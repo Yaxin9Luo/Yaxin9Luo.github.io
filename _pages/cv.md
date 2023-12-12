@@ -11,38 +11,42 @@ redirect_from:
 
 Education
 ======
-* B.S. in GitHub, GitHub University, 2012
-* M.S. in Jekyll, GitHub University, 2014
-* Ph.D in Version Control Theory, GitHub University, 2018 (expected)
+* B.S. in Mathematics, University of Edinburgh, 2020-2021
+* B.S. in General Engineering, Technical University of Denmark, 2021-2024
 
-Work experience
+Experience
 ======
-* Summer 2015: Research Assistant
-  * Github University
-  * Duties included: Tagging issues
-  * Supervisor: Professor Git
+* Summer 2019: Summer Internship
+  * Chinese Institute of Social Science Survey,Peking University
+  * Duties included: Conduct interviews & data collection
 
-* Fall 2015: Research Assistant
-  * Github University
-  * Duties included: Merging pull requests
-  * Supervisor: Professor Hub
-  
 Skills
 ======
-* Skill 1
-* Skill 2
-  * Sub-skill 2.1
-  * Sub-skill 2.2
-  * Sub-skill 2.3
-* Skill 3
+* Machine Learning & Deep Learning (pytorch,tensorflow)
+* Good skills in Python, Matlab, Java
+* 4 Course Projects in Embedded System Programming and circuits
+* Signal Processing
+* Agile Software Development
 
 Publications
 ======
   <ul>{% for post in site.publications %}
     {% include archive-single-cv.html %}
   {% endfor %}</ul>
-  
-Talks
+
+Projects
+====== 
+Few-shot text to video diffusion model (Course project):
+Roles in charge:
+  1. Search and find the papers which are using diffusion model for text to video generation and propose the one
+  which is doable and trainable.
+  2. Train the video from own videos.
+
+Sentiment Analysis (Course project):
+Roles in charge:
+  1. Compare Word2Vec and BERT as embedding extraction methods.
+  2. Implement 3 clustering algorithms KMeans, CURE, DBSCAN.
+<!-- Talks
 ======
   <ul>{% for post in site.talks %}
     {% include archive-single-talk-cv.html %}
@@ -52,8 +56,8 @@ Teaching
 ======
   <ul>{% for post in site.teaching %}
     {% include archive-single-cv.html %}
-  {% endfor %}</ul>
+  {% endfor %}</ul> -->
   
-Service and leadership
+<!-- Service and leadership
 ======
-* Currently signed in to 43 different slack teams
+* Currently signed in to 43 different slack teams -->
