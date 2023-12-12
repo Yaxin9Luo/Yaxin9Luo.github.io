@@ -46,18 +46,3 @@ Sentiment Analysis (Course project):
 Roles in charge:
   1. Compare Word2Vec and BERT as embedding extraction methods.
   2. Implement 3 clustering algorithms KMeans, CURE, DBSCAN.
-<!-- Talks
-======
-  <ul>{% for post in site.talks %}
-    {% include archive-single-talk-cv.html %}
-  {% endfor %}</ul>
-  
-Teaching
-======
-  <ul>{% for post in site.teaching %}
-    {% include archive-single-cv.html %}
-  {% endfor %}</ul> -->
-  
-<!-- Service and leadership
-======
-* Currently signed in to 43 different slack teams -->
