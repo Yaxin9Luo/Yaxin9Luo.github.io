@@ -23,6 +23,7 @@ Experience
   * Collabrate with Xia Men University in weakly supervised referring expression comphrehension.
 * 2024: Research Assistant
   * Collabrate with IDEA research institute in efficient scale up MLLM from depth and width(MOE).
+  
 Skills
 ======
 * Machine Learning & Deep Learning (pytorch,tensorflow)
@@ -50,7 +51,7 @@ Sentiment Analysis (Course project):
 Roles in charge:
   1. Compare Word2Vec and BERT as embedding extraction methods.
   2. Implement 3 clustering algorithms KMeans, CURE, DBSCAN.
-  
+
 Weakly Supervised Referring Expression Comphrehension:
 Roles in charge:
   1. Collect, read and analysis the paper from this research area and discuss advantages and disadvantages of each pathway to find novel ideas with supervisor
