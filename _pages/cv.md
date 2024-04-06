@@ -54,7 +54,7 @@ Roles in charge:
   1. Compare Word2Vec and BERT as embedding extraction methods.
   2. Implement 3 clustering algorithms KMeans, CURE, DBSCAN.
 
-Weakly Supervised Referring Expression Comphrehension:
+Weakly Supervised Referring Image Segmentation using external knowledge from attention maps of ldm diffusion model (Course project):
 
 Roles in charge:
   1. Collect, read and analysis the paper from this research area and discuss advantages and disadvantages of each pathway to find novel ideas with supervisor
