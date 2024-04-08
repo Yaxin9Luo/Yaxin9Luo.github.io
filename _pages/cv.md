@@ -24,14 +24,12 @@ Experience
 * 2024: Research Assistant
   * Collabrate with IDEA research institute in efficient scale up MLLM from depth and width(MOE).
 
-Skills
+Other Skills
 ======
-* Machine Learning & Deep Learning (pytorch,tensorflow)
-* Good skills in Python, Matlab
-* HPC training(slurm usage), DeepSpeed and some theory knowledge in Distributed computing(like how to calculate how many memory needed for training a LLM)
-* 4 Course Projects in Embedded System Programming and circuits
+* Good skills in HPC training(Slurm), DeepSpeed and some theoretical knowledge in Distributed Computing(like how to calculate how many memory needed for training a LLM)
+* 3 Course Projects in Embedded System Programming and Circuits
 * Signal Processing
-* Knowledge in acoustics
+* Knowledge in Acoustics
 
 Publications
 ======
