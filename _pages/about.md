@@ -12,7 +12,7 @@ redirect_from:
 
 😍 My research interests fall into the field of Multi-Modalities learning, such as Visual Language Perception(grounding/segmentation) in images/videos, Video Understanding, Leaning better algined representations through Self-Supervised Learning. Specifically, I am super interested in combing egocentric and exocentric videos to train the intelligent models that can solve preception tasks. In my opinion, this is the way to produce truly human-level AI, as well as highly useful assistant AI, to support daily human activities, for example, the ego-exo4d dataset published by Meta is a large forward step in this area.
 
-🧗 I am currently working on project: Efficient Large Multimodal Language Model using mixure of depth method.
+🧗 I am currently working on project: Efficient Large Multimodal Language Model using mixture of depth method.
 
 🏹Publications:
 1. APL: Anchor-based Prompt Learning for One-stage Weakly Supervised Referring Expression Comprehension (Submitted to ECCV 2024)
