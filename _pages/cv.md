@@ -22,11 +22,11 @@ Experience
 * 2023: Research Assistant
   * Collabrate with Xia Men University in weakly supervised referring expression comphrehension.
 * 2024: Research Assistant
-  * Collabrate with IDEA research institute in efficient scale up MLLM from depth and width(MOE).
+  * Collabrate with Xia Men University in efficient scale up MLLM from depth.
 
 Other Skills
 ======
-* Good skills in HPC training(Slurm), DeepSpeed and some theoretical knowledge in Distributed Computing(like how to calculate how many memory needed for training a LLM)
+* Good practical skills in HPC training(Slurm), DeepSpeed for LLMs and some theoretical knowledge in Distributed Computing
 * 3 Course Projects in Embedded System Programming and Circuits
 * Signal Processing
 * Knowledge in Acoustics
@@ -46,13 +46,7 @@ Roles in charge:
   which is doable and trainable.
   2. Train the video from own videos.
 
-Sentiment Analysis (Course project):
-
-Roles in charge:
-  1. Compare Word2Vec and BERT as embedding extraction methods.
-  2. Implement 3 clustering algorithms KMeans, CURE, DBSCAN.
-
-Weakly Supervised Referring Image Segmentation using external knowledge from attention maps of ldm diffusion model (Course project):
+Enhance Weakly Supervised Referring Image Segmentation with diffusion model, supervised by Prof. Dimitrios Papadopoulos at DTU.
 
 Roles in charge:
   1. Collect, read and analysis the paper from this research area and discuss advantages and disadvantages of each pathway to find novel ideas with supervisor
