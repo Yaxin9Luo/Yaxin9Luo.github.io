@@ -42,9 +42,9 @@ Projects
 Few-shot text to video diffusion model (Course project):
 
 Roles in charge:
-  1. Search and find the papers which are using diffusion model for text to video generation and propose the one
-  which is doable and trainable.
-  2. Train the video from own videos.
+  1. Search and find the papers which use diffusion model for text to video generation and implement the one
+  which is doable and trainable with limited gpu.
+  2. Train the model from our own videos.
 
 Enhance Weakly Supervised Referring Image Segmentation with diffusion model, supervised by Prof. Dimitrios Papadopoulos at DTU.
 
