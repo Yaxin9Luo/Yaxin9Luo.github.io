@@ -20,9 +20,9 @@ Experience
   * Chinese Institute of Social Science Survey,Peking University
   * Duties included: Conduct interviews & data collection
 * 2023: Research Assistant
-  * Collabrate with Xia Men University in weakly supervised referring expression comphrehension.
+  * Collabrate with Xia Men University and Peng Cheng Laboratory in Weakly Supervised Referring Expression Comphrehension supervised by Dr.Gen Luo.
 * 2024: Research Assistant
-  * Collabrate with Xia Men University in efficient scale up MLLM from depth.
+  * Collabrate with Xia Men University in Efficient Scale Up MLLM from Depth with Dr.Gen Luo and Prof.Rongrong Ji.
 
 Other Skills
 ======
@@ -45,10 +45,11 @@ Roles in charge:
   1. Search and find the papers which use diffusion model for text to video generation and implement the one
   which is doable and trainable with limited gpu.
   2. Train the model from our own videos.
+  3. Write the project report , make the project poster and attend the poster session organized by DTU.
 
-Enhance Weakly Supervised Referring Image Segmentation with diffusion model, supervised by Prof. Dimitrios Papadopoulos at DTU.
+Enhance Weakly Supervised Referring Image Segmentation with diffusion model, supervised by Prof.Dimitrios Papadopoulos at DTU.
 
 Roles in charge:
   1. Collect, read and analysis the paper from this research area and discuss advantages and disadvantages of each pathway to find novel ideas with supervisor
   2. Implement and improve the research ideas and conduct extensive experiments to prove it work.
-  3. Write the first draft version of whole research paper and modify it based on the feedback from supervisor.
+  3. Write the research paper , make the project poster and present the presentation.
