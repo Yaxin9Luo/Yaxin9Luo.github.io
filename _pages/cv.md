@@ -39,7 +39,7 @@ Publications
 
 Projects
 ====== 
-Few-shot text to video diffusion model (Course project):
+Few-shot text to video diffusion model (guided by Prof.Ole Winther for the Deep Learning Course project):
 
 Roles in charge:
   1. Search and find the papers which use diffusion model for text to video generation and implement the one
