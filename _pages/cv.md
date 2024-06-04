@@ -39,7 +39,7 @@ Publications
 
 Projects
 ====== 
-Few-shot text to video diffusion model (guided by Prof.Ole Winther for the Deep Learning Course project):
+Few-shot text to video diffusion model (Deep Learning Course project):
 
 Roles in charge:
   1. Search and find the papers which use diffusion model for text to video generation and implement the one
@@ -47,9 +47,16 @@ Roles in charge:
   2. Train the model from our own videos.
   3. Write the project report , make the project poster and attend the poster session organized by DTU.
 
+Flash-SAM: Knowledge Distillation For Segment Anything (Advanced Computer Vision Course project):
+
+Roles in charge:
+  1. Collect, read and analysis the paper from this research area and discuss advantages and disadvantages of each pathway to find novel ideas with supervisor
+  2. Implement and improve the research ideas and conduct extensive experiments to prove it work.
+  3. Write the research paper, make the project poster and present the presentation.
+
 Enhance Weakly Supervised Referring Image Segmentation with diffusion model, supervised by Prof.Dimitrios Papadopoulos at DTU.
 
 Roles in charge:
   1. Collect, read and analysis the paper from this research area and discuss advantages and disadvantages of each pathway to find novel ideas with supervisor
   2. Implement and improve the research ideas and conduct extensive experiments to prove it work.
-  3. Write the research paper , make the project poster and present the presentation.
+  3. Write the research paper, make the project poster and present the presentation.
