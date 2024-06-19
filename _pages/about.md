@@ -10,7 +10,9 @@ redirect_from:
 
 🧑‍🎓I'm a final year undergraduate student at Techinacl University of Denmark(DTU). I am so glad to do research projects under the supervision of [Prof. Dimitrios Papadopoulos](https://people.csail.mit.edu/dimpapa/) and [Prof.Weizhi Meng](https://scholar.google.com/citations?user=OlepJ5wAAAAJ) at DTU, and [Dr. Gen Luo](https://scholar.google.com.hk/citations?user=EyZqU9gAAAAJ&hl=zh-CN), [Prof. Rongrong Ji](https://scholar.google.com.hk/citations?user=lRSD7PQAAAAJ&hl=zh-CN) at Xiamen University. 
 
-😍 My research interests fall into the field of Multi-Modalities learning, such as Visual Language Perception(grounding/segmentation) in images/videos, Video Understanding, Leaning better algined representations through Self-Supervised Learning. Specifically, I am super interested in combing egocentric and exocentric videos to train the intelligent models that can solve preception tasks. In my opinion, this is the way to produce truly human-level AI, as well as highly useful assistant AI, to support daily human activities, for example, the ego-exo4d dataset published by Meta is a large forward step in this area.
+😍 My research interests fall into the field of Efficient Multi-Modalities learning, such as Visual Language Perception(grounding/segmentation) in images/videos, Efficient Video Understanding, Efficient Self-Supervised Learning approach for Foundation Model. Specifically, I am super interested in utilizing internet-scale videos for new self-supervised paradism to train a Foundational Multimodal Model. 
+In my opinion, this is the way to achieve the unifying goal of generative and perceptive models.
+We have rich Video data on the internet, we need to find an efficient algorithm to use the data.
 
 🧗 I am currently working on project: Efficient Large Multimodal Language Model using Mixture of Depth method with Dr.Gen Luo and Prof.Rongrong Ji.
 
