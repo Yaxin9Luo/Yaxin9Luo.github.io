@@ -25,6 +25,7 @@ ECCV 2024
 
 **Yaxin Luo**, Jiayi Ji, Xiaofu Chen, Yuxin Zhang, Tianhe Ren, Gen Luo
 
+![Image Sculpting](images/APL.jpg)
+
 [Paper](#) | [Code](https://github.com/Yaxin9Luo/APL)
 
-<img src="images/APL.jpg" alt="APL: Anchor-based Prompt Learning" width="500">
