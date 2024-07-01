@@ -27,4 +27,4 @@ ECCV 2024
 
 [Paper](#) | [Code](https://github.com/Yaxin9Luo/APL)
 
-![Image Sculpting](images/APL.jpg)
+<img src="images/APL.jpg" alt="APL: Anchor-based Prompt Learning" width="500">
