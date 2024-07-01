@@ -21,7 +21,7 @@ We have rich Video data on the internet, we need to find an efficient algorithm 
 ## Publications
 (* indicate equal contribution)
 ### APL: Anchor-based Prompt Learning for One-stage Weakly Supervised Referring Expression Comprehension (ECCV 2024)
-Yaxin Luo, Jiayi Ji, Xiaofu Chen, Yuxin Zhang, Tianhe Ren, Gen Luo
+***Yaxin Luo***, Jiayi Ji, Xiaofu Chen, Yuxin Zhang, Tianhe Ren, Gen Luo
 
 ![Image Sculpting](images/APL.jpg)
 
