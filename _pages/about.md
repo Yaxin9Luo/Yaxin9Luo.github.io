@@ -15,6 +15,13 @@ In my opinion, this is the way to achieve the unifying goal of generative and pe
 We have rich Video data on the internet, we need to find an efficient algorithm to use the data.
 
 🧗 I am currently working on project: Efficient Large Multimodal Language Model using Mixture of Depth method with Dr.Gen Luo and Prof.Rongrong Ji.
+### News
+- APL was accepted by ECCV 2024, see you in Milan, Italy.
+## 🏹Publications
+(* indicate equal contribution)
+### APL: Anchor-based Prompt Learning for One-stage Weakly Supervised Referring Expression Comprehension
+**ECCV 2024**  
+**Yaxin Luo**, Jiayi Ji, Xiaofu Chen, Yuxin Zhang, Tianhe Ren, Gen Luo
+[Paper](#) | [Code](https://github.com/Yaxin9Luo/APL)
 
-🏹Publications:
-1. APL: Anchor-based Prompt Learning for One-stage Weakly Supervised Referring Expression Comprehension (Accepted ECCV 2024)
+![Image Sculpting](link-to-image)
