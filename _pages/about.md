@@ -27,4 +27,4 @@ ECCV 2024
 
 [Paper](#) | [Code](https://github.com/Yaxin9Luo/APL)
 
-![Image Sculpting](APL.jpg)
+![Image Sculpting](images/APL.jpg)
