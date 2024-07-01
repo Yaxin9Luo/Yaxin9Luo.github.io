@@ -17,4 +17,4 @@ We have rich Video data on the internet, we need to find an efficient algorithm 
 🧗 I am currently working on project: Efficient Large Multimodal Language Model using Mixture of Depth method with Dr.Gen Luo and Prof.Rongrong Ji.
 
 🏹Publications:
-1. APL: Anchor-based Prompt Learning for One-stage Weakly Supervised Referring Expression Comprehension (Submitted to ECCV 2024)
+1. APL: Anchor-based Prompt Learning for One-stage Weakly Supervised Referring Expression Comprehension (Accepted ECCV 2024)
