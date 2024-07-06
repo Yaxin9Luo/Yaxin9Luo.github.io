@@ -22,7 +22,7 @@ Experience
 * 2023: Research Assistant
   * Collabrate with Xia Men University and Peng Cheng Laboratory in Weakly Supervised Referring Expression Comphrehension supervised by Dr.Gen Luo.
 * 2024: Research Assistant
-  * Collabrate with Xia Men University in Efficient Scale Up MLLM from Depth with Dr.Gen Luo and Prof.Rongrong Ji.
+  * Collabrate with Xia Men University and Shanghai AI Lab(openGVLab) about Efficient Scale Up MLLM from Depth with Dr.Gen Luo and Prof.Rongrong Ji.
 
 Other Skills
 ======
