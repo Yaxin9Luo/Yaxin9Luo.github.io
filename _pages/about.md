@@ -20,7 +20,8 @@ We have rich Video data on the internet, we need to find an efficient algorithm 
 - APL was accepted by ECCV 2024, see you in Milan, Italy.
 
 ## Publications
-(* indicate equal contribution)
+(* indicates equal contribution)
+(✝ indicates corresponding author)
 ### APL: Anchor-based Prompt Learning for One-stage Weakly Supervised Referring Expression Comprehension (ECCV 2024)
 <span style="color: grey;"><b>Yaxin Luo</b></span>, Jiayi Ji, Xiaofu Chen, Yuxin Zhang, Tianhe Ren, Gen Luo
 
