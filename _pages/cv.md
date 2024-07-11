@@ -19,10 +19,10 @@ Experience
 * Summer 2019: Summer Internship
   * Chinese Institute of Social Science Survey,Peking University
   * Duties included: Conduct interviews & data collection
-* 2023: Research Assistant
-  * Collabrate with Xia Men University and Peng Cheng Laboratory in Weakly Supervised Referring Expression Comphrehension supervised by Dr.Gen Luo.
-* 2024: Research Assistant
-  * Collabrate with Xia Men University and Shanghai AI Lab(openGVLab) about Efficient Scale Up MLLM from Depth with Dr.Gen Luo and Prof.Rongrong Ji.
+* 2023: Remote Research Assistant
+  * Collabrate with Xia Men University and Peng Cheng Laboratory in Weakly Supervised Referring Expression Comphrehension supervised by Dr.Jijia Yi and Dr.Gen Luo.
+* 2024: Remote Research Assistant
+  * Collabrate with Xia Men University and Shanghai AI Lab about Efficient Scale Up MLLM from Depth with Dr.Gen Luo.
 
 Other Skills
 ======
