@@ -16,13 +16,15 @@ Education
 
 Experience
 ======
+* March,2024--August,2025: Research Assistant at [MBZUAI](https://mbzuai.ac.ae/)
+  * Under supervision of Prof.Zhiqiang Shen.
+* March,2024--Present: Remote Research Assistant
+  * Collabrate with Xia Men University and Shanghai AI Lab about Efficient Scale Up MLLM from Depth with Dr.Gen Luo.
+* November,2023--March,2024: Remote Research Assistant
+  * Collabrate with Xia Men University and Peng Cheng Laboratory in Weakly Supervised Referring Expression Comphrehension supervised by Dr.Jijia Yi and Dr.Gen Luo.
 * Summer 2019: Summer Internship
   * Chinese Institute of Social Science Survey,Peking University
   * Duties included: Conduct interviews & data collection
-* 2023: Remote Research Assistant
-  * Collabrate with Xia Men University and Peng Cheng Laboratory in Weakly Supervised Referring Expression Comphrehension supervised by Dr.Jijia Yi and Dr.Gen Luo.
-* 2024: Remote Research Assistant
-  * Collabrate with Xia Men University and Shanghai AI Lab about Efficient Scale Up MLLM from Depth with Dr.Gen Luo.
 
 Other Skills
 ======
