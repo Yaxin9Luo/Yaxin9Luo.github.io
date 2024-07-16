@@ -14,7 +14,12 @@ redirect_from:
 In my opinion, this is the way to achieve the unifying goal of generative and perceptive models.
 We have rich Video data on the internet, we need to find an efficient algorithm to use the data.
 
-🧗 I am currently working on project: Efficient Large Multimodal Language Model using Mixture of Depth method with Dr.Gen Luo.
+🧗 I am currently working on project: 
+
+1.Efficient Large Multimodal Language Model using Mixture of Depth method with Dr.Gen Luo.
+
+2.LLM as Visual Encoder Directly with Prof.Zhiqiang Shen.
+
 ### News
 - APL was accepted by ECCV 2024, see you in Milan, Italy.
 
