@@ -18,7 +18,7 @@ We have rich Video data on the internet, we need to find an efficient algorithm 
 
 1.Efficient Large Multimodal Language Model using Mixture of Depth method with Dr.Gen Luo.
 
-2.LLM as Visual Encoder Directly with Prof.Zhiqiang Shen.
+2.Directly using LLM as Visual Encoder with Prof.Zhiqiang Shen.
 
 ### News
 - APL was accepted by ECCV 2024, see you in Milan, Italy.
