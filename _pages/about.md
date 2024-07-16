@@ -14,7 +14,7 @@ redirect_from:
 In my opinion, this is the way to achieve the unifying goal of generative and perceptive models.
 We have rich Video data on the internet, we need to find an efficient algorithm to use the data.
 
-🧗 I am currently working on project: 
+🧗 I am currently working on projects: 
 
 1.Efficient Large Multimodal Language Model using Mixture of Depth method with Dr.Gen Luo.
 
