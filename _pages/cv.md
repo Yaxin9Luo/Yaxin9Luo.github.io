@@ -9,11 +9,6 @@ redirect_from:
 
 {% include base_path %}
 
-Education
-======
-* B.S. in Mathematics, University of Edinburgh, 2020-2021
-* B.S. in General Engineering, Technical University of Denmark, 2021-2024
-
 Experience
 ======
 * March,2024--August,2025: Research Assistant at [MBZUAI](https://mbzuai.ac.ae/)
