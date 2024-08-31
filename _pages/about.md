@@ -20,7 +20,7 @@ In additon, I am always interested in exploring the intersection of recent machi
 
 1.Efficient Large Multimodal Language Model using Mixture of Depth method with Dr.Gen Luo.
 
-2.Directly using LLM as Visual Encoder with Prof.Zhiqiang Shen.
+2.Exploring the potential of using LLM as Visual Encoder training on pure visual datawith Prof.Zhiqiang Shen.
 
 ### News
 - APL was accepted by ECCV 2024, see you in Milan, Italy.
