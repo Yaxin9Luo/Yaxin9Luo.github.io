@@ -11,8 +11,6 @@ redirect_from:
 
 Experience
 ======
-* March,2024--August,2025: Research Assistant at [MBZUAI](https://mbzuai.ac.ae/)
-  * Under supervision of Prof.Zhiqiang Shen.
 * March,2024--Present: Remote Research Assistant
   * Collabrate with Xia Men University and Shanghai AI Lab about Efficient Scale Up MLLM from Depth with Dr.Gen Luo.
 * November,2023--March,2024: Remote Research Assistant
