@@ -23,6 +23,7 @@ In additon, I am always interested in exploring the intersection of recent machi
 2.Exploring the potential of using LLM as Visual Encoder training on pure visual datawith Prof.Zhiqiang Shen.
 
 ### News
+- DViR: Dynamic Visual Routing forWeakly Supervised Referring Expression Comprehension finised and submitted to AAAI.
 - APL was accepted by ECCV 2024, see you in Milan, Italy.
 
 ## Publications
