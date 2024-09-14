@@ -8,7 +8,7 @@ redirect_from:
   - /about.html
 ---
 ## About Me
-🧑‍🎓I'm currently at Techinacl University of Denmark (DTU) and will graduate in Fall 2024. I am writing my bachelor thesis with [Prof. Dimitrios Papadopoulos](https://people.csail.mit.edu/dimpapa/), and I am so glad to work with [Prof.Weizhi Meng](https://scholar.google.com/citations?user=OlepJ5wAAAAJ) in two projectsat DTU. Also, I am right now a research assistant supervised by [Prof.Zhiqiang Shen](https://scholar.google.com/citations?user=DGr0fVoAAAAJ&hl=en) at [MBZUAI](https://mbzuai.ac.ae/) and [Dr. Gen Luo](https://scholar.google.com.hk/citations?user=EyZqU9gAAAAJ&hl=zh-CN) at [Shanghai AI Lab](https://www.shlab.org.cn/).
+🧑‍🎓I'm currently at Techinacl University of Denmark (DTU) and will graduate in Fall 2024. I am writing my bachelor thesis with [Prof. Dimitrios Papadopoulos](https://people.csail.mit.edu/dimpapa/), and I am so glad to work with [Prof.Weizhi Meng](https://scholar.google.com/citations?user=OlepJ5wAAAAJ) in two projectsat DTU. Also, I am right now a research assistant supervised by [Dr. Gen Luo](https://scholar.google.com.hk/citations?user=EyZqU9gAAAAJ&hl=zh-CN) at [Shanghai AI Lab](https://www.shlab.org.cn/).
 
 😍 My long-term goal is to develop intelligent machines capable of perceiving, understanding, and creating multimodal content, such as videos. Right now, as deep learning techniques are the recent effective method and may still be a trend in a while, so my research interests are centered on efficient multi-modal learning using deep learning. This includes areas such as visual language perception, video understanding, and efficient self-supervised learning algorithms for foundational models.
 I am particularly fascinated by the potential of utilizing internet-scale videos to establish new self-supervised paradigms for training foundational multimodal models. I believe this approach is key to achieving the unified goal of generative and perceptive models. In my opinion, With the abundance of video data available on the internet, it is crucial to develop efficient algorithms to harness this resource effectively.
@@ -20,7 +20,7 @@ In additon, I am always interested in exploring the intersection of recent machi
 
 1.Efficient Large Multimodal Language Model using Mixture of Depth method with Dr.Gen Luo.
 
-2.Exploring the potential of using LLM as Visual Encoder training on pure visual datawith Prof.Zhiqiang Shen.
+2.Exploring the potential of using LLM as Visual Encoder training on pure visual data with Prof.Zhiqiang Shen.
 
 ### News
 - DViR: Dynamic Visual Routing forWeakly Supervised Referring Expression Comprehension finised and submitted to AAAI 2025.
