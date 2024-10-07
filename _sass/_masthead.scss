@@ -10,6 +10,8 @@
   -webkit-animation-delay: 0.15s;
           animation-delay: 0.15s;
   z-index: 20;
+  background-color: $primary-color;
+  padding: 1em 0;
 
   &__inner-wrap {
     @include container;
@@ -27,6 +29,26 @@
 
     a {
       text-decoration: none;
+    }
+  }
+  
+  &__inner-wrap {
+    max-width: $max-width;
+    margin: 0 auto;
+    padding: 0 1em;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .site-title {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #ffffff;
+    text-decoration: none;
+    
+    &:hover {
+      color: darken(#ffffff, 10%);
     }
   }
 }
