@@ -38,5 +38,5 @@ In additon, I am always interested in exploring the intersection of recent machi
 
 ![Image Sculpting](images/APL.jpg)
 
-[Paper](#) | [Code](https://github.com/Yaxin9Luo/APL)
+[Paper](https://www.ecva.net/papers/eccv_2024/papers_ECCV/papers/02055.pdf) | [Code](https://github.com/Yaxin9Luo/APL)
 
