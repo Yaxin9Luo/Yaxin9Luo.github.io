@@ -36,7 +36,7 @@ In additon, I am always interested in exploring the intersection of recent machi
 ### $\gamma$-MoD: Mixture-of-Depth Adaptation for Multimodal Large Language Models
 <span style="color: grey;"><b>Yaxin Luo</b></span>, Gen Luo, Jiayi Ji, Yiyi Zhou, Xiaoshuai Sun, Zhiqiang Shen, Rongrong Ji<sup>✝</sup>
 
-![Image Sculpting](images/gamma-mod.png)
+![Image Sculpting](images/gamma_mod.png)
 
 [Paper](placeholder) | [Code](https://github.com/Yaxin9Luo/Gamma-MOD)
 
