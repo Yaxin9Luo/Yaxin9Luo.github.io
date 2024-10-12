@@ -9,6 +9,11 @@ redirect_from:
 
 {% include base_path %}
 
+Education
+======
+* B.S. in General Engineering, Technical University of Denmark, 2021---2024
+* B.S. in Pure Mathematics, University of Edinburgh, 2020---2021
+
 Experience
 ======
 * March,2024--Present: Remote Research Assistant
