@@ -37,7 +37,7 @@ In additon, I am always interested in exploring the intersection of recent machi
 <span style="color: grey;"><b>Yaxin Luo</b></span>, Gen Luo, Jiayi Ji, Yiyi Zhou, Xiaoshuai Sun, Zhiqiang Shen, Rongrong Ji<sup>✝</sup>
 
 ![Image Sculpting](images/gamma_mod.png)
-[Project Website](https://yaxin9luo.github.io/Gamma-MOD) | [Paper](placeholder) | [Code](https://github.com/Yaxin9Luo/Gamma-MOD) 
+[Project Website](https://yaxin9luo.github.io/gamma-mod-webpage) | [Paper](placeholder) | [Code](https://github.com/Yaxin9Luo/Gamma-MOD) 
 
 ### APL: Anchor-based Prompt Learning for One-stage Weakly Supervised Referring Expression Comprehension (ECCV 2024)
 <span style="color: grey;"><b>Yaxin Luo</b></span>, Jiayi Ji, Xiaofu Chen, Yuxin Zhang, Tianhe Ren, Gen Luo<sup>✝</sup>
