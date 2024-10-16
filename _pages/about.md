@@ -25,8 +25,8 @@ In additon, I am always interested in exploring the intersection of recent machi
 3.Bachelor Thesis: Exploring LLM's potential to understand unseen visual data by self-supervised method with Prof. Dimitrios Papadopoulos.
 
 ### News
-- γ−MOD: EXPLORING MIXTURE-OF-DEPTH ADAPTATION FOR MULTIMODAL LARGE LANGUAGE MODELS finshed and published on Arxiv.
-- DViR: Dynamic Visual Routing forWeakly Supervised Referring Expression Comprehension finised and submitted to AAAI 2025.
+- γ−MOD: EXPLORING MIXTURE-OF-DEPTH ADAPTATION FOR MULTIMODAL LARGE LANGUAGE MODELS finshed and is on Arxiv.
+- DViR: Dynamic Visual Routing for Weakly Supervised Referring Expression Comprehension finised and it is under review.
 - APL was accepted by ECCV 2024, see you in Milan, Italy.
 
 ## Publications
