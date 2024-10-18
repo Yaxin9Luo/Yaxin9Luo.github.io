@@ -18,11 +18,9 @@ In additon, I am always interested in exploring the intersection of recent machi
 
 🧗 I am currently working on projects: 
 
-1.Efficient Large Multimodal Language Model using Mixture of Depth method with Dr.Gen Luo.
+1.Exploring the Generalization ability of LLM with Prof.Zhiqiang Shen.
 
-2.Exploring the Generalization ability of LLM with Prof.Zhiqiang Shen.
-
-3.Bachelor Thesis: Exploring LLM's potential to understand unseen visual data by self-supervised method with Prof. Dimitrios Papadopoulos.
+2.Bachelor Thesis: Exploring LLM's potential to understand unseen visual data by self-supervised method with Prof. Dimitrios Papadopoulos.
 
 ### News
 - γ−MOD: EXPLORING MIXTURE-OF-DEPTH ADAPTATION FOR MULTIMODAL LARGE LANGUAGE MODELS finshed and is on Arxiv.
