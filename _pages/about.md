@@ -8,7 +8,7 @@ redirect_from:
   - /about.html
 ---
 ## About Me
-🧑‍🎓I'm currently at Techinacl University of Denmark (DTU) and will graduate in Fall 2024. I am writing my bachelor thesis with [Prof. Dimitrios Papadopoulos](https://people.csail.mit.edu/dimpapa/), and I am so glad to work with [Prof.Weizhi Meng](https://scholar.google.com/citations?user=OlepJ5wAAAAJ) at DTU. Also, I am right now a remote research assistant [Dr. Gen Luo](https://scholar.google.com.hk/citations?user=EyZqU9gAAAAJ&hl=zh-CN) at [Shanghai AI Lab](https://www.shlab.org.cn/).
+🧑‍🎓I'm currently at Techinacl University of Denmark (DTU) and will graduate in Fall 2024. I am writing my bachelor thesis with [Prof. Dimitrios Papadopoulos](https://people.csail.mit.edu/dimpapa/), and I am so glad to work with [Prof.Weizhi Meng](https://scholar.google.com/citations?user=OlepJ5wAAAAJ) at DTU. Also, I am right now a remote research assistant [Dr. Gen Luo](https://scholar.google.com.hk/citations?user=EyZqU9gAAAAJ&hl=zh-CN) at [Shanghai AI Lab](https://www.shlab.org.cn/). I will join [MBZUAI](https://mbzuai.ac.ae/) as a Research Assistant from Jan 2025 and then start my PhD in Aug 2025 under supervision of [Prof. Zhiqiang Shen](https://zhiqiangshen.com/).
 
 😍 My long-term goal is to develop intelligent machines capable of perceiving, understanding, and creating multimodal content, such as videos. This includes areas such as visual language perception, video understanding, and efficient foundational models.
 I am particularly fascinated by the potential of utilizing internet-scale videos to establish new self-supervised paradigms for training foundational multimodal models. I believe this approach is key to achieving the unified goal of generative and perceptive models. In my opinion, With the abundance of video data available on the internet, it is crucial to develop efficient algorithms to harness this resource effectively.
@@ -37,7 +37,7 @@ In additon, I am always interested in exploring the intersection of recent machi
 <span style="color: grey;"><b>Yaxin Luo</b></span>, Gen Luo, Jiayi Ji, Yiyi Zhou, Xiaoshuai Sun, Zhiqiang Shen, Rongrong Ji<sup>✝</sup>
 
 ![Image Sculpting](images/gamma_mod.png)
-[Project Website](https://yaxin9luo.github.io/gamma-mod-webpage) | [Paper](placeholder) | [Code](https://github.com/Yaxin9Luo/Gamma-MOD) 
+[Project Website](https://yaxin9luo.github.io/gamma-mod-webpage) | [Paper](https://arxiv.org/abs/2410.13859) | [Code](https://github.com/Yaxin9Luo/Gamma-MOD) 
 
 ### APL: Anchor-based Prompt Learning for One-stage Weakly Supervised Referring Expression Comprehension (ECCV 2024)
 <span style="color: grey;"><b>Yaxin Luo</b></span>, Jiayi Ji, Xiaofu Chen, Yuxin Zhang, Tianhe Ren, Gen Luo<sup>✝</sup>
