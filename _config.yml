@@ -21,7 +21,7 @@ repository               : "academicpages/academicpages.github.io"
 #               Additional customization can be done by editing /_includes/author-profile.html
 author:
   # Biographic information
-  avatar           : "images/profile.png"
+  avatar           : "./images/Yaxin.JPG"
   name             : "Yaxin Luo"
   pronouns         : # example: "she/her"  
   bio              : "MLLM, Efficient Foundation Model, SSL"
