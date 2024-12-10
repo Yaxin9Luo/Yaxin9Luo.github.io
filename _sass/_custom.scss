@@ -1,0 +1,75 @@
+// 现代化配色方案
+:root {
+    --primary-color: #2c3e50;
+    --accent-color: #3498db;
+    --text-color: #2c3e50;
+    --light-bg: #f5f6fa;
+  }
+  
+  // 重新设计导航栏
+  .masthead {
+    background: var(--primary-color);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    
+    &__inner-wrap {
+      padding: 0.8em;
+    }
+    
+    .greedy-nav {
+      background: transparent;
+      
+      a {
+        color: white;
+        font-weight: 500;
+        
+        &:hover {
+          color: var(--accent-color);
+        }
+      }
+    }
+  }
+  
+  // 美化个人信息侧边栏
+  .author__avatar {
+    img {
+      border: 3px solid var(--accent-color);
+      transition: transform 0.3s ease;
+      
+      &:hover {
+        transform: scale(1.05);
+      }
+    }
+  }
+  
+  .author__content {
+    text-align: center;
+    
+    .author__name {
+      color: var(--primary-color);
+      font-size: 1.5em;
+      font-weight: bold;
+    }
+    
+    .author__bio {
+      font-style: italic;
+      color: #666;
+    }
+  }
+  
+  // 美化文章卡片
+  .archive__item {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 1.5em;
+    transition: transform 0.2s ease;
+    
+    &:hover {
+      transform: translateY(-3px);
+    }
+    
+    .archive__item-title {
+      color: var(--primary-color);
+      font-size: 1.3em;
+    }
+  }
