@@ -23,10 +23,3 @@ Research experience
   * Xiamen University
   * Duties included: Conducting research on Weakly supervised learning 
   
-Publications
-======
-{% raw %}
-<ul>{% for post in site.publications reversed %}
-    {% include archive-single-cv.html %}
-{% endfor %}</ul>
-{% endraw %}
