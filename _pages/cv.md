@@ -22,4 +22,3 @@ Research experience
 * 2023-2024: Research Assistant
   * Xiamen University
   * Duties included: Conducting research on Weakly supervised learning 
-  
