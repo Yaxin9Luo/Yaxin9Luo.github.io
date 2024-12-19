@@ -9,7 +9,7 @@ redirect_from:
 
 About Me
 ======
-Hello! I am an Undergraduate Student at Technical University of Denmark. I am interested in develop native multimodal foundation models which can perform both understanding and generation tasks
+Hello! I am an Undergraduate Student at Technical University of Denmark. I am interested in developing native multimodal foundation models which can perform both understanding and generation tasks
 
 
 Selected Publications
