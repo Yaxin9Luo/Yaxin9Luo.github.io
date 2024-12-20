@@ -9,7 +9,10 @@ redirect_from:
 
 About Me
 ======
-Hello! I am an Undergraduate Student at Technical University of Denmark. I am interested in developing native multimodal foundation models which can perform both understanding and generation tasks
+Hello! I am an Undergraduate Student at Technical University of Denmark. I am interested in :
+- Multimodal Foundation Model: Developing native multimodal foundation models or agents which can perform both understanding and generation tasks from video,language.
+- Efficiency: I am interested in how to train or inference large models more efficiently, especially tackling the sparsity nature of nerual networks.
+
 
 
 Selected Publications
