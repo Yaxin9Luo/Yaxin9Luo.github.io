@@ -9,7 +9,7 @@ redirect_from:
 
 About Me
 ======
-Hello! I am a Research Assistant at [MBZUAI](https://mbzuai.ac.ae/) under the supervision of [Prof. Zhiqiang Shen](https://scholar.google.com/citations?user=DGr0fVoAAAAJ&hl=en). I am also working with [Dr.Gen Luo](https://scholar.google.com.hk/citations?user=EyZqU9gAAAAJ&hl=zh-CN) at Shanghai AI Lab and [Prof. Rongrong Ji](https://scholar.google.com/citations?user=lRSD7PQAAAAJ&hl=en). Previously, I graduated from Technical University of Denmark supervised by [Prof. Dim P. Papadopoulos](https://scholar.google.com/citations?user=-_JAhdQAAAAJ&hl=en). My research interests span in :
+Hello! I am a Research Assistant at [MBZUAI](https://mbzuai.ac.ae/) under the supervision of [Prof. Zhiqiang Shen](https://scholar.google.com/citations?user=DGr0fVoAAAAJ&hl=en). I am also working with [Dr.Gen Luo](https://scholar.google.com.hk/citations?user=EyZqU9gAAAAJ&hl=zh-CN) at Shanghai AI Lab and [Prof. Rongrong Ji](https://scholar.google.com/citations?user=lRSD7PQAAAAJ&hl=en). Previously, I received my Bachelor's degree from Technical University of Denmark supervised by [Prof. Dim P. Papadopoulos](https://scholar.google.com/citations?user=-_JAhdQAAAAJ&hl=en). My research interests span in :
 - **Multimodal Foundation Model**: Developing native multimodal foundation models or agents which can perform both understanding and generation tasks from video,language.
 - **Efficient deep learning**: I am interested in how to train or inference large models more efficiently, especially tackling the sparsity nature of nerual networks.
 
