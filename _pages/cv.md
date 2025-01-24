@@ -14,6 +14,10 @@ Education
 
 Research experience
 ======
+* 2025: Research Assistant
+  * MBZUAI
+  * Duties included: Conducting research on MLLM and Efficient Foundation Model
+  
 * 2024: Remote Research Assistant
   * Shanghai AI Lab
   * Duties included: Conducting research on MLLM and Efficient Foundation Model
