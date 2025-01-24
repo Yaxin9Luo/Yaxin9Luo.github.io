@@ -15,7 +15,7 @@ Hello! I am a Research Assistant and will start my PhD in August,2025 at [MBZUAI
 
 News
 ======
-- [2025-01-22] **γ-MoD** is accepted by ICLR 2024, see you in Singapore!
+- [2025-01-22] **γ-MoD** is accepted by ICLR 2025, see you in Singapore!
 
 Selected Publications
 ======
@@ -29,6 +29,6 @@ For full and up-to-date publication list, please refer to my [Google Scholar](ht
   * [Paper](https://link.springer.com/chapter/10.1007/978-3-031-72624-8_12) | [Code](https://github.com/Yaxin9Luo/APL)
 
 * <img src="./images/MoD.png" width="400px" align="left" style="margin-right:10px"> **γ-MoD: Exploring Mixture-of-Depth Adaptation for Multimodal Large Language Models**
-  * ICLR 2024
+  * ICLR 2025
   * Yaxin Luo, Gen Luo, Jiayi Ji, Yiyi Zhou, Xiaoshuai Sun, Zhiqiang Shen, Rongrong Ji
   * [Paper](https://arxiv.org/abs/2410.13859) | [Code](https://github.com/Yaxin9Luo/gamma-MoD)
