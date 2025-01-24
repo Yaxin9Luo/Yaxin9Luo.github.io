@@ -14,6 +14,7 @@ Education
 
 Research experience
 ======
+
 * 2025: Research Assistant
   * MBZUAI
   * Duties included: Conducting research on MLLM and Efficient Foundation Model
