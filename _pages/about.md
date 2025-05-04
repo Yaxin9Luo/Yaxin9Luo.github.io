@@ -36,5 +36,5 @@ For full and up-to-date publication list, please refer to my [Google Scholar](ht
 
 * <img src="./images/DViN.png" width="400px" align="left" style="margin-right:10px"> **DViN: Dynamic Visual Routing Network for Weakly Supervised Referring Expression Comprehension**
   * CVPR 2025
-  * iaofu Chen, Yaxin Luo, Gen Luo, Jiayi Ji, Henghui Ding, Yiyi Zhou
+  * Xiaofu Chen, Yaxin Luo, Gen Luo, Jiayi Ji, Henghui Ding, Yiyi Zhou
   * [Paper](coming soon) | [Code](https://github.com/XxFChen/DViN)
