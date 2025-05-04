@@ -33,3 +33,8 @@ For full and up-to-date publication list, please refer to my [Google Scholar](ht
   * ICLR 2025
   * Yaxin Luo, Gen Luo, Jiayi Ji, Yiyi Zhou, Xiaoshuai Sun, Zhiqiang Shen, Rongrong Ji
   * [Paper](https://arxiv.org/abs/2410.13859) | [Code](https://github.com/Yaxin9Luo/gamma-MoD)
+
+* <img src="./images/DViN.png" width="400px" align="left" style="margin-right:10px"> **DViN: Dynamic Visual Routing Network for Weakly Supervised Referring Expression Comprehension**
+  * CVPR 2025
+  * iaofu Chen, Yaxin Luo, Gen Luo, Jiayi Ji, Henghui Ding, Yiyi Zhou
+  * [Paper](coming soon) | [Code](https://github.com/XxFChen/DViN)
