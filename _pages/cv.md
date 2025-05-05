@@ -9,6 +9,7 @@ redirect_from:
 
 Education
 ======
+* PhD. in Machine Learning, MBZUAI, 2025--2029
 * Bsc. in General Engineering, Technical University of Denmark, 2021--2024
 * Bsc in Mathematics, University of Edinburgh, 2020--2021
 
