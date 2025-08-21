@@ -12,7 +12,7 @@ About Me
 Hello! I am a First-Year Machine Learning PhD student at [MBZUAI](https://mbzuai.ac.ae/), advising by [Prof. Zhiqiang Shen](https://scholar.google.com/citations?user=DGr0fVoAAAAJ&hl=en) and [Prof. Mohsen Guizani](https://scholar.google.com/citations?user=RigrYkcAAAAJ&hl=en). I am also closely working with my friend [Xiaofu Chen](https://scholar.google.com/citations?user=dks3OoUAAAAJ&hl=en). Previously, I was a Research Assistant at [MBZUAI](https://mbzuai.ac.ae/) as well and received my Bachelor's degree from Technical University of Denmark supervised by [Prof. Dim P. Papadopoulos](https://scholar.google.com/citations?user=-_JAhdQAAAAJ&hl=en). My research interests span in :
 - **Multimodal Foundation Model**: Developing native multimodal foundation models which can perform both understanding and generation tasks from video,language. **(My Long-Term never changed research interest and belief)**
 - **Efficient deep learning**: I am interested in how to train or inference large models more efficiently, especially tackling the sparsity nature of nerual networks. **(Support the first goal)**
-- **Multimodal Agents and Applications**: Innovate easy to use Multimodal Agents to automate complicated real-world complex tasks. **(Application of the first goal)**
+- **Applications of Efficient Ai Models**: Build deployable, low-latency AI service that’s affordable and widely accessible, delivering measurable real-world impact.
 
 News
 ======
