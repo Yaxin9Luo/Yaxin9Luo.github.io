@@ -27,20 +27,20 @@ For full and up-to-date publication list, please refer to my [Google Scholar](ht
 
 * <img src="./images/opencaptchaworld.png" width="400px" align="left" style="margin-right:10px"> **OpenCaptchaWorld: AComprehensive Web-based Platform for Testing and Benchmarking Multimodal LLM Agents**
   * Arxiv
-  * Yaxin Luo*, Zhaoyi Li*, Jiacheng Liu, Jiacheng Cui, Xiaohan Zhao, Zhiqiang Shen
+  * **Yaxin Luo** *, Zhaoyi Li *, Jiacheng Liu, Jiacheng Cui, Xiaohan Zhao, Zhiqiang Shen
   * [Paper](https://arxiv.org/abs/2505.24878) | [Code](https://github.com/MetaAgentX/OpenCaptchaWorld) | [Demo](https://huggingface.co/spaces/YaxinLuo/Open_CaptchaWorld)
 
 * <img src="./images/APL.png" width="400px" align="left" style="margin-right:10px"> **APL: Anchor-Based Prompt Learning for One-Stage Weakly Supervised Referring Expression Comprehension**
   * ECCV 2024
-  * Yaxin Luo,Jiayi Ji, Xiaofu Chen, Yuxin Zhang, Tianhe Ren, Gen Luo
+  * **Yaxin Luo**,Jiayi Ji, Xiaofu Chen, Yuxin Zhang, Tianhe Ren, Gen Luo
   * [Paper](https://link.springer.com/chapter/10.1007/978-3-031-72624-8_12) | [Code](https://github.com/Yaxin9Luo/APL)
 
 * <img src="./images/MoD.png" width="400px" align="left" style="margin-right:10px"> **γ-MoD: Exploring Mixture-of-Depth Adaptation for Multimodal Large Language Models**
   * ICLR 2025
-  * Yaxin Luo, Gen Luo, Jiayi Ji, Yiyi Zhou, Xiaoshuai Sun, Zhiqiang Shen, Rongrong Ji
+  * **Yaxin Luo**, Gen Luo, Jiayi Ji, Yiyi Zhou, Xiaoshuai Sun, Zhiqiang Shen, Rongrong Ji
   * [Paper](https://arxiv.org/abs/2410.13859) | [Code](https://github.com/Yaxin9Luo/gamma-MoD)
 
 * <img src="./images/DViN.png" width="400px" align="left" style="margin-right:10px"> **DViN: Dynamic Visual Routing Network for Weakly Supervised Referring Expression Comprehension**
   * CVPR 2025
-  * Xiaofu Chen, Yaxin Luo, Gen Luo, Jiayi Ji, Henghui Ding, Yiyi Zhou
+  * Xiaofu Chen, **Yaxin Luo**, Gen Luo, Jiayi Ji, Henghui Ding, Yiyi Zhou
   * [Paper](https://openaccess.thecvf.com/content/CVPR2025/html/Chen_DViN_Dynamic_Visual_Routing_Network_for_Weakly_Supervised_Referring_Expression_CVPR_2025_paper.html) | [Code](https://github.com/XxFChen/DViN)
