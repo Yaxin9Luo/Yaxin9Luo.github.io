@@ -27,7 +27,7 @@ For full and up-to-date publication list, please refer to my [Google Scholar](ht
 
 * <img src="./images/opencaptchaworld.png" width="400px" align="left" style="margin-right:10px"> **OpenCaptchaWorld: AComprehensive Web-based Platform for Testing and Benchmarking Multimodal LLM Agents**
   * Arxiv
-  * Yaxin Luo, Zhaoyi Li, Jiacheng Liu, Jiacheng Cui, Xiaohan Zhao, Zhiqiang Shen
+  * Yaxin Luo*, Zhaoyi Li*, Jiacheng Liu, Jiacheng Cui, Xiaohan Zhao, Zhiqiang Shen
   * [Paper](https://arxiv.org/abs/2505.24878) | [Code](https://github.com/MetaAgentX/OpenCaptchaWorld) | [Demo](https://huggingface.co/spaces/YaxinLuo/Open_CaptchaWorld)
 
 * <img src="./images/APL.png" width="400px" align="left" style="margin-right:10px"> **APL: Anchor-Based Prompt Learning for One-Stage Weakly Supervised Referring Expression Comprehension**
