@@ -10,9 +10,9 @@ redirect_from:
 About Me
 ======
 Hello! I am a First-Year Machine Learning PhD student at [MBZUAI](https://mbzuai.ac.ae/), advising by [Prof. Zhiqiang Shen](https://scholar.google.com/citations?user=DGr0fVoAAAAJ&hl=en). I am also closely working with my friend [Xiaofu Chen](https://scholar.google.com/citations?user=dks3OoUAAAAJ&hl=en). Previously, I was a Research Assistant at [MBZUAI](https://mbzuai.ac.ae/) as well and received my Bachelor's degree from Technical University of Denmark supervised by [Prof. Dim P. Papadopoulos](https://scholar.google.com/citations?user=-_JAhdQAAAAJ&hl=en). My research interests span in :
-- **Multimodal Foundation Model**: Developing native multimodal foundation models which can perform both understanding and generation tasks from video,language. **(My Long-Term never changed research interest and belief)**
-- **Efficient deep learning**: I am interested in how to train or inference large models more efficiently, especially tackling the sparsity nature of nerual networks. **(Support the first goal)**
-- **Applications of Efficient Ai Models**: Build deployable, low-latency AI service that’s affordable and widely accessible, delivering measurable real-world impact.
+- **Multimodal Foundation Model / World Model**: Developing native multimodal foundation models which can perform  **understanding**, **reasoning**, **generation** tasks from video,language, speech. These models will serve as the core intelligence—the "brain"—for Embodied AI, Robotics, and many other applications. **(My Long-Term research interest and belief)**
+- **Data Synthesis**: Foundation Models are data consuming monsters, the quantity and quality of real-world data is way more behind to train a multimodal foundation model or world model, using advanced generative models to create vast quantities of diverse, high-quality training data can accelerates the development of this progress. **(Support the first goal)**
+- **Efficient deep learning**: Improving training and inference efficiency of large foundation models from data, system and model perspectives, invoking real-world services. **(Support the first goal)**
 
 News
 ======
