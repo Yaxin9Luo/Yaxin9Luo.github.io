@@ -16,8 +16,7 @@ Hello! I am a First-Year Machine Learning PhD student at [MBZUAI](https://mbzuai
 
 News
 ======
-- [2025-05-16] **DRAG** is accepted by ACL 2025 main conference!!
-- [2025-01-22] **γ-MoD** is accepted by ICLR 2025, see you in Singapore!
+- Recently, I am focusing on developing physical law obeyed Video Generation Foundation Model using RL post-training techniques. 
 
 Selected Publications
 ======
