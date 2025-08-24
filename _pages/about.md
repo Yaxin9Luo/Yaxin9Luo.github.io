@@ -18,11 +18,11 @@ News
 ======
 - Recently, I am focusing on developing physical law obeyed Video Generation Foundation Model using RL post-training techniques, some of my thoughts:
 
-- 1. Use a reward model (e.g., a classifier) to judge whether generated videos obey physical laws, instead of hand-crafted reward functions like people did in LLM post training on math/code.
+  - Use a reward model (e.g., a classifier) to judge whether generated videos obey physical laws, instead of hand-crafted reward functions like people did in LLM post training on math/code.
 
-- 2. Give rewards per denoising/sampling step and apply step-wise policy gradients; see ideas similar to flow-matching policy gradient. Anologue to token-level or sequece level policy gradient.
+  - Give rewards per denoising/sampling step and apply step-wise policy gradients; see ideas similar to flow-matching policy gradient. Anologue to token-level or sequece level policy gradient.
 
-- 3. During RL, estimate the entropy of the video generation trajectory (analogy: LLM token entropy) to down-weight low-entropy parts and focus optimization on high-entropy parts, improving training efficiency.
+  - During RL, estimate the entropy of the video generation trajectory (analogy: LLM token entropy) to down-weight low-entropy parts and focus optimization on high-entropy parts, improving training efficiency.
 
 Selected Publications
 ======
