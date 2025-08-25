@@ -11,7 +11,7 @@ About Me
 ======
 Hello! I am a First-Year Machine Learning PhD student at [MBZUAI](https://mbzuai.ac.ae/), advising by [Prof. Zhiqiang Shen](https://zhiqiangshen.com/). I am also closely working with my friend [Xiaofu Chen](https://xxfchen.github.io/XiaofuChen/). Previously, I was a Research Assistant at [MBZUAI](https://mbzuai.ac.ae/) and received my Bachelor's degree from [Technical University of Denmark](https://www.dtu.dk/english/) supervised by [Prof. Dim P. Papadopoulos](https://dimipapa.github.io/). My research interests span in :
 - **Multimodal Foundation Model / World Model**: Developing native multimodal foundation models which can perform  **understanding**, **reasoning**, **generation** tasks from video,language, speech. These models will serve as the core intelligence—the "brain"—for Embodied AI, Robotics, and many other applications. **(My Long-Term research interest and belief)**
-- **Reinforcement Learning**: Invoking the new skills for generative models, robotics and leverage broad knowledge from pretraining. Or train an agent in the world model environment by RL. 
+- **Reinforcement Learning**: I study reinforcement learning on top of pretrained and SFT-initialized models to move beyond imitation—unlocking new capabilities in generative modeling and robotics, including training agents inside learned world-model environments.
 - **Efficient deep learning (More Data-centric now)**: Improving training and inference efficiency of large foundation models from data, system and model perspectives, invoking real-world services. 
 
 News
