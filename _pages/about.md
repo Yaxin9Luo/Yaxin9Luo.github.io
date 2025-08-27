@@ -18,7 +18,7 @@ Hello! I am a First-Year Machine Learning PhD student at [MBZUAI](https://mbzuai
 
 News
 ======
-- OpenCaptchaWorld released and expand to double.
+- [OpenCaptchaWorld](https://github.com/MetaAgentX/OpenCaptchaWorld) released and expand to double.
 
 
 Selected Publications
