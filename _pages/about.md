@@ -110,9 +110,9 @@ Hello! I am a First-Year Machine Learning PhD student at [MBZUAI](https://mbzuai
 
 News
 ======
-<div class="news-item">
-🚀 <strong>[OpenCaptchaWorld](https://github.com/MetaAgentX/OpenCaptchaWorld)</strong> released and expanded to double the dataset size!
-</div>
+
+-- 🚀 <strong>[OpenCaptchaWorld](https://github.com/MetaAgentX/OpenCaptchaWorld)</strong> released and expanded to double the dataset size!
+
 
 
 Selected Publications
