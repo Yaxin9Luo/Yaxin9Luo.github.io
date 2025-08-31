@@ -241,17 +241,17 @@ For full and up-to-date publication list, please refer to my [Google Scholar](ht
   text-decoration: underline;
 }
 
-/* ✅ 人名：暗紫 */
+/* ✅ 人名：news-item blue */
 .about-me-content .advisor-link,
 .about-me-content .collaborator-link {
-  color: #5B2B82;
+  color: #3498db;
   font-weight: 600;
   text-decoration: none;
   transition: all 0.2s ease;
 }
 .about-me-content .advisor-link:hover,
 .about-me-content .collaborator-link:hover {
-  color: #4A246C;
+  color: #2980b9;
   text-decoration: underline;
 }
 
