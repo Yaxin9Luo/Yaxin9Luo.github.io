@@ -12,12 +12,33 @@ About Me
 </div>
 
 <div class="about-me-content">
-Hello! I am a First-Year Machine Learning PhD student at [MBZUAI](https://mbzuai.ac.ae/), advised by [Prof. Zhiqiang Shen](https://zhiqiangshen.com/), [Dr.Fabio Pizzati](https://fabvio.github.io/) and [Prof.Ivan Laptev](https://www.di.ens.fr/~laptev/) . I am also closely working with my friend [Xiaofu Chen](https://xxfchen.github.io/XiaofuChen/). Previously, I was a Research Assistant at MBZUAI and received my Bachelor's degree from [Technical University of Denmark](https://www.dtu.dk/english/) supervised by [Prof. Dim P. Papadopoulos](https://dimipapa.github.io/). Recently, I am focusing on **physical aware learning** for vision models and **analysis the pretrain data of LLM**. My research interests span in :
-- **Multimodal Foundation Model / World Model**: Developing native multimodal foundation models which can perform  **understanding**, **reasoning**, **generation** tasks from video,language, speech. These models will serve as the core intelligence—the "brain"—for Embodied AI, Robotics, and many other applications. **(My Long-Term research interest and belief)**
-
-- **Reinforcement Learning**: I study reinforcement learning on top of pretrained and SFT-initialized models to move beyond imitation—unlocking new capabilities in generative modeling and robotics, including training agents inside learned world-model environments.
-
-- **Data-centric Machine Learning**: Analysis and Understanding the training data of the model, improve the data quality, compress the data for training efficiency, scalable and cheap data pipline for curating or synthesis high quality training data.
+  <div class="intro-text">
+    Hello! I am a First-Year Machine Learning PhD student at <a href="https://mbzuai.ac.ae/" class="institution-link">MBZUAI</a>, advised by <a href="https://zhiqiangshen.com/" class="advisor-link">Prof. Zhiqiang Shen</a>, <a href="https://fabvio.github.io/" class="advisor-link">Dr. Fabio Pizzati</a> and <a href="https://www.di.ens.fr/~laptev/" class="advisor-link">Prof. Ivan Laptev</a>. I am also closely working with my friend <a href="https://xxfchen.github.io/XiaofuChen/" class="collaborator-link">Xiaofu Chen</a>.
+  </div>
+  
+  <div class="background-text">
+    Previously, I was a Research Assistant at MBZUAI and received my Bachelor's degree from <a href="https://www.dtu.dk/english/" class="institution-link">Technical University of Denmark</a> supervised by <a href="https://dimipapa.github.io/" class="advisor-link">Prof. Dim P. Papadopoulos</a>.
+  </div>
+  
+  <div class="current-focus">
+    Recently, I am focusing on <strong>physical aware learning</strong> for vision models and <strong>analysis of pretrain data of LLM</strong>.
+  </div>
+  
+  <div class="research-interests">
+    <h4>My research interests span:</h4>
+    
+    <div class="research-item">
+      **Multimodal Foundation Model / World Model**: Developing native multimodal foundation models which can perform **understanding**, **reasoning**, **generation** tasks from video, language, speech. These models will serve as the core intelligence—the "brain"—for Embodied AI, Robotics, and many other applications. *(My Long-Term research interest and belief)*
+    </div>
+    
+    <div class="research-item">
+      **Reinforcement Learning**: I study reinforcement learning on top of pretrained and SFT-initialized models to move beyond imitation—unlocking new capabilities in generative modeling and robotics, including training agents inside learned world-model environments.
+    </div>
+    
+    <div class="research-item">
+      **Data-centric Machine Learning**: Analysis and understanding of training data, improving data quality, compressing data for training efficiency, and scalable data pipelines for curating or synthesizing high-quality training data.
+    </div>
+  </div>
 </div>
 
 
@@ -243,6 +264,97 @@ For full and up-to-date publication list, please refer to my [Google Scholar](ht
 .about-me-content a:hover {
   color: #9b59b6;
   text-decoration: underline;
+}
+
+/* Enhanced About Me content structure */
+.about-me-content .intro-text {
+  margin-bottom: 20px;
+  line-height: 1.7;
+  font-size: 1.05em;
+}
+
+.about-me-content .background-text {
+  margin-bottom: 20px;
+  line-height: 1.6;
+  color: #555;
+}
+
+.about-me-content .current-focus {
+  margin-bottom: 25px;
+  padding: 15px;
+  background: rgba(52, 152, 219, 0.1);
+  border-radius: 8px;
+  border-left: 3px solid #3498db;
+  font-weight: 500;
+}
+
+.about-me-content .research-interests {
+  margin-top: 25px;
+}
+
+.about-me-content .research-interests h4 {
+  color: #2c3e50;
+  margin-bottom: 15px;
+  font-size: 1.1em;
+  font-weight: 600;
+}
+
+.about-me-content .research-item {
+  margin: 15px 0;
+  padding: 15px;
+  background: rgba(52, 152, 219, 0.05);
+  border-radius: 8px;
+  border-left: 3px solid #3498db;
+  transition: all 0.3s ease;
+  line-height: 1.6;
+}
+
+.about-me-content .research-item:hover {
+  background: rgba(52, 152, 219, 0.1);
+  transform: translateX(5px);
+  box-shadow: 0 4px 15px rgba(52, 152, 219, 0.1);
+}
+
+/* Link styling */
+.about-me-content .institution-link {
+  color: #3498db;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.about-me-content .institution-link:hover {
+  color: #2980b9;
+  text-decoration: underline;
+}
+
+.about-me-content .advisor-link {
+  color: #9b59b6;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.about-me-content .advisor-link:hover {
+  color: #8e44ad;
+  text-decoration: underline;
+}
+
+.about-me-content .collaborator-link {
+  color: #e67e22;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.about-me-content .collaborator-link:hover {
+  color: #d35400;
+  text-decoration: underline;
+}
+
+.about-me-content em {
+  color: #7f8c8d;
+  font-style: italic;
 }
 
 /* Responsive design for badges */
