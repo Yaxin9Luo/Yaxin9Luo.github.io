@@ -1,6 +1,6 @@
 ---
 permalink: /
-title: "Hi there! 👋 I am Yaxin Luo."
+title: '<span class="greeting-title">Hi there! <span class="wave-emoji">👋</span> I am <span class="name-highlight">Yaxin Luo</span></span>'
 author_profile: true
 redirect_from: 
   - /about/
@@ -324,14 +324,14 @@ For full and up-to-date publication list, please refer to my [Google Scholar](ht
 
 /* Link styling */
 .about-me-content .institution-link {
-  color: #3498db;
+  color: #ff9a9e;
   font-weight: 600;
   text-decoration: none;
   transition: all 0.3s ease;
 }
 
 .about-me-content .institution-link:hover {
-  color: #2980b9;
+  color: #fad0c4;
   text-decoration: underline;
 }
 
@@ -362,6 +362,113 @@ For full and up-to-date publication list, please refer to my [Google Scholar](ht
 .about-me-content em {
   color: #7f8c8d;
   font-style: italic;
+}
+
+/* Cool Greeting Title Animations */
+.greeting-title {
+  display: inline-block;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradient-shift 3s ease infinite;
+  font-weight: 700;
+  position: relative;
+}
+
+.greeting-title:before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
+  background-size: 200% 200%;
+  animation: gradient-shift 3s ease infinite;
+  z-index: -1;
+  border-radius: 8px;
+  opacity: 0.3;
+  filter: blur(4px);
+}
+
+.wave-emoji {
+  display: inline-block;
+  animation: wave 2s ease-in-out infinite;
+  transform-origin: 70% 70%;
+  font-size: 1.2em;
+}
+
+@keyframes wave {
+  0%, 100% { transform: rotate(0deg); }
+  10% { transform: rotate(14deg); }
+  20% { transform: rotate(-8deg); }
+  30% { transform: rotate(14deg); }
+  40% { transform: rotate(-4deg); }
+  50% { transform: rotate(10deg); }
+  60% { transform: rotate(0deg); }
+}
+
+.name-highlight {
+  background: linear-gradient(135deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: rainbow-shift 4s ease infinite;
+  font-weight: 800;
+  position: relative;
+  text-shadow: 0 0 30px rgba(255, 107, 107, 0.3);
+}
+
+.name-highlight:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
+  background-size: 300% 300%;
+  animation: rainbow-shift 4s ease infinite;
+  z-index: -1;
+  border-radius: 4px;
+  opacity: 0.2;
+  filter: blur(8px);
+}
+
+@keyframes rainbow-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Glowing effect for the entire title */
+.greeting-title {
+  box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
+  transition: all 0.3s ease;
+}
+
+.greeting-title:hover {
+  transform: scale(1.02);
+  box-shadow: 0 0 30px rgba(102, 126, 234, 0.5);
+}
+
+/* Sparkle effect */
+.greeting-title:after {
+  content: '✨';
+  position: absolute;
+  top: -10px;
+  right: -15px;
+  font-size: 0.8em;
+  animation: sparkle 2s ease-in-out infinite;
+  opacity: 0.8;
+}
+
+@keyframes sparkle {
+  0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.8; }
+  50% { transform: scale(1.2) rotate(180deg); opacity: 1; }
 }
 
 /* Responsive design for badges */
