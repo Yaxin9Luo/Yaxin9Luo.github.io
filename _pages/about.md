@@ -241,17 +241,17 @@ For full and up-to-date publication list, please refer to my [Google Scholar](ht
   text-decoration: underline;
 }
 
-/* ✅ 人名：news-item blue */
+/* ✅ 人名：soft blue-green */
 .about-me-content .advisor-link,
 .about-me-content .collaborator-link {
-  color: #3498db;
+  color: #5dade2;
   font-weight: 600;
   text-decoration: none;
   transition: all 0.2s ease;
 }
 .about-me-content .advisor-link:hover,
 .about-me-content .collaborator-link:hover {
-  color: #2980b9;
+  color: #3498db;
   text-decoration: underline;
 }
 
