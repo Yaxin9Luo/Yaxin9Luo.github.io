@@ -348,14 +348,14 @@ For full and up-to-date publication list, please refer to my [Google Scholar](ht
 }
 
 .about-me-content .collaborator-link {
-  color: #e67e22;
+  color: #7f8c8d;
   font-weight: 500;
   text-decoration: none;
   transition: all 0.3s ease;
 }
 
 .about-me-content .collaborator-link:hover {
-  color: #d35400;
+  color: #7f8c8d;
   text-decoration: underline;
 }
 
