@@ -336,14 +336,14 @@ For full and up-to-date publication list, please refer to my [Google Scholar](ht
 }
 
 .about-me-content .advisor-link {
-  color: #9b59b6;
+  color: #d4a5f7;
   font-weight: 500;
   text-decoration: none;
   transition: all 0.3s ease;
 }
 
 .about-me-content .advisor-link:hover {
-  color: #8e44ad;
+  color: #c084fc;
   text-decoration: underline;
 }
 
