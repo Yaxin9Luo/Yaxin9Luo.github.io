@@ -16,103 +16,13 @@ Hello! I am a First-Year Machine Learning PhD student at [MBZUAI](https://mbzuai
 
 - **Data-centric Machine Learning**: Analysis and Understanding the training data of the model, improve the data quality, compress the data for training efficiency, scalable and cheap data pipline for curating or synthesis high quality training data.
 
-## 🛠️ Technical Skills
-
-<div class="skills-container">
-  <div class="skill-category">
-    <h4>🤖 Machine Learning</h4>
-    <div class="skill-tags">
-      <span class="skill-tag ml">PyTorch</span>
-      <span class="skill-tag ml">TensorFlow</span>
-      <span class="skill-tag ml">Transformers</span>
-      <span class="skill-tag ml">CUDA</span>
-      <span class="skill-tag ml">MLflow</span>
-    </div>
-  </div>
-  
-  <div class="skill-category">
-    <h4>💻 Programming</h4>
-    <div class="skill-tags">
-      <span class="skill-tag prog">Python</span>
-      <span class="skill-tag prog">C++</span>
-      <span class="skill-tag prog">JavaScript</span>
-      <span class="skill-tag prog">MATLAB</span>
-      <span class="skill-tag prog">R</span>
-    </div>
-  </div>
-  
-  <div class="skill-category">
-    <h4>🌐 Tools & Platforms</h4>
-    <div class="skill-tags">
-      <span class="skill-tag tools">Docker</span>
-      <span class="skill-tag tools">AWS</span>
-      <span class="skill-tag tools">Git</span>
-      <span class="skill-tag tools">Linux</span>
-      <span class="skill-tag tools">Slurm</span>
-    </div>
-  </div>
-</div>
-
-<style>
-.skills-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 20px;
-  margin: 20px 0;
-}
-
-.skill-category {
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
-  padding: 20px;
-  border-radius: 12px;
-  border-left: 4px solid #667eea;
-}
-
-.skill-category h4 {
-  margin: 0 0 15px 0;
-  color: #667eea;
-  font-weight: 600;
-}
-
-.skill-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.skill-tag {
-  padding: 6px 12px;
-  border-radius: 20px;
-  font-size: 0.85em;
-  font-weight: 500;
-  color: white;
-  transition: all 0.3s ease;
-  cursor: pointer;
-}
-
-.skill-tag:hover {
-  transform: translateY(-2px) scale(1.05);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-}
-
-.skill-tag.ml {
-  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-}
-
-.skill-tag.prog {
-  background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-}
-
-.skill-tag.tools {
-  background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
-}
-</style> 
 
 News
 ======
 
--- 🚀 <strong>[OpenCaptchaWorld](https://github.com/MetaAgentX/OpenCaptchaWorld)</strong> released and expanded to double the dataset size!
-
+<div class="news-item">
+🚀 <strong><a href="https://github.com/MetaAgentX/OpenCaptchaWorld">OpenCaptchaWorld</a></strong> released and expanded to double the dataset size!
+</div>
 
 
 Selected Publications
