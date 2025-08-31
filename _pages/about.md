@@ -7,14 +7,18 @@ redirect_from:
   - /about.html
 ---
 
+<div class="section-header">
 About Me
-======
+</div>
+
+<div class="about-me-content">
 Hello! I am a First-Year Machine Learning PhD student at [MBZUAI](https://mbzuai.ac.ae/), advised by [Prof. Zhiqiang Shen](https://zhiqiangshen.com/), [Dr.Fabio Pizzati](https://fabvio.github.io/) and [Prof.Ivan Laptev](https://www.di.ens.fr/~laptev/) . I am also closely working with my friend [Xiaofu Chen](https://xxfchen.github.io/XiaofuChen/). Previously, I was a Research Assistant at MBZUAI and received my Bachelor's degree from [Technical University of Denmark](https://www.dtu.dk/english/) supervised by [Prof. Dim P. Papadopoulos](https://dimipapa.github.io/). Recently, I am focusing on **physical aware learning** for vision models and **analysis the pretrain data of LLM**. My research interests span in :
 - **Multimodal Foundation Model / World Model**: Developing native multimodal foundation models which can perform  **understanding**, **reasoning**, **generation** tasks from video,language, speech. These models will serve as the core intelligence—the "brain"—for Embodied AI, Robotics, and many other applications. **(My Long-Term research interest and belief)**
 
 - **Reinforcement Learning**: I study reinforcement learning on top of pretrained and SFT-initialized models to move beyond imitation—unlocking new capabilities in generative modeling and robotics, including training agents inside learned world-model environments.
 
 - **Data-centric Machine Learning**: Analysis and Understanding the training data of the model, improve the data quality, compress the data for training efficiency, scalable and cheap data pipline for curating or synthesis high quality training data.
+</div>
 
 
 News
@@ -170,6 +174,75 @@ For full and up-to-date publication list, please refer to my [Google Scholar](ht
   transform: translateX(5px);
   box-shadow: 0 4px 15px rgba(52, 152, 219, 0.2);
   background: linear-gradient(135deg, rgba(52, 152, 219, 0.15) 0%, rgba(155, 89, 182, 0.15) 100%);
+}
+
+/* About Me section enhancement */
+.section-header {
+  font-size: 1.5em;
+  font-weight: 700;
+  color: #2c3e50;
+  margin: 30px 0 15px 0;
+  padding-bottom: 8px;
+  border-bottom: 3px solid #3498db;
+  position: relative;
+}
+
+.section-header:after {
+  content: '';
+  position: absolute;
+  bottom: -3px;
+  left: 0;
+  width: 50px;
+  height: 3px;
+  background: linear-gradient(90deg, #3498db, #9b59b6);
+}
+
+.about-me-content {
+  padding: 20px;
+  margin: 15px 0;
+  background: linear-gradient(135deg, rgba(52, 152, 219, 0.1) 0%, rgba(155, 89, 182, 0.1) 100%);
+  border-radius: 12px;
+  border-left: 4px solid #3498db;
+  transition: all 0.3s ease;
+  line-height: 1.6;
+}
+
+.about-me-content:hover {
+  transform: translateX(3px);
+  box-shadow: 0 8px 25px rgba(52, 152, 219, 0.1);
+}
+
+.about-me-content ul {
+  margin: 15px 0;
+  padding-left: 20px;
+}
+
+.about-me-content ul li {
+  margin: 8px 0;
+  padding: 8px 0;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.about-me-content ul li:hover {
+  background: rgba(52, 152, 219, 0.1);
+  padding-left: 10px;
+}
+
+.about-me-content strong {
+  color: #3498db;
+  font-weight: 600;
+}
+
+.about-me-content a {
+  color: #3498db;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.about-me-content a:hover {
+  color: #9b59b6;
+  text-decoration: underline;
 }
 
 /* Responsive design for badges */
