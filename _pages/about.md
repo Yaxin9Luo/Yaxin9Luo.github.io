@@ -17,7 +17,7 @@ About Me
   </div>
   
   <div class="background-text">
-    Previously, I was a Research Assistant at MBZUAI and received my Bachelor's degree from <a href="https://www.dtu.dk/english/" class="institution-link">Technical University of Denmark</a> supervised by <a href="https://dimipapa.github.io/" class="advisor-link">Prof. Dim P. Papadopoulos</a>.
+    Previously, I was a Research Assistant at <strong>MBZUAI</strong> and received my Bachelor's degree from <a href="https://www.dtu.dk/english/" class="institution-link">Technical University of Denmark</a> supervised by <a href="https://dimipapa.github.io/" class="advisor-link">Prof. Dim P. Papadopoulos</a>.
   </div>
   
   <div class="current-focus">
@@ -119,68 +119,44 @@ For full and up-to-date publication list, please refer to my [Google Scholar](ht
 .venue-badge.cvpr {
   background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
 }
-
-.venue-badge.cvpr:hover {
-  box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
-}
+.venue-badge.cvpr:hover { box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4); }
 
 .venue-badge.eccv {
   background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
 }
-
-.venue-badge.eccv:hover {
-  box-shadow: 0 6px 20px rgba(155, 89, 182, 0.4);
-}
+.venue-badge.eccv:hover { box-shadow: 0 6px 20px rgba(155, 89, 182, 0.4); }
 
 .venue-badge.iclr {
   background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
 }
-
-.venue-badge.iclr:hover {
-  box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
-}
+.venue-badge.iclr:hover { box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4); }
 
 .venue-badge.arxiv {
   background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
 }
-
-.venue-badge.arxiv:hover {
-  box-shadow: 0 6px 20px rgba(243, 156, 18, 0.4);
-}
+.venue-badge.arxiv:hover { box-shadow: 0 6px 20px rgba(243, 156, 18, 0.4); }
 
 .venue-badge.nips,
 .venue-badge.neurips {
   background: linear-gradient(135deg, #1abc9c 0%, #16a085 100%);
 }
-
 .venue-badge.nips:hover,
-.venue-badge.neurips:hover {
-  box-shadow: 0 6px 20px rgba(26, 188, 156, 0.4);
-}
+.venue-badge.neurips:hover { box-shadow: 0 6px 20px rgba(26, 188, 156, 0.4); }
 
 .venue-badge.icml {
   background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%);
 }
-
-.venue-badge.icml:hover {
-  box-shadow: 0 6px 20px rgba(52, 73, 94, 0.4);
-}
+.venue-badge.icml:hover { box-shadow: 0 6px 20px rgba(52, 73, 94, 0.4); }
 
 .venue-badge.aaai {
   background: linear-gradient(135deg, #e67e22 0%, #d35400 100%);
 }
-
-.venue-badge.aaai:hover {
-  box-shadow: 0 6px 20px rgba(230, 126, 34, 0.4);
-}
+.venue-badge.aaai:hover { box-shadow: 0 6px 20px rgba(230, 126, 34, 0.4); }
 
 .venue-badge.ijcai {
   background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
 }
-
-.venue-badge.ijcai:hover {
-  box-shadow: 0 6px 20px rgba(39, 174, 96, 0.4);
-}
+.venue-badge.ijcai:hover { box-shadow: 0 6px 20px rgba(39, 174, 96, 0.4); }
 
 /* News item enhanced styling */
 .news-item {
@@ -191,7 +167,6 @@ For full and up-to-date publication list, please refer to my [Google Scholar](ht
   border-left: 4px solid #3498db;
   transition: all 0.3s ease;
 }
-
 .news-item:hover {
   transform: translateX(5px);
   box-shadow: 0 4px 15px rgba(52, 152, 219, 0.2);
@@ -208,7 +183,6 @@ For full and up-to-date publication list, please refer to my [Google Scholar](ht
   border-bottom: 3px solid #3498db;
   position: relative;
 }
-
 .section-header:after {
   content: '';
   position: absolute;
@@ -228,143 +202,86 @@ For full and up-to-date publication list, please refer to my [Google Scholar](ht
   transition: all 0.3s ease;
   line-height: 1.6;
 }
-
 .about-me-content:hover {
   transform: translateX(3px);
   box-shadow: 0 8px 25px rgba(52, 152, 219, 0.1);
 }
 
-.about-me-content ul {
-  margin: 15px 0;
-  padding-left: 20px;
-}
-
+.about-me-content ul { margin: 15px 0; padding-left: 20px; }
 .about-me-content ul li {
-  margin: 8px 0;
-  padding: 8px 0;
-  border-radius: 8px;
-  transition: all 0.3s ease;
+  margin: 8px 0; padding: 8px 0; border-radius: 8px; transition: all 0.3s ease;
 }
+.about-me-content ul li:hover { background: rgba(52, 152, 219, 0.1); padding-left: 10px; }
 
-.about-me-content ul li:hover {
-  background: rgba(52, 152, 219, 0.1);
-  padding-left: 10px;
-}
-
+/* ✅ 只加粗，不上色 */
 .about-me-content strong {
-  color: #3498db;
-  font-weight: 600;
+  color: inherit;
+  font-weight: 700;
 }
 
+/* 全局链接（About 区域） */
 .about-me-content a {
   color: #3498db;
   text-decoration: none;
   transition: all 0.3s ease;
 }
-
 .about-me-content a:hover {
   color: #9b59b6;
   text-decoration: underline;
 }
 
-/* Enhanced About Me content structure */
-.about-me-content .intro-text {
-  margin-bottom: 20px;
-  line-height: 1.7;
-  font-size: 1.05em;
+/* ✅ 学校/机构：加粗，保持继承颜色 */
+.about-me-content .institution-link {
+  font-weight: 700;
+  color: inherit;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+.about-me-content .institution-link:hover {
+  text-decoration: underline;
 }
 
-.about-me-content .background-text {
-  margin-bottom: 20px;
-  line-height: 1.6;
-  color: #555;
+/* ✅ 人名：暗紫 */
+.about-me-content .advisor-link,
+.about-me-content .collaborator-link {
+  color: #5B2B82;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
 }
+.about-me-content .advisor-link:hover,
+.about-me-content .collaborator-link:hover {
+  color: #4A246C;
+  text-decoration: underline;
+}
+
+.about-me-content .intro-text { margin-bottom: 20px; line-height: 1.7; font-size: 1.05em; }
+.about-me-content .background-text { margin-bottom: 20px; line-height: 1.6; color: #555; }
 
 .about-me-content .current-focus {
-  margin-bottom: 25px;
-  padding: 15px;
+  margin-bottom: 25px; padding: 15px;
   background: rgba(173, 216, 230, 0.3);
-  border-radius: 8px;
-  border-left: 3px solid #87ceeb;
-  font-weight: 500;
+  border-radius: 8px; border-left: 3px solid #87ceeb; font-weight: 500;
 }
 
-.about-me-content .research-interests {
-  margin-top: 25px;
-}
-
-.about-me-content .research-interests h4 {
-  color: #2c3e50;
-  margin-bottom: 15px;
-  font-size: 1.1em;
-  font-weight: 600;
-}
-
-.about-me-content .research-interests ul {
-  margin: 0;
-  padding-left: 0;
-  list-style: none;
-}
-
+.about-me-content .research-interests { margin-top: 25px; }
+.about-me-content .research-interests h4 { color: #2c3e50; margin-bottom: 15px; font-size: 1.1em; font-weight: 600; }
+.about-me-content .research-interests ul { margin: 0; padding-left: 0; list-style: none; }
 .about-me-content .research-interests li {
-  margin: 15px 0;
-  padding: 15px;
+  margin: 15px 0; padding: 15px;
   background: rgba(173, 216, 230, 0.2);
-  border-radius: 8px;
-  border-left: 3px solid #87ceeb;
-  transition: all 0.3s ease;
-  line-height: 1.6;
+  border-radius: 8px; border-left: 3px solid #87ceeb;
+  transition: all 0.3s ease; line-height: 1.6;
 }
-
 .about-me-content .research-interests li:hover {
   background: rgba(173, 216, 230, 0.3);
   transform: translateX(5px);
   box-shadow: 0 4px 15px rgba(135, 206, 235, 0.2);
 }
 
-/* Link styling */
-.about-me-content .institution-link {
-  color: #ff9a9e;
-  font-weight: 600;
-  text-decoration: none;
-  transition: all 0.3s ease;
-}
+.about-me-content em { color: #7f8c8d; font-style: italic; }
 
-.about-me-content .institution-link:hover {
-  color: #fad0c4;
-  text-decoration: underline;
-}
-
-.about-me-content .advisor-link {
-  color: #d4a5f7;
-  font-weight: 500;
-  text-decoration: none;
-  transition: all 0.3s ease;
-}
-
-.about-me-content .advisor-link:hover {
-  color: #c084fc;
-  text-decoration: underline;
-}
-
-.about-me-content .collaborator-link {
-  color: #7f8c8d;
-  font-weight: 500;
-  text-decoration: none;
-  transition: all 0.3s ease;
-}
-
-.about-me-content .collaborator-link:hover {
-  color: #7f8c8d;
-  text-decoration: underline;
-}
-
-.about-me-content em {
-  color: #7f8c8d;
-  font-style: italic;
-}
-
-/* Cool Greeting Title Animations */
+/* Greeting Title (unchanged visual flair) */
 .greeting-title {
   display: inline-block;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
@@ -375,115 +292,28 @@ For full and up-to-date publication list, please refer to my [Google Scholar](ht
   animation: gradient-shift 3s ease infinite;
   font-weight: 700;
   position: relative;
-}
-
-.greeting-title:before {
-  content: '';
-  position: absolute;
-  top: -2px;
-  left: -2px;
-  right: -2px;
-  bottom: -2px;
-  background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
-  background-size: 200% 200%;
-  animation: gradient-shift 3s ease infinite;
-  z-index: -1;
-  border-radius: 8px;
-  opacity: 0.3;
-  filter: blur(4px);
-}
-
-.wave-emoji {
-  display: inline-block;
-  animation: wave 2s ease-in-out infinite;
-  transform-origin: 70% 70%;
-  font-size: 1.2em;
-}
-
-@keyframes wave {
-  0%, 100% { transform: rotate(0deg); }
-  10% { transform: rotate(14deg); }
-  20% { transform: rotate(-8deg); }
-  30% { transform: rotate(14deg); }
-  40% { transform: rotate(-4deg); }
-  50% { transform: rotate(10deg); }
-  60% { transform: rotate(0deg); }
-}
-
-.name-highlight {
-  background: linear-gradient(135deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
-  background-size: 300% 300%;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  animation: rainbow-shift 4s ease infinite;
-  font-weight: 800;
-  position: relative;
-  text-shadow: 0 0 30px rgba(255, 107, 107, 0.3);
-}
-
-.name-highlight:before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(135deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
-  background-size: 300% 300%;
-  animation: rainbow-shift 4s ease infinite;
-  z-index: -1;
-  border-radius: 4px;
-  opacity: 0.2;
-  filter: blur(8px);
-}
-
-@keyframes rainbow-shift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-/* Glowing effect for the entire title */
-.greeting-title {
   box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
   transition: all 0.3s ease;
 }
-
-.greeting-title:hover {
-  transform: scale(1.02);
-  box-shadow: 0 0 30px rgba(102, 126, 234, 0.5);
+.greeting-title:hover { transform: scale(1.02); box-shadow: 0 0 30px rgba(102, 126, 234, 0.5); }
+.greeting-title:before {
+  content: ''; position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px;
+  background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
+  background-size: 200% 200%; animation: gradient-shift 3s ease infinite; z-index: -1;
+  border-radius: 8px; opacity: 0.3; filter: blur(4px);
 }
+.greeting-title:after { content: '✨'; position: absolute; top: -10px; right: -15px; font-size: 0.8em; animation: sparkle 2s ease-in-out infinite; opacity: 0.8; }
 
-/* Sparkle effect */
-.greeting-title:after {
-  content: '✨';
-  position: absolute;
-  top: -10px;
-  right: -15px;
-  font-size: 0.8em;
-  animation: sparkle 2s ease-in-out infinite;
-  opacity: 0.8;
-}
-
-@keyframes sparkle {
-  0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.8; }
-  50% { transform: scale(1.2) rotate(180deg); opacity: 1; }
-}
+.wave-emoji { display: inline-block; animation: wave 2s ease-in-out infinite; transform-origin: 70% 70%; font-size: 1.2em; }
+@keyframes wave { 0%,100%{transform:rotate(0)}10%{transform:rotate(14deg)}20%{transform:rotate(-8deg)}30%{transform:rotate(14deg)}40%{transform:rotate(-4deg)}50%{transform:rotate(10deg)}60%{transform:rotate(0)} }
+@keyframes rainbow-shift { 0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%} }
+@keyframes sparkle { 0%,100%{transform:scale(1) rotate(0); opacity:.8}50%{transform:scale(1.2) rotate(180deg); opacity:1} }
 
 /* Responsive design for badges */
 @media (max-width: 768px) {
-  .venue-badge {
-    padding: 4px 10px;
-    font-size: 0.8em;
-    margin: 2px 4px 2px 0;
-  }
+  .venue-badge { padding: 4px 10px; font-size: 0.8em; margin: 2px 4px 2px 0; }
 }
-
 @media (max-width: 480px) {
-  .venue-badge {
-    padding: 3px 8px;
-    font-size: 0.75em;
-  }
+  .venue-badge { padding: 3px 8px; font-size: 0.75em; }
 }
 </style>
