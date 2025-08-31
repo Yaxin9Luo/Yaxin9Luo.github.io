@@ -283,9 +283,9 @@ For full and up-to-date publication list, please refer to my [Google Scholar](ht
 .about-me-content .current-focus {
   margin-bottom: 25px;
   padding: 15px;
-  background: rgba(52, 152, 219, 0.1);
+  background: rgba(173, 216, 230, 0.3);
   border-radius: 8px;
-  border-left: 3px solid #3498db;
+  border-left: 3px solid #87ceeb;
   font-weight: 500;
 }
 
@@ -309,17 +309,17 @@ For full and up-to-date publication list, please refer to my [Google Scholar](ht
 .about-me-content .research-interests li {
   margin: 15px 0;
   padding: 15px;
-  background: rgba(52, 152, 219, 0.05);
+  background: rgba(173, 216, 230, 0.2);
   border-radius: 8px;
-  border-left: 3px solid #3498db;
+  border-left: 3px solid #87ceeb;
   transition: all 0.3s ease;
   line-height: 1.6;
 }
 
 .about-me-content .research-interests li:hover {
-  background: rgba(52, 152, 219, 0.1);
+  background: rgba(173, 216, 230, 0.3);
   transform: translateX(5px);
-  box-shadow: 0 4px 15px rgba(52, 152, 219, 0.1);
+  box-shadow: 0 4px 15px rgba(135, 206, 235, 0.2);
 }
 
 /* Link styling */
