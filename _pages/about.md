@@ -1,11 +1,15 @@
 ---
 permalink: /
-title: '<span class="greeting-title">Hi there! <span class="wave-emoji">👋</span> I am <span class="name-highlight">Yaxin Luo</span></span>'
+title: "Hi there! 👋 I am Yaxin Luo."
 author_profile: true
 redirect_from: 
   - /about/
   - /about.html
 ---
+
+<div class="greeting-header">
+  <span class="greeting-title">Hi there! <span class="wave-emoji">👋</span> I am <span class="name-highlight">Yaxin Luo</span></span>
+</div>
 
 <div class="section-header">
 About Me
@@ -362,6 +366,13 @@ For full and up-to-date publication list, please refer to my [Google Scholar](ht
 .about-me-content em {
   color: #7f8c8d;
   font-style: italic;
+}
+
+/* Greeting Header Styling */
+.greeting-header {
+  text-align: center;
+  margin: 30px 0 40px 0;
+  padding: 20px;
 }
 
 /* Cool Greeting Title Animations */
