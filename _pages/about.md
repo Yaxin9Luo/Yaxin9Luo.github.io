@@ -26,18 +26,19 @@ About Me
   
   <div class="research-interests">
     <h4>My research interests span:</h4>
-    
-    <div class="research-item">
-      **Multimodal Foundation Model / World Model**: Developing native multimodal foundation models which can perform **understanding**, **reasoning**, **generation** tasks from video, language, speech. These models will serve as the core intelligence—the "brain"—for Embodied AI, Robotics, and many other applications. *(My Long-Term research interest and belief)*
-    </div>
-    
-    <div class="research-item">
-      **Reinforcement Learning**: I study reinforcement learning on top of pretrained and SFT-initialized models to move beyond imitation—unlocking new capabilities in generative modeling and robotics, including training agents inside learned world-model environments.
-    </div>
-    
-    <div class="research-item">
-      **Data-centric Machine Learning**: Analysis and understanding of training data, improving data quality, compressing data for training efficiency, and scalable data pipelines for curating or synthesizing high-quality training data.
-    </div>
+    <ul>
+      <li>
+        <strong>Multimodal Foundation Model / World Model</strong>: Developing native multimodal foundation models which can perform <strong>understanding</strong>, <strong>reasoning</strong>, <strong>generation</strong> tasks from video, language, speech. These models will serve as the core intelligence—the "brain"—for Embodied AI, Robotics, and many other applications. <em>(My Long-Term research interest and belief)</em>
+      </li>
+      
+      <li>
+        <strong>Reinforcement Learning</strong>: I study reinforcement learning on top of pretrained and SFT-initialized models to move beyond imitation—unlocking new capabilities in generative modeling and robotics, including training agents inside learned world-model environments.
+      </li>
+      
+      <li>
+        <strong>Data-centric Machine Learning</strong>: Analysis and understanding of training data, improving data quality, compressing data for training efficiency, and scalable data pipelines for curating or synthesizing high-quality training data.
+      </li>
+    </ul>
   </div>
 </div>
 
@@ -299,7 +300,13 @@ For full and up-to-date publication list, please refer to my [Google Scholar](ht
   font-weight: 600;
 }
 
-.about-me-content .research-item {
+.about-me-content .research-interests ul {
+  margin: 0;
+  padding-left: 0;
+  list-style: none;
+}
+
+.about-me-content .research-interests li {
   margin: 15px 0;
   padding: 15px;
   background: rgba(52, 152, 219, 0.05);
@@ -309,7 +316,7 @@ For full and up-to-date publication list, please refer to my [Google Scholar](ht
   line-height: 1.6;
 }
 
-.about-me-content .research-item:hover {
+.about-me-content .research-interests li:hover {
   background: rgba(52, 152, 219, 0.1);
   transform: translateX(5px);
   box-shadow: 0 4px 15px rgba(52, 152, 219, 0.1);
