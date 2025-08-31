@@ -1,0 +1,181 @@
+<!-- Enhanced Footer with Cool Features -->
+<div class="enhanced-footer">
+  <div class="footer-content">
+    <div class="footer-section">
+      <h3>🚀 Quick Links</h3>
+      <div class="quick-links">
+        <a href="{{ base_path }}/publications/" class="footer-link">Publications</a>
+        <a href="{{ base_path }}/cv/" class="footer-link">CV</a>
+        <a href="https://scholar.google.com/citations?user=tEaSCzYAAAAJ&hl=en" class="footer-link" target="_blank">Google Scholar</a>
+        <a href="https://github.com/Yaxin9Luo" class="footer-link" target="_blank">GitHub</a>
+      </div>
+    </div>
+    
+    <div class="footer-section">
+      <h3>💬 Connect</h3>
+      <div class="social-grid">
+        <a href="mailto:yaxinluo999@163.com" class="social-item" title="Email">
+          <i class="fas fa-envelope"></i>
+        </a>
+        <a href="https://twitter.com/YaxinLuo999999" class="social-item" title="Twitter" target="_blank">
+          <i class="fab fa-x-twitter"></i>
+        </a>
+        <a href="https://github.com/Yaxin9Luo" class="social-item" title="GitHub" target="_blank">
+          <i class="fab fa-github"></i>
+        </a>
+        <a href="https://scholar.google.com/citations?user=tEaSCzYAAAAJ&hl=en" class="social-item" title="Google Scholar" target="_blank">
+          <i class="ai ai-google-scholar"></i>
+        </a>
+      </div>
+    </div>
+    
+    <div class="footer-section">
+      <h3>🎓 Research Focus</h3>
+      <div class="research-tags">
+        <span class="research-tag">MLLM</span>
+        <span class="research-tag">Efficient Models</span>
+        <span class="research-tag">AI Agents</span>
+        <span class="research-tag">World Models</span>
+      </div>
+    </div>
+  </div>
+  
+  <div class="footer-bottom">
+    <p>&copy; {{ site.time | date: '%Y' }} Yaxin Luo. Built with ❤️ and Jekyll.</p>
+    <div class="footer-stats">
+      <span class="stat-item">📍 Abu Dhabi, UAE</span>
+      <span class="stat-item">🏫 MBZUAI</span>
+      <span class="stat-item">🔬 PhD Student</span>
+    </div>
+  </div>
+</div>
+
+<style>
+.enhanced-footer {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 40px 0 20px;
+  margin-top: 50px;
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px;
+}
+
+.footer-section h3 {
+  margin-bottom: 15px;
+  font-size: 1.1em;
+  font-weight: 600;
+}
+
+.quick-links {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.footer-link {
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  transition: all 0.3s ease;
+  padding: 5px 0;
+  border-bottom: 1px solid transparent;
+}
+
+.footer-link:hover {
+  color: white;
+  border-bottom-color: rgba(255, 255, 255, 0.5);
+  transform: translateX(5px);
+}
+
+.social-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+  max-width: 200px;
+}
+
+.social-item {
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.social-item:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.research-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.research-tag {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 5px 12px;
+  border-radius: 15px;
+  font-size: 0.85em;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.research-tag:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.05);
+}
+
+.footer-bottom {
+  max-width: 1200px;
+  margin: 30px auto 0;
+  padding: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.footer-stats {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.stat-item {
+  font-size: 0.9em;
+  opacity: 0.8;
+}
+
+@media (max-width: 768px) {
+  .footer-content {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+  
+  .footer-bottom {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .footer-stats {
+    justify-content: center;
+  }
+}
+</style>
