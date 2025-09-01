@@ -196,7 +196,7 @@
     padding: 0 0.5rem;
     border: 0;
     outline: none;
-    background-color: $primary-color;
+    background-color: $link-color;
     color: #fff;
     cursor: pointer;
     z-index: 100;
@@ -234,7 +234,7 @@
         left: 0;
         bottom: 0;
         height: 4px;
-        background: mix(#fff, $primary-color, 50%);
+        background: mix(#fff, $link-color, 50%);
         width: 100%;
         -webkit-transition: $global-transition;
         transition: $global-transition;
@@ -252,11 +252,11 @@
       /* Featured nav item: renders as a pill button */
       &.is-featured {
         color: #fff;
-        background: $primary-color;
+        background: $link-color;
         padding: 0.5rem 0.85rem;
         margin: 0 0.75rem; /* slightly tighter spacing for buttons */
         border-radius: 999px;
-        box-shadow: 0 6px 16px rgba($primary-color, 0.28);
+        box-shadow: 0 6px 16px rgba($link-color, 0.28);
         font-weight: 600;
         letter-spacing: 0.2px;
         -webkit-transition: background-color 150ms ease, box-shadow 150ms ease, transform 80ms ease;
@@ -266,13 +266,13 @@
 
         &:hover {
           color: #fff;
-          background: mix(#000, $primary-color, 10%);
-          box-shadow: 0 8px 20px rgba($primary-color, 0.35);
+          background: mix(#000, $link-color, 10%);
+          box-shadow: 0 8px 20px rgba($link-color, 0.35);
         }
 
         &:active {
           transform: translateY(1px);
-          box-shadow: 0 4px 12px rgba($primary-color, 0.25);
+          box-shadow: 0 4px 12px rgba($link-color, 0.25);
         }
       }
     }
@@ -296,7 +296,7 @@
 
       &:hover {
         color: $masthead-link-color-hover;
-        background: mix(#fff, $primary-color, 75%);
+        background: mix(#fff, $link-color, 75%);
       }
     }
 
