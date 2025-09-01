@@ -3,24 +3,23 @@
    ========================================================================== */
 
 document.addEventListener('DOMContentLoaded', function() {
-    
-    // Add floating contact button
+    const isHome = (location.pathname.replace(/\/+$/, '') === '');
+
+    // Global niceties
     addFloatingContactButton();
-    
-    // Add scroll-to-top functionality
     addScrollToTop();
-    
-    // Add typing animation to the hero section
-    addTypingAnimation();
-    
-    // Add smooth scrolling for internal links
     addSmoothScrolling();
-    
-    // Add particle background
-    addParticleBackground();
-    
-    // Add theme toggle
     addThemeToggle();
+
+    // Home-specific artistic features
+    if (isHome) {
+        addTypingAnimation();
+        addSignatureUnderline();
+        addMorphingBlobs();
+        addOrbitingTopics();
+        addPublicationFilmstrip();
+        addParticleBackground();
+    }
 });
 
 function addFloatingContactButton() {
@@ -318,3 +317,112 @@ function addLoadingAnimation() {
 
 // Initialize loading animation immediately
 addLoadingAnimation();
+
+/* ========================= New Artistic Features ========================= */
+
+// 1) Signature underline that draws itself under the main title
+function addSignatureUnderline() {
+    const h1 = document.querySelector('h1.page__title');
+    if (!h1) return;
+    const wrapper = document.createElement('div');
+    wrapper.className = 'signature-underline';
+    wrapper.innerHTML = `
+      <svg viewBox="0 0 600 24" preserveAspectRatio="none" aria-hidden="true">
+        <defs>
+          <linearGradient id="sigGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#667eea"/>
+            <stop offset="50%" stop-color="#764ba2"/>
+            <stop offset="100%" stop-color="#f093fb"/>
+          </linearGradient>
+        </defs>
+        <path d="M5 12 C 120 26, 220 -2, 320 12 S 520 26, 595 12" />
+      </svg>`;
+    h1.after(wrapper);
+}
+
+// 2) Morphing blobs behind About section (uses .blob-field wrapper)
+function addMorphingBlobs() {
+    const field = document.querySelector('.blob-field');
+    if (!field) return;
+    const b1 = document.createElement('span');
+    const b2 = document.createElement('span');
+    b1.className = 'blob blob-1';
+    b2.className = 'blob blob-2';
+    field.appendChild(b1);
+    field.appendChild(b2);
+}
+
+// 3) Orbiting research topic chips around avatar
+function addOrbitingTopics() {
+    const avatar = document.querySelector('.author__avatar');
+    if (!avatar) return;
+    const container = document.createElement('div');
+    container.className = 'orbiting-topics';
+    const topics = [
+        { label: 'Vision', radius: 70, dur: 16, delay: 0 },
+        { label: 'RL', radius: 50, dur: 12, delay: -2 },
+        { label: 'Data', radius: 90, dur: 20, delay: -4 },
+        { label: 'Multimodal', radius: 110, dur: 26, delay: -6 },
+        { label: 'GenAI', radius: 65, dur: 14, delay: -1 }
+    ];
+    topics.forEach(t => {
+        const s = document.createElement('span');
+        s.className = 'topic';
+        s.textContent = t.label;
+        s.style.setProperty('--radius', t.radius + 'px');
+        s.style.setProperty('--duration', t.dur + 's');
+        s.style.setProperty('--delay', t.delay + 's');
+        container.appendChild(s);
+    });
+    avatar.appendChild(container);
+}
+
+// 4) Filmstrip of publication thumbnails
+function addPublicationFilmstrip() {
+    const anchor = document.getElementById('pub-strip-anchor');
+    if (!anchor) return;
+
+    const imgs = Array.from(document.querySelectorAll('img.publication-image'));
+    if (!imgs.length) return;
+
+    const stripWrap = document.createElement('div');
+    stripWrap.className = 'pub-filmstrip';
+    const strip = document.createElement('div');
+    strip.className = 'strip';
+
+    function createItem(img) {
+        const item = document.createElement('a');
+        item.className = 'item';
+        item.href = findPaperLink(img) || '#';
+        item.target = item.href !== '#' ? '_blank' : '';
+        const clone = img.cloneNode(true);
+        clone.removeAttribute('align');
+        clone.style.margin = '0';
+        clone.style.width = 'auto';
+        item.appendChild(clone);
+        return item;
+    }
+
+    function findPaperLink(img) {
+        // Try nearest ancestor block for a paper link
+        const block = img.closest('li, p, div, section') || document;
+        let link = block.querySelector('a.enhanced-link.paper-link');
+        if (link) return link.href;
+        // Fallback: search forward in DOM siblings up to a small limit
+        let n = block.nextElementSibling, hops = 0;
+        while (n && hops < 3) {
+            link = n.querySelector && n.querySelector('a.enhanced-link.paper-link');
+            if (link) return link.href;
+            n = n.nextElementSibling; hops++;
+        }
+        return null;
+    }
+
+    const take = Math.min(imgs.length, 8);
+    const chosen = imgs.slice(0, take);
+    // Build two copies for seamless loop
+    [chosen, chosen].forEach(arr => arr.forEach(img => strip.appendChild(createItem(img))));
+
+    stripWrap.appendChild(strip);
+    anchor.replaceWith(stripWrap);
+}

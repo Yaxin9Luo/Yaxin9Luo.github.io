@@ -11,6 +11,8 @@ redirect_from:
 About Me
 </div>
 
+<div class="blob-field">
+<span class="sr-only">Decorative animated background</span>
 <div class="about-me-content">
   <div class="intro-text">
     Hello! I am a First-Year Machine Learning PhD student at <a href="https://mbzuai.ac.ae/" class="institution-link">MBZUAI</a>, advised by <a href="https://zhiqiangshen.com/" class="advisor-link">Prof. Zhiqiang Shen</a>, <a href="https://fabvio.github.io/" class="advisor-link">Dr. Fabio Pizzati</a> and <a href="https://www.di.ens.fr/~laptev/" class="advisor-link">Prof. Ivan Laptev</a>. I am also closely working with my friend <a href="https://xxfchen.github.io/XiaofuChen/" class="collaborator-link">Xiaofu Chen</a>.
@@ -41,6 +43,7 @@ About Me
     </ul>
   </div>
 </div>
+</div>
 
 
 News
@@ -50,6 +53,8 @@ News
 🚀 <strong><a href="https://github.com/MetaAgentX/OpenCaptchaWorld">OpenCaptchaWorld</a></strong> released and expanded to double the dataset size!
 </div>
 
+
+<div id="pub-strip-anchor"></div>
 
 Selected Publications
 ======

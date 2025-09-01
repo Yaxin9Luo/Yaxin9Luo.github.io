@@ -24,6 +24,136 @@
   50% { transform: scale(1.05); }
 }
 
+/* ========================= Novel Artistic Enhancements ========================= */
+
+/* Signature underline that draws itself beneath the page title */
+.signature-underline {
+  margin-top: 6px;
+}
+.signature-underline svg {
+  width: 100%;
+  height: 24px;
+  display: block;
+}
+.signature-underline path {
+  fill: none;
+  stroke: url(#sigGradient);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  animation: draw-signature 1.8s ease forwards 0.2s;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.15));
+}
+@keyframes draw-signature {
+  to { stroke-dashoffset: 0; }
+}
+
+/* Morphing blob background behind the About section */
+.blob-field {
+  position: relative;
+}
+.blob-field .about-me-content {
+  position: relative;
+  backdrop-filter: blur(2px);
+}
+.blob-field .blob {
+  position: absolute;
+  z-index: -1;
+  width: 320px;
+  height: 320px;
+  border-radius: 40% 60% 60% 40% / 40% 40% 60% 60%;
+  opacity: 0.25;
+  filter: blur(20px);
+  animation: blob-morph 12s ease-in-out infinite;
+}
+.blob-field .blob-1 { 
+  top: -40px; left: -40px; 
+  background: radial-gradient( circle at 30% 30%, rgba(102,126,234,.6), rgba(118,75,162,.6));
+}
+.blob-field .blob-2 { 
+  bottom: -40px; right: -40px; 
+  background: radial-gradient( circle at 70% 70%, rgba(250,112,154,.5), rgba(254,225,64,.5));
+  animation-duration: 16s;
+}
+@keyframes blob-morph {
+  0%, 100% { border-radius: 40% 60% 60% 40% / 40% 40% 60% 60%; transform: translate(0,0) rotate(0deg); }
+  33% { border-radius: 55% 45% 65% 35% / 35% 55% 45% 65%; transform: translate(6px,-10px) rotate(10deg); }
+  66% { border-radius: 35% 65% 45% 55% / 60% 30% 70% 40%; transform: translate(-8px,10px) rotate(-8deg); }
+}
+
+/* Orbiting research topic chips around the avatar */
+.author__avatar { position: relative; }
+.orbiting-topics {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+.orbiting-topics .topic {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: rotate(0deg) translate(var(--radius, 70px)) rotate(0deg);
+  animation: orbit var(--duration, 14s) linear infinite;
+  animation-delay: var(--delay, 0s);
+  background: rgba(255,255,255,0.7);
+  color: #2c3e50;
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 999px;
+  padding: 3px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+@keyframes orbit {
+  from { transform: rotate(0deg) translate(var(--radius, 70px)) rotate(0deg); }
+  to   { transform: rotate(360deg) translate(var(--radius, 70px)) rotate(-360deg); }
+}
+
+/* Publication filmstrip: elegant horizontal scroller */
+.pub-filmstrip {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  margin: 12px 0 24px 0;
+  background: linear-gradient(135deg, rgba(102,126,234,0.08), rgba(118,75,162,0.08));
+}
+.pub-filmstrip .strip {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 10px 12px;
+  animation: scroll-x 40s linear infinite;
+}
+.pub-filmstrip .item {
+  flex: 0 0 auto;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+  transition: transform .25s ease, box-shadow .25s ease;
+  background: #fff;
+}
+.pub-filmstrip .item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 28px rgba(0,0,0,0.12);
+}
+.pub-filmstrip img { display: block; height: 110px; width: auto; }
+@keyframes scroll-x {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* Reduced motion: respect user preference */
+@media (prefers-reduced-motion: reduce) {
+  .signature-underline path,
+  .blob-field .blob,
+  .orbiting-topics .topic,
+  .pub-filmstrip .strip,
+  .floating-contact { animation: none !important; }
+}
+
 /* Enhanced Follow Button with Gradient */
 .btn--inverse {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
