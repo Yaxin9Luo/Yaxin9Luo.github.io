@@ -351,6 +351,25 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Selected Publications: gradient underline without changing markup */
+#pub-strip-anchor + h1 {
+  position: relative;
+  padding-bottom: 10px;
+}
+#pub-strip-anchor + h1::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 140px;
+  height: 4px;
+  border-radius: 3px;
+  background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
+  background-size: 200% 200%;
+  animation: gradient-shift 6s ease infinite;
+  box-shadow: 0 1px 6px rgba(102,126,234,0.35);
+}
+
 /* Enhanced focus states for accessibility */
 .btn:focus,
 .enhanced-link:focus,
