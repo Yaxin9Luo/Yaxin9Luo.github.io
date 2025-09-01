@@ -16,7 +16,6 @@ document.addEventListener('DOMContentLoaded', function() {
         addTypingAnimation();
         addSignatureUnderline();
         addMorphingBlobs();
-        addOrbitingTopics();
         addPublicationFilmstrip();
         addParticleBackground();
     }
