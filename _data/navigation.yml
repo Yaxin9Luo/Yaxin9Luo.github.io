@@ -7,6 +7,7 @@
 main:
   - title: "📚 Publications"
     url: /publications/
+    featured: true
 
   # - title: "Talks"
   #   url: /talks/    
@@ -22,6 +23,7 @@ main:
     
   - title: "📄 CV"
     url: /cv/
+    featured: true
     
   # - title: "Guide"
   #   url: /markdown/

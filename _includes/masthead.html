@@ -13,7 +13,13 @@
               {% else %}
               {% assign domain = base_path %}
             {% endif %}
-            <li class="masthead__menu-item"><a href="{{ domain }}{{ link.url }}">{{ link.title }}</a></li>
+            {% assign item_classes = ' ' %}
+            {% if link.featured %}
+              {% assign item_classes = item_classes | append: 'is-featured' %}
+            {% endif %}
+            <li class="masthead__menu-item">
+              <a class="{{ item_classes }}" href="{{ domain }}{{ link.url }}">{{ link.title }}</a>
+            </li>
           {% endfor %}
         </ul>
         <ul class="hidden-links hidden"></ul>

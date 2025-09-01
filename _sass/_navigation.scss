@@ -172,7 +172,7 @@
    Priority plus navigation
    ========================================================================== */
 
-.greedy-nav {
+  .greedy-nav {
   position: relative;
   min-width: 250px;
   background: $background-color;
@@ -247,6 +247,33 @@
         -webkit-transform: scaleX(1);
             -ms-transform: scaleX(1);
                 transform: scaleX(1); /* reveal*/
+      }
+
+      /* Featured nav item: renders as a pill button */
+      &.is-featured {
+        color: #fff;
+        background: $primary-color;
+        padding: 0.5rem 0.85rem;
+        margin: 0 0.75rem; /* slightly tighter spacing for buttons */
+        border-radius: 999px;
+        box-shadow: 0 6px 16px rgba($primary-color, 0.28);
+        font-weight: 600;
+        letter-spacing: 0.2px;
+        -webkit-transition: background-color 150ms ease, box-shadow 150ms ease, transform 80ms ease;
+        transition: background-color 150ms ease, box-shadow 150ms ease, transform 80ms ease;
+
+        &:before { display: none; } /* disable underline effect for buttons */
+
+        &:hover {
+          color: #fff;
+          background: mix(#000, $primary-color, 10%);
+          box-shadow: 0 8px 20px rgba($primary-color, 0.35);
+        }
+
+        &:active {
+          transform: translateY(1px);
+          box-shadow: 0 4px 12px rgba($primary-color, 0.25);
+        }
       }
     }
   }
