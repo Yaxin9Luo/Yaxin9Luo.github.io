@@ -17,13 +17,20 @@
   font-weight: bold;
   text-align: center;
   text-decoration: none;
-  background-color: $link-color;
+  background-image: linear-gradient(135deg, $accent-gradient-start 0%, $accent-gradient-end 100%);
   border: 0 !important;
   border-radius: $border-radius;
   cursor: pointer;
+  transition: transform 120ms ease, box-shadow 150ms ease, background-image 150ms ease;
 
   &:hover {
-    background-color: mix(#000, $link-color, 20%);
+    background-image: linear-gradient(
+      135deg,
+      mix(#000, $accent-gradient-start, 8%) 0%,
+      mix(#000, $accent-gradient-end, 8%) 100%
+    );
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.35);
+    transform: translateY(-1px);
   }
 
   .icon {

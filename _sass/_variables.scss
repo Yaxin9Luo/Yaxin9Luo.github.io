@@ -108,6 +108,10 @@ $link-color-visited         : mix(#fff, $link-color, 25%);
 $masthead-link-color        : $link-color;
 $masthead-link-color-hover  : mix(#000, $link-color, 25%);
 
+/* accent gradient */
+$accent-gradient-start      : #667eea; // indigo
+$accent-gradient-end        : #764ba2; // purple
+
 
 /*
    Breakpoints

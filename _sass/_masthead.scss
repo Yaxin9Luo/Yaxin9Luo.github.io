@@ -69,7 +69,7 @@
         }
       }
       a.is-featured {
-        background: $link-color !important;
+        background-image: linear-gradient(135deg, $accent-gradient-start 0%, $accent-gradient-end 100%) !important;
         color: #fff !important;
       }
     }

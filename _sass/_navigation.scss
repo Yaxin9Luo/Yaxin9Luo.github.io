@@ -196,7 +196,7 @@
     padding: 0 0.5rem;
     border: 0;
     outline: none;
-    background-color: $link-color;
+    background-image: linear-gradient(135deg, $accent-gradient-start 0%, $accent-gradient-end 100%);
     color: #fff;
     cursor: pointer;
     z-index: 100;
@@ -252,7 +252,7 @@
       /* Featured nav item: renders as a pill button */
       &.is-featured {
         color: #fff;
-        background: $link-color;
+        background-image: linear-gradient(135deg, $accent-gradient-start 0%, $accent-gradient-end 100%);
         padding: 0.5rem 0.85rem;
         margin: 0 0.75rem; /* slightly tighter spacing for buttons */
         border-radius: 999px;
@@ -266,7 +266,11 @@
 
         &:hover {
           color: #fff;
-          background: mix(#000, $link-color, 10%);
+          background-image: linear-gradient(
+            135deg,
+            mix(#000, $accent-gradient-start, 8%) 0%,
+            mix(#000, $accent-gradient-end, 8%) 100%
+          );
           box-shadow: 0 8px 20px rgba($link-color, 0.35);
         }
 
