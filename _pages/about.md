@@ -62,7 +62,7 @@ Selected Publications
 
 For full and up-to-date publication list, please refer to my [Google Scholar](https://scholar.google.com/citations?user=tEaSCzYAAAAJ&hl=en) page.
 
-<div class="pub-cards" markdown="1">
+<!-- Publications: reverted to original Markdown layout -->
 * <img src="./images/opencaptchaworld.png" width="400px" align="left" style="margin-right:10px" class="publication-image"> **OpenCaptchaWorld: AComprehensive Web-based Platform for Testing and Benchmarking Multimodal LLM Agents**
   * <span class="venue-badge arxiv">arXiv</span>
   * **Yaxin Luo** *, Zhaoyi Li *, Jiacheng Liu, Jiacheng Cui, Xiaohan Zhao, Zhiqiang Shen
@@ -83,7 +83,6 @@ For full and up-to-date publication list, please refer to my [Google Scholar](ht
   * Xiaofu Chen, **Yaxin Luo**, Gen Luo, Jiayi Ji, Henghui Ding, Yiyi Zhou
   * <a href="https://openaccess.thecvf.com/content/CVPR2025/html/Chen_DViN_Dynamic_Visual_Routing_Network_for_Weakly_Supervised_Referring_Expression_CVPR_2025_paper.html" class="enhanced-link paper-link">📄 Paper</a> <a href="https://github.com/XxFChen/DViN" class="enhanced-link code-link">💻 Code</a>
 
-</div>
 
 <style>
 /* Beautiful Conference Venue Badges */
