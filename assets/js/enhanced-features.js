@@ -11,6 +11,9 @@ document.addEventListener('DOMContentLoaded', function() {
     addSmoothScrolling();
     addThemeToggle();
 
+    // Cleanup: ensure any old orbiting topic elements are removed
+    document.querySelectorAll('.orbiting-topics').forEach(el => el.remove());
+
     // Home-specific artistic features
     if (isHome) {
         addTypingAnimation();
@@ -351,32 +354,7 @@ function addMorphingBlobs() {
     field.appendChild(b2);
 }
 
-// 3) Orbiting research topic chips around avatar
-function addOrbitingTopics() {
-    const avatar = document.querySelector('.author__avatar');
-    if (!avatar) return;
-    const container = document.createElement('div');
-    container.className = 'orbiting-topics';
-    const topics = [
-        { label: 'Vision', radius: 70, dur: 16, delay: 0 },
-        { label: 'RL', radius: 50, dur: 12, delay: -2 },
-        { label: 'Data', radius: 90, dur: 20, delay: -4 },
-        { label: 'Multimodal', radius: 110, dur: 26, delay: -6 },
-        { label: 'GenAI', radius: 65, dur: 14, delay: -1 }
-    ];
-    topics.forEach(t => {
-        const s = document.createElement('span');
-        s.className = 'topic';
-        s.textContent = t.label;
-        s.style.setProperty('--radius', t.radius + 'px');
-        s.style.setProperty('--duration', t.dur + 's');
-        s.style.setProperty('--delay', t.delay + 's');
-        container.appendChild(s);
-    });
-    avatar.appendChild(container);
-}
-
-// 4) Filmstrip of publication thumbnails
+// 3) Filmstrip of publication thumbnails
 function addPublicationFilmstrip() {
     const anchor = document.getElementById('pub-strip-anchor');
     if (!anchor) return;
