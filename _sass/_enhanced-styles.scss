@@ -584,3 +584,36 @@ a:focus {
   .cv-subtitle, .cv-hero__note, .cv-item__meta, .cv-note { color: #cbd5e1; }
   .cv-pdf { border-color: rgba(255,255,255,0.15); }
 }
+
+/* Additional CV microinteractions (no sticky index) */
+.cv-card { transition: transform .25s ease, box-shadow .25s ease, border .25s ease; }
+.cv-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(0,0,0,0.12);
+  border: 1px solid transparent;
+  border-image: linear-gradient(135deg, #667eea, #764ba2) 1;
+}
+
+.cv-item::before { transition: box-shadow .25s ease, transform .25s ease; }
+.cv-item:hover::before { box-shadow: 0 0 0 6px rgba(102,126,234,0.18), 0 2px 8px rgba(102,126,234,0.35); transform: scale(1.05); }
+
+.cv-chip { position: relative; overflow: hidden; }
+.cv-chip:active::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(circle at 50% 50%, rgba(102,126,234,0.25), transparent 40%);
+  animation: chip-ripple .5s ease;
+}
+@keyframes chip-ripple { from { opacity: 1; } to { opacity: 0; } }
+
+/* Print optimization: single-column, minimal color */
+@media print {
+  .masthead, .page__meta, .page__related, .cv-hero__blobs { display: none !important; }
+  body { background: #fff !important; }
+  .cv-grid { grid-template-columns: 1fr !important; gap: 10px !important; }
+  .cv-hero, .cv-section, .cv-card, .cv-pdf { box-shadow: none !important; background: #fff !important; border: 1px solid #ddd !important; }
+  .cv-h2::after, .cv-hero__underline { background: #111 !important; }
+  .cv-title { -webkit-text-fill-color: initial !important; color: #000 !important; }
+  .cv-download { color: #000 !important; background: #fff !important; border: 1px solid #000 !important; }
+  .cv-pdf iframe { display: none; }
+}
