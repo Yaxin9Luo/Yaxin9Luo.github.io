@@ -407,47 +407,9 @@ function addPublicationFilmstrip() {
 
 // Publications enhancements: filter + lazyloading
 function enhancePublicationsSection() {
-    // Lazy-load publication images
+    // Lazy-load publication images only
     document.querySelectorAll('.publication-image').forEach(img => {
         if (!img.hasAttribute('loading')) img.setAttribute('loading', 'lazy');
         img.setAttribute('decoding', 'async');
     });
-
-    const container = document.querySelector('.pub-cards > ul');
-    const filter = document.querySelector('.pub-filter');
-    if (!container || !filter) return;
-
-    const chips = filter.querySelectorAll('.chip');
-    const countEl = filter.querySelector('.pub-count');
-
-    function venueOf(li) {
-        const badge = li.querySelector('.venue-badge');
-        if (!badge) return 'unknown';
-        const classes = badge.className.split(/\s+/);
-        // classes like 'venue-badge cvpr'
-        const known = ['cvpr','iclr','eccv','arxiv','neurips','nips','icml','aaai','ijcai'];
-        return classes.find(c => known.includes(c)) || 'unknown';
-    }
-
-    const items = Array.from(container.children).filter(n => n.tagName === 'LI');
-    items.forEach(li => li.dataset.venue = venueOf(li));
-
-    function applyFilter(key) {
-        let visible = 0;
-        items.forEach(li => {
-            const show = (key === 'all' || li.dataset.venue === key);
-            li.style.display = show ? '' : 'none';
-            if (show) visible++;
-        });
-        if (countEl) countEl.textContent = `${visible} shown`;
-    }
-
-    chips.forEach(chip => chip.addEventListener('click', () => {
-        chips.forEach(c => c.classList.remove('active'));
-        chip.classList.add('active');
-        applyFilter(chip.dataset.venue);
-    }));
-
-    // Initialize
-    applyFilter('all');
 }

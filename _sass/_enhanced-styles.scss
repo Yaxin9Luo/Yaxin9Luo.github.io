@@ -117,28 +117,7 @@
   to { transform: translateX(-50%); }
 }
 
-/* Publication Cards + Filter */
-.pub-filter {
-  margin: 8px 0 12px 0;
-}
-.pub-filter .chip {
-  display: inline-block;
-  margin: 0 6px 8px 0;
-  padding: 6px 12px;
-  border-radius: 999px;
-  border: 1px solid rgba(0,0,0,0.1);
-  background: rgba(102, 126, 234, 0.08);
-  color: #2c3e50;
-  font-weight: 600;
-  font-size: .85em;
-  cursor: pointer;
-  transition: all .2s ease;
-}
-.pub-filter .chip:hover { transform: translateY(-1px); background: rgba(102,126,234,0.14); }
-.pub-filter .chip.active { background: linear-gradient(135deg, #667eea33, #764ba233); border-color: rgba(118,75,162,0.35); }
-.pub-filter .pub-count { margin-left: 8px; font-size: .85em; opacity: .75; }
-.pub-filter .tip { margin-top: 4px; font-size: .8em; opacity: .6; }
-
+/* Publication Cards */
 .pub-cards > ul { list-style: none; padding-left: 0; }
 .pub-cards > ul > li {
   display: flex;

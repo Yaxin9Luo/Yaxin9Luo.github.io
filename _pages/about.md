@@ -62,21 +62,7 @@ Selected Publications
 
 For full and up-to-date publication list, please refer to my [Google Scholar](https://scholar.google.com/citations?user=tEaSCzYAAAAJ&hl=en) page.
 
-<div class="pub-filter" aria-label="Filter publications by venue">
-  <button class="chip active" data-venue="all">All</button>
-  <button class="chip" data-venue="cvpr">CVPR</button>
-  <button class="chip" data-venue="iclr">ICLR</button>
-  <button class="chip" data-venue="eccv">ECCV</button>
-  <button class="chip" data-venue="arxiv">arXiv</button>
-  <!-- Add more if needed: icml, neurips, etc. -->
-  <span class="pub-count" aria-live="polite"></span>
-  
-  <div class="tip">Tip: hover a card for details, click to open paper/code.</div>
-  
-  <hr />
-</div>
-
-<div class="pub-cards">
+<div class="pub-cards" markdown="1">
 * <img src="./images/opencaptchaworld.png" width="400px" align="left" style="margin-right:10px" class="publication-image"> **OpenCaptchaWorld: AComprehensive Web-based Platform for Testing and Benchmarking Multimodal LLM Agents**
   * <span class="venue-badge arxiv">arXiv</span>
   * **Yaxin Luo** *, Zhaoyi Li *, Jiacheng Liu, Jiacheng Cui, Xiaohan Zhao, Zhiqiang Shen
