@@ -62,6 +62,21 @@ Selected Publications
 
 For full and up-to-date publication list, please refer to my [Google Scholar](https://scholar.google.com/citations?user=tEaSCzYAAAAJ&hl=en) page.
 
+<div class="pub-filter" aria-label="Filter publications by venue">
+  <button class="chip active" data-venue="all">All</button>
+  <button class="chip" data-venue="cvpr">CVPR</button>
+  <button class="chip" data-venue="iclr">ICLR</button>
+  <button class="chip" data-venue="eccv">ECCV</button>
+  <button class="chip" data-venue="arxiv">arXiv</button>
+  <!-- Add more if needed: icml, neurips, etc. -->
+  <span class="pub-count" aria-live="polite"></span>
+  
+  <div class="tip">Tip: hover a card for details, click to open paper/code.</div>
+  
+  <hr />
+</div>
+
+<div class="pub-cards">
 * <img src="./images/opencaptchaworld.png" width="400px" align="left" style="margin-right:10px" class="publication-image"> **OpenCaptchaWorld: AComprehensive Web-based Platform for Testing and Benchmarking Multimodal LLM Agents**
   * <span class="venue-badge arxiv">arXiv</span>
   * **Yaxin Luo** *, Zhaoyi Li *, Jiacheng Liu, Jiacheng Cui, Xiaohan Zhao, Zhiqiang Shen
@@ -81,6 +96,8 @@ For full and up-to-date publication list, please refer to my [Google Scholar](ht
   * <span class="venue-badge cvpr">CVPR 2025</span>
   * Xiaofu Chen, **Yaxin Luo**, Gen Luo, Jiayi Ji, Henghui Ding, Yiyi Zhou
   * <a href="https://openaccess.thecvf.com/content/CVPR2025/html/Chen_DViN_Dynamic_Visual_Routing_Network_for_Weakly_Supervised_Referring_Expression_CVPR_2025_paper.html" class="enhanced-link paper-link">📄 Paper</a> <a href="https://github.com/XxFChen/DViN" class="enhanced-link code-link">💻 Code</a>
+
+</div>
 
 <style>
 /* Beautiful Conference Venue Badges */
