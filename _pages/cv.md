@@ -117,7 +117,7 @@ redirect_from:
     <div class="cv-skill-badges">
       <span class="badge">HPC (Slurm)</span>
       <span class="badge">DeepSpeed</span>
-      <span class="badge">Distributed Computing (theory)</span>
+      <span class="badge">Distributed Computing </span>
       <span class="badge">Embedded Systems (3 projects)</span>
       <span class="badge">Signal Processing & Acoustics</span>
       <span class="badge">Bioinformatics (DTU coursework)</span>
