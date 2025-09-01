@@ -56,3 +56,22 @@
     font-weight: 700;
   }
 }
+
+/* Ensure top nav uses accent color even if other styles override */
+.masthead {
+  .greedy-nav {
+    .visible-links {
+      a {
+        color: $masthead-link-color !important;
+
+        &:hover {
+          color: $masthead-link-color-hover !important;
+        }
+      }
+      a.is-featured {
+        background: $link-color !important;
+        color: #fff !important;
+      }
+    }
+  }
+}
