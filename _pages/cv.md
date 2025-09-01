@@ -45,18 +45,6 @@ redirect_from:
     </p>
   </section>
 
-  <section class="cv-section">
-    <h2 class="cv-h2"><i class="fas fa-tools"></i> Other Skills</h2>
-    <div class="cv-skill-badges">
-      <span class="badge">HPC (Slurm)</span>
-      <span class="badge">DeepSpeed</span>
-      <span class="badge">Distributed Computing (theory)</span>
-      <span class="badge">Embedded Systems (3 projects)</span>
-      <span class="badge">Signal Processing & Acoustics</span>
-      <span class="badge">Bioinformatics (DTU coursework)</span>
-    </div>
-  </section>
-
   <!-- Right Column -->
   <section class="cv-section">
     <h2 class="cv-h2"><i class="fas fa-graduation-cap"></i> Education</h2>
@@ -121,6 +109,18 @@ redirect_from:
         <div class="cv-card__title">Institute of Social Science Survey, Peking University — Summer Internship (Jul 2019–Sep 2019)</div>
         <div class="cv-card__body">Internship in a public psychological healthcare project led by the Ministry of Civil Affairs, China.</div>
       </div>
+    </div>
+  </section>
+
+  <section class="cv-section">
+    <h2 class="cv-h2"><i class="fas fa-tools"></i> Other Skills</h2>
+    <div class="cv-skill-badges">
+      <span class="badge">HPC (Slurm)</span>
+      <span class="badge">DeepSpeed</span>
+      <span class="badge">Distributed Computing (theory)</span>
+      <span class="badge">Embedded Systems (3 projects)</span>
+      <span class="badge">Signal Processing & Acoustics</span>
+      <span class="badge">Bioinformatics (DTU coursework)</span>
     </div>
   </section>
 </div>
