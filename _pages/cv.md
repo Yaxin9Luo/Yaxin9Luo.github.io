@@ -30,9 +30,9 @@ machine learning, vision foundation models, and efficient algorithms for foundat
 Education
 ======
 * PhD in Machine Learning, MBZUAI, 2025–2029 (expected Dec 2029)  
-  PhD Advisor: Dr. Zhiqiang Shen & Prof.Ivan Laptev
+  PhD Advisor: **Prof. Zhiqiang Shen** & **Prof.Ivan Laptev**
 * BSc in General Engineering (specialization: Machine Learning), Technical University of Denmark, 2021–2025 
-  Bachelor thesis advisor: Prof. Dimitrios Papadopoulos
+  Bachelor thesis advisor: **Prof. Dimitrios Papadopoulos**
 * BSc in Mathematics, University of Edinburgh, 2020–2021  
   Overall grade of taken courses: UK First-Class; withdrew 19 Mar 2021 (changed major and country)
 
