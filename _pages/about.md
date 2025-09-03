@@ -19,7 +19,7 @@ About Me
   </div>
   
   <div class="background-text">
-    Previously, I was a Research Assistant at <strong>MBZUAI</strong> and received my Bachelor's degree from <a href="https://www.dtu.dk/english/" class="institution-link">Technical University of Denmark</a> supervised by <a href="https://dimipapa.github.io/" class="advisor-link">Prof. Dim P. Papadopoulos</a>.
+    Previously, I was fortune to work with [Dr.Gen Luo]<a href="https://scholar.google.com/citations?user=EyZqU9gAAAAJ&hl=zh-CN"class="advisor-link"> at Shanghai Ai Lab, Internvl Team and received my Bachelor's degree from <a href="https://www.dtu.dk/english/" class="institution-link">Technical University of Denmark</a> supervised by <a href="https://dimipapa.github.io/" class="advisor-link">Prof. Dim P. Papadopoulos</a>.
   </div>
   
   <div class="current-focus">
