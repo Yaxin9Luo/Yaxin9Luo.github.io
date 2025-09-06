@@ -38,7 +38,7 @@ About Me
       </li>
       
       <li>
-        <strong>Data-centric Machine Learning</strong>: Analysis and understanding of training data, improving data quality, compressing data for training efficiency, and scalable data pipelines for curating or synthesizing high-quality training data.
+        <strong>Data-centric Machine Learning</strong>: Beyond the perspectives of models and algorithms, I am also enjoying to analysis and understand training data, improve data quality, compressdata for training efficiency, and build efficient / scalable data pipelines for curating or synthesizing high-quality training data for foundation models.
       </li>
     </ul>
   </div>
