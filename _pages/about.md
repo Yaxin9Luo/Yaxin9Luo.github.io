@@ -38,7 +38,7 @@ About Me
       </li>
       
       <li>
-        <strong>Data-centric Machine Learning</strong>: Beyond the perspectives of models and algorithms, I am also enjoying to analysis and understand training data, improve data quality, compressdata for training efficiency, and build efficient / scalable data pipelines for curating or synthesizing high-quality training data for foundation models.
+        <strong>Data-centric Machine Learning</strong>: Beyond the perspectives of models and algorithms, I am also enjoying to analysis and understand  data, improve data quality, compress data for training efficiency, and build efficient / scalable data pipelines for synthesizing high-quality  data for foundation models.
       </li>
     </ul>
   </div>
