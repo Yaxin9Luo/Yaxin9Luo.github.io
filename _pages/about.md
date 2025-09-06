@@ -63,7 +63,7 @@ Selected Publications
 For full and up-to-date publication list, please refer to my [Google Scholar](https://scholar.google.com/citations?user=tEaSCzYAAAAJ&hl=en) page.
 
 <!-- Publications: reverted to original Markdown layout -->
-* <img src="./images/opencaptchaworld.png" width="400px" align="left" style="margin-right:10px" class="publication-image"> **OpenCaptchaWorld: AComprehensive Web-based Platform for Testing and Benchmarking Multimodal LLM Agents**
+* <img src="./images/opencaptchaworld.png" width="400px" align="left" style="margin-right:10px" class="publication-image"> **OpenCaptchaWorld: A Comprehensive Web-based Platform for Testing and Benchmarking Multimodal LLM Agents**
   * <span class="venue-badge arxiv">arXiv</span>
   * **Yaxin Luo** *, Zhaoyi Li *, Jiacheng Liu, Jiacheng Cui, Xiaohan Zhao, Zhiqiang Shen
   * <a href="https://arxiv.org/abs/2505.24878" class="enhanced-link paper-link">📄 Paper</a> <a href="https://github.com/MetaAgentX/OpenCaptchaWorld" class="enhanced-link code-link">💻 Code</a> <a href="https://huggingface.co/spaces/YaxinLuo/Open_CaptchaWorld" class="enhanced-link demo-link">🚀 Demo</a>
