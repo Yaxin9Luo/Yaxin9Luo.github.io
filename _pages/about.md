@@ -30,15 +30,15 @@ About Me
     <h4>My research interests span:</h4>
     <ul>
       <li>
-        <strong>Multimodal Foundation Model / World Model</strong>: Developing native multimodal foundation models which can perform <strong>understanding</strong>, <strong>reasoning</strong>, <strong>generation</strong> tasks from video, language, speech. These models will serve as the core intelligence—the "brain"—for Embodied AI, Robotics, and many other applications. <em>(My Long-Term research interest and belief)</em>
+        <strong> Multimodal Foundation Model </strong>: Developing native multimodal foundation models which can perform <strong>understanding</strong>, <strong>reasoning</strong>, <strong>generation</strong> tasks from video, language, speech. These models will serve as the core intelligence—the "brain"—for Embodied AI, Robotics, and many other applications. <em>(My Long-Term research interest and belief)</em>
       </li>
       
       <li>
-        <strong>Reinforcement Learning</strong>: I study reinforcement learning on top of pretrained and SFT-initialized models to move beyond imitation—unlocking new capabilities in generative modeling and robotics, including training agents inside learned world-model environments.
+        <strong> Video Understanding & Generation </strong>:  Vision-centric video model that learns causal structure and object-centric representations from large-scale video supports both understanding and generation with long-horizon temporal coherence; and further enabling action-conditioned prediction for embodied agents.
       </li>
-      
+
       <li>
-        <strong>Data-centric Machine Learning</strong>: Beyond the perspectives of models and algorithms, I am also enjoying to analysis and understand  data, improve data quality, compress data for training efficiency, and build efficient / scalable data pipelines for synthesizing high-quality  data for foundation models.
+        <strong> Data-centric Machine Learning </strong>: Beyond the perspectives of models and algorithms, I am also enjoying to analysis and understand  data, improve data quality, compress data for training efficiency, and build efficient / scalable data pipelines for synthesizing high-quality  data for foundation models.
       </li>
     </ul>
   </div>
