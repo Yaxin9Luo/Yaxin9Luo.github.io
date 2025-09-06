@@ -23,7 +23,7 @@ About Me
   </div>
   
   <div class="current-focus">
-    Recently, I am focusing on <strong>physical aware learning</strong> for vision models and <strong>analysis of pretrain data of LLM</strong>.
+    Recently, I am focusing on <strong>physical aware learning</strong> for vision models and doing a project for<strong>data anatomy of LLM pretraining</strong>.
   </div>
   
   <div class="research-interests">
