@@ -30,11 +30,11 @@ About Me
     <h4>My research interests span:</h4>
     <ul>
       <li>
-        <strong> Multimodal Foundation Model </strong>: Developing native multimodal foundation models which can perform <strong>understanding</strong>, <strong>reasoning</strong>, <strong>generation</strong> tasks from video, language, speech. These models will serve as the core intelligence—the "brain"—for Embodied AI, Robotics, and many other applications. <em>(My Long-Term research interest and belief)</em>
+        <strong> Multimodal Foundation Model </strong>: Developing native multimodal foundation models which can perform <strong>understanding</strong>, <strong>reasoning</strong>, <strong>generation</strong> and further <strong>action</strong> tasks for <strong>video</strong>, language, speech. These models will serve as the core intelligence—the "brain"—for Embodied AI, Robotics, and many other applications. 
       </li>
       
       <li>
-        <strong> Video Understanding & Generation </strong>:  Vision-centric video model that learns causal structure and object-centric representations from large-scale video supports both understanding and generation with long-horizon temporal coherence; and further enabling action-conditioned prediction for embodied agents.
+        <strong> Physics Grounded Video Understanding & Generation </strong>:  Vision-centric video model that learns causal structure and explicit physics knowledge from large-scale videos supports both understanding and generation for physical real-world; and further enabling action-conditioned prediction for embodied agents.
       </li>
 
       <li>
