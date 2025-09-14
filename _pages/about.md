@@ -15,7 +15,7 @@ About Me
 <span class="sr-only">Decorative animated background</span>
 <div class="about-me-content">
   <div class="intro-text">
-    Hello! I am a First-Year Machine Learning PhD student at <a href="https://mbzuai.ac.ae/" class="institution-link">MBZUAI</a>, advised by <a href="https://zhiqiangshen.com/" class="advisor-link">Prof. Zhiqiang Shen</a>, <a href="https://www.di.ens.fr/~laptev/" class="advisor-link">Prof. Ivan Laptev</a>  and <a href="https://fabvio.github.io/" class="advisor-link">Dr. Fabio Pizzati</a>, collaborating with <a href="https://rdecharette.github.io/" class="advisor-link">Prof. Raoul de Charette</a> at <a href="https://www.inria.org/en" class="institution-link">Inria</a>. I am also closely working with my friend <a href="https://xxfchen.github.io/XiaofuChen/" class="collaborator-link">Xiaofu Chen</a>. 
+    Hello! I am a First-Year Machine Learning PhD student at <a href="https://mbzuai.ac.ae/" class="institution-link">MBZUAI</a>, advised by <a href="https://zhiqiangshen.com/" class="advisor-link">Prof. Zhiqiang Shen</a>, <a href="https://www.di.ens.fr/~laptev/" class="advisor-link">Prof. Ivan Laptev</a>  and <a href="https://fabvio.github.io/" class="advisor-link">Dr. Fabio Pizzati</a>, collaborating with <a href="https://rdecharette.github.io/" class="advisor-link">Prof. Raoul de Charette</a> at <a href="https://www.inria.org/en" class="institution-link">Inria</a>. I am also closely working with my friend <a href="https://xxfchen.github.io/XiaofuChen/" class="collaborator-link">Xiaofu Chen</a>. I believe 
   </div>
   
   <div class="background-text">
@@ -26,7 +26,7 @@ About Me
   </div>
   
   <div class="current-focus">
-    Recently, I am focusing on <strong>physical aware learning</strong> for vision models and doing a project for<strong>data anatomy of LLM pretraining</strong>.
+    Recently, I am focusing on <strong>physical aware learning</strong> for vision models and doing a project for<strong> data anatomy of LLM pretraining</strong>.
   </div>
   
   <div class="research-interests">
