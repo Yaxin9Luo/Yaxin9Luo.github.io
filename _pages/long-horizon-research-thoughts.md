@@ -11,7 +11,8 @@ Long-Horizon Research Thoughts
 
 <div class="page-content">
   <p>
-    Content coming soon. I will add notes and ideas on long-horizon research directions here.
+  My System-level Mission:
+    Enable an embodied agent to perceive → reason about physics → predict and generate world states → plan → act → self-correct across long horizons in the real world, with language/speech as the interface and video as the primary substrate.
   </p>
 </div>
 
