@@ -24,6 +24,9 @@ main:
   - title: "📄 CV"
     url: /cv/
     featured: true
+  
+  - title: "Long-Horizon Research Thoughts"
+    url: /long-horizon-research-thoughts/
     
   # - title: "Guide"
   #   url: /markdown/
