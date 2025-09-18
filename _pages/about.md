@@ -53,7 +53,8 @@ News
 ======
 
 <div class="news-item">
-🚀 <strong><a href="https://github.com/MetaAgentX/OpenCaptchaWorld">OpenCaptchaWorld</a></strong> released and expanded to double the dataset size!
+[2025-09-18] 🚀 <strong><a href="https://github.com/MetaAgentX/OpenCaptchaWorld">OpenCaptchaWorld</a></strong> has been accepted by NeurIPS 2025.
+
 </div>
 
 
@@ -67,7 +68,7 @@ For full and up-to-date publication list, please refer to my [Google Scholar](ht
 
 <!-- Publications: reverted to original Markdown layout -->
 * <img src="./images/opencaptchaworld.png" width="400px" align="left" style="margin-right:10px" class="publication-image"> **OpenCaptchaWorld: A Comprehensive Web-based Platform for Testing and Benchmarking Multimodal LLM Agents**
-  * <span class="venue-badge arxiv">arXiv</span>
+  * <span class="venue-badge neurips">NeurIPS 2025</span>
   * **Yaxin Luo** *, Zhaoyi Li *, Jiacheng Liu, Jiacheng Cui, Xiaohan Zhao, Zhiqiang Shen
   * <a href="https://arxiv.org/abs/2505.24878" class="enhanced-link paper-link">📄 Paper</a> <a href="https://github.com/MetaAgentX/OpenCaptchaWorld" class="enhanced-link code-link">💻 Code</a> <a href="https://huggingface.co/spaces/YaxinLuo/Open_CaptchaWorld" class="enhanced-link demo-link">🚀 Demo</a>
 
