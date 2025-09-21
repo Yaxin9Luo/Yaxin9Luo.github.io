@@ -84,6 +84,10 @@ redirect_from:
   <section class="cv-section">
     <h2 class="cv-h2"><i class="fas fa-book-open"></i> Publications (first author only)</h2>
     <div class="cv-cards">
+    <div class="cv-card">
+        <div class="cv-card__title"><strong>NeurIPS 2025</strong> — OpenCaptchaWorld: A Comprehensive Web-based Platform for Testing and Benchmarking Multimodal LLM Agents.</div>
+        <div class="cv-card__body">A comprehensive web-based platform for testing and benchmarking Multimodal LLM Web Agents on CAPTCHA-style puzzles. This project provides an environment to evaluate how artificial intelligence systems perform on a variety of visual puzzles resembling CAPTCHAs.</div>
+      </div>
       <div class="cv-card">
         <div class="cv-card__title"><strong>ICLR 2025</strong> — γ-MoD: Exploring Mixture-of-Depth Adaptation for Multimodal Large Language Models.</div>
         <div class="cv-card__body">γ-MoD is a plug-and-play approach that replaces redundant dense layers with Mixture-of-Depth (MoD) layers to reduce computation while maintaining performance.</div>
