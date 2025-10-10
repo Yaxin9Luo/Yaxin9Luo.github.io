@@ -15,14 +15,11 @@ About Me
 <span class="sr-only">Decorative animated background</span>
 <div class="about-me-content">
   <div class="intro-text">
-    Hello! I am a First-Year Machine Learning PhD student at <a href="https://mbzuai.ac.ae/" class="institution-link">MBZUAI</a>, advised by <a href="https://zhiqiangshen.com/" class="advisor-link">Prof. Zhiqiang Shen</a>, <a href="https://www.di.ens.fr/~laptev/" class="advisor-link">Prof. Ivan Laptev</a>  and <a href="https://fabvio.github.io/" class="advisor-link">Dr. Fabio Pizzati</a>, collaborating with <a href="https://rdecharette.github.io/" class="advisor-link">Prof. Raoul de Charette</a> at <a href="https://www.inria.org/en" class="institution-link">Inria</a>. I am also closely working with my friend <a href="https://xxfchen.github.io/XiaofuChen/" class="collaborator-link">Xiaofu Chen</a>. I believe that the next-gen advanced machine intelligence is vision-centric, multimodal foundation model that can understand the physics of the real world and can correctly interact with and predict the changes of it.
+    Hello! I am a First-Year Machine Learning PhD student at <a href="https://mbzuai.ac.ae/" class="institution-link">MBZUAI</a>, advised by <a href="https://zhiqiangshen.com/" class="advisor-link">Prof. Zhiqiang Shen</a>, <a href="https://www.di.ens.fr/~laptev/" class="advisor-link">Prof. Ivan Laptev</a>  and <a href="https://fabvio.github.io/" class="advisor-link">Dr. Fabio Pizzati</a>, collaborating with <a href="https://rdecharette.github.io/" class="advisor-link">Prof. Raoul de Charette</a> at <a href="https://www.inria.org/en" class="institution-link">Inria</a>. I am also closely working with my friend <a href="https://xxfchen.github.io/XiaofuChen/" class="collaborator-link">Xiaofu Chen</a>. 
   </div>
   
   <div class="background-text">
-    Previously, I earned my Bachelor’s degree from <a href="https://www.dtu.dk/english/" class="institution-link">Technical University of Denmark</a>, where I was fortunate to be supervised by <a href="https://dimipapa.github.io/" class="advisor-link">Prof. Dim P. Papadopoulos</a> who offered me a good research training and habits. 
-    
-    
-    Earlier, I spent an intense and rewarding year at the <strong>University of Edinburgh</strong> studying pure mathematics and physics—an experience that sparked my passion for science and technology, deepened my curiosity about the unknown, I was curious and wanted to explore <strong>String Theory</strong> at that time, this one year ultimately shaped who I am today. Before Edinburgh, while enrolled in a Bio-Medicine program at the <strong>University of Queensland</strong> and preparing for the UCAT test to be addimitted into the university's medical school, I failed at the end. As I only focused on managing a high-street multi-brand boutique which was located in Brisbane‘s Southbank near the casino, and was far more focused on business than on study and research; that Edinburgh year changed my priorities and set me on a research path, thanks to the advice, encourage and supports of my academic personal tutor <a href="https://webhomes.maths.ed.ac.uk/~apires/" class="advisor-link">Prof.Ana Rita Pires</a> when I was at Edinburgh. <strong>Anyway, all those past experiences have made me who I am today.</strong>
+    Previously, I earned my Bachelor’s degree from <a href="https://www.dtu.dk/english/" class="institution-link">Technical University of Denmark</a>, where I was fortunate to be supervised by <a href="https://dimipapa.github.io/" class="advisor-link">Prof. Dim P. Papadopoulos</a>. 
   </div>
   
   <div class="current-focus">
@@ -33,11 +30,11 @@ About Me
     <h4>My research interests span:</h4>
     <ul>      
       <li>
-        <strong> Physics Grounded Video Understanding & Generation </strong>:  Vision-centric video model that learns causal structure and explicit physics knowledge from large-scale videos supports both understanding and generation for physical real-world; and further enabling action-conditioned prediction for embodied agents.
+        <strong> Efficient Machine Learning </strong>: Beyond the perspectives of large scale, I enjoy compressing the large foundation models into real-world application deployable ones, from both data and algorithm–system co-design perspectives. as well as considering all training and inference stages techiniques. My aim is to deploy the advanced AI models to edge devices that we used and faced in the daily life, such as, phones, laptops and drones etc..
       </li>
 
       <li>
-        <strong> Data-centric and Efficient Machine Learning </strong>: Beyond the perspectives of models and algorithms, I also enjoy analyzing and understanding  data, improving data quality, compressing data for training efficiency, and building efficient / scalable data pipelines for synthesizing high-quality  data for foundation models.
+        <strong> Physics Grounded Foundation Model </strong>:  Vision-centric video model that learns causal structure and explicit physics knowledge from large-scale videos supports both understanding and generation for physical real-world; and further enabling action-conditioned prediction for embodied agents.
       </li>
     </ul>
   </div>
