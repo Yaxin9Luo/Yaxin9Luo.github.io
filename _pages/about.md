@@ -19,7 +19,7 @@ About Me
   </div>
   
   <div class="background-text">
-    Previously, I earned my Bachelor’s degree from <a href="https://www.dtu.dk/english/" class="institution-link">Technical University of Denmark</a>, where I was fortunate to be supervised by <a href="https://dimipapa.github.io/" class="advisor-link">Prof. Dim P. Papadopoulos</a>. 
+    Previously, I earned my Bachelor’s degree from <a href="https://www.dtu.dk/english/" class="institution-link">Technical University of Denmark</a>, where I was fortunate to be supervised by <a href="https://dimipapa.github.io/" class="advisor-link">Prof. Dim P. Papadopoulos</a>.
   </div>
   
   <div class="current-focus">
