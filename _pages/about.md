@@ -15,7 +15,8 @@ About Me
 <span class="sr-only">Decorative animated background</span>
 <div class="about-me-content">
   <div class="intro-text">
-    Hello! I am a First-Year Machine Learning PhD student at <a href="https://mbzuai.ac.ae/" class="institution-link">MBZUAI</a>, advised by <a href="https://zhiqiangshen.com/" class="advisor-link">Prof. Zhiqiang Shen</a>, <a href="https://www.di.ens.fr/~laptev/" class="advisor-link">Prof. Ivan Laptev</a>  and <a href="https://fabvio.github.io/" class="advisor-link">Dr. Fabio Pizzati</a>. I am also closely working with my friend <a href="https://xxfchen.github.io/XiaofuChen/" class="collaborator-link">Xiaofu Chen</a>. My goal is to make the advanced large-scale vision/language/multimodal models to be deployable on edge devices, or ambitiously, we can even train them with the edge devices' computing power, from a <strong>data & algorithm & system</strong> triplet perspectives <strong>co-design</strong> apporach. 
+    Hello! I am a First-Year Machine Learning PhD student at <a href="https://mbzuai.ac.ae/" class="institution-link">MBZUAI</a>, advised by <a href="https://zhiqiangshen.com/" class="advisor-link">Prof. Zhiqiang Shen</a>, <a href="https://www.di.ens.fr/~laptev/" class="advisor-link">Prof. Ivan Laptev</a>  and <a href="https://fabvio.github.io/" class="advisor-link">Dr. Fabio Pizzati</a>. I am also closely working with my friend <a href="https://xxfchen.github.io/XiaofuChen/" class="collaborator-link">Xiaofu Chen</a>.
+    My research aims to make large-scale vision, language, and multimodal models deployable on edge devices — and, more ambitiously, to enable training them directly using edge devices’ computing power. I approach this challenge from a co-design perspective across the data, algorithm, system, and hardware full stack.
   </div>
   
   <div class="background-text">
@@ -30,7 +31,7 @@ About Me
     <h4>My research interests span:</h4>
     <ul>      
       <li>
-        <strong> Efficient Machine Learning </strong>: Beyond the perspectives of large scale, I enjoy compressing the large foundation models into real-world application deployable ones, from both data and algorithm–system co-design perspectives. as well as considering all training and inference stages techiniques. My aim is to deploy the advanced AI models to edge devices that we used and faced in the daily life, such as, phones, laptops and drones etc..
+        <strong> Efficient Machine Learning </strong>: Beyond the perspectives of large scale, I enjoy compressing the large foundation models into real-world application deployable ones, from both data , algorithm–system and hardware full stack co-design perspectives. as well as considering all training and inference stages techiniques. My aim is to deploy the advanced AI models to edge devices that we used and faced in the daily life, such as, phones, laptops and drones etc..
       </li>
 
       <li>
