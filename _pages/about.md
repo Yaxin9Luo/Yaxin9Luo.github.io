@@ -19,7 +19,7 @@ About Me
   </div>
   
   <div class="background-text">
-    Previously, I earned my Bachelor’s degree from <a href="https://www.dtu.dk/english/" class="institution-link">Technical University of Denmark</a>, where I was fortunate to be supervised by <a href="https://dimipapa.github.io/" class="advisor-link">Prof. Dim P. Papadopoulos</a>. Meanwhile, I am lucky to collarating with <a href="https://scholar.google.com/citations?user=EyZqU9gAAAAJ&hl=en" class="advisor-link">Dr.Gen Luo</a> and <a href="https://scholar.google.com/citations?user=lRSD7PQAAAAJ&hl=en" class="advisor-link">Prof.Rongrong Ji</a> on efficient deep learning researches in my bachelor. 
+    Previously, I earned my Bachelor’s degree from <a href="https://www.dtu.dk/english/" class="institution-link">Technical University of Denmark</a>, where I was fortunate to be supervised by <a href="https://dimipapa.github.io/" class="advisor-link">Prof. Dim P. Papadopoulos</a>. Meanwhile, I was lucky to collarating with <a href="https://scholar.google.com/citations?user=EyZqU9gAAAAJ&hl=en" class="advisor-link">Dr.Gen Luo</a> and <a href="https://scholar.google.com/citations?user=lRSD7PQAAAAJ&hl=en" class="advisor-link">Prof.Rongrong Ji</a> on efficient deep learning researches during my bachelor. 
   </div>
   
   <div class="current-focus">
