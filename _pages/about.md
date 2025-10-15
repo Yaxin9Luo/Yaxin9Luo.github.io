@@ -25,21 +25,17 @@ About Me
     Earlier, I spent an intense and rewarding year at the <strong>University of Edinburgh</strong> studying pure mathematics and physics—an experience that sparked my passion for science and technology, deepened my curiosity about the unknown, I was curious and wanted to explore <strong>String Theory</strong> at that time, this one year ultimately shaped who I am today. Before Edinburgh, while enrolled in a Bio-Medicine program at the <strong>University of Queensland</strong> and preparing for the UCAT test to be addimitted into the university's medical school, I failed at the end. As I only focused on managing a high-street multi-brand boutique which was located in Brisbane‘s Southbank near the casino, and was far more focused on business than on study and research; that Edinburgh year changed my priorities and set me on a research path, thanks to the advice, encourage and supports of my academic personal tutor <a href="https://webhomes.maths.ed.ac.uk/~apires/" class="advisor-link">Prof.Ana Rita Pires</a> when I was at Edinburgh. <strong>Anyway, all those past experiences have made me who I am today.</strong>
   </div>
   
-  <div class="current-focus">
-    Recently, I am focusing on <strong>physical aware learning</strong> for vision models and doing a project for<strong> data anatomy of LLM pretraining</strong>.
-  </div>
-  
   <div class="research-interests">
-    <h4>My research interests span:</h4>
+    <h4>My research interests focus on:</h4>
     <ul>      
       <li>
         <strong> Efficient Machine Learning </strong>: Beyond the perspectives of large scale, I enjoy compressing the large foundation models into real-world application deployable ones, from both data , algorithm–system and hardware full stack co-design perspectives. as well as considering all training and inference stages techiniques. My aim is to deploy the advanced AI models to edge devices that we used and faced in the daily life, such as, phones, laptops and drones etc..
       </li>
-
-      <li>
-        <strong> Physics Grounded Foundation Model </strong>:  Vision-centric video model that learns causal structure and explicit physics knowledge from large-scale videos supports both understanding and generation for physical real-world; and further enabling action-conditioned prediction for embodied agents.
-      </li>
     </ul>
+  </div>
+
+  <div class="current-focus">
+    Recently, I am focusing on pretraining data anatomy of LLM pretraining and on-device efficient video generation model.
   </div>
 </div>
 </div>
