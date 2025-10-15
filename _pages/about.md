@@ -15,7 +15,7 @@ About Me
 <span class="sr-only">Decorative animated background</span>
 <div class="about-me-content">
   <div class="intro-text">
-    Hello! I am a First-Year Machine Learning PhD student at <a href="https://mbzuai.ac.ae/" class="institution-link">MBZUAI</a>, advised by <a href="https://zhiqiangshen.com/" class="advisor-link">Prof. Zhiqiang Shen</a> and <a href="https://scholar.google.com/citations?user=RigrYkcAAAAJ&hl=en"class="advisor-link">Prof.Mohsen Guizani</a>. I am also closely working with my friend <a href="https://xxfchen.github.io/XiaofuChen/" class="collaborator-link">Xiaofu Chen</a>.
+    Hello! I am a First-Year Machine Learning PhD student at <a href="https://mbzuai.ac.ae/" class="institution-link">MBZUAI</a>, advised by <a href="https://zhiqiangshen.com/" class="advisor-link">Prof. Zhiqiang Shen</a> and <a href="https://scholar.google.com/citations?user=RigrYkcAAAAJ&hl=en" class="advisor-link">Prof.Mohsen Guizani</a>. I am also closely working with my friend <a href="https://xxfchen.github.io/XiaofuChen/" class="collaborator-link">Xiaofu Chen</a>.
     My research aims to make large-scale vision, language, and multimodal models deployable on edge devices — and, more ambitiously, to enable training them directly using edge devices’ computing power. I approach this challenge from a co-design perspective across the data, algorithm, system, and hardware full stack.
   </div>
   
@@ -30,6 +30,10 @@ About Me
     <ul>      
       <li>
         <strong> Efficient Machine Learning </strong>: Beyond the perspectives of large scale, I enjoy compressing the large foundation models into real-world application deployable ones, from both data , algorithm–system and hardware full stack co-design perspectives. as well as considering all training and inference stages techiniques. My aim is to deploy the advanced AI models to edge devices that we used and faced in the daily life, such as, phones, laptops and drones etc..
+      </li>
+
+      <li>
+        <strong> Data-centric Machine Learning </strong>: Beyond the perspectives of models and algorithms, I also enjoy analyzing and understanding  data, improving data quality, compressing data for training efficiency, and building efficient / scalable data pipelines for synthesizing high-quality  data for foundation models.
       </li>
     </ul>
   </div>
