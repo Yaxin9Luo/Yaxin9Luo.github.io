@@ -39,7 +39,7 @@ About Me
   </div>
 
   <div class="current-focus">
-    Recently, I am focusing on pretraining data anatomy of LLM pretraining and on-device unified understanding & generation model.
+    Recently, I am focusing on LLM's training data anatomy and on-device unified understanding & generation model.
   </div>
 </div>
 </div>
