@@ -37,7 +37,7 @@ About Me
       </li>
 
       <li>
-        <strong> Data-centric Machine Learning </strong>: Beyond the perspectives of models and algorithms, I also enjoy analyzing and understanding  data, improving data quality, compressing data for training efficiency, and building efficient / scalable data pipelines for synthesizing high-quality  data for foundation models.
+        <strong> Physics Grounded Foundation Model </strong>:  Vision-centric video model that learns causal structure and explicit physics knowledge from large-scale videos supports both understanding and generation for physical real-world; and further enabling action-conditioned prediction for embodied agents.
       </li>
     </ul>
   </div>
