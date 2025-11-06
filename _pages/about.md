@@ -16,7 +16,7 @@ About Me
 <div class="about-me-content">
   <div class="intro-text">
     Hello! I am a First-Year Machine Learning PhD student at <a href="https://mbzuai.ac.ae/" class="institution-link">MBZUAI</a>, advised by <a href="https://zhiqiangshen.com/" class="advisor-link">Prof. Zhiqiang Shen</a> and <a href="https://scholar.google.com/citations?user=RigrYkcAAAAJ&hl=en" class="advisor-link">Prof.Mohsen Guizani</a>. I am also closely working with my friend <a href="https://xxfchen.github.io/XiaofuChen/" class="collaborator-link">Xiaofu Chen</a>.
-    My research aims to develop unified and physical grounded mutlimodal foundation models and make them efficient and faster, be deployable on edge devices — and, more ambitiously, to enable training them directly using edge devices’ computing power. I wish to approach this challenge from a co-design perspective across the data, algorithm, system, and hardware.
+    My research aims to develop unified understanding/generation and physical aware mutlimodal foundation models and make them efficient and faster, be deployable on edge devices — and, more ambitiously, to enable training them directly using edge devices’ computing power. I wish to approach this challenge from a co-design perspective across the data, algorithm, system, and hardware.
   </div>
   
   <div class="background-text">
@@ -29,12 +29,13 @@ About Me
     <h4>My research interests focus on:</h4>
     <ul>      
       <li>
+        <strong> Multimodal Foundation Model </strong>: Developing native multimodal foundation models which can perform unified <strong>understanding</strong>, <strong>reasoning</strong>, <strong>generation</strong> tasks from video, language, speech. These models will serve as the core intelligence—the "brain"—for Embodied AI, Robotics, and many other applications. 
+      </li>
+      
+      <li>
         <strong> Efficient Machine Learning </strong>: Beyond the perspectives of large scale, I enjoy compressing the large foundation models into real-world application deployable ones, from both data , algorithm–system and hardware full stack co-design perspectives. as well as considering all training and inference stages techiniques. My aim is to deploy the advanced AI models to edge devices that we used and faced in the daily life, such as, phones, laptops and drones etc..
       </li>
 
-      <li>
-        <strong> Multimodal Foundation Model </strong>: Developing native multimodal foundation models which can perform unified <strong>understanding</strong>, <strong>reasoning</strong>, <strong>generation</strong> tasks from video, language, speech. These models will serve as the core intelligence—the "brain"—for Embodied AI, Robotics, and many other applications. 
-      </li>
 
       <li>
         <strong> Physics Grounded Foundation Model </strong>:  Vision-centric video model that learns causal structure and explicit physics knowledge from large-scale videos supports both understanding and generation for physical real-world; and further enabling action-conditioned prediction for embodied agents.
