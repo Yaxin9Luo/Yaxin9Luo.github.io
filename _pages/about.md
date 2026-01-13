@@ -32,13 +32,12 @@ About Me
         <strong> Multimodal Foundation Model </strong>: Developing native multimodal foundation models which can perform unified <strong>understanding</strong>, <strong>reasoning</strong>, <strong>generation</strong> tasks from video, language, speech. These models will serve as the core intelligence—the "brain"—for Embodied AI, Robotics, and many other applications. 
       </li>
       
-      <li>
-        <strong> Efficient Machine Learning </strong>: Beyond the perspectives of large scale, I enjoy compressing the large foundation models into real-world application deployable ones, from both data , algorithm–system and hardware full stack co-design perspectives. as well as considering all training and inference stages techiniques. My aim is to deploy the advanced AI models to edge devices that we used and faced in the daily life, such as, phones, laptops and drones etc..
+       <li>
+        <strong> GUI (or Real World Device) Agent </strong>:  Build the LLM Agents that can just like humans to control and use the real world devices like computer, smart-home furnitures etc..
       </li>
 
-
       <li>
-        <strong> Physics Grounded Foundation Model </strong>:  Vision-centric video model that learns causal structure and explicit physics knowledge from large-scale videos supports both understanding and generation for physical real-world; and further enabling action-conditioned prediction for embodied agents.
+        <strong> Efficient AI Models </strong>: Beyond the perspectives of large scale, I enjoy compressing the large foundation models into real-world application deployable ones, from both data , algorithm–system and hardware full stack co-design perspectives. as well as considering all training and inference stages techiniques. My aim is to deploy the advanced AI models to edge devices that we used and faced in the daily life, such as, phones, laptops and drones etc..
       </li>
     </ul>
   </div>
