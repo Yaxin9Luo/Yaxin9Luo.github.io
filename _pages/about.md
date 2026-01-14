@@ -16,7 +16,7 @@ About Me
 <div class="about-me-content">
   <div class="intro-text">
     Hello! I am a First-Year Machine Learning PhD student at <a href="https://mbzuai.ac.ae/" class="institution-link">MBZUAI</a>, advised by <a href="https://zhiqiangshen.com/" class="advisor-link">Prof. Zhiqiang Shen</a> and <a href="https://scholar.google.com/citations?user=RigrYkcAAAAJ&hl=en" class="advisor-link">Prof.Mohsen Guizani</a>. I am also closely working with my friend <a href="https://xxfchen.github.io/XiaofuChen/" class="collaborator-link">Xiaofu Chen</a>.
-    My research aims to develop unified understanding/generation and physical aware mutlimodal foundation models and make them efficient and faster, be deployable on edge devices — and, more ambitiously, to enable training them directly using edge devices’ computing power. I wish to approach this challenge from a co-design perspective across the data, algorithm, system, and hardware.
+    My research focuses on developing native **Multimodal Foundation Models** for unified understanding and generation, as well as building **Autonomous Agents** capable of perceiving, reasoning, and acting. I am particularly interested in bridging the gap between foundation model intelligence and actionable execution to enable agents that can effectively navigate and manipulate both digital (GUI) and physical environments.
   </div>
   
   <div class="background-text">
@@ -32,13 +32,10 @@ About Me
         <strong> Multimodal Foundation Model </strong>: Developing native multimodal foundation models which can perform unified <strong>understanding</strong>, <strong>reasoning</strong>, <strong>generation</strong> tasks from video, language, speech. These models will serve as the core intelligence—the "brain"—for Embodied AI, Robotics, and many other applications. 
       </li>
       
-       <li>
-        <strong> GUI (or Real World Device) Agent </strong>:  Build the LLM Agents that can just like humans to control and use the real world devices like computer, smart-home furnitures etc..
+      <li>
+        <strong> GUI/CUA & Autonomous Agents </strong>: Building intelligent agents capable of interacting with digital and physical environments just like humans. I focus on enabling LLMs to perceive, reason, and execute complex workflows across GUIs (Computer Use Agents) and IoT devices. The goal is to create reliable, generalist systems that automate real-world tasks, from software operation to smart home control, significantly boosting productivity and bridging the gap between AI reasoning and actionable execution.
       </li>
 
-      <li>
-        <strong> Efficient AI Models </strong>: Beyond the perspectives of large scale, I enjoy compressing the large foundation models into real-world application deployable ones, from both data , algorithm–system and hardware full stack co-design perspectives. as well as considering all training and inference stages techiniques. My aim is to deploy the advanced AI models to edge devices that we used and faced in the daily life, such as, phones, laptops and drones etc..
-      </li>
     </ul>
   </div>
 
