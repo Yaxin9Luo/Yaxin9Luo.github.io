@@ -16,7 +16,7 @@ About Me
 <div class="about-me-content">
   <div class="intro-text">
     Hello! I am a First-Year Machine Learning PhD student at <a href="https://mbzuai.ac.ae/" class="institution-link">MBZUAI</a>, advised by <a href="https://zhiqiangshen.com/" class="advisor-link">Prof. Zhiqiang Shen</a> and <a href="https://scholar.google.com/citations?user=RigrYkcAAAAJ&hl=en" class="advisor-link">Prof.Mohsen Guizani</a>. I am also closely working with my friend <a href="https://xxfchen.github.io/XiaofuChen/" class="collaborator-link">Xiaofu Chen</a>.
-    My research vision centers on building <strong>Autonomous Agents</strong> that can perceive, reason, and act in both digital (GUI/Computer Use/Web) and physical environments. To achieve this, I focus on developing native <strong>Multimodal Foundation Models</strong> with unified understanding, reasoning, and generation capabilities—these models serve as the core intelligence that powers agentic systems to effectively execute complex real-world tasks.
+    My research vision centers on building <strong>Autonomous Agents</strong> that can perceive, reason, and act in both digital (GUI/Computer Use/Web) and physical environments. To achieve this, I focus on developing <strong>Native Multimodal Foundation Models</strong> with unified understanding, reasoning, and generation capabilities—these models serve as the core intelligence that powers agentic systems to effectively execute complex real-world tasks.
   </div>
   
   <div class="background-text">
@@ -27,13 +27,14 @@ About Me
   
   <div class="research-interests">
     <h4>My research interests focus on:</h4>
-    <ul>
-      <li>
-        <strong> Autonomous Agents </strong>: Building intelligent agents capable of interacting with digital and physical environments just like humans. I focus on enabling multimodal models to perceive, reason, and execute complex workflows across GUIs (Computer Use/Web Agents) and IoT devices in Physical World (Agents that control your smart-home devices). The goal is to create reliable, generalist systems that automate real-world tasks—from software operation to smart home control—significantly boosting productivity and bridging the gap between AI reasoning and actionable execution.
-      </li>
-
+    <ul>\
       <li>
         <strong> Multimodal Foundation Models </strong>: Developing native multimodal foundation models that perform unified <strong>understanding</strong>, <strong>reasoning</strong>, and <strong>generation</strong> across video, language, and speech. These models serve as the core intelligence—the "brain"—that powers autonomous agents, enabling them to ground perception in action for embodied AI, robotics, and beyond.
+      </li>
+
+
+      <li>
+        <strong> Autonomous Agents </strong>: Building intelligent agents capable of interacting with digital and physical environments just like humans. I focus on enabling multimodal models to perceive, reason, and execute complex workflows across GUIs (Computer Use/Web Agents) and IoT devices in Physical World (Agents that control your smart-home devices). The goal is to create reliable, generalist systems that automate real-world tasks—from software operation to smart home control—significantly boosting productivity and bridging the gap between AI reasoning and actionable execution.
       </li>
 
     </ul>
