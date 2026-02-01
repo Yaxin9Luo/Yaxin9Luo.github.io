@@ -12,7 +12,7 @@ redirect_from:
   <div class="cv-hero__inner">
     <div class="cv-hero__left">
       <h1 class="cv-title">Yaxin Luo</h1>
-      <div class="cv-subtitle">Autonomous Agents & Native Multimodal Foundation Models</div>
+      <div class="cv-subtitle">Native Multimodal Foundation Models & Autonomous Agents </div>
       <div class="cv-contact">
         <a href="mailto:Yaxin.Luo@mbzuai.ac.ae" class="cv-chip"><i class="fas fa-envelope"></i> Yaxin.Luo@mbzuai.ac.ae</a>
         <a href="mailto:luoyaxin999@gmail.com" class="cv-chip"><i class="fas fa-envelope"></i> luoyaxin999@gmail.com</a>
