@@ -51,6 +51,11 @@ News
 ======
 
 <div class="news-item">
+[2026-02-10] 🚀 <strong><a href="https://github.com/MetaAgentX/NextGen-CAPTCHAs">Next-Gen CAPTCHAs</a></strong> is now available on arXiv! A defense framework leveraging cognitive gaps against MLLM-based GUI agents.
+
+</div>
+
+<div class="news-item">
 [2025-09-18] 🚀 <strong><a href="https://github.com/MetaAgentX/OpenCaptchaWorld">OpenCaptchaWorld</a></strong> has been accepted by NeurIPS 2025.
 
 </div>
@@ -65,6 +70,11 @@ Selected Publications
 For full and up-to-date publication list, please refer to my [Google Scholar](https://scholar.google.com/citations?user=tEaSCzYAAAAJ&hl=en) page.
 
 <!-- Publications: reverted to original Markdown layout -->
+* <img src="./images/nextgen-captchas.png" width="400px" align="left" style="margin-right:10px" class="publication-image"> **Next-Gen CAPTCHAs: Leveraging the Cognitive Gap for Scalable and Diverse GUI-Agent Defense**
+  * <span class="venue-badge arxiv">arXiv 2026</span>
+  * Jiacheng Liu *, **Yaxin Luo** *, Jiacheng Cui, Xinyi Shang, Xiaohan Zhao, Zhiqiang Shen
+  * <a href="https://arxiv.org/abs/2602.09012" class="enhanced-link paper-link">📄 Paper</a> <a href="https://github.com/MetaAgentX/NextGen-CAPTCHAs" class="enhanced-link code-link">💻 Code</a> <a href="https://huggingface.co/spaces/zcahjl3/NextGen-CAPTCHAs" class="enhanced-link demo-link">🚀 Demo</a> <a href="https://greenoso.github.io/NextGen-CAPTCHAs_webpage/" class="enhanced-link demo-link">🌐 Project</a>
+
 * <img src="./images/opencaptchaworld.png" width="400px" align="left" style="margin-right:10px" class="publication-image"> **OpenCaptchaWorld: A Comprehensive Web-based Platform for Testing and Benchmarking Multimodal LLM Agents**
   * <span class="venue-badge neurips">NeurIPS 2025</span>
   * **Yaxin Luo** *, Zhaoyi Li *, Jiacheng Liu, Jiacheng Cui, Xiaohan Zhao, Zhiqiang Shen
