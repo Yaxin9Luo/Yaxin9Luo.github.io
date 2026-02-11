@@ -16,7 +16,7 @@ About Me
 <div class="about-me-content">
   <div class="intro-text">
     Hello! I am a First-Year Machine Learning PhD student at <a href="https://mbzuai.ac.ae/" class="institution-link">MBZUAI</a>, advised by <a href="https://zhiqiangshen.com/" class="advisor-link">Prof. Zhiqiang Shen</a> and <a href="https://scholar.google.com/citations?user=RigrYkcAAAAJ&hl=en" class="advisor-link">Prof.Mohsen Guizani</a>. I am also closely working with my friend <a href="https://xxfchen.github.io/XiaofuChen/" class="collaborator-link">Xiaofu Chen</a>.
-    My research vision centers on building <strong>Autonomous Agents</strong> that can perceive, reason, and act in both digital and physical environments. To achieve this, I focus on developing <strong>Native Multimodal Foundation Models</strong> with unified understanding, reasoning, generation and agentic capabilities—these models serve as the core intelligence that powers agentic systems to effectively execute complex real-world tasks.
+    My research vision centers on advancing <strong>Native Multimodal Foundation Models</strong> that can understand, reason, generate and agentic action across diverse modalities. I am also interested in bridging the gap between high-performance unified intelligence and computational efficiency. To achieve this, I focus on developing <strong>Unified and Efficient Foundation Models</strong> capable of seamless understanding and generation, while ensuring they remain scalable and deployable through efficient architectural designs.
   </div>
   
   <div class="background-text">
@@ -29,20 +29,19 @@ About Me
     <h4>My research interests focus on:</h4>
     <ul>\
       <li>
-        <strong> Multimodal Foundation Models </strong>: Developing native multimodal foundation models that perform unified <strong>understanding</strong>, <strong>reasoning</strong>, and <strong>generation</strong> across video, language, and speech. These models serve as the core intelligence—the "brain"—that powers autonomous agents, enabling them to ground perception in action for embodied AI, robotics, and beyond.
+        <strong> Unified Multimodal Foundation Models </strong>: Developing native multimodal foundation models that perform unified <strong>understanding</strong>, <strong>reasoning</strong>, and <strong>generation</strong> across video, language, and speech. I aim to construct a universal interface where diverse modalities converge, enabling models to perceive complex real-world dynamics and generate coherent, high-fidelity multimodal content.
       </li>
 
 
       <li>
-        <strong> Autonomous Agents </strong>: Building intelligent agents capable of interacting with digital and physical environments just like humans. I focus on enabling multimodal models to perceive, reason, and execute complex workflows across digital and physical world. The goal is to create reliable, generalist systems that automate real-world tasks—from software operation to smart home control—significantly boosting productivity and even autonomous AI research.
+        <strong> Efficient Foundation Models </strong>: Tackling the efficiency challenges in scaling unified models. I explore novel architectures and mechanisms—such as dynamic computation allocation, efficient attention mechanisms, and token compression—to maximize performance-per-compute. The goal is to build sustainable AI systems that support long-context understanding and high-resolution generation without prohibitive computational costs.
       </li>
 
     </ul>
   </div>
 
   <div class="current-focus">
-    Recently, I am focusing on Native Multimodal Foundation Model and Autonomous AI Research Agent.
-  </div>
+    Recently, I am focusing on Unified Multimodal Foundation Models Projects one Analysis and one on post training
 </div>
 </div>
 
