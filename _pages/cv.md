@@ -52,7 +52,7 @@ redirect_from:
       <div class="cv-item">
         <div class="cv-item__title">PhD of Machine Learning, MBZUAI</div>
         <div class="cv-item__meta">Aug 2025–Jun 2029 (expected)</div>
-        <div class="cv-item__detail">Advisors: <strong>Prof. Zhiqiang Shen</strong> &amp; <strong>Prof. Mohsen Guizani</strong></div>
+        <div class="cv-item__detail">Advisors: <strong>Prof. Zhiqiang Shen</strong> </div>
       </div>
       <div class="cv-item">
         <div class="cv-item__title">Bachelor of General Engineering (specialized in Machine Learning), Technical University of Denmark</div>
