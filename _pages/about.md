@@ -62,13 +62,12 @@ News
 
 <div id="pub-strip-anchor"></div>
 
-Selected Publications
-======
+<h1>Selected Publications</h1>
 
-*( * indicate equal contribution)*
+<p><em>( * indicate equal contribution)</em></p>
 
-For full and up-to-date publication list, please refer to my 
-[Google Scholar](https://scholar.google.com/citations?user=tEaSCzYAAAAJ&hl=en) page.
+<p>For full and up-to-date publication list, please refer to my
+<a href="https://scholar.google.com/citations?user=tEaSCzYAAAAJ&hl=en">Google Scholar</a> page.</p>
 
 <div class="pub-entry">
   <div class="pub-image">
