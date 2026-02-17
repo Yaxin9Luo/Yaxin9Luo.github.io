@@ -46,8 +46,7 @@ About Me
 </div>
 
 
-News
-======
+<h1>News</h1>
 
 <div class="news-item">
 [2026-02-10] 🚀 <strong><a href="https://github.com/MetaAgentX/NextGen-CAPTCHAs">Next-Gen CAPTCHAs</a></strong> is now available on arXiv! A defense framework leveraging cognitive gaps against MLLM-based GUI agents.
