@@ -16,7 +16,7 @@ About Me
 <div class="about-me-content">
   <div class="intro-text">
     Hello! I am a First-Year Machine Learning PhD student at <a href="https://mbzuai.ac.ae/" class="institution-link">MBZUAI</a>, advised by <a href="https://zhiqiangshen.com/" class="advisor-link">Prof. Zhiqiang Shen</a>. I am also closely working with my friend <a href="https://xxfchen.github.io/XiaofuChen/" class="collaborator-link">Xiaofu Chen</a>.
-    My research vision centers on advancing <strong>Native Multimodal Foundation Models</strong> that can understand, reason, generate and agentic action across diverse modalities. I am also interested in bridging the gap between high-performance unified intelligence and computational efficiency. To achieve this, I focus on developing <strong>Unified and Efficient Foundation Models</strong> capable of seamless understanding and generation, while ensuring they remain scalable and deployable through efficient architectural designs.
+    My research vision centers on advancing Native Multimodal Foundation Modelsthat can <strong>understand, reason, generate and agentic action across diverse modalities.</strong>  I am also interested in bridging the gap between high-performance unified intelligence and computational <strong>efficiency</strong>. 
   </div>
   
   <div class="background-text">
@@ -27,7 +27,7 @@ About Me
   
   <div class="research-interests">
     <h4>My research interests focus on:</h4>
-    <ul>\
+    <ul>
       <li>
         <strong> Unified Multimodal Foundation Models </strong>: Developing native multimodal foundation models that perform unified <strong>understanding</strong>, <strong>reasoning</strong>, and <strong>generation</strong> across video, language, and speech. I aim to construct a universal interface where diverse modalities converge, enabling models to perceive complex real-world dynamics and generate coherent, high-fidelity multimodal content.
       </li>
@@ -70,27 +70,37 @@ Selected Publications
 For full and up-to-date publication list, please refer to my [Google Scholar](https://scholar.google.com/citations?user=tEaSCzYAAAAJ&hl=en) page.
 
 <!-- Publications: reverted to original Markdown layout -->
-* <img src="./images/nextgen-captchas.png" width="400px" align="left" style="margin-right:10px" class="publication-image"> **Next-Gen CAPTCHAs: Leveraging the Cognitive Gap for Scalable and Diverse GUI-Agent Defense**
+* <img src="./images/nextgen-captchas.png" width="400px" align="left" style="margin-right:10px" class="publication-image"> 
+
+**Next-Gen CAPTCHAs: Leveraging the Cognitive Gap for Scalable and Diverse GUI-Agent Defense**
   * <span class="venue-badge arxiv">arXiv 2026</span>
   * Jiacheng Liu *, **Yaxin Luo** *, Jiacheng Cui, Xinyi Shang, Xiaohan Zhao, Zhiqiang Shen
   * <a href="https://arxiv.org/abs/2602.09012" class="enhanced-link paper-link">📄 Paper</a> <a href="https://github.com/MetaAgentX/NextGen-CAPTCHAs" class="enhanced-link code-link">💻 Code</a> <a href="https://huggingface.co/spaces/zcahjl3/NextGen-CAPTCHAs" class="enhanced-link demo-link">🚀 Demo</a> <a href="https://greenoso.github.io/NextGen-CAPTCHAs_webpage/" class="enhanced-link demo-link">🌐 Project</a>
 
-* <img src="./images/opencaptchaworld.png" width="400px" align="left" style="margin-right:10px" class="publication-image"> **OpenCaptchaWorld: A Comprehensive Web-based Platform for Testing and Benchmarking Multimodal LLM Agents**
+* <img src="./images/opencaptchaworld.png" width="400px" align="left" style="margin-right:10px" class="publication-image"> 
+
+**OpenCaptchaWorld: A Comprehensive Web-based Platform for Testing and Benchmarking Multimodal LLM Agents**
   * <span class="venue-badge neurips">NeurIPS 2025</span>
   * **Yaxin Luo** *, Zhaoyi Li *, Jiacheng Liu, Jiacheng Cui, Xiaohan Zhao, Zhiqiang Shen
   * <a href="https://arxiv.org/abs/2505.24878" class="enhanced-link paper-link">📄 Paper</a> <a href="https://github.com/MetaAgentX/OpenCaptchaWorld" class="enhanced-link code-link">💻 Code</a> <a href="https://huggingface.co/spaces/YaxinLuo/Open_CaptchaWorld" class="enhanced-link demo-link">🚀 Demo</a>
 
-* <img src="./images/APL.png" width="400px" align="left" style="margin-right:10px" class="publication-image"> **APL: Anchor-Based Prompt Learning for One-Stage Weakly Supervised Referring Expression Comprehension**
+* <img src="./images/APL.png" width="400px" align="left" style="margin-right:10px" class="publication-image"> 
+
+**APL: Anchor-Based Prompt Learning for One-Stage Weakly Supervised Referring Expression Comprehension**
   * <span class="venue-badge eccv">ECCV 2024</span>
   * **Yaxin Luo**,Jiayi Ji, Xiaofu Chen, Yuxin Zhang, Tianhe Ren, Gen Luo
   * <a href="https://link.springer.com/chapter/10.1007/978-3-031-72624-8_12" class="enhanced-link paper-link">📄 Paper</a> <a href="https://github.com/Yaxin9Luo/APL" class="enhanced-link code-link">💻 Code</a>
 
-* <img src="./images/MoD.png" width="400px" align="left" style="margin-right:10px" class="publication-image"> **γ-MoD: Exploring Mixture-of-Depth Adaptation for Multimodal Large Language Models**
+* <img src="./images/MoD.png" width="400px" align="left" style="margin-right:10px" class="publication-image"> 
+
+**γ-MoD: Exploring Mixture-of-Depth Adaptation for Multimodal Large Language Models**
   * <span class="venue-badge iclr">ICLR 2025</span>
   * **Yaxin Luo**, Gen Luo, Jiayi Ji, Yiyi Zhou, Xiaoshuai Sun, Zhiqiang Shen, Rongrong Ji
   * <a href="https://arxiv.org/abs/2410.13859" class="enhanced-link paper-link">📄 Paper</a> <a href="https://github.com/Yaxin9Luo/gamma-MoD" class="enhanced-link code-link">💻 Code</a>
 
-* <img src="./images/DViN.png" width="400px" align="left" style="margin-right:10px" class="publication-image"> **DViN: Dynamic Visual Routing Network for Weakly Supervised Referring Expression Comprehension**
+* <img src="./images/DViN.png" width="400px" align="left" style="margin-right:10px" class="publication-image"> 
+
+**DViN: Dynamic Visual Routing Network for Weakly Supervised Referring Expression Comprehension**
   * <span class="venue-badge cvpr">CVPR 2025</span>
   * Xiaofu Chen, **Yaxin Luo**, Gen Luo, Jiayi Ji, Henghui Ding, Yiyi Zhou
   * <a href="https://openaccess.thecvf.com/content/CVPR2025/html/Chen_DViN_Dynamic_Visual_Routing_Network_for_Weakly_Supervised_Referring_Expression_CVPR_2025_paper.html" class="enhanced-link paper-link">📄 Paper</a> <a href="https://github.com/XxFChen/DViN" class="enhanced-link code-link">💻 Code</a>
