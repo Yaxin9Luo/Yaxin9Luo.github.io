@@ -69,41 +69,65 @@ Selected Publications
 
 For full and up-to-date publication list, please refer to my [Google Scholar](https://scholar.google.com/citations?user=tEaSCzYAAAAJ&hl=en) page.
 
-<!-- Publications: reverted to original Markdown layout -->
-* <img src="./images/nextgen-captchas.png" width="400px" align="left" style="margin-right:10px" class="publication-image"> 
+<div class="pub-entry">
+  <div class="pub-image">
+    <img src="./images/nextgen-captchas.png">
+  </div>
+  <div class="pub-text">
+    <strong>Next-Gen CAPTCHAs: Leveraging the Cognitive Gap for Scalable and Diverse GUI-Agent Defense</strong><br>
+    <span class="venue-badge arxiv">arXiv 2026</span><br>
+    Jiacheng Liu *, <strong>Yaxin Luo</strong> *, Jiacheng Cui, Xinyi Shang, Xiaohan Zhao, Zhiqiang Shen<br>
+    <a href="https://arxiv.org/abs/2602.09012" class="enhanced-link paper-link">📄 Paper</a> <a href="https://github.com/MetaAgentX/NextGen-CAPTCHAs" class="enhanced-link code-link">💻 Code</a> <a href="https://huggingface.co/spaces/zcahjl3/NextGen-CAPTCHAs" class="enhanced-link demo-link">🚀 Demo</a> <a href="https://greenoso.github.io/NextGen-CAPTCHAs_webpage/" class="enhanced-link demo-link">🌐 Project</a>
+  </div>
+</div>
 
-**Next-Gen CAPTCHAs: Leveraging the Cognitive Gap for Scalable and Diverse GUI-Agent Defense**
-  * <span class="venue-badge arxiv">arXiv 2026</span>
-  * Jiacheng Liu *, **Yaxin Luo** *, Jiacheng Cui, Xinyi Shang, Xiaohan Zhao, Zhiqiang Shen
-  * <a href="https://arxiv.org/abs/2602.09012" class="enhanced-link paper-link">📄 Paper</a> <a href="https://github.com/MetaAgentX/NextGen-CAPTCHAs" class="enhanced-link code-link">💻 Code</a> <a href="https://huggingface.co/spaces/zcahjl3/NextGen-CAPTCHAs" class="enhanced-link demo-link">🚀 Demo</a> <a href="https://greenoso.github.io/NextGen-CAPTCHAs_webpage/" class="enhanced-link demo-link">🌐 Project</a>
+<div class="pub-entry">
+  <div class="pub-image">
+    <img src="./images/opencaptchaworld.png">
+  </div>
+  <div class="pub-text">
+    <strong>OpenCaptchaWorld: A Comprehensive Web-based Platform for Testing and Benchmarking Multimodal LLM Agents</strong><br>
+    <span class="venue-badge neurips">NeurIPS 2025</span><br>
+    <strong>Yaxin Luo</strong> *, Zhaoyi Li *, Jiacheng Liu, Jiacheng Cui, Xiaohan Zhao, Zhiqiang Shen<br>
+    <a href="https://arxiv.org/abs/2505.24878" class="enhanced-link paper-link">📄 Paper</a> <a href="https://github.com/MetaAgentX/OpenCaptchaWorld" class="enhanced-link code-link">💻 Code</a> <a href="https://huggingface.co/spaces/YaxinLuo/Open_CaptchaWorld" class="enhanced-link demo-link">🚀 Demo</a>
+  </div>
+</div>
 
-* <img src="./images/opencaptchaworld.png" width="400px" align="left" style="margin-right:10px" class="publication-image"> 
+<div class="pub-entry">
+  <div class="pub-image">
+    <img src="./images/APL.png">
+  </div>
+  <div class="pub-text">
+    <strong>APL: Anchor-Based Prompt Learning for One-Stage Weakly Supervised Referring Expression Comprehension</strong><br>
+    <span class="venue-badge eccv">ECCV 2024</span><br>
+    <strong>Yaxin Luo</strong>, Jiayi Ji, Xiaofu Chen, Yuxin Zhang, Tianhe Ren, Gen Luo<br>
+    <a href="https://link.springer.com/chapter/10.1007/978-3-031-72624-8_12" class="enhanced-link paper-link">📄 Paper</a> <a href="https://github.com/Yaxin9Luo/APL" class="enhanced-link code-link">💻 Code</a>
+  </div>
+</div>
 
-**OpenCaptchaWorld: A Comprehensive Web-based Platform for Testing and Benchmarking Multimodal LLM Agents**
-  * <span class="venue-badge neurips">NeurIPS 2025</span>
-  * **Yaxin Luo** *, Zhaoyi Li *, Jiacheng Liu, Jiacheng Cui, Xiaohan Zhao, Zhiqiang Shen
-  * <a href="https://arxiv.org/abs/2505.24878" class="enhanced-link paper-link">📄 Paper</a> <a href="https://github.com/MetaAgentX/OpenCaptchaWorld" class="enhanced-link code-link">💻 Code</a> <a href="https://huggingface.co/spaces/YaxinLuo/Open_CaptchaWorld" class="enhanced-link demo-link">🚀 Demo</a>
+<div class="pub-entry">
+  <div class="pub-image">
+    <img src="./images/MoD.png">
+  </div>
+  <div class="pub-text">
+    <strong>γ-MoD: Exploring Mixture-of-Depth Adaptation for Multimodal Large Language Models</strong><br>
+    <span class="venue-badge iclr">ICLR 2025</span><br>
+    <strong>Yaxin Luo</strong>, Gen Luo, Jiayi Ji, Yiyi Zhou, Xiaoshuai Sun, Zhiqiang Shen, Rongrong Ji<br>
+    <a href="https://arxiv.org/abs/2410.13859" class="enhanced-link paper-link">📄 Paper</a> <a href="https://github.com/Yaxin9Luo/gamma-MoD" class="enhanced-link code-link">💻 Code</a>
+  </div>
+</div>
 
-* <img src="./images/APL.png" width="400px" align="left" style="margin-right:10px" class="publication-image"> 
-
-**APL: Anchor-Based Prompt Learning for One-Stage Weakly Supervised Referring Expression Comprehension**
-  * <span class="venue-badge eccv">ECCV 2024</span>
-  * **Yaxin Luo**,Jiayi Ji, Xiaofu Chen, Yuxin Zhang, Tianhe Ren, Gen Luo
-  * <a href="https://link.springer.com/chapter/10.1007/978-3-031-72624-8_12" class="enhanced-link paper-link">📄 Paper</a> <a href="https://github.com/Yaxin9Luo/APL" class="enhanced-link code-link">💻 Code</a>
-
-* <img src="./images/MoD.png" width="400px" align="left" style="margin-right:10px" class="publication-image"> 
-
-**γ-MoD: Exploring Mixture-of-Depth Adaptation for Multimodal Large Language Models**
-  * <span class="venue-badge iclr">ICLR 2025</span>
-  * **Yaxin Luo**, Gen Luo, Jiayi Ji, Yiyi Zhou, Xiaoshuai Sun, Zhiqiang Shen, Rongrong Ji
-  * <a href="https://arxiv.org/abs/2410.13859" class="enhanced-link paper-link">📄 Paper</a> <a href="https://github.com/Yaxin9Luo/gamma-MoD" class="enhanced-link code-link">💻 Code</a>
-
-* <img src="./images/DViN.png" width="400px" align="left" style="margin-right:10px" class="publication-image"> 
-
-**DViN: Dynamic Visual Routing Network for Weakly Supervised Referring Expression Comprehension**
-  * <span class="venue-badge cvpr">CVPR 2025</span>
-  * Xiaofu Chen, **Yaxin Luo**, Gen Luo, Jiayi Ji, Henghui Ding, Yiyi Zhou
-  * <a href="https://openaccess.thecvf.com/content/CVPR2025/html/Chen_DViN_Dynamic_Visual_Routing_Network_for_Weakly_Supervised_Referring_Expression_CVPR_2025_paper.html" class="enhanced-link paper-link">📄 Paper</a> <a href="https://github.com/XxFChen/DViN" class="enhanced-link code-link">💻 Code</a>
+<div class="pub-entry">
+  <div class="pub-image">
+    <img src="./images/DViN.png">
+  </div>
+  <div class="pub-text">
+    <strong>DViN: Dynamic Visual Routing Network for Weakly Supervised Referring Expression Comprehension</strong><br>
+    <span class="venue-badge cvpr">CVPR 2025</span><br>
+    Xiaofu Chen, <strong>Yaxin Luo</strong>, Gen Luo, Jiayi Ji, Henghui Ding, Yiyi Zhou<br>
+    <a href="https://openaccess.thecvf.com/content/CVPR2025/html/Chen_DViN_Dynamic_Visual_Routing_Network_for_Weakly_Supervised_Referring_Expression_CVPR_2025_paper.html" class="enhanced-link paper-link">📄 Paper</a> <a href="https://github.com/XxFChen/DViN" class="enhanced-link code-link">💻 Code</a>
+  </div>
+</div>
 
 
 <style>
@@ -338,9 +362,36 @@ For full and up-to-date publication list, please refer to my [Google Scholar](ht
 @keyframes rainbow-shift { 0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%} }
 @keyframes sparkle { 0%,100%{transform:scale(1) rotate(0); opacity:.8}50%{transform:scale(1.2) rotate(180deg); opacity:1} }
 
+/* Publication entry layout */
+.pub-entry {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 25px;
+  padding-bottom: 25px;
+  border-bottom: 1px solid #eee;
+}
+.pub-entry:last-child {
+  border-bottom: none;
+}
+.pub-image {
+  flex-shrink: 0;
+  width: 300px;
+  margin-right: 20px;
+}
+.pub-image img {
+  width: 100%;
+  border-radius: 6px;
+}
+.pub-text {
+  flex: 1;
+  line-height: 1.7;
+}
+
 /* Responsive design for badges */
 @media (max-width: 768px) {
   .venue-badge { padding: 4px 10px; font-size: 0.8em; margin: 2px 4px 2px 0; }
+  .pub-entry { flex-direction: column; }
+  .pub-image { width: 100%; margin-right: 0; margin-bottom: 10px; }
 }
 @media (max-width: 480px) {
   .venue-badge { padding: 3px 8px; font-size: 0.75em; }
