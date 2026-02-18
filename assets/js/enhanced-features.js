@@ -6,14 +6,10 @@
 document.addEventListener('DOMContentLoaded', function() {
     const isHome = (location.pathname.replace(/\/+$/, '') === '');
 
-    // Restore dark mode from localStorage
-    restoreDarkMode();
-
     // Global niceties
     addFloatingContactButton();
     addScrollToTop();
     addSmoothScrolling();
-    addThemeToggle();
 
     // Cleanup: ensure any old orbiting topic elements are removed
     document.querySelectorAll('.orbiting-topics').forEach(el => el.remove());
@@ -30,15 +26,6 @@ document.addEventListener('DOMContentLoaded', function() {
         addSubtleParallax();
     }
 });
-
-/* ========================= Dark Mode Persistence ========================= */
-
-function restoreDarkMode() {
-    const stored = localStorage.getItem('theme');
-    if (stored === 'dark') {
-        document.body.classList.add('dark-mode');
-    }
-}
 
 /* ========================= Floating Contact Button ========================= */
 
@@ -180,7 +167,7 @@ function addParticleBackground() {
         height: 100%;
         pointer-events: none;
         z-index: -1;
-        opacity: 0.08;
+        opacity: 0.12;
     `;
     document.body.appendChild(canvas);
 
@@ -255,156 +242,6 @@ function addParticleBackground() {
         resizeCanvas();
         initParticles();
     });
-}
-
-/* ========================= Theme Toggle — Luxury ========================= */
-
-function addThemeToggle() {
-    const themeToggle = document.createElement('div');
-    themeToggle.style.cssText = `
-        position: fixed;
-        top: 100px;
-        right: 30px;
-        width: 50px;
-        height: 50px;
-        background: linear-gradient(135deg, #1a1f3a 0%, #2d1b4e 100%);
-        border: 1px solid rgba(201, 169, 110, 0.25);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        z-index: 999;
-        box-shadow: 0 4px 15px rgba(26, 31, 58, 0.25);
-    `;
-
-    const isDark = document.body.classList.contains('dark-mode');
-    const icon = document.createElement('i');
-    icon.className = isDark ? 'fas fa-sun' : 'fas fa-moon';
-    icon.style.color = '#dfc89a';
-    themeToggle.appendChild(icon);
-
-    themeToggle.addEventListener('mouseenter', function() {
-        themeToggle.style.boxShadow = '0 8px 25px rgba(26, 31, 58, 0.35), 0 0 0 1px rgba(201, 169, 110, 0.4)';
-        themeToggle.style.transform = 'translateY(-2px)';
-    });
-    themeToggle.addEventListener('mouseleave', function() {
-        themeToggle.style.boxShadow = '0 4px 15px rgba(26, 31, 58, 0.25)';
-        themeToggle.style.transform = 'translateY(0)';
-    });
-
-    themeToggle.addEventListener('click', function() {
-        document.body.classList.toggle('dark-mode');
-        const nowDark = document.body.classList.contains('dark-mode');
-        localStorage.setItem('theme', nowDark ? 'dark' : 'light');
-        icon.className = nowDark ? 'fas fa-sun' : 'fas fa-moon';
-    });
-
-    document.body.appendChild(themeToggle);
-
-    // Inject comprehensive dark mode styles
-    const darkModeStyle = document.createElement('style');
-    darkModeStyle.textContent = `
-        .dark-mode {
-            background-color: #0f1019 !important;
-            color: #e8e6e1 !important;
-        }
-        .dark-mode .masthead {
-            background: rgba(15, 16, 25, 0.92) !important;
-            border-bottom-color: rgba(201, 169, 110, 0.12) !important;
-        }
-        .dark-mode .sidebar {
-            background-color: #0f1019 !important;
-        }
-        .dark-mode .sidebar p,
-        .dark-mode .sidebar li,
-        .dark-mode .sidebar a {
-            color: #c9d1d9 !important;
-        }
-        .dark-mode .author-card {
-            background: #1a1b26 !important;
-            border-color: rgba(201, 169, 110, 0.15) !important;
-            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.35) !important;
-        }
-        .dark-mode .author-card .author__name {
-            -webkit-text-fill-color: #e8e6e1 !important;
-            color: #e8e6e1 !important;
-        }
-        .dark-mode .author__urls a {
-            color: #c9d1d9 !important;
-            background: rgba(201, 169, 110, 0.04) !important;
-            border-color: rgba(201, 169, 110, 0.15) !important;
-        }
-        .dark-mode .author__urls a:hover {
-            background: rgba(201, 169, 110, 0.08) !important;
-        }
-        .dark-mode .author__bio,
-        .dark-mode .author__desktop {
-            color: #9a9caa !important;
-        }
-        .dark-mode .about-me-content {
-            background: rgba(26, 27, 38, 0.6) !important;
-            border-left-color: rgba(201, 169, 110, 0.3) !important;
-        }
-        .dark-mode .section-header {
-            color: #e8e6e1 !important;
-            border-bottom-color: rgba(201, 169, 110, 0.3) !important;
-        }
-        .dark-mode .news-item {
-            background: rgba(201, 169, 110, 0.06) !important;
-        }
-        .dark-mode .pub-entry {
-            border-bottom-color: rgba(255, 255, 255, 0.06) !important;
-        }
-        .dark-mode .pub-image img {
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3) !important;
-        }
-        .dark-mode .about-me-content a {
-            color: #7a9cc6 !important;
-        }
-        .dark-mode .about-me-content .advisor-link,
-        .dark-mode .about-me-content .collaborator-link {
-            color: #8aacca !important;
-        }
-        .dark-mode .about-me-content .background-text,
-        .dark-mode .about-me-content .toggle-content {
-            color: #9a9caa !important;
-        }
-        .dark-mode .research-interests h4 {
-            color: #e8e6e1 !important;
-        }
-        .dark-mode .research-interests li {
-            background: rgba(201, 169, 110, 0.04) !important;
-            border-left-color: rgba(201, 169, 110, 0.25) !important;
-        }
-        .dark-mode .current-focus {
-            background: rgba(201, 169, 110, 0.06) !important;
-            border-left-color: rgba(201, 169, 110, 0.3) !important;
-        }
-        .dark-mode .background-toggle summary {
-            color: #7a9cc6 !important;
-        }
-        .dark-mode .cv-section,
-        .dark-mode .cv-hero {
-            background: linear-gradient(135deg, rgba(26, 31, 58, 0.15), rgba(45, 27, 78, 0.1)) !important;
-        }
-        .dark-mode .cv-card {
-            background: #1a1b26 !important;
-            border-color: rgba(201, 169, 110, 0.12) !important;
-        }
-        .dark-mode .page__content {
-            color: #e8e6e1 !important;
-        }
-        .dark-mode h1, .dark-mode h2, .dark-mode h3 {
-            color: #e8e6e1 !important;
-        }
-        .dark-mode .page__footer {
-            background: #0a0b12 !important;
-            color: #9a9caa !important;
-        }
-    `;
-    document.head.appendChild(darkModeStyle);
 }
 
 /* ========================= Loading Animation — Gold Progress Bar ========================= */

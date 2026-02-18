@@ -135,305 +135,164 @@ About Me
 
 
 <style>
-/* ========================= Venue Badges — Luxury Refined ========================= */
+/* ========================= Venue Badges ========================= */
 .venue-badge {
-  display: inline-block;
-  padding: 5px 12px;
-  border-radius: 6px;
-  font-size: 0.8em;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  color: white !important;
-  margin: 4px 8px 4px 0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: inline-block; padding: 5px 12px; border-radius: 6px;
+  font-size: 0.8em; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+  color: white !important; margin: 4px 8px 4px 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-  overflow: hidden;
+  position: relative; overflow: hidden;
 }
+.venue-badge:before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent); transition: left 0.5s; }
+.venue-badge:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4); }
+.venue-badge:hover:before { left: 100%; }
+.venue-badge.cvpr { background: linear-gradient(135deg, #c0392b, #a93226); }
+.venue-badge.eccv { background: linear-gradient(135deg, #7d4e8a, #6c3d7a); }
+.venue-badge.iclr { background: linear-gradient(135deg, #2c6faa, #245c92); }
+.venue-badge.arxiv { background: linear-gradient(135deg, #c9a96e, #a8884f); }
+.venue-badge.nips, .venue-badge.neurips { background: linear-gradient(135deg, #16896e, #127a60); }
+.venue-badge.icml { background: linear-gradient(135deg, #3a4a5e, #2c3e50); }
+.venue-badge.aaai { background: linear-gradient(135deg, #c47a1e, #a56518); }
+.venue-badge.ijcai { background: linear-gradient(135deg, #1e8449, #196f3d); }
 
-.venue-badge:before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-  transition: left 0.5s;
-}
-
-.venue-badge:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
-}
-
-.venue-badge:hover:before {
-  left: 100%;
-}
-
-/* Conference Colors — Muted & Refined */
-.venue-badge.cvpr {
-  background: linear-gradient(135deg, #c0392b 0%, #a93226 100%);
-}
-.venue-badge.cvpr:hover { box-shadow: 0 6px 20px rgba(192, 57, 43, 0.3); }
-
-.venue-badge.eccv {
-  background: linear-gradient(135deg, #7d4e8a 0%, #6c3d7a 100%);
-}
-.venue-badge.eccv:hover { box-shadow: 0 6px 20px rgba(125, 78, 138, 0.3); }
-
-.venue-badge.iclr {
-  background: linear-gradient(135deg, #2c6faa 0%, #245c92 100%);
-}
-.venue-badge.iclr:hover { box-shadow: 0 6px 20px rgba(44, 111, 170, 0.3); }
-
-.venue-badge.arxiv {
-  background: linear-gradient(135deg, #c9a96e 0%, #a8884f 100%);
-}
-.venue-badge.arxiv:hover { box-shadow: 0 6px 20px rgba(201, 169, 110, 0.3); }
-
-.venue-badge.nips,
-.venue-badge.neurips {
-  background: linear-gradient(135deg, #16896e 0%, #127a60 100%);
-}
-.venue-badge.nips:hover,
-.venue-badge.neurips:hover { box-shadow: 0 6px 20px rgba(22, 137, 110, 0.3); }
-
-.venue-badge.icml {
-  background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%);
-}
-.venue-badge.icml:hover { box-shadow: 0 6px 20px rgba(44, 62, 80, 0.3); }
-
-.venue-badge.aaai {
-  background: linear-gradient(135deg, #c47a1e 0%, #a56518 100%);
-}
-.venue-badge.aaai:hover { box-shadow: 0 6px 20px rgba(196, 122, 30, 0.3); }
-
-.venue-badge.ijcai {
-  background: linear-gradient(135deg, #1e8449 0%, #196f3d 100%);
-}
-.venue-badge.ijcai:hover { box-shadow: 0 6px 20px rgba(30, 132, 73, 0.3); }
-
-/* ========================= News — Luxury (inline override) ========================= */
-.news-item {
-  padding: 15px 20px;
-  margin: 12px 0;
-  background: rgba(201, 169, 110, 0.04);
-  border-radius: 10px;
-  border-left: 3px solid #c9a96e;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.news-item:hover {
-  transform: translateX(5px);
-  background: rgba(201, 169, 110, 0.07);
-  box-shadow: 0 4px 16px rgba(26, 31, 58, 0.06);
-}
-
-/* ========================= Section Header — Luxury ========================= */
+/* ========================= Section Header ========================= */
 .section-header {
   font-family: "Cormorant Garamond", Georgia, serif;
-  font-size: 1.6em;
-  font-weight: 700;
-  color: #2c2c34;
-  margin: 30px 0 15px 0;
-  padding-bottom: 8px;
-  border-bottom: 2px solid rgba(201, 169, 110, 0.4);
+  font-size: 1.6em; font-weight: 700;
+  color: #dfc89a;
+  margin: 30px 0 15px 0; padding-bottom: 8px;
+  border-bottom: 2px solid rgba(201, 169, 110, 0.3);
   position: relative;
 }
 .section-header:after {
-  content: '';
-  position: absolute;
-  bottom: -2px;
-  left: 0;
-  width: 50px;
-  height: 2px;
+  content: ''; position: absolute; bottom: -2px; left: 0;
+  width: 50px; height: 2px;
   background: linear-gradient(90deg, #c9a96e, #dfc89a);
 }
 
-/* ========================= About Me Content — Luxury ========================= */
+/* ========================= About Me Content ========================= */
 .about-me-content {
-  padding: 24px;
-  margin: 15px 0;
-  background: linear-gradient(135deg, rgba(26, 31, 58, 0.03) 0%, rgba(201, 169, 110, 0.03) 100%);
+  padding: 24px; margin: 15px 0;
+  background: rgba(201, 169, 110, 0.03);
   border-radius: 12px;
-  border-left: 3px solid rgba(201, 169, 110, 0.4);
+  border-left: 3px solid rgba(201, 169, 110, 0.3);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  line-height: 1.6;
+  line-height: 1.6; color: #c8c6c0;
 }
 .about-me-content:hover {
   transform: translateX(3px);
-  box-shadow: 0 8px 25px rgba(26, 31, 58, 0.06);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
 }
 
 .about-me-content ul { margin: 15px 0; padding-left: 20px; }
-.about-me-content ul li {
-  margin: 8px 0; padding: 8px 0; border-radius: 8px; transition: all 0.3s ease;
-}
+.about-me-content ul li { margin: 8px 0; padding: 8px 0; border-radius: 8px; transition: all 0.3s ease; }
 .about-me-content ul li:hover { background: rgba(201, 169, 110, 0.06); padding-left: 10px; }
 
+/* TEXT HIERARCHY: bold/strong = gold accent for emphasis */
 .about-me-content strong {
-  color: inherit;
+  color: #c9a96e;
   font-weight: 700;
 }
 
-/* Links */
-.about-me-content a {
-  color: #3a5a8c;
-  text-decoration: none;
-  transition: all 0.3s ease;
-}
-.about-me-content a:hover {
-  color: #c9a96e;
-  text-decoration: underline;
-}
+/* Links: light steel blue */
+.about-me-content a { color: #7a9cc6; text-decoration: none; transition: all 0.3s ease; }
+.about-me-content a:hover { color: #c9a96e; text-decoration: underline; }
 
-/* Institution links */
+/* Institution links: bright white (stands out) */
 .about-me-content .institution-link {
-  font-weight: 700;
-  color: inherit;
-  text-decoration: none;
-  transition: all 0.2s ease;
+  font-weight: 700; color: #e8e6e1;
+  text-decoration: none; transition: all 0.2s ease;
 }
-.about-me-content .institution-link:hover {
-  text-decoration: underline;
-  color: #c9a96e;
-}
+.about-me-content .institution-link:hover { text-decoration: underline; color: #c9a96e; }
 
-/* Advisor/collaborator links */
+/* Advisor/collaborator links: warm blue */
 .about-me-content .advisor-link,
 .about-me-content .collaborator-link {
-  color: #5a7a9e;
-  font-weight: 600;
-  text-decoration: none;
-  transition: all 0.2s ease;
+  color: #8ab4d6; font-weight: 600;
+  text-decoration: none; transition: all 0.2s ease;
 }
 .about-me-content .advisor-link:hover,
-.about-me-content .collaborator-link:hover {
-  color: #c9a96e;
-  text-decoration: underline;
-}
+.about-me-content .collaborator-link:hover { color: #c9a96e; text-decoration: underline; }
 
 .about-me-content .intro-text { margin-bottom: 20px; line-height: 1.7; font-size: 1.05em; }
-.about-me-content .background-text { margin-bottom: 20px; line-height: 1.6; color: #555; }
+.about-me-content .background-text { margin-bottom: 20px; line-height: 1.6; color: #8a8c9a; }
 
-/* Toggle section for background story */
-.background-toggle {
-  margin-top: 12px;
-  border-radius: 8px;
-  overflow: hidden;
-}
-.background-toggle summary {
-  cursor: pointer;
-  font-weight: 600;
-  color: #3a5a8c;
-  padding: 8px 0;
-  list-style: none;
-  transition: color 0.3s ease;
-}
+/* Toggle */
+.background-toggle { margin-top: 12px; border-radius: 8px; overflow: hidden; }
+.background-toggle summary { cursor: pointer; font-weight: 600; color: #7a9cc6; padding: 8px 0; list-style: none; transition: color 0.3s ease; }
 .background-toggle summary::-webkit-details-marker { display: none; }
-.background-toggle summary::before {
-  content: '▸ ';
-  display: inline-block;
-  transition: transform 0.3s ease;
-}
-.background-toggle[open] summary::before {
-  transform: rotate(90deg);
-}
+.background-toggle summary::before { content: '▸ '; display: inline-block; transition: transform 0.3s ease; }
+.background-toggle[open] summary::before { transform: rotate(90deg); }
 .background-toggle summary:hover { color: #c9a96e; }
-.background-toggle .toggle-content {
-  padding: 12px 0 4px 0;
-  line-height: 1.6;
-  color: #555;
-  animation: fadeIn 0.3s ease;
-}
+.background-toggle .toggle-content { padding: 12px 0 4px 0; line-height: 1.6; color: #8a8c9a; animation: fadeIn 0.3s ease; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
 
 .about-me-content .current-focus {
   margin-bottom: 25px; padding: 15px;
-  background: rgba(201, 169, 110, 0.08);
+  background: rgba(201, 169, 110, 0.06);
   border-radius: 8px; border-left: 3px solid #c9a96e; font-weight: 500;
+  color: #e8e6e1;
 }
 
 .about-me-content .research-interests { margin-top: 25px; }
 .about-me-content .research-interests h4 {
   font-family: "Cormorant Garamond", Georgia, serif;
-  color: #2c2c34; margin-bottom: 15px; font-size: 1.15em; font-weight: 600;
+  color: #dfc89a; margin-bottom: 15px; font-size: 1.15em; font-weight: 600;
 }
 .about-me-content .research-interests ul { margin: 0; padding-left: 0; list-style: none; }
 .about-me-content .research-interests li {
   margin: 15px 0; padding: 15px;
-  background: rgba(201, 169, 110, 0.05);
-  border-radius: 8px; border-left: 3px solid rgba(201, 169, 110, 0.4);
+  background: rgba(201, 169, 110, 0.04);
+  border-radius: 8px; border-left: 3px solid rgba(201, 169, 110, 0.3);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); line-height: 1.6;
 }
 .about-me-content .research-interests li:hover {
-  background: rgba(201, 169, 110, 0.08);
+  background: rgba(201, 169, 110, 0.07);
   transform: translateX(5px);
-  box-shadow: 0 4px 15px rgba(26, 31, 58, 0.06);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
-.about-me-content em { color: #7f8c8d; font-style: italic; }
+.about-me-content em { color: #8a8c9a; font-style: italic; }
 
-/* ========================= Greeting Title — Luxury ========================= */
+/* ========================= Greeting Title — Gold Gradient ========================= */
 .greeting-title {
   display: inline-block;
-  background: linear-gradient(135deg, #1a1f3a 0%, #2d1b4e 50%, #c9a96e 100%);
+  background: linear-gradient(135deg, #c9a96e 0%, #dfc89a 50%, #e8e6e1 100%);
   background-size: 200% 200%;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
   animation: gradient-shift 8s ease infinite;
-  font-weight: 700;
-  position: relative;
-  box-shadow: 0 0 20px rgba(201, 169, 110, 0.2);
+  font-weight: 700; position: relative;
+  box-shadow: 0 0 20px rgba(201, 169, 110, 0.15);
   transition: all 0.3s ease;
 }
-.greeting-title:hover { transform: scale(1.02); box-shadow: 0 0 30px rgba(201, 169, 110, 0.3); }
+.greeting-title:hover { transform: scale(1.02); box-shadow: 0 0 30px rgba(201, 169, 110, 0.25); }
 .greeting-title:before {
   content: ''; position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px;
-  background: linear-gradient(135deg, #1a1f3a, #2d1b4e, #c9a96e);
+  background: linear-gradient(135deg, #c9a96e, #dfc89a, #e8e6e1);
   background-size: 200% 200%; animation: gradient-shift 8s ease infinite; z-index: -1;
-  border-radius: 8px; opacity: 0.2; filter: blur(4px);
+  border-radius: 8px; opacity: 0.15; filter: blur(6px);
 }
-.greeting-title:after { content: '✨'; position: absolute; top: -10px; right: -15px; font-size: 0.8em; animation: sparkle 2s ease-in-out infinite; opacity: 0.7; }
+.greeting-title:after { content: '✨'; position: absolute; top: -10px; right: -15px; font-size: 0.8em; animation: sparkle 2s ease-in-out infinite; opacity: 0.6; }
 
 .wave-emoji { display: inline-block; animation: wave 2s ease-in-out infinite; transform-origin: 70% 70%; font-size: 1.2em; }
 @keyframes wave { 0%,100%{transform:rotate(0)}10%{transform:rotate(14deg)}20%{transform:rotate(-8deg)}30%{transform:rotate(14deg)}40%{transform:rotate(-4deg)}50%{transform:rotate(10deg)}60%{transform:rotate(0)} }
-@keyframes rainbow-shift { 0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%} }
-@keyframes sparkle { 0%,100%{transform:scale(1) rotate(0); opacity:.7}50%{transform:scale(1.2) rotate(180deg); opacity:1} }
+@keyframes sparkle { 0%,100%{transform:scale(1) rotate(0); opacity:.6}50%{transform:scale(1.2) rotate(180deg); opacity:1} }
 
-/* ========================= Publication Entries — Luxury ========================= */
+/* ========================= Publication Entries ========================= */
 .pub-entry {
-  display: flex;
-  align-items: flex-start;
-  margin-bottom: 25px;
-  padding: 24px 0 24px 16px;
-  border-bottom: 1px solid rgba(201, 169, 110, 0.15);
+  display: flex; align-items: flex-start;
+  margin-bottom: 25px; padding: 24px 0 24px 16px;
+  border-bottom: 1px solid rgba(201, 169, 110, 0.1);
   border-left: 2px solid transparent;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  color: #c8c6c0;
 }
-.pub-entry:hover {
-  border-left-color: #c9a96e;
-  background: rgba(201, 169, 110, 0.02);
-}
-.pub-entry:last-child {
-  border-bottom: none;
-}
-.pub-image {
-  flex-shrink: 0;
-  width: 300px;
-  margin-right: 20px;
-}
-.pub-image img {
-  width: 100%;
-  border-radius: 8px;
-  box-shadow: 0 4px 16px rgba(26, 31, 58, 0.08);
-}
-.pub-text {
-  flex: 1;
-  line-height: 1.7;
-}
+.pub-entry:hover { border-left-color: #c9a96e; background: rgba(201, 169, 110, 0.03); }
+.pub-entry:last-child { border-bottom: none; }
+.pub-image { flex-shrink: 0; width: 300px; margin-right: 20px; }
+.pub-image img { width: 100%; border-radius: 8px; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3); }
+.pub-text { flex: 1; line-height: 1.7; }
 
 /* Responsive */
 @media (max-width: 768px) {

@@ -26,6 +26,7 @@ h1, h2, h3, h4, h5, h6 {
   line-height: 1.2;
   font-family: $header-font-family;
   font-weight: bold;
+  color: #e8e6e1;
 }
 
 h1 {
@@ -141,7 +142,7 @@ td > code {
   padding-bottom: 0.1rem;
   font-size: $type-size-6;
   background: $code-background-color;
-  border: 1px solid $lighter-gray;
+  border: 1px solid rgba(201, 169, 110, 0.15);
   border-radius: $border-radius;
   box-shadow: $box-shadow;
 
@@ -236,7 +237,7 @@ figure {
 
 figcaption {
   margin-bottom: 0.5em;
-  color: mix(#fff, $text-color, 25%);
+  color: #8a8c9a;
   font-family: $caption-font-family;
   font-size: $type-size-6;
 
@@ -248,8 +249,8 @@ figcaption {
     transition: $global-transition;
 
     &:hover {
-      color: #000;
-      border-bottom-color: #000;
+      color: $accent-gold;
+      border-bottom-color: $accent-gold;
     }
   }
 }

@@ -61,12 +61,12 @@ $darker-gray                : mix(#000, $gray, 60%);
 $light-gray                 : mix(#fff, $gray, 50%);
 $lighter-gray               : mix(#fff, $gray, 90%);
 
-$body-color                 : #f0efe8;
-$background-color           : #f0efe8;
-$code-background-color      : #fafafa;
-$code-background-color-dark : $light-gray;
-$text-color                 : #2c2c34;
-$border-color               : #e8dfc8;
+$body-color                 : #0d0e17;
+$background-color           : #0d0e17;
+$code-background-color      : #181924;
+$code-background-color-dark : #1e1f2e;
+$text-color                 : #c8c6c0;
+$border-color               : #2a2520;
 
 $primary-color              : #7a8288;
 $success-color              : #62c462;
@@ -107,7 +107,7 @@ $xing-color                 : #006567;
 
 
 /* links */
-$link-color                 : #3a5a8c; /* Steel blue — luxury academic */
+$link-color                 : #7a9cc6; /* Light steel blue for dark bg */
 $link-color-hover           : $accent-gold;
 $link-color-visited         : mix(#fff, $link-color, 15%);
 $masthead-link-color        : $link-color;
@@ -168,7 +168,7 @@ $susy: (
    ========================================================================== */
 
 $border-radius              : 6px;
-$box-shadow                 : 0 2px 8px rgba(0, 0, 0, 0.06);
+$box-shadow                 : 0 2px 8px rgba(0, 0, 0, 0.3);
 $navicon-width              : 28px;
 $navicon-height             : 4px;
 $global-transition          : all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
