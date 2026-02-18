@@ -16,7 +16,7 @@ About Me
 <div class="about-me-content">
   <div class="intro-text">
     Hello! I am a First-Year Machine Learning PhD student at <a href="https://mbzuai.ac.ae/" class="institution-link">MBZUAI</a>, advised by <a href="https://zhiqiangshen.com/" class="advisor-link">Prof. Zhiqiang Shen</a>. I am also closely working with my friend <a href="https://xxfchen.github.io/XiaofuChen/" class="collaborator-link">Xiaofu Chen</a>.
-    My research vision centers on advancing Native Multimodal Foundation Modelsthat can <strong>understand, reason, generate and agentic action across diverse modalities.</strong>  I am also interested in bridging the gap between high-performance unified intelligence and computational <strong>efficiency</strong>. 
+    My research vision centers on advancing Native Multimodal Foundation Modelsthat can <strong>understand, reason, generate and agentic action across diverse modalities.</strong>  I am also interested in bridging the gap between high-performance unified intelligence and computational <strong>efficiency</strong>. Also, I care about the application side of such foundation models (Computer-Use/Device-Use Agent).
   </div>
   
   <div class="background-text">
