@@ -135,19 +135,19 @@ About Me
 
 
 <style>
-/* Beautiful Conference Venue Badges */
+/* ========================= Venue Badges — Luxury Refined ========================= */
 .venue-badge {
   display: inline-block;
-  padding: 6px 14px;
-  border-radius: 20px;
-  font-size: 0.9em;
+  padding: 5px 12px;
+  border-radius: 6px;
+  font-size: 0.8em;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 1px;
   color: white !important;
   margin: 4px 8px 4px 0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
 }
@@ -159,135 +159,136 @@ About Me
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
   transition: left 0.5s;
 }
 
 .venue-badge:hover {
-  transform: translateY(-2px) scale(1.05);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
 }
 
 .venue-badge:hover:before {
   left: 100%;
 }
 
-/* Specific Conference Colors */
+/* Conference Colors — Muted & Refined */
 .venue-badge.cvpr {
-  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+  background: linear-gradient(135deg, #c0392b 0%, #a93226 100%);
 }
-.venue-badge.cvpr:hover { box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4); }
+.venue-badge.cvpr:hover { box-shadow: 0 6px 20px rgba(192, 57, 43, 0.3); }
 
 .venue-badge.eccv {
-  background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
+  background: linear-gradient(135deg, #7d4e8a 0%, #6c3d7a 100%);
 }
-.venue-badge.eccv:hover { box-shadow: 0 6px 20px rgba(155, 89, 182, 0.4); }
+.venue-badge.eccv:hover { box-shadow: 0 6px 20px rgba(125, 78, 138, 0.3); }
 
 .venue-badge.iclr {
-  background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+  background: linear-gradient(135deg, #2c6faa 0%, #245c92 100%);
 }
-.venue-badge.iclr:hover { box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4); }
+.venue-badge.iclr:hover { box-shadow: 0 6px 20px rgba(44, 111, 170, 0.3); }
 
 .venue-badge.arxiv {
-  background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+  background: linear-gradient(135deg, #c9a96e 0%, #a8884f 100%);
 }
-.venue-badge.arxiv:hover { box-shadow: 0 6px 20px rgba(243, 156, 18, 0.4); }
+.venue-badge.arxiv:hover { box-shadow: 0 6px 20px rgba(201, 169, 110, 0.3); }
 
 .venue-badge.nips,
 .venue-badge.neurips {
-  background: linear-gradient(135deg, #1abc9c 0%, #16a085 100%);
+  background: linear-gradient(135deg, #16896e 0%, #127a60 100%);
 }
 .venue-badge.nips:hover,
-.venue-badge.neurips:hover { box-shadow: 0 6px 20px rgba(26, 188, 156, 0.4); }
+.venue-badge.neurips:hover { box-shadow: 0 6px 20px rgba(22, 137, 110, 0.3); }
 
 .venue-badge.icml {
-  background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%);
+  background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%);
 }
-.venue-badge.icml:hover { box-shadow: 0 6px 20px rgba(52, 73, 94, 0.4); }
+.venue-badge.icml:hover { box-shadow: 0 6px 20px rgba(44, 62, 80, 0.3); }
 
 .venue-badge.aaai {
-  background: linear-gradient(135deg, #e67e22 0%, #d35400 100%);
+  background: linear-gradient(135deg, #c47a1e 0%, #a56518 100%);
 }
-.venue-badge.aaai:hover { box-shadow: 0 6px 20px rgba(230, 126, 34, 0.4); }
+.venue-badge.aaai:hover { box-shadow: 0 6px 20px rgba(196, 122, 30, 0.3); }
 
 .venue-badge.ijcai {
-  background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+  background: linear-gradient(135deg, #1e8449 0%, #196f3d 100%);
 }
-.venue-badge.ijcai:hover { box-shadow: 0 6px 20px rgba(39, 174, 96, 0.4); }
+.venue-badge.ijcai:hover { box-shadow: 0 6px 20px rgba(30, 132, 73, 0.3); }
 
-/* News item enhanced styling */
+/* ========================= News — Luxury (inline override) ========================= */
 .news-item {
   padding: 15px 20px;
   margin: 12px 0;
-  background: linear-gradient(135deg, rgba(52, 152, 219, 0.1) 0%, rgba(155, 89, 182, 0.1) 100%);
-  border-radius: 12px;
-  border-left: 4px solid #3498db;
-  transition: all 0.3s ease;
+  background: rgba(201, 169, 110, 0.04);
+  border-radius: 10px;
+  border-left: 3px solid #c9a96e;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .news-item:hover {
   transform: translateX(5px);
-  box-shadow: 0 4px 15px rgba(52, 152, 219, 0.2);
-  background: linear-gradient(135deg, rgba(52, 152, 219, 0.15) 0%, rgba(155, 89, 182, 0.15) 100%);
+  background: rgba(201, 169, 110, 0.07);
+  box-shadow: 0 4px 16px rgba(26, 31, 58, 0.06);
 }
 
-/* About Me section enhancement */
+/* ========================= Section Header — Luxury ========================= */
 .section-header {
-  font-size: 1.5em;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1.6em;
   font-weight: 700;
-  color: #2c3e50;
+  color: #2c2c34;
   margin: 30px 0 15px 0;
   padding-bottom: 8px;
-  border-bottom: 3px solid #3498db;
+  border-bottom: 2px solid rgba(201, 169, 110, 0.4);
   position: relative;
 }
 .section-header:after {
   content: '';
   position: absolute;
-  bottom: -3px;
+  bottom: -2px;
   left: 0;
   width: 50px;
-  height: 3px;
-  background: linear-gradient(90deg, #3498db, #9b59b6);
+  height: 2px;
+  background: linear-gradient(90deg, #c9a96e, #dfc89a);
 }
 
+/* ========================= About Me Content — Luxury ========================= */
 .about-me-content {
-  padding: 20px;
+  padding: 24px;
   margin: 15px 0;
-  background: linear-gradient(135deg, rgba(52, 152, 219, 0.1) 0%, rgba(155, 89, 182, 0.1) 100%);
+  background: linear-gradient(135deg, rgba(26, 31, 58, 0.03) 0%, rgba(201, 169, 110, 0.03) 100%);
   border-radius: 12px;
-  border-left: 4px solid #3498db;
-  transition: all 0.3s ease;
+  border-left: 3px solid rgba(201, 169, 110, 0.4);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   line-height: 1.6;
 }
 .about-me-content:hover {
   transform: translateX(3px);
-  box-shadow: 0 8px 25px rgba(52, 152, 219, 0.1);
+  box-shadow: 0 8px 25px rgba(26, 31, 58, 0.06);
 }
 
 .about-me-content ul { margin: 15px 0; padding-left: 20px; }
 .about-me-content ul li {
   margin: 8px 0; padding: 8px 0; border-radius: 8px; transition: all 0.3s ease;
 }
-.about-me-content ul li:hover { background: rgba(52, 152, 219, 0.1); padding-left: 10px; }
+.about-me-content ul li:hover { background: rgba(201, 169, 110, 0.06); padding-left: 10px; }
 
-/* ✅ 只加粗，不上色 */
 .about-me-content strong {
   color: inherit;
   font-weight: 700;
 }
 
-/* 全局链接（About 区域） */
+/* Links */
 .about-me-content a {
-  color: #3498db;
+  color: #3a5a8c;
   text-decoration: none;
   transition: all 0.3s ease;
 }
 .about-me-content a:hover {
-  color: #9b59b6;
+  color: #c9a96e;
   text-decoration: underline;
 }
 
-/* ✅ 学校/机构：加粗，保持继承颜色 */
+/* Institution links */
 .about-me-content .institution-link {
   font-weight: 700;
   color: inherit;
@@ -296,19 +297,20 @@ About Me
 }
 .about-me-content .institution-link:hover {
   text-decoration: underline;
+  color: #c9a96e;
 }
 
-/* ✅ 人名：soft blue-green */
+/* Advisor/collaborator links */
 .about-me-content .advisor-link,
 .about-me-content .collaborator-link {
-  color: #5dade2;
+  color: #5a7a9e;
   font-weight: 600;
   text-decoration: none;
   transition: all 0.2s ease;
 }
 .about-me-content .advisor-link:hover,
 .about-me-content .collaborator-link:hover {
-  color: #3498db;
+  color: #c9a96e;
   text-decoration: underline;
 }
 
@@ -324,7 +326,7 @@ About Me
 .background-toggle summary {
   cursor: pointer;
   font-weight: 600;
-  color: #3498db;
+  color: #3a5a8c;
   padding: 8px 0;
   list-style: none;
   transition: color 0.3s ease;
@@ -338,7 +340,7 @@ About Me
 .background-toggle[open] summary::before {
   transform: rotate(90deg);
 }
-.background-toggle summary:hover { color: #9b59b6; }
+.background-toggle summary:hover { color: #c9a96e; }
 .background-toggle .toggle-content {
   padding: 12px 0 4px 0;
   line-height: 1.6;
@@ -349,62 +351,71 @@ About Me
 
 .about-me-content .current-focus {
   margin-bottom: 25px; padding: 15px;
-  background: rgba(173, 216, 230, 0.3);
-  border-radius: 8px; border-left: 3px solid #87ceeb; font-weight: 500;
+  background: rgba(201, 169, 110, 0.08);
+  border-radius: 8px; border-left: 3px solid #c9a96e; font-weight: 500;
 }
 
 .about-me-content .research-interests { margin-top: 25px; }
-.about-me-content .research-interests h4 { color: #2c3e50; margin-bottom: 15px; font-size: 1.1em; font-weight: 600; }
+.about-me-content .research-interests h4 {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  color: #2c2c34; margin-bottom: 15px; font-size: 1.15em; font-weight: 600;
+}
 .about-me-content .research-interests ul { margin: 0; padding-left: 0; list-style: none; }
 .about-me-content .research-interests li {
   margin: 15px 0; padding: 15px;
-  background: rgba(173, 216, 230, 0.2);
-  border-radius: 8px; border-left: 3px solid #87ceeb;
-  transition: all 0.3s ease; line-height: 1.6;
+  background: rgba(201, 169, 110, 0.05);
+  border-radius: 8px; border-left: 3px solid rgba(201, 169, 110, 0.4);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); line-height: 1.6;
 }
 .about-me-content .research-interests li:hover {
-  background: rgba(173, 216, 230, 0.3);
+  background: rgba(201, 169, 110, 0.08);
   transform: translateX(5px);
-  box-shadow: 0 4px 15px rgba(135, 206, 235, 0.2);
+  box-shadow: 0 4px 15px rgba(26, 31, 58, 0.06);
 }
 
 .about-me-content em { color: #7f8c8d; font-style: italic; }
 
-/* Greeting Title (unchanged visual flair) */
+/* ========================= Greeting Title — Luxury ========================= */
 .greeting-title {
   display: inline-block;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+  background: linear-gradient(135deg, #1a1f3a 0%, #2d1b4e 50%, #c9a96e 100%);
   background-size: 200% 200%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  animation: gradient-shift 3s ease infinite;
+  animation: gradient-shift 8s ease infinite;
   font-weight: 700;
   position: relative;
-  box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 0 20px rgba(201, 169, 110, 0.2);
   transition: all 0.3s ease;
 }
-.greeting-title:hover { transform: scale(1.02); box-shadow: 0 0 30px rgba(102, 126, 234, 0.5); }
+.greeting-title:hover { transform: scale(1.02); box-shadow: 0 0 30px rgba(201, 169, 110, 0.3); }
 .greeting-title:before {
   content: ''; position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px;
-  background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
-  background-size: 200% 200%; animation: gradient-shift 3s ease infinite; z-index: -1;
-  border-radius: 8px; opacity: 0.3; filter: blur(4px);
+  background: linear-gradient(135deg, #1a1f3a, #2d1b4e, #c9a96e);
+  background-size: 200% 200%; animation: gradient-shift 8s ease infinite; z-index: -1;
+  border-radius: 8px; opacity: 0.2; filter: blur(4px);
 }
-.greeting-title:after { content: '✨'; position: absolute; top: -10px; right: -15px; font-size: 0.8em; animation: sparkle 2s ease-in-out infinite; opacity: 0.8; }
+.greeting-title:after { content: '✨'; position: absolute; top: -10px; right: -15px; font-size: 0.8em; animation: sparkle 2s ease-in-out infinite; opacity: 0.7; }
 
 .wave-emoji { display: inline-block; animation: wave 2s ease-in-out infinite; transform-origin: 70% 70%; font-size: 1.2em; }
 @keyframes wave { 0%,100%{transform:rotate(0)}10%{transform:rotate(14deg)}20%{transform:rotate(-8deg)}30%{transform:rotate(14deg)}40%{transform:rotate(-4deg)}50%{transform:rotate(10deg)}60%{transform:rotate(0)} }
 @keyframes rainbow-shift { 0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%} }
-@keyframes sparkle { 0%,100%{transform:scale(1) rotate(0); opacity:.8}50%{transform:scale(1.2) rotate(180deg); opacity:1} }
+@keyframes sparkle { 0%,100%{transform:scale(1) rotate(0); opacity:.7}50%{transform:scale(1.2) rotate(180deg); opacity:1} }
 
-/* Publication entry layout */
+/* ========================= Publication Entries — Luxury ========================= */
 .pub-entry {
   display: flex;
   align-items: flex-start;
   margin-bottom: 25px;
-  padding-bottom: 25px;
-  border-bottom: 1px solid #eee;
+  padding: 24px 0 24px 16px;
+  border-bottom: 1px solid rgba(201, 169, 110, 0.15);
+  border-left: 2px solid transparent;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.pub-entry:hover {
+  border-left-color: #c9a96e;
+  background: rgba(201, 169, 110, 0.02);
 }
 .pub-entry:last-child {
   border-bottom: none;
@@ -416,20 +427,21 @@ About Me
 }
 .pub-image img {
   width: 100%;
-  border-radius: 6px;
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(26, 31, 58, 0.08);
 }
 .pub-text {
   flex: 1;
   line-height: 1.7;
 }
 
-/* Responsive design for badges */
+/* Responsive */
 @media (max-width: 768px) {
-  .venue-badge { padding: 4px 10px; font-size: 0.8em; margin: 2px 4px 2px 0; }
-  .pub-entry { flex-direction: column; }
+  .venue-badge { padding: 4px 10px; font-size: 0.75em; margin: 2px 4px 2px 0; }
+  .pub-entry { flex-direction: column; padding-left: 0; }
   .pub-image { width: 100%; margin-right: 0; margin-bottom: 10px; }
 }
 @media (max-width: 480px) {
-  .venue-badge { padding: 3px 8px; font-size: 0.75em; }
+  .venue-badge { padding: 3px 8px; font-size: 0.7em; }
 }
 </style>
