@@ -22,7 +22,12 @@ About Me
   <div class="background-text">
     Previously, I earned my Bachelor’s degree from <a href="https://www.dtu.dk/english/" class="institution-link">Technical University of Denmark</a>, where I was fortunate to be supervised by <a href="https://dimipapa.github.io/" class="advisor-link">Prof. Dim P. Papadopoulos</a>. Meanwhile, I was lucky to collarating with <a href="https://scholar.google.com/citations?user=EyZqU9gAAAAJ&hl=en" class="advisor-link">Dr.Gen Luo</a> and <a href="https://scholar.google.com/citations?user=lRSD7PQAAAAJ&hl=en" class="advisor-link">Prof.Rongrong Ji</a> on efficient deep learning researches during my bachelor. 
     
-    Earlier, I spent an intense and rewarding year at the <strong>University of Edinburgh</strong> studying pure mathematics and physics—an experience that sparked my passion for science and technology, deepened my curiosity about the unknown, I was curious and wanted to explore <strong>String Theory</strong> at that time, this one year ultimately shaped who I am today. Before Edinburgh, while enrolled in a Bio-Medicine program at the <strong>University of Queensland</strong> and preparing for the UCAT test to be addimitted into the university's medical school, I failed at the end. As I only focused on managing a high-street multi-brand boutique which was located in Brisbane‘s Southbank near the casino, and was far more focused on business than on study and research; that Edinburgh year changed my priorities and set me on a research path, thanks to the advice, encourage and supports of my academic personal tutor <a href="https://webhomes.maths.ed.ac.uk/~apires/" class="advisor-link">Prof.Ana Rita Pires</a> when I was at Edinburgh. <strong>Anyway, all those past experiences have made me who I am today.</strong>
+    <details class="background-toggle">
+      <summary>More about my earlier journey...</summary>
+      <div class="toggle-content">
+        I spent an intense and rewarding year at the <strong>University of Edinburgh</strong> studying pure mathematics and physics—an experience that sparked my passion for science and technology, deepened my curiosity about the unknown, I was curious and wanted to explore <strong>String Theory</strong> at that time, this one year ultimately shaped who I am today. Before Edinburgh, while enrolled in a Bio-Medicine program at the <strong>University of Queensland</strong> and preparing for the UCAT test to be addimitted into the university's medical school, I failed at the end. As I only focused on managing a high-street multi-brand boutique which was located in Brisbane's Southbank near the casino, and was far more focused on business than on study and research; that Edinburgh year changed my priorities and set me on a research path, thanks to the advice, encourage and supports of my academic personal tutor <a href="https://webhomes.maths.ed.ac.uk/~apires/" class="advisor-link">Prof.Ana Rita Pires</a> when I was at Edinburgh. <strong>Anyway, all those past experiences have made me who I am today.</strong>
+      </div>
+    </details>
   </div>
   
   <div class="research-interests">
@@ -309,6 +314,38 @@ About Me
 
 .about-me-content .intro-text { margin-bottom: 20px; line-height: 1.7; font-size: 1.05em; }
 .about-me-content .background-text { margin-bottom: 20px; line-height: 1.6; color: #555; }
+
+/* Toggle section for background story */
+.background-toggle {
+  margin-top: 12px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.background-toggle summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: #3498db;
+  padding: 8px 0;
+  list-style: none;
+  transition: color 0.3s ease;
+}
+.background-toggle summary::-webkit-details-marker { display: none; }
+.background-toggle summary::before {
+  content: '▸ ';
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+.background-toggle[open] summary::before {
+  transform: rotate(90deg);
+}
+.background-toggle summary:hover { color: #9b59b6; }
+.background-toggle .toggle-content {
+  padding: 12px 0 4px 0;
+  line-height: 1.6;
+  color: #555;
+  animation: fadeIn 0.3s ease;
+}
+@keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
 
 .about-me-content .current-focus {
   margin-bottom: 25px; padding: 15px;
