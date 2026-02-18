@@ -55,10 +55,10 @@
   color: $text-color;
 }
 
-/* Masthead: matches page background, subtle gold border */
+/* Masthead: black & gold luxury */
 .masthead {
-  background: $background-color !important;
-  border-bottom: 1px solid rgba($accent-gold, 0.2) !important;
+  background: #1a1a1a !important;
+  border-bottom: 1px solid rgba($accent-gold, 0.4) !important;
 }
 
 /* ========================= Novel Artistic Enhancements ========================= */
@@ -603,7 +603,7 @@ a:focus {
 /* ========================= Masthead — Site Title Luxury Typography ========================= */
 .masthead .masthead__menu-item--lg a {
   font-family: $serif;
-  background: linear-gradient(135deg, #1a1f3a, #2d1b4e);
+  background: linear-gradient(135deg, $accent-gold, $accent-gold-light);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
