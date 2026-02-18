@@ -121,17 +121,6 @@ About Me
   </div>
 </div>
 
-<div class="pub-entry">
-  <div class="pub-image">
-    <img src="./images/DViN.png">
-  </div>
-  <div class="pub-text">
-    <strong>DViN: Dynamic Visual Routing Network for Weakly Supervised Referring Expression Comprehension</strong><br>
-    <span class="venue-badge cvpr">CVPR 2025</span><br>
-    Xiaofu Chen, <strong>Yaxin Luo</strong>, Gen Luo, Jiayi Ji, Henghui Ding, Yiyi Zhou<br>
-    <a href="https://openaccess.thecvf.com/content/CVPR2025/html/Chen_DViN_Dynamic_Visual_Routing_Network_for_Weakly_Supervised_Referring_Expression_CVPR_2025_paper.html" class="enhanced-link paper-link">📄 Paper</a> <a href="https://github.com/XxFChen/DViN" class="enhanced-link code-link">💻 Code</a>
-  </div>
-</div>
 
 
 <style>

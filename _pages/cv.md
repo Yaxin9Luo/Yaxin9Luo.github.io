@@ -90,21 +90,6 @@ redirect_from:
       </div>
 
       <div class="cv-card">
-        <div class="cv-card__title"><strong>NeurIPS 2025</strong> — FADRM: Fast and Accurate Data Residual Matching for Dataset Distillation</div>
-        <div class="cv-card__body">Cui J, Bi X, Luo Y, Zhao X, Liu J, Shen Z. arXiv:2506.24125 (2025).</div>
-      </div>
-
-      <div class="cv-card">
-        <div class="cv-card__title"><strong>ACL 2025 (Main)</strong> — DRAG: Distilling RAG for SLMs from LLMs to Transfer Knowledge and Mitigate Hallucination via Evidence and Graph-based Distillation</div>
-        <div class="cv-card__body">Chen J, Myrzakhan A, Luo Y, Khan HM, Bsharat SM, Shen Z. arXiv:2506.01954 (2025).</div>
-      </div>
-
-      <div class="cv-card">
-        <div class="cv-card__title"><strong>CVPR 2025</strong> — DViN: Dynamic Visual Routing Network for Weakly Supervised Referring Expression Comprehension</div>
-        <div class="cv-card__body">Chen X, Luo Y, Luo G, Ji J, Ding H, Zhou Y. CVPR 2025, pp. 14347–14357.</div>
-      </div>
-
-      <div class="cv-card">
         <div class="cv-card__title"><strong>ICLR 2025</strong> — γ-MoD: Exploring Mixture-of-Depth Adaptation for Multimodal Large Language Models</div>
         <div class="cv-card__body">Luo Y, Luo G, Ji J, Zhou Y, Sun X, Shen Z, Ji R. arXiv:2410.13859 (2024).</div>
       </div>
