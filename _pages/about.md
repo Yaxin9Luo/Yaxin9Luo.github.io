@@ -46,7 +46,7 @@ About Me
   </div>
 
   <div class="current-focus">
-    Recently, I am focusing on Unified Multimodal Foundation Models Projects one Analysis and one on post training
+    Recently, I am focusing on Unified Multimodal Foundation Models post training and flow matching modeling speed up.
 </div>
 </div>
 
