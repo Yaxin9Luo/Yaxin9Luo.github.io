@@ -315,12 +315,21 @@ function addThemeToggle() {
             border-bottom-color: rgba(201, 169, 110, 0.12) !important;
         }
         .dark-mode .sidebar {
-            background: #0f1019 !important;
+            background-color: #0f1019 !important;
+        }
+        .dark-mode .sidebar p,
+        .dark-mode .sidebar li,
+        .dark-mode .sidebar a {
+            color: #c9d1d9 !important;
         }
         .dark-mode .author-card {
             background: #1a1b26 !important;
             border-color: rgba(201, 169, 110, 0.15) !important;
             box-shadow: 0 4px 24px rgba(0, 0, 0, 0.35) !important;
+        }
+        .dark-mode .author-card .author__name {
+            -webkit-text-fill-color: #e8e6e1 !important;
+            color: #e8e6e1 !important;
         }
         .dark-mode .author__urls a {
             color: #c9d1d9 !important;

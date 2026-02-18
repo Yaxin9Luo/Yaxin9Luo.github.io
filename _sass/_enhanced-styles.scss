@@ -40,6 +40,27 @@
   50% { box-shadow: 0 0 30px rgba(201, 169, 110, 0.15); }
 }
 
+/* ========================= Sidebar & Masthead — Ensure Light Background ========================= */
+
+/* Sidebar must be explicitly light — the fixed position means it needs its own bg */
+.sidebar {
+  background-color: $background-color !important;
+}
+
+/* Ensure sidebar text is always readable (dark text on light bg) */
+.sidebar,
+.sidebar p,
+.sidebar li,
+.sidebar a {
+  color: $text-color;
+}
+
+/* Masthead: warm ivory, fully opaque */
+.masthead {
+  background: #fafaf8 !important;
+  border-bottom: 1px solid rgba($accent-gold, 0.15) !important;
+}
+
 /* ========================= Novel Artistic Enhancements ========================= */
 
 /* Signature underline that draws itself beneath the page title */
@@ -579,23 +600,16 @@ a:focus {
   outline-offset: 3px;
 }
 
-/* ========================= Masthead — Luxury Header ========================= */
-.masthead {
-  background: rgba(250, 250, 248, 0.88);
-  backdrop-filter: blur(20px) saturate(1.2);
-  -webkit-backdrop-filter: blur(20px) saturate(1.2);
-  border-bottom: 1px solid rgba($accent-gold, 0.12) !important;
-
-  .masthead__menu-item--lg a {
-    font-family: $serif;
-    background: linear-gradient(135deg, #1a1f3a, #2d1b4e);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    font-weight: 700;
-    font-size: 1.25em;
-    letter-spacing: 0.5px;
-  }
+/* ========================= Masthead — Site Title Luxury Typography ========================= */
+.masthead .masthead__menu-item--lg a {
+  font-family: $serif;
+  background: linear-gradient(135deg, #1a1f3a, #2d1b4e);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 700;
+  font-size: 1.25em;
+  letter-spacing: 0.5px;
 }
 
 /* ========================= News Items — Luxury ========================= */
@@ -662,8 +676,14 @@ a:focus {
     background: rgba(201, 169, 110, 0.1);
   }
 
+  .sidebar {
+    background-color: #0f1019 !important;
+  }
+  .sidebar p, .sidebar li, .sidebar a {
+    color: #c9d1d9;
+  }
   .masthead {
-    background: rgba(15, 16, 25, 0.9) !important;
+    background: #0f1019 !important;
     border-bottom-color: rgba(201, 169, 110, 0.12) !important;
   }
 }
