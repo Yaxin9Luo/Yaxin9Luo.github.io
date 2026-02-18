@@ -40,14 +40,14 @@
   50% { box-shadow: 0 0 30px rgba(201, 169, 110, 0.15); }
 }
 
-/* ========================= Sidebar & Masthead — Ensure Light Background ========================= */
+/* ========================= Sidebar & Masthead — Warm Parchment ========================= */
 
-/* Sidebar must be explicitly light — the fixed position means it needs its own bg */
+/* Sidebar: warm parchment to match the page */
 .sidebar {
   background-color: $background-color !important;
 }
 
-/* Ensure sidebar text is always readable (dark text on light bg) */
+/* Ensure sidebar text is always readable */
 .sidebar,
 .sidebar p,
 .sidebar li,
@@ -55,10 +55,10 @@
   color: $text-color;
 }
 
-/* Masthead: warm ivory, fully opaque */
+/* Masthead: matches page background, subtle gold border */
 .masthead {
-  background: #fafaf8 !important;
-  border-bottom: 1px solid rgba($accent-gold, 0.15) !important;
+  background: $background-color !important;
+  border-bottom: 1px solid rgba($accent-gold, 0.2) !important;
 }
 
 /* ========================= Novel Artistic Enhancements ========================= */
@@ -140,7 +140,7 @@
   overflow: hidden;
   box-shadow: 0 6px 24px rgba(26, 31, 58, 0.08);
   transition: transform .25s ease, box-shadow .25s ease;
-  background: #fff;
+  background: #f7f6f1;
 }
 .pub-filmstrip .item:hover {
   transform: translateY(-3px);
@@ -258,11 +258,11 @@
   position: relative;
   padding: 18px 16px;
   border-radius: 12px;
-  background: #ffffff;
-  border: 1px solid rgba($accent-gold, 0.15);
+  background: #f7f6f1;
+  border: 1px solid rgba($accent-gold, 0.18);
   box-shadow:
     0 4px 20px rgba(26, 31, 58, 0.06),
-    0 1px 3px rgba(0, 0, 0, 0.04);
+    0 1px 3px rgba(0, 0, 0, 0.03);
   overflow: hidden;
   animation: fadeUp 450ms ease both;
 
@@ -813,7 +813,7 @@ a:focus {
 .cv-cards { display: grid; grid-template-columns: 1fr; gap: 12px; }
 .cv-cards--compact .cv-card { padding: 10px 12px; }
 .cv-card {
-  background: #fff;
+  background: #f7f6f1;
   border-radius: 12px;
   border: 1px solid rgba($accent-gold, 0.1);
   box-shadow: 0 4px 16px rgba(26, 31, 58, 0.05);
