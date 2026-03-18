@@ -34,12 +34,12 @@ About Me
     <h4>My research interests focus on:</h4>
     <ul>
       <li>
-        <strong> Unified Multimodal Foundation Models </strong>: Developing native multimodal foundation models that perform unified <strong>understanding</strong>, <strong>reasoning</strong>, and <strong>generation</strong> across video, language, and speech. I aim to construct a universal interface where diverse modalities converge, enabling models to perceive complex real-world dynamics and generate coherent, high-fidelity multimodal content.
+        <strong> Unified Multimodal Foundation Models </strong>: Developing native multimodal foundation models that perform unified <strong>understanding</strong>, <strong>generation</strong>, <strong>reasoning</strong>,  <strong>planning</strong> and <strong>action</strong> across multi-modalities. I aim to construct a universal interface where diverse modalities converge, enabling models to perceive complex real-world dynamics and generate coherent, high-fidelity multimodal contents.
       </li>
 
 
       <li>
-        <strong> Efficient Foundation Models </strong>: Tackling the efficiency challenges in scaling unified models. I explore novel architectures and mechanisms—such as dynamic computation allocation, efficient attention mechanisms, and token compression—to maximize performance-per-compute. The goal is to build sustainable AI systems that support long-context understanding and high-resolution generation without prohibitive computational costs.
+        <strong> Efficient Foundation Models </strong>: Tackling the efficiency challenges in scaling unified models. I explore novel architectures and mechanisms to maximize performance-per-compute. 
       </li>
 
     </ul>
