@@ -84,7 +84,6 @@ Experience
     <ul class="experience-bullets">
       <li>Investigated <strong>language-pretraining-induced bias</strong> as a strong foundation for general vision tasks, showing LLM priors transfer to pure-vision learning — published in <em>TMLR 2026</em>.</li>
       <li>Explored <strong>reasoning and agentic behaviors in multimodal large language models</strong> (MLLMs), leading the <em>OpenCaptchaWorld</em> benchmark (NeurIPS 2025).</li>
-      <li>Co-led <em>Next-Gen CAPTCHAs</em> (arXiv 2026), a defense framework leveraging the cognitive gap to stress-test MLLM-based GUI agents.</li>
     </ul>
   </div>
 </div>
