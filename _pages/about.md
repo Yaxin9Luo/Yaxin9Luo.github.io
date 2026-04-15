@@ -82,8 +82,9 @@ Experience
       Advised by <a href="https://zhiqiangshen.com/" class="advisor-link">Prof. Zhiqiang Shen</a> at the VILA Lab.
     </div>
     <ul class="experience-bullets">
-      <li>Analyzed <strong>LLM generalization ability</strong> on pure vision tasks using only image data.</li>
-      <li>Explored <strong>reasoning in multimodal large language models</strong> (MLLMs), contributing to the <em>OpenCaptchaWorld</em> benchmark (NeurIPS 2025).</li>
+      <li>Investigated <strong>language-pretraining-induced bias</strong> as a strong foundation for general vision tasks, showing LLM priors transfer to pure-vision learning — published in <em>TMLR 2026</em>.</li>
+      <li>Explored <strong>reasoning and agentic behaviors in multimodal large language models</strong> (MLLMs), leading the <em>OpenCaptchaWorld</em> benchmark (NeurIPS 2025).</li>
+      <li>Co-led <em>Next-Gen CAPTCHAs</em> (arXiv 2026), a defense framework leveraging the cognitive gap to stress-test MLLM-based GUI agents.</li>
     </ul>
   </div>
 </div>
