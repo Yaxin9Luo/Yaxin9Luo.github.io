@@ -16,7 +16,7 @@ About Me
 <div class="about-me-content">
   <div class="intro-text">
     Hello! I am a First-Year Machine Learning PhD student at <a href="https://mbzuai.ac.ae/" class="institution-link">MBZUAI</a>, advised by <a href="https://zhiqiangshen.com/" class="advisor-link">Prof. Zhiqiang Shen</a>. I am also closely working with my friend <a href="https://xxfchen.github.io/XiaofuChen/" class="collaborator-link">Xiaofu Chen</a>.
-    My research vision centers on advancing Native Multimodal Foundation Modelsthat to unify <strong>understanding, generateion reasoning, planning and action across diverse modalities.</strong>. Ambitiously, in the future, this could be extended in real-world. I am also interested in bridging the gap between high-performance unified intelligence and computational <strong>efficiency</strong>. 
+    My research vision centers on advancing Native Multimodal Foundation Modelsthat to unify <strong>understanding, generateion reasoning, planning and action across diverse modalities.</strong>. Ambitiously, in the future, this type of models could be extended in both digital and real worlds. I am also interested in bridging the gap between high-performance unified intelligence and computational <strong>efficiency</strong>. 
   </div>
   
   <div class="background-text">
@@ -48,6 +48,44 @@ About Me
   <div class="current-focus">
     Recently, I am focusing on Unified Multimodal Foundation Models post training and flow matching modeling speed up.
 </div>
+</div>
+
+
+<div class="section-header">
+Experience
+</div>
+
+<div class="experience-timeline">
+  <div class="experience-item">
+    <div class="experience-header">
+      <div class="experience-title">
+        <strong>Research Intern</strong>, <a href="https://longcat.ai/" class="institution-link">Meituan LongCat Team</a>
+      </div>
+      <div class="experience-meta">Apr 2026 – Present</div>
+    </div>
+    <div class="experience-detail">
+      Working on <strong>Unified Multimodal Foundation Model</strong> pretraining for unified embeddding/latent space.
+    </div>
+    <ul class="experience-bullets">
+      <li>Training a unified model with strong <strong>agentic capability</strong>, alongside <strong>generation</strong> and <strong>editing</strong> of long-horizon interactive videos and images.</li>
+      <li>Focusing on <strong>tokenization</strong> design and large-scale pretraining strategies for cross-modal unification.</li>
+    </ul>
+  </div>
+  <div class="experience-item">
+    <div class="experience-header">
+      <div class="experience-title">
+        <strong>Research Assistant</strong>, <a href="https://mbzuai.ac.ae/" class="institution-link">MBZUAI</a>
+      </div>
+      <div class="experience-meta">Jan 2025 – Aug 2025 · Abu Dhabi, UAE</div>
+    </div>
+    <div class="experience-detail">
+      Advised by <a href="https://zhiqiangshen.com/" class="advisor-link">Prof. Zhiqiang Shen</a> at the VILA Lab.
+    </div>
+    <ul class="experience-bullets">
+      <li>Analyzed <strong>LLM generalization ability</strong> on pure vision tasks using only image data.</li>
+      <li>Explored <strong>reasoning in multimodal large language models</strong> (MLLMs), contributing to the <em>OpenCaptchaWorld</em> benchmark (NeurIPS 2025).</li>
+    </ul>
+  </div>
 </div>
 
 
@@ -267,6 +305,90 @@ About Me
 .wave-emoji { display: inline-block; animation: wave 2s ease-in-out infinite; transform-origin: 70% 70%; font-size: 1.2em; }
 @keyframes wave { 0%,100%{transform:rotate(0)}10%{transform:rotate(14deg)}20%{transform:rotate(-8deg)}30%{transform:rotate(14deg)}40%{transform:rotate(-4deg)}50%{transform:rotate(10deg)}60%{transform:rotate(0)} }
 @keyframes sparkle { 0%,100%{transform:scale(1) rotate(0); opacity:.6}50%{transform:scale(1.2) rotate(180deg); opacity:1} }
+
+/* ========================= Experience Timeline ========================= */
+.experience-timeline {
+  margin: 15px 0 25px 0;
+  padding: 0 0 0 20px;
+  position: relative;
+}
+.experience-timeline:before {
+  content: ''; position: absolute; left: 0; top: 8px; bottom: 8px;
+  width: 2px;
+  background: linear-gradient(180deg, rgba(201, 169, 110, 0.5), rgba(201, 169, 110, 0.1));
+  border-radius: 2px;
+}
+.experience-item {
+  position: relative;
+  padding: 20px 22px;
+  margin-bottom: 16px;
+  background: rgba(201, 169, 110, 0.04);
+  border-radius: 10px;
+  border-left: 3px solid rgba(201, 169, 110, 0.4);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  color: #c8c6c0;
+  line-height: 1.6;
+}
+.experience-item:hover {
+  background: rgba(201, 169, 110, 0.07);
+  transform: translateX(5px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+  border-left-color: #c9a96e;
+}
+.experience-item:before {
+  content: '';
+  position: absolute;
+  left: -27px; top: 26px;
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #dfc89a 0%, #c9a96e 60%, rgba(201, 169, 110, 0.3) 100%);
+  box-shadow: 0 0 10px rgba(201, 169, 110, 0.5);
+}
+.experience-header {
+  display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline;
+  gap: 8px 16px; margin-bottom: 6px;
+}
+.experience-title {
+  font-size: 1.08em;
+  color: #e8e6e1;
+}
+.experience-title strong { color: #dfc89a; font-weight: 700; }
+.experience-title a.institution-link { color: #e8e6e1; font-weight: 700; text-decoration: none; transition: color 0.3s ease; }
+.experience-title a.institution-link:hover { color: #c9a96e; text-decoration: underline; }
+.experience-meta {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 0.92em;
+  color: #8a8c9a;
+  font-style: italic;
+}
+.experience-detail {
+  margin: 6px 0 10px 0;
+  color: #a8a69f;
+  font-size: 0.96em;
+}
+.experience-detail a.advisor-link {
+  color: #8ab4d6; font-weight: 600; text-decoration: none; transition: color 0.3s ease;
+}
+.experience-detail a.advisor-link:hover { color: #c9a96e; text-decoration: underline; }
+.experience-bullets {
+  margin: 8px 0 0 0; padding-left: 20px; list-style: none;
+}
+.experience-bullets li {
+  position: relative; padding: 4px 0 4px 4px;
+  color: #c8c6c0;
+}
+.experience-bullets li:before {
+  content: '◆';
+  position: absolute; left: -16px; top: 4px;
+  color: #c9a96e; font-size: 0.75em;
+}
+.experience-bullets strong { color: #c9a96e; font-weight: 700; }
+.experience-bullets em { color: #8ab4d6; font-style: italic; }
+
+@media (max-width: 600px) {
+  .experience-header { flex-direction: column; }
+  .experience-meta { font-size: 0.85em; }
+}
 
 /* ========================= Publication Entries ========================= */
 .pub-entry {
