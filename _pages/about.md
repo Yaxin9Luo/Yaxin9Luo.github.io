@@ -16,16 +16,16 @@ About Me
 <div class="about-me-content">
   <div class="intro-text">
     Hello! I am a First-Year Machine Learning PhD student at <a href="https://mbzuai.ac.ae/" class="institution-link">MBZUAI</a>, advised by <a href="https://zhiqiangshen.com/" class="advisor-link">Prof. Zhiqiang Shen</a>. I am also closely working with my friend <a href="https://xxfchen.github.io/XiaofuChen/" class="collaborator-link">Xiaofu Chen</a>.
-    My research vision centers on advancing Native Multimodal Foundation Modelsthat to unify <strong>understanding, generateion reasoning, planning and action across diverse modalities.</strong>. Ambitiously, in the future, this type of models could be extended in both digital and real worlds. I am also interested in bridging the gap between high-performance unified intelligence and computational <strong>efficiency</strong>. 
+    My research vision centers on advancing Native Multimodal Foundation Models that unify <strong>understanding, generation, reasoning, planning, and action across diverse modalities.</strong> Ambitiously, in the future, this type of models could be extended in both digital and real worlds. I am also interested in bridging the gap between high-performance unified intelligence and computational <strong>efficiency</strong>. 
   </div>
   
   <div class="background-text">
-    Previously, I earned my Bachelor’s degree from <a href="https://www.dtu.dk/english/" class="institution-link">Technical University of Denmark</a>, where I was fortunate to be supervised by <a href="https://dimipapa.github.io/" class="advisor-link">Prof. Dim P. Papadopoulos</a>. Meanwhile, I was lucky to collarating with <a href="https://scholar.google.com/citations?user=EyZqU9gAAAAJ&hl=en" class="advisor-link">Dr.Gen Luo</a> and <a href="https://scholar.google.com/citations?user=lRSD7PQAAAAJ&hl=en" class="advisor-link">Prof.Rongrong Ji</a> on efficient deep learning researches during my bachelor. 
+    Previously, I earned my Bachelor’s degree from <a href="https://www.dtu.dk/english/" class="institution-link">Technical University of Denmark</a>, where I was fortunate to be supervised by <a href="https://dimipapa.github.io/" class="advisor-link">Prof. Dim P. Papadopoulos</a>. Meanwhile, I was lucky to be collaborating with <a href="https://scholar.google.com/citations?user=EyZqU9gAAAAJ&hl=en" class="advisor-link">Dr.Gen Luo</a> and <a href="https://scholar.google.com/citations?user=lRSD7PQAAAAJ&hl=en" class="advisor-link">Prof.Rongrong Ji</a> on efficient deep learning research during my bachelor. 
     
     <details class="background-toggle">
       <summary>More about my earlier journey...</summary>
       <div class="toggle-content">
-        I spent an intense and rewarding year at the <strong>University of Edinburgh</strong> studying pure mathematics and physics—an experience that sparked my passion for science and technology, deepened my curiosity about the unknown, I was curious and wanted to explore <strong>String Theory</strong> at that time, this one year ultimately shaped who I am today. Before Edinburgh, while enrolled in a Bio-Medicine program at the <strong>University of Queensland</strong> and preparing for the UCAT test to be addimitted into the university's medical school, I failed at the end. As I only focused on managing a high-street multi-brand boutique which was located in Brisbane's Southbank near the casino, and was far more focused on business than on study and research; that Edinburgh year changed my priorities and set me on a research path, thanks to the advice, encourage and supports of my academic personal tutor <a href="https://webhomes.maths.ed.ac.uk/~apires/" class="advisor-link">Prof.Ana Rita Pires</a> when I was at Edinburgh. <strong>Anyway, all those past experiences have made me who I am today.</strong>
+        I spent an intense and rewarding year at the <strong>University of Edinburgh</strong> studying pure mathematics and physics—an experience that sparked my passion for science and technology, deepened my curiosity about the unknown, I was curious and wanted to explore <strong>String Theory</strong> at that time, this one year ultimately shaped who I am today. Before Edinburgh, while enrolled in a Bio-Medicine program at the <strong>University of Queensland</strong> and preparing for the UCAT test to be admitted into the university's medical school, I failed at the end. As I only focused on managing a high-street multi-brand boutique which was located in Brisbane's Southbank near the casino, and was far more focused on business than on study and research; that Edinburgh year changed my priorities and set me on a research path, thanks to the advice, encouragement and support of my academic personal tutor <a href="https://webhomes.maths.ed.ac.uk/~apires/" class="advisor-link">Prof.Ana Rita Pires</a> when I was at Edinburgh. <strong>Anyway, all those past experiences have made me who I am today.</strong>
       </div>
     </details>
   </div>
@@ -57,34 +57,44 @@ Experience
 
 <div class="experience-timeline">
   <div class="experience-item">
-    <div class="experience-header">
-      <div class="experience-title">
-        <strong>Research Intern</strong>, <a href="https://longcat.ai/" class="institution-link">Meituan LongCat Team</a>
+    <div class="exp-logo">
+      <img src="{{ '/images/logos/longcat.png' | relative_url }}" alt="Meituan LongCat Team logo" loading="lazy">
+    </div>
+    <div class="exp-body">
+      <div class="experience-header">
+        <div class="experience-title">
+          <strong>Research Intern</strong>, <a href="https://longcat.ai/" class="institution-link">Meituan LongCat Team</a>
+        </div>
+        <div class="experience-meta">Apr 2026 – Present · Beijing, China</div>
       </div>
-      <div class="experience-meta">Apr 2026 – Present</div>
+      <div class="experience-detail">
+        Working on <strong>Unified Multimodal Foundation Model</strong> pretraining for unified embedding/latent space.
+      </div>
+      <ul class="experience-bullets">
+        <li>Training a unified model with strong <strong>agentic capability</strong>, alongside <strong>generation</strong> and <strong>editing</strong> of long-horizon interactive videos and images.</li>
+        <li>Focusing on <strong>tokenization</strong> design and large-scale pretraining strategies for cross-modal unification.</li>
+      </ul>
     </div>
-    <div class="experience-detail">
-      Working on <strong>Unified Multimodal Foundation Model</strong> pretraining for unified embeddding/latent space.
-    </div>
-    <ul class="experience-bullets">
-      <li>Training a unified model with strong <strong>agentic capability</strong>, alongside <strong>generation</strong> and <strong>editing</strong> of long-horizon interactive videos and images.</li>
-      <li>Focusing on <strong>tokenization</strong> design and large-scale pretraining strategies for cross-modal unification.</li>
-    </ul>
   </div>
   <div class="experience-item">
-    <div class="experience-header">
-      <div class="experience-title">
-        <strong>Research Assistant</strong>, <a href="https://mbzuai.ac.ae/" class="institution-link">MBZUAI</a>
+    <div class="exp-logo exp-logo--wordmark">
+      <img src="{{ '/images/logos/mbzuai.png' | relative_url }}" alt="MBZUAI logo" loading="lazy">
+    </div>
+    <div class="exp-body">
+      <div class="experience-header">
+        <div class="experience-title">
+          <strong>Research Assistant</strong>, <a href="https://mbzuai.ac.ae/" class="institution-link">MBZUAI</a>
+        </div>
+        <div class="experience-meta">Jan 2025 – Aug 2025 · Abu Dhabi, UAE</div>
       </div>
-      <div class="experience-meta">Jan 2025 – Aug 2025 · Abu Dhabi, UAE</div>
+      <div class="experience-detail">
+        Advised by <a href="https://zhiqiangshen.com/" class="advisor-link">Prof. Zhiqiang Shen</a> at the VILA Lab.
+      </div>
+      <ul class="experience-bullets">
+        <li>Investigated <strong>language-pretraining-induced bias</strong> as a strong foundation for general vision tasks, showing LLM priors transfer to pure-vision learning — published in <em>TMLR 2026</em>.</li>
+        <li>Explored <strong>reasoning and agentic behaviors in multimodal large language models</strong> (MLLMs), leading the <em>OpenCaptchaWorld</em> benchmark (NeurIPS 2025).</li>
+      </ul>
     </div>
-    <div class="experience-detail">
-      Advised by <a href="https://zhiqiangshen.com/" class="advisor-link">Prof. Zhiqiang Shen</a> at the VILA Lab.
-    </div>
-    <ul class="experience-bullets">
-      <li>Investigated <strong>language-pretraining-induced bias</strong> as a strong foundation for general vision tasks, showing LLM priors transfer to pure-vision learning — published in <em>TMLR 2026</em>.</li>
-      <li>Explored <strong>reasoning and agentic behaviors in multimodal large language models</strong> (MLLMs), leading the <em>OpenCaptchaWorld</em> benchmark (NeurIPS 2025).</li>
-    </ul>
   </div>
 </div>
 
@@ -320,6 +330,9 @@ Experience
 }
 .experience-item {
   position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
   padding: 20px 22px;
   margin-bottom: 16px;
   background: rgba(201, 169, 110, 0.04);
@@ -388,6 +401,50 @@ Experience
 @media (max-width: 600px) {
   .experience-header { flex-direction: column; }
   .experience-meta { font-size: 0.85em; }
+}
+
+/* ========================= Experience Logos ========================= */
+.exp-logo {
+  flex: 0 0 56px;
+  width: 56px;
+  height: 56px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: rgba(232, 230, 225, 0.92);
+  border: 1px solid rgba(201, 169, 110, 0.25);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35), inset 0 0 0 1px rgba(255, 255, 255, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.exp-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 6px;
+  display: block;
+}
+.experience-item:hover .exp-logo {
+  border-color: rgba(201, 169, 110, 0.6);
+  box-shadow: 0 4px 16px rgba(201, 169, 110, 0.25), inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+  transform: scale(1.03);
+}
+.exp-body { flex: 1; min-width: 0; }
+
+/* Wordmark variant: wider plate so long logos like "MBZUAI" read clearly */
+.exp-logo--wordmark {
+  flex: 0 0 120px;
+  width: 120px;
+}
+.exp-logo--wordmark img { padding: 8px 10px; }
+
+@media (max-width: 600px) {
+  .experience-item { gap: 12px; }
+  .exp-logo { flex: 0 0 44px; width: 44px; height: 44px; border-radius: 8px; }
+  .exp-logo img { padding: 4px; }
+  .exp-logo--wordmark { flex: 0 0 90px; width: 90px; }
+  .exp-logo--wordmark img { padding: 5px 7px; }
 }
 
 /* ========================= Publication Entries ========================= */
