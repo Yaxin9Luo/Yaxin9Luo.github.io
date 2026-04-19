@@ -77,7 +77,7 @@ Experience
     </div>
   </div>
   <div class="experience-item">
-    <div class="exp-logo exp-logo--wordmark">
+    <div class="exp-logo">
       <img src="{{ '/images/logos/mbzuai.png' | relative_url }}" alt="MBZUAI logo" loading="lazy">
     </div>
     <div class="exp-body">
@@ -404,9 +404,11 @@ Experience
 }
 
 /* ========================= Experience Logos ========================= */
+/* Uniform rectangular plate for every entry so the body column
+   starts at the same x for all items — titles align vertically. */
 .exp-logo {
-  flex: 0 0 56px;
-  width: 56px;
+  flex: 0 0 110px;
+  width: 110px;
   height: 56px;
   border-radius: 10px;
   overflow: hidden;
@@ -419,10 +421,12 @@ Experience
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .exp-logo img {
-  width: 100%;
-  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
   object-fit: contain;
-  padding: 6px;
+  padding: 8px 10px;
   display: block;
 }
 .experience-item:hover .exp-logo {
@@ -432,19 +436,10 @@ Experience
 }
 .exp-body { flex: 1; min-width: 0; }
 
-/* Wordmark variant: wider plate so long logos like "MBZUAI" read clearly */
-.exp-logo--wordmark {
-  flex: 0 0 120px;
-  width: 120px;
-}
-.exp-logo--wordmark img { padding: 8px 10px; }
-
 @media (max-width: 600px) {
   .experience-item { gap: 12px; }
-  .exp-logo { flex: 0 0 44px; width: 44px; height: 44px; border-radius: 8px; }
-  .exp-logo img { padding: 4px; }
-  .exp-logo--wordmark { flex: 0 0 90px; width: 90px; }
-  .exp-logo--wordmark img { padding: 5px 7px; }
+  .exp-logo { flex: 0 0 88px; width: 88px; height: 44px; border-radius: 8px; }
+  .exp-logo img { padding: 5px 7px; }
 }
 
 /* ========================= Publication Entries ========================= */
