@@ -15,8 +15,8 @@ About Me
 <span class="sr-only">Decorative animated background</span>
 <div class="about-me-content">
   <div class="intro-text">
-    Hello! I am a First-Year Machine Learning PhD student at <a href="https://mbzuai.ac.ae/" class="institution-link">MBZUAI</a>, advised by <a href="https://zhiqiangshen.com/" class="advisor-link">Prof. Zhiqiang Shen</a>. I am also closely working with my friend <a href="https://xxfchen.github.io/XiaofuChen/" class="collaborator-link">Xiaofu Chen</a>.
-    My research vision centers on advancing Native Multimodal Foundation Models that unify <strong>understanding, generation, reasoning, planning, and action across diverse modalities.</strong> Ambitiously, in the future, this type of models could be extended in both digital and real worlds. I am also interested in bridging the gap between high-performance unified intelligence and computational <strong>efficiency</strong>. 
+    Hello! I am a First-Year Machine Learning PhD student at <a href="https://mbzuai.ac.ae/" class="institution-link">MBZUAI</a>, advised by <a href="https://zhiqiangshen.com/" class="advisor-link">Prof. Zhiqiang Shen</a>. I am also closely working with my friend <a href="https://xxfchen.github.io/XiaofuChen/" class="collaborator-link">Xiaofu Chen</a>. Ambitiously, my vision is to build reliable，scalable，real-world application computer/device use agent systems.
+    Currently, my research focus on advancing Native Multimodal Foundation Models that unify <strong>understanding, generation, reasoning, planning, and action across diverse modalities.</strong> 
   </div>
   
   <div class="background-text">
@@ -39,7 +39,7 @@ About Me
 
 
       <li>
-        <strong> Efficient Foundation Models </strong>: Tackling the efficiency challenges in scaling unified models. I explore novel architectures and mechanisms to maximize performance-per-compute. 
+        <strong> To build reliable，scalable，real-world application computer/device use agent systems. </strong>
       </li>
 
     </ul>
