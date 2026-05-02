@@ -15,7 +15,7 @@ About Me
 <span class="sr-only">Decorative animated background</span>
 <div class="about-me-content">
   <div class="intro-text">
-    Hello! I am a First-Year Machine Learning PhD student at <a href="https://mbzuai.ac.ae/" class="institution-link">MBZUAI</a>, advised by <a href="https://zhiqiangshen.com/" class="advisor-link">Prof. Zhiqiang Shen</a>. I am also closely working with my friend <a href="https://xxfchen.github.io/XiaofuChen/" class="collaborator-link">Xiaofu Chen</a>. Ambitiously, my vision is to build reliable，scalable，real-world application computer/device use agent systems.
+    Hello! I am a First-Year Machine Learning PhD student at <a href="https://mbzuai.ac.ae/" class="institution-link">MBZUAI</a>, advised by <a href="https://zhiqiangshen.com/" class="advisor-link">Prof. Zhiqiang Shen</a>. I am also closely working with my friend <a href="https://xxfchen.github.io/XiaofuChen/" class="collaborator-link">Xiaofu Chen</a>. Ambitiously, my vision is to build reliable，scalable，real-world application computer/device use agent systems. We organize <a href="https://github.com/MetaAgentX" class="institution-link">MetaAgentX</a> to conduct a serial of research projects on these.
     Currently, my research focus on advancing Native Multimodal Foundation Models that unify <strong>understanding, generation, reasoning, planning, and action across diverse modalities.</strong> 
   </div>
   
