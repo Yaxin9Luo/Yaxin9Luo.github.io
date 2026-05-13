@@ -68,11 +68,11 @@ Experience
         <div class="experience-meta">Apr 2026 – Present · Beijing, China</div>
       </div>
       <div class="experience-detail">
-        Working on <strong>Unified Multimodal Foundation Model</strong> pretraining for unified embedding/latent space.
+        Working on <strong>Unified Multimodal Foundation Model Projects<a href="https://arxiv.org/abs/2603.27538" class="institution-link">(LongCat-Next Team)</a>.</strong>
       </div>
       <ul class="experience-bullets">
-        <li>Training a unified model with strong <strong>agentic capability</strong>, alongside <strong>generation</strong> and <strong>editing</strong> of long-horizon interactive videos and images.</li>
-        <li>Focusing on <strong>tokenization</strong> design and large-scale pretraining strategies for cross-modal unification.</li>
+        <li> Long-Horizon Multimodal Interactive Tasks for Unified Multimodal Models: <strong>Agentic Design System.</strong></li>
+        <li>Unified Discrete Vision Encoder for both understanding and generation.</li>
       </ul>
     </div>
   </div>
