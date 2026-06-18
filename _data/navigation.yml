@@ -24,6 +24,10 @@ main:
   - title: "📄 CV"
     url: /cv/
     featured: true
+
+  - title: "中文主页"
+    url: /zh/
+    featured: true
   
   - title: "Long-Horizon Research Thoughts"
     url: /long-horizon-research-thoughts/

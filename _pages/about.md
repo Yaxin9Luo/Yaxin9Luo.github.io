@@ -7,6 +7,10 @@ redirect_from:
   - /about.html
 ---
 
+<div class="language-switch">
+  <a href="{{ '/zh/' | relative_url }}">中文</a>
+</div>
+
 <div class="section-header">
 About Me
 </div>
@@ -15,8 +19,8 @@ About Me
 <span class="sr-only">Decorative animated background</span>
 <div class="about-me-content">
   <div class="intro-text">
-    Hello! I am a First-Year Machine Learning PhD student at <a href="https://mbzuai.ac.ae/" class="institution-link">MBZUAI</a>, advised by <a href="https://zhiqiangshen.com/" class="advisor-link">Prof. Zhiqiang Shen</a>. I am also closely working with my friend <a href="https://xxfchen.github.io/XiaofuChen/" class="collaborator-link">Xiaofu Chen</a>. Ambitiously, my vision is to build reliable，scalable，real-world application computer/device use agent systems. We organize <a href="https://github.com/MetaAgentX" class="institution-link">MetaAgentX</a> to conduct a serial of research projects on these.
-    Currently, my research focus on advancing Native Multimodal Foundation Models that unify <strong>understanding, generation, reasoning, planning, and action across diverse modalities.</strong> 
+    Hello! I am a First-Year Machine Learning PhD student at <a href="https://mbzuai.ac.ae/" class="institution-link">MBZUAI</a>, advised by <a href="https://zhiqiangshen.com/" class="advisor-link">Prof. Zhiqiang Shen</a>. I am also closely working with my friend <a href="https://xxfchen.github.io/XiaofuChen/" class="collaborator-link">Xiaofu Chen</a>.
+    Currently, my research explores <strong>Native Multimodal Foundation Models</strong> and <strong>Multimodal Agentic Models</strong> as tightly coupled directions: building models that unify <strong>understanding, generation, reasoning, planning, and action across diverse modalities</strong>, and using those capabilities to support long-horizon interactive tasks.
   </div>
   
   <div class="background-text">
@@ -34,19 +38,14 @@ About Me
     <h4>My research interests focus on:</h4>
     <ul>
       <li>
-        <strong> Unified Multimodal Foundation Models </strong>: Developing native multimodal foundation models that perform unified <strong>understanding</strong>, <strong>generation</strong>, <strong>reasoning</strong>,  <strong>planning</strong> and <strong>action</strong> across multi-modalities. I aim to construct a universal interface where diverse modalities converge, enabling models to perceive complex real-world dynamics and generate coherent, high-fidelity multimodal contents.
-      </li>
-
-
-      <li>
-        <strong> To build reliable，scalable，real-world application computer/device use agent systems. </strong>
+        <strong> Native Multimodal Foundation Models and Multimodal Agentic Models </strong>: I view native multimodal foundation models and multimodal agentic models as a connected research agenda. Native multimodal foundation models provide unified representations and capabilities for <strong>multimodal understanding</strong>, <strong>generation</strong>, <strong>reasoning</strong>, <strong>planning</strong>, and <strong>action</strong>; multimodal agentic models further test and extend these capabilities through long-horizon interaction, memory, execution, and self-correction. I am especially interested in concrete long-horizon tasks such as <strong>Agentic Design</strong>, <strong>Agentic Game Crafting</strong>, and <strong>Application Crafting</strong>.
       </li>
 
     </ul>
   </div>
 
   <div class="current-focus">
-    Recently, I am focusing on long-horizon and editiable design agentic foundation model and system.
+    Recently, I am focusing on long-horizon multimodal agentic foundation models and systems, especially for Agentic Design, Agentic Game Crafting, and Application Crafting.
 </div>
 </div>
 
