@@ -17,7 +17,7 @@ author_profile: true
 <div class="about-me-content">
   <div class="intro-text">
     我是 Yaxin Luo，目前是 <a href="https://mbzuai.ac.ae/" class="institution-link">MBZUAI</a> 机器学习方向一年级博士生，导师是 <a href="https://zhiqiangshen.com/" class="advisor-link">Prof. Zhiqiang Shen</a>。我也与好友 <a href="https://xxfchen.github.io/XiaofuChen/" class="collaborator-link">Xiaofu Chen</a> 保持紧密合作。
-    我的研究关注 <strong>原生多模态基础模型（Native Multimodal Foundation Models）</strong>与<strong>多模态智能体模型（Multimodal Agentic Models）</strong>，尤其希望探索模型如何在统一框架中完成跨模态的理解、生成、推理、规划与行动。
+    我的研究聚焦于<strong>多模态输入—多模态输出智能体系统（Multimodal-in and Multimodal-out Agentic Systems）</strong>和<strong>递归式自我改进智能体系统（Recursive Self-improvement Agentic Systems）</strong>这两个相互补充的方向：一方面构建统一多模态理解、生成、推理、规划与行动的模型和系统；另一方面探索如何基于 rollout experience，让模型参数与外围的智能体基础设施协同演化。
   </div>
 
   <div class="background-text">
@@ -28,13 +28,16 @@ author_profile: true
     <h4>我的研究兴趣主要集中在：</h4>
     <ul>
       <li>
-        <strong>原生多模态基础模型与多模态智能体模型</strong>：我将这两个方向视为高度耦合的研究问题。一方面，原生多模态基础模型需要在视觉、语言、交互状态等信息之间建立统一表征，支持多模态理解与生成、跨模态迁移以及更强的多模态推理能力；另一方面，多模态智能体模型进一步要求模型具备面向复杂长程任务的规划、记忆、执行与自我修正能力。我的长期目标是构建能够在开放任务中持续理解环境、生成方案、推理决策并采取行动的多模态智能系统，具体关注方向包括 <strong>Agentic Design</strong>、<strong>Agentic Game Crafting</strong> 和 <strong>Application Crafting</strong>。
+        <strong>多模态输入—多模态输出智能体系统</strong>：我关注能够理解异构多模态输入并生成多模态输出的智能体系统，在统一框架中整合<strong>理解、生成、推理、规划与行动</strong>。我尤其关注能够支持长程交互以及结构化、可编辑内容生成的原生多模态基础模型。
+      </li>
+      <li>
+        <strong>递归式自我改进智能体系统</strong>：我关注能够从 rollout trajectories 和 accumulated experience 中递归改进的智能体系统。在这类系统中，<strong>模型参数</strong>与外围的<strong>智能体基础设施</strong>——包括 harnesses、tools、memory、orchestration、evaluation 和 feedback loops——共同作为优化目标并协同演化，而不是将模型或其 scaffold 中的任何一方视为固定不变。
       </li>
     </ul>
   </div>
 
   <div class="current-focus">
-    最近，我主要关注面向长程交互任务的多模态智能体基础模型与系统，尤其是 Agentic Design、Agentic Game Crafting 和 Application Crafting。
+    最近，我主要关注面向长程交互任务的多模态智能体基础模型与系统，尤其是 Agentic Design、Recursive Self-improvement Agentic Systems 和 Infrastructure Frameworks。
   </div>
 </div>
 </div>

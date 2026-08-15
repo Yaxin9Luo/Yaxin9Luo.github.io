@@ -20,7 +20,7 @@ About Me
 <div class="about-me-content">
   <div class="intro-text">
     Hello! I am a First-Year Machine Learning PhD student at <a href="https://mbzuai.ac.ae/" class="institution-link">MBZUAI</a>, advised by <a href="https://zhiqiangshen.com/" class="advisor-link">Prof. Zhiqiang Shen</a>. I am also closely working with my friend <a href="https://xxfchen.github.io/XiaofuChen/" class="collaborator-link">Xiaofu Chen</a>.
-    Currently, my research explores <strong>Native Multimodal Foundation Models</strong> and <strong>Multimodal Agentic Models</strong> as tightly coupled directions: building models that unify <strong>understanding, generation, reasoning, planning, and action across diverse modalities</strong>, and using those capabilities to support long-horizon interactive tasks.
+    Currently, my research explores <strong>Multimodal-in and Multimodal-out Agentic Systems</strong> and <strong>Recursive Self-improvement Agentic Systems</strong> as two complementary directions: building models and systems that unify <strong>multimodal understanding, generation, reasoning, planning, and action</strong>, and enabling model parameters and the surrounding agentic infrastructure to co-evolve through rollout experience.
   </div>
   
   <div class="background-text">
@@ -38,14 +38,17 @@ About Me
     <h4>My research interests focus on:</h4>
     <ul>
       <li>
-        <strong> Native Multimodal Foundation Models and Multimodal Agentic Models </strong>: I view native multimodal foundation models and multimodal agentic models as a connected research agenda. Native multimodal foundation models provide unified representations and capabilities for <strong>multimodal understanding</strong>, <strong>generation</strong>, <strong>reasoning</strong>, <strong>planning</strong>, and <strong>action</strong>; multimodal agentic models further test and extend these capabilities through long-horizon interaction, memory, execution, and self-correction. I am especially interested in concrete long-horizon tasks such as <strong>Agentic Design</strong>, <strong>Agentic Game Crafting</strong>, and <strong>Application Crafting</strong>.
+        <strong>Multimodal-in and Multimodal-out Agentic Systems</strong>: I study agentic systems that can understand heterogeneous multimodal inputs and produce multimodal outputs, integrating <strong>understanding, generation, reasoning, planning, and action</strong> within a unified framework. I am particularly interested in native multimodal foundation models that support long-horizon interaction and the creation of structured, editable artifacts.
+      </li>
+      <li>
+        <strong>Recursive Self-improvement Agentic Systems</strong>: I study agentic systems that improve recursively through rollout trajectories and accumulated experience. In these systems, <strong>model parameters</strong> and the surrounding <strong>agentic infrastructure</strong>—including harnesses, tools, memory, orchestration, evaluation, and feedback loops—are joint optimization targets that co-evolve, rather than treating either the model or its scaffold as fixed.
       </li>
 
     </ul>
   </div>
 
   <div class="current-focus">
-    Recently, I am focusing on long-horizon multimodal agentic foundation models and systems, especially for Agentic Design, Agentic Game Crafting, and Application Crafting.
+    Recently, I am focusing on long-horizon multimodal agentic foundation models and systems, especially Agentic Design, Recursive Self-improvement Agentic Systems, and Infrastructure Frameworks.
 </div>
 </div>
 
