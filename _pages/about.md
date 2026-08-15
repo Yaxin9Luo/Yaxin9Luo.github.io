@@ -101,6 +101,11 @@ Experience
 <h1>News</h1>
 
 <div class="news-item">
+[2026-08-13] 🚀 <strong><a href="https://arxiv.org/abs/2608.13560">AutoDesign</a></strong> is now available on arXiv! We introduce Meta-Harness Optimization for long-horizon agentic design, together with <a href="https://github.com/Yaxin9Luo/AutoDesign">open-source code</a> and an <a href="https://designanything.ai/">online demo</a>.
+
+</div>
+
+<div class="news-item">
 [2026-02-10] 🚀 <strong><a href="https://github.com/MetaAgentX/NextGen-CAPTCHAs">Next-Gen CAPTCHAs</a></strong> is now available on arXiv! A defense framework leveraging cognitive gaps against MLLM-based GUI agents.
 
 </div>
@@ -119,6 +124,18 @@ Experience
 
 <p>For full and up-to-date publication list, please refer to my
 <a href="https://scholar.google.com/citations?user=tEaSCzYAAAAJ&hl=en">Google Scholar</a> page.</p>
+
+<div class="pub-entry">
+  <div class="pub-image">
+    <img src="{{ '/images/autodesign.webp' | relative_url }}" alt="AutoDesign project overview">
+  </div>
+  <div class="pub-text">
+    <strong>AutoDesign: Meta-Harness Optimization for Long-Horizon Agentic Design</strong><br>
+    <span class="venue-badge arxiv">arXiv 2026</span><br>
+    <strong>Yaxin Luo</strong> *, Haobin Jiang *, Jialv Zou, Xu Huang, Wenhao Yan, Haodong Li, Zhengrong Yue, Jing Li, Xiaofu Chen, Xiaohan Zhao, Jiacheng Liu, Jiacheng Cui, Zhiqiang Shen, Xiaotong Li<br>
+    <a href="https://arxiv.org/abs/2608.13560" class="enhanced-link paper-link">📄 Paper</a> <a href="https://github.com/Yaxin9Luo/AutoDesign" class="enhanced-link code-link">💻 Code</a> <a href="https://designanything.ai/" class="enhanced-link demo-link">🚀 Demo</a> <a href="https://autodesign.designanything.ai/" class="enhanced-link demo-link">🌐 Project</a>
+  </div>
+</div>
 
 <div class="pub-entry">
   <div class="pub-image">
