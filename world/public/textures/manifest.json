@@ -1,0 +1,1355 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-09-07T15:31:29.506848+00:00",
+  "generator": "scripts/fetch-world-assets.py",
+  "pillowVersion": "12.3.0",
+  "license": "CC0-1.0",
+  "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "notes": "Self-hosted CC0 asset derivatives. No runtime API dependency. Color maps use sRGB; all scalar/normal maps use no color-space conversion. Normal maps are OpenGL +Y. Procedural copper includes the provider's metalness map. WebP delivery is lossy except opacity; sampled normal angular error is recorded.",
+  "materials": {
+    "castle-masonry": {
+      "provider": "Poly Haven",
+      "assetId": "old_stone_wall_02",
+      "title": "Old Stone Wall 02",
+      "authors": {
+        "Charlotte Baglioni": "All"
+      },
+      "sourceUrl": "https://polyhaven.com/a/old_stone_wall_02",
+      "metadataUrls": [
+        "https://api.polyhaven.com/info/old_stone_wall_02",
+        "https://api.polyhaven.com/files/old_stone_wall_02"
+      ],
+      "license": "CC0-1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "providerLicenseUrl": "https://polyhaven.com/license",
+      "sourceDimensionsMillimeters": [
+        2085.0000381469727,
+        2085.0000381469727
+      ],
+      "tileMeters": [
+        2.085,
+        2.085
+      ],
+      "files": {
+        "color": {
+          "path": "/textures/castle-masonry/color.webp",
+          "bytes": 1343684,
+          "sha256": "a65c1bdc90bcfe9b1998d93b0174940992ca1747f2196dd69508c87cc93a27d4",
+          "width": 2048,
+          "height": 2048,
+          "channels": "RGB",
+          "colorSpace": "sRGB",
+          "encoding": {
+            "format": "WebP",
+            "lossless": false,
+            "quality": 90,
+            "method": 6
+          },
+          "sourceDimensions": [
+            2048,
+            2048
+          ],
+          "source": {
+            "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/old_stone_wall_02/old_stone_wall_02_diff_2k.jpg",
+            "md5": "103f481ad11f69fcd6e2c78de3c7aee8",
+            "bytes": 3485051,
+            "verification": "Provider MD5 and declared byte size verified before conversion",
+            "sha256": "e0f2d3a63ab21a33a88dbc58cf53a165d5c908ab8c18caf3aef709f25a925c07"
+          }
+        },
+        "normal": {
+          "path": "/textures/castle-masonry/normal.webp",
+          "bytes": 2045592,
+          "sha256": "3735d2dbabee7dc76fa5c8e1a0d165e7aecb14628ec7e84d723536ddc932211f",
+          "width": 2048,
+          "height": 2048,
+          "channels": "RGB",
+          "colorSpace": "linear / no color conversion",
+          "encoding": {
+            "format": "WebP",
+            "lossless": false,
+            "quality": 95,
+            "method": 6
+          },
+          "sourceDimensions": [
+            2048,
+            2048
+          ],
+          "source": {
+            "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/old_stone_wall_02/old_stone_wall_02_nor_gl_2k.jpg",
+            "md5": "5ef2783f87549b41726ff97b77120acb",
+            "bytes": 4419099,
+            "verification": "Provider MD5 and declared byte size verified before conversion",
+            "sha256": "1d48b89ad413e1f3b1fb3a5941d0b8fcbd896930aa289a6373013305d2814d66"
+          },
+          "normalConvention": "OpenGL (+Y)",
+          "normalCompressionErrorDegrees": {
+            "samplingStridePixels": 8,
+            "sampleCount": 65536,
+            "mean": 2.0023,
+            "percentile95": 4.6592,
+            "percentile99": 6.6148
+          }
+        },
+        "roughness": {
+          "path": "/textures/castle-masonry/roughness.webp",
+          "bytes": 16240,
+          "sha256": "06510453b7724cd5316c09f8e32704ba2d6045372feb379d28393af164a1c74d",
+          "width": 2048,
+          "height": 2048,
+          "channels": "RGB",
+          "colorSpace": "linear / no color conversion",
+          "encoding": {
+            "format": "WebP",
+            "lossless": false,
+            "quality": 95,
+            "method": 6
+          },
+          "sourceDimensions": [
+            2048,
+            2048
+          ],
+          "source": {
+            "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/old_stone_wall_02/old_stone_wall_02_rough_2k.jpg",
+            "md5": "e075fcfce3a1e48d84f72311df906566",
+            "bytes": 859183,
+            "verification": "Provider MD5 and declared byte size verified before conversion",
+            "sha256": "59cc58af7591ec1f9aa598277b6a7a9d23ef48d92be7c4260a90acbc5d86e871"
+          }
+        }
+      }
+    },
+    "slate-roof": {
+      "provider": "Poly Haven",
+      "assetId": "roof_slates_02",
+      "title": "Roof Slates 02",
+      "authors": {
+        "Rob Tuytel": "All"
+      },
+      "sourceUrl": "https://polyhaven.com/a/roof_slates_02",
+      "metadataUrls": [
+        "https://api.polyhaven.com/info/roof_slates_02",
+        "https://api.polyhaven.com/files/roof_slates_02"
+      ],
+      "license": "CC0-1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "providerLicenseUrl": "https://polyhaven.com/license",
+      "sourceDimensionsMillimeters": [
+        3000,
+        3000
+      ],
+      "tileMeters": [
+        3.0,
+        3.0
+      ],
+      "files": {
+        "color": {
+          "path": "/textures/slate-roof/color.webp",
+          "bytes": 919740,
+          "sha256": "3213827fd80f1ba036e2f0fb79780dbdf22a0bb657644854ccde53f9ea31b32a",
+          "width": 2048,
+          "height": 2048,
+          "channels": "RGB",
+          "colorSpace": "sRGB",
+          "encoding": {
+            "format": "WebP",
+            "lossless": false,
+            "quality": 90,
+            "method": 6
+          },
+          "sourceDimensions": [
+            2048,
+            2048
+          ],
+          "source": {
+            "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/roof_slates_02/roof_slates_02_diff_2k.jpg",
+            "md5": "2bd2c8593d8cbaea04878203be4bc7ad",
+            "bytes": 1838933,
+            "verification": "Provider MD5 and declared byte size verified before conversion",
+            "sha256": "5be7e739997e9f5560b07ee42f335d7ad70213359d48cbffc9c04ad129e9a2c4"
+          }
+        },
+        "normal": {
+          "path": "/textures/slate-roof/normal.webp",
+          "bytes": 1537462,
+          "sha256": "5deb6fd94d8b92ed2f866672c3b1dee248984d85694aea2577bcdd6c4db51c4b",
+          "width": 2048,
+          "height": 2048,
+          "channels": "RGB",
+          "colorSpace": "linear / no color conversion",
+          "encoding": {
+            "format": "WebP",
+            "lossless": false,
+            "quality": 95,
+            "method": 6
+          },
+          "sourceDimensions": [
+            2048,
+            2048
+          ],
+          "source": {
+            "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/roof_slates_02/roof_slates_02_nor_gl_2k.jpg",
+            "md5": "1256041f95f300753b867934324c7b91",
+            "bytes": 2919261,
+            "verification": "Provider MD5 and declared byte size verified before conversion",
+            "sha256": "4ff2618aa5f2eac52f728b8b4f7e715d87c410719effc66eb6f528378ef9f49e"
+          },
+          "normalConvention": "OpenGL (+Y)",
+          "normalCompressionErrorDegrees": {
+            "samplingStridePixels": 8,
+            "sampleCount": 65536,
+            "mean": 3.7198,
+            "percentile95": 11.6609,
+            "percentile99": 20.2269
+          }
+        },
+        "roughness": {
+          "path": "/textures/slate-roof/roughness.webp",
+          "bytes": 760424,
+          "sha256": "4f394aae5e83392ee958d0873cc2571f4423aeb974a65bee3d4aaf5c9b604b46",
+          "width": 2048,
+          "height": 2048,
+          "channels": "RGB",
+          "colorSpace": "linear / no color conversion",
+          "encoding": {
+            "format": "WebP",
+            "lossless": false,
+            "quality": 95,
+            "method": 6
+          },
+          "sourceDimensions": [
+            2048,
+            2048
+          ],
+          "source": {
+            "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/roof_slates_02/roof_slates_02_rough_2k.jpg",
+            "md5": "925f6de5f84f351c8d061086a278c005",
+            "bytes": 1126001,
+            "verification": "Provider MD5 and declared byte size verified before conversion",
+            "sha256": "641b51370745e7e990c93542716bf46219e7415808a4cea999bb3f0683ec01bf"
+          }
+        }
+      }
+    },
+    "mossy-rock": {
+      "provider": "Poly Haven",
+      "assetId": "mossy_rock",
+      "title": "Mossy Rock",
+      "authors": {
+        "Rob Tuytel": "All"
+      },
+      "sourceUrl": "https://polyhaven.com/a/mossy_rock",
+      "metadataUrls": [
+        "https://api.polyhaven.com/info/mossy_rock",
+        "https://api.polyhaven.com/files/mossy_rock"
+      ],
+      "license": "CC0-1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "providerLicenseUrl": "https://polyhaven.com/license",
+      "sourceDimensionsMillimeters": [
+        3000,
+        3000
+      ],
+      "tileMeters": [
+        3.0,
+        3.0
+      ],
+      "files": {
+        "color": {
+          "path": "/textures/mossy-rock/color.webp",
+          "bytes": 453490,
+          "sha256": "d59a092722eb97d20c7e54bc3fe3c0bc944c97fef618b7c10defa823efa6fa52",
+          "width": 1024,
+          "height": 1024,
+          "channels": "RGB",
+          "colorSpace": "sRGB",
+          "encoding": {
+            "format": "WebP",
+            "lossless": false,
+            "quality": 90,
+            "method": 6
+          },
+          "sourceDimensions": [
+            1024,
+            1024
+          ],
+          "source": {
+            "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/mossy_rock/mossy_rock_diff_1k.jpg",
+            "md5": "a57fbbf55269eb64f8d40708fe3af26c",
+            "bytes": 1124438,
+            "verification": "Provider MD5 and declared byte size verified before conversion",
+            "sha256": "4dbf37f1b0465c9c8914213163923be159716f5b97fb6946437b6c5e143ef540"
+          }
+        },
+        "normal": {
+          "path": "/textures/mossy-rock/normal.webp",
+          "bytes": 480794,
+          "sha256": "84a310f08d2054db59e16e3ee3e733a002080c7109f3f3aa1ce693a5289c60c5",
+          "width": 1024,
+          "height": 1024,
+          "channels": "RGB",
+          "colorSpace": "linear / no color conversion",
+          "encoding": {
+            "format": "WebP",
+            "lossless": false,
+            "quality": 95,
+            "method": 6
+          },
+          "sourceDimensions": [
+            1024,
+            1024
+          ],
+          "source": {
+            "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/mossy_rock/mossy_rock_nor_gl_1k.jpg",
+            "md5": "59370f9b3d068271c2bccfb414dc325b",
+            "bytes": 995727,
+            "verification": "Provider MD5 and declared byte size verified before conversion",
+            "sha256": "232cdd6a9fdfd01bb8bb1f8f604c53dbca79fa0d3d7995edf85c9945757aa8df"
+          },
+          "normalConvention": "OpenGL (+Y)",
+          "normalCompressionErrorDegrees": {
+            "samplingStridePixels": 8,
+            "sampleCount": 16384,
+            "mean": 1.3997,
+            "percentile95": 3.1342,
+            "percentile99": 4.6527
+          }
+        },
+        "roughness": {
+          "path": "/textures/mossy-rock/roughness.webp",
+          "bytes": 425734,
+          "sha256": "801d9198377c49145142dc90f95c2f9f550d858fd6a417bc28c6f60bcdbce68d",
+          "width": 1024,
+          "height": 1024,
+          "channels": "RGB",
+          "colorSpace": "linear / no color conversion",
+          "encoding": {
+            "format": "WebP",
+            "lossless": false,
+            "quality": 95,
+            "method": 6
+          },
+          "sourceDimensions": [
+            1024,
+            1024
+          ],
+          "source": {
+            "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/mossy_rock/mossy_rock_rough_1k.jpg",
+            "md5": "7eadb38815ad2569104d827ad8ac1572",
+            "bytes": 780918,
+            "verification": "Provider MD5 and declared byte size verified before conversion",
+            "sha256": "0a18bdeb08444b730170b0477f13940ce6cd4d82d06137df661f96d1e2a6a66e"
+          }
+        }
+      }
+    },
+    "forest-ground": {
+      "provider": "Poly Haven",
+      "assetId": "forest_floor",
+      "title": "Forest Floor",
+      "authors": {
+        "eye-candy.xyz": "All"
+      },
+      "sourceUrl": "https://polyhaven.com/a/forest_floor",
+      "metadataUrls": [
+        "https://api.polyhaven.com/info/forest_floor",
+        "https://api.polyhaven.com/files/forest_floor"
+      ],
+      "license": "CC0-1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "providerLicenseUrl": "https://polyhaven.com/license",
+      "sourceDimensionsMillimeters": [
+        2139.9996280670166,
+        2139.9996280670166
+      ],
+      "tileMeters": [
+        2.14,
+        2.14
+      ],
+      "files": {
+        "color": {
+          "path": "/textures/forest-ground/color.webp",
+          "bytes": 552148,
+          "sha256": "8aaaa3ed32e9b0714df187dc180949796c96a24332927fb35ea0b88c0b3c8957",
+          "width": 1024,
+          "height": 1024,
+          "channels": "RGB",
+          "colorSpace": "sRGB",
+          "encoding": {
+            "format": "WebP",
+            "lossless": false,
+            "quality": 90,
+            "method": 6
+          },
+          "sourceDimensions": [
+            1024,
+            1024
+          ],
+          "source": {
+            "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/forest_floor/forest_floor_diff_1k.jpg",
+            "md5": "d67f308e4b8be6a65989e8dc76ec40fe",
+            "bytes": 1329853,
+            "verification": "Provider MD5 and declared byte size verified before conversion",
+            "sha256": "f12e5adea1741f9eb7a528bfc621f8267885b9530b74c3a8afdb823899bdbf0b"
+          }
+        },
+        "normal": {
+          "path": "/textures/forest-ground/normal.webp",
+          "bytes": 688856,
+          "sha256": "983e0701be3676ebded13b65c39c4d4271a29ae41493833cfcebc986ebbdde6e",
+          "width": 1024,
+          "height": 1024,
+          "channels": "RGB",
+          "colorSpace": "linear / no color conversion",
+          "encoding": {
+            "format": "WebP",
+            "lossless": false,
+            "quality": 95,
+            "method": 6
+          },
+          "sourceDimensions": [
+            1024,
+            1024
+          ],
+          "source": {
+            "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/forest_floor/forest_floor_nor_gl_1k.jpg",
+            "md5": "7cb480d082527766acdf3b6c8cba50f4",
+            "bytes": 1380104,
+            "verification": "Provider MD5 and declared byte size verified before conversion",
+            "sha256": "681f3de8c756c4d19bcda33039f953295498f38b1425ce9d56b37d6f97f6e518"
+          },
+          "normalConvention": "OpenGL (+Y)",
+          "normalCompressionErrorDegrees": {
+            "samplingStridePixels": 8,
+            "sampleCount": 16384,
+            "mean": 2.7807,
+            "percentile95": 6.678,
+            "percentile99": 9.3044
+          }
+        },
+        "roughness": {
+          "path": "/textures/forest-ground/roughness.webp",
+          "bytes": 401860,
+          "sha256": "088863248984f379de0829f56d21e15c682c89e146cfa91793249272732ea2b3",
+          "width": 1024,
+          "height": 1024,
+          "channels": "RGB",
+          "colorSpace": "linear / no color conversion",
+          "encoding": {
+            "format": "WebP",
+            "lossless": false,
+            "quality": 95,
+            "method": 6
+          },
+          "sourceDimensions": [
+            1024,
+            1024
+          ],
+          "source": {
+            "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/forest_floor/forest_floor_rough_1k.jpg",
+            "md5": "446092b42424c7bcf15994d651949546",
+            "bytes": 736353,
+            "verification": "Provider MD5 and declared byte size verified before conversion",
+            "sha256": "ece0b331f08c03f3edcd8ab6815b74a5ae20768beef64cd4f96a5b2fa26e116e"
+          }
+        }
+      }
+    },
+    "meadow": {
+      "provider": "Poly Haven",
+      "assetId": "aerial_grass_rock",
+      "title": "Aerial Grass Rock",
+      "authors": {
+        "Rob Tuytel": "All"
+      },
+      "sourceUrl": "https://polyhaven.com/a/aerial_grass_rock",
+      "metadataUrls": [
+        "https://api.polyhaven.com/info/aerial_grass_rock",
+        "https://api.polyhaven.com/files/aerial_grass_rock"
+      ],
+      "license": "CC0-1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "providerLicenseUrl": "https://polyhaven.com/license",
+      "sourceDimensionsMillimeters": [
+        15000,
+        15000
+      ],
+      "tileMeters": [
+        15.0,
+        15.0
+      ],
+      "files": {
+        "color": {
+          "path": "/textures/meadow/color.webp",
+          "bytes": 335138,
+          "sha256": "4142f57cd397bf7ee1553797d93220ac7f40c2c41d0468f4713a3eedc53f0e4b",
+          "width": 1024,
+          "height": 1024,
+          "channels": "RGB",
+          "colorSpace": "sRGB",
+          "encoding": {
+            "format": "WebP",
+            "lossless": false,
+            "quality": 90,
+            "method": 6
+          },
+          "sourceDimensions": [
+            1024,
+            1024
+          ],
+          "source": {
+            "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/aerial_grass_rock/aerial_grass_rock_diff_1k.jpg",
+            "md5": "e920ce36afd0abff000b8366d3d768d3",
+            "bytes": 666655,
+            "verification": "Provider MD5 and declared byte size verified before conversion",
+            "sha256": "57b8041bfe0d0f01430e4dbaad45e7ddddf0a9fc97317f90dbc51f7b0d9e1b5d"
+          }
+        },
+        "normal": {
+          "path": "/textures/meadow/normal.webp",
+          "bytes": 493262,
+          "sha256": "b390b29f47a873fc7c1915835732f94018cef39f5fd51d551cab578f12bd3a5e",
+          "width": 1024,
+          "height": 1024,
+          "channels": "RGB",
+          "colorSpace": "linear / no color conversion",
+          "encoding": {
+            "format": "WebP",
+            "lossless": false,
+            "quality": 95,
+            "method": 6
+          },
+          "sourceDimensions": [
+            1024,
+            1024
+          ],
+          "source": {
+            "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/aerial_grass_rock/aerial_grass_rock_nor_gl_1k.jpg",
+            "md5": "c8aa4c4f09b113cc7edef89ddeaccad9",
+            "bytes": 904956,
+            "verification": "Provider MD5 and declared byte size verified before conversion",
+            "sha256": "1aa3e23bff453f152e089b9f83aa36b4901651e019f7e2ca01d5331a9bbbda78"
+          },
+          "normalConvention": "OpenGL (+Y)",
+          "normalCompressionErrorDegrees": {
+            "samplingStridePixels": 8,
+            "sampleCount": 16384,
+            "mean": 4.0832,
+            "percentile95": 10.036,
+            "percentile99": 14.5726
+          }
+        },
+        "roughness": {
+          "path": "/textures/meadow/roughness.webp",
+          "bytes": 305636,
+          "sha256": "91eaa64d91cc2dc13417758fc23789c7d9b4577fe47785113e1bc2e9d9a6ce63",
+          "width": 1024,
+          "height": 1024,
+          "channels": "RGB",
+          "colorSpace": "linear / no color conversion",
+          "encoding": {
+            "format": "WebP",
+            "lossless": false,
+            "quality": 95,
+            "method": 6
+          },
+          "sourceDimensions": [
+            1024,
+            1024
+          ],
+          "source": {
+            "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/aerial_grass_rock/aerial_grass_rock_rough_1k.jpg",
+            "md5": "f78c5cdc565f990299ae7c5a81f68cf7",
+            "bytes": 362214,
+            "verification": "Provider MD5 and declared byte size verified before conversion",
+            "sha256": "b9f3f76aba74007f708333c0dbe73c52eb83ea0c4187a13e2e994f888a25114a"
+          }
+        }
+      }
+    },
+    "aged-wood": {
+      "provider": "Poly Haven",
+      "assetId": "weathered_planks",
+      "title": "Weathered Planks",
+      "authors": {
+        "Dario Barresi": "Processing",
+        "Dimitrios Savva": "Photography"
+      },
+      "sourceUrl": "https://polyhaven.com/a/weathered_planks",
+      "metadataUrls": [
+        "https://api.polyhaven.com/info/weathered_planks",
+        "https://api.polyhaven.com/files/weathered_planks"
+      ],
+      "license": "CC0-1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "providerLicenseUrl": "https://polyhaven.com/license",
+      "sourceDimensionsMillimeters": [
+        2000,
+        2000
+      ],
+      "tileMeters": [
+        2.0,
+        2.0
+      ],
+      "files": {
+        "color": {
+          "path": "/textures/aged-wood/color.webp",
+          "bytes": 133654,
+          "sha256": "08e9208c0924796858dd3853989c729f0e73af8c92bc689cffb08b231f068e22",
+          "width": 1024,
+          "height": 1024,
+          "channels": "RGB",
+          "colorSpace": "sRGB",
+          "encoding": {
+            "format": "WebP",
+            "lossless": false,
+            "quality": 90,
+            "method": 6
+          },
+          "sourceDimensions": [
+            1024,
+            1024
+          ],
+          "source": {
+            "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/weathered_planks/weathered_planks_diff_1k.jpg",
+            "md5": "5d7c9e7088bfa54490ba03ba15b660d8",
+            "bytes": 599581,
+            "verification": "Provider MD5 and declared byte size verified before conversion",
+            "sha256": "01c9a372cfd7a7bf471b59c2458ed3ccecc93448aebf7ba0cc5b3b5b6ed24349"
+          }
+        },
+        "normal": {
+          "path": "/textures/aged-wood/normal.webp",
+          "bytes": 268670,
+          "sha256": "7fcca29512d62d753be94a58653c090b83a301c51cb72f3c52e21ba2543a9af9",
+          "width": 1024,
+          "height": 1024,
+          "channels": "RGB",
+          "colorSpace": "linear / no color conversion",
+          "encoding": {
+            "format": "WebP",
+            "lossless": false,
+            "quality": 95,
+            "method": 6
+          },
+          "sourceDimensions": [
+            1024,
+            1024
+          ],
+          "source": {
+            "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/weathered_planks/weathered_planks_nor_gl_1k.jpg",
+            "md5": "119541f6b143f21f0a6e9774e9208905",
+            "bytes": 681552,
+            "verification": "Provider MD5 and declared byte size verified before conversion",
+            "sha256": "381d298f3194ec4961b04b4912b9b6efea4b2ff7b914dac57e24c8b6b0be6a25"
+          },
+          "normalConvention": "OpenGL (+Y)",
+          "normalCompressionErrorDegrees": {
+            "samplingStridePixels": 8,
+            "sampleCount": 16384,
+            "mean": 1.2207,
+            "percentile95": 2.9512,
+            "percentile99": 7.3258
+          }
+        },
+        "roughness": {
+          "path": "/textures/aged-wood/roughness.webp",
+          "bytes": 18408,
+          "sha256": "2f76569ccbe849ff4dc704b70950510ddb01b3b100d7411c4ed65d6e70eabd0c",
+          "width": 1024,
+          "height": 1024,
+          "channels": "RGB",
+          "colorSpace": "linear / no color conversion",
+          "encoding": {
+            "format": "WebP",
+            "lossless": false,
+            "quality": 95,
+            "method": 6
+          },
+          "sourceDimensions": [
+            1024,
+            1024
+          ],
+          "source": {
+            "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/weathered_planks/weathered_planks_rough_1k.jpg",
+            "md5": "4ca50b076e1fc58f6862a5b039a7d5c9",
+            "bytes": 218802,
+            "verification": "Provider MD5 and declared byte size verified before conversion",
+            "sha256": "a017728183597417a350d1846a5a46db9702ee6d472a21c5da2f23015d606aa3"
+          }
+        }
+      }
+    },
+    "pine-bark": {
+      "provider": "Poly Haven",
+      "assetId": "pine_bark",
+      "title": "Pine Bark",
+      "authors": {
+        "Dimitrios Savva": "All"
+      },
+      "sourceUrl": "https://polyhaven.com/a/pine_bark",
+      "metadataUrls": [
+        "https://api.polyhaven.com/info/pine_bark",
+        "https://api.polyhaven.com/files/pine_bark"
+      ],
+      "license": "CC0-1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "providerLicenseUrl": "https://polyhaven.com/license",
+      "sourceDimensionsMillimeters": [
+        1999.9996423721313,
+        1999.9996423721313
+      ],
+      "tileMeters": [
+        2.0,
+        2.0
+      ],
+      "files": {
+        "color": {
+          "path": "/textures/pine-bark/color.webp",
+          "bytes": 269422,
+          "sha256": "5c3e07a18c39b6638dded8ef13d6098a561c99db6f849ea8757ff376aa755147",
+          "width": 1024,
+          "height": 1024,
+          "channels": "RGB",
+          "colorSpace": "sRGB",
+          "encoding": {
+            "format": "WebP",
+            "lossless": false,
+            "quality": 90,
+            "method": 6
+          },
+          "sourceDimensions": [
+            1024,
+            1024
+          ],
+          "source": {
+            "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/pine_bark/pine_bark_diff_1k.jpg",
+            "md5": "7bb38cccfc647aeaf2f5b6488c815e75",
+            "bytes": 837641,
+            "verification": "Provider MD5 and declared byte size verified before conversion",
+            "sha256": "89ddfbff0388d30caff902ba600cdf75eb1e651ca71ece6594b5a9b27abb47ab"
+          }
+        },
+        "normal": {
+          "path": "/textures/pine-bark/normal.webp",
+          "bytes": 560852,
+          "sha256": "d762910ef6c8c43530a76f287a43cd84af5653b8bbd4d2d633356bef43a05cb5",
+          "width": 1024,
+          "height": 1024,
+          "channels": "RGB",
+          "colorSpace": "linear / no color conversion",
+          "encoding": {
+            "format": "WebP",
+            "lossless": false,
+            "quality": 95,
+            "method": 6
+          },
+          "sourceDimensions": [
+            1024,
+            1024
+          ],
+          "source": {
+            "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/pine_bark/pine_bark_nor_gl_1k.jpg",
+            "md5": "7b971070fc986e517b5d2795cec0f4e0",
+            "bytes": 1178440,
+            "verification": "Provider MD5 and declared byte size verified before conversion",
+            "sha256": "666e5f175a010f12577687dd8029125bff99110e6a97958afb295b34266437db"
+          },
+          "normalConvention": "OpenGL (+Y)",
+          "normalCompressionErrorDegrees": {
+            "samplingStridePixels": 8,
+            "sampleCount": 16384,
+            "mean": 1.9464,
+            "percentile95": 4.6954,
+            "percentile99": 7.047
+          }
+        },
+        "roughness": {
+          "path": "/textures/pine-bark/roughness.webp",
+          "bytes": 191416,
+          "sha256": "e7636ee05b394f0a328019dd80403a6a5717e798f47742c666d6838a6e6f4a21",
+          "width": 1024,
+          "height": 1024,
+          "channels": "RGB",
+          "colorSpace": "linear / no color conversion",
+          "encoding": {
+            "format": "WebP",
+            "lossless": false,
+            "quality": 95,
+            "method": 6
+          },
+          "sourceDimensions": [
+            1024,
+            1024
+          ],
+          "source": {
+            "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/pine_bark/pine_bark_rough_1k.jpg",
+            "md5": "f5ba950ee648056809153e0506f8a2e2",
+            "bytes": 506697,
+            "verification": "Provider MD5 and declared byte size verified before conversion",
+            "sha256": "04f466447098d0b6d3d4abdc69ce5766d5da67eedfa076e4a3f22fe6996a60a8"
+          }
+        }
+      }
+    },
+    "wool-cloth": {
+      "provider": "Poly Haven",
+      "assetId": "poly_wool_herringbone",
+      "title": "Poly Wool Herringbone",
+      "authors": {
+        "colormass": "Photography",
+        "Rico Cilliers": "Processing"
+      },
+      "sourceUrl": "https://polyhaven.com/a/poly_wool_herringbone",
+      "metadataUrls": [
+        "https://api.polyhaven.com/info/poly_wool_herringbone",
+        "https://api.polyhaven.com/files/poly_wool_herringbone"
+      ],
+      "license": "CC0-1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "providerLicenseUrl": "https://polyhaven.com/license",
+      "sourceDimensionsMillimeters": [
+        270.0788548673393,
+        275.70000290870667
+      ],
+      "tileMeters": [
+        0.2701,
+        0.2757
+      ],
+      "files": {
+        "color": {
+          "path": "/textures/wool-cloth/color.webp",
+          "bytes": 357818,
+          "sha256": "cf52442fc7c645b3d782938c2f5ec7662e2326f514de2b73bc8279d0144ee986",
+          "width": 1003,
+          "height": 1024,
+          "channels": "RGB",
+          "colorSpace": "sRGB",
+          "encoding": {
+            "format": "WebP",
+            "lossless": false,
+            "quality": 90,
+            "method": 6
+          },
+          "sourceDimensions": [
+            1024,
+            1045
+          ],
+          "source": {
+            "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/poly_wool_herringbone/poly_wool_herringbone_diff_1k.jpg",
+            "md5": "5c0981092ba0129d5951720ea23d50c2",
+            "bytes": 942966,
+            "verification": "Provider MD5 and declared byte size verified before conversion",
+            "sha256": "fd889a46f617efd331e522e36b8ad2548e16e1cb018c001872f17537d7666af5"
+          }
+        },
+        "normal": {
+          "path": "/textures/wool-cloth/normal.webp",
+          "bytes": 520820,
+          "sha256": "3a568c178b5b8f2a13b2dedde4063c9e0b2209a82902683e2b711e595f478c24",
+          "width": 1003,
+          "height": 1024,
+          "channels": "RGB",
+          "colorSpace": "linear / no color conversion",
+          "encoding": {
+            "format": "WebP",
+            "lossless": false,
+            "quality": 95,
+            "method": 6
+          },
+          "sourceDimensions": [
+            1024,
+            1045
+          ],
+          "source": {
+            "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/poly_wool_herringbone/poly_wool_herringbone_nor_gl_1k.jpg",
+            "md5": "a6371d03b033a1c20e1c2758136ac757",
+            "bytes": 1045151,
+            "verification": "Provider MD5 and declared byte size verified before conversion",
+            "sha256": "314ac7c1b7c101a48106e05199bfdb24e33671e58a6ccb334249b441d8e8ac98"
+          },
+          "normalConvention": "OpenGL (+Y)",
+          "normalCompressionErrorDegrees": {
+            "samplingStridePixels": 8,
+            "sampleCount": 16128,
+            "mean": 1.6462,
+            "percentile95": 3.5027,
+            "percentile99": 4.5546
+          }
+        },
+        "roughness": {
+          "path": "/textures/wool-cloth/roughness.webp",
+          "bytes": 457940,
+          "sha256": "b4e9cebf602557f85e8a2e8aeddab44f8ada81acb1221ef6e48722d67361c508",
+          "width": 1003,
+          "height": 1024,
+          "channels": "RGB",
+          "colorSpace": "linear / no color conversion",
+          "encoding": {
+            "format": "WebP",
+            "lossless": false,
+            "quality": 95,
+            "method": 6
+          },
+          "sourceDimensions": [
+            1024,
+            1045
+          ],
+          "source": {
+            "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/poly_wool_herringbone/poly_wool_herringbone_rough_1k.jpg",
+            "md5": "9f85f667517ee9c7f3cc85214058a7d8",
+            "bytes": 857426,
+            "verification": "Provider MD5 and declared byte size verified before conversion",
+            "sha256": "028b4fb92c322a31b5374171f62f43af2cfd6a012748be175fd44dbf1109903c"
+          }
+        }
+      }
+    },
+    "dark-leather": {
+      "provider": "Poly Haven",
+      "assetId": "brown_leather",
+      "title": "Brown Leather",
+      "authors": {
+        "Rob Tuytel": "All"
+      },
+      "sourceUrl": "https://polyhaven.com/a/brown_leather",
+      "metadataUrls": [
+        "https://api.polyhaven.com/info/brown_leather",
+        "https://api.polyhaven.com/files/brown_leather"
+      ],
+      "license": "CC0-1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "providerLicenseUrl": "https://polyhaven.com/license",
+      "sourceDimensionsMillimeters": [
+        400.0000059604645,
+        400.00003576278687
+      ],
+      "tileMeters": [
+        0.4,
+        0.4
+      ],
+      "files": {
+        "color": {
+          "path": "/textures/dark-leather/color.webp",
+          "bytes": 272794,
+          "sha256": "99b8608c14d1532d858aa5fafee1564b25f389b1134aaca874feec27350f9290",
+          "width": 1024,
+          "height": 1024,
+          "channels": "RGB",
+          "colorSpace": "sRGB",
+          "encoding": {
+            "format": "WebP",
+            "lossless": false,
+            "quality": 90,
+            "method": 6
+          },
+          "sourceDimensions": [
+            1024,
+            1024
+          ],
+          "source": {
+            "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/brown_leather/brown_leather_albedo_1k.jpg",
+            "md5": "080b3bf1372766ff2c7ff121ed07b5e8",
+            "bytes": 503348,
+            "verification": "Provider MD5 and declared byte size verified before conversion",
+            "sha256": "7e9e1d6566d1fd91d4ceb4966c4820361e85d53a7a828b6bab3b2a093a876cd1"
+          }
+        },
+        "normal": {
+          "path": "/textures/dark-leather/normal.webp",
+          "bytes": 463102,
+          "sha256": "2d31609a071a9568954aef44de8be531a87d1a538399cf10805677db81d3ffc3",
+          "width": 1024,
+          "height": 1024,
+          "channels": "RGB",
+          "colorSpace": "linear / no color conversion",
+          "encoding": {
+            "format": "WebP",
+            "lossless": false,
+            "quality": 95,
+            "method": 6
+          },
+          "sourceDimensions": [
+            1024,
+            1024
+          ],
+          "source": {
+            "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/brown_leather/brown_leather_nor_gl_1k.jpg",
+            "md5": "b63ae0121a415c23d74eed0b07fc6065",
+            "bytes": 863280,
+            "verification": "Provider MD5 and declared byte size verified before conversion",
+            "sha256": "506a0b7650c2dea285e247f26ed2d0d6ec38fc10dd584359f0d203e9c082236d"
+          },
+          "normalConvention": "OpenGL (+Y)",
+          "normalCompressionErrorDegrees": {
+            "samplingStridePixels": 8,
+            "sampleCount": 16384,
+            "mean": 4.8182,
+            "percentile95": 11.6438,
+            "percentile99": 15.0021
+          }
+        },
+        "roughness": {
+          "path": "/textures/dark-leather/roughness.webp",
+          "bytes": 607426,
+          "sha256": "457da1e941e1142f72f350057ed6e8c008a91b6ca72892f64fa7b816f2144797",
+          "width": 1024,
+          "height": 1024,
+          "channels": "RGB",
+          "colorSpace": "linear / no color conversion",
+          "encoding": {
+            "format": "WebP",
+            "lossless": false,
+            "quality": 95,
+            "method": 6
+          },
+          "sourceDimensions": [
+            1024,
+            1024
+          ],
+          "source": {
+            "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/brown_leather/brown_leather_rough_1k.jpg",
+            "md5": "0f3a0148c8d2d25fbeca67e64e79bca0",
+            "bytes": 686142,
+            "verification": "Provider MD5 and declared byte size verified before conversion",
+            "sha256": "f9739ef2da2e3d17b9ec253f5042f61b10dc10f3ae28f6cf6491650d3d1b0ca3"
+          }
+        }
+      }
+    },
+    "oxidized-copper": {
+      "provider": "ambientCG",
+      "assetId": "Metal058C",
+      "title": "Metal 058 C",
+      "authors": {
+        "ambientCG / Lennart Demes": "Provider"
+      },
+      "sourceUrl": "https://ambientcg.com/a/Metal058C",
+      "metadataUrls": [
+        "https://ambientcg.com/api/v2/full_json?id=Metal058C&include=downloadData"
+      ],
+      "license": "CC0-1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "providerLicenseUrl": "https://docs.ambientcg.com/license/",
+      "creationMethod": "PBRProcedural",
+      "tileMeters": null,
+      "physicalScaleNote": "No usable physical dimensions published by provider; choose an artistic UV scale.",
+      "sourceArchive": {
+        "url": "https://ambientcg.com/get?file=Metal058C_1K-JPG.zip",
+        "bytes": 6827662,
+        "sha256": "8b8d847780b8d4ed785b247f20a16727fcf39df6cb0134cb9daece125545a6f1",
+        "verification": "Declared archive size and all ZIP CRC checks verified; no upstream cryptographic checksum is supplied by this API."
+      },
+      "files": {
+        "color": {
+          "path": "/textures/oxidized-copper/color.webp",
+          "bytes": 250772,
+          "sha256": "1b32ebda3452c7109e1d439ae73d7e04f39a5479257aae0ed73795bafe3b26df",
+          "width": 1024,
+          "height": 1024,
+          "channels": "RGB",
+          "colorSpace": "sRGB",
+          "encoding": {
+            "format": "WebP",
+            "lossless": false,
+            "quality": 90,
+            "method": 6
+          },
+          "sourceDimensions": [
+            1024,
+            1024
+          ],
+          "source": {
+            "archiveUrl": "https://ambientcg.com/get?file=Metal058C_1K-JPG.zip",
+            "archiveMember": "Metal058C_1K-JPG_Color.jpg",
+            "bytes": 1586915,
+            "verification": "ZIP member CRC verified; SHA-256 recorded locally",
+            "sha256": "165551cb833345476418d6a285e7952079c2ccc86ccfd7e60f95f28d97fa4c9b"
+          }
+        },
+        "normal": {
+          "path": "/textures/oxidized-copper/normal.webp",
+          "bytes": 105422,
+          "sha256": "ea8b96d42728780e1b71f4fba921d0a7583ef45de5eb3e6213a35dcdfab190a4",
+          "width": 1024,
+          "height": 1024,
+          "channels": "RGB",
+          "colorSpace": "linear / no color conversion",
+          "encoding": {
+            "format": "WebP",
+            "lossless": false,
+            "quality": 95,
+            "method": 6
+          },
+          "sourceDimensions": [
+            1024,
+            1024
+          ],
+          "source": {
+            "archiveUrl": "https://ambientcg.com/get?file=Metal058C_1K-JPG.zip",
+            "archiveMember": "Metal058C_1K-JPG_NormalGL.jpg",
+            "bytes": 965287,
+            "verification": "ZIP member CRC verified; SHA-256 recorded locally",
+            "sha256": "43fc69d2526324450b7da736b026bb74ce898bafde69d934c435ea3b4c21b506"
+          },
+          "normalConvention": "OpenGL (+Y)",
+          "normalCompressionErrorDegrees": {
+            "samplingStridePixels": 8,
+            "sampleCount": 16384,
+            "mean": 0.9834,
+            "percentile95": 2.4311,
+            "percentile99": 3.4298
+          }
+        },
+        "roughness": {
+          "path": "/textures/oxidized-copper/roughness.webp",
+          "bytes": 152150,
+          "sha256": "fdf08acc9912dae9bdbab373cf8c06283aea150306a737c326aa156c3a03c73e",
+          "width": 1024,
+          "height": 1024,
+          "channels": "RGB",
+          "colorSpace": "linear / no color conversion",
+          "encoding": {
+            "format": "WebP",
+            "lossless": false,
+            "quality": 95,
+            "method": 6
+          },
+          "sourceDimensions": [
+            1024,
+            1024
+          ],
+          "source": {
+            "archiveUrl": "https://ambientcg.com/get?file=Metal058C_1K-JPG.zip",
+            "archiveMember": "Metal058C_1K-JPG_Roughness.jpg",
+            "bytes": 473934,
+            "verification": "ZIP member CRC verified; SHA-256 recorded locally",
+            "sha256": "71488324fd932dd7df9e5a026f7395eae96a557c5cfe5841a1ea85ffe141032b"
+          }
+        },
+        "metalness": {
+          "path": "/textures/oxidized-copper/metalness.webp",
+          "bytes": 538788,
+          "sha256": "c69016b6f371f9d6781d1129a41c6a11a4307e6ba6dc1107498441f4c193f7c4",
+          "width": 1024,
+          "height": 1024,
+          "channels": "RGB",
+          "colorSpace": "linear / no color conversion",
+          "encoding": {
+            "format": "WebP",
+            "lossless": false,
+            "quality": 95,
+            "method": 6
+          },
+          "sourceDimensions": [
+            1024,
+            1024
+          ],
+          "source": {
+            "archiveUrl": "https://ambientcg.com/get?file=Metal058C_1K-JPG.zip",
+            "archiveMember": "Metal058C_1K-JPG_Metalness.jpg",
+            "bytes": 891032,
+            "verification": "ZIP member CRC verified; SHA-256 recorded locally",
+            "sha256": "25254b16c2d58ad6f4e87e02cd21da07a5b4489fbff489ade6ea88196f413155"
+          }
+        }
+      }
+    },
+    "foliage": {
+      "provider": "ambientCG",
+      "assetId": "LeafSet001",
+      "title": "Leaf Set 001",
+      "authors": {
+        "ambientCG / Lennart Demes": "Provider"
+      },
+      "sourceUrl": "https://ambientcg.com/a/LeafSet001",
+      "metadataUrls": [
+        "https://ambientcg.com/api/v2/full_json?id=LeafSet001&include=downloadData"
+      ],
+      "license": "CC0-1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "providerLicenseUrl": "https://docs.ambientcg.com/license/",
+      "creationMethod": "PBRApproximated",
+      "tileMeters": null,
+      "physicalScaleNote": "No usable physical dimensions published by provider; choose an artistic UV scale.",
+      "sourceArchive": {
+        "url": "https://ambientcg.com/get?file=LeafSet001_1K-JPG.zip",
+        "bytes": 3319979,
+        "sha256": "8ed9935aa00f0d0a1b8671db4406e424fb4b41f1d2f290971d14968280a52199",
+        "verification": "Declared archive size and all ZIP CRC checks verified; no upstream cryptographic checksum is supplied by this API."
+      },
+      "files": {
+        "color": {
+          "path": "/textures/foliage/color.webp",
+          "bytes": 60216,
+          "sha256": "85baf662d8355e23cb19e09d3a703a55f592ae830cbcfa9763469a9272418100",
+          "width": 1024,
+          "height": 1024,
+          "channels": "RGBA",
+          "colorSpace": "sRGB",
+          "encoding": {
+            "format": "WebP",
+            "lossless": false,
+            "quality": 90,
+            "method": 6
+          },
+          "sourceDimensions": [
+            1024,
+            1024
+          ],
+          "source": {
+            "archiveUrl": "https://ambientcg.com/get?file=LeafSet001_1K-JPG.zip",
+            "archiveMember": "LeafSet001_1K-JPG_Color.jpg",
+            "bytes": 343912,
+            "verification": "ZIP member CRC verified; SHA-256 recorded locally",
+            "sha256": "69131ebfbdb37c6b9d2ebef6a96f9ca77a045f3a5194bbfbc69877d334568f69"
+          },
+          "alphaSourceSha256": "73eb2588e7931a200e37d225e66b5e80d1bee03bc0a41d8763a833707213f57d",
+          "hasEmbeddedOpacity": true
+        },
+        "normal": {
+          "path": "/textures/foliage/normal.webp",
+          "bytes": 72164,
+          "sha256": "8f988df72ea3a0aaef7ced3cb9aa6d0a9bba34654fa4a311247b06e62e2179e0",
+          "width": 1024,
+          "height": 1024,
+          "channels": "RGB",
+          "colorSpace": "linear / no color conversion",
+          "encoding": {
+            "format": "WebP",
+            "lossless": false,
+            "quality": 95,
+            "method": 6
+          },
+          "sourceDimensions": [
+            1024,
+            1024
+          ],
+          "source": {
+            "archiveUrl": "https://ambientcg.com/get?file=LeafSet001_1K-JPG.zip",
+            "archiveMember": "LeafSet001_1K-JPG_NormalGL.jpg",
+            "bytes": 692180,
+            "verification": "ZIP member CRC verified; SHA-256 recorded locally",
+            "sha256": "7bf33e6a0344df2da01569ca9fc6d1e64cb8f3f58e8fff713b33798b48179d95"
+          },
+          "normalConvention": "OpenGL (+Y)",
+          "normalCompressionErrorDegrees": {
+            "samplingStridePixels": 8,
+            "sampleCount": 16384,
+            "mean": 0.8145,
+            "percentile95": 2.6826,
+            "percentile99": 5.4467
+          }
+        },
+        "roughness": {
+          "path": "/textures/foliage/roughness.webp",
+          "bytes": 26610,
+          "sha256": "e39c3e73e4f101badead52c648b74487a251712916eaa98b68f70eab3e6c493a",
+          "width": 1024,
+          "height": 1024,
+          "channels": "RGB",
+          "colorSpace": "linear / no color conversion",
+          "encoding": {
+            "format": "WebP",
+            "lossless": false,
+            "quality": 95,
+            "method": 6
+          },
+          "sourceDimensions": [
+            1024,
+            1024
+          ],
+          "source": {
+            "archiveUrl": "https://ambientcg.com/get?file=LeafSet001_1K-JPG.zip",
+            "archiveMember": "LeafSet001_1K-JPG_Roughness.jpg",
+            "bytes": 177153,
+            "verification": "ZIP member CRC verified; SHA-256 recorded locally",
+            "sha256": "d379799c9ac679780bc48a537cb99f392632200ccb3577d4e2eaf5e8da3d6599"
+          }
+        },
+        "alpha": {
+          "path": "/textures/foliage/alpha.webp",
+          "bytes": 24414,
+          "sha256": "3b77fac0cc0144c372ec845915b1b67b8c0c7266023016039749de26b65e628f",
+          "width": 1024,
+          "height": 1024,
+          "channels": "RGB",
+          "colorSpace": "linear / no color conversion",
+          "encoding": {
+            "format": "WebP",
+            "lossless": true,
+            "quality": 95,
+            "method": 6
+          },
+          "sourceDimensions": [
+            1024,
+            1024
+          ],
+          "source": {
+            "archiveUrl": "https://ambientcg.com/get?file=LeafSet001_1K-JPG.zip",
+            "archiveMember": "LeafSet001_1K-JPG_Opacity.jpg",
+            "bytes": 64757,
+            "verification": "ZIP member CRC verified; SHA-256 recorded locally",
+            "sha256": "73eb2588e7931a200e37d225e66b5e80d1bee03bc0a41d8763a833707213f57d"
+          }
+        }
+      },
+      "atlas": {
+        "columns": 3,
+        "rows": 2,
+        "note": "Six photographed leaves. Color map includes opacity; use alphaTest, not alpha blending, for dense foliage."
+      }
+    }
+  },
+  "environment": {
+    "provider": "Poly Haven",
+    "assetId": "moonless_golf",
+    "title": "Moonless Golf",
+    "authors": {
+      "Greg Zaal": "All"
+    },
+    "sourceUrl": "https://polyhaven.com/a/moonless_golf",
+    "metadataUrls": [
+      "https://api.polyhaven.com/info/moonless_golf",
+      "https://api.polyhaven.com/files/moonless_golf"
+    ],
+    "license": "CC0-1.0",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "providerLicenseUrl": "https://polyhaven.com/license",
+    "path": "/textures/environment/night.hdr",
+    "width": 1024,
+    "height": 512,
+    "colorSpace": "Linear HDR RGBE",
+    "bytes": 1672754,
+    "sha256": "4f597078024bd81429431e872d466d8808653ad62a8bc8c61d8052af7466c3aa",
+    "md5": "da9edde9ad39465900a7935dc15ab8d7",
+    "downloadUrl": "https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/moonless_golf_1k.hdr",
+    "verification": "Provider MD5, byte size, Radiance header and dimensions verified; unmodified source file"
+  },
+  "sky": {
+    "provider": "Poly Haven",
+    "assetId": "kloppenheim_06_puresky",
+    "title": "Kloppenheim 06 (Pure Sky)",
+    "authors": {
+      "Greg Zaal": "Original",
+      "Jarod Guest": "Sky edits"
+    },
+    "sourceUrl": "https://polyhaven.com/a/kloppenheim_06_puresky",
+    "metadataUrls": [
+      "https://api.polyhaven.com/info/kloppenheim_06_puresky",
+      "https://api.polyhaven.com/files/kloppenheim_06_puresky"
+    ],
+    "license": "CC0-1.0",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "providerLicenseUrl": "https://polyhaven.com/license",
+    "path": "/textures/environment/sky.hdr",
+    "width": 2048,
+    "height": 1024,
+    "colorSpace": "Linear HDR RGBE",
+    "bytes": 4434394,
+    "sha256": "99451201586489ef3288c97bfac2a2ac232a5491c51a1faf0ec8ea39f3ccd533",
+    "md5": "590a829b3cf71216451655e601d542c6",
+    "downloadUrl": "https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/2k/kloppenheim_06_puresky_2k.hdr",
+    "verification": "Provider MD5, byte size, Radiance header and dimensions verified; unmodified source file"
+  }
+}

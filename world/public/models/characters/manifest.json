@@ -1,0 +1,17 @@
+{
+  "generator": "Blender 5.1.2; original geometry, Poly Haven CC0 cloth/leather PBR and original wood patterns",
+  "assets": [
+    {
+      "file": "wizard.glb",
+      "triangles": 45059,
+      "meshes": 20,
+      "bytes": 3643736
+    },
+    {
+      "file": "wraith.glb",
+      "triangles": 12998,
+      "meshes": 5,
+      "bytes": 1523468
+    }
+  ]
+}

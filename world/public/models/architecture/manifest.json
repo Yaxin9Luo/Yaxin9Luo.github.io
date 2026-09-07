@@ -1,0 +1,140 @@
+{
+  "version": 3,
+  "provenance": "Original procedural architecture; CC0 source surfaces listed in ../../textures/manifest.json",
+  "runtime": "world/src/models.js",
+  "textures": "External shared WebP PBR images using EXT_texture_webp",
+  "assets": [
+    {
+      "id": "castle",
+      "factory": "createCastle",
+      "file": "castle.glb",
+      "triangles": 233238,
+      "meshes": 19,
+      "bytes": 22415412,
+      "bounds": {
+        "min": [
+          -17,
+          -5.9604645663569045e-9,
+          -11.500160217285156
+        ],
+        "max": [
+          17,
+          49.33000183105469,
+          11.449999809265137
+        ]
+      },
+      "front": "+Z",
+      "units": "metres"
+    },
+    {
+      "id": "library",
+      "factory": "createLibrary",
+      "file": "library.glb",
+      "triangles": 31062,
+      "meshes": 20,
+      "bytes": 3007420,
+      "bounds": {
+        "min": [
+          -8.5,
+          0,
+          -6.75
+        ],
+        "max": [
+          8.5,
+          19.93000030517578,
+          8.925000190734863
+        ]
+      },
+      "front": "+Z",
+      "units": "metres"
+    },
+    {
+      "id": "observatory",
+      "factory": "createObservatory",
+      "file": "observatory.glb",
+      "triangles": 21434,
+      "meshes": 15,
+      "bytes": 2078444,
+      "bounds": {
+        "min": [
+          -8.199999809265137,
+          -2.3841858265427618e-8,
+          -8.199999809265137
+        ],
+        "max": [
+          8.199999809265137,
+          21.337499618530273,
+          9.225000381469727
+        ]
+      },
+      "front": "+Z",
+      "units": "metres"
+    },
+    {
+      "id": "workshop",
+      "factory": "createWorkshop",
+      "file": "workshop.glb",
+      "triangles": 13494,
+      "meshes": 21,
+      "bytes": 1322428,
+      "bounds": {
+        "min": [
+          -8.5,
+          -1.3113021779531664e-8,
+          -6.699999809265137
+        ],
+        "max": [
+          8.5,
+          17.325000762939453,
+          7.449999809265137
+        ]
+      },
+      "front": "+Z",
+      "units": "metres"
+    },
+    {
+      "id": "owlery",
+      "factory": "createOwlery",
+      "file": "owlery.glb",
+      "triangles": 31530,
+      "meshes": 19,
+      "bytes": 3051776,
+      "bounds": {
+        "min": [
+          -6.400000095367432,
+          -5.9604645663569045e-9,
+          -6.400000095367432
+        ],
+        "max": [
+          6.400000095367432,
+          20.93000030517578,
+          6.400000095367432
+        ]
+      },
+      "front": "+Z",
+      "units": "metres"
+    },
+    {
+      "id": "ruins",
+      "factory": "createRuins",
+      "file": "ruins.glb",
+      "triangles": 9900,
+      "meshes": 9,
+      "bytes": 962632,
+      "bounds": {
+        "min": [
+          -8.899999618530273,
+          -2.9802322831784522e-9,
+          -8.899999618530273
+        ],
+        "max": [
+          8.899999618530273,
+          10.609999656677246,
+          8.899999618530273
+        ]
+      },
+      "front": "+Z",
+      "units": "metres"
+    }
+  ]
+}

@@ -5,12 +5,18 @@ _site/
 # Ignore the directory for local files during development
 local/
 
-# Ignore the Gemfile that is generated
-Gemfile.lock
+# Keep the Ruby lockfile so traditional-site builds resolve consistently.
 
 # Ingore files created by npm
 node_modules
 package-lock.json
+!world/package-lock.json
 
 # Ignore local Ruby bundle installs
 vendor/
+
+# Generated combined site, game output, and local build/runtime scratch.
+/dist/
+/world/dist/
+/work/
+.jekyll-cache/

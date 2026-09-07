@@ -1,0 +1,6 @@
+All material and HDRI files in this directory derive from CC0 1.0 Universal assets.
+License: https://creativecommons.org/publicdomain/zero/1.0/
+Poly Haven: https://polyhaven.com/license
+ambientCG: https://docs.ambientcg.com/license/
+See manifest.json for exact authors, asset/download URLs, transformations, dimensions and checksums.
+Provider preview renders are not included in the shipped asset set.
