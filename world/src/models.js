@@ -388,73 +388,255 @@ function banner(b, x, y, z, width = 1.1, length = 3, color = M.burgundy) {
   b.add(icoGeometry, M.gold, [x, y - length * 0.38, z + 0.09], [0.22, 0.35, 0.04]);
 }
 
+// A compound three-lancet window: carved tracery casts actual shadows over the glass.
+function cathedralWindow(b, x, y, z, width, height, ry = 0, glow = M.glass) {
+  const point = (u,v,d) => [x+Math.cos(ry)*u+Math.sin(ry)*d,y+v,z-Math.sin(ry)*u+Math.cos(ry)*d];
+  b.add(archFrame(width+.28,height+.18,.24,.23),M.stoneDark,point(0,0,.02),[1,1,1],[0,ry,0]);
+  b.add(archFrame(width,height,.16,.19),M.stoneLight,point(0,.04,.21),[1,1,1],[0,ry,0]);
+  b.add(lancet(width-.08,height-.05),glow,point(0,.08,-.13),[1,1,1],[0,ry,0]);
+  const lane=(width-.35)/3;
+  for(let i=-1;i<=1;i++) {
+    b.add(archFrame(lane-.13,height*.68,.07,.10,false),M.stoneLight,point(i*lane,.13,.06),[1,1,1],[0,ry,0]);
+    for(let row=0;row<Math.floor(height*.57/.65);row++) for(const side of [-1,1]) {
+      b.beam(point(i*lane+side*(lane-.2)*.45,.3+row*.65,.03),point(i*lane,.7+row*.65,.03),.012,M.wood,.012,4);
+    }
+    for(const v of [height*.25,height*.48]) {
+      const q=point(i*lane,v,.07);b.box(...q,lane-.1,.06,.09,M.stoneLight,ry);
+    }
+  }
+  const radius=width*.18;
+  for(let i=0;i<4;i++) {
+    const a=i*Math.PI/2;
+    b.add(cached(`foil-${radius}`,()=>new THREE.TorusGeometry(radius*.7,.05,4,20)),M.stoneLight,
+      point(Math.sin(a)*radius*.66,height*.78+Math.cos(a)*radius*.66,.14),[1,1,1],[0,ry,0]);
+  }
+  const sill=point(0,-.14,.22);b.box(...sill,width+.9,.3,.78,M.stoneLight,ry);
+}
+
+function longitudinalRoof(b,x,y,z,width,depth,rise) {
+  const shape=new THREE.Shape();shape.moveTo(-width/2,0);shape.lineTo(width/2,0);shape.lineTo(0,rise);shape.closePath();
+  const geo=new THREE.ExtrudeGeometry(shape,{depth,bevelEnabled:false});
+  b.add(geo,M.roof,[x,y,z-depth/2]);geo.dispose();
+  b.beam([x,y+rise,z-depth/2-.12],[x,y+rise,z+depth/2+.12],.15,M.roofLight);
+  for(const side of [-1,1]) {
+    b.box(x+side*width/2,y,z,.3,.23,depth+.2,M.roofDark);
+    const count=Math.ceil(Math.hypot(rise,width/2)/.6);
+    for(let i=1;i<count;i++) b.box(x+side*width*(1-i/count)/2,y+rise*i/count,z,.04,.035,depth,M.roofLight);
+    for(let zz=z-depth/2;zz<=z+depth/2+.01;zz+=depth/9)
+      b.beam([x+side*width/2,y+.04,zz],[x,y+rise+.04,zz],.035,M.roofDark);
+  }
+}
+
+function pyramidRoof(b,x,y,z,width,height) {
+  const radius=width/Math.sqrt(2);
+  b.cylinder(x,y+.12,z,radius,radius*1.025,.3,M.roofDark,4,Math.PI/4);
+  b.cylinder(x,y+height/2,z,.05,radius,height,M.roof,4,Math.PI/4);
+  for(let i=1;i<Math.ceil(height/.65);i++) {
+    const t=i/Math.ceil(height/.65),r=radius*(1-t);
+    b.cylinder(x,y+height*t,z,r+.03,r+.08,.045,M.roofLight,4,Math.PI/4);
+  }
+  for(const sx of [-1,1])for(const sz of [-1,1]) b.beam([x+sx*width/2,y+.08,z+sz*width/2],[x,y+height,z],.065,M.copper);
+  b.beam([x,y+height,z],[x,y+height+1.2,z],.045,M.brass);
+  b.sphere(x,y+height+.92,z,.2,M.gold);
+}
+
+function pointedArcade(b,x,base,z,width,height,count,ry=0,depth=.6) {
+  const pitch=width/count,openings=[];
+  for(let i=0;i<count;i++)openings.push({x:-width/2+pitch*(i+.5),y:.12,w:pitch-.72,h:height-.5});
+  wallPanel(b,x,base,z,width,height,openings,ry,depth);
+  for(const o of openings) {
+    const xx=x+Math.cos(ry)*o.x,zz=z-Math.sin(ry)*o.x;
+    b.add(archFrame(o.w,o.h,.15,.2),M.stoneLight,[xx,base+.12,zz],[1,1,1],[0,ry,0]);
+  }
+  for(let i=0;i<=count;i++) {
+    const u=-width/2+pitch*i,xx=x+Math.cos(ry)*u,zz=z-Math.sin(ry)*u;
+    b.box(xx,base+height*.42,zz,.26,height*.84,.42,M.stoneLight,ry);
+  }
+}
+
+function galleryBridge(b,x,y,z,width,depth,count=4) {
+  b.box(x,y,z,width,.48,depth,M.stoneDark);
+  for(const side of [-1,1]) {
+    pointedArcade(b,x,y+.22,z+side*depth/2,width,4.8,count,side<0?Math.PI:0,.44);
+    b.box(x,y+5.1,z+side*depth/2,width+.3,.25,.42,M.stoneLight);
+  }
+  pitchedRoof(b,x,y+5.3,z,width+.8,depth+.6,2.6);
+}
+
+function stoneTerrace(b,points,base,height,mat) {
+  const shape=new THREE.Shape();shape.moveTo(points[0][0],-points[0][1]);
+  points.slice(1).forEach(p=>shape.lineTo(p[0],-p[1]));shape.closePath();
+  const geo=new THREE.ExtrudeGeometry(shape,{depth:height,bevelEnabled:false});
+  b.add(geo,mat,[0,base,0],[1,1,1],[-Math.PI/2,0,0]);geo.dispose();
+}
+
+function flyingArch(b,x0,y0,x1,y1,z) {
+  const points=[];
+  for(let i=0;i<=8;i++){const t=i/8;points.push([x0+(x1-x0)*t,y0+(y1-y0)*Math.sin(t*Math.PI/2)+.22]);}
+  for(let i=8;i>=0;i--){const t=i/8;points.push([x0+(x1-x0)*t,y0+(y1-y0)*Math.sin(t*Math.PI/2)-.32]);}
+  const shape=new THREE.Shape();shape.moveTo(...points[0]);points.slice(1).forEach(p=>shape.lineTo(...p));shape.closePath();
+  const geo=new THREE.ExtrudeGeometry(shape,{depth:.5,bevelEnabled:true,bevelSize:.045,bevelThickness:.04,bevelSegments:1,curveSegments:1});
+  b.add(geo,M.stoneLight,[0,0,z-.25]);geo.dispose();
+}
+
 export function createCastle() {
-  const b = new Builder('academy-castle');
-  b.box(0, 0.3, 0, 34, 0.6, 22, M.slate);
-  b.box(0, 0.67, 0, 32.7, 0.22, 20.8, M.stoneLight);
-  hallVolume(b, 0, 0.7, -0.6, 18, 13.4, 10.8, [-6.6, -3.3, 0, 3.3, 6.6].map(x => ({ x, y:4.65, w:1.45, h:6.95 })));
-  b.box(0, 2.2, 0, 24, 3, 14, M.stoneDark);
-  b.box(0, 3.82, 0, 24.3, 0.24, 14.2, M.stoneLight);
-  for (const side of [-1, 1]) {
-    hallVolume(b, side * 10.5, 0.8, -1.1, 6, 10.4, 13.5, [-1.7, 0, 1.7].map(x => ({x, y:4.5, w:0.8, h:4.1})));
-    pitchedRoof(b, side * 10.5, 11.4, -1.1, 6.8, 14.4, 5.8);
-    for (let j = -1; j <= 1; j++) {
-      windowAt(b, side * 10.5 + j * 1.7, 5.3, 5.65, 0.8, 4.1, 0, M.glass, -0.22);
-      windowAt(b, side * 13.54, 3.8, -1 + j * 3.8, 1.1, 5.6, side * Math.PI / 2);
-      windowAt(b, side * 9.04, 10.65, -1 + j * 3.4, 0.82, 2.6, side * Math.PI / 2);
+  const b=new Builder('academy-castle');
+  // Chamfered footprint and a lower open forecourt prevent a single cubic mass.
+  const outline=[[-29,-17],[-23,-23],[23,-23],[29,-17],[29,14],[24,23],[-24,23],[-29,14]];
+  const shape=new THREE.Shape();shape.moveTo(...outline[0]);outline.slice(1).forEach(p=>shape.lineTo(...p));shape.closePath();
+  const plinth=new THREE.ExtrudeGeometry(shape,{depth:.72,bevelEnabled:false});
+  b.add(plinth,M.slate,[0,0,0],[1,1,1],[-Math.PI/2,0,0]);plinth.dispose();
+  const upperTerrace=[[-26.5,-17.5],[-22,-22],[22,-22],[26.5,-17.5],[26.5,6],[-26.5,6]];
+  stoneTerrace(b,upperTerrace,.58,1.2,M.stoneDark);
+  stoneTerrace(b,upperTerrace.map(([x,z])=>[x*1.008,z+.05]),1.78,.22,M.stoneLight);
+  // The central court remains ground-level and open, with a visible paved axis.
+  for(let row=0;row<10;row++)for(let col=-2;col<=2;col++)
+    b.box(col*1.62,.83,5.3+row*1.57,1.54,.09,1.49,(row+col)%3?M.stone:M.stoneLight);
+  for(const side of [-1,1]) {
+    b.box(side*10.1,.78,12,8,.18,16,M.stone);
+    for(let i=0;i<7;i++)b.box(side*10.1,.9,4.8+i*2.3,7.8,.08,.1,M.stoneDark);
+  }
+
+  // The great hall stands on the upper terrace behind the courtyard.
+  const hallWindows=[-10,-5.1,5.1,10].map(x=>({x,y:5.2,w:3.15,h:11.4}));
+  hallVolume(b,0,2,-9.5,27,19.8,14,hallWindows);
+  pitchedRoof(b,0,22.05,-9.5,28.1,15,9.7);
+  for(const x of [-10,-5.1,5.1,10])cathedralWindow(b,x,7.2,-2.5,3.15,11.4,0,x<0?M.glassDim:M.glass);
+  for(const x of [-13.2,-7.55,0,7.55,13.2]) {
+    b.box(x,11.8,-2.18,.62,19.4,1.1,M.stoneLight);
+    b.box(x,5,-1.72,1.05,6,1.7,M.stoneDark);
+    spire(b,x,21.85,-2.18,.48,3.5,false);
+  }
+  for(const y of [2.2,6.4,21.55])b.box(0,y,-2.3,27.6,.27,.65,M.stoneLight);
+  dentilCourse(b,0,21.3,-2.05,26.8);
+  // Projecting entrance frontispiece with a deeply carved rose, not a flat facade.
+  hallVolume(b,0,1.7,.1,8.4,18.9,5.7,[{x:0,y:11.5,w:4.9,h:5.5}]);
+  pitchedRoof(b,0,20.75,.1,9.1,6.5,5.35);
+  roseWindow(b,0,15.6,3.04,2.13);
+  for(let i=0;i<12;i++) {
+    const a=i/12*TAU;b.add(cached('rose-petal',()=>new THREE.TorusGeometry(.4,.075,4,18)),M.stoneLight,
+      [Math.sin(a)*1.53,15.6+Math.cos(a)*1.53,3.16]);
+  }
+  doorAt(b,0,3.05,3.3,7.4,2);
+  stairs(b,0,3.45,5.5,7,.28,.55);
+  for(const side of [-1,1]) {
+    quoinStrip(b,side*4.05,1.8,3.14,18.4,0,.62);
+    b.box(side*4.35,6.7,3.35,.6,10,1.2,M.stoneLight);
+    spire(b,side*4.35,20.65,2.95,.75,5.2);
+    lantern(b,side*3.2,6.5,3.4,side);
+    banner(b,side*10,20.7,-1.9,1.4,4.6,side<0?M.burgundy:M.cloth);
+  }
+
+  // Long wings have ridge lines perpendicular to the hall and layered cloisters.
+  for(const side of [-1,1]) {
+    hallVolume(b,side*20,1.3,0,11,12.3,31,[-3,0,3].map(x=>({x,y:2.2,w:1.55,h:7.6})));
+    longitudinalRoof(b,side*20,13.8,0,12,32,7.4);
+    for(const x of [-3,0,3])cathedralWindow(b,side*20+x,3.5,15.5,1.55,7.6);
+    roseWindow(b,side*20,16.9,16.06,1.43);
+    for(const z of [-11,-4,3,10]) {
+      const rotation=side<0?Math.PI/2:-Math.PI/2;
+      windowAt(b,side*14.5,5,z,1.8,6.5,rotation,M.glassDim);
+      cathedralWindow(b,side*25.5,3.8,z,2.05,7.5,side*Math.PI/2);
+      // Carved flying buttresses meet a separate outer pier instead of becoming a wall.
+      b.box(side*27.9,4.9,z,1.1,8.2,1.5,M.stoneDark);
+      b.box(side*27.9,9.2,z,1.45,.35,1.8,M.stoneLight);
+      flyingArch(b,side*27.9,9.3,side*25.15,12.7,z);
+      b.beam([side*27.9,6.4,z],[side*25.25,10.6,z],.2,M.stoneDark,.16,6);
+      spire(b,side*27.9,9.45,z,.62,3.25);
     }
-    for (const z of [-2.8, 3.3]) {
-      b.box(side * 15.8, 2.8, z, 0.85, 4.4, 1.1, M.stoneDark);
-      b.box(side * 15.8, 5.12, z, 1.05, 0.24, 1.25, M.stoneLight);
-      b.beam([side * 15.8, 4.9, z], [side * 13.3, 9.7, z], 0.24, M.stoneLight, 0.19, 5);
-      spire(b, side * 15.8, 5.25, z, 0.6, 2.2);
+    for(const x of [14.8,25.2])quoinStrip(b,side*x,1.5,15.7,12,0,.57);
+    dentilCourse(b,side*20,13.1,15.76,10.7);
+    // The lower walkway is a real arcade; its inside is empty in geometry/collision.
+    pointedArcade(b,side*12.2,1.15,8.1,16.8,6.5,4,side<0?Math.PI/2:-Math.PI/2,.5);
+    b.box(side*13.3,7.82,8.1,2.9,.35,17.4,M.stoneLight);
+    for(let i=0;i<12;i++)b.box(side*12.15,8.3,.25+i*1.43,.5,.75,.67,M.stoneLight);
+    for(const z of [-7,4]) {
+      b.box(side*20,18,z,2.6,4.7,2.3,M.stone);
+      cathedralWindow(b,side*20,16.15,z+1.18,1.1,3.5);
+      pitchedRoof(b,side*20,20.45,z,3.25,2.8,2.6);
     }
-    for (const x of [7.7, 13.3]) quoinStrip(b, side * x, 0.8, 5.83, 10.4, 0, 0.52);
-    dentilCourse(b, side * 10.5, 10.96, 5.92, 5.9);
+    ivy(b,side*24.7,1.4,15.72,1,8);
+    banner(b,side*20,12.7,15.85,1.25,3.4,side<0?M.cloth:M.burgundy);
   }
-  pitchedRoof(b, 0, 14.15, -0.6, 18.9, 11.8, 7.4);
-  b.box(0, 13.7, 4.92, 18.1, 0.24, 0.28, M.stoneLight);
-  for (const x of [-6.6, -3.3, 0, 3.3, 6.6]) {
-    windowAt(b, x, 5.35, 4.8, 1.45, 6.95, 0, M.glass, -0.25);
-    if (x !== 0) windowAt(b, x, 1.3, 7.02, 0.8, 1.9);
-    b.box(x + 1.54, 7.4, 5.12, 0.38, 12.1, 0.68, M.stoneLight);
-    b.box(x + 1.54, 2.2, 5.4, 0.7, 2.9, 1.2, M.stoneDark);
-    spire(b, x + 1.54, 13.8, 5.12, 0.31, 1.9, false);
+
+  // A square astronomical keep with an overhanging belfry is the primary silhouette.
+  const kx=-4,kz=-13,bodyWidth=9.8;
+  const storeys=[4.3,12.2,20.1,28,35.9];
+  for(const [ry,wx,wz] of [[0,kx,kz+4.9],[Math.PI,kx,kz-4.9],[Math.PI/2,kx+4.9,kz],[-Math.PI/2,kx-4.9,kz]]) {
+    wallPanel(b,wx,2,wz,bodyWidth,43,storeys.flatMap(y=>[-2.9,0,2.9].map(x=>({x,y:y-2,w:1.25,h:5.9}))),ry,.58);
+    for(const y of storeys)for(const u of [-2.9,0,2.9])windowAt(b,wx+Math.cos(ry)*u,y,wz-Math.sin(ry)*u,1.25,5.9,ry,M.glass,-.18);
   }
-  for (const x of [-8.78, 8.78]) quoinStrip(b, x, 0.85, 4.96, 12.7, 0, 0.5);
-  dentilCourse(b, 0, 13.4, 5.08, 17.7);
-  // Distinct tiers rise from the approach to a needle-thin astronomical keep.
-  tower(b, -2, -6.8, 3.6, 34.5, 13.8, { balcony: true });
-  tower(b, -11.25, -5.6, 2.35, 25.1, 10.1);
-  tower(b, 10.8, -5.9, 2.6, 28.2, 11.3);
-  tower(b, -11.25, 6.1, 2.1, 18.1, 8.4);
-  tower(b, 11.25, 6.1, 2.1, 21.3, 9.3);
-  tower(b, 5.5, -5.7, 1.45, 31.2, 11.4);
-  tower(b, -6.3, -7.6, 1.02, 28.4, 10.7);
-  // Projecting entrance, deeply layered pointed doorway and little turrets.
-  b.box(0, 3.3, 7.1, 5.2, 5.2, 2.2, M.stone);
-  b.box(0, 6.1, 7.1, 5.6, 0.35, 2.65, M.stoneLight);
-  for (let i = -2; i <= 2; i++) b.box(i * 1.1, 6.7, 8.19, 0.65, 1.05, 0.6, M.stoneLight);
-  doorAt(b, 0, 8.23, 2.25, 4.55, 0.8);
-  stairs(b, 0, 8.6, 4.1, 4, 0.2);
-  for (const side of [-1, 1]) {
-    lantern(b, side * 2.1, 3.1, 8.55, side);
-    banner(b, side * 6, 12.5, 5.45, 1.35, 4.7, side < 0 ? M.burgundy : M.cloth);
+  for(const y of [3,11.1,19,26.9,34.8,43.6,44.4])b.box(kx,y,kz,10.35,.32,10.35,M.stoneLight);
+  for(const sx of [-1,1])for(const sz of [-1,1]) {
+    b.box(kx+sx*4.75,23,kz+sz*4.75,.65,43,.65,M.stoneDark);
+    for(let row=0;row<6;row++) b.box(kx+sx*5.05,41.8+row*.45,kz+sz*5.05,.55+row*.16,.5,.55+row*.16,M.stoneLight);
   }
-  // Roof dormers add a second scale of detail above the stone nave.
-  for (const x of [-6, 0, 6]) {
-    b.box(x, 17.15, 2.45, 1.8, 2.9, 1.6, M.stone);
-    windowAt(b, x, 15.85, 3.28, 0.8, 2.5);
-    pitchedRoof(b, x, 18.7, 2.4, 2.35, 2.1, 2.05);
+  for(const [ry,wx,wz] of [[0,kx,kz+5.8],[Math.PI,kx,kz-5.8],[Math.PI/2,kx+5.8,kz],[-Math.PI/2,kx-5.8,kz]]) {
+    wallPanel(b,wx,44.8,wz,11.6,11.4,[-3.7,0,3.7].map(x=>({x,y:1.3,w:2.15,h:8.1})),ry,.55);
+    for(const u of [-3.7,0,3.7])cathedralWindow(b,wx+Math.cos(ry)*u,46.1,wz-Math.sin(ry)*u,2.15,8.1,ry);
   }
-  for (const x of [-7, 6.5]) {
-    b.box(x, 21.1, -2.8, 0.85, 3.2, 0.85, M.stoneDark);
-    b.box(x, 22.8, -2.8, 1.05, 0.24, 1.05, M.stoneLight);
+  for(const y of [44.9,55.8,56.3])b.box(kx,y,kz,12.2,.4,12.2,M.stoneLight);
+  pyramidRoof(b,kx,56.6,kz,13.3,16);
+  // Projecting roof lucarnes break the large pyramid into a readable Gothic crown.
+  for(const u of [-2.65,2.65]) {
+    b.box(kx+u,60.75,kz+4.5,2.2,4.1,1.55,M.stone);
+    cathedralWindow(b,kx+u,59.1,kz+5.32,1.18,3.5);
+    longitudinalRoof(b,kx+u,62.9,kz+4.5,2.75,2.1,3.5);
+    spire(b,kx+u,62.85,kz+5.5,.22,2.15,false);
+    b.box(kx+4.5,60.75,kz+u,1.55,4.1,2.2,M.stone);
+    cathedralWindow(b,kx+5.32,59.1,kz+u,1.18,3.5,Math.PI/2);
+    pitchedRoof(b,kx+4.5,62.9,kz+u,2.1,2.75,3.5);
   }
-  ivy(b, -8.6, 0.9, 7.15, 1.6, 5.4);
-  ivy(b, 12.3, 0.8, 5.85, 1, 4.2);
-  ivy(b, -4.2, 0.8, 7.16, 0.7, 2.8);
-  return b.finish();
+  for(const side of [-1,1]) {
+    const ox=kx+side*5.25,oz=kz+5.0;
+    b.cylinder(ox,34.3,oz,1.08,.24,2.3,M.stoneLight,8);
+    b.cylinder(ox,37.15,oz,1.04,1.04,3.5,M.stone,8);
+    windowAt(b,ox,35.75,oz+1.02,.7,2.4);
+    spire(b,ox,39,oz,1.36,4.25);
+  }
+  for(const sx of [-1,1])for(const sz of [-1,1])spire(b,kx+sx*5.7,54.9,kz+sz*5.7,.83,6.2);
+
+  const towers=[[-21,-14,3.1,35.5,14], [21,-14,3.2,40,15.2], [9.5,-16,2,46.3,14.2],
+    [-12,-16,1.7,41,12.3],[-21,13,2.8,20.5,9.7],[21,13,2.8,25.5,10.5],
+    [-8.5,19,2.1,17.5,8],[8.5,19,2.1,19.7,8.8]];
+  towers.forEach((p,i)=>tower(b,...p,{floorPitch:i<4?6.8:5.25,balcony:i===1}));
+  // Two roofed bridges join towers at different levels, with open arched sides.
+  galleryBridge(b,-12.5,28.3,-13.3,15,3.9,4);
+  galleryBridge(b,15.3,31.1,-14,11.7,3.6,3);
+  for(const x of [-8,2,8]) {
+    b.box(x,27.7,-5.5,2.25,4.6,2.4,M.stone);
+    cathedralWindow(b,x,25.8,-4.25,1.1,3.4);
+    pitchedRoof(b,x,30.1,-5.5,2.9,2.95,2.4);
+  }
+  for(const x of [-10,5.4]) {
+    b.box(x,29.4,-11.5,1.2,7.5,1.2,M.stoneDark);
+    b.box(x,33.2,-11.5,1.65,.4,1.65,M.stoneLight);
+    for(const y of [27,29,31])b.box(x,y,-11.5,1.38,.19,1.38,M.stoneLight);
+  }
+
+  // Open front gate: a tall pointed passage, layered archivolts and a crenellated crown.
+  for(const side of [-1,1]) {
+    wallPanel(b,0,1.05,20+side*1.25,14,10.5,[{x:0,y:.15,w:7.6,h:8.8}],side<0?Math.PI:0,.6);
+    // Separate narrow archivolts make the actual central opening seven metres wide.
+    b.add(archFrame(7.6,8.8,.4,.5),M.stoneLight,[0,1.2,20+side*1.32],[1,1,1],[0,side<0?Math.PI:0,0]);
+  }
+  for(const side of [-1,1]) {
+    b.box(side*5.35,5.8,20,3.3,9.5,3.15,M.stone);
+    quoinStrip(b,side*6.75,1.2,21.72,9.3,0,.7);
+    lantern(b,side*5.1,7.6,21.8,side);
+    banner(b,side*5.25,10.8,21.75,1,3.5,side<0?M.burgundy:M.cloth);
+    b.box(side*16.5,2,20.4,11,2.4,1.4,M.stoneDark);
+    for(let i=0;i<9;i++)b.box(side*16.5-5+i*1.25,3.7,20.4,.64,1.1,1.4,M.stoneLight);
+  }
+  b.box(0,11.8,20,14.5,.42,3.65,M.stoneLight);
+  for(let i=-6;i<=6;i++)b.box(i*1.08,12.45,21.3,.62,1.1,.8,M.stoneLight);
+  stairs(b,0,23.25,8,5,.22,.5);
+  for(const x of [-11.9,12.1])ivy(b,x,1.2,16.05,1.1,5.8);
+  ivy(b,-3.8,2.2,3.38,.8,8);
+  const group=b.finish();
+  group.userData.entrance={x:0,y:1.1,z:23.25};
+  group.userData.courtyard={minX:-10.5,maxX:10.5,minZ:7.7,maxZ:18.4};
+  return group;
 }
 
 function railing(b, x, y, z, radius, count = 24) {

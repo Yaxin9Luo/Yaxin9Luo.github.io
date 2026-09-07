@@ -56,14 +56,14 @@ Some local macOS routes terminated TLS 1.3 handshakes to the providers' storage 
 - Cloth weave must stay small: one full herringbone tile covers about 27 cm, so a 1 m coat panel spans approximately 3.7 horizontal repeats. A full leather tile covers 40 cm. Material tint can recolor the gray cloth while preserving its actual weave; these scale values come from source metadata rather than an arbitrary 0.5 m approximation.
 - Use the copper `metalness.webp` with its roughness map. The bright turquoise patina is intentional source color; restrained material tint and scene lighting can adapt it to the evening palette.
 - Treat the leaf sheet as an atlas: crop/select one of six cells when constructing an individual leaf. For dense foliage, prefer `alphaTest` and two-sided leaf geometry to sorting many blended quads. Opacity is present both separately and in the color map.
-- Load HDR files through Three.js `HDRLoader`. `environment/night.hdr` is a real night panorama and includes distant golf-course lamps; it remains available for low-strength image-based lighting. `environment/sky.hdr` supplies the photographic visible background and can also be PMREM-filtered for environment lighting.
+- Load HDR files through Three.js `HDRLoader`. `environment/night.hdr` is a real night panorama and includes distant golf-course lamps; the current moonlit scene uses it for low-strength image-based lighting. `environment/sky.hdr` is retained from the earlier photographic-lighting iteration. The visible background now uses the blue night panorama documented in [night-garden-art.md](night-garden-art.md).
 - Color is WebP quality 90; normal/scalar delivery is quality 95. These are lossy derivatives of the providers' 8-bit source images. Alpha remains lossless. The manifest reports sampled normal angular error against the decoded source at an 8-pixel stride; it does not call the normal compression lossless. Source and delivered resolutions remain identical.
 
 All eleven actual color maps were inspected together. The visual check confirmed mortar, slate seams, rock fissures, ground foliage, olive grass, wood grain, bark, copper patina, fine cloth weave, brown leather grain and genuine leaf silhouettes. The offline audit checks file integrity and image data; full scene lighting, tiling, frame rate and browser rendering are evaluated by the main world QA.
 
 After acquisition, all 37 resources returned HTTP 200 through the project's Vite preview at `http://127.0.0.1:4190`, with response SHA-256 matching the manifest. Both HDRs were decoded using the installed Three.js loaders to confirm finite HDR sample data, beyond their file headers.
 
-## Photographic sky selection and calibration
+## Earlier photographic sky selection and calibration
 
 The actual provider thumbnails for Kloppenheim 06 and Kloofendal 48d were inspected before choosing the sky. Kloppenheim 06 has muted blue upper sky, several cloud layers, and a warm low horizon. Kloofendal 48d has stronger midday contrast and bright cloud tops. The selected source is photographed low-sun light; the provider describes sunrise, so a late-afternoon interpretation is an artistic use of its palette rather than a claim about capture time. Provider selection previews remain in ignored scratch storage and are not published as website assets.
 

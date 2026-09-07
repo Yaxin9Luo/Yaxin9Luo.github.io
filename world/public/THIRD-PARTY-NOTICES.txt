@@ -1,9 +1,60 @@
 Third-party notices for the interactive portfolio
 
-Original architecture and character geometry were authored for this project.
-Material scans: Poly Haven and ambientCG, CC0; authors, URLs and checksums are
-recorded in textures/manifest.json and docs/world-asset-sources.md in the repository.
-Local font licenses are provided in fonts/.
+The architecture, character clothing, guardian and broom geometry were authored
+for this project. The researcher's anatomical head and hair adapt the external
+CC0 assets credited below. The moon imagery is provided by NASA. These sources
+are distinct from the project's generated sky and botanical artwork.
+
+Material maps and HDR environments
+=================================
+Poly Haven and ambientCG downloadable assets: CC0 1.0 Universal.
+Authors, source URLs, transformations and checksums are recorded in
+textures/manifest.json and docs/world-asset-sources.md in the repository.
+License evidence: https://polyhaven.com/license
+                  https://docs.ambientcg.com/license/
+
+Character source geometry and hair
+=================================
+Blender Studio Human Base Meshes v1.4.1 — Realistic Head (Animation)
+Author: Dan Ulrich / Blender Studio
+License: CC0 1.0 Universal
+Official source and license evidence: https://www.blender.org/download/demo-files/
+The retained source is an adapted head-and-eyes subset of the original bundle.
+
+Short Messy Hair / short_messy
+Author: Cortu Johnstone
+License: CC0 1.0 Universal; also stated in the original material header.
+Official source and license evidence:
+https://static.makehumancommunity.org/assets/assetpacks/hair01.html
+The original hair cards and albedo are refitted and tinted for the researcher.
+
+Exact source downloads, retained-file hashes and adaptations are recorded in
+models/characters/source/sources.json and models/characters/source/LICENSE.txt.
+The runtime model inventory is models/characters/manifest.json.
+
+Moon imagery
+============
+NASA Scientific Visualization Studio / Ernie Wright / NASA-GSFC / LROC
+The unmodified 2K LROC color map is used on the lunar sphere.
+Source: https://svs.gsfc.nasa.gov/4720
+Usage statements: https://svs.gsfc.nasa.gov/help/
+                  https://www.nasa.gov/nasa-brand-center/images-and-media/
+This imagery follows NASA's media-use guidance and the SVS public-domain
+statement; it is not described as a CC0 asset. This credit identifies image
+provenance and does not imply NASA endorsement.
+Source URL, credit and SHA-256 are in art/night-garden/manifest.json.
+
+Generated artwork
+=================
+The moonlit sky panorama and botanical atlas were generated for this project
+with the built-in ImageGen tool. They are not third-party CC0 material scans.
+Their generation record, actual use and hashes are in
+art/night-garden/manifest.json and docs/night-garden-art.md in the repository.
+
+Fonts
+=====
+Local font licenses are provided in fonts/OFL-inter.txt and
+fonts/OFL-cormorant.txt.
 
 Three.js
 ========

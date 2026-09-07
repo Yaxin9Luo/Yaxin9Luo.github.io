@@ -1,0 +1,17 @@
+Retained character source assets
+
+Blender Studio Human Base Meshes v1.4.1 — Realistic Head (Animation)
+Author: Dan Ulrich / Blender Studio
+License: Creative Commons CC0 1.0 Universal
+Official license evidence: https://www.blender.org/download/demo-files/
+CC0 legal text: https://creativecommons.org/publicdomain/zero/1.0/legalcode
+The retained .blend contains only the head and ocular geometry, with the bundled multiresolution detail applied. This is an adapted subset, not the complete upstream bundle.
+
+Short Messy Hair / short_messy
+Author: Cortu Johnstone
+License: Creative Commons CC0 1.0 Universal
+Official asset pack: https://static.makehumancommunity.org/assets/assetpacks/hair01.html
+The upstream .mhmat header independently states "Cortu Johnstone - CC0".
+The OBJ and PNG remain source copies; the build refits, layers and tints the hair.
+
+Exact download URLs and source-file hashes are in sources.json.

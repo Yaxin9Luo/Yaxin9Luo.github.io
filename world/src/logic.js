@@ -1,17 +1,18 @@
 import {locations,crystalPositions} from './locations.js';
 
 export const SAVE_KEY = 'yaxin.grimoire.v1';
+export const RACE_COURSE = 'moonlit-2';
 export const clamp = (v, min, max) => Math.min(max, Math.max(min,v));
 export const damp = (a,b,speed,dt) => a + (b-a)*(1-Math.exp(-speed*dt));
 export const distance2 = (a,b) => Math.hypot(a.x-b.x,a.z-b.z);
-export function freshProgress(){return {version:1,visited:[],crystals:[],banished:0,bestTime:null};}
+export function freshProgress(){return {version:1,raceCourse:RACE_COURSE,visited:[],crystals:[],banished:0,bestTime:null};}
 export function parseProgress(raw){
   try {
     const p=JSON.parse(raw);
     if(!p || p.version!==1) return freshProgress();
     const visited=Array.isArray(p.visited)?[...new Set(p.visited.filter(id=>locations.some(l=>l.id===id)))]:[];
     const crystals=Array.isArray(p.crystals)?[...new Set(p.crystals.filter(id=>Number.isInteger(id)&&id>=0&&id<crystalPositions.length))]:[];
-    return {version:1,visited,crystals,banished:Number.isInteger(p.banished)?clamp(p.banished,0,100000):0,bestTime:Number.isFinite(p.bestTime)&&p.bestTime>0&&p.bestTime<=120?p.bestTime:null};
+    return {version:1,raceCourse:RACE_COURSE,visited,crystals,banished:Number.isInteger(p.banished)?clamp(p.banished,0,100000):0,bestTime:p.raceCourse===RACE_COURSE&&Number.isFinite(p.bestTime)&&p.bestTime>0&&p.bestTime<=120?p.bestTime:null};
   } catch {return freshProgress();}
 }
 export function progressEvent(progress,event){

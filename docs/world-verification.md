@@ -1,115 +1,45 @@
-# Verification record
+# Verification record — 8 September 2026
 
-Local verification on 7–8 September 2026. This record distinguishes simulation,
-browser behavior, asset inspection and deployment evidence.
+This record describes the enlarged moonlit revision. Earlier screenshots and checks remain in the local QA directory; old coordinates and lap records are not used as evidence for this map.
 
-## Portfolio and navigation
+## Actual browser checks
 
-- All six chapters were opened in the actual browser. English and Chinese
-  publications each contain 11 articles; profile, projects, six research
-  directions, education/experience and contact links are readable without playing.
-- Local portrait, publication figures and CV paths were checked. Offscreen images
-  use lazy loading; no completed image reported a failed decode in the sampled
-  mobile/Chinese publication view.
-- All six map buttons were clicked. The observed destinations were academy
-  `(0,11,5)`, library `(-44,10,17)`, workshop `(40,9,40)`, observatory
-  `(-48,10,-32)`, ruins `(-29,9,60)`, and owl post `(43,10,-26)`.
-  The UI reached `6 / 6`; after a full reload it still displayed `6 / 6`.
-- Actual CSS viewports tested include desktop `1280 × 800` and `1024 × 576`, and
-  phone-sized `390 × 844`. The Chinese profile and publication view had no document
-  horizontal overflow. Mobile chapter tabs scroll horizontally by design. The
-  five modal tools stayed inside the dialog. Touch-target sizes were enlarged
-  following this inspection.
-- Keyboard M opens the map, Escape closes it; Tab stays within the modal focus
-  cycle. Background content is inert while reading. The reduced-motion switch
-  applies its CSS state and disables the teleport flash.
+The combined Vite/Jekyll site was exercised through loopback HTTP. Actual CSS viewports were 1280 × 800 and 390 × 844.
 
-## Playing the actual browser build
+- The welcome screen offers immediate Chinese/English profile, publications, projects and CV access. Both traditional entrances remain available. The original academic content, layouts, config, images and PDFs have no diff against original master `d74149b885dbb1a8b59940e9ae0766922140727f`.
+- The visible ascend button moved Y=18→30. Repeated presses reached the ceiling at Y=130; Descend then reached Y=118. Native Space activation on a focused ascend button produced a second 12-metre ascent (52→76 across click + Space), while mana stayed at 100.
+- Follow, bird’s-eye and low-angle presets were clicked. The overhead camera shows the full archipelago. Selecting a camera during a tour now exits the tour and applies the selected preset.
+- All six guided stops were visited in the actual browser: `(54,52,62)`, `(-49,25,48)`, `(88,26,78)`, `(-55,34,-40)`, `(-18,22,98)`, `(108,33,-30)`. Next, Previous, End, Read more and live language switching were exercised. Reading pauses the world and retains the stop when closed.
+- The project portkey arrived at `(64,12,56)`. Clicking visible courtyard ground then moved the rider to approximately `(55.89,12,57.32)`. Clicking the actual open book at that location opened the AutoDesign article. Its top stayed at approximately 101 px after changing Chinese to English, confirming preservation of the selected paper rather than returning to the publication list start.
+- Release a lantern displayed its confirmation and produced the rising paper-light effect. Individual actual assets—book, rider front/back and guardian—were inspected in Asset Studio.
+- On the phone viewport, the welcome, flight, collapsible tools, guided tour, map and English profile were checked. The profile dialog and document fit the viewport with no horizontal overflow. The portrait tour camera was pulled back after screenshot review. A challenge timer overlapping Flight tools was found and corrected.
+- Opening the map held the challenge timer at 111.6 seconds across observations. Traveling from that map canceled the race. Earlier browser playtests also exercised casting, shields, a banishment, first-ring collection, save reload and keyboard modal focus.
 
-- Clicking visible courtyard ground moved the rider from `(9,8,48)` to about
-  `(8.30,8,42.96)`, confirming that movement was actually simulated.
-- Keyboard Space and the mobile cast button consume mana. The mobile shield
-  button produced the visible protective membrane. Selecting Avada Kedavra and
-  casting at an automatically targeted wraith changed the actual quest record to
-  `1 / 5` banishments.
-- A flight trial displayed the ten-ring course. Flying through the first ring
-  changed the UI to `1 / 10`. Opening the map held the timer at `87.1` seconds
-  across subsequent observations. Teleporting ended the trial.
-- Playtesting found that a trial started after dueling retained combat mode. It
-  now clears combat and previous projectiles; the fix is covered by a regression.
-- A full ten-ring manual playthrough and simultaneous multi-touch joystick input
-  on a physical phone have not been performed. Ring ordering, full-course
-  completion, personal-best logic and touch/keyboard release are simulation-tested.
+## Automated contracts
 
-## Automated and geometry checks
+`npm --prefix world test`: **53 passed, 0 failed**. Coverage includes bilingual factual content and local image/CV contracts, malformed storage, progress migration, spell costs/cooldowns and peaceful exploration, shield/hit accounting, ordered ten-ring completion, portkeys, stale-input clearing, target-altitude convergence, camera presets and portrait tour framing, guide lifecycle, research book callbacks and wall occlusion, native Space keydown/keyup behavior, actual terrain contact and structural collision.
 
-`npm --prefix world test`: **34 passing tests**, including:
+The new `moonlit-2` course invalidates earlier personal-best times while preserving other progress. This is tested without silently resetting a visitor's discoveries.
 
-- bilingual content and local resource contracts;
-- malformed/unavailable storage, immutable snapshots, idempotent progress;
-- movement normalization, frame-independent damping and swept proximity checks;
-- spell cooldown/mana, shields, peaceful exploration, hit/banishment accounting;
-- all direct destinations, clearing stale input, trial ordering and best times;
-- actual road triangle interiors above the rendered ground, graded gate platforms;
-- building collision against the new asset dimensions and a camera obstruction
-  regression also checked against the actual castle mesh.
+## Geometry and art checks
 
-The art integration review reproduced gates floating by up to about 1.6 m,
-roads intersecting new terrain, an east-wing rider penetration and an orbit camera
-inside the castle. These were corrected. The final road centroid clearance is
-roughly 0.009–0.141 m; island crossings now route to the stone bridges. Building
-collision uses 103 structural convex bodies rather than outdated circular radii.
-It conservatively treats windows and closed doors as solid. Decorative vegetation
-and furniture are not player colliders. Per-frame motion is bounded; arbitrary
-large teleport segments are not a continuous-physics simulation.
+- Castle geometry and exported models were checked for finite positions, UVs and normals; front/courtyard/crown Blender renders were reviewed and refined. Its current size is 58 × 73.8 × 48.55 m with 423,667 triangles and 20 material batches.
+- Character GLBs were independently parsed for triangles, embedded material maps, skin color attributes and animation anchors. Current sizes are 5,007,284 bytes for the rider and 1,895,056 bytes for the guardian.
+- Both viaducts have real arch openings. Collision regressions cover deck, rails, piers and all six openings against actual meshes. Real movement simulation can descend toward the water and pass through the contact bridge's central arch; its camera stays above water.
+- Road triangle centroids clear the rendered ground; gates and three exhibit bases meet graded surfaces. Review found and fixed buried bridges, uneven pedestals, a book clickable through walls and old castle collision dimensions.
+- Independent sampled sweeps checked all ten course segments and six tour positions for structural obstructions. This is geometry/simulation evidence, not a complete manual browser race run.
+- Multiple actual scene screenshots prompted the sky, moon, far mountains, warm paths, tree density, portrait camera and control-panel revisions documented in [moonlit-iteration.md](moonlit-iteration.md). Generated targets are always labeled separately from real renders.
 
-## Asset and visual review
+## Build, assets and performance
 
-- The owner’s screenshots, supplied Hogwarts Legacy gameplay and official
-  Hogwarts Legacy, Baldur’s Gate 3 and Divinity sources informed the art direction.
-  The reference image generated with ImageGen is explicitly a target, not a
-  screenshot of the implementation.
-- Terrain, six buildings, rider, wraith, trees, portal and shield are individually
-  viewable in the live asset studio. Architecture also has standalone Blender
-  renders and packed `.blend` source scenes. Character front renders were checked
-  after correcting inflated sleeves and intersecting clothing.
-- The assembled scene was captured from both the welcome camera and broom camera.
-  Reviews prompted readable navigation over the sky, a weaker overlay over the
-  main castle, shorter foreground trees, natural tree crowns, less glittery water,
-  and hiding the racing rings until the optional trial starts.
-- Materials have source URLs, license records, physical-scale notes and hashes.
-  Thirty-seven PBR/HDR resources were validated and served successfully. Original
-  geometry and UV export checks are detailed in the model/character documents.
-- These are textured, stylized browser assets. They do not establish parity with
-  AAA character scans, cloth simulation, cinematic animation or environment art.
-  Cloth motion uses lightweight anchor animation; there is no full skeletal action
-  animation set or photorealistic facial system.
+- `npm run build:site` passed: Vite production bundle, Jekyll traditional site and 43 compatibility redirects. Original academic source directories are unchanged.
+- All **83 public files** were verified source = combined `dist` = HTTP 4188 bytes, with SHA-256 and HTTP 200. The final audit totals **183,754,170 bytes**. This includes downloadable GLB/Blender source and preview renders, not just first-visit downloads. Separately, 26 representative entrypoints, original resources and emitted JS/CSS files returned 200 and matched `dist`.
+- The three new sky/moon/flower resources total 1,343,734 bytes. Runtime characters total 6,902,340 bytes. The world constructs architecture from shared factories and does not download all optional architecture exports or Blender source scenes on entry.
+- NASA lunar imagery, Blender Studio/MakeHuman character inputs, Poly Haven maps, generated artwork and original geometry have distinct provenance and license records. Final GLB hashes are included in the manifest and generation script.
+- Local observed readings in the final revision ranged approximately **44–70 FPS** across welcome, flight, tour and phone-sized views with another 3D preview tab present. This is not a guaranteed frame rate, a controlled benchmark or proof of physical-phone performance. Renderer triangle counts include reflection, shadow and postprocessing passes.
 
-## Build and performance
+## Remaining limits and publication boundary
 
-- `npm run build:site` passed, combining Vite and Jekyll with 43 compatibility
-  redirects. The original academic content/config/layout/image/PDF directories
-  have no diff against the original master revision.
-- Independent review checked 133 representative HTTP addresses, all emitted JS
-  companion paths, and byte-for-byte correspondence of the public assets with
-  their built and served copies. All 70 final public files were rechecked through the delivery server,
-  matching source and built files byte-for-byte; the homepage, asset studio, both
-  traditional entrances, CV and portrait returned HTTP 200.
-- The production dependency audit reported zero known vulnerabilities.
-- Observed local rendering during development ranged approximately 39–60 FPS with
-  multiple active 3D previews. After closing the extra previews and Blender jobs,
-  the academy approach read 75 FPS at 1280 × 800 and Balanced quality. This is a local observation, not a
-  60 FPS guarantee or a mobile-device benchmark. GPU draw/triangle counters include
-  shadow, reflection and postprocessing passes rather than unique model triangles.
-- The optional world loads local textures and roughly 5.17 MB of character GLBs.
-  The complete public asset directory also includes large, downloadable Blender
-  and architecture exports; those are not all downloaded to enter the world.
-  Readable portfolio content initializes before the 3D assets.
+A complete ten-ring manual browser playthrough, physical-phone multi-touch and a cross-device GPU matrix have not been completed. The scene is a stylized browser interpretation, not AAA-equivalent character animation, cinematic materials or environment production. Low and balanced graphics settings remain available.
 
-## Publication boundary
-
-The feature branch can be reviewed without replacing the public homepage. The
-workflow builds PRs but deploys only from master. A production merge, GitHub Pages
-configuration change and public deployment have not been performed. Scholar
-returned HTTP 429 during research; facts were grounded in the existing site and
-linked work, and unverified citation metrics were omitted.
+Work is on `codex/enchanted-research-world` and draft PR #1. The workflow builds PRs but only deploys master. No production merge, Pages configuration change or public-homepage replacement has been performed. Scholar was rate-limited during the initial research; unverified citation metrics were omitted rather than invented.

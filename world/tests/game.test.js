@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import * as THREE from 'three';
 import { Game } from '../src/game.js';
 import { terrainHeight } from '../src/world.js';
-import { locations, ringPositions, crystalPositions, spellDefinitions } from '../src/locations.js';
+import { locations, ringPositions, crystalPositions, spellDefinitions, worldBounds, bridges } from '../src/locations.js';
 import { SAVE_KEY, freshProgress } from '../src/logic.js';
 
 // Exercise the actual simulation methods without constructing a WebGL renderer.
@@ -198,7 +198,8 @@ test('only actual proximity discovers places and swept crystal collection reward
   assert.deepEqual(game.progress.visited, []);
   assert.equal(game.nearest, null);
 
-  game.position.set(-48, 7.1, -34);
+  const research=locations.find(l=>l.id==='research');
+  game.position.set(research.x,research.y+3.1,research.z+research.radius+3);
   game._previous.copy(game.position);
   game._updateInteractions();
   assert.equal(game.nearest, 'research');
@@ -235,19 +236,19 @@ test('flight follows the camera while respecting terrain, ceiling, and buildings
   assert.ok(Math.abs(game.position.z - 48) < 1e-9);
 
   game._clearControls();
-  game.position.y = 58;
+  game.position.y = worldBounds.ceiling;
   game.setControl('up', true);
   game._move(.05);
-  assert.equal(game.position.y, 58);
+  assert.equal(game.position.y, worldBounds.ceiling);
   game._clearControls();
   game.position.y = 0;
   game._move(.05);
   assert.ok(game.position.y >= terrainHeight(game.position.x, game.position.z) + 3.2);
 
   const academy = locations.find((location) => location.id === 'about');
-  game.position.set(academy.x, academy.y + 6, academy.z);
+  game.position.set(academy.x, academy.y + 6, academy.z - 15);
   game._move(.05);
-  assert.ok(Math.hypot(game.position.x - academy.x, game.position.z - academy.z) > 5, 'the rider is pushed outside the central building volume');
+  assert.ok(Math.hypot(game.position.x - academy.x, game.position.z - (academy.z-15)) > 3, 'the rider is pushed outside the central building volume');
   assert.ok(Number.isFinite(game.position.x) && Number.isFinite(game.position.z));
 });
 
@@ -339,4 +340,171 @@ test('unavailable storage preserves playable discoveries and isolates progress c
   progressEvents[0].visited.push('contact');
   assert.deepEqual(game.progress.visited, ['research'], 'a UI consumer cannot change the live save by mutating its snapshot');
   assert.equal(game._commit({ type: 'visit', id: 'research' }), false);
+});
+
+test('clickable altitude targets converge, stack and yield to manual controls', (t) => {
+  const {game}=simulation(t);game.position.set(18,30,74);
+  assert.equal(game.changeAltitude(12),true);
+  assert.equal(game._altitudeTarget,42);
+  game.changeAltitude(12);assert.equal(game._altitudeTarget,54);
+  for(let i=0;i<300;i++)game._move(1/60);
+  assert.ok(Math.abs(game.position.y-54)<.25,'click rise reaches its requested height');
+  game.changeAltitude(1000);
+  assert.equal(game._altitudeTarget,worldBounds.ceiling);
+  game.setControl('down',true);game._move(.05);
+  assert.equal(game._altitudeTarget,null,'manual descent takes control immediately');
+  game.setPaused(true);assert.equal(game.changeAltitude(12),false);
+});
+
+test('view presets support below-rider and overhead cameras without losing terrain clearance', (t) => {
+  const {game}=simulation(t);
+  Object.assign(game,{zoom:1,zoomTarget:1,_cameraGoal:new THREE.Vector3(),_lookGoal:new THREE.Vector3(),_lookAt:new THREE.Vector3()});
+  game.position.set(18,65,74);
+  game.setCameraView('low');game._updateCamera(.1,true);
+  assert.ok(game.camera.position.y<game.position.y,'low view looks upward from below the rider');
+  game.setCameraView('overlook');game._updateCamera(.1,true);
+  assert.ok(game.camera.position.y>game.position.y+35,'bird view has meaningful height');
+  assert.equal(game.setCameraView('invalid'),false);
+  game.position.set(18,10,74);game.setCameraView('low');game._updateCamera(.1,true);
+  assert.ok(game.camera.position.y>=terrainHeight(game.camera.position.x,game.camera.position.z)+2.2);
+});
+
+test('research book interaction points to the real paper without unlocking gates', (t) => {
+  const {game}=simulation(t),group=new THREE.Group();group.position.set(45,6,54);
+  game.world.exhibits=[{id:'autodesign',group}];
+  game.position.set(45,11,55);game._previous.copy(game.position);game._updateInteractions();
+  assert.equal(game.nearestPaper,'autodesign');
+  let paper=null;game.callbacks.onExhibit=id=>paper=id;
+  game._keyDown({code:'KeyE',preventDefault(){}});assert.equal(paper,'autodesign');
+  game.position.set(10,60,70);game._updateInteractions();assert.equal(game.nearestPaper,null);
+});
+
+test('all guided tour stops remain independent of race progress and reading pauses cleanly', (t) => {
+  const {game}=simulation(t),previousDocument=Object.getOwnPropertyDescriptor(globalThis,'document');
+  Object.defineProperty(globalThis,'document',{configurable:true,value:{hidden:false}});
+  t.after(()=>{if(previousDocument)Object.defineProperty(globalThis,'document',previousDocument);else delete globalThis.document;});
+  Object.assign(game,{canvas:{focus(){}},renderer:{shadowMap:{needsUpdate:false}},zoom:1,zoomTarget:1,_cameraGoal:new THREE.Vector3(),_lookGoal:new THREE.Vector3(),_lookAt:new THREE.Vector3()});
+  for(let index=0;index<locations.length;index++){
+    game._combat=true;game.race={active:true,index:1,elapsed:3,timeLeft:117};
+    assert.equal(game.tourStop(index),true);
+    assert.equal(game.tour.index,index);assert.equal(game._combat,false);assert.equal(game.race,null);
+    assert.ok(game.position.y<worldBounds.ceiling);
+    assert.ok(game.progress.visited.includes(locations[index].id));
+    game.setPaused(true);assert.equal(game.tour.index,index,'reading retains the current tour stop');
+    game.setPaused(false);
+  }
+  assert.equal(game.tourStop(100),false);assert.equal(game.tour.index,5);
+  game.endTour();assert.equal(game.tour,null);assert.equal(game.cameraView,'follow');
+});
+
+test('research books cannot be clicked through an intervening wall', t=>{
+  const {game}=simulation(t),book=new THREE.Mesh(new THREE.BoxGeometry(2,2,2),new THREE.MeshBasicMaterial()),wall=new THREE.Mesh(new THREE.BoxGeometry(8,8,1),new THREE.MeshBasicMaterial());
+  book.position.set(0,4,-12);wall.position.set(0,4,-4);game.scene.add(book,wall);game.scene.updateMatrixWorld(true);
+  game.world.exhibits=[{id:'autodesign',group:book}];game.world.occluders=[wall];
+  game._raycaster=new THREE.Raycaster(new THREE.Vector3(0,4,0),new THREE.Vector3(0,0,-1));
+  assert.equal(game._pickExhibit(),null,'the nearer wall blocks paper interaction');
+  wall.position.x=20;wall.updateMatrixWorld();assert.equal(game._pickExhibit()?.object,book,'the unobstructed book remains clickable');
+});
+
+test('space on a focused interface button activates the button instead of casting',t=>{
+  const {game}=simulation(t);let prevented=false;
+  game._keyDown({code:'Space',target:{closest:selector=>selector.includes('button')?{}:null},preventDefault(){prevented=true;}});
+  assert.equal(prevented,false);assert.equal(game.mana,100);assert.equal(game._keys.has('Space'),false);
+});
+
+test('choosing a camera exits the tour and applies the same preset used in free flight',t=>{
+  const {game}=simulation(t);
+  Object.assign(game,{zoom:1,zoomTarget:1,_cameraGoal:new THREE.Vector3(),_lookGoal:new THREE.Vector3(),_lookAt:new THREE.Vector3()});
+  game.position.set(54,52,62);game.tour={index:0};
+  assert.equal(game.setCameraView('invalid'),false);
+  assert.deepEqual(game.tour,{index:0},'an invalid request does not end the tour');
+  for(const view of ['overlook','low','follow']) {
+    game.tour={index:0};
+    assert.equal(game.setCameraView(view),true);
+    assert.equal(game.tour,null);
+    game._updateCamera(1,true);
+    if(view==='overlook')assert.deepEqual(game.camera.position.toArray(),[140,175,195],'the whole-world camera must not become a tour-relative boom');
+    else assert.ok(game._lookGoal.distanceTo(game.position)<2,'free-flight views look back at the rider');
+  }
+});
+
+test('portrait tours widen the landmark framing without changing ordinary follow or desktop views',t=>{
+  const {game}=simulation(t);
+  Object.assign(game,{zoom:1,zoomTarget:1,cameraDistance:17,cameraElevation:.18,cameraView:'follow',
+    _cameraGoal:new THREE.Vector3(),_lookGoal:new THREE.Vector3(),_lookAt:new THREE.Vector3()});
+  game.position.set(54,52,62);game.cameraYaw=Math.atan2(54,100);game.tour={index:0};
+  game.camera.aspect=16/9;game._updateCamera(1,true);
+  assert.ok(Math.abs(game.camera.position.distanceTo(game.position)-17)<1e-8);
+  game.camera.aspect=390/844;game._updateCamera(1,true);
+  assert.ok(Math.abs(game.camera.position.distanceTo(game.position)-52)<1e-8,'portrait tours add 35m to the boom');
+  game.tour=null;game._updateCamera(1,true);
+  assert.ok(Math.abs(game.camera.position.distanceTo(game.position)-17)<1e-8,'portrait free flight retains its normal follow distance');
+});
+
+test('a valid click-to-fly destination exits the tour, while clicking empty sky retains it',t=>{
+  const {game}=simulation(t);
+  Object.assign(game,{canvas:{getBoundingClientRect:()=>({left:0,top:0,width:800,height:600})},
+    _raycaster:new THREE.Raycaster(),_pointerNDC:new THREE.Vector2(),_flightPlane:new THREE.Plane(new THREE.Vector3(0,1,0),0)});
+  game.position.set(18,20,74);game.camera.position.set(18,32,89);
+  game.camera.lookAt(18,20,64);game.camera.updateMatrixWorld();game.tour={index:0};
+  game._pointer={id:1,button:0,moved:false};
+  game._pointerUp({pointerId:1,clientX:400,clientY:300});
+  assert.ok(game._destination,'the actual camera ray creates a flight destination');
+  assert.equal(game.tour,null);assert.equal(game.cameraView,'follow');
+  const start=game.position.clone();for(let i=0;i<30;i++)game._move(1/60);
+  assert.ok(game.position.distanceTo(start)>1,'click travel still moves the rider');
+  game._clearControls();game.tour={index:0};
+  game.camera.position.set(18,32,89);game.camera.lookAt(18,60,64);game.camera.updateMatrixWorld();
+  game._pointer={id:2,button:0,moved:false};game._pointerUp({pointerId:2,clientX:400,clientY:300});
+  assert.equal(game._destination,null);assert.deepEqual(game.tour,{index:0});
+});
+
+test('buttons and F descend toward the lake surface, and real movement can cross the contact arch',t=>{
+  const {game}=simulation(t);game.position.set(150,2,140);
+  game.changeAltitude(-1000);assert.equal(game._altitudeTarget,-11.8);
+  for(let i=0;i<360;i++)game._move(1/60);
+  assert.ok(Math.abs(game.position.y+11.8)<.1);
+  game._keys.add('KeyF');for(let i=0;i<120;i++)game._move(1/60);
+  assert.equal(game.position.y,-11.8,'held descent stops 3.2m above the lake');
+  game._clearControls();
+  const [a,b]=bridges.contact,length=Math.hypot(b[0]-a[0],b[1]-a[1]);
+  const sin=(b[0]-a[0])/length,cos=(b[1]-a[1])/length,cx=(a[0]+b[0])/2,cz=(a[1]+b[1])/2;
+  game.position.set(cx-cos*6,1.8,cz+sin*6);game.cameraYaw=Math.atan2(sin,cos);game._keys.add('KeyD');
+  let crossed=false;
+  for(let i=0;i<80;i++) {
+    game._move(1/60);
+    assert.ok(Math.abs(game.position.y-1.8)<1e-8,'the flight floor must not lift the rider into the arch');
+    if((game.position.x-cx)*cos-(game.position.z-cz)*sin>6){crossed=true;break;}
+  }
+  assert.equal(crossed,true,'both sides of the contact viaduct can be traversed during real movement');
+});
+
+test('the low camera remains above water at the new minimum flight altitude',t=>{
+  const {game}=simulation(t);
+  Object.assign(game,{zoom:1,zoomTarget:1,_cameraGoal:new THREE.Vector3(),_lookGoal:new THREE.Vector3(),_lookAt:new THREE.Vector3()});
+  game.position.set(150,-11.8,140);game.setCameraView('low');game._updateCamera(1,true);
+  assert.ok(game.camera.position.y>=-14.2-1e-8,'look-up view must not put the camera beneath the lake shader');
+  assert.ok(game.camera.position.y<game.position.y,'it still looks upward from below the rider');
+});
+
+test('space keyup on focused controls retains native activation but canvas space prevents scrolling',t=>{
+  const {game}=simulation(t),listeners=new Map();
+  for(const name of ['window','document']) {
+    const previous=Object.getOwnPropertyDescriptor(globalThis,name);
+    Object.defineProperty(globalThis,name,{configurable:true,value:{}});
+    t.after(()=>{if(previous)Object.defineProperty(globalThis,name,previous);else delete globalThis[name];});
+  }
+  game.canvas={style:{},hasAttribute:()=>true};
+  game._listen=(target,event,callback)=>listeners.set(event,callback);
+  game._bindEvents();
+  for(const tag of ['button','a','summary','[role="button"]']) {
+    let prevented=false;
+    const event={code:'Space',target:{closest:selector=>selector.split(',').includes(tag)?{}:null},preventDefault(){prevented=true;}};
+    game._keyDown(event);game._keys.add('Space');listeners.get('keyup')(event);
+    assert.equal(prevented,false,`${tag} native keyup default action remains available`);
+    assert.equal(game._keys.has('Space'),false,'stale cast state is still released');
+  }
+  let canvasPrevented=false;
+  listeners.get('keyup')({code:'Space',target:{closest:()=>null},preventDefault(){canvasPrevented=true;}});
+  assert.equal(canvasPrevented,true);
 });

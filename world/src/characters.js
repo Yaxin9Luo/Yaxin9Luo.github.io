@@ -13,6 +13,14 @@ function prepareTemplate(scene, kind) {
     node.receiveShadow = true;
     node.frustumCulled = true;
     node.geometry.computeBoundingSphere();
+    // Hair cards use cutout transparency so their strands do not sort over the face.
+    const materials = Array.isArray(node.material) ? node.material : [node.material];
+    for (const material of materials) {
+      if (!material?.name.includes('Cortu natural chestnut hair cards')) continue;
+      material.transparent = false;
+      material.alphaTest = 0.38;
+      material.depthWrite = true;
+    }
   });
   if (kind === 'wizard') {
     for (const name of ['rider-cape', 'rider-scarf', 'wandTip', 'broomTail']) {
@@ -20,7 +28,9 @@ function prepareTemplate(scene, kind) {
     }
   }
   scene.userData.asset = `/models/characters/${kind}.glb`;
-  scene.userData.assetSource = 'Original Blender geometry with embedded PBR textures';
+  scene.userData.assetSource = kind === 'wizard'
+    ? 'Original clothing and broom; CC0 Blender Studio anatomy, Cortu hair, and Poly Haven PBR'
+    : 'Original moon guardian geometry with Poly Haven CC0 PBR textures';
   return scene;
 }
 

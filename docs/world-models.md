@@ -4,7 +4,7 @@ The six architectural landmarks in `world/src/models.js` are original procedural
 
 ## Art direction and references
 
-The architecture uses aged grey-beige masonry, blue-grey slate, oxidized copper, worn timber, antique brass, recessed lancets, and restrained amber light. The academy has seven unequal towers, a tall keep, clerestory-scale windows, flying buttresses, corner quoins, cornices, dormers, roof courses, and a projecting gatehouse. The observatory uses a separate copper material instead of slate on its dome. The workshop mixes stone and timber around a copper pressure vessel. The ruins include a surviving open-arched cloister wall, broken coping, and uneven paving.
+The architecture uses aged grey-beige masonry, blue-grey slate, oxidized copper, worn timber, antique brass, recessed lancets, and restrained amber light. The enlarged academy has a square astronomical keep with an overhanging belfry, eight subordinate round towers, two perpendicular long wings, a recessed great hall, a paved open court, side cloisters, two roofed aerial galleries, curved flying buttresses, multi-lancet windows, and a genuinely open front gate. Its crown has roof lucarnes, corner pinnacles and projecting oriel bays. A chamfered raised rear terrace separates its levels without enclosing the foreground courtyard. The observatory uses a separate copper material instead of slate on its dome. The workshop mixes stone and timber around a copper pressure vessel. The ruins include a surviving open-arched cloister wall, broken coping, and uneven paving.
 
 The following primary references informed architectural density, plausible surface scale, weathering, and the distinction between load-bearing stone and metal/timber details. They were used as visual references, not as sources of reusable artwork:
 
@@ -54,13 +54,13 @@ Dimensions are **X × Y × Z**, measured from the final geometry. Mesh counts ar
 
 | Model | Dimensions | Meshes | Triangles |
 | --- | --- | ---: | ---: |
-| Castle | 34.00 × 49.33 × 22.95 | 19 | 233,238 |
+| Castle | 58.00 × 73.80 × 48.55 | 20 | 423,667 |
 | Observatory | 16.40 × 21.34 × 17.43 | 15 | 21,434 |
 | Library | 17.00 × 19.93 × 15.68 | 20 | 31,062 |
 | Workshop | 17.00 × 17.33 × 14.15 | 21 | 13,494 |
 | Owlery | 12.80 × 20.93 × 12.80 | 19 | 31,530 |
 | Ruins | 17.80 × 10.61 × 17.80 | 9 | 9,900 |
-| **Total** | — | **103** | **340,658** |
+| **Total** | — | **104** | **531,087** |
 
 ## Inspectable assets and reproduction
 
@@ -80,8 +80,19 @@ Produce independent Blender studio renders without opening an existing user scen
   castle library observatory workshop owlery ruins
 ```
 
-The render script creates separate `*-studio.png` and `*-studio.blend` files. Each blend file packs its textures and uses relative source/render paths so it can be moved to another machine. The blend files contain review lighting and a ground plane in addition to the asset; those studio objects are not part of the exported game GLBs. The live asset studio uses the runtime Three.js factories and PBR loader, so it remains the final check for browser lighting, texture loading, and actual performance. Offline renders are art-review evidence, not browser frame-rate evidence.
+The render script creates separate `*-studio.png` and `*-studio.blend` files. Each blend file packs its textures and uses relative source/render paths so it can be moved to another machine. The castle render additionally produces `castle-courtyard.png` and `castle-crown.png`; its saved blend retains the whole-asset studio camera. `castle-iteration-1.png` records the first render before the roof, gate, platform-corner and buttress refinements. The blend files contain review lighting and a ground plane in addition to the asset; those studio objects are not part of the exported game GLBs. The live asset studio uses the runtime Three.js factories and PBR loader, so it remains the final check for browser lighting, texture loading, and actual performance. Offline renders are art-review evidence, not browser frame-rate evidence.
 
 The individual render review caught and corrected three structural details: ivy now uses thin lobed leaves and stems instead of solid chunks; the owlery staircase now has a continuous handrail and supporting stringer that reaches the upper balcony; and the atelier chimney has a hollow throat with a four-piece coping instead of a solid dark cap. The ruin portal uses closely fitted curved voussoirs around a keystone instead of floating rectangular blocks.
 
 Final verification built all six factories in Node, checked finite positions, normals, UVs, ground bounds, and measured triangle counts, and exercised the explicit preload without a DOM. All six GLBs and studio PNGs returned HTTP 200 from the live development server, and every external GLB texture reference resolved to an existing relative file. All six Blender files were reopened and checked for packed images and relative texture/render paths. Every final studio PNG was visually inspected after the structural fixes above.
+
+
+## Enlarged castle: placement and collision contract
+
+The final castle extends from **(-29, 0, -23)** to **(29, 73.80, 25.55)** in local coordinates. The gatehouse lies around Z = 20; the main entrance approach is `(0, 1.1, 23.25)`, and its steps end at Z = 25.55. An external portkey at local Z = 36 leaves a clear approach. `group.userData.entrance` and `group.userData.courtyard` expose the entrance and open court rectangle, and the GLB manifest records them. World placement belongs to `locations.js`; no world position is baked into this model.
+
+`collision.js` now describes the castle with 185 convex structural proxies. Those proxies distinguish the great hall, low side wings, tapered roofs, belfry, gallery decks, arcade piers, and arch shoulders. The open court is not replaced by a whole-castle bounding box. The renderer never needs to raycast the 423,667 visible triangles for movement or camera collision. The existing pure collision API and rider/camera dimensions are unchanged.
+
+The collision suite now samples the new building using the current location offsets, checks wall sliding, low-wing overflight, tapered roof clearance, the gate and court, side cloister, and space beneath and within the sky gallery. An offline mesh raycast additionally verifies that the corrected camera segment stops before the actual new frontispiece, and that the open gate and fly-under route agree with real geometry. Randomized checks across 15,000 rider/camera samples found no unresolved overlaps or obstructed shortened segments; this is numerical verification rather than browser frame-rate evidence.
+
+The new reference was the user-supplied moonlit Gothic academy image. The first studio review identified an overly blank main roof, mismatched gate archivolts, straight flying braces and an overhanging rear plinth corner. The final pass added roof lucarnes and oriels, aligned the actual gate opening with its carved surrounds, replaced the upper braces with curved stone arches, and clipped the raised platform to its chamfered footprint. Material response remains based on the same documented CC0 masonry/slate/wood scans, with warm restrained emissive windows.

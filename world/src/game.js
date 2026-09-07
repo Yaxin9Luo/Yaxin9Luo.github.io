@@ -1,12 +1,13 @@
 import * as THREE from 'three';
 import { createWorld, terrainHeight } from './world.js';
 import { createWizard } from './characters.js';
-import { locations, ringPositions, spellDefinitions, spawn } from './locations.js';
+import { locations, ringPositions, spellDefinitions, spawn, worldBounds, bridges } from './locations.js';
 import { SAVE_KEY, clamp, damp, parseProgress, freshProgress, progressEvent, movementVector, segmentDistance, canCast } from './logic.js';
 import { WorldAudio } from './audio.js';
 import { createRendering } from './rendering.js';
 import {createShield} from './effects.js';
-import {createBuildingColliders,resolveRiderCollision,shortenCameraBoom} from './collision.js';
+import {cameraViews,tourStops} from './navigation.js';
+import {createBuildingColliders,createBridgeColliders,resolveRiderCollision,shortenCameraBoom} from './collision.js';
 
 const QUALITY = {
   high: { dpr: 1.6, minDpr: .85, shadows: true, mapSize: 2048 },
@@ -14,13 +15,15 @@ const QUALITY = {
   low: { dpr: 1, minDpr: .7, shadows: false, mapSize: 1024 },
 };
 const MOVEMENT_KEYS = new Set(['KeyW', 'KeyA', 'KeyS', 'KeyD', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ShiftLeft', 'ShiftRight', 'KeyR', 'KeyF', 'Space']);
-const ACTION_KEYS = new Set(['Digit1', 'Digit2', 'Digit3', 'KeyQ', 'KeyE']);
+const ACTION_KEYS = new Set(['Digit1', 'Digit2', 'Digit3', 'KeyQ', 'KeyE', 'KeyV']);
 const PARTICLE_COUNT = 280;
 const PROJECTILE_COUNT = 36;
 const Y_AXIS = new THREE.Vector3(0, 1, 0);
 const Z_AXIS = new THREE.Vector3(0, 0, 1);
 const TAU = Math.PI * 2;
-const BUILDING_COLLIDERS=createBuildingColliders(locations);
+const WATER_LEVEL = -15;
+const MIN_FLIGHT_ALTITUDE = WATER_LEVEL + 3.2; // Keep the rider above the lake, including under bridges.
+const BUILDING_COLLIDERS=createBuildingColliders(locations).concat(createBridgeColliders(bridges));
 const turnDelta = (from, to) => THREE.MathUtils.euclideanModulo(to - from + Math.PI, TAU) - Math.PI;
 const copyProgress = (p) => ({ ...p, visited: [...p.visited], crystals: [...p.crystals] });
 
@@ -44,7 +47,11 @@ export class Game {
     this.velocity = new THREE.Vector3();
     this.heading = .35;
     this.cameraYaw = .35;
-    this.cameraElevation = .39;
+    this.cameraElevation = cameraViews.follow.elevation;
+    this.cameraDistance = cameraViews.follow.distance;
+    this.cameraView = 'follow';
+    this._altitudeTarget = null;
+    this.tour = null;
     this.zoom = 1;
     this.zoomTarget = 1;
     this.nearest = null;
@@ -79,24 +86,24 @@ export class Game {
     this._projected = new THREE.Vector3();
     this._cameraGoal = new THREE.Vector3();
     this._lookGoal = new THREE.Vector3();
-    this._lookAt = new THREE.Vector3(1, 14, -18);
+    this._lookAt = new THREE.Vector3(-18,34,-25);
     this._castOrigin = new THREE.Vector3();
     this._raycaster = new THREE.Raycaster();
     this._pointerNDC = new THREE.Vector2();
     this._flightPlane = new THREE.Plane(Y_AXIS, -spawn.y);
     this.audio = new WorldAudio(this.options.sound);
     this.scene = new THREE.Scene();
-    this.scene.background = new THREE.Color('#78848a');
-    this.scene.fog = new THREE.FogExp2('#8a9699', .00215);
+    this.scene.background = new THREE.Color('#243f5c');
+    this.scene.fog = new THREE.FogExp2('#233f63', .0012);
     this.camera = new THREE.PerspectiveCamera(43, 1, .15, 1250);
-    this.camera.position.set(82, 49, 112);
+    this.camera.position.set(105,58,150);
     this.camera.lookAt(this._lookAt);
 
     try {
       this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false, powerPreference: 'high-performance' });
       this.renderer.outputColorSpace = THREE.SRGBColorSpace;
       this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
-      this.renderer.toneMappingExposure = 1.13;
+      this.renderer.toneMappingExposure = 1.23;
       this.renderer.shadowMap.type = THREE.PCFShadowMap;
       this.renderer.shadowMap.autoUpdate = false;
       this._lights();
@@ -122,19 +129,23 @@ export class Game {
   }
 
   _lights() {
-    this.scene.add(new THREE.HemisphereLight('#b4c0d1', '#55543e', 1.4));
-    this.keyLight = new THREE.DirectionalLight('#ffdfb0', 3.0);
-    this.keyLight.position.set(55, 105, 65);
+    this.scene.add(new THREE.HemisphereLight('#8cbfe7', '#45516d', 2.5));
+    this.keyLight = new THREE.DirectionalLight('#b8d8ff', 2.7);
+    this.keyLight.position.set(-45, 150, -115);
     this.keyLight.target.position.set(0, 3, -17);
     this.keyLight.castShadow = true;
-    Object.assign(this.keyLight.shadow.camera, { left: -100, right: 100, top: 105, bottom: -105, near: 1, far: 260 });
+    Object.assign(this.keyLight.shadow.camera, { left: -145, right: 145, top: 150, bottom: -150, near: 1, far: 400 });
     this.keyLight.shadow.bias = -.00015;
     this.keyLight.shadow.normalBias = .24;
     this.keyLight.shadow.radius = 2;
     this.scene.add(this.keyLight, this.keyLight.target);
-    const moonlight = new THREE.DirectionalLight('#a3c8e0', .92);
-    moonlight.position.set(-80, 60, -90);
+    const moonlight = new THREE.DirectionalLight('#ffe2be', 1.8);
+    moonlight.position.set(60, 80, 100);
     this.scene.add(moonlight);
+    // Warm reflected light at the inhabited facades, without lighting every lamp.
+    for(const [x,y,z,power] of [[0,20,0,220],[-70,13,18,75],[64,13,48,75]]){
+      const light=new THREE.PointLight('#ffb965',power,55,2);light.position.set(x,y,z);this.scene.add(light);
+    }
   }
 
   _createEffects() {
@@ -186,6 +197,7 @@ export class Game {
     this._listen(window, 'keydown', (event) => this._keyDown(event));
     this._listen(window, 'keyup', (event) => {
       this._keys.delete(event.code);
+      if (['Space','Enter'].includes(event.code) && event.target?.closest?.('button,a,summary,[role="button"]')) return;
       if (this.started && !this._isPaused() && MOVEMENT_KEYS.has(event.code) && !this._typing(event)) event.preventDefault();
     });
     this._listen(window, 'blur', () => { this._suspended = true; this._clearControls(); this.audio.setSuspended(true); });
@@ -204,7 +216,7 @@ export class Game {
     this._listen(this.canvas, 'wheel', (event) => {
       if (this._isPaused()) return;
       event.preventDefault();
-      this.zoomTarget = clamp(this.zoomTarget * Math.exp(event.deltaY * .00065), .6, 1.55);
+      this.zoomTarget = clamp(this.zoomTarget * Math.exp(event.deltaY * .00065), .6, 2.2);
     }, { passive: false });
     this._listen(this.canvas, 'webglcontextlost', (event) => {
       event.preventDefault();
@@ -230,6 +242,7 @@ export class Game {
   }
 
   _keyDown(event) {
+    if (['Space','Enter'].includes(event.code) && event.target?.closest?.('button,a,summary,[role="button"]')) return;
     if (!this.started || this._isPaused() || this._typing(event) || event.ctrlKey || event.metaKey || event.altKey || event.defaultPrevented) return;
     if (!MOVEMENT_KEYS.has(event.code) && !ACTION_KEYS.has(event.code)) return;
     event.preventDefault();
@@ -242,8 +255,10 @@ export class Game {
     if (event.repeat) return;
     if (event.code.startsWith('Digit')) this.selectSpell(Number(event.code.slice(-1)) - 1);
     else if (event.code === 'KeyQ') this.activateShield();
+    else if (event.code === 'KeyV') this.setCameraView(Object.keys(cameraViews)[(Object.keys(cameraViews).indexOf(this.cameraView)+1)%3]);
     else if (event.code === 'KeyE') {
-      if (this.nearest) this.callbacks.onInteract?.(this.nearest);
+      if (this.nearestPaper) this.callbacks.onExhibit?.(this.nearestPaper);
+      else if (this.nearest) this.callbacks.onInteract?.(this.nearest);
       else this._message('Approach a glowing gateway to open its research notebook.', '靠近发光的传送门，即可打开对应的研究笔记。', 'interact', 2);
     }
   }
@@ -267,7 +282,8 @@ export class Game {
     pointer.y = event.clientY;
     if (pointer.button === 2) {
       this.cameraYaw -= dx * .005;
-      this.cameraElevation = clamp(this.cameraElevation + dy * .004, .24, .98);
+      this.cameraElevation = clamp(this.cameraElevation + dy * .004, -.38, 1.43);
+      this.cameraView = 'custom';
     }
   }
 
@@ -279,9 +295,12 @@ export class Game {
     if (!rect.width || !rect.height) return;
     this._pointerNDC.set((event.clientX - rect.left) / rect.width * 2 - 1, -(event.clientY - rect.top) / rect.height * 2 + 1);
     this._raycaster.setFromCamera(this._pointerNDC, this.camera);
+    const exhibitHit=this._pickExhibit();
+    if(exhibitHit?.object.userData.paper){this.callbacks.onExhibit?.(exhibitHit.object.userData.paper);return;}
     this._flightPlane.constant = -this.position.y;
     if (this._raycaster.ray.intersectPlane(this._flightPlane, this._scratch)) {
-      this._destination = new THREE.Vector3(clamp(this._scratch.x, -105, 105), this.position.y, clamp(this._scratch.z, -99, 99));
+      if (this.tour) this.endTour();
+      this._destination = new THREE.Vector3(clamp(this._scratch.x, -worldBounds.x+3, worldBounds.x-3), this.position.y, clamp(this._scratch.z, -worldBounds.z+3, worldBounds.z-3));
       this._destinationMesh.position.copy(this._destination);
       this._destinationMesh.position.y = Math.max(terrainHeight(this._destination.x, this._destination.z) + .3, 0);
       this._destinationMesh.visible = true;
@@ -290,6 +309,13 @@ export class Game {
 
   _isPaused() { return this.paused || this._suspended || this._contextLost; }
 
+  _pickExhibit() {
+    const hit=this._raycaster.intersectObjects((this.world.exhibits||[]).map(e=>e.group),true).find(h=>h.distance<80);
+    if(!hit)return null;
+    const blocker=this._raycaster.intersectObjects(this.world.occluders||[],true)[0];
+    return blocker&&blocker.distance<hit.distance-.05?null:hit;
+  }
+
   _clearControls() {
     this._keys.clear();
     this._touch.x = 0;
@@ -297,6 +323,7 @@ export class Game {
     for (const key of Object.keys(this._controls)) this._controls[key] = false;
     this._pointer = null;
     this._destination = null;
+    this._altitudeTarget = null;
     if (this._destinationMesh) this._destinationMesh.visible = false;
     this.velocity.set(0, 0, 0);
   }
@@ -351,6 +378,7 @@ export class Game {
     this.audio.setSuspended(this._suspended);
     this.audio.unlock();
     this._clearControls();
+    this.tour = null;
     this._endRace();
     this._combat = false;
     this._teleport(location.x, location.y + 6, location.z + location.radius + 5);
@@ -397,6 +425,58 @@ export class Game {
     this._controls[name] = true;
     this.audio.unlock();
     if (name === 'fire') this.cast();
+  }
+
+  changeAltitude(delta) {
+    if (!this.started || this._isPaused() || !Number.isFinite(delta)) return false;
+    this.tour = null;
+    const floor=Math.max(terrainHeight(this.position.x,this.position.z)+3.2,MIN_FLIGHT_ALTITUDE);
+    this._altitudeTarget=clamp((this._altitudeTarget??this.position.y)+delta,floor,worldBounds.ceiling);
+    this._emitFrame();
+    return true;
+  }
+
+  setCameraView(view) {
+    const preset=cameraViews[view];
+    if (!preset) return false;
+    this.tour=null;
+    this.cameraView=view;
+    if(view==='overlook')this.cameraYaw=Math.atan2(140,195);
+    this.cameraElevation=preset.elevation;
+    this.cameraDistance=preset.distance;
+    this.zoomTarget=1;
+    this._emitFrame();
+    return true;
+  }
+
+  tourStop(index=0) {
+    if (!Number.isInteger(index) || !tourStops[index] || this._disposed) return false;
+    this.start();
+    this._clearControls();
+    this._endRace();
+    this._combat=false;
+    const stop=tourStops[index],landmark=locations[index];
+    this.cameraYaw=Math.atan2(stop.position[0]-landmark.x,stop.position[2]-landmark.z);
+    this.heading=this.cameraYaw;
+    this.setCameraView('follow');
+    this.tour={index};
+    this.cameraElevation=.18;
+    this._teleport(...stop.position);
+    this._commit({type:'visit',id:stop.id});
+    this._emitFrame();
+    return true;
+  }
+
+  endTour() {this.tour=null;this.setCameraView('follow');}
+
+  releaseLantern() {
+    if(!this.started||this._isPaused())return false;
+    if(this.world.releaseLantern?.(this.position)){
+      this.audio.unlock();this.audio.play('ring');
+      this._message('A little light, on its way.', '一盏灯，慢慢飞向夜空。','lantern',3);
+      return true;
+    }
+    return false;
   }
 
   selectSpell(index) {
@@ -454,6 +534,8 @@ export class Game {
     this.audio.setSuspended(this._suspended);
     this.audio.unlock();
     this._clearControls();
+    this.tour = null;
+    this.setCameraView('follow');
     this._combat = false;
     const first = ringPositions[0];
     const next = ringPositions[1];
@@ -572,8 +654,9 @@ export class Game {
     let x = this._touch.x + Number(this._keys.has('KeyD') || this._keys.has('ArrowRight')) - Number(this._keys.has('KeyA') || this._keys.has('ArrowLeft'));
     let z = this._touch.z + Number(this._keys.has('KeyS') || this._keys.has('ArrowDown')) - Number(this._keys.has('KeyW') || this._keys.has('ArrowUp'));
     const manual = Math.hypot(x, z) > .03;
+    if (manual && this.tour) this.tour = null;
     const boost = this._controls.boost || this._keys.has('ShiftLeft') || this._keys.has('ShiftRight');
-    let speed = boost ? 31 : 17;
+    let speed = boost ? 42 : 23;
     let direction = movementVector(x, z, this.cameraYaw);
     if (manual) { this._destination = null; this._destinationMesh.visible = false; }
     else if (this._destination) {
@@ -586,20 +669,25 @@ export class Game {
     }
     const up = this._controls.up || this._keys.has('KeyR');
     const down = this._controls.down || this._keys.has('KeyF');
-    let vertical = (Number(up) - Number(down)) * (boost ? 14 : 10);
-    if (!up && !down && this.race) {
+    if (up || down) { this._altitudeTarget = null; this.tour = null; }
+    let vertical = (Number(up) - Number(down)) * (boost ? 23 : 16);
+    if (!up && !down && Number.isFinite(this._altitudeTarget)) {
+      vertical = clamp((this._altitudeTarget-this.position.y)*2.1,-16,16);
+      if(Math.abs(this._altitudeTarget-this.position.y)<.08){this.position.y=this._altitudeTarget;this.velocity.y=0;vertical=0;this._altitudeTarget=null;}
+    }
+    if (!up && !down && this._altitudeTarget == null && this.race) {
       const ring = ringPositions[this.race.index];
-      if (ring && Math.hypot(ring[0] - this.position.x, ring[2] - this.position.z) < 24) vertical = clamp((ring[1] - this.position.y) * 1.3, -6, 6);
+      if (ring && Math.hypot(ring[0] - this.position.x, ring[2] - this.position.z) < 55) vertical = clamp((ring[1] - this.position.y) * 1.5, -18, 18);
     }
     this.velocity.x = damp(this.velocity.x, direction.x * speed, 4.2, dt);
     this.velocity.z = damp(this.velocity.z, direction.z * speed, 4.2, dt);
     this.velocity.y = damp(this.velocity.y, vertical, 5, dt);
     this.position.addScaledVector(this.velocity, dt);
-    this.position.x = clamp(this.position.x, -108, 108);
-    this.position.z = clamp(this.position.z, -102, 102);
-    const floor = Math.max(terrainHeight(this.position.x, this.position.z) + 3.2, 2.7);
-    this.position.y = clamp(this.position.y, floor, 58);
-    if ((this.position.y <= floor && this.velocity.y < 0) || (this.position.y >= 58 && this.velocity.y > 0)) this.velocity.y = 0;
+    this.position.x = clamp(this.position.x, -worldBounds.x, worldBounds.x);
+    this.position.z = clamp(this.position.z, -worldBounds.z, worldBounds.z);
+    const floor = Math.max(terrainHeight(this.position.x, this.position.z) + 3.2, MIN_FLIGHT_ALTITUDE);
+    this.position.y = clamp(this.position.y, floor, worldBounds.ceiling);
+    if ((this.position.y <= floor && this.velocity.y < 0) || (this.position.y >= worldBounds.ceiling && this.velocity.y > 0)) this.velocity.y = 0;
     this._avoidBuildings();
     const horizontalSpeed = Math.hypot(this.velocity.x, this.velocity.z);
     if (horizontalSpeed > .35) {
@@ -641,17 +729,22 @@ export class Game {
   _updateCamera(dt, immediate = false) {
     this.zoom = damp(this.zoom, this.zoomTarget, 7, dt);
     if (!this.started) {
-      const radius = Math.hypot(82, 112) * this.zoom;
-      const yaw = Math.atan2(82, 112) + this.cameraYaw - .35;
-      this._cameraGoal.set(Math.sin(yaw) * radius, 49 * this.zoom, Math.cos(yaw) * radius);
-      this._lookGoal.set(1, 14, -18);
+      const radius = Math.hypot(105,150) * this.zoom;
+      const yaw = Math.atan2(105,150) + this.cameraYaw - .35;
+      this._cameraGoal.set(Math.sin(yaw) * radius, 58 * this.zoom, Math.cos(yaw) * radius);
+      this._lookGoal.set(-18,34,-25);
+    } else if(this.cameraView==='overlook'&&!this.tour){
+      this._cameraGoal.set(140*this.zoom,175*this.zoom,195*this.zoom);
+      this._lookGoal.set(0,16,0);
     } else {
-      const distance = 16 * this.zoom;
+      const portraitTourOffset = this.tour && this.camera.aspect < .8 ? 35 : 0;
+      const distance = ((this.cameraDistance || 17) + portraitTourOffset) * this.zoom;
       const horizontal = Math.cos(this.cameraElevation) * distance;
       this._cameraGoal.set(this.position.x + Math.sin(this.cameraYaw) * horizontal, this.position.y + Math.sin(this.cameraElevation) * distance, this.position.z + Math.cos(this.cameraYaw) * horizontal);
-      this._cameraGoal.y = Math.max(this._cameraGoal.y, terrainHeight(this._cameraGoal.x, this._cameraGoal.z) + 7);
+      this._cameraGoal.y = Math.max(this._cameraGoal.y, terrainHeight(this._cameraGoal.x, this._cameraGoal.z) + 2.3, WATER_LEVEL + .8);
       this._lookGoal.copy(this.position).addScaledVector(this.velocity, .23);
       this._lookGoal.y += 1.3;
+      if(this.tour){const stop=locations[this.tour.index];this._lookGoal.set(stop.x,stop.y+stop.height*.52,stop.z);}
       if (this._hitShake > 0 && !this.options.reducedMotion) this._cameraGoal.x += Math.sin(this._time * 70) * this._hitShake * .45;
       this._scratch.copy(this.position).addScaledVector(Y_AXIS,1.3);
       this._cameraGoal.copy(shortenCameraBoom(this._scratch,this._cameraGoal,BUILDING_COLLIDERS).position);
@@ -660,7 +753,7 @@ export class Game {
     this.camera.position.lerp(this._cameraGoal, follow);
     // Contract the boom immediately at an obstruction; recovering outward still
     // uses the normal smooth follow. The rider is the stable ray origin.
-    if(this.started){
+    if(this.started&&(this.cameraView!=='overlook'||this.tour)){
       this._scratch.copy(this.position).addScaledVector(Y_AXIS,1.3);
       this.camera.position.copy(shortenCameraBoom(this._scratch,this.camera.position,BUILDING_COLLIDERS).position);
     }
@@ -825,6 +918,10 @@ export class Game {
   }
 
   _updateInteractions() {
+    this.nearestPaper=null;
+    for(const exhibit of this.world.exhibits||[]){
+      if(this.position.distanceTo(this._scratch.copy(exhibit.group.position).addScaledVector(Y_AXIS,4.25))<10){this.nearestPaper=exhibit.id;break;}
+    }
     this.nearest = null;
     let nearestDistance = 12;
     for (const portal of this.world.portals) {
@@ -944,16 +1041,16 @@ export class Game {
   _emitFrame() {
     if (this._disposed || !this.renderer || !this.callbacks.onFrame) return;
     this._lastSnapshot = this._time;
-    const labelHeights = [54, 24, 18, 28, 18, 33];
     const landmarks = locations.map((location, index) => {
-      this._projected.set(location.x, location.y + labelHeights[index], location.z).project(this.camera);
+      this._projected.set(location.x, location.y + location.height, location.z).project(this.camera);
       return { id: location.id, x: (this._projected.x + 1) / 2, y: (1 - this._projected.y) / 2, visible: this._projected.z > -1 && this._projected.z < 1 && Math.abs(this._projected.x) < 1 && Math.abs(this._projected.y) < 1 };
     });
     this.callbacks.onFrame({
+      cameraView: this.cameraView, altitudeTarget:this._altitudeTarget, tour:this.tour ? {...this.tour} : null,
       started: this.started, paused: this._isPaused(), mana: this.mana, health: this.health,
       spell: this.spell, shield: this.shield, cooldown: this.cooldown,
       position: { x: this.position.x, y: this.position.y, z: this.position.z },
-      nearest: this.started ? this.nearest : null, progress: copyProgress(this.progress),
+      nearest: this.started ? this.nearest : null, nearestPaper:this.started?this.nearestPaper:null, progress: copyProgress(this.progress),
       race: this.race ? { ...this.race } : null, speed: Math.hypot(this.velocity.x, this.velocity.z),
       fps: Math.round(this.fps), drawCalls: this.renderer.info.render.calls, triangles: this.renderer.info.render.triangles,
       target: this._target ? `wisp-${this._target.id}` : null, quality: this.options.quality, landmarks,

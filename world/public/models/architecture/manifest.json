@@ -1,5 +1,5 @@
 {
-  "version": 3,
+  "version": 4,
   "provenance": "Original procedural architecture; CC0 source surfaces listed in ../../textures/manifest.json",
   "runtime": "world/src/models.js",
   "textures": "External shared WebP PBR images using EXT_texture_webp",
@@ -8,23 +8,34 @@
       "id": "castle",
       "factory": "createCastle",
       "file": "castle.glb",
-      "triangles": 233238,
-      "meshes": 19,
-      "bytes": 22415412,
+      "triangles": 423667,
+      "meshes": 20,
+      "bytes": 40698440,
       "bounds": {
         "min": [
-          -17,
-          -5.9604645663569045e-9,
-          -11.500160217285156
+          -29,
+          -1.907348590179936e-8,
+          -23
         ],
         "max": [
-          17,
-          49.33000183105469,
-          11.449999809265137
+          29,
+          73.80000305175781,
+          25.549999237060547
         ]
       },
       "front": "+Z",
-      "units": "metres"
+      "units": "metres",
+      "entrance": {
+        "x": 0,
+        "y": 1.1,
+        "z": 23.25
+      },
+      "courtyard": {
+        "minX": -10.5,
+        "maxX": 10.5,
+        "minZ": 7.7,
+        "maxZ": 18.4
+      }
     },
     {
       "id": "library",

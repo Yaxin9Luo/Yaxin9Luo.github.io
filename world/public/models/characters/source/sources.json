@@ -1,0 +1,42 @@
+{
+  "sources": [
+    {
+      "asset": "Realistic Head Animation",
+      "author": "Dan Ulrich / Blender Studio",
+      "license": "CC0-1.0",
+      "licenseEvidence": "https://www.blender.org/download/demo-files/",
+      "download": "https://ftp.nluug.nl/pub/graphics/blender/demo/asset-bundles/human-base-meshes/human-base-meshes-bundle-v1.4.1.zip",
+      "changes": "Extracted head, sclera and iris only; applied bundled Multires scan detail in Blender. Runtime build refits and trims neck, adds skin colors and ocular materials."
+    },
+    {
+      "asset": "short_messy",
+      "author": "Cortu Johnstone",
+      "license": "CC0-1.0",
+      "licenseEvidence": "https://static.makehumancommunity.org/assets/assetpacks/hair01.html",
+      "download": "http://files2.makehumancommunity.org/asset_packs/hair01/hair01_cc0.zip",
+      "changes": "Refitted original hair card topology and albedo to the researcher; tinted dark chestnut; no source object-space normal map used."
+    }
+  ],
+  "files": [
+    {
+      "file": "blender-studio-head-cc0.blend",
+      "bytes": 712626,
+      "sha256": "9b1cd21116a5961145035008524de8fe85c726ed34c58843a76316b66a424bc6"
+    },
+    {
+      "file": "cortu-short-messy-hair/short_messy.mhmat",
+      "bytes": 854,
+      "sha256": "28e4ba6df3f1af7a3b68ffde131509be4add84f397409d26b8fc6f8d6efd475d"
+    },
+    {
+      "file": "cortu-short-messy-hair/short_messy.obj",
+      "bytes": 52093,
+      "sha256": "d6dd3d11d44424e8dcd63d98b15763f1c3bb754be8eb02a527ec5f04724a54b1"
+    },
+    {
+      "file": "cortu-short-messy-hair/short_messy_diff.png",
+      "bytes": 530185,
+      "sha256": "ddf92030eeefe80fdc12703ef44624ba4dd690f458042def549f2853b0daa0dc"
+    }
+  ]
+}

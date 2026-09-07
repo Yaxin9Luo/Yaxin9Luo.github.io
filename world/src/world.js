@@ -1,29 +1,34 @@
 import * as THREE from 'three';
 import {createPortal} from './effects.js';
-import {locations,ringPositions,crystalPositions,wispPositions} from './locations.js';
+import {createAtmosphere} from './atmosphere.js';
+import {locations,ringPositions,crystalPositions,wispPositions,islands,bridges,court,exhibitSites} from './locations.js';
 import {noise as coherentNoise,fbm,surface,planarUV,groundMaterial,createLake,createVegetation,createBackdrop} from './landscape.js';
 import {createCastle,createObservatory,createLibrary,createWorkshop,createOwlery,createRuins} from './models.js';
 import {createWisp} from './characters.js';
+import {createViaduct,createGardenLamp,createResearchBook,createLampGroundGlow} from './site-details.js';
 
 let seed=131;
 function random(){seed=(Math.imul(seed,1664525)+1013904223)|0;return (seed>>>0)/4294967296;}
 const mat=(color,extra={})=>new THREE.MeshStandardMaterial({color,roughness:.87,...extra});
-const islands=[{x:0,z:10,rx:72,rz:62,y:3.8},{x:-48,z:-49,rx:23,rz:23,y:4},{x:45,z:-45,rx:24,rz:23,y:4}];
 const TERRAIN_STEP=1.1;
-const bridges={research:[[-35,-25],[-45,-37]],contact:[[31,-24],[42,-33]]};
 function edgeShape(a){return .94+.10*Math.sin(a*3+.7)+.055*Math.cos(a*7)+.045*coherentNoise(Math.sin(a)*8,Math.cos(a)*8);}
+const channels=Object.values(bridges).map(([a,b])=>{const length=Math.hypot(b[0]-a[0],b[1]-a[1]);return{x:(a[0]+b[0])/2,z:(a[1]+b[1])/2,dx:(b[0]-a[0])/length,dz:(b[1]-a[1])/length,width:length/2-4.8};});
+function channelField(x,z){return Math.min(...channels.map(c=>{const cross=(x-c.x)*c.dz-(z-c.z)*c.dx,along=(x-c.x)*c.dx+(z-c.z)*c.dz-Math.sin(cross*.07)*3-Math.sin(cross*.19)*.7;return Math.max(Math.abs(along)/(c.width*(1+Math.sin(cross*.1)*.15))-1,Math.abs(cross)/100-1);}));}
+function shoreField(x,z){return Math.min(channelField(x,z),Math.max(...islands.map(i=>{const u=(x-i.x)/i.rx,v=(z-i.z)/i.rz;return 1-Math.hypot(u,v)/edgeShape(Math.atan2(v,u));})));}
 export function terrainHeight(x,z){
+  if(channelField(x,z)<0)return -22;
   let h=-22;
   for(const i of islands){
     const u=(x-i.x)/i.rx,v=(z-i.z)/i.rz,a=Math.atan2(v,u),r=Math.hypot(u,v)/edgeShape(a);
     if(r<1) h=Math.max(h,i.y+(fbm(x*.065+5,z*.065)-.48)*7-Math.max(0,r-.83)*14);
   }
-  for(const l of locations){const d=Math.hypot(x-l.x,z-l.z);if(d<l.radius+3)h=THREE.MathUtils.lerp(l.y,h,THREE.MathUtils.smoothstep(d,l.radius,l.radius+3));}
+  for(const l of locations){const d=Math.hypot(x-l.x,z-l.z);if(d<l.radius+8)h=THREE.MathUtils.lerp(l.y,h,THREE.MathUtils.smoothstep(d,l.radius,l.radius+8));}
   // Grade each gate's approach with a soft shoulder instead of suspending its
   // stone plinth over the unmodified hillside.
-  for(const l of locations){const d=Math.max(Math.abs(x-l.x)/4.6,Math.abs(z-l.z-l.radius-3)/3);if(d<1.8)h=THREE.MathUtils.lerp(l.y,h,THREE.MathUtils.smoothstep(d,1,1.8));}
-  for(const ends of Object.values(bridges))for(const [bx,bz] of ends){const d=Math.hypot(x-bx,z-bz);if(d<7)h=THREE.MathUtils.lerp(4,h,THREE.MathUtils.smoothstep(d,4.3,7));}
-  const court=Math.hypot(x*.88,z-22);if(court<14)h=THREE.MathUtils.lerp(4,h,THREE.MathUtils.smoothstep(court,7,14));
+  for(const l of locations){const d=Math.max(Math.abs(x-l.x)/4.6,Math.abs(z-l.z-l.radius-3)/3);if(d<3)h=THREE.MathUtils.lerp(l.y,h,THREE.MathUtils.smoothstep(d,1,3));}
+  for(const ends of Object.values(bridges))for(const [bx,bz] of ends){const d=Math.hypot(x-bx,z-bz);if(d<7)h=THREE.MathUtils.lerp(7,h,THREE.MathUtils.smoothstep(d,4.3,7));}
+  const courtDistance=Math.hypot(x*.88,z-court.z);if(courtDistance<18)h=THREE.MathUtils.lerp(court.y,h,THREE.MathUtils.smoothstep(courtDistance,9,18));
+  for(const e of exhibitSites){const d=Math.hypot(x-e.x,z-e.z);if(d<5)h=THREE.MathUtils.lerp(e.y,h,THREE.MathUtils.smoothstep(d,2.7,5));}
   return h;
 }
 
@@ -41,10 +46,6 @@ export function renderedTerrainHeight(x,z){
 // by the cliff shells, so neither overlapping ground nor open shoreline seams remain.
 function islandGeometry(){
   const step=TERRAIN_STEP,positions=[],colors=[],indices=[],shore=[],vertices=new Map(),cuts=new Map();
-  const shoreField=(x,z)=>Math.max(...islands.map(i=>{
-    const u=(x-i.x)/i.rx,v=(z-i.z)/i.rz;
-    return 1-Math.hypot(u,v)/edgeShape(Math.atan2(v,u));
-  }));
   const minX=Math.floor(Math.min(...islands.map(i=>i.x-i.rx*1.08))/step)*step;
   const maxX=Math.ceil(Math.max(...islands.map(i=>i.x+i.rx*1.08))/step)*step;
   const minZ=Math.floor(Math.min(...islands.map(i=>i.z-i.rz*1.08))/step)*step;
@@ -139,12 +140,13 @@ export function createWorld(scene){
   const terrain=islandGeometry();
   const ground=mesh(terrain.ground,groundMaterial());ground.name='island-ground';
   const cliffs=mesh(terrain.cliffs,surface('mossy-rock',{vertexColors:true,color:'#b8b6ab'}));cliffs.name='shoreline-cliffs';
+  const occluders=[ground,cliffs];
   // Retain the existing seeded tree/rock/lantern distribution after replacing
   // the old 23×97 polar samples and 96×3×6 cliff samples per island.
   for(let i=0;i<islands.length*(23*97+96*3*6);i++)random();
   const lake=createLake(root,scene);
   const makers=[createCastle,createLibrary,createWorkshop,createObservatory,createRuins,createOwlery];
-  locations.forEach((l,i)=>{const m=makers[i]();m.position.set(l.x,l.y,l.z);root.add(m);
+  locations.forEach((l,i)=>{const m=makers[i]();m.position.set(l.x,l.y,l.z);root.add(m);occluders.push(m);
     // Portals sit at the approach to each building and also serve as map destinations.
     const portal=createPortal(l.color);portal.position.set(l.x,l.y+3.1,l.z+l.radius+3);root.add(portal);
     box(0,-3.05,0,7,.3,3,stone,portal);
@@ -157,12 +159,12 @@ export function createWorld(scene){
   for(const l of locations){
     const gate=new THREE.Vector3(l.x,0,l.z+l.radius+3),ends=bridges[l.id];
     const p=ends?new THREE.Vector3(ends[0][0],0,ends[0][1]):gate;
-    const curves=[new THREE.CatmullRomCurve3([new THREE.Vector3(1,0,21),new THREE.Vector3(p.x*.45+7,0,23+p.z*.12),p])];
+    const curves=[new THREE.CatmullRomCurve3([new THREE.Vector3(1,0,court.z),new THREE.Vector3(p.x*.45+10,0,court.z+p.z*.12),p])];
     if(ends)curves.push(new THREE.LineCurve3(new THREE.Vector3(ends[1][0],0,ends[1][1]),gate));
     for(const curve of curves){
-    const points=curve.getPoints(Math.ceil(curve.getLength()/.3));paths.push(points);
+    const points=curve.getPoints(Math.ceil(curve.getLength()/.18));paths.push(points);
     const pos=[],idx=[];
-    const width=l.id==='about'?3.2:2,across=Math.ceil(width*2/.4),stride=across+1;
+    const width=l.id==='about'?3.2:2,across=Math.ceil(width*2/.22),stride=across+1;
     points.forEach((v,k)=>{const next=points[Math.min(k+1,points.length-1)],prev=points[Math.max(k-1,0)];const dir=new THREE.Vector3().subVectors(next,prev).normalize();
       for(let side=0;side<=across;side++){const offset=(side/across*2-1)*width,x=v.x+dir.z*offset,z=v.z-dir.x*offset;pos.push(x,renderedTerrainHeight(x,z)+.075,z);}
       if(k<points.length-1)for(let side=0;side<across;side++){const j=k*stride+side;idx.push(j,j+1,j+stride,j+1,j+stride+1,j+stride);}
@@ -172,22 +174,28 @@ export function createWorld(scene){
   }
   const nearPath=(x,z)=>paths.some(p=>p.some((v,i)=>i%3===0&&Math.hypot(v.x-x,v.z-z)<3.7));
   function bridge(ax,az,bx,bz){
-    const length=Math.hypot(bx-ax,bz-az),group=new THREE.Group();group.position.set((ax+bx)/2,3.6,(az+bz)/2);group.rotation.y=Math.atan2(bx-ax,bz-az);root.add(group);
-    box(0,0,0,6,.85,length,stone,group);box(-3,.6,0,.4,.75,length,edge,group);box(3,.6,0,.4,.75,length,edge,group);
-    const count=Math.ceil(length/6);
-    for(let i=0;i<count;i++){const z=-length/2+i*length/(count-1);box(-2.5,-3.2,z,.9,6,.95,stone,group);box(2.5,-3.2,z,.9,6,.95,stone,group);box(-3,1.25,z,.8,.65,.8,stone,group);box(3,1.25,z,.8,.65,.8,stone,group);}
+    const group=createViaduct(Math.hypot(bx-ax,bz-az));group.position.set((ax+bx)/2,6.82,(az+bz)/2);group.rotation.y=Math.atan2(bx-ax,bz-az);root.add(group);occluders.push(group);
   }
   for(const [[ax,az],[bx,bz]] of Object.values(bridges))bridge(ax,az,bx,bz);
   // Central astrolabe fountain.
-  const fountain=new THREE.Group();fountain.position.set(0,terrainHeight(0,22),22);root.add(fountain);
+  const fountain=new THREE.Group();fountain.position.set(0,court.y,court.z);root.add(fountain);
   for(const [r,h,y] of [[5,.4,.1],[4.2,.7,.5],[1.2,2.8,1.4]]){const m=mesh(new THREE.CylinderGeometry(r,r,h,32),stone,fountain);m.position.y=y;}
   const pool=mesh(new THREE.CylinderGeometry(3.9,3.9,.1,48),mat('#294943',{metalness:0,roughness:.42}),fountain);pool.position.y=.9;
   const sphere=mesh(new THREE.IcosahedronGeometry(1.35,2),brass,fountain);sphere.position.y=4.6;
   for(let i=0;i<3;i++){const torus=mesh(new THREE.TorusGeometry(2,.055,6,64),brass,fountain);torus.position.y=4.6;torus.rotation.set(i*.8,i*.6,.8);animated.push({type:'orb',mesh:torus});}
 
+  // Hand-worked lamps along the paths. Instance each material across the grounds.
+  const lamp=createGardenLamp(),lampSites=[];
+  for(const path of paths)for(let n=18;n<path.length-4;n+=80){const p=path[n],next=path[n+1],direction=new THREE.Vector3().subVectors(next,p).normalize();for(const side of[-1,1]){const x=p.x+direction.z*4.7*side,z=p.z-direction.x*4.7*side;lampSites.push([x,renderedTerrainHeight(x,z),z]);}}
+  const matrix=new THREE.Matrix4();
+  lamp.children.forEach(part=>{const instances=new THREE.InstancedMesh(part.geometry,part.material,lampSites.length);lampSites.forEach((p,i)=>{matrix.makeTranslation(...p);instances.setMatrixAt(i,matrix);});instances.castShadow=false;instances.receiveShadow=true;root.add(instances);});
+  root.add(createLampGroundGlow([...lampSites,...locations.map(l=>[l.x,l.y,l.z+l.radius+3,6])],renderedTerrainHeight));
+  const exhibits=exhibitSites.map(({id,x,z,color})=>{const group=createResearchBook(id,color);group.position.set(x,terrainHeight(x,z),z);group.rotation.y=-.24;root.add(group);return {id,group};});
+
   const vegetation=createVegetation(root,terrainHeight,nearPath);
   root.userData.vegetation=vegetation;
   createBackdrop(root,scene);
+  const atmosphere=createAtmosphere(scene,{heightAt:terrainHeight});
 
   ringPositions.forEach((p,i)=>{const group=new THREE.Group();group.position.fromArray(p);const next=ringPositions[(i+1)%ringPositions.length];group.lookAt(new THREE.Vector3(...next));root.add(group);
     const material=new THREE.MeshBasicMaterial({color:i===0?'#ffe3a6':'#d9b676',transparent:true,opacity:i===0?1:.4,toneMapped:false});
@@ -209,11 +217,13 @@ export function createWorld(scene){
   const birds=[];
   const bg=new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-.8,0,.2),new THREE.Vector3(0,0,0),new THREE.Vector3(.8,0,.2)]);
   for(let i=0;i<12;i++){const bird=new THREE.Line(bg,new THREE.LineBasicMaterial({color:'#111f24'}));root.add(bird);birds.push(bird);}
-  return {root,portals,ringMeshes,crystals,wisps,
+  return {root,portals,ringMeshes,crystals,wisps,exhibits,occluders,releaseLantern:position=>atmosphere.releaseLantern(position),
     update(time,dt,reducedMotion=false){
       lake.update(time,reducedMotion);
+      atmosphere.update(time,dt,reducedMotion);
       if(reducedMotion)return;
       animated.forEach(a=>{if(a.type==='portal'){a.group.userData.update(time,reducedMotion);}else a.mesh.rotation.y=time*.15;});
+      exhibits.forEach((e,i)=>{e.group.userData.book.position.y=4.25+Math.sin(time*1.4+i)*.25;e.group.userData.book.rotation.y=Math.sin(time*.3+i)*.12;});
       crystals.forEach(c=>{c.group.rotation.y=time*.6;c.group.position.y=c.baseY+Math.sin(time*1.6+c.id)*.25;});
       lanterns.forEach(l=>l.mesh.position.y=l.base+Math.sin(time*.5+l.phase)*.5);
       sparks.rotation.y=time*.006;

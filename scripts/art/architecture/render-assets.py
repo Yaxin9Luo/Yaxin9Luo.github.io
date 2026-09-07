@@ -79,6 +79,22 @@ for name in NAMES:
     scene.view_settings.view_transform = "AgX"
     scene.render.filepath = str(OUTPUT / f"{name}-studio.png")
     bpy.ops.render.render(write_still=True)
+    if name == "castle":
+        saved_location = camera.location.copy()
+        saved_rotation = camera.rotation_euler.copy()
+        saved_scale = camera.data.ortho_scale
+        for view, location, target, scale in [
+            ("courtyard", (34, -66, 39), (0, -5, 16), 59),
+            ("crown", (26, -34, 69), (-4, 13, 54), 43),
+        ]:
+            camera.location = location
+            camera.data.ortho_scale = scale
+            aim(camera, target)
+            scene.render.filepath = str(OUTPUT / f"castle-{view}.png")
+            bpy.ops.render.render(write_still=True)
+        camera.location = saved_location
+        camera.rotation_euler = saved_rotation
+        camera.data.ortho_scale = saved_scale
     # Studio .blend contains the inspectable asset, camera, and reproducible lighting.
     bpy.ops.file.pack_all()
     for image in bpy.data.images:

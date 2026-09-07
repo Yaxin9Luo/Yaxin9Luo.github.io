@@ -7,9 +7,18 @@ import {OutputPass} from 'three/addons/postprocessing/OutputPass.js';
 import * as models from './models.js';
 import {loadCharacterAssets,createWizard,createWisp} from './characters.js';
 import {loadLandscapeAssets,createTreeSpecimen,surface,planarUV} from './landscape.js';
+import {createSkyLantern} from './atmosphere.js';
 import {createPortal,createShield} from './effects.js';
+import {createViaduct,createGardenLamp,createResearchBook} from './site-details.js';
 import {createTerrainSpecimen} from './world.js';
 const assets=[
+ ['sky-lantern','Sky Lantern / 孔明灯',createSkyLantern,'Translucent rice paper, bamboo seams, an open rim and a sheltered flame.'],
+ ['lilac','Lilac / 紫花树',()=>createTreeSpecimen('lilac'),'Arching branches and layered, softly lit flower clusters.'],
+ ['cherry','Cherry / 樱花树',()=>createTreeSpecimen('cherry'),'Warm pink blossoms on a low, spreading silhouette.'],
+ ['silver','Silver Tree / 银蓝树',()=>createTreeSpecimen('silver'),'Cool foliage and open branching that leaves room for the architecture.'],
+ ['bridge','Viaduct / 拱券桥',()=>createViaduct(26),'Cut-through stone arches, balustrades and supporting piers.'],
+ ['book','Research Book / 研究书页',()=>createResearchBook('autodesign'),'Curved paper, bound covers and gilt corners. Click a book in the world to read its paper.'],
+ ['garden-lamp','Garden Lantern / 庭院灯',createGardenLamp,'Worked bronze ribs and warm glass, instanced along the paths.'],
  ['terrain','Terrain / 地形',createTerrainSpecimen,'Continuous island mesh, eroded cliff strata, real rock and meadow PBR surfaces.'],
  ['castle','Grand Academy / 主城堡',models.createCastle,'Weathered ashlar, recessed Gothic tracery, flying buttresses and layered slate roofs.'],
  ['library','Library / 图书馆',models.createLibrary,'Tall reading hall, stone mullions and carved masonry.'],
@@ -39,7 +48,7 @@ document.querySelector('#rotate').setAttribute('aria-pressed',String(controls.au
 document.querySelector('aside').append(document.querySelector('.caption'));
 const buttons=document.querySelector('#assets');assets.forEach(([id,name])=>{const b=document.createElement('button');b.textContent=name;b.dataset.asset=id;b.addEventListener('click',()=>show(id));buttons.insertBefore(b,document.querySelector('.caption'));});
 function show(id){const selected=assets.find(a=>a[0]===id)||assets[0];if(current)scene.remove(current);if(!specimens.has(selected[0]))specimens.set(selected[0],selected[2]());current=specimens.get(selected[0]);scene.add(current);current.updateMatrixWorld(true);const box=new THREE.Box3().setFromObject(current),size=box.getSize(new THREE.Vector3()),center=box.getCenter(new THREE.Vector3()),radius=Math.max(size.x,size.y,size.z)*.72;
-  floor.position.y=box.min.y-.035;camera.position.copy(center).add(new THREE.Vector3(radius*1.5,radius*.7,radius*1.85));controls.target.copy(center);controls.minDistance=radius*.18;controls.maxDistance=radius*8;camera.near=Math.max(.02,radius/200);camera.updateProjectionMatrix();controls.update();
+  floor.position.y=box.min.y-.035;camera.position.copy(center).add(new THREE.Vector3(radius*1.5,radius*.7,radius*1.85*(['rider','wraith'].includes(selected[0])?-1:1)));controls.target.copy(center);controls.minDistance=radius*.18;controls.maxDistance=radius*8;camera.near=Math.max(.02,radius/200);camera.updateProjectionMatrix();controls.update();
   current.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true;const mats=Array.isArray(o.material)?o.material:[o.material];mats.forEach(m=>{m.wireframe=wire;});}});
   document.querySelector('#name').textContent=selected[1];document.querySelector('#description').textContent=selected[3];buttons.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.asset===selected[0])));
   let triangles=0,meshes=0;current.traverse(o=>{if(o.isMesh){meshes++;triangles+=(o.geometry.index?.count||o.geometry.attributes.position.count)/3;}});

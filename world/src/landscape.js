@@ -1,8 +1,9 @@
 import * as THREE from 'three';
 import { Water } from 'three/addons/objects/Water.js';
 import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
-import { locations } from './locations.js';
+import { locations, islands, court } from './locations.js';
 import {loadPBRTexture} from './asset-cache.js';
+import {loadAtmosphereAssets,blossomTexture} from './atmosphere.js';
 
 // The library's source entry keeps image files separate instead of shipping its
 // 3.8 MB base64 UMD/ES distribution inside the JavaScript download.
@@ -16,9 +17,9 @@ export async function loadLandscapeAssets() {
       const texture = await loadPBRTexture(name,kind);
       (maps[name] ||= {})[kind] = texture;
     }));
-  await Promise.all(jobs);
+  await Promise.all([...jobs,loadAtmosphereAssets()]);
   ({ Tree } = await import('../node_modules/@dgreenheck/ez-tree/src/lib/index.js'));
-  try { environment = await new HDRLoader().loadAsync('/textures/environment/sky.hdr');
+  try { environment = await new HDRLoader().loadAsync('/textures/environment/night.hdr');
     environment.mapping = THREE.EquirectangularReflectionMapping;
   } catch { /* The authored sky and direct lighting remain available offline. */ }
 }
@@ -43,7 +44,7 @@ export function planarUV(geometry, scale=.2) {
   geometry.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2));return geometry;
 }
 export function groundMaterial() {
-  const m=surface('meadow',{vertexColors:true,color:'#b7c3a2',normalScale:new THREE.Vector2(.65,.65)});
+  const m=surface('meadow',{vertexColors:true,color:'#8195a7',normalScale:new THREE.Vector2(.65,.65)});
   m.onBeforeCompile=shader=>{
     shader.uniforms.rockMap={value:maps['mossy-rock']?.color};
     shader.vertexShader='varying vec3 terrainNormal; varying vec3 terrainPosition;\n'+shader.vertexShader;
@@ -68,7 +69,7 @@ export function createLake(root, scene) {
     data[i]=(n.x*.5+.5)*255;data[i+1]=(n.y*.5+.5)*255;data[i+2]=(n.z*.5+.5)*255;data[i+3]=255;
   }
   const normals=new THREE.DataTexture(data,size,size);normals.wrapS=normals.wrapT=THREE.RepeatWrapping;normals.needsUpdate=true;
-  const water=new Water(new THREE.PlaneGeometry(2200,2200),{textureWidth:512,textureHeight:512,waterNormals:normals,sunDirection:new THREE.Vector3(-.7,.7,.5).normalize(),sunColor:'#e4ccaa',waterColor:'#253d43',distortionScale:2.1,fog:true});
+  const water=new Water(new THREE.PlaneGeometry(2200,2200),{textureWidth:512,textureHeight:512,waterNormals:normals,sunDirection:new THREE.Vector3(-.16,.18,-.84).normalize(),sunColor:'#a8d9ff',waterColor:'#123955',distortionScale:1.6,fog:true});
   water.name='Reflective lake';water.rotation.x=-Math.PI/2;water.position.y=-15;
   water.material.uniforms.size.value=2.5;
   water.material.fragmentShader=water.material.fragmentShader.replace('vec3( 1.5, 1.0, 1.5 )','vec3( 0.55, 1.0, 0.55 )').replace('100.0, 2.0, 0.5','45.0, 0.45, 0.35');
@@ -76,47 +77,72 @@ export function createLake(root, scene) {
   // Reflection is refreshed at a controlled cadence; the live surface still moves every frame.
   const reflect=water.onBeforeRender;let frame=0;
   water.onBeforeRender=function(...args){if(args[1].overrideMaterial)return;if(frame++%5===0)reflect.apply(this,args);};
-  if(environment){scene.environment=environment;scene.environmentIntensity=.22;scene.background=environment;scene.backgroundIntensity=.75;scene.backgroundBlurriness=0;}
+  if(environment){scene.environment=environment;scene.environmentIntensity=.14;}
   return {update(time,reduced){water.material.uniforms.time.value=reduced?0:time*.24;wind.value=reduced?0:time;},water};
 }
 
-function leafMaterial(map,color='#afbd89') {
+function leafMaterial(map,color='#b4c8dd',silvering=0) {
   const m=new THREE.MeshStandardMaterial({map,alphaTest:.30,side:THREE.DoubleSide,color,roughness:.91,metalness:0});
   m.onBeforeCompile=shader=>{
     shader.uniforms.windTime=wind;
+    shader.uniforms.leafSilvering={value:silvering};
+    shader.fragmentShader='uniform float leafSilvering;\n'+shader.fragmentShader;
+    shader.fragmentShader=shader.fragmentShader.replace('#include <map_fragment>',`#include <map_fragment>
+      float leafLight=dot(diffuseColor.rgb,vec3(.2126,.7152,.0722));
+      diffuseColor.rgb=mix(diffuseColor.rgb,(.055+leafLight*1.6)*vec3(1.08,1.34,1.63),leafSilvering);`);
     shader.vertexShader='uniform float windTime;\n'+shader.vertexShader;
     shader.vertexShader=shader.vertexShader.replace('#include <begin_vertex>',`#include <begin_vertex>
       float phase=position.y*.53+position.x*.27;
       transformed.x+=sin(windTime*.9+phase)*.18*uv.y;
       transformed.z+=cos(windTime*.7+phase)*.11*uv.y;`);
-    shader.fragmentShader=shader.fragmentShader.replace('#include <opaque_fragment>',`outgoingLight+=diffuseColor.rgb*.055;
+    shader.fragmentShader=shader.fragmentShader.replace('#include <opaque_fragment>',`outgoingLight+=diffuseColor.rgb*.095;
       #include <opaque_fragment>`);
   };
-  m.customProgramCacheKey=()=> 'leaves-wind-pbr-v1';return m;
+  m.customProgramCacheKey=()=> 'leaves-wind-pbr-v2';return m;
 }
-function makeTree(preset,seed,detail=1) {
+function makeTree(preset,seed,detail=1,kind='pine') {
   if(!Tree)return null;
   const tree=new Tree();tree.loadPreset(preset);tree.options.seed=seed;
-  const pine=preset.includes('Pine');
-  tree.options.branch.children[0]=pine?(detail===1?65:28):(detail===1?11:6);
-  tree.options.branch.children[1]=pine?2:3;
-  tree.options.branch.sections[0]=9;tree.options.branch.sections[1]=5;tree.options.branch.sections[2]=4;
-  tree.options.branch.segments[0]=7;tree.options.branch.segments[1]=4;tree.options.branch.segments[2]=3;
-  tree.options.leaves.count=detail===1?(pine?30:24):10;
-  tree.options.leaves.size*=detail===1?2.05:2.3;tree.generate();
+  const pine=kind==='pine',flower=kind==='lilac'||kind==='cherry';
+  tree.options.branch.children[0]=pine?(detail===1?31:17):(detail===1?8:5);
+  tree.options.branch.children[1]=pine?2:3;tree.options.branch.children[2]=2;
+  tree.options.branch.sections[0]=10;tree.options.branch.sections[1]=6;tree.options.branch.sections[2]=4;
+  tree.options.branch.segments[0]=8;tree.options.branch.segments[1]=5;tree.options.branch.segments[2]=3;
+  tree.options.leaves.count=detail===1?(pine?18:12):8;
+  tree.options.leaves.size*=pine?1.5:1.15;
+  if(!pine){
+    tree.options.branch.levels=3;tree.options.branch.start[1]=.32;tree.options.branch.start[2]=.28;
+    tree.options.branch.angle[1]=58;tree.options.branch.angle[2]=57;
+    tree.options.branch.length[0]=15;tree.options.branch.length[1]=12;tree.options.branch.length[2]=7;tree.options.branch.length[3]=4;
+    tree.options.branch.gnarliness[0]=.14;tree.options.branch.gnarliness[1]=.17;
+    tree.options.branch.force.strength=-.014;tree.options.branch.radius[0]=.62;
+    tree.options.leaves.size=flower?2.3:1.65;tree.options.leaves.sizeVariance=.42;
+    tree.options.bark.tint=0xbabac5;
+  }
+  tree.generate();
   const height=new THREE.Box3().setFromObject(tree).getSize(new THREE.Vector3()).y;
-  const scale=(pine?14:12)/height;
+  const scale=(pine?10.5:flower?7.6:9)/Math.max(height,.1);
   tree.branchesMesh.geometry.scale(scale,scale,scale);tree.leavesMesh.geometry.scale(scale,scale,scale);
-  const old=tree.leavesMesh.material;tree.leavesMesh.material=leafMaterial(old.map,pine?'#c9d09e':'#d4d19c');old.dispose();
+  if(!pine){tree.branchesMesh.geometry.scale(1.16,.96,1.12);tree.leavesMesh.geometry.scale(1.16,.96,1.12);}
+  const old=tree.leavesMesh.material;
+  if(flower&&blossomTexture()){
+    const uv=tree.leavesMesh.geometry.attributes.uv;
+    for(let i=0;i<uv.count;i++)uv.setXY(i,uv.getX(i)*.47+(kind==='lilac'?.515:.015),uv.getY(i)*.47+.515);
+    uv.needsUpdate=true;
+  }
+  tree.leavesMesh.material=leafMaterial(flower?(blossomTexture()||old.map):old.map,
+    {pine:'#93abbf',silver:'#b7d2e6',lilac:'#c6abf0',cherry:'#dabbe9'}[kind]||'#b7d2e6',kind==='silver'?.95:pine?.65:0);
+  tree.leavesMesh.material.alphaTest=flower?.42:.32;old.dispose();
+  tree.name=`${kind} ornamental tree`;
   return tree;
 }
 
 export function createTreeSpecimen(kind='pine') {
-  const t=makeTree(kind==='pine'?'Pine Medium':'Ash Small',221,1);
-  return t||new THREE.Group();
+  const variant=kind==='ash'?'silver':kind;
+  return makeTree(variant==='pine'?'Pine Small':'Ash Small',221,1,variant)||new THREE.Group();
 }
 
-export function createVegetation(root,heightAt,nearPath) {
+export function createVegetation(root,heightAt,nearPath=()=>false) {
   let state=48623;const rand=()=>{state=(Math.imul(state,1664525)+1013904223)|0;return(state>>>0)/4294967296;};
   const dummy=new THREE.Object3D();
   const batch=(geo,mat,placements,name,shadow=true)=>{
@@ -125,36 +151,37 @@ export function createVegetation(root,heightAt,nearPath) {
     placements.forEach((p,i)=>{dummy.position.set(p.x,p.y,p.z);dummy.rotation.set(p.rx||0,p.r||0,p.rz||0);dummy.scale.set(p.sx||p.s||1,p.sy||p.s||1,p.sz||p.s||1);dummy.updateMatrix();mesh.setMatrixAt(i,dummy.matrix);});
     mesh.castShadow=shadow;mesh.receiveShadow=true;mesh.computeBoundingSphere();root.add(mesh);return mesh;
   };
-  const groups=Array.from({length:6},()=>[]);
-  const clear=(x,z)=>locations.some(l=>Math.hypot(x-l.x,z-l.z)<l.radius+4)||nearPath(x,z)||Math.hypot(x,z-22)<9;
-  const treeClear=(x,z)=>clear(x,z)||Math.pow((x-5)/30,2)+Math.pow((z-39)/35,2)<1||nearPath(x+4,z)||nearPath(x-4,z)||nearPath(x,z+4)||nearPath(x,z-4);
-  for(let j=0;j<1500;j++){
-    const x=(rand()-.5)*163,z=(rand()-.5)*173,h=heightAt(x,z);
-    if(h<.3||treeClear(x,z)||noise(x*.05+9,z*.05)<.29)continue;
-    if(groups.flat().some(p=>Math.hypot(x-p.x,z-p.z)<4.3))continue;
-    // Keep the entrance and workshop visible from the welcome camera; mature
-    // forest remains at the flanks and in the distance.
-    const foreground=x>27&&z>19&&z<66;
-    const k=j%6;groups[k].push({x,y:h-.15,z,s:(.65+rand()*.6)*(foreground?.52:1),r:rand()*6.28});
+  const kinds=['pine','silver','lilac','cherry','lilac','silver'],groups=kinds.map(()=>[]),placed=[];
+  const clear=(x,z)=>locations.some(l=>Math.hypot(x-l.x,z-l.z)<l.radius+4)||nearPath(x,z)||Math.hypot(x-court.x,z-court.z)<13;
+  // A broad approach corridor frames the castle and stays clear of tall crowns.
+  const treeClear=(x,z)=>clear(x,z)||Math.pow((x-court.x-6)/32,2)+Math.pow((z-court.z-14)/42,2)<1||nearPath(x+5,z)||nearPath(x-5,z)||nearPath(x,z+5)||nearPath(x,z-5);
+  const sampleIsland=()=>{const island=islands[Math.floor(rand()*islands.length)];const a=rand()*6.28,r=Math.sqrt(rand())*.95;return{x:island.x+Math.cos(a)*island.rx*r,z:island.z+Math.sin(a)*island.rz*r};};
+  for(let j=0;j<3200&&placed.length<112;j++){
+    const{x,z}=sampleIsland(),h=heightAt(x,z);
+    if(h<.5||treeClear(x,z)||noise(x*.044+9,z*.044)<.3)continue;
+    if(placed.some(p=>Math.hypot(x-p.x,z-p.z)<6.5))continue;
+    const k=placed.length%6,foreground=x>25&&z>court.z-8;
+    const p={x,y:h-.12,z,s:(.78+rand()*.33)*(foreground?.76:1),r:rand()*6.28};groups[k].push(p);placed.push(p);
   }
-  for(let k=0;k<6;k++){
-    const specimen=makeTree(k<4?'Pine Medium':'Ash Small',168+k*331,1);if(!specimen)continue;
-    batch(specimen.branchesMesh.geometry,specimen.branchesMesh.material,groups[k],`Forest trunks ${k}`);
-    batch(specimen.leavesMesh.geometry,specimen.leavesMesh.material,groups[k],`Forest foliage ${k}`);
+  for(let k=0;k<kinds.length;k++){
+    const specimen=makeTree(kinds[k]==='pine'?'Pine Small':'Ash Small',168+k*331,1,kinds[k]);if(!specimen)continue;
+    batch(specimen.branchesMesh.geometry,specimen.branchesMesh.material,groups[k],`Garden trunks ${k}`);
+    batch(specimen.leavesMesh.geometry,specimen.leavesMesh.material,groups[k],`Garden ${kinds[k]} crowns ${k}`);
   }
   // Reusable eroded outcrops: actual surface deformation and scanned mossy rock.
-  const rocks=[],pebbles=[],grass=[];
-  for(let j=0;j<3100;j++){
-    const x=(rand()-.5)*165,z=(rand()-.5)*178,h=heightAt(x,z);if(h<-.5||clear(x,z))continue;
+  const rocks=[],pebbles=[],grass=[],flowers=[];
+  for(let j=0;j<2400;j++){
+    const{x,z}=sampleIsland(),h=heightAt(x,z);if(h<.4||clear(x,z))continue;
     if(j%6===0)rocks.push({x,y:h-.45,z,sx:.6+rand()*2.2,sy:.5+rand()*2,sz:.6+rand()*2,r:rand()*6.28});
     else if(j%3===0)pebbles.push({x,y:h,z,s:.12+rand()*.3,r:rand()*6.28});
-    for(let g=0;g<5;g++){
-      const gx=x+(rand()-.5)*3,gz=z+(rand()-.5)*3;grass.push({x:gx,y:heightAt(gx,gz)+.025,z:gz,s:.45+rand()*.8,r:rand()*6.28});
+    for(let g=0;g<3;g++){
+      const gx=x+(rand()-.5)*3,gz=z+(rand()-.5)*3;if(heightAt(gx,gz)<.2)continue;grass.push({x:gx,y:heightAt(gx,gz)+.025,z:gz,s:.4+rand()*.65,r:rand()*6.28});
     }
+    if(j%3===0&&noise(x*.12+5,z*.12)>.32)flowers.push({x,y:h,z,s:.64+rand()*.54,r:rand()*6.28});
   }
   const rockGeo=new THREE.IcosahedronGeometry(1,2),p=rockGeo.attributes.position;
   for(let i=0;i<p.count;i++){const x=p.getX(i),y=p.getY(i),z=p.getZ(i),s=.78+fbm(x*3+7,z*3+y)*.48;p.setXYZ(i,x*s,y*s*.84,z*s);}
-  rockGeo.computeVertexNormals();planarUV(rockGeo,.8);const rockMat=surface('mossy-rock',{color:'#aaa99a'});
+  rockGeo.computeVertexNormals();planarUV(rockGeo,.8);const rockMat=surface('mossy-rock',{color:'#99aeb9'});
   batch(rockGeo,rockMat,rocks,'Scanned mossy outcrops');batch(rockGeo,rockMat,pebbles,'Ground stones',false);
   const vertices=[],colors=[],indices=[],uv=[],c=new THREE.Color();
   for(let b=0;b<7;b++){
@@ -163,50 +190,80 @@ export function createVegetation(root,heightAt,nearPath) {
       const t=row/3,lean=t*t*.32;
       for(const side of [-1,1]){
         vertices.push(bx+Math.cos(a)*(side*w*(1-t)+lean),t*h,bz+Math.sin(a)*(side*w*(1-t)+lean));uv.push(side===-1?0:1,t);
-        c.set('#718451').lerp(new THREE.Color('#c0b780'),t*.6);colors.push(c.r,c.g,c.b);
+        c.set('#617d89').lerp(new THREE.Color('#9eaed0'),t*.75);colors.push(c.r,c.g,c.b);
       }
       if(row<3){const q=at+row*2;indices.push(q,q+1,q+2,q+1,q+3,q+2);}
     }
   }
   const gg=new THREE.BufferGeometry();gg.setAttribute('position',new THREE.Float32BufferAttribute(vertices,3));gg.setAttribute('color',new THREE.Float32BufferAttribute(colors,3));gg.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2));gg.setIndex(indices);gg.computeVertexNormals();
-  const gm=leafMaterial(null,'#a8af80');gm.vertexColors=true;gm.alphaTest=0;batch(gg,gm,grass,'Windblown meadow tufts',false);
-  return {treeCount:groups.reduce((n,g)=>n+g.length,0),grassCount:grass.length};
+  const gm=leafMaterial(null,'#a6bfd0');gm.vertexColors=true;gm.alphaTest=0;batch(gg,gm,grass,'Silver blue meadow tufts',false);
+  if(blossomTexture()){
+    const fgeo=new THREE.PlaneGeometry(.95,1.45,1,3);fgeo.translate(0,.725,0);
+    const uv=fgeo.attributes.uv;for(let i=0;i<uv.count;i++)uv.setXY(i,uv.getX(i)*.47+.015,uv.getY(i)*.47+.015);
+    const fm=leafMaterial(blossomTexture(),'#c9b6ed');fm.alphaTest=.48;
+    batch(fgeo,fm,flowers,'Lavender bellflower meadow',false);
+    batch(fgeo,fm,flowers.map(p=>({...p,r:p.r+Math.PI/2,s:p.s*.91})),'Crossed lavender flower sprays',false);
+  }
+  return {treeCount:placed.length,treeLimit:112,flowerTreeCount:groups[2].length+groups[3].length+groups[4].length,grassCount:grass.length,flowerCount:flowers.length};
 }
 
 export function createBackdrop(root, scene) {
-  const distantTrees=[];
-  const sky=new THREE.Mesh(new THREE.SphereGeometry(900,48,24),new THREE.ShaderMaterial({side:THREE.BackSide,depthWrite:false,uniforms:{top:{value:new THREE.Color('#263344')},horizon:{value:new THREE.Color('#99998e')}},vertexShader:'varying vec3 direction;void main(){direction=position;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',fragmentShader:`varying vec3 direction;uniform vec3 top;uniform vec3 horizon;
-    float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
-    float n(vec2 p){vec2 a=floor(p),b=fract(p);b=b*b*(3.-2.*b);return mix(mix(hash(a),hash(a+vec2(1.,0.)),b.x),mix(hash(a+vec2(0.,1.)),hash(a+vec2(1.)),b.x),b.y);}
-    void main(){vec3 d=normalize(direction);float h=max(0.,d.y);vec3 c=mix(horizon,top,pow(h,.48));
-    vec2 p=d.xz/(h+.24)*2.;float clouds=n(p*2.)*.6+n(p*5.)*.28+n(p*12.)*.12;float layer=smoothstep(.45,.72,clouds)*smoothstep(.04,.18,h)*(1.-smoothstep(.35,.75,h));
-    c=mix(c,vec3(.43,.42,.40),layer*.7);gl_FragColor=vec4(c,1.);
-    #include <tonemapping_fragment>
-    #include <colorspace_fragment>
-    }`}));sky.name='Layered evening sky';if(!environment)root.add(sky);else{sky.geometry.dispose();sky.material.dispose();}
+  if(!scene.background)scene.background=new THREE.Color('#102b50');
+  const wrap=a=>Math.atan2(Math.sin(a),Math.cos(a));
+  // Separate, irregular ridgelines leave open water and sky between headlands.
+  // Their materials have a bounded night palette so foreground lights cannot
+  // turn the entire mountain ring into a brighter wall behind the castle.
+  const summits=[[.35,92,.19],[1.35,76,.23],[2.32,105,.16],[2.85,75,.18],[3.98,86,.18],[4.62,126,.24],[5.57,83,.17]];
   for(let layer=0;layer<3;layer++){
-    const positions=[],uv=[],indices=[],colors=[],segments=300,bands=22;
+    const positions=[],indices=[],segments=420,bands=30;
     for(let s=0;s<=segments;s++){
-      const a=s/segments*Math.PI*2;
-      const ridge=235+layer*130+noise(Math.sin(a)*4+layer,Math.cos(a)*4)*60;
-      const crest=17+layer*12+fbm(Math.sin(a)*3+layer*17,Math.cos(a)*3)*65;
+      const a=s/segments*Math.PI*2,shift=(layer-1)*.13;
+      let peaks=0;
+      for(const [angle,height,width] of summits){
+        const offset=Math.abs(wrap(a-angle-shift));
+        peaks+=height*Math.exp(-Math.pow(offset/width,1.38));
+      }
+      const moonValley=1-.68*Math.exp(-Math.pow(wrap(a+2.95)/.30,2));
+      const ridge=340+layer*145+noise(Math.sin(a)*4+layer*2.3,Math.cos(a)*4)*85;
+      const crest=(15+layer*6+peaks*(.72+layer*.035))*moonValley;
       for(let b=0;b<=bands;b++){
-        const t=b/bands,r=ridge+(t-.45)*(140+layer*40);
-        const erosion=Math.pow(Math.max(0,Math.sin(t*Math.PI)),1.8);
-        const h=-22+crest*Math.max(0,erosion)*( .77+fbm(Math.sin(a)*10+b*.15,Math.cos(a)*10+layer)*.24);
-        const x=Math.sin(a)*r,z=Math.cos(a)*r;positions.push(x,h,z);
-        if(layer===0&&b>1&&b<15&&s%3===0&&noise(x*.1,z*.1)>.4&&h>-10)distantTrees.push({x,y:h-1,z,s:.55+noise(x*.6,z*.6)*.6,r:a});uv.push(x*.028,z*.028);
-        const c=new THREE.Color(['#697263','#6e796f','#85908b'][layer]);c.multiplyScalar(.7+noise(x*.05,z*.05)*.4);colors.push(c.r,c.g,c.b);
+        const t=b/bands;
+        const channel=Math.sin(a*47+Math.sin(a*13)*2.4+t*2.8)*.5+.5;
+        const foothill=.54+.46*Math.pow(Math.sin(t*Math.PI),.4);
+        const width=190+layer*35;
+        const r=ridge+(t-.43)*width+Math.sin(a*21+t*5)*8*Math.sin(t*Math.PI);
+        const silhouette=Math.pow(Math.max(0,Math.sin(t*Math.PI)),1.25);
+        const ribs=.79+.13*channel+.08*fbm(Math.sin(a)*24+t*3,Math.cos(a)*24-layer*2);
+        const h=-24+crest*silhouette*ribs*foothill;
+        positions.push(Math.sin(a)*r,h,Math.cos(a)*r);
         if(s<segments&&b<bands){const q=s*(bands+1)+b;indices.push(q,q+1,q+bands+1,q+1,q+bands+2,q+bands+1);}
       }
     }
-    const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));g.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2));g.setAttribute('color',new THREE.Float32BufferAttribute(colors,3));g.setIndex(indices);g.computeVertexNormals();
-    const m=new THREE.Mesh(g,surface('mossy-rock',{vertexColors:true,side:THREE.DoubleSide,color:'#a3aba0'}));m.name=`Eroded distant highlands ${layer}`;m.receiveShadow=true;root.add(m);
+    const geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));geometry.setIndex(indices);geometry.computeVertexNormals();
+    const material=new THREE.ShaderMaterial({side:THREE.DoubleSide,fog:false,toneMapped:false,
+      uniforms:{rockMap:{value:maps['mossy-rock']?.color||null},hasRock:{value:maps['mossy-rock']?.color?1:0},baseColor:{value:new THREE.Color(['#092039','#102a45','#17324d'][layer])},hazeColor:{value:new THREE.Color('#18334e')},layerDepth:{value:layer}},
+      vertexShader:'varying vec3 mountainPosition;varying vec3 mountainNormal;void main(){mountainPosition=(modelMatrix*vec4(position,1.)).xyz;mountainNormal=normalize(mat3(modelMatrix)*normal);gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
+      fragmentShader:`varying vec3 mountainPosition;varying vec3 mountainNormal;
+        uniform sampler2D rockMap;uniform float hasRock;uniform vec3 baseColor;uniform vec3 hazeColor;uniform float layerDepth;
+        void main(){vec3 p=mountainPosition;vec3 n=normalize(mountainNormal);vec3 weights=pow(abs(n),vec3(3.));weights/=max(dot(weights,vec3(1.)),.001);
+          vec3 tx=texture2D(rockMap,p.zy*.11).rgb;vec3 ty=texture2D(rockMap,p.xz*.11).rgb;vec3 tz=texture2D(rockMap,p.xy*.11).rgb;
+          float grain=dot(tx*weights.x+ty*weights.y+tz*weights.z,vec3(.2126,.7152,.0722));
+          float rockDetail=mix(1.,.91+grain*.16,hasRock);
+          float moonFacing=max(0.,dot(n,normalize(vec3(-.28,.48,-.72))));
+          float skyFacing=max(0.,dot(n,normalize(vec3(.18,.35,.84))));
+          float faceLight=.36+moonFacing*.40+skyFacing*.48+max(0.,n.y)*.15;
+          float slopeBands=.97+.03*sin(p.y*.21+sin(p.x*.027+p.z*.034)*2.);
+          vec3 color=baseColor*faceLight*rockDetail*slopeBands;
+          float distanceHaze=smoothstep(380.,1080.,distance(cameraPosition,p))*.18;
+          float valleyHaze=(1.-smoothstep(-16.,55.,p.y))*(.04+layerDepth*.012);
+          color=mix(color,hazeColor,distanceHaze+valleyHaze);
+          gl_FragColor=vec4(color,1.);
+          #include <colorspace_fragment>
+        }`,
+    });
+    const mesh=new THREE.Mesh(geometry,material);mesh.name=`Layered navy highlands ${layer}`;mesh.castShadow=false;mesh.receiveShadow=false;root.add(mesh);
   }
-  if(Tree){const tree=makeTree('Pine Medium',5321,0),dummy=new THREE.Object3D();
-    for(const source of [tree.branchesMesh,tree.leavesMesh]){const m=new THREE.InstancedMesh(source.geometry,source.material,distantTrees.length);m.name='Distant forest';distantTrees.forEach((p,i)=>{dummy.position.set(p.x,p.y,p.z);dummy.rotation.set(0,p.r,0);dummy.scale.setScalar(p.s);dummy.updateMatrix();m.setMatrixAt(i,dummy.matrix);});m.receiveShadow=false;m.castShadow=false;m.computeBoundingSphere();root.add(m);}
-  }
-  // Narrow, low-opacity fog banks occupy valleys; no giant opaque fog cards.
-  const fogMat=new THREE.ShaderMaterial({transparent:true,depthWrite:false,side:THREE.DoubleSide,uniforms:{t:wind},vertexShader:'varying vec2 v;void main(){v=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',fragmentShader:'varying vec2 v;uniform float t;void main(){float a=pow(sin(v.x*3.14159)*sin(v.y*3.14159),2.);float wisps=.65+.35*sin(v.x*19.+sin(v.x*33.)+t*.05);gl_FragColor=vec4(.53,.6,.6,a*wisps*.11);}' });
-  for(let i=0;i<9;i++){const a=i/9*Math.PI*2,m=new THREE.Mesh(new THREE.PlaneGeometry(150,16),fogMat);m.position.set(Math.sin(a)*185,2+i%3*4,Math.cos(a)*185);m.rotation.y=a;root.add(m);}
+  // Valley mist remains dark and translucent; it does not brighten the skyline.
+  const fogMat=new THREE.ShaderMaterial({transparent:true,depthWrite:false,side:THREE.DoubleSide,uniforms:{t:wind},vertexShader:'varying vec2 v;void main(){v=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',fragmentShader:'varying vec2 v;uniform float t;void main(){float a=pow(sin(v.x*3.14159)*sin(v.y*3.14159),2.);float wisps=.65+.35*sin(v.x*19.+sin(v.x*33.)+t*.05);gl_FragColor=vec4(.08,.15,.25,a*wisps*.045);}' });
+  for(let i=0;i<7;i++){const a=i/7*Math.PI*2,m=new THREE.Mesh(new THREE.PlaneGeometry(150,16),fogMat);m.position.set(Math.sin(a)*280,2+i%3*4,Math.cos(a)*280);m.rotation.y=a;root.add(m);}
 }

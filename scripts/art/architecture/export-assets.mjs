@@ -62,6 +62,7 @@ for (const [name, factory] of Object.entries(modelNames)) {
   const bounds=new THREE.Box3().setFromObject(group);
   const triangles=group.children.reduce((sum,mesh)=>sum+mesh.geometry.attributes.position.count/3,0);
   const item={id:name,factory,file:`${name}.glb`,triangles,meshes:group.children.length,bytes:output.length,bounds:{min:bounds.min.toArray(),max:bounds.max.toArray()},front:'+Z',units:'metres'};
+  if(group.userData.entrance){item.entrance=group.userData.entrance;item.courtyard=group.userData.courtyard;}
   assets.push(item);console.log(JSON.stringify(item));
 }
-await fs.writeFile(path.join(destination,'manifest.json'),JSON.stringify({version:3,provenance:'Original procedural architecture; CC0 source surfaces listed in ../../textures/manifest.json',runtime:'world/src/models.js',textures:'External shared WebP PBR images using EXT_texture_webp',assets},null,2)+'\n');
+await fs.writeFile(path.join(destination,'manifest.json'),JSON.stringify({version:4,provenance:'Original procedural architecture; CC0 source surfaces listed in ../../textures/manifest.json',runtime:'world/src/models.js',textures:'External shared WebP PBR images using EXT_texture_webp',assets},null,2)+'\n');

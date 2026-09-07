@@ -1,12 +1,12 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {parseProgress,freshProgress,progressEvent,achievements,movementVector,damp,segmentDistance,canCast} from '../src/logic.js';
+import {parseProgress,freshProgress,progressEvent,RACE_COURSE,achievements,movementVector,damp,segmentDistance,canCast} from '../src/logic.js';
 import {locations,spellDefinitions} from '../src/locations.js';
 
 test('corrupt, unavailable and incompatible saves recover safely',()=>{
   for(const s of [null,'{broken','null','[]','{"version":99}']) assert.deepEqual(parseProgress(s),freshProgress());
   const p=parseProgress(JSON.stringify({version:1,visited:['about','about','unknown'],crystals:[0,0,8,-1,'2'],banished:-3,bestTime:'fast'}));
-  assert.deepEqual(p,{version:1,visited:['about'],crystals:[0],banished:0,bestTime:null});
+  assert.deepEqual(p,{version:1,raceCourse:RACE_COURSE,visited:['about'],crystals:[0],banished:0,bestTime:null});
 });
 test('progress events are bounded, idempotent and do not mutate old saves',()=>{
   const p=freshProgress();
@@ -35,4 +35,11 @@ test('fast movement uses swept collision rather than missing a crossed ring',()=
 });
 test('spell energy and cooldown both gate attacks',()=>{
   const s=spellDefinitions[2];assert.equal(canCast(100,1,s),false);assert.equal(canCast(37,0,s),false);assert.equal(canCast(38,0,s),true);
+});
+
+
+test('a changed flight course keeps discoveries but does not compare old lap records',()=>{
+  const old={version:1,visited:['about'],crystals:[2],banished:3,bestTime:32};
+  const migrated=parseProgress(JSON.stringify(old));assert.deepEqual(migrated.visited,['about']);assert.deepEqual(migrated.crystals,[2]);assert.equal(migrated.banished,3);assert.equal(migrated.bestTime,null);
+  const current=progressEvent(migrated,{type:'race',time:54});assert.equal(parseProgress(JSON.stringify(current)).bestTime,54);
 });
