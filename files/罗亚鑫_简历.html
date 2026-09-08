@@ -1,0 +1,649 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="data:,">
+  <title>罗亚鑫｜基础模型 / AI Agent 研究实习生</title>
+  <style>
+    :root {
+      --page-width: 210mm;
+      --page-height: 297mm;
+      --ink: #17202a;
+      --muted: #5a6570;
+      --accent: #0d5277;
+      --accent-soft: #eaf3f7;
+      --rule: #b8c9d2;
+      --paper: #ffffff;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { background: #e9eef2; }
+
+    body {
+      margin: 0;
+      padding: 72px 18px 40px;
+      color: var(--ink);
+      font-family: "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif;
+      font-size: 9.65pt;
+      line-height: 1.34;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+      overflow-wrap: anywhere;
+    }
+
+    strong { font-weight: 700; }
+
+    .toolbar {
+      position: fixed;
+      z-index: 1000;
+      inset: 0 0 auto;
+      min-height: 58px;
+      padding: 10px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+      gap: 8px;
+      background: rgba(255, 255, 255, .97);
+      border-bottom: 1px solid #ccd6dc;
+      box-shadow: 0 2px 12px rgba(28, 47, 59, .12);
+    }
+
+    .toolbar-title {
+      margin-right: auto;
+      color: #42515d;
+      font-size: 12px;
+      letter-spacing: .05em;
+    }
+
+    .toolbar button,
+    .toolbar select,
+    .toolbar input {
+      border: 1px solid #a9bac4;
+      border-radius: 5px;
+      background: #fff;
+      color: #244657;
+      padding: 6px 10px;
+      font: inherit;
+      font-size: 12px;
+    }
+
+    .toolbar button { cursor: pointer; }
+    .toolbar button:hover { background: #edf5f8; }
+    .toolbar button.primary { color: #fff; background: var(--accent); border-color: var(--accent); }
+    .toolbar label { display: flex; align-items: center; gap: 5px; color: #52616c; font-size: 12px; }
+    .toolbar input[type="color"] { width: 31px; height: 29px; padding: 2px; }
+
+    .sheet {
+      width: var(--page-width);
+      height: var(--page-height);
+      margin: 0 auto 18px;
+      padding: 10mm 13mm 10mm;
+      overflow: hidden;
+      background: var(--paper);
+      box-shadow: 0 12px 34px rgba(34, 53, 65, .14);
+      break-after: page;
+      page-break-after: always;
+    }
+
+    .sheet:last-child { break-after: auto; page-break-after: auto; }
+
+    .resume-root.is-editing .sheet {
+      outline: 2px dashed rgba(13, 82, 119, .34);
+      outline-offset: -4px;
+    }
+
+    .header {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8mm;
+      align-items: end;
+      padding-bottom: 4mm;
+      border-bottom: .65mm solid var(--accent);
+    }
+
+    .name {
+      margin: 0;
+      font-family: "Songti SC", "STSong", "Noto Serif CJK SC", Georgia, serif;
+      font-size: 26pt;
+      line-height: 1;
+      letter-spacing: .12em;
+      color: #121a20;
+    }
+
+    .target {
+      margin: 2.1mm 0 0;
+      color: var(--accent);
+      font-size: 12.8pt;
+      font-weight: 700;
+      letter-spacing: .02em;
+    }
+
+    .focus {
+      margin: 1.2mm 0 0;
+      color: var(--muted);
+      font-size: 9.25pt;
+    }
+
+    .contact {
+      display: grid;
+      grid-template-columns: repeat(2, auto);
+      gap: .9mm 5mm;
+      align-content: end;
+      color: #394650;
+      font-size: 8.45pt;
+      text-align: right;
+    }
+
+    .contact .wide { grid-column: 1 / -1; }
+
+    .internal-note {
+      margin: 2.4mm 0 0;
+      padding: 1.5mm 2.4mm;
+      color: #254557;
+      background: var(--accent-soft);
+      border-left: 1mm solid var(--accent);
+      font-size: 8.8pt;
+      font-weight: 600;
+    }
+
+    .section {
+      margin-top: 4.2mm;
+      break-inside: avoid;
+    }
+
+    .section.compact { margin-top: 3.2mm; }
+
+    .section-title {
+      display: flex;
+      align-items: baseline;
+      gap: 2.4mm;
+      margin: 0 0 2.2mm;
+      padding-bottom: 1.2mm;
+      color: var(--accent);
+      font-size: 12.4pt;
+      line-height: 1.1;
+      border-bottom: .28mm solid var(--rule);
+      letter-spacing: .04em;
+    }
+
+    .section-title .en {
+      color: #7f8d96;
+      font-size: 7.4pt;
+      font-weight: 500;
+      letter-spacing: .11em;
+      text-transform: uppercase;
+    }
+
+    .summary {
+      margin: 0;
+      color: #26333c;
+      text-align: justify;
+    }
+
+    .entry {
+      margin-bottom: 3mm;
+      break-inside: avoid;
+    }
+
+    .entry:last-child { margin-bottom: 0; }
+
+    .entry-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 5mm;
+      align-items: baseline;
+      margin-bottom: 1mm;
+    }
+
+    .entry-title {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5mm 2.6mm;
+      align-items: baseline;
+    }
+
+    .entry-title .org { font-size: 10.35pt; }
+    .entry-title .role { color: var(--accent); font-weight: 700; }
+    .date { color: #4e5b64; font-size: 8.8pt; font-weight: 650; white-space: nowrap; }
+
+    .bullets {
+      margin: 0;
+      padding-left: 4.7mm;
+    }
+
+    .bullets li {
+      margin: 1.05mm 0;
+      padding-left: .8mm;
+      text-align: justify;
+    }
+
+    .bullets.tight li { margin: .65mm 0; }
+
+    .evidence {
+      display: inline-block;
+      margin-left: 1.4mm;
+      padding: .2mm 1.2mm;
+      color: var(--accent);
+      background: var(--accent-soft);
+      border-radius: 2mm;
+      font-size: 7.5pt;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .project-link {
+      margin-top: 1mm;
+      font-family: Arial, sans-serif;
+      font-size: 7.9pt;
+    }
+
+    .edu-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2.1mm;
+    }
+
+    .edu-item {
+      display: grid;
+      grid-template-columns: 34mm 1fr auto;
+      gap: 3mm;
+      align-items: baseline;
+      font-size: 8.75pt;
+    }
+
+    .edu-item .school { font-size: 9pt; font-weight: 700; }
+    .edu-item .detail { color: #34424c; }
+    .edu-item .meta { color: var(--muted); font-size: 8.4pt; white-space: nowrap; }
+
+    .paper {
+      display: grid;
+      grid-template-columns: 9mm minmax(0, 1fr);
+      gap: 2.2mm;
+      margin-bottom: 2.8mm;
+      break-inside: avoid;
+    }
+
+    .paper:last-child { margin-bottom: 0; }
+
+    .paper-index {
+      color: var(--accent);
+      font-family: Georgia, serif;
+      font-size: 13pt;
+      line-height: 1;
+      font-weight: 700;
+    }
+
+    .paper-title {
+      margin: 0 0 .6mm;
+      font-size: 9.4pt;
+      line-height: 1.24;
+    }
+
+    .paper-meta {
+      color: #52616b;
+      font-size: 8.15pt;
+    }
+
+    .paper-copy {
+      margin: .65mm 0 0;
+      color: #2d3942;
+      font-size: 8.55pt;
+      line-height: 1.28;
+      text-align: justify;
+    }
+
+    .paper-link {
+      margin-top: .4mm;
+      font-family: Arial, sans-serif;
+      font-size: 7.55pt;
+    }
+
+    .pub-list {
+      margin: 0;
+      padding-left: 5.2mm;
+      font-size: 8.25pt;
+      line-height: 1.28;
+    }
+
+    .pub-list li { margin: 1mm 0; padding-left: .6mm; }
+
+    .footer-note {
+      margin-top: 3mm;
+      padding-top: 1.6mm;
+      color: #6c7880;
+      border-top: .2mm solid #d1dbe0;
+      font-size: 7.4pt;
+      text-align: right;
+    }
+
+    @page { size: A4; margin: 0; }
+
+    @media print {
+      html, body { background: #fff; }
+      body { padding: 0; }
+      .toolbar { display: none !important; }
+      .sheet {
+        width: var(--page-width);
+        height: 290mm;
+        margin: 0;
+        box-shadow: none;
+        break-after: auto;
+        page-break-after: auto;
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+      .resume-root.is-editing .sheet { outline: 0; }
+      a { color: var(--accent); }
+    }
+
+    @media (max-width: 860px) {
+      body { padding: 68px 8px 20px; }
+      .sheet { transform-origin: top left; }
+      .toolbar-title { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="toolbar" role="toolbar" aria-label="简历编辑工具" contenteditable="false">
+    <span class="toolbar-title" id="toolbarStatus">可编辑 HTML 简历 · 自动保存到本浏览器</span>
+    <button type="button" id="editButton">编辑文字</button>
+    <button type="button" id="undoButton">撤回</button>
+    <button type="button" id="redoButton">前进</button>
+    <label>字体
+      <select id="fontSelect" aria-label="字体">
+        <option value="PingFang SC">苹方</option>
+        <option value="Microsoft YaHei">微软雅黑</option>
+        <option value="Noto Sans CJK SC">Noto Sans CJK</option>
+        <option value="Arial">Arial</option>
+        <option value="Georgia">Georgia</option>
+      </select>
+    </label>
+    <label>强调色 <input id="accentInput" type="color" value="#0d5277" aria-label="强调色"></label>
+    <button type="button" id="boldButton"><strong>B</strong> 加粗</button>
+    <button type="button" id="printButton" class="primary">导出 PDF</button>
+  </div>
+
+  <main class="resume-root" id="resumeRoot" contenteditable="false">
+    <section class="sheet" aria-label="简历第 1 页">
+      <header class="header">
+        <div>
+          <h1 class="name">罗亚鑫</h1>
+          <p class="focus">多模态智能体 · Agent Harness · 多模态长程任务</p>
+        </div>
+        <div class="contact">
+          <span>+86 150 1025 8639</span><span>+971 58 569 9266</span>
+          <span>Yaxin.Luo@mbzuai.ac.ae</span><span>微信：Yaxin_Luo999</span>
+          <span>主页：<a href="https://yaxin9luo.github.io/">yaxin9luo.github.io</a></span>
+          <span><a href="https://github.com/Yaxin9Luo">github.com/Yaxin9Luo</a></span>
+          <span class="wide"><a href="https://scholar.google.com/citations?user=tEaSCzYAAAAJ&amp;hl=en">Google Scholar · tEaSCzYAAAAJ</a></span>
+        </div>
+      </header>
+
+      <section class="section compact">
+        <h2 class="section-title">教育背景 <span class="en">Education</span></h2>
+        <div class="edu-grid">
+          <div class="edu-item"><span class="date">2025.08–至今</span><span><strong class="school">MBZUAI</strong> · 机器学习博士</span><span class="meta">导师：Dr. Zhiqiang Shen</span></div>
+          <div class="edu-item"><span class="date">2021.09–2025.04</span><span><strong class="school">Technical University of Denmark</strong> · General Engineering 学士</span><span class="meta">导师：Prof. Dimitrios Papadopoulos</span></div>
+          <div class="edu-item"><span class="date">2020.09–2021.04</span><span><strong class="school">University of Edinburgh</strong> · 数学学士</span><span class="meta"></span></div>
+        </div>
+      </section>
+
+      <section class="section compact">
+        <h2 class="section-title">研究方向 <span class="en">Profile</span></h2>
+        <p class="summary">研究出能具备统一理解、推理、生成及长程复杂任务能力的原生多模态 AI 系统。目前的短期目标是让模型能做好生产力级别的设计相关的 Agentic 任务的模型，以及伴随模型的长程任务的更好的 Harness 的自动迭代系统。</p>
+      </section>
+
+      <section class="section">
+        <h2 class="section-title">研究与实习经历 <span class="en">Research Experience</span></h2>
+        <article class="entry">
+          <div class="entry-head">
+            <div class="entry-title"><strong class="org">美团 · M17 龙猫</strong><span class="role">研究实习生</span></div>
+            <span class="date">2026.04–至今</span>
+          </div>
+          <ul class="bullets">
+            <li>面向<strong>多模态长程设计任务</strong>，研究并构建长程设计任务相关 Agent Harness 为后续模型训练做好轨迹，将任务执行、工具调用、轨迹记录、自动评测与迭代优化组织为可复现链路。</li>
+            <li>探索 Harness 自进化与元优化方法：在固定模型能力边界下，利用 rollout 证据、评测反馈和单组件更新提升长程任务的稳定交付能力。</li>
+            <li>以 <strong>AutoDesign</strong> 作为龙猫长期项目的第一阶段，率先验证从长程设计 Agent 到可复用 DesignHarness、评测协议与真实交付物的研究闭环，为后续基础模型 Agent 与 Harness 迭代提供系统基础。</li>
+          </ul>
+        </article>
+
+        <article class="entry">
+          <div class="entry-head">
+            <div class="entry-title"><strong class="org">Mohamed bin Zayed University of Artificial Intelligence (MBZUAI)</strong><span class="role">科研助理</span></div>
+            <span class="date">2025.01–2025.08</span>
+          </div>
+          <ul class="bullets">
+            <li>研究语言预训练参数在纯视觉任务中的迁移与泛化，提出无需人工标注的随机标签桥接训练，用于跨模态参数适配与基础能力分析。</li>
+            <li>构建多模态浏览器 Agent 交互评测 Open CaptchaWorld，覆盖 20 类、225 个动态 CAPTCHA，量化人类与前沿 Agent 的长程交互差距。</li>
+          </ul>
+        </article>
+      </section>
+
+      <section class="section">
+        <h2 class="section-title">开源项目 <span class="en">Agent / Harness Systems</span></h2>
+        <article class="entry">
+          <div class="entry-head">
+            <div class="entry-title"><strong class="org">AutoDesign</strong><span class="evidence">197 Stars · 2026.09.08</span></div>
+            <span class="date">2026–至今</span>
+          </div>
+          <ul class="bullets tight">
+            <li>构建面向学术传播制品的开源 Design Agent 与模型无关 Harness，将一篇论文转化为可编辑海报、幻灯片、网页与带字幕视频；兼容 Codex、Claude Code、Kimi Code 等多种 coding harness。</li>
+            <li>提出 <strong>Meta-Harness Optimization</strong>：内层 Designer–Critic 迭代原生制品，外层基于轨迹、评测器与持久优化记录更新可复用 DesignHarness，并通过接受门控约束回退。</li>
+            <li>构建 100 篇论文规模的 PosterBench；公开结果中 AutoDesign 最高得分 <strong>78.32</strong>，较 Claude Design 高 <strong>7.45</strong> 分，并在 7 组匹配配置上带来 <strong>+5.01–19.56</strong> 分增益。</li>
+          </ul>
+          <div class="project-link"><a href="https://github.com/Yaxin9Luo/AutoDesign">github.com/Yaxin9Luo/AutoDesign</a></div>
+        </article>
+
+        <article class="entry">
+          <div class="entry-head">
+            <div class="entry-title"><strong class="org">FigMirror</strong><span class="evidence">509 Stars · 2026.09.08</span></div>
+            <span class="date">2026–至今</span>
+          </div>
+          <ul class="bullets tight">
+            <li>参与构建参考图驱动的科研绘图 Agent：通过 Orchestrator–Drawer–Reviewer 角色分工和 Grounded Measurement，将用户数据生成可编辑 Matplotlib 代码与 camera-ready PDF。</li>
+            <li>负责早期方法、Web UI 与多轮 refinement 的项目规格，并补充 Codex / Claude runner、事件总线、会话状态和 refine 集成测试，为后续 Agent 迭代提供可验证基线。</li>
+          </ul>
+          <div class="project-link"><a href="https://github.com/VILA-Lab/FigMirror">github.com/VILA-Lab/FigMirror</a></div>
+        </article>
+      </section>
+
+    </section>
+
+    <section class="sheet" aria-label="简历第 2 页">
+      <section class="section compact">
+        <h2 class="section-title">第一作者 / 共同第一作者论文 <span class="en">Lead-author Research</span></h2>
+
+        <article class="paper">
+          <div class="paper-index">01</div>
+          <div>
+            <h3 class="paper-title">AutoDesign: Meta-Harness Optimization for Long-Horizon Agentic Design</h3>
+            <div class="paper-meta"><strong>第一作者</strong> · arXiv 2026 · Long-Horizon Agentic Design</div>
+            <p class="paper-copy">提出 Meta-Harness Optimization，以 rollout、评测与接受门控递归优化可复用 DesignHarness；在 PosterBench 上取得 78.32 分，较同配置 Claude Design 高 7.45 分，并获机器之心专题报道。</p>
+            <div class="paper-link"><a href="https://arxiv.org/abs/2608.13560">arxiv.org/abs/2608.13560</a> · <a href="https://h5.ifeng.com/c/vivoArticle/v002--AN0LymzrvycvWldG-_ZImmNRtmKwkcuZ3lQV0zWQgHk__?isNews=1&amp;showComments=0">机器之心报道</a></div>
+          </div>
+        </article>
+
+        <article class="paper">
+          <div class="paper-index">02</div>
+          <div>
+            <h3 class="paper-title">LLMSurgeon: Diagnosing Data Mixture of Large Language Models</h3>
+            <div class="paper-meta"><strong>第一作者</strong> · ACL 2026 Main · Foundation Model Data Auditing</div>
+            <p class="paper-copy">将预训练数据混合诊断形式化为 Data Mixture Surgery；通过校准软混淆矩阵与约束逆问题，在无需访问训练数据的情况下恢复 LLM 潜在领域分布，并构建可核验训练配方的 LLMScan 评测套件。</p>
+            <div class="paper-link"><a href="https://aclanthology.org/2026.acl-long.1964/">aclanthology.org/2026.acl-long.1964</a></div>
+          </div>
+        </article>
+
+        <article class="paper">
+          <div class="paper-index">03</div>
+          <div>
+            <h3 class="paper-title">Next-Gen CAPTCHAs: Leveraging the Cognitive Gap for Scalable and Diverse GUI-Agent Defense</h3>
+            <div class="paper-meta"><strong>共同第一作者</strong> · ICML 2026 · GUI-Agent Defense</div>
+            <p class="paper-copy">提出基于人机 Cognitive Gap 的可扩展 GUI-Agent 防御框架，围绕交互感知、记忆、决策与动作差异设计动态任务；通过数据生成流水线与后端支持的任务类型，持续生成大规模、多样化 CAPTCHA 实例。</p>
+            <div class="paper-link"><a href="https://arxiv.org/abs/2602.09012">arxiv.org/abs/2602.09012</a></div>
+          </div>
+        </article>
+
+        <article class="paper">
+          <div class="paper-index">04</div>
+          <div>
+            <h3 class="paper-title">Language-Pretraining-Induced Bias: A Strong Foundation for General Vision Tasks</h3>
+            <div class="paper-meta"><strong>第一作者</strong> · TMLR 2026 · Cross-modality Foundation Models</div>
+            <p class="paper-copy">提出无需人工标注的随机标签桥接训练，使语言预训练参数适配视觉基础任务；实验显示语言诱导偏置可加速视觉任务收敛，并在 CIFAR-100 上带来 <strong>+2.4%</strong> 测试准确率提升。</p>
+            <div class="paper-link"><a href="https://openreview.net/forum?id=N7DSUbnzYo">openreview.net/forum?id=N7DSUbnzYo</a></div>
+          </div>
+        </article>
+
+        <article class="paper">
+          <div class="paper-index">05</div>
+          <div>
+            <h3 class="paper-title">Open CaptchaWorld: A Comprehensive Web-based Platform for Testing and Benchmarking Multimodal LLM Agents</h3>
+            <div class="paper-meta"><strong>第一作者</strong> · NeurIPS 2025 · Multimodal Agents</div>
+            <p class="paper-copy">提出首个面向多模态 LLM Agent 的动态网页 CAPTCHA 基准，覆盖 20 类、225 个任务及 CAPTCHA Reasoning Depth 指标；人类成功率 93.3%，最佳评测 Agent 为 40.0%。</p>
+            <div class="paper-link"><a href="https://arxiv.org/abs/2505.24878">arxiv.org/abs/2505.24878</a></div>
+          </div>
+        </article>
+
+        <article class="paper">
+          <div class="paper-index">06</div>
+          <div>
+            <h3 class="paper-title">γ-MoD: Exploring Mixture-of-Depth Adaptation for Multimodal Large Language Models</h3>
+            <div class="paper-meta"><strong>第一作者</strong> · ICLR 2025 · Efficient Multimodal Foundation Models</div>
+            <p class="paper-copy">提出面向现有 MLLM 的 Mixture-of-Depth 适配策略，通过选择性激活 token 与层计算降低部署开销，避免将稠密层直接转换为 MoD 所导致的显著性能退化。</p>
+            <div class="paper-link"><a href="https://openreview.net/forum?id=1EnpStvBU8">openreview.net/forum?id=1EnpStvBU8</a></div>
+          </div>
+        </article>
+
+        <article class="paper">
+          <div class="paper-index">07</div>
+          <div>
+            <h3 class="paper-title">APL: Anchor-based Prompt Learning for One-stage Weakly Supervised Referring Expression Comprehension</h3>
+            <div class="paper-meta"><strong>第一作者</strong> · ECCV 2024 · Vision-Language Alignment</div>
+            <p class="paper-copy">设计位置、颜色与类别提示驱动的 Anchor-based Prompt Encoder，并结合文本重建与视觉对齐目标，在四个 REC 基准上达到 SOTA；RefCOCO 相对 RefCLIP 提升 <strong>6.44%</strong>。</p>
+            <div class="paper-link"><a href="https://www.ecva.net/papers/eccv_2024/papers_ECCV/papers/02055.pdf">ecva.net · ECCV 2024 / APL</a></div>
+          </div>
+        </article>
+      </section>
+
+      <section class="section compact">
+        <h2 class="section-title">合作论文 <span class="en">Collaborative Research</span></h2>
+        <ol class="pub-list">
+          <li><strong>arXiv 2026</strong> · <a href="https://arxiv.org/abs/2608.13524">DARTree: Speculative Diffusion Decoding with Autoregressive Draft Trees</a></li>
+          <li><strong>arXiv 2026</strong> · <a href="https://arxiv.org/abs/2607.27380">VideoCoCo: Code-as-CoT for Physically-Consistent Video Generation via an Agentic Dual-Engine System</a></li>
+          <li><strong>arXiv 2026</strong> · <a href="https://arxiv.org/abs/2602.17645">Pushing the Frontier of Black-Box LVLM Attacks via Fine-Grained Detail Targeting</a></li>
+          <li><strong>NeurIPS 2025</strong> · <a href="https://proceedings.neurips.cc/paper_files/paper/2025/hash/5a733c79d35a9738dd52a22610baa2d0-Abstract-Conference.html">FADRM: Fast and Accurate Data Residual Matching for Dataset Distillation</a></li>
+          <li><strong>ACL 2025</strong> · <a href="https://aclanthology.org/2025.acl-long.358/">DRAG: Distilling RAG for SLMs from LLMs via Evidence and Graph-based Distillation</a></li>
+          <li><strong>CVPR 2025</strong> · <a href="https://openaccess.thecvf.com/content/CVPR2025/html/Chen_Dynamic_Visual_Routing_Network_for_Weakly_Supervised_Referring_Expression_Comprehension_CVPR_2025_paper.html">DViN: Dynamic Visual Routing Network for Weakly Supervised Referring Expression Comprehension</a></li>
+          <li><strong>arXiv 2025</strong> · <a href="https://arxiv.org/abs/2503.20322">Dynamic Pyramid Network for Efficient Multimodal Large Language Model</a></li>
+          <li><strong>arXiv 2025</strong> · <a href="https://arxiv.org/abs/2501.07575">Dataset Distillation via Committee Voting</a></li>
+        </ol>
+      </section>
+
+      <section class="section compact">
+        <h2 class="section-title">补充经历 <span class="en">Additional Experience</span></h2>
+        <ul class="bullets tight">
+          <li>IEEE Cybermatics Congress 2024：会议志愿者团队成员，担任会议助理及 Smart Data 研讨会分会主席。</li>
+          <li>SciSec 2024：会议志愿者；北京大学社会科学调查中心：公共心理健康项目暑期实习（2019.07–2019.09）。</li>
+        </ul>
+      </section>
+
+    </section>
+  </main>
+
+  <script>
+    (() => {
+      const root = document.getElementById('resumeRoot');
+      const editButton = document.getElementById('editButton');
+      const undoButton = document.getElementById('undoButton');
+      const redoButton = document.getElementById('redoButton');
+      const boldButton = document.getElementById('boldButton');
+      const printButton = document.getElementById('printButton');
+      const fontSelect = document.getElementById('fontSelect');
+      const accentInput = document.getElementById('accentInput');
+      const status = document.getElementById('toolbarStatus');
+      const storageKey = 'yaxin-luo-resume-foundation-agent-v3';
+      let saveTimer;
+      let savedRange = null;
+
+      const setStatus = (message) => {
+        status.textContent = message;
+        window.clearTimeout(saveTimer);
+        saveTimer = window.setTimeout(() => {
+          status.textContent = '可编辑 HTML 简历 · 自动保存到本浏览器';
+        }, 2200);
+      };
+
+      const save = () => {
+        localStorage.setItem(storageKey, root.innerHTML);
+        setStatus('已自动保存');
+      };
+
+      const restored = localStorage.getItem(storageKey);
+      if (restored) root.innerHTML = restored;
+
+      document.addEventListener('selectionchange', () => {
+        const selection = window.getSelection();
+        if (!selection || !selection.rangeCount || !root.contains(selection.anchorNode)) return;
+        savedRange = selection.getRangeAt(0).cloneRange();
+      });
+
+      const restoreSelection = () => {
+        if (!savedRange) return;
+        const selection = window.getSelection();
+        selection.removeAllRanges();
+        selection.addRange(savedRange);
+      };
+
+      const ensureEditing = () => {
+        if (root.contentEditable === 'true') return;
+        root.contentEditable = 'true';
+        root.classList.add('is-editing');
+        editButton.textContent = '完成编辑';
+      };
+
+      editButton.addEventListener('click', () => {
+        const editing = root.contentEditable === 'true';
+        root.contentEditable = String(!editing);
+        root.classList.toggle('is-editing', !editing);
+        editButton.textContent = editing ? '编辑文字' : '完成编辑';
+        if (editing) save(); else root.focus();
+      });
+
+      root.addEventListener('input', () => {
+        window.clearTimeout(saveTimer);
+        saveTimer = window.setTimeout(save, 450);
+      });
+
+      undoButton.addEventListener('click', () => { ensureEditing(); document.execCommand('undo'); });
+      redoButton.addEventListener('click', () => { ensureEditing(); document.execCommand('redo'); });
+      boldButton.addEventListener('click', () => {
+        ensureEditing();
+        root.focus();
+        restoreSelection();
+        document.execCommand('bold');
+      });
+
+      fontSelect.addEventListener('change', () => {
+        ensureEditing();
+        root.focus();
+        restoreSelection();
+        document.execCommand('fontName', false, fontSelect.value);
+      });
+
+      accentInput.addEventListener('input', () => {
+        document.documentElement.style.setProperty('--accent', accentInput.value);
+        setStatus('强调色已更新');
+      });
+
+      printButton.addEventListener('click', () => window.print());
+    })();
+  </script>
+</body>
+</html>

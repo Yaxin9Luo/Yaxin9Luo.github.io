@@ -1,0 +1,15 @@
+{% assign lang = include.lang | default: 'en' %}
+<section class="resume-projects" aria-label="{% if lang == 'zh' %}开源项目{% else %}Open-source projects{% endif %}">
+  <h2>{% if lang == 'zh' %}开源项目{% else %}Open-Source Agent &amp; Harness Systems{% endif %}</h2>
+  {% for project in site.data.portfolio.projects %}
+  {% assign repository = site.data.open-source.repositories[project.id] %}
+  <article class="cv-card" id="project-{{ project.id }}">
+    <h3><a href="{{ repository.url }}">{{ project.shortTitle[lang] }}</a> <small class="resume-stars">☆ {{ repository.stars }} Stars · {{ site.data.open-source.checked_on }}</small></h3>
+    <p><strong>{{ project.role[lang] }}</strong> · 2026–{% if lang == 'zh' %}至今{% else %}Present{% endif %}</p>
+    <p>{{ project.approach[lang] }}</p>
+    <p>{{ project.output[lang] }}</p>
+    {% if project.contribution %}<p><strong>{% if lang == 'zh' %}我的贡献：{% else %}My contribution: {% endif %}</strong>{{ project.contribution[lang] }}</p>{% endif %}
+    <p><a href="{{ repository.url }}">{{ repository.repository }} ↗</a></p>
+  </article>
+  {% endfor %}
+</section>

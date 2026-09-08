@@ -5,32 +5,16 @@ permalink: /publications/
 author_profile: false
 ---
 
-{% if site.author.googlescholar %}
-  <div class="wordwrap">You can also find my articles on <a href="{{site.author.googlescholar}}">my Google Scholar profile</a>.</div>
-{% endif %}
-
-{% include base_path %}
-
-<!-- New style rendering if publication categories are defined -->
-{% if site.publication_category %}
-  {% for category in site.publication_category  %}
-    {% assign title_shown = false %}
-    {% for post in site.publications reversed %}
-      {% if post.category != category[0] %}
-        {% continue %}
-      {% endif %}
-      {% unless title_shown %}
-        <h2>{{ category[1].title }}</h2><hr />
-        {% assign title_shown = true %}
-      {% endunless %}
-      {% include archive-single.html %}
-    {% endfor %}
-  {% endfor %}
-{% else %}
-  {% for post in site.publications reversed %}
-    {% include archive-single.html %}
-  {% endfor %}
-{% endif %}
-
-
-
+<p>Research publications · <a href="{{site.author.googlescholar}}">Google Scholar</a> · <a href="{{ '/files/CV_YaxinLuo.pdf' | relative_url }}">English CV</a> · <a href="{{ '/files/CV_YaxinLuo_zh.pdf' | relative_url }}">中文简历</a></p>
+<p><em>* Equal contribution.</em></p>
+{% assign papers = site.data.portfolio.publications | sort: 'year' | reverse %}
+{% assign current_year = 0 %}
+{% for paper in papers %}
+  {% if paper.year != current_year %}<h2>{{ paper.year }}</h2>{% assign current_year = paper.year %}{% endif %}
+  <article class="list__item">
+    <h3><a href="{{ paper.links.first.url }}">{{ paper.title.en }}</a></h3>
+    <p><strong>{{ paper.venue }} {{ paper.year }}</strong><br>{{ paper.authors }}</p>
+    <p>{{ paper.summary.en }}</p>
+    <p>{% for link in paper.links %}<a href="{{ link.url }}">{{ link.label.en }} ↗</a>{% unless forloop.last %} · {% endunless %}{% endfor %}</p>
+  </article>
+{% endfor %}

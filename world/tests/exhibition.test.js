@@ -39,13 +39,28 @@ test('late media and failed media never replace the current completed selection'
 });
 
 test('every selected project has honest author roles and traceable, existing media', () => {
-  assert.equal(selectedProjects.length,7);
+  assert.equal(selectedProjects.length,8);
+  assert.equal(getProject('figmirror').kind,'software');
   assert.equal(publicationRole(publications.find(p=>p.id==='autodesign')).en,'Co-first author');
   assert.equal(publicationRole(publications.find(p=>p.id==='dvin')).en,'Co-author');
   for(const project of selectedProjects)for(const media of project.media){
     assert.ok(media.caption.en&&media.caption.zh);assert.ok(media.source.startsWith('https://'));
     assert.ok(['output','method','process'].includes(media.kind));
     assert.ok(fs.existsSync(new URL(media.src.startsWith('/media/')?'../public'+media.src:'../..'+media.src,import.meta.url)),media.src);
+  }
+});
+
+test('FigMirror is an accessible software project without an invented paper or authorship',()=>{
+  assert.equal(publications.some(p=>p.id==='figmirror'),false);
+  assert.equal(parseContentRoute('#project/figmirror').id,'figmirror');
+  for(const lang of ['en','zh']){
+    const html=renderProjectDetail('figmirror',lang);
+    assert.ok(html.includes('FigMirror'));
+    assert.ok(html.includes('https://github.com/VILA-Lab/FigMirror'));
+    assert.ok(html.includes(getProject('figmirror').contribution[lang]));
+    assert.ok(!html.includes('data-action="paper"'));
+    assert.ok(!html.includes('Published paper'));
+    assert.ok(!html.includes('已发表论文'));
   }
 });
 

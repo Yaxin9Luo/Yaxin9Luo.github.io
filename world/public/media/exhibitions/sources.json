@@ -32,6 +32,14 @@
       "source": "https://raw.githubusercontent.com/Yaxin9Luo/AutoDesign/bd635851ef8a2ae257e2bf4c8cd4e984ea3fff1e/assets/readme/research/qualitative-trajectory.webp",
       "bytes": 149852,
       "sha256": "b94934f4200d8f4d94ab8768f6ea05fa574d9d5822db6b4270d53034db92d5a5"
+    },
+    {
+      "file": "figmirror-generated.jpg",
+      "source": "https://github.com/VILA-Lab/FigMirror/blob/d37edebbc7cb80acecfd949d3a3615f44c13929a/docs/assets/showcase/primary-generated.jpg",
+      "download": "https://raw.githubusercontent.com/VILA-Lab/FigMirror/d37edebbc7cb80acecfd949d3a3615f44c13929a/docs/assets/showcase/primary-generated.jpg",
+      "sha256": "86c6daaf34629fc3c37c4f1ef901d97e477e4378a01896500670b28617f430fa",
+      "bytes": 1473267,
+      "description": "Actual FigMirror output published in the official project showcase; displayed with attribution."
     }
   ]
 }

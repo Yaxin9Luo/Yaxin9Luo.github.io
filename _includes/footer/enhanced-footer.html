@@ -14,7 +14,7 @@
     <div class="footer-section">
       <h3>💬 Connect</h3>
       <div class="social-grid">
-        <a href="mailto:yaxinluo999@163.com" class="social-item" title="Email">
+        <a href="mailto:{{ site.author.email }}" class="social-item" title="Email">
           <i class="fas fa-envelope"></i>
         </a>
         <a href="https://twitter.com/YaxinLuo999999" class="social-item" title="Twitter" target="_blank">
@@ -32,10 +32,10 @@
     <div class="footer-section">
       <h3>🎓 Research Focus</h3>
       <div class="research-tags">
-        <span class="research-tag">🌈Computer Vision</span>
-        <span class="research-tag">🎨Generative Model</span>
-        <span class="research-tag">🤖Vision and Language</span>
-        <span class="research-tag">🚀Data-Centric Machine Learning</span>
+        {% assign research_lang = 'en' %}{% if page.url contains '/zh/' %}{% assign research_lang = 'zh' %}{% endif %}
+        {% for direction in site.data.portfolio.research limit:3 %}
+        <span class="research-tag">{{ direction.title[research_lang] }}</span>
+        {% endfor %}
       </div>
     </div>
   </div>

@@ -26,6 +26,7 @@ async function files(directory, prefix = '') {
 
 const escapeHtml = (value) => value.replaceAll('&', '&amp;').replaceAll('"', '&quot;').replaceAll('<', '&lt;');
 
+run('node', ['scripts/sync-portfolio-data.mjs']);
 run('npm', ['--prefix', 'world', 'run', 'build']);
 run('bash', ['scripts/build-traditional.sh']);
 

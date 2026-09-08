@@ -1,5 +1,6 @@
 // Factual portfolio content. Magical place names and game progress are fictional.
 // Sources, translation choices, and resolved conflicts: docs/world-content-sources.md.
+import openSourceSnapshot from '../../_data/open-source.json' with { type: 'json' };
 const bilingual = (en, zh) => ({ en, zh });
 const paper = (url) => ({ label: bilingual('Paper', '论文'), url });
 const code = (url) => ({ label: bilingual('Code', '代码'), url });
@@ -7,12 +8,15 @@ const project = (url) => ({ label: bilingual('Project', '项目主页'), url });
 const demo = (url) => ({ label: bilingual('Demo', '演示'), url });
 
 export const profile = {
-  name: bilingual('Yaxin Luo', 'Yaxin Luo'),
+  name: bilingual(
+    'Yaxin Luo',
+    '罗亚鑫 · Yaxin Luo',
+  ),
   role: bilingual('Machine Learning PhD Student', '机器学习博士生'),
   affiliation: bilingual('MBZUAI · VILA Lab', 'MBZUAI · VILA 实验室'),
   bio: bilingual(
-    'I study multimodal design, multimodal agentic design, and recursive self-improvement at MBZUAI, advised by Prof. Zhiqiang Shen. My work connects understanding, generation, reasoning, planning, and action, with a focus on long-horizon interaction and editable design. I also work closely with Xiaofu Chen. Welcome to my little world of ideas.',
-    '我在 MBZUAI 攻读机器学习博士，导师是 Zhiqiang Shen 教授，研究多模态设计、多模态智能体设计（multimodal agentic design）与递归式自我改进。我关注如何连接理解、生成、推理、规划与行动，尤其是长程交互与可编辑设计，也与 Xiaofu Chen 保持紧密合作。欢迎来到这个由想法构成的小小世界。',
+    'I am a Machine Learning PhD student at MBZUAI, advised by Prof. Zhiqiang Shen. I build native multimodal AI systems that unify understanding, reasoning, generation, and sustained execution over complex tasks. My current focus is production-grade multimodal agentic design and automated iteration of long-horizon agent harnesses. At Meituan M17 LongCat, I connect execution, tool use, rollout traces, evaluation, and harness optimization to produce trajectories for subsequent model training. Welcome to my little world of ideas.',
+    '我是罗亚鑫，在 MBZUAI 攻读机器学习博士，导师是 Zhiqiang Shen 教授。我研究统一理解、推理、生成与长程复杂任务执行的原生多模态 AI 系统，近期聚焦生产力级多模态智能体设计（multimodal agentic design）与长程 Agent Harness 的自动迭代。在美团 M17 龙猫实习期间，我将任务执行、工具调用、rollout 轨迹、评测与 Harness 优化连接起来，为后续模型训练准备轨迹。欢迎来到这个由想法构成的小小世界。',
   ),
   portrait: '/images/Yaxin.JPG',
 };
@@ -20,34 +24,40 @@ export const profile = {
 export const research = [
   {
     id: 'multimodal-agents',
-    title: bilingual('Multimodal-in, Multimodal-out Agents', '多模态输入与输出智能体'),
+    title: bilingual(
+      'Native Multimodal Systems',
+      '原生多模态系统',
+    ),
     description: bilingual(
-      'My research aims to unify understanding, generation, reasoning, planning, and action in native multimodal foundation models. I am especially interested in agents that interpret heterogeneous inputs and create structured, editable outputs through extended interaction.',
-      '我的研究目标是在原生多模态基础模型中统一理解、生成、推理、规划与行动。我尤其关注能够理解异构输入，并通过持续交互生成结构化、可编辑输出的智能体。',
+      'I aim to build native multimodal AI systems that unify understanding, reasoning, generation, and sustained execution over complex tasks. My near-term focus is production-grade models for multimodal agentic design, with structured, editable outputs and long-horizon interaction.',
+      '我希望构建统一理解、推理、生成与长程复杂任务执行的原生多模态 AI 系统，近期聚焦能够完成生产力级多模态设计任务的模型，让智能体通过长程交互产出结构化、可编辑的成果。',
     ),
   },
   {
     id: 'recursive-improvement',
-    title: bilingual('Recursive Self-improvement', '递归式自我改进'),
+    title: bilingual(
+      'Agent Harnesses & Self-improvement',
+      'Agent Harness 与自我改进',
+    ),
     description: bilingual(
-      'I explore how rollout trajectories and accumulated experience can improve both model parameters and agent infrastructure. Harnesses, tools, memory, orchestration, evaluation, and feedback loops are research targets that may co-evolve with the model. This is an ongoing research direction.',
-      '我探索如何利用 rollout 轨迹与积累的经验，同时改进模型参数和智能体基础设施。Harness、工具、记忆、编排、评估与反馈循环，都可以作为与模型协同演化的研究对象。这是我正在探索的研究方向。',
+      'I research automated iteration of the harnesses around long-horizon agents. At a fixed model capability boundary, rollout evidence, evaluator feedback, component-level updates, and acceptance gates improve reusable infrastructure. Execution traces also provide a systems foundation for subsequent model training and model-and-harness iteration.',
+      '我研究长程智能体外围 Harness 的自动迭代：在固定模型能力边界下，利用 rollout 证据、评测反馈、单组件更新与接受门控，改进可复用的智能体基础设施；同时积累可复现轨迹，为后续模型训练与模型—Harness 协同迭代提供系统基础。',
     ),
   },
   {
     id: 'agentic-design',
     title: bilingual('Long-Horizon Agentic Design', '长程智能体设计'),
     description: bilingual(
-      'How can an agent turn multimodal source material into coherent, editable artifacts while learning from each attempt? AutoDesign studies meta-harness optimization using rollout feedback, instantiated on academic paper-to-poster generation with PosterBench. Broader long-horizon design systems remain an active focus.',
-      '智能体怎样把多模态素材转化为连贯、可编辑的作品，并从每次尝试中学习？AutoDesign 研究基于 rollout 反馈的 Meta-Harness 优化，以学术论文到海报的生成任务和 PosterBench 进行实例化与评估。更广泛的长程设计系统仍是我持续关注的方向。',
+      'AutoDesign turns papers into editable posters, slides, webpages, and captioned videos using a model-agnostic DesignHarness. An inner Designer–Critic loop refines artifacts while outer Meta-Harness Optimization improves reusable infrastructure. FigMirror applies reference-driven, multi-round refinement to scientific figures and editable Matplotlib code.',
+      'AutoDesign 通过模型无关的 DesignHarness，将论文转化为可编辑海报、幻灯片、网页与带字幕视频；内层 Designer–Critic 迭代产物，外层 Meta-Harness Optimization 改进可复用系统。FigMirror 则将参考图驱动的多轮 refinement 用于科研绘图与可编辑 Matplotlib 代码。',
     ),
   },
   {
     id: 'efficient-vision',
     title: bilingual('Efficient Vision and Language', '高效视觉与语言学习'),
     description: bilingual(
-      'My earlier work studies visual grounding and efficient multimodal learning: anchor-based prompts in APL, dynamic visual routing in DViN, and mixture-of-depth adaptation in γ-MoD. My current internship also explores a discrete vision encoder shared by understanding and generation.',
-      '我此前研究视觉定位与高效多模态学习，包括 APL 的锚点提示、DViN 的动态视觉路由，以及 γ-MoD 的混合深度适配。目前的实习工作也涉及理解与生成共享的离散视觉编码器。',
+      'My earlier work studies visual grounding and efficient multimodal learning: anchor-based prompts in APL, dynamic visual routing in DViN, and mixture-of-depth adaptation in γ-MoD. Collaborative work also explores dynamic pyramid networks and speculative diffusion decoding with DARTree.',
+      '早期工作围绕视觉定位与高效多模态学习展开，包括 APL 的锚点提示、DViN 的动态视觉路由与 γ-MoD 的混合深度适配。合作研究还涉及动态金字塔网络与 DARTree 的扩散推测解码。',
     ),
   },
   {
@@ -70,13 +80,61 @@ export const research = [
 
 export const publications = [
   {
+    id: 'dartree',
+    title: bilingual('DARTree: Speculative Diffusion Decoding with Autoregressive Draft Trees', 'DARTree：使用自回归草稿树的扩散推测解码'),
+    venue: 'arXiv', year: 2026,
+    authors: 'Tianyi Li, Yaxin Luo, Xinyi Shang, Zhiqiang Shen',
+    summary: bilingual(
+      'A training-free method that combines diffusion drafting with autoregressive correction over candidate trees for efficient language-model inference.',
+      '将扩散草稿生成与候选树上的自回归校正结合，用于高效语言模型推理，无需额外训练。',
+    ),
+    image: '',
+    links: [paper('https://arxiv.org/abs/2608.13524')],
+  },
+  {
+    id: 'videococo',
+    title: bilingual('VideoCoCo: Code-as-CoT for Physically-Consistent Video Generation via an Agentic Dual-Engine System', 'VideoCoCo：通过智能体双引擎系统与代码思维链生成物理一致视频'),
+    venue: 'arXiv', year: 2026,
+    authors: 'Haodong Li, Tianfei Ren, Xiaoxiao Ma, Chunmei Qing, Zhen Fang, Sipeng He, Ziyu Guo, Haoyu Wu, Juanxi Tian, Yihang Zou, Ruichuan An, Dongzhi Jiang, Boxue Yang, Ji Xie, Xu Huang, Wenhao Yan, Jialv Zou, Zhengrong Yue, Yaxin Luo, Xiaotong Li, Yuzhu Wang, Junyan Ye, Jinjing Zhao, Zehui Chen, Lin Chen, Renye Yan, Feng Zhao, Pheng-Ann Heng',
+    summary: bilingual(
+      'Uses executable Blender code as an intermediate representation of a scene and its evolution. Simulation drafts guide a generative video engine toward physically consistent output.',
+      '以可执行 Blender 代码表示场景及其动态过程，通过仿真草稿引导生成视频引擎，提升视频的物理一致性。',
+    ),
+    image: '',
+    links: [paper('https://arxiv.org/abs/2607.27380')],
+  },
+  {
+    id: 'detail-targeting',
+    title: bilingual('Pushing the Frontier of Black-Box LVLM Attacks via Fine-Grained Detail Targeting', '通过细粒度细节研究黑盒视觉语言模型的鲁棒性边界'),
+    venue: 'arXiv', year: 2026,
+    authors: 'Xiaohan Zhao, Zhaoyi Li, Yaxin Luo, Jiacheng Cui, Zhiqiang Shen',
+    summary: bilingual(
+      'Collaborative research on the robustness of large vision-language models, examining their sensitivity to fine-grained visual detail under black-box evaluation.',
+      '围绕大视觉语言模型鲁棒性的合作研究，考察模型在黑盒评估中对细粒度视觉信息的敏感性。',
+    ),
+    image: '',
+    links: [paper('https://arxiv.org/abs/2602.17645')],
+  },
+  {
+    id: 'dynamic-pyramid',
+    title: bilingual('Dynamic Pyramid Network for Efficient Multimodal Large Language Model', '用于高效多模态大语言模型的动态金字塔网络'),
+    venue: 'arXiv', year: 2025,
+    authors: 'Hao Ai, Kunyi Wang, Zezhou Wang, Hao Lu, Jin Tian, Yaxin Luo, Peng Xing, Jen-Yuan Huang, Huaxia Li, Gen Luo',
+    summary: bilingual(
+      'Explores dynamic pyramid representations for efficient multimodal large language models, adapting visual processing to reduce unnecessary computation.',
+      '研究面向高效多模态大语言模型的动态金字塔表征，通过自适应视觉处理减少不必要的计算。',
+    ),
+    image: '',
+    links: [paper('https://arxiv.org/abs/2503.20322')],
+  },
+  {
     id: 'autodesign',
     title: bilingual('AutoDesign: Meta-Harness Optimization for Long-Horizon Agentic Design', 'AutoDesign：面向长程智能体设计的 Meta-Harness 优化'),
     venue: 'arXiv', year: 2026,
     authors: 'Yaxin Luo*, Haobin Jiang*, Jialv Zou, Xu Huang, Wenhao Yan, Haodong Li, Zhengrong Yue, Jing Li, Xiaofu Chen, Xiaohan Zhao, Jiacheng Liu, Jiacheng Cui, Zhiqiang Shen, Xiaotong Li',
     summary: bilingual(
-      'A meta-harness optimizer guides a code agent to improve its design harness from rollout feedback. The paper introduces PosterBench and evaluates the framework on turning academic papers into structured posters.',
-      '通过 Meta-Harness 优化器，引导代码智能体依据 rollout 反馈持续改进设计 Harness。论文提出 PosterBench，并在学术论文到结构化海报的生成任务上评估该框架。',
+      'Meta-Harness Optimization improves a reusable DesignHarness through rollout evidence, evaluation, and acceptance gates. On the 100-paper PosterBench, the reported best score is 78.32, 7.45 points above Claude Design under the matched configuration; gains across seven matched configurations range from 5.01 to 19.56 points.',
+      'Meta-Harness Optimization 通过 rollout 证据、评测与接受门控改进可复用的 DesignHarness。在 100 篇论文的 PosterBench 上，公开结果最高为 78.32 分，较同配置 Claude Design 高 7.45 分；7 组匹配配置的增益为 5.01–19.56 分。',
     ),
     image: '/images/autodesign.webp',
     links: [paper('https://arxiv.org/abs/2608.13560'), code('https://github.com/Yaxin9Luo/AutoDesign'), project('https://autodesign.designanything.ai/'), demo('https://designanything.ai/')],
@@ -111,8 +169,8 @@ export const publications = [
     venue: 'TMLR', year: 2026,
     authors: 'Yaxin Luo, Zhiqiang Shen',
     summary: bilingual(
-      'Investigates how language-pretrained parameters transfer to vision. Random-label bridge training adapts language-model priors to visual tasks without manual labels during the bridge stage, with partial adaptation studied as a practical route.',
-      '研究语言预训练参数如何迁移到视觉任务。随机标签桥接训练在桥接阶段无需人工标签，将语言模型先验适配到视觉任务，并探索部分参数适配的可行性。',
+      'Random-label bridge training adapts language-pretrained parameters to vision without manual labels during the bridge stage. The reported language-induced prior accelerates convergence and improves CIFAR-100 test accuracy by 2.4 percentage points.',
+      '通过无需人工标注的随机标签桥接训练，将语言预训练参数适配到视觉任务。论文报告语言诱导偏置可加速视觉任务收敛，并在 CIFAR-100 上带来 2.4 个百分点的测试准确率提升。',
     ),
     image: '',
     links: [paper('https://arxiv.org/abs/2604.01833'), { label: bilingual('OpenReview', '评审与论文'), url: 'https://openreview.net/forum?id=N7DSUbnzYo' }],
@@ -123,8 +181,8 @@ export const publications = [
     venue: 'NeurIPS', year: 2025,
     authors: 'Yaxin Luo*, Zhaoyi Li*, Jiacheng Liu, Jiacheng Cui, Xiaohan Zhao, Zhiqiang Shen',
     summary: bilingual(
-      'A web-based benchmark for multimodal agents that combines perception, reasoning, and interaction. CAPTCHA-style environments expose limitations that static question answering can miss.',
-      '一个结合感知、推理与交互的多模态智能体网页评测平台。验证码式环境能够揭示静态问答评测容易遗漏的能力局限。',
+      'A dynamic web CAPTCHA benchmark spanning 20 categories and 225 tasks, with the CAPTCHA Reasoning Depth metric. The reported human success rate is 93.3%, compared with 40.0% for the strongest evaluated agent, exposing gaps in perception, reasoning, and sustained interaction.',
+      '动态网页 CAPTCHA 基准，覆盖 20 类、225 个任务，并提出 CAPTCHA Reasoning Depth 指标。论文报告人类成功率为 93.3%，最佳受测智能体为 40.0%，揭示感知、推理与长程交互能力之间的差距。',
     ),
     image: '/images/opencaptchaworld.png',
     links: [paper('https://arxiv.org/abs/2505.24878'), code('https://github.com/MetaAgentX/OpenCaptchaWorld'), demo('https://huggingface.co/spaces/YaxinLuo/Open_CaptchaWorld')],
@@ -195,8 +253,8 @@ export const publications = [
     venue: 'ECCV', year: 2024,
     authors: 'Yaxin Luo, Jiayi Ji, Xiaofu Chen, Yuxin Zhang, Tianhe Ren, Gen Luo',
     summary: bilingual(
-      'Adds position, color, and category prompts to anchor features for visual grounding. Text reconstruction and visual alignment objectives help connect referring expressions to objects without instance-level grounding labels.',
-      '为视觉定位中的锚点特征加入位置、颜色与类别提示，结合文本重建和视觉对齐目标，在没有实例级定位标签的情况下建立指代表达与图像目标的联系。',
+      'Position, color, and category prompts enrich anchor features for weakly supervised visual grounding. Text reconstruction and visual alignment achieve state-of-the-art results on four REC benchmarks, with a reported 6.44% improvement over RefCLIP on RefCOCO.',
+      '通过位置、颜色与类别提示增强锚点特征，结合文本重建与视觉对齐目标，在四个 REC 基准上达到 SOTA；论文报告 RefCOCO 相对 RefCLIP 提升 6.44%。',
     ),
     image: '/images/APL.png',
     links: [paper('https://link.springer.com/chapter/10.1007/978-3-031-72624-8_12'), code('https://github.com/Yaxin9Luo/APL')],
@@ -207,11 +265,14 @@ export const experience = [
   {
     id: 'longcat-intern',
     role: bilingual('Research Intern', '研究实习生'),
-    organization: bilingual('Meituan LongCat Team', '美团 LongCat 团队'),
+    organization: bilingual(
+      'Meituan · M17 LongCat',
+      '美团 · M17 龙猫',
+    ),
     period: bilingual('Apr 2026 – Present · Beijing, China', '2026 年 4 月至今 · 中国北京'),
     description: bilingual(
-      'Working on unified multimodal foundation-model projects with the LongCat-Next team: long-horizon multimodal interaction for agentic design, and a unified discrete vision encoder for understanding and generation.',
-      '在 LongCat-Next 团队参与统一多模态基础模型项目：面向智能体设计的长程多模态交互，以及服务理解与生成的统一离散视觉编码器。',
+      'Researching agent harnesses for long-horizon multimodal design, connecting execution, tool use, trace capture, automated evaluation, and iterative optimization into a reproducible pipeline for subsequent model training. Investigating harness self-evolution through rollout evidence and component-level updates at a fixed model boundary. AutoDesign is Phase I of this long-term project, connecting design agents, reusable DesignHarnesses, evaluation protocols, and real deliverables.',
+      '面向多模态长程设计任务研究 Agent Harness，将任务执行、工具调用、轨迹记录、自动评测与迭代优化组织为可复现链路，为后续模型训练准备轨迹。在固定模型能力边界下，利用 rollout 证据和单组件更新探索 Harness 自进化。以 AutoDesign 作为长期项目第一阶段，连接设计智能体、可复用 DesignHarness、评测协议与真实交付物。',
     ),
   },
   {
@@ -220,8 +281,8 @@ export const experience = [
     organization: bilingual('MBZUAI · VILA Lab', 'MBZUAI · VILA 实验室'),
     period: bilingual('Jan 2025 – Aug 2025 · Abu Dhabi, UAE', '2025 年 1 月至 8 月 · 阿联酋阿布扎比'),
     description: bilingual(
-      'Advised by Prof. Zhiqiang Shen. Investigated language-pretraining priors for vision and reasoning in multimodal large language models. This work led to the TMLR 2026 language-bias paper and Open CaptchaWorld at NeurIPS 2025.',
-      '由 Zhiqiang Shen 教授指导，研究语言预训练先验向视觉的迁移，以及多模态大语言模型的推理能力。相关工作形成了发表于 TMLR 2026 的语言偏置论文，以及 NeurIPS 2025 的 Open CaptchaWorld。',
+      'Advised by Prof. Zhiqiang Shen. Studied transfer of language-pretrained parameters to vision using label-free random-label bridge training, published at TMLR 2026. Built Open CaptchaWorld, an interactive multimodal browser-agent benchmark with 20 categories and 225 dynamic CAPTCHAs, accepted at NeurIPS 2025.',
+      '由 Zhiqiang Shen 教授指导，研究语言预训练参数向纯视觉任务的迁移，提出无需人工标注的随机标签桥接训练，相关工作发表于 TMLR 2026。构建 Open CaptchaWorld 多模态浏览器智能体交互基准，覆盖 20 类、225 个动态 CAPTCHA，被 NeurIPS 2025 接收。',
     ),
   },
   {
@@ -252,14 +313,20 @@ export const journey = [
     id: 'phd',
     role: bilingual('PhD in Machine Learning', '机器学习博士研究'),
     organization: bilingual('MBZUAI', '穆罕默德·本·扎耶德人工智能大学（MBZUAI）'),
-    period: bilingual('Aug 2025 – Jun 2029 (expected)', '2025 年 8 月至 2029 年 6 月（预计）'),
+    period: bilingual(
+      'Aug 2025 – Present',
+      '2025 年 8 月至今',
+    ),
     description: bilingual('Advised by Prof. Zhiqiang Shen. Exploring native multimodal foundation models, agentic systems, and recursive self-improvement.', '导师为 Zhiqiang Shen 教授，探索原生多模态基础模型、智能体系统与递归式自我改进。'),
   },
   {
     id: 'dtu',
     role: bilingual('Bachelor of General Engineering · Machine Learning', '通用工程学士 · 机器学习方向'),
     organization: bilingual('Technical University of Denmark', '丹麦技术大学'),
-    period: bilingual('Sep 2021 – Mar 2025', '2021 年 9 月至 2025 年 3 月'),
+    period: bilingual(
+      'Sep 2021 – Apr 2025',
+      '2021 年 9 月至 2025 年 4 月',
+    ),
     description: bilingual(
       'Bachelor thesis advised by Prof. Dimitrios Papadopoulos. Collaborated with Dr. Gen Luo and Prof. Rongrong Ji on efficient deep learning during my undergraduate studies.',
       '本科论文导师为 Dimitrios Papadopoulos 教授；本科期间也与 Gen Luo 博士和 Rongrong Ji 教授合作开展高效深度学习研究。',
@@ -269,7 +336,10 @@ export const journey = [
     id: 'edinburgh',
     role: bilingual('Mathematics and Physics Studies', '数学与物理学习'),
     organization: bilingual('University of Edinburgh', '爱丁堡大学'),
-    period: bilingual('Sep 2020 – Mar 2021 · Withdrew', '2020 年 9 月至 2021 年 3 月 · 后退学转向其他专业'),
+    period: bilingual(
+      'Sep 2020 – Apr 2021 · Undergraduate studies',
+      '2020 年 9 月至 2021 年 4 月 · 本科学习经历',
+    ),
     description: bilingual(
       'Studied pure mathematics and physics, with an early fascination for string theory. My tutor Prof. Ana Rita Pires helped turn that curiosity into a commitment to research. I later changed major and country; no Edinburgh degree was completed.',
       '学习纯数学与物理，曾对弦理论充满好奇。导师 Ana Rita Pires 教授的鼓励与支持，让这份好奇逐渐转化为科研志向。之后我更换专业与国家，未在爱丁堡完成学位。',
@@ -312,4 +382,8 @@ export const links = {
   linkedin: 'https://www.linkedin.com/in/yaxin-luo-a76037219',
   twitter: 'https://twitter.com/YaxinLuo999999',
   cv: '/files/CV_YaxinLuo.pdf',
+  cvZh: '/files/CV_YaxinLuo_zh.pdf',
 };
+
+export const cvForLanguage = (lang = 'en') => lang === 'zh' ? links.cvZh : links.cv;
+export const openSource = openSourceSnapshot;

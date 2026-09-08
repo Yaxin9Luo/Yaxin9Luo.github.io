@@ -4,6 +4,6 @@ collection: publications
 category: manuscripts
 permalink: /publication/OpenCaptchaWorld
 date: 2025-05-30
-venue: 'arXiv preprint'
+venue: 'NeurIPS 2025'
 paperurl: 'https://arxiv.org/abs/2505.24878'
 ---

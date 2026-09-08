@@ -19,8 +19,7 @@ About Me
 <span class="sr-only">Decorative animated background</span>
 <div class="about-me-content">
   <div class="intro-text">
-    Hello! I am a First-Year Machine Learning PhD student at <a href="https://mbzuai.ac.ae/" class="institution-link">MBZUAI</a>, advised by <a href="https://zhiqiangshen.com/" class="advisor-link">Prof. Zhiqiang Shen</a>. I am also closely working with my friend <a href="https://xxfchen.github.io/XiaofuChen/" class="collaborator-link">Xiaofu Chen</a>.
-    Currently, my research explores <strong>Multimodal-in and Multimodal-out Agentic Systems</strong> and <strong>Recursive Self-improvement Agentic Systems</strong> as two complementary directions: building models and systems that unify <strong>multimodal understanding, generation, reasoning, planning, and action</strong>, and enabling model parameters and the surrounding agentic infrastructure to co-evolve through rollout experience.
+    {{ site.data.portfolio.profile.bio.en }}
   </div>
   
   <div class="background-text">
@@ -36,20 +35,12 @@ About Me
   
   <div class="research-interests">
     <h4>My research interests focus on:</h4>
-    <ul>
-      <li>
-        <strong>Multimodal-in and Multimodal-out Agentic Systems</strong>: I study agentic systems that can understand heterogeneous multimodal inputs and produce multimodal outputs, integrating <strong>understanding, generation, reasoning, planning, and action</strong> within a unified framework. I am particularly interested in native multimodal foundation models that support long-horizon interaction and the creation of structured, editable artifacts.
-      </li>
-      <li>
-        <strong>Recursive Self-improvement Agentic Systems</strong>: I study agentic systems that improve recursively through rollout trajectories and accumulated experience. In these systems, <strong>model parameters</strong> and the surrounding <strong>agentic infrastructure</strong>—including harnesses, tools, memory, orchestration, evaluation, and feedback loops—are joint optimization targets that co-evolve, rather than treating either the model or its scaffold as fixed.
-      </li>
-
-    </ul>
+    <ul>{% for direction in site.data.portfolio.research limit:3 %}<li><strong>{{ direction.title.en }}</strong>: {{ direction.description.en }}</li>{% endfor %}</ul>
   </div>
 
   <div class="current-focus">
-    Recently, I am focusing on long-horizon multimodal agentic foundation models and systems, especially Agentic Design, Recursive Self-improvement Agentic Systems, and Infrastructure Frameworks.
-</div>
+    My current focus is production-grade multimodal agentic design and automated iteration of long-horizon agent harnesses.
+  </div>
 </div>
 
 
@@ -57,49 +48,9 @@ About Me
 Experience
 </div>
 
-<div class="experience-timeline">
-  <div class="experience-item">
-    <div class="exp-logo">
-      <img src="{{ '/images/logos/longcat.png' | relative_url }}" alt="Meituan LongCat Team logo" loading="lazy">
-    </div>
-    <div class="exp-body">
-      <div class="experience-header">
-        <div class="experience-title">
-          <strong>Research Intern</strong>, <a href="https://longcat.ai/" class="institution-link">Meituan LongCat Team</a>
-        </div>
-        <div class="experience-meta">Apr 2026 – Present · Beijing, China</div>
-      </div>
-      <div class="experience-detail">
-        Working on <strong>Unified Multimodal Foundation Model Projects<a href="https://arxiv.org/abs/2603.27538" class="institution-link">(LongCat-Next Team)</a>.</strong>
-      </div>
-      <ul class="experience-bullets">
-        <li> Long-Horizon Multimodal Interactive Tasks for Unified Multimodal Models: <strong>Agentic Design System.</strong></li>
-        <li>Unified Discrete Vision Encoder for both understanding and generation.</li>
-      </ul>
-    </div>
-  </div>
-  <div class="experience-item">
-    <div class="exp-logo">
-      <img src="{{ '/images/logos/mbzuai.png' | relative_url }}" alt="MBZUAI logo" loading="lazy">
-    </div>
-    <div class="exp-body">
-      <div class="experience-header">
-        <div class="experience-title">
-          <strong>Research Assistant</strong>, <a href="https://mbzuai.ac.ae/" class="institution-link">MBZUAI</a>
-        </div>
-        <div class="experience-meta">Jan 2025 – Aug 2025 · Abu Dhabi, UAE</div>
-      </div>
-      <div class="experience-detail">
-        Advised by <a href="https://zhiqiangshen.com/" class="advisor-link">Prof. Zhiqiang Shen</a> at the VILA Lab.
-      </div>
-      <ul class="experience-bullets">
-        <li>Investigated <strong>language-pretraining-induced bias</strong> as a strong foundation for general vision tasks, showing LLM priors transfer to pure-vision learning — published in <em>TMLR 2026</em>.</li>
-        <li>Explored <strong>reasoning and agentic behaviors in multimodal large language models</strong> (MLLMs), leading the <em>OpenCaptchaWorld</em> benchmark (NeurIPS 2025).</li>
-      </ul>
-    </div>
-  </div>
-</div>
+{% include resume-experience.html lang='en' %}
 
+{% include open-source-projects.html lang='en' %}
 
 <h1>News</h1>
 
@@ -140,13 +91,18 @@ Experience
   </div>
 </div>
 
+{% assign added_papers = 'llmsurgeon|language-bias' | split: '|' %}
+{% for id in added_papers %}{% assign paper = site.data.portfolio.publications | where: 'id', id | first %}
+<div class="pub-entry"><div class="pub-text"><strong><a href="{{ paper.links.first.url }}">{{ paper.title.en }}</a></strong><br><span class="venue-badge">{{ paper.venue }} {{ paper.year }}</span><p>{{ paper.authors }}</p><p>{{ paper.summary.en }}</p></div></div>
+{% endfor %}
+
 <div class="pub-entry">
   <div class="pub-image">
     <img src="./images/nextgen-captchas.png">
   </div>
   <div class="pub-text">
     <strong>Next-Gen CAPTCHAs: Leveraging the Cognitive Gap for Scalable and Diverse GUI-Agent Defense</strong><br>
-    <span class="venue-badge arxiv">arXiv 2026</span><br>
+    <span class="venue-badge icml">ICML 2026</span><br>
     Jiacheng Liu *, <strong>Yaxin Luo</strong> *, Jiacheng Cui, Xinyi Shang, Xiaohan Zhao, Zhiqiang Shen<br>
     <a href="https://arxiv.org/abs/2602.09012" class="enhanced-link paper-link">📄 Paper</a> <a href="https://github.com/MetaAgentX/NextGen-CAPTCHAs" class="enhanced-link code-link">💻 Code</a> <a href="https://huggingface.co/spaces/zcahjl3/NextGen-CAPTCHAs" class="enhanced-link demo-link">🚀 Demo</a> <a href="https://greenoso.github.io/NextGen-CAPTCHAs_webpage/" class="enhanced-link demo-link">🌐 Project</a>
   </div>

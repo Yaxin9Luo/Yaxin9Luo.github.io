@@ -1,0 +1,62 @@
+{% assign lang = page.resume_lang | default: 'en' %}
+{% assign portfolio = site.data.portfolio %}
+{% if lang == 'zh' %}{% assign pdf = '/files/CV_YaxinLuo_zh.pdf' %}{% else %}{% assign pdf = '/files/CV_YaxinLuo.pdf' %}{% endif %}
+<section class="cv-hero cv-hero--resume">
+  <div class="cv-hero__inner">
+    <div class="cv-hero__left">
+      <h1 class="cv-title">{{ portfolio.profile.name[lang] }}</h1>
+      <div class="cv-subtitle">{% if lang == 'zh' %}原生多模态系统 · Agent Harness · 长程多模态任务{% else %}Native Multimodal Systems · Agent Harnesses · Long-Horizon Tasks{% endif %}</div>
+      <div class="cv-contact">
+        <a href="mailto:Yaxin.Luo@mbzuai.ac.ae" class="cv-chip">Yaxin.Luo@mbzuai.ac.ae</a>
+        <span class="cv-chip">+86 150 1025 8639 · +971 58 569 9266</span>
+        <span class="cv-chip">{% if lang == 'zh' %}微信{% else %}WeChat{% endif %}: Yaxin_Luo999</span>
+        <a href="https://github.com/Yaxin9Luo" class="cv-chip">GitHub</a>
+        <a href="https://scholar.google.com/citations?user=tEaSCzYAAAAJ&amp;hl=en" class="cv-chip">Google Scholar</a>
+      </div>
+    </div>
+    <div class="cv-hero__right resume-downloads">
+      <a class="btn cv-download" href="{{ '/files/CV_YaxinLuo.pdf' | relative_url }}" target="_blank" rel="noopener">English PDF ↗</a>
+      <a class="btn cv-download" href="{{ '/files/CV_YaxinLuo_zh.pdf' | relative_url }}" target="_blank" rel="noopener">中文 PDF ↗</a>
+      <a href="{{ '/files/Yaxin_Luo_Resume.html' | relative_url }}">English HTML</a>
+      <a href="{{ '/files/罗亚鑫_简历.html' | relative_url }}">中文 HTML</a>
+      {% if lang == 'zh' %}<a href="{{ '/cv/' | relative_url }}">English CV page</a>{% else %}<a href="{{ '/zh/cv/' | relative_url }}">中文简历页面</a>{% endif %}
+    </div>
+  </div>
+  <div class="cv-hero__underline"></div>
+  <div class="cv-hero__note">MBZUAI · {% if lang == 'zh' %}更新于{% else %}Updated{% endif %} 2026-09-08</div>
+</section>
+<div class="cv-grid cv-grid--resume">
+  <section class="cv-section">
+    <h2 class="cv-h2">{% if lang == 'zh' %}研究方向{% else %}Research Profile{% endif %}</h2>
+    <p>{{ portfolio.profile.bio[lang] }}</p>
+    {% for direction in portfolio.research limit:3 %}<h3>{{ direction.title[lang] }}</h3><p>{{ direction.description[lang] }}</p>{% endfor %}
+  </section>
+  <section class="cv-section">
+    <h2 class="cv-h2">{% if lang == 'zh' %}教育背景{% else %}Education{% endif %}</h2>
+    <div class="cv-timeline">
+      {% for education in portfolio.journey limit:3 %}<div class="cv-item"><div class="cv-item__title">{{ education.organization[lang] }} · {{ education.role[lang] }}</div><div class="cv-item__meta">{{ education.period[lang] }}</div><div class="cv-item__detail">{{ education.description[lang] }}</div></div>{% endfor %}
+    </div>
+  </section>
+  <section class="cv-section">
+    <h2 class="cv-h2">{% if lang == 'zh' %}研究与实习经历{% else %}Research Experience{% endif %}</h2>
+    <div class="cv-timeline">
+      {% for experience in portfolio.experience limit:2 %}<div class="cv-item"><div class="cv-item__title">{{ experience.role[lang] }} · {{ experience.organization[lang] }}</div><div class="cv-item__meta">{{ experience.period[lang] }}</div><p>{{ experience.description[lang] }}</p></div>{% endfor %}
+    </div>
+  </section>
+  <section class="cv-section">{% include open-source-projects.html lang=lang %}</section>
+  <section class="cv-section">
+    <h2 class="cv-h2">{% if lang == 'zh' %}第一作者 / 共同第一作者论文{% else %}First- and Co-First-Author Publications{% endif %}</h2>
+    {% assign lead_ids = 'autodesign|llmsurgeon|nextgen-captchas|language-bias|opencaptchaworld|gamma-mod|apl' | split: '|' %}
+    {% for id in lead_ids %}{% assign paper = portfolio.publications | where: 'id', id | first %}<div class="cv-card"><div class="cv-card__title"><strong>{{ paper.venue }} {{ paper.year }}</strong> — <a href="{{ paper.links.first.url }}">{{ paper.title[lang] }}</a></div><p>{{ paper.summary[lang] }}</p></div>{% endfor %}
+    <a href="{{ '/publications/' | relative_url }}">{% if lang == 'zh' %}全部论文{% else %}All publications{% endif %} ↗</a>
+  </section>
+  <section class="cv-section">
+    <h2 class="cv-h2">{% if lang == 'zh' %}补充经历{% else %}Additional Experience{% endif %}</h2>
+    {% for experience in portfolio.experience offset:2 %}<div class="cv-card"><div class="cv-card__title">{{ experience.organization[lang] }} · {{ experience.role[lang] }}</div><div class="cv-item__meta">{{ experience.period[lang] }}</div><p>{{ experience.description[lang] }}</p></div>{% endfor %}
+  </section>
+</div>
+<section class="cv-section cv-section--wide">
+  <h2 class="cv-h2">{% if lang == 'zh' %}PDF 预览{% else %}PDF Preview{% endif %}</h2>
+  <div class="cv-pdf"><iframe src="{{ pdf | relative_url }}#view=FitH" title="{% if lang == 'zh' %}中文简历 PDF{% else %}English resume PDF{% endif %}" loading="lazy"></iframe></div>
+  <p class="cv-note">{% if lang == 'zh' %}如预览未能加载，请使用上方的 PDF 下载链接。{% else %}If the preview does not load, use the PDF links above.{% endif %}</p>
+</section>

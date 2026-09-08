@@ -1,0 +1,645 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="data:,">
+  <title>Yaxin Luo | Foundation Models / AI Agents Research Resume</title>
+  <style>
+    :root {
+      --page-width: 210mm;
+      --page-height: 297mm;
+      --ink: #17202a;
+      --muted: #5a6570;
+      --accent: #0d5277;
+      --accent-soft: #eaf3f7;
+      --rule: #b8c9d2;
+      --paper: #ffffff;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { background: #e9eef2; }
+
+    body {
+      margin: 0;
+      padding: 72px 18px 40px;
+      color: var(--ink);
+      font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+      font-size: 9.65pt;
+      line-height: 1.34;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+      overflow-wrap: anywhere;
+    }
+
+    strong { font-weight: 700; }
+
+    .toolbar {
+      position: fixed;
+      z-index: 1000;
+      inset: 0 0 auto;
+      min-height: 58px;
+      padding: 10px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+      gap: 8px;
+      background: rgba(255, 255, 255, .97);
+      border-bottom: 1px solid #ccd6dc;
+      box-shadow: 0 2px 12px rgba(28, 47, 59, .12);
+    }
+
+    .toolbar-title {
+      margin-right: auto;
+      color: #42515d;
+      font-size: 12px;
+      letter-spacing: .05em;
+    }
+
+    .toolbar button,
+    .toolbar select,
+    .toolbar input {
+      border: 1px solid #a9bac4;
+      border-radius: 5px;
+      background: #fff;
+      color: #244657;
+      padding: 6px 10px;
+      font: inherit;
+      font-size: 12px;
+    }
+
+    .toolbar button { cursor: pointer; }
+    .toolbar button:hover { background: #edf5f8; }
+    .toolbar button.primary { color: #fff; background: var(--accent); border-color: var(--accent); }
+    .toolbar label { display: flex; align-items: center; gap: 5px; color: #52616c; font-size: 12px; }
+    .toolbar input[type="color"] { width: 31px; height: 29px; padding: 2px; }
+
+    .sheet {
+      width: var(--page-width);
+      height: var(--page-height);
+      margin: 0 auto 18px;
+      padding: 10mm 13mm 10mm;
+      overflow: hidden;
+      background: var(--paper);
+      box-shadow: 0 12px 34px rgba(34, 53, 65, .14);
+    }
+
+    .resume-root.is-editing .sheet {
+      outline: 2px dashed rgba(13, 82, 119, .34);
+      outline-offset: -4px;
+    }
+
+    .header {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8mm;
+      align-items: end;
+      padding-bottom: 4mm;
+      border-bottom: .65mm solid var(--accent);
+    }
+
+    .name {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 26pt;
+      line-height: 1;
+      letter-spacing: .06em;
+      color: #121a20;
+    }
+
+    .target {
+      margin: 2.1mm 0 0;
+      color: var(--accent);
+      font-size: 12.8pt;
+      font-weight: 700;
+      letter-spacing: .02em;
+    }
+
+    .focus {
+      margin: 1.2mm 0 0;
+      color: var(--muted);
+      font-size: 9.25pt;
+    }
+
+    .contact {
+      display: grid;
+      grid-template-columns: repeat(2, auto);
+      gap: .9mm 5mm;
+      align-content: end;
+      color: #394650;
+      font-size: 8.45pt;
+      text-align: right;
+    }
+
+    .contact .wide { grid-column: 1 / -1; }
+
+    .internal-note {
+      margin: 2.4mm 0 0;
+      padding: 1.5mm 2.4mm;
+      color: #254557;
+      background: var(--accent-soft);
+      border-left: 1mm solid var(--accent);
+      font-size: 8.8pt;
+      font-weight: 600;
+    }
+
+    .section {
+      margin-top: 4.2mm;
+      break-inside: avoid;
+    }
+
+    .section.compact { margin-top: 3.2mm; }
+
+    .section-title {
+      display: flex;
+      align-items: baseline;
+      gap: 2.4mm;
+      margin: 0 0 2.2mm;
+      padding-bottom: 1.2mm;
+      color: var(--accent);
+      font-size: 12.4pt;
+      line-height: 1.1;
+      border-bottom: .28mm solid var(--rule);
+      letter-spacing: .04em;
+    }
+
+    .section-title .en {
+      color: #7f8d96;
+      font-size: 7.4pt;
+      font-weight: 500;
+      letter-spacing: .11em;
+      text-transform: uppercase;
+    }
+
+    .summary {
+      margin: 0;
+      color: #26333c;
+      text-align: justify;
+    }
+
+    .entry {
+      margin-bottom: 3mm;
+      break-inside: avoid;
+    }
+
+    .entry:last-child { margin-bottom: 0; }
+
+    .entry-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 5mm;
+      align-items: baseline;
+      margin-bottom: 1mm;
+    }
+
+    .entry-title {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5mm 2.6mm;
+      align-items: baseline;
+    }
+
+    .entry-title .org { font-size: 10.35pt; }
+    .entry-title .role { color: var(--accent); font-weight: 700; }
+    .date { color: #4e5b64; font-size: 8.8pt; font-weight: 650; white-space: nowrap; }
+
+    .bullets {
+      margin: 0;
+      padding-left: 4.7mm;
+    }
+
+    .bullets li {
+      margin: 1.05mm 0;
+      padding-left: .8mm;
+      text-align: justify;
+    }
+
+    .bullets.tight li { margin: .65mm 0; }
+
+    .evidence {
+      display: inline-block;
+      margin-left: 1.4mm;
+      padding: .2mm 1.2mm;
+      color: var(--accent);
+      background: var(--accent-soft);
+      border-radius: 2mm;
+      font-size: 7.5pt;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .project-link {
+      margin-top: 1mm;
+      font-family: Arial, sans-serif;
+      font-size: 7.9pt;
+    }
+
+    .edu-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2.1mm;
+    }
+
+    .edu-item {
+      display: grid;
+      grid-template-columns: 34mm 1fr auto;
+      gap: 3mm;
+      align-items: baseline;
+      font-size: 8.75pt;
+    }
+
+    .edu-item .school { font-size: 9pt; font-weight: 700; }
+    .edu-item .detail { color: #34424c; }
+    .edu-item .meta { color: var(--muted); font-size: 8.4pt; white-space: nowrap; }
+
+    .paper {
+      display: grid;
+      grid-template-columns: 9mm minmax(0, 1fr);
+      gap: 2.2mm;
+      margin-bottom: 2.6mm;
+      break-inside: avoid;
+    }
+
+    .paper:last-child { margin-bottom: 0; }
+
+    .paper-index {
+      color: var(--accent);
+      font-family: Georgia, serif;
+      font-size: 13pt;
+      line-height: 1;
+      font-weight: 700;
+    }
+
+    .paper-title {
+      margin: 0 0 .6mm;
+      font-size: 9.4pt;
+      line-height: 1.24;
+    }
+
+    .paper-meta {
+      color: #52616b;
+      font-size: 8.15pt;
+    }
+
+    .paper-copy {
+      margin: .65mm 0 0;
+      color: #2d3942;
+      font-size: 8.55pt;
+      line-height: 1.28;
+      text-align: justify;
+    }
+
+    .paper-link {
+      margin-top: .4mm;
+      font-family: Arial, sans-serif;
+      font-size: 7.55pt;
+    }
+
+    .pub-list {
+      margin: 0;
+      padding-left: 5.2mm;
+      font-size: 8.25pt;
+      line-height: 1.28;
+    }
+
+    .pub-list li { margin: 1mm 0; padding-left: .6mm; }
+
+    .footer-note {
+      margin-top: 3mm;
+      padding-top: 1.6mm;
+      color: #6c7880;
+      border-top: .2mm solid #d1dbe0;
+      font-size: 7.4pt;
+      text-align: right;
+    }
+
+    @page { size: A4; margin: 0; }
+
+    @media print {
+      html, body { background: #fff; }
+      body { padding: 0; }
+      .toolbar { display: none !important; }
+      .sheet {
+        width: var(--page-width);
+        height: 290mm;
+        padding-bottom: 2mm;
+        margin: 0;
+        box-shadow: none;
+        break-after: auto;
+        page-break-after: auto;
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+      .resume-root.is-editing .sheet { outline: 0; }
+      a { color: var(--accent); }
+    }
+
+    @media (max-width: 860px) {
+      body { padding: 68px 8px 20px; }
+      .sheet { transform-origin: top left; }
+      .toolbar-title { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="toolbar" role="toolbar" aria-label="Resume editing toolbar" contenteditable="false">
+    <span class="toolbar-title" id="toolbarStatus">Editable HTML resume · Changes auto-save to this browser</span>
+    <button type="button" id="editButton">Edit text</button>
+    <button type="button" id="undoButton">Undo</button>
+    <button type="button" id="redoButton">Redo</button>
+    <label>Font
+      <select id="fontSelect" aria-label="Font">
+        <option value="Arial">Arial</option>
+        <option value="Helvetica Neue">Helvetica Neue</option>
+        <option value="Georgia">Georgia</option>
+        <option value="Times New Roman">Times New Roman</option>
+      </select>
+    </label>
+    <label>Accent <input id="accentInput" type="color" value="#0d5277" aria-label="Accent color"></label>
+    <button type="button" id="boldButton"><strong>B</strong> Bold</button>
+    <button type="button" id="printButton" class="primary">Export PDF</button>
+  </div>
+
+  <main class="resume-root" id="resumeRoot" contenteditable="false">
+    <section class="sheet" aria-label="Resume page 1">
+      <header class="header">
+        <div>
+          <h1 class="name">Yaxin Luo</h1>
+          <p class="focus">Native Multimodal Systems · Agent Harnesses · Long-Horizon Multimodal Tasks</p>
+        </div>
+        <div class="contact">
+          <span>+86 150 1025 8639</span><span>+971 58 569 9266</span>
+          <span>Yaxin.Luo@mbzuai.ac.ae</span><span>WeChat: Yaxin_Luo999</span>
+          <span>Website: <a href="https://yaxin9luo.github.io/">yaxin9luo.github.io</a></span>
+          <span><a href="https://github.com/Yaxin9Luo">github.com/Yaxin9Luo</a></span>
+          <span class="wide"><a href="https://scholar.google.com/citations?user=tEaSCzYAAAAJ&amp;hl=en">Google Scholar · tEaSCzYAAAAJ</a></span>
+        </div>
+      </header>
+
+      <section class="section compact">
+        <h2 class="section-title">Education</h2>
+        <div class="edu-grid">
+          <div class="edu-item"><span class="date">Aug 2025-Present</span><span><strong class="school">MBZUAI</strong> · Ph.D. in Machine Learning</span><span class="meta">Advisor: Dr. Zhiqiang Shen</span></div>
+          <div class="edu-item"><span class="date">Sep 2021-Apr 2025</span><span><strong class="school">Technical University of Denmark</strong> · B.Sc. in General Engineering</span><span class="meta">Advisor: Prof. Dimitrios Papadopoulos</span></div>
+          <div class="edu-item"><span class="date">Sep 2020-Apr 2021</span><span><strong class="school">University of Edinburgh</strong> · B.Sc. in Mathematics</span><span class="meta"></span></div>
+        </div>
+      </section>
+
+      <section class="section compact">
+        <h2 class="section-title">Research Profile</h2>
+        <p class="summary">I build native multimodal AI systems that unify understanding, reasoning, generation, and sustained execution over complex tasks. My current focus is production-grade models for agentic design and automated iteration systems for the long-horizon harnesses that support them.</p>
+      </section>
+
+      <section class="section">
+        <h2 class="section-title">Research Experience</h2>
+        <article class="entry">
+          <div class="entry-head">
+            <div class="entry-title"><strong class="org">Meituan · M17 LongCat</strong><span class="role">Research Intern</span></div>
+            <span class="date">Apr 2026-Present</span>
+          </div>
+          <ul class="bullets">
+            <li>Research and build Agent Harnesses for <strong>long-horizon multimodal design tasks</strong>, producing trajectories for subsequent model training and integrating execution, tool use, trace capture, automated evaluation, and iterative optimization into a reproducible pipeline.</li>
+            <li>Investigate harness self-evolution and meta-optimization: within a fixed model capability boundary, use rollout evidence, evaluator feedback, and component-level updates to improve reliable completion of long-horizon tasks.</li>
+            <li>Use <strong>AutoDesign</strong> as Phase I of the long-term LongCat project to validate an end-to-end research loop spanning long-horizon design agents, reusable DesignHarnesses, evaluation protocols, and real deliverables, establishing a systems foundation for subsequent model-and-harness iteration.</li>
+          </ul>
+        </article>
+
+        <article class="entry">
+          <div class="entry-head">
+            <div class="entry-title"><strong class="org">Mohamed bin Zayed University of Artificial Intelligence (MBZUAI)</strong><span class="role">Research Assistant</span></div>
+            <span class="date">Jan-Aug 2025</span>
+          </div>
+          <ul class="bullets">
+            <li>Studied how language-pretrained parameters transfer and generalize to vision-only tasks; developed label-free random-label bridge training for cross-modal parameter adaptation and foundation-capability analysis.</li>
+            <li>Built Open CaptchaWorld, an interactive benchmark for multimodal browser agents spanning 20 categories and 225 dynamic CAPTCHAs, quantifying the long-horizon interaction gap between humans and frontier agents.</li>
+          </ul>
+        </article>
+      </section>
+
+      <section class="section">
+        <h2 class="section-title">Open-Source Agent and Harness Systems</h2>
+        <article class="entry">
+          <div class="entry-head">
+            <div class="entry-title"><strong class="org">AutoDesign</strong><span class="evidence">197 Stars · 2026.09.08</span></div>
+            <span class="date">2026-Present</span>
+          </div>
+          <ul class="bullets tight">
+            <li>Built an open-source Design Agent and model-agnostic harness for academic communication artifacts, transforming a paper into an editable poster, slide deck, webpage, and subtitled video; supports coding harnesses including Codex, Claude Code, and Kimi Code.</li>
+            <li>Proposed <strong>Meta-Harness Optimization</strong>: an inner Designer-Critic loop iterates native artifacts, while an outer loop updates reusable DesignHarnesses from traces, evaluators, and persistent optimization records, with acceptance gates preventing regressions.</li>
+            <li>Built PosterBench over 100 papers. In public results, AutoDesign reached <strong>78.32</strong>, outperforming Claude Design by <strong>7.45</strong> points and delivering <strong>+5.01 to +19.56</strong> point gains across seven matched configurations.</li>
+          </ul>
+          <div class="project-link"><a href="https://github.com/Yaxin9Luo/AutoDesign">github.com/Yaxin9Luo/AutoDesign</a></div>
+        </article>
+
+        <article class="entry">
+          <div class="entry-head">
+            <div class="entry-title"><strong class="org">FigMirror</strong><span class="evidence">509 Stars · 2026.09.08</span></div>
+            <span class="date">2026-Present</span>
+          </div>
+          <ul class="bullets tight">
+            <li>Contributed to a reference-image-driven scientific figure agent that combines Orchestrator-Drawer-Reviewer roles with Grounded Measurement to turn user data into editable Matplotlib code and camera-ready PDFs.</li>
+            <li>Authored early specifications for the method, Web UI, and multi-round refinement; added Codex and Claude runners, event-bus and session-state coverage, and refinement integration tests to establish a verifiable baseline for subsequent agent iterations.</li>
+          </ul>
+          <div class="project-link"><a href="https://github.com/VILA-Lab/FigMirror">github.com/VILA-Lab/FigMirror</a></div>
+        </article>
+      </section>
+
+    </section>
+
+    <section class="sheet" aria-label="Resume page 2">
+      <section class="section compact">
+        <h2 class="section-title">First- and Co-First-Author Publications</h2>
+
+        <article class="paper">
+          <div class="paper-index">01</div>
+          <div>
+            <h3 class="paper-title">AutoDesign: Meta-Harness Optimization for Long-Horizon Agentic Design</h3>
+            <div class="paper-meta"><strong>First author</strong> · arXiv 2026 · Long-Horizon Agentic Design</div>
+            <p class="paper-copy">Introduced Meta-Harness Optimization, which recursively improves reusable DesignHarnesses using rollouts, evaluation, and acceptance gates. AutoDesign scored 78.32 on PosterBench, 7.45 points above Claude Design under the same configuration, and was featured by Synced.</p>
+            <div class="paper-link"><a href="https://arxiv.org/abs/2608.13560">arxiv.org/abs/2608.13560</a> · <a href="https://h5.ifeng.com/c/vivoArticle/v002--AN0LymzrvycvWldG-_ZImmNRtmKwkcuZ3lQV0zWQgHk__?isNews=1&amp;showComments=0">Synced feature</a></div>
+          </div>
+        </article>
+
+        <article class="paper">
+          <div class="paper-index">02</div>
+          <div>
+            <h3 class="paper-title">LLMSurgeon: Diagnosing Data Mixture of Large Language Models</h3>
+            <div class="paper-meta"><strong>First author</strong> · ACL 2026 Main · Foundation Model Data Auditing</div>
+            <p class="paper-copy">Formulated pretraining-data mixture diagnosis as Data Mixture Surgery. Recovered latent LLM domain distributions without access to training data using calibrated soft confusion matrices and a constrained inverse problem, and introduced LLMScan for auditable training-recipe evaluation.</p>
+            <div class="paper-link"><a href="https://aclanthology.org/2026.acl-long.1964/">aclanthology.org/2026.acl-long.1964</a></div>
+          </div>
+        </article>
+
+        <article class="paper">
+          <div class="paper-index">03</div>
+          <div>
+            <h3 class="paper-title">Next-Gen CAPTCHAs: Leveraging the Cognitive Gap for Scalable and Diverse GUI-Agent Defense</h3>
+            <div class="paper-meta"><strong>Co-first author</strong> · ICML 2026 · GUI-Agent Defense</div>
+            <p class="paper-copy">Developed a scalable GUI-agent defense framework around the human-agent cognitive gap, designing dynamic tasks that probe differences in interactive perception, memory, decision-making, and action. A data-generation pipeline and backend-supported task types continuously produce diverse CAPTCHA instances at scale.</p>
+            <div class="paper-link"><a href="https://arxiv.org/abs/2602.09012">arxiv.org/abs/2602.09012</a></div>
+          </div>
+        </article>
+
+        <article class="paper">
+          <div class="paper-index">04</div>
+          <div>
+            <h3 class="paper-title">Language-Pretraining-Induced Bias: A Strong Foundation for General Vision Tasks</h3>
+            <div class="paper-meta"><strong>First author</strong> · TMLR 2026 · Cross-Modal Foundation Models</div>
+            <p class="paper-copy">Introduced label-free random-label bridge training to adapt language-pretrained parameters to foundational vision tasks. Language-induced bias accelerated convergence and improved CIFAR-100 test accuracy by <strong>2.4 percentage points</strong>.</p>
+            <div class="paper-link"><a href="https://openreview.net/forum?id=N7DSUbnzYo">openreview.net/forum?id=N7DSUbnzYo</a></div>
+          </div>
+        </article>
+
+        <article class="paper">
+          <div class="paper-index">05</div>
+          <div>
+            <h3 class="paper-title">Open CaptchaWorld: A Comprehensive Web-based Platform for Testing and Benchmarking Multimodal LLM Agents</h3>
+            <div class="paper-meta"><strong>First author</strong> · NeurIPS 2025 · Multimodal Agents</div>
+            <p class="paper-copy">Introduced the first dynamic web CAPTCHA benchmark for multimodal LLM agents, covering 20 categories, 225 tasks, and the CAPTCHA Reasoning Depth metric. Humans achieved a 93.3% success rate, compared with 40.0% for the strongest evaluated agent.</p>
+            <div class="paper-link"><a href="https://arxiv.org/abs/2505.24878">arxiv.org/abs/2505.24878</a></div>
+          </div>
+        </article>
+
+        <article class="paper">
+          <div class="paper-index">06</div>
+          <div>
+            <h3 class="paper-title">γ-MoD: Exploring Mixture-of-Depth Adaptation for Multimodal Large Language Models</h3>
+            <div class="paper-meta"><strong>First author</strong> · ICLR 2025 · Efficient Multimodal Foundation Models</div>
+            <p class="paper-copy">Introduced a Mixture-of-Depth adaptation strategy for existing MLLMs that reduces serving cost through selective token and layer activation while avoiding the substantial degradation caused by directly converting dense layers to MoD.</p>
+            <div class="paper-link"><a href="https://openreview.net/forum?id=1EnpStvBU8">openreview.net/forum?id=1EnpStvBU8</a></div>
+          </div>
+        </article>
+
+        <article class="paper">
+          <div class="paper-index">07</div>
+          <div>
+            <h3 class="paper-title">APL: Anchor-based Prompt Learning for One-stage Weakly Supervised Referring Expression Comprehension</h3>
+            <div class="paper-meta"><strong>First author</strong> · ECCV 2024 · Vision-Language Alignment</div>
+            <p class="paper-copy">Designed an Anchor-based Prompt Encoder driven by position, color, and category prompts, together with text-reconstruction and visual-alignment objectives. The method achieved state-of-the-art results on four REC benchmarks, improving over RefCLIP by <strong>6.44%</strong> on RefCOCO.</p>
+            <div class="paper-link"><a href="https://www.ecva.net/papers/eccv_2024/papers_ECCV/papers/02055.pdf">ecva.net · ECCV 2024 / APL</a></div>
+          </div>
+        </article>
+      </section>
+
+      <section class="section compact">
+        <h2 class="section-title">Collaborative Publications</h2>
+        <ol class="pub-list">
+          <li><strong>arXiv 2026</strong> · <a href="https://arxiv.org/abs/2608.13524">DARTree: Speculative Diffusion Decoding with Autoregressive Draft Trees</a></li>
+          <li><strong>arXiv 2026</strong> · <a href="https://arxiv.org/abs/2607.27380">VideoCoCo: Code-as-CoT for Physically-Consistent Video Generation via an Agentic Dual-Engine System</a></li>
+          <li><strong>arXiv 2026</strong> · <a href="https://arxiv.org/abs/2602.17645">Pushing the Frontier of Black-Box LVLM Attacks via Fine-Grained Detail Targeting</a></li>
+          <li><strong>NeurIPS 2025</strong> · <a href="https://proceedings.neurips.cc/paper_files/paper/2025/hash/5a733c79d35a9738dd52a22610baa2d0-Abstract-Conference.html">FADRM: Fast and Accurate Data Residual Matching for Dataset Distillation</a></li>
+          <li><strong>ACL 2025</strong> · <a href="https://aclanthology.org/2025.acl-long.358/">DRAG: Distilling RAG for SLMs from LLMs via Evidence and Graph-based Distillation</a></li>
+          <li><strong>CVPR 2025</strong> · <a href="https://openaccess.thecvf.com/content/CVPR2025/html/Chen_Dynamic_Visual_Routing_Network_for_Weakly_Supervised_Referring_Expression_Comprehension_CVPR_2025_paper.html">DViN: Dynamic Visual Routing Network for Weakly Supervised Referring Expression Comprehension</a></li>
+          <li><strong>arXiv 2025</strong> · <a href="https://arxiv.org/abs/2503.20322">Dynamic Pyramid Network for Efficient Multimodal Large Language Model</a></li>
+          <li><strong>arXiv 2025</strong> · <a href="https://arxiv.org/abs/2501.07575">Dataset Distillation via Committee Voting</a></li>
+        </ol>
+      </section>
+
+      <section class="section compact">
+        <h2 class="section-title">Additional Experience</h2>
+        <ul class="bullets tight">
+          <li>IEEE Cybermatics Congress 2024: volunteer organizing-team member; served as conference assistant and session chair for the Smart Data workshop.</li>
+          <li>SciSec 2024: conference volunteer. Institute of Social Science Survey, Peking University: Summer Intern, Public Mental Health Project (Jul-Sep 2019).</li>
+        </ul>
+      </section>
+
+    </section>
+  </main>
+
+  <script>
+    (() => {
+      const root = document.getElementById('resumeRoot');
+      const editButton = document.getElementById('editButton');
+      const undoButton = document.getElementById('undoButton');
+      const redoButton = document.getElementById('redoButton');
+      const boldButton = document.getElementById('boldButton');
+      const printButton = document.getElementById('printButton');
+      const fontSelect = document.getElementById('fontSelect');
+      const accentInput = document.getElementById('accentInput');
+      const status = document.getElementById('toolbarStatus');
+      const storageKey = 'yaxin-luo-resume-foundation-agent-en-20260908';
+      let saveTimer;
+      let savedRange = null;
+
+      const setStatus = (message) => {
+        status.textContent = message;
+        window.clearTimeout(saveTimer);
+        saveTimer = window.setTimeout(() => {
+          status.textContent = 'Editable HTML resume · Changes auto-save to this browser';
+        }, 2200);
+      };
+
+      const save = () => {
+        localStorage.setItem(storageKey, root.innerHTML);
+        setStatus('Changes saved in this browser');
+      };
+
+      const restored = localStorage.getItem(storageKey);
+      if (restored) root.innerHTML = restored;
+
+      document.addEventListener('selectionchange', () => {
+        const selection = window.getSelection();
+        if (!selection || !selection.rangeCount || !root.contains(selection.anchorNode)) return;
+        savedRange = selection.getRangeAt(0).cloneRange();
+      });
+
+      const restoreSelection = () => {
+        if (!savedRange) return;
+        const selection = window.getSelection();
+        selection.removeAllRanges();
+        selection.addRange(savedRange);
+      };
+
+      const ensureEditing = () => {
+        if (root.contentEditable === 'true') return;
+        root.contentEditable = 'true';
+        root.classList.add('is-editing');
+        editButton.textContent = 'Finish editing';
+      };
+
+      editButton.addEventListener('click', () => {
+        const editing = root.contentEditable === 'true';
+        root.contentEditable = String(!editing);
+        root.classList.toggle('is-editing', !editing);
+        editButton.textContent = editing ? 'Edit text' : 'Finish editing';
+        if (editing) save(); else root.focus();
+      });
+
+      root.addEventListener('input', () => {
+        window.clearTimeout(saveTimer);
+        saveTimer = window.setTimeout(save, 450);
+      });
+
+      undoButton.addEventListener('click', () => { ensureEditing(); document.execCommand('undo'); });
+      redoButton.addEventListener('click', () => { ensureEditing(); document.execCommand('redo'); });
+      boldButton.addEventListener('click', () => {
+        ensureEditing();
+        root.focus();
+        restoreSelection();
+        document.execCommand('bold');
+      });
+
+      fontSelect.addEventListener('change', () => {
+        ensureEditing();
+        root.focus();
+        restoreSelection();
+        document.execCommand('fontName', false, fontSelect.value);
+      });
+
+      accentInput.addEventListener('input', () => {
+        document.documentElement.style.setProperty('--accent', accentInput.value);
+        setStatus('Accent color updated');
+      });
+
+      printButton.addEventListener('click', () => window.print());
+    })();
+  </script>
+</body>
+</html>

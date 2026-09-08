@@ -1,0 +1,12 @@
+{% assign lang = include.lang | default: 'en' %}
+<div class="experience-timeline">
+  {% for experience in site.data.portfolio.experience limit:2 %}
+  <div class="experience-item">
+    <div class="exp-logo">{% if experience.id == 'longcat-intern' %}<img src="{{ '/images/logos/longcat.png' | relative_url }}" alt="Meituan LongCat" loading="lazy">{% else %}<img src="{{ '/images/logos/mbzuai.png' | relative_url }}" alt="MBZUAI" loading="lazy">{% endif %}</div>
+    <div class="exp-body">
+      <div class="experience-header"><div class="experience-title"><strong>{{ experience.role[lang] }}</strong>, {{ experience.organization[lang] }}</div><div class="experience-meta">{{ experience.period[lang] }}</div></div>
+      <p class="experience-detail">{{ experience.description[lang] }}</p>
+    </div>
+  </div>
+  {% endfor %}
+</div>

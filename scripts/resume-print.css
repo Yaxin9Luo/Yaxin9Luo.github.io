@@ -1,0 +1,8 @@
+/* Deterministic A4 layout when exporting the supplied editable HTML with WeasyPrint. */
+@media print {
+  .header { grid-template-columns: 78mm 98mm !important; }
+  .contact { grid-template-columns: 46.5mm 46.5mm !important; }
+  .contact .wide { grid-column: 1 / 3 !important; }
+  .sheet { height: 297mm !important; break-after: page !important; page-break-after: always !important; }
+  .sheet:last-child { break-after: auto !important; page-break-after: auto !important; }
+}

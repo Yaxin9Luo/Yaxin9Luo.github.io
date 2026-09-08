@@ -797,8 +797,20 @@ html {
 }
 .cv-download i { margin-right: 8px; }
 
+.cv-hero--resume .cv-hero__inner { flex-wrap: wrap; }
+.resume-downloads {
+  display: flex; flex-wrap: wrap; gap: .6rem 1rem; align-items: center;
+  flex: 1 0 100%; font-size: .85rem;
+}
+.resume-downloads a { white-space: nowrap; }
+.resume-stars { display: inline-block; font-size: .75em; font-weight: 500; color: $accent-gold; }
+.resume-projects .cv-card { margin-bottom: 1.5rem; }
+.resume-projects h3 { margin-top: 0; }
+.resume-projects .cv-card p { font-size: .9em; line-height: 1.65; }
+
 .cv-grid { display: grid; grid-template-columns: 1.2fr 1.6fr; gap: 22px; margin-top: 20px; }
 @media (max-width: 900px) { .cv-grid { grid-template-columns: 1fr; } }
+.cv-grid--resume { grid-template-columns: repeat(auto-fit, minmax(min(100%, 28rem), 1fr)); }
 
 .cv-section {
   background: rgba($accent-gold, 0.03);

@@ -4,6 +4,6 @@ collection: publications
 category: manuscripts
 permalink: /publication/NextGen-CAPTCHAs
 date: 2026-02-10
-venue: 'arXiv'
+venue: 'ICML 2026'
 paperurl: 'https://arxiv.org/abs/2602.09012'
 ---

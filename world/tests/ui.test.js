@@ -52,15 +52,19 @@ test('closing a direct paper link returns to a stable site entry',()=>{
 });
 
 
-test('CV keeps a meaningful bilingual accessible name after language application',()=>{
+test('CV downloads and accessible labels follow language changes in every persistent entry',()=>{
   const {ui,element,restore}=reader();try{
-    const cv=element('.persistent-cv'),modalCV=element('.modal-cv');
-    ui.root.querySelectorAll=selector=>selector==='.header-nav .nav-link,.modal-tool'?[cv]:selector==='.persistent-cv,.modal-cv'?[cv,modalCV]:[];
+    const cv=element('.persistent-cv'),modalCV=element('.modal-cv'),quickCV=element('.quick-links a');
+    ui.root.querySelectorAll=selector=>selector==='.header-nav .nav-link,.modal-tool'?[cv]:selector==='.persistent-cv,.modal-cv'?[cv,modalCV]:selector==='a[data-i18n="cv"]'?[quickCV]:[];
     ui.t=key=>key==='cv'?(ui.options.lang==='zh'?'打开简历':'Open CV'):key;ui.updateStatus=()=>{};
     Interface.prototype.applyLanguage.call(ui);
     assert.equal(cv.getAttribute('aria-label'),'Open CV · PDF');
+    for(const link of [cv,modalCV,quickCV])assert.equal(link.getAttribute('href'),'/files/CV_YaxinLuo.pdf');
     ui.options.lang='zh';Interface.prototype.applyLanguage.call(ui);
     assert.equal(cv.getAttribute('aria-label'),'打开简历 · PDF');assert.equal(modalCV.getAttribute('aria-label'),'打开简历 · PDF');
+    for(const link of [cv,modalCV,quickCV])assert.equal(link.getAttribute('href'),'/files/CV_YaxinLuo_zh.pdf');
+    ui.options.lang='en';Interface.prototype.applyLanguage.call(ui);
+    for(const link of [cv,modalCV,quickCV])assert.equal(link.getAttribute('href'),'/files/CV_YaxinLuo.pdf');
   }finally{restore();}
 });
 

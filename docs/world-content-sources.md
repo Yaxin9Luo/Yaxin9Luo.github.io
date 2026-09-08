@@ -2,6 +2,8 @@
 
 Content audit: 7 September 2026. Base repository content was inspected at `d74149b` (`Update homepage research interests`). The interactive world is a fictional presentation of an actual research portfolio. Game ranks, spell names, locations, and collectibles are not academic credentials or research results.
 
+**8 September update:** [Resume refresh and verification](resume-refresh-2026-09-08.md) documents the newly supplied bilingual resumes, dated GitHub star counts, FigMirror project, four additional publications, and synchronized traditional pages. That update supersedes the historical notes below about unchanged PDFs, absent Chinese name, education dates, and the eleven-paper count. Both entrances now share fifteen papers and current resume facts.
+
 ## Local source coverage
 
 | Source | Information used |
