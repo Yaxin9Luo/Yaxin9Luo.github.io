@@ -84,9 +84,26 @@ test('ground preview resumes without hidden time and completes mounting in real 
   assert.ok(Math.abs(qa.updates.at(-1).args.transitionProgress-1)<1e-8,'mounting should finish in 1.2 seconds of visible playback');
 });
 
+test('a stalled ground recording cannot claim a complete sequence after skipping its actions',async()=>{
+  const qa=await fixture(),select=qa.element('.actor-tools').querySelector('select');select.value='walk';select.onchange({target:select});qa.recordActor();
+  qa.tick(0);qa.tick(100);qa.tick(16100);
+  await qa.recorders[0].finish();await qa.flush();
+  assert.match(qa.requests[0].url,/invalid-frame-stall/);
+  assert.equal(qa.state().recording,null);assert.equal(qa.streams[0].getTracks()[0].stops,1);
+});
+
+test('an uninterrupted ground recording includes moving gaits and both complete broom transitions',async()=>{
+  const qa=await fixture(),select=qa.element('.actor-tools').querySelector('select');select.value='walk';select.onchange({target:select});qa.recordActor();
+  for(let time=0;time<=16000;time+=100)qa.tick(time);
+  for(const speed of [CHARACTER_GROUND_MOTION.walkSpeed,CHARACTER_GROUND_MOTION.runSpeed])assert.ok(qa.updates.some(({args})=>args.groundSpeed===speed));
+  for(const mode of ['mounting','dismounting'])assert.ok(qa.updates.some(({args})=>args.mode===mode&&args.transitionProgress>.999));
+  assert.equal(qa.casts.length,1);
+  await qa.recorders[0].finish();await qa.flush();assert.match(qa.requests[0].url,/record-complete/);assert.doesNotMatch(qa.requests[0].url,/invalid/);
+});
+
 test('one 16-second sequence releases its stream and restores paused inspection state',async()=>{
   const qa=await fixture();qa.element('[data-actor-play]').click();qa.element('#wire').disabled=true;qa.recordActor();qa.recordActor();assert.equal(qa.recorders.length,1);assert.equal(qa.state().controls.enabled,false);
-  for(const time of [0,2000,4000,8000,10000,12000,16000])qa.tick(time);
+  for(let time=0;time<=16000;time+=100)qa.tick(time);
   assert.equal(qa.casts.length,1);assert.equal(qa.recorders[0].stopCount,1);assert.ok(qa.updates.some(update=>update.args.boost));
   await qa.recorders[0].finish();assert.equal(qa.state().recording,null);assert.equal(qa.state().actorPlaying,false);assert.equal(qa.element('[data-actor-record]').disabled,false);assert.equal(qa.streams[0].getTracks()[0].stops,1);
   assert.equal(qa.state().controls.enabled,true);assert.equal(qa.state().controls.autoRotate,true);assert.equal(qa.element('#wire').disabled,true);assert.equal(qa.recorders[0].onstop,null);
@@ -107,7 +124,7 @@ test('asynchronous PNG encoding retains the rendered asset, light, shadow, view 
 });
 
 test('hiding a recording stops and releases immediately, and the exported take is explicitly invalid',async()=>{
-  const qa=await fixture();qa.recordActor();qa.tick(4000);qa.document.hidden=true;qa.listeners.visibilitychange?.();
+  const qa=await fixture();qa.recordActor();qa.tick(100);qa.document.hidden=true;qa.listeners.visibilitychange?.();
   assert.equal(qa.recorders[0].stopCount,1);assert.equal(qa.streams[0].getTracks()[0].stops,1);
   await qa.recorders[0].finish();await qa.flush();assert.match(qa.requests[0].url,/invalid/);assert.match(qa.requests[0].url,/hidden|visibility/);assert.equal(qa.state().recording,null);
 });
@@ -131,7 +148,7 @@ test('shadow toggle updates renderer, caster and material state in both directio
 
 test('device errors and spontaneous stops cannot be exported as completed 16-second takes',async()=>{
   for(const deviceError of [true,false]){
-    const qa=await fixture();qa.recordActor();qa.tick(3000);
+    const qa=await fixture();qa.recordActor();qa.tick(100);
     if(deviceError)qa.recorders[0].onerror({error:new Error('encoder failed')});
     await qa.recorders[0].finish();await qa.flush();assert.equal(qa.state().recording,null);assert.equal(qa.streams[0].getTracks()[0].stops,1);
     assert.match(qa.requests[0].url,deviceError?/invalid-recorder-error/:/invalid-recorder-stopped-early/);
@@ -140,13 +157,13 @@ test('device errors and spontaneous stops cannot be exported as completed 16-sec
 });
 
 test('a page exit between stop request and final chunks invalidates that take without double release',async()=>{
-  const qa=await fixture();qa.recordActor();for(const time of [0,2000,4000,8000,10000,12000,16000])qa.tick(time);
+  const qa=await fixture();qa.recordActor();for(let time=0;time<=16000;time+=100)qa.tick(time);
   qa.listeners.pagehide({persisted:false});await qa.recorders[0].finish();await qa.flush();
   assert.match(qa.requests[0].url,/invalid-page-hidden/);assert.equal(qa.recorders[0].stopCount,1);assert.equal(qa.streams[0].getTracks()[0].stops,1);assert.equal(qa.urls.size,0);
 });
 
 test('the guardian sequence dispatches its channel action instead of a rider-only cast request',async()=>{
-  const qa=await fixture();qa.show('wraith');qa.recordActor();for(const time of [0,2000,4000,8000,10000])qa.tick(time);
+  const qa=await fixture();qa.show('wraith');qa.recordActor();for(let time=0;time<=10000;time+=100)qa.tick(time);
   assert.equal(qa.updates.at(-1).args.state,'channel');assert.equal(qa.casts.length,0);
-  qa.tick(12000);qa.tick(16000);await qa.recorders[0].finish();assert.equal(qa.state().recording,null);
+  for(let time=10100;time<=16000;time+=100)qa.tick(time);await qa.recorders[0].finish();assert.equal(qa.state().recording,null);
 });

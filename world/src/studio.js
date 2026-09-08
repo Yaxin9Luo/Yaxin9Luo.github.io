@@ -220,8 +220,9 @@ new ResizeObserver(()=>{const r=canvas.getBoundingClientRect(),dpr=renderPixelRa
 try{await Promise.all([loadLandscapeAssets(),models.loadArchitectureAssets?.(),loadCharacterAssets(),environmentReady]);await show(new URLSearchParams(location.search).get('asset')); document.querySelector('#loading').hidden=true;document.body.dataset.ready='true';}catch(error){document.querySelector('#loading').innerHTML='<div class="studio-error">Asset loading failed. The portfolio remains available from the link above.</div>';console.error(error);}
 function frame(now){
   requestAnimationFrame(frame);
-  const elapsed=Math.max(0,Math.min((now-last)/1000,.25));last=now;
+  const rawElapsed=Math.max(0,(now-last)/1000),elapsed=Math.min(rawElapsed,.25);last=now;
   if(document.hidden||capturePageHidden)return;
+  if(recording&&!recording.stopping&&rawElapsed>.25+1e-8)stopRecording('frame-stall');
   updateRecording(now);controls.update(elapsed);current?.userData.update?.(now/1000,false);
   const ground=groundActions.has(actorAction),mode=actorAction==='mount'?'mounting':actorAction==='dismount'?'dismounting':ground?'grounded':'flying';
   const cycle=actorAction==='run'?CHARACTER_GROUND_MOTION.runCycle:CHARACTER_GROUND_MOTION.walkCycle;
