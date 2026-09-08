@@ -101,8 +101,10 @@ export function createLake(root, scene) {
   const size=512,data=new Uint8Array(size*size*4);
   for(let y=0;y<size;y++)for(let x=0;x<size;x++){
     const i=(y*size+x)*4,u=x*128/size,v=y*128/size;
-    const sx=(noise(u*.15+.2,v*.25)-noise(u*.15-.2,v*.25))*.46;
-    const sy=(noise(u*.15,v*.25+.2)-noise(u*.15,v*.25-.2))*.46;
+    // Fine wind-aligned ripples break the broad reflection into moving facets.
+    const ripple=Math.sin((x*28+y*9)*TAU/size)*.055+Math.sin((x*53-y*13)*TAU/size)*.022;
+    const sx=(noise(u*.15+.2,v*.25)-noise(u*.15-.2,v*.25))*.46+ripple;
+    const sy=(noise(u*.15,v*.25+.2)-noise(u*.15,v*.25-.2))*.46+ripple*.32;
     const n=new THREE.Vector3(sx,sy,1).normalize();
     data[i]=(n.x*.5+.5)*255;data[i+1]=(n.y*.5+.5)*255;data[i+2]=(n.z*.5+.5)*255;data[i+3]=255;
   }
@@ -111,7 +113,7 @@ export function createLake(root, scene) {
   const reflection=water.material.uniforms.mirrorSampler.value;reflection.generateMipmaps=true;reflection.minFilter=THREE.LinearMipmapLinearFilter;
   water.name='Reflective lake';water.rotation.x=-Math.PI/2;water.position.y=-15;
   water.material.uniforms.size.value=2.5;
-  water.material.fragmentShader=water.material.fragmentShader.replace('vec3( 1.5, 1.0, 1.5 )','vec3( 0.55, 1.0, 0.55 )').replace('100.0, 2.0, 0.5','45.0, 0.45, 0.35');
+  water.material.fragmentShader=water.material.fragmentShader.replace('vec3( 1.5, 1.0, 1.5 )','vec3( 0.9, 1.0, 0.9 )').replace('100.0, 2.0, 0.5','45.0, 0.9, 0.35');
   root.add(water);
   // Reflection is refreshed at a controlled cadence; the live surface still moves every frame.
   const reflect=water.onBeforeRender;let frame=0;

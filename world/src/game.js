@@ -263,7 +263,7 @@ export class Game {
     Object.assign(this.keyLight.shadow.camera, { left: -145, right: 145, top: 150, bottom: -150, near: 1, far: 400 });
     this.keyLight.shadow.bias = -.00015;
     this.keyLight.shadow.normalBias = .055;
-    this.keyLight.shadow.radius = 2;
+    this.keyLight.shadow.radius = 4.5;
     this.scene.add(this.keyLight, this.keyLight.target);
     this.fillLight = new THREE.DirectionalLight('#ffe2be', 1.8);
     this.fillLight.position.set(60, 80, 100);
@@ -281,7 +281,7 @@ export class Game {
     this.environment = environment;
     if(environment.night>.05&&this._enhancementController&&!this._nightAttempted)this._loadNightEnvironment({signal:this._enhancementController.signal,deadline:performance.now()+90000}).catch(()=>{});
     this.scene.background.copy(environment.horizon);
-    this.scene.fog.color.copy(environment.horizon);
+    this.scene.fog.color.copy(environment.fog);
     this.scene.fog.density = environment.fogDensity;
     this.renderer.toneMappingExposure = environment.exposure;
     this.scene.environmentIntensity = .14 + (1 - environment.night) * .08;
@@ -290,6 +290,7 @@ export class Game {
     this.ambientLight.intensity = environment.ambientIntensity;
     this.keyLight.color.copy(environment.key);
     this.keyLight.intensity = environment.keyIntensity;
+    this.keyLight.shadow.intensity = environment.shadowIntensity;
     this.keyLight.position.copy(this.keyLight.target.position).addScaledVector(environment.lightDirection, 240);
     this.fillLight.color.copy(environment.fill);
     this.fillLight.intensity = environment.fillIntensity;

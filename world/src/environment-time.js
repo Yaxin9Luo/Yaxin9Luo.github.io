@@ -8,13 +8,13 @@ const smooth = value => value * value * (3 - 2 * value);
 // Art-directed palettes. Lighting and sky share these values; surfaces keep
 // their own albedo instead of receiving a full-screen colour filter.
 const palettes = {
-  night: { zenith: '#152d59', horizon: '#6382a0', cloud: '#6386a4', fog: '#46617c', key: '#c3deff', sky: '#b6d1eb', ground: '#596d88', fill: '#b7ccec', water: '#173d50', keyIntensity: 3.35, ambientIntensity: 1.75, fillIntensity: .90, fogDensity: .00135, exposure: 1.16, night: 1 },
-  dawn: { zenith: '#7195c4', horizon: '#edbdb0', cloud: '#f0d1c0', fog: '#a8a9bc', key: '#ffd4b8', sky: '#cad6f0', ground: '#9f9694', fill: '#9aafdf', water: '#537481', keyIntensity: 3.3, ambientIntensity: 1.8, fillIntensity: .65, fogDensity: .0011, exposure: 1.02, night: .12 },
-  day: { zenith: '#397bb1', horizon: '#c9e4e9', cloud: '#fff3dd', fog: '#abc6d5', key: '#fff0d5', sky: '#b3d6f2', ground: '#9d9d83', fill: '#bed8ef', water: '#236775', keyIntensity: 3.4, ambientIntensity: 2.0, fillIntensity: 1.15, fogDensity: .00095, exposure: 1.02, night: 0 },
-  dusk: { zenith: '#6979ad', horizon: '#efac87', cloud: '#f4bc96', fog: '#b49da6', key: '#ffd2a5', sky: '#c2b9e0', ground: '#a39390', fill: '#a6bbe9', water: '#53697f', keyIntensity: 3.35, ambientIntensity: 1.8, fillIntensity: .7, fogDensity: .0012, exposure: 1.0, night: .28 },
+  night: { zenith: '#17244d', horizon: '#496c7b', cloud: '#536d8b', fog: '#354f66', key: '#c3deff', sky: '#b6d1eb', ground: '#596d88', fill: '#b7ccec', water: '#173d50', keyIntensity: 1.5, ambientIntensity: .8, fillIntensity: .25, fogDensity: .00135, exposure: 1.0, night: 1 },
+  dawn: { zenith: '#7195c4', horizon: '#edbdb0', cloud: '#f0d1c0', fog: '#a8a9bc', key: '#ffd4b8', sky: '#cad6f0', ground: '#9f9694', fill: '#9aafdf', water: '#537481', keyIntensity: 2.15, ambientIntensity: .9, fillIntensity: .3, fogDensity: .0011, exposure: 1.0, night: .12 },
+  day: { zenith: '#397bb1', horizon: '#c9e4e9', cloud: '#fff3dd', fog: '#abc6d5', key: '#fff0d5', sky: '#b3d6f2', ground: '#9d9d83', fill: '#bed8ef', water: '#236775', keyIntensity: 3.0, ambientIntensity: .95, fillIntensity: .35, fogDensity: .00095, exposure: 1.0, night: 0 },
+  dusk: { zenith: '#6979ad', horizon: '#efac87', cloud: '#f4bc96', fog: '#b49da6', key: '#ffd2a5', sky: '#c2b9e0', ground: '#a39390', fill: '#a6bbe9', water: '#53697f', keyIntensity: 2.0, ambientIntensity: .85, fillIntensity: .28, fogDensity: .0012, exposure: 1.0, night: .28 },
 };
-palettes.noon = { ...palettes.day, zenith: '#3078b1', key: '#fff6e7', keyIntensity: 3.5, fogDensity: .0009 };
-palettes.midnight = { ...palettes.night, zenith: '#13274d', horizon: '#5e7798', cloud: '#5a7798', ambientIntensity: 1.65, fillIntensity: .84 };
+palettes.noon = { ...palettes.day, zenith: '#3078b1', key: '#fff6e7', keyIntensity: 3.15, fogDensity: .0009 };
+palettes.midnight = { ...palettes.night, zenith: '#121d40', horizon: '#405f73', cloud: '#48617e', ambientIntensity: .75, fillIntensity: .23 };
 const colorKeys = ['zenith', 'horizon', 'cloud', 'fog', 'key', 'sky', 'ground', 'fill', 'water'];
 for (const palette of Object.values(palettes)) for (const key of colorKeys) palette[key] = new THREE.Color(palette[key]);
 const stops = [[0, 'midnight'], [.08, 'night'], [.19, 'night'], [.265, 'dawn'], [.36, 'day'], [.46, 'day'], [.5, 'noon'], [.54, 'day'], [.62, 'day'], [.735, 'dusk'], [.815, 'night'], [.92, 'night'], [1, 'midnight']];
@@ -42,6 +42,9 @@ export function sampleEnvironment(phase) {
     const horizontalScale = Math.sqrt(1 - elevation ** 2) / Math.hypot(direction.x, direction.z);
     direction.set(direction.x * horizontalScale, elevation, direction.z * horizontalScale);
   }
+  // Low-angle keys retain surface light without casting long black stripes.
+  const shadowElevation = smooth(THREE.MathUtils.clamp((direction.y - .05) / .3, 0, 1));
+  result.shadowIntensity = THREE.MathUtils.lerp(.72, .55, result.night) * shadowElevation;
   return result;
 }
 

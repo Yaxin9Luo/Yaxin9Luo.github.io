@@ -44,7 +44,7 @@ test('every sampled time retains finite lighting and unit directions, with reada
   for (let i = 0; i <= 1000; i++) {
     const value = sampleEnvironment(i / 1000);
     assert.ok(value.night >= 0 && value.night <= 1);
-    assert.ok(value.ambientIntensity >= 1.5);
+    assert.ok(value.ambientIntensity >= .7);
     assert.ok(value.exposure >= .9 && value.exposure <= 1.2);
     assert.ok(Math.abs(value.lightDirection.length() - 1) < 1e-10);
     for (const color of ['zenith', 'horizon', 'fog', 'key', 'cloud']) for (const channel of ['r','g','b']) assert.ok(Number.isFinite(value[color][channel]));
@@ -54,7 +54,7 @@ test('every sampled time retains finite lighting and unit directions, with reada
 test('the automatic key stays above the horizon throughout the cycle while sky bodies keep their true crossings', () => {
   let lowest = cycle[0];
   for (const value of cycle) {
-    assert.ok(value.keyIntensity > 3, 'horizon protection must not remove the authored illumination');
+    assert.ok(value.keyIntensity >= 1.4, 'horizon protection must retain readable surface illumination');
     assert.ok(Math.abs(value.lightDirection.length() - 1) < 1e-10);
     if (value.lightDirection.y < lowest.lightDirection.y) lowest = value;
   }
@@ -86,19 +86,22 @@ test('solar and lunar handoffs have continuous key direction and velocity, inclu
   assert.ok(maxVelocityChange < .075, `key direction velocity has a hard transition: ${maxVelocityChange}`);
 });
 
-test('horizon protection preserves all four manual palettes and their authored intensities', () => {
-  const colors = ['zenith', 'horizon', 'cloud', 'fog', 'key', 'sky', 'ground', 'fill', 'water'];
-  const numbers = ['keyIntensity', 'ambientIntensity', 'fillIntensity', 'fogDensity', 'exposure', 'night'];
-  const presets = {
-    dawn: {colors: ['7195c4', 'edbdb0', 'f0d1c0', 'a8a9bc', 'ffd4b8', 'cad6f0', '9f9694', '9aafdf', '537481'], numbers: [3.3, 1.8, .65, .0011, 1.02, .12]},
-    day: {colors: ['397bb1', 'c9e4e9', 'fff3dd', 'abc6d5', 'fff0d5', 'b3d6f2', '9d9d83', 'bed8ef', '236775'], numbers: [3.4, 2.0, 1.15, .00095, 1.02, 0]},
-    dusk: {colors: ['6979ad', 'efac87', 'f4bc96', 'b49da6', 'ffd2a5', 'c2b9e0', 'a39390', 'a6bbe9', '53697f'], numbers: [3.35, 1.8, .7, .0012, 1.0, .28]},
-    night: {colors: ['152d59', '6382a0', '6386a4', '46617c', 'c3deff', 'b6d1eb', '596d88', 'b7ccec', '173d50'], numbers: [3.35, 1.75, .90, .00135, 1.16, 1]},
-  };
-  for (const [mode, expected] of Object.entries(presets)) {
-    const actual = sampleEnvironment(TIME_PHASES[mode]);
-    assert.deepEqual(colors.map(key => actual[key].getHexString()), expected.colors, `${mode} colours`);
-    numbers.forEach((key, i) => assert.ok(Math.abs(actual[key] - expected.numbers[i]) < 1e-12, `${mode} ${key}`));
+test('day and night preserve pigment contrast with a continuous soft shadow handoff', () => {
+  const day = sampleEnvironment(TIME_PHASES.day), night = sampleEnvironment(TIME_PHASES.night);
+  const luminance = c => c.r * .2126 + c.g * .7152 + c.b * .0722;
+  assert.ok(day.keyIntensity > night.keyIntensity * 1.7);
+  assert.ok(night.ambientIntensity > .7, 'night keeps diffuse surface detail');
+  assert.ok(night.fillIntensity < night.ambientIntensity, 'fill must not flatten material shading');
+  assert.ok(luminance(night.horizon) < luminance(day.horizon) * .5);
+  assert.ok(luminance(night.fog) < luminance(night.horizon));
+  for (let i = 0; i < cycle.length; i++) {
+    const current = cycle[i], next = cycle[(i + 1) % cycle.length];
+    assert.ok(current.shadowIntensity >= 0 && current.shadowIntensity <= 1);
+    if (current.lightDirection.y <= .06) assert.ok(current.shadowIntensity < .01);
+    for (const key of ['keyIntensity', 'ambientIntensity', 'fillIntensity', 'exposure', 'shadowIntensity']) {
+      assert.ok(Number.isFinite(current[key]));
+      assert.ok(Math.abs(current[key] - next[key]) < .01, `${key} must not jump`);
+    }
   }
 });
 
@@ -143,5 +146,5 @@ test('the clock snapshot distinguishes fixed presets, auto time and pause reason
 test('noon and midnight have distinct continuous light while retaining readable surfaces',()=>{
   assert.ok(sampleEnvironment(TIME_PHASES.noon).keyIntensity>sampleEnvironment(TIME_PHASES.day).keyIntensity);
   assert.ok(sampleEnvironment(TIME_PHASES.midnight).ambientIntensity<sampleEnvironment(TIME_PHASES.night).ambientIntensity);
-  assert.ok(sampleEnvironment(0).ambientIntensity>=1.5);
+  assert.ok(sampleEnvironment(0).ambientIntensity>=.7);
 });

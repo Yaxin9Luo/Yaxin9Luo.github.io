@@ -49,19 +49,21 @@ export function createGardenLamp(){
 }
 
 export function createLampGroundGlow(sites,heightAt){
-  const positions=[],uv=[],indices=[],steps=10;
-  for(const [x,,z,radius=5.2] of sites){
+  const positions=[],uv=[],strengths=[],indices=[],steps=10;
+  for(const [x,,z,radius=3.7] of sites){
+    const variation=(Math.sin(x*12.9898+z*78.233)*43758.5453)%1;
+    const shape=.88+Math.abs(variation)*.22,strength=.75+Math.abs(variation)*.25;
     const start=positions.length/3;
     for(let row=0;row<=steps;row++)for(let col=0;col<=steps;col++){
-      const u=col/steps,v=row/steps,px=x+(u-.5)*radius*2,pz=z+(v-.5)*radius*2;
-      positions.push(px,heightAt(px,pz)+.105,pz);uv.push(u,v);
+      const u=col/steps,v=row/steps,px=x+(u-.5)*radius*2*shape,pz=z+(v-.5)*radius*2/shape;
+      positions.push(px,heightAt(px,pz)+.105,pz);uv.push(u,v);strengths.push(strength);
       if(row<steps&&col<steps){const a=start+row*(steps+1)+col;indices.push(a,a+steps+1,a+1,a+1,a+steps+1,a+steps+2);}
     }
   }
-  const geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));geometry.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2));geometry.setIndex(indices);
+  const geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));geometry.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2));geometry.setIndex(indices);geometry.setAttribute('strength',new THREE.Float32BufferAttribute(strengths,1));
   const material=new THREE.ShaderMaterial({transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,uniforms:{nightFactor:{value:1}},
-    vertexShader:'varying vec2 v;void main(){v=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
-    fragmentShader:'uniform float nightFactor;varying vec2 v;void main(){float r=length(v-.5)*2.;float light=pow(max(0.,1.-r),2.6)*.23*nightFactor;gl_FragColor=vec4(1.,.61,.29,light);}',
+    vertexShader:'attribute float strength;varying float intensity;varying vec2 v;void main(){v=uv;intensity=strength;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
+    fragmentShader:'uniform float nightFactor;varying float intensity;varying vec2 v;void main(){float r=length(v-.5)*2.;float light=pow(max(0.,1.-r),3.)*.15*nightFactor*intensity;gl_FragColor=vec4(1.,.61,.29,light);}',
   });
   const mesh=new THREE.Mesh(geometry,material);mesh.name='Warm light on garden paths';mesh.renderOrder=1;return mesh;
 }
