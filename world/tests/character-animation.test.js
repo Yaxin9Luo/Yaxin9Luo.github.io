@@ -145,6 +145,7 @@ test('published assets carry complete skins/actions and respect per-character bu
       assert.ok(Number.isInteger(primitive.attributes.NORMAL));
     }
     if (kind === 'wizard') {
+      for(const [key,value] of Object.entries(CHARACTER_GROUND_MOTION))assert.equal(entry.groundMotion[key],value,'baked ground motion must match runtime '+key);
       for (const name of ['Academy midnight wool', 'Graphite twill riding trousers', 'Burgundy satin lining']) {
         const material = json.materials.find((item) => item.name === name);
         assert.ok(Number.isInteger(material?.normalTexture?.index), `${name} must export its woven normal map`);
@@ -434,7 +435,7 @@ test('exported cloth changes shape, loops continuously and stays finite for ever
     for (const name of group.userData.characterAnimation.actions.keys()) {
       const duration = group.userData.characterAnimation.actions.get(name).getClip().duration;
       const oneShotDuration = { boost_start: .2, boost_end: .35, cast: .6, ground_cast:.6, mount:1.2, dismount:1.2 }[name];
-      if (factory === createWizard) assert.ok(Math.abs(duration - (oneShotDuration || {ground_idle:2,walk:1,run:.7}[name] || 4)) < 1e-5, 'clips must start at zero and use the authored duration');
+      if (factory === createWizard) assert.ok(Math.abs(duration - (oneShotDuration || {ground_idle:2,walk:CHARACTER_GROUND_MOTION.walkCycle,run:CHARACTER_GROUND_MOTION.runCycle}[name] || 4)) < 1e-5, 'clips must start at zero and use the authored duration');
       setAction(group, name, 0);
       const start = cloth.getVertexPosition(index, new Vector3());
       for (const time of [0, .0625, .125, .25, .375, .5, .625, .75, .875, .999975].map((phase) => phase * duration)) {
@@ -628,15 +629,15 @@ test('ground poses plant sole anchors and isolated broom visibility preserves cl
 });
 test('authored stance foot displacement cancels world travel throughout walk and run contact',()=>{
  const rider=createWizard();
- for(const [name,speed,duration,contact]of [['walk',1.6,1,.58],['run',3.8,.7,.36]]){
+ for(const [name,speed,duration,contact]of [['walk',CHARACTER_GROUND_MOTION.walkSpeed,CHARACTER_GROUND_MOTION.walkCycle,CHARACTER_GROUND_MOTION.walkContact],['run',CHARACTER_GROUND_MOTION.runSpeed,CHARACTER_GROUND_MOTION.runCycle,CHARACTER_GROUND_MOTION.runContact]]){
   for(const side of ['L','R']){
-   const offset=side==='L'?0:.5;let origin;
-   for(const p of [.025,.075,.15,.25,.33].filter(p=>p<contact)){
+   const offset=side==='L'?0:.5,origins={};
+   for(const p of [.025,.075,.15,.25,contact*.86,contact*.98].filter(p=>p<contact)){
     const phase=(p-offset+1)%1;setAction(rider,name,phase*duration);
-    const foot=worldPosition(rider,'sole.'+side);foot.z-=speed*p*duration;
-    if(!origin)origin=foot.clone();
-    assert.ok(Math.abs(foot.y-CHARACTER_GROUND_MOTION.soleY)<.006,`${name} ${side} foot height ${foot.y}`);
-    assert.ok(Math.abs(foot.z-origin.z)<.006,`${name} ${side} foot slid ${foot.z-origin.z}`);
+    const heel=worldPosition(rider,'sole.'+side),toe=worldPosition(rider,'toe.'+side),pivot=toe.y<heel.y?'toe':'heel';
+    const foot=pivot==='toe'?toe:heel;foot.z-=speed*p*duration;origins[pivot]??=foot.clone();
+    assert.ok(Math.abs(foot.y-CHARACTER_GROUND_MOTION.soleY)<.006,`${name} ${side} ${pivot} height ${foot.y}`);
+    assert.ok(Math.abs(foot.z-origins[pivot].z)<.006,`${name} ${side} ${pivot} slid ${foot.z-origins[pivot].z}`);
    }
   }
  }
@@ -661,12 +662,13 @@ test('mount and dismount endpoints match standing and flight while pause freezes
 });
 
 test('ground contact report measures dense samples and standing body clearance',t=>{
- const rider=createWizard();let maxHeight=0,maxDrift=0;
- for(const [name,speed,duration,contact]of [['walk',1.6,1,.58],['run',3.8,.7,.36]])for(const side of ['L','R']){
-  let origin;for(let i=1;i<36;i++){
+ const rider=createWizard();let maxHeight=0,maxDrift=0,worst;
+ for(const [name,speed,duration,contact]of [['walk',CHARACTER_GROUND_MOTION.walkSpeed,CHARACTER_GROUND_MOTION.walkCycle,CHARACTER_GROUND_MOTION.walkContact],['run',CHARACTER_GROUND_MOTION.runSpeed,CHARACTER_GROUND_MOTION.runCycle,CHARACTER_GROUND_MOTION.runContact]])for(const side of ['L','R']){
+  const origins={};for(let i=1;i<36;i++){
    const p=contact*i/36,phase=(p-(side==='L'?0:.5)+1)%1;setAction(rider,name,phase*duration);
-   const foot=worldPosition(rider,'sole.'+side);foot.z-=speed*p*duration;
-   origin??=foot.clone();maxHeight=Math.max(maxHeight,Math.abs(foot.y-CHARACTER_GROUND_MOTION.soleY));maxDrift=Math.max(maxDrift,Math.abs(foot.z-origin.z));
+   const heel=worldPosition(rider,'sole.'+side),toe=worldPosition(rider,'toe.'+side),pivot=toe.y<heel.y?'toe':'heel';
+   const foot=pivot==='toe'?toe:heel;foot.z-=speed*p*duration;
+   origins[pivot]??=foot.clone();if(Math.abs(foot.y-CHARACTER_GROUND_MOTION.soleY)>maxHeight)worst={name,side,p,phase,foot:foot.toArray()};maxHeight=Math.max(maxHeight,Math.abs(foot.y-CHARACTER_GROUND_MOTION.soleY));maxDrift=Math.max(maxDrift,Math.abs(foot.z-origins[pivot].z));
   }
  }
  setAction(rider,'ground_idle',0);const bounds=new Box3();
@@ -674,6 +676,7 @@ test('ground contact report measures dense samples and standing body clearance',
   if(mesh.userData.broomPart)continue;
   for(let i=0;i<mesh.geometry.attributes.position.count;i+=13)bounds.expandByPoint(mesh.getVertexPosition(i,new Vector3()).applyMatrix4(mesh.matrixWorld));
  }
+ t.diagnostic('Worst contact '+JSON.stringify(worst));
  t.diagnostic(`Ground sole height error ${(maxHeight*1000).toFixed(3)} mm; stance drift ${(maxDrift*1000).toFixed(3)} mm; stand bounds ${bounds.min.toArray()} / ${bounds.max.toArray()}; full height above sole ${(bounds.max.y-CHARACTER_GROUND_MOTION.soleY).toFixed(3)} m`);
  assert.ok(maxHeight<.006);assert.ok(maxDrift<.006);
 });
@@ -690,5 +693,134 @@ test('runtime foot correction follows a slope and preserves pause without changi
 test('actual distance motion retains the stance foot through idle-to-walk blending',()=>{
  const rider=createWizard();rider.position.y=1.3;const groundSupport={x:0,z:0,y:0,normal:{x:0,y:1,z:0}};
  updateCharacter(rider,{dt:.02,mode:'grounded',groundSupport});const planted=worldPosition(rider,'sole.L');
- for(let i=1;i<=10;i++){rider.position.z=-i*.032;updateCharacter(rider,{dt:.02,mode:'grounded',groundSpeed:1.6,gaitPhase:.29+i*.02,groundSupport});const foot=worldPosition(rider,'sole.L');assert.ok(foot.distanceTo(planted)<.007,'frame '+i+' stance shifted '+foot.distanceTo(planted)+' lock '+JSON.stringify(rider.userData.characterAnimation.feet[0].lock));}
+ for(let i=1;i<=4;i++){const distance=i*.02*CHARACTER_GROUND_MOTION.walkSpeed;rider.position.z=-distance;updateCharacter(rider,{dt:.02,mode:'grounded',groundSpeed:CHARACTER_GROUND_MOTION.walkSpeed,gaitPhase:CHARACTER_GROUND_MOTION.walkContact/2+distance/(CHARACTER_GROUND_MOTION.walkSpeed*CHARACTER_GROUND_MOTION.walkCycle),groundSupport});const foot=worldPosition(rider,'sole.L');assert.ok(foot.distanceTo(planted)<.007,'frame '+i+' stance shifted '+foot.distanceTo(planted)+' lock '+JSON.stringify(rider.userData.characterAnimation.feet[0].lock));}
+});
+
+test('ground gait uses relaxed walking arms, bent running elbows and opposite limb swing',()=>{
+ const rider=createWizard();
+ for(const name of ['walk','run']){
+  const duration=rider.userData.characterAnimation.actions.get(name).getClip().duration;
+  for(const phase of [.03,.17,.53,.67]){
+   setAction(rider,name,phase*duration);
+   const handL=worldPosition(rider,'hand.L'),handR=worldPosition(rider,'hand.R');
+   const footL=worldPosition(rider,'foot.L'),footR=worldPosition(rider,'foot.R');
+   assert.ok((handL.z-handR.z)*(footL.z-footR.z)<-.015,`${name} ${phase} arms must counter the legs`);
+   for(const side of ['L','R']){
+    const shoulder=worldPosition(rider,'upper.'+side),elbow=worldPosition(rider,'fore.'+side),wrist=worldPosition(rider,'hand.'+side);
+    const angle=shoulder.clone().sub(elbow).angleTo(wrist.clone().sub(elbow))*180/Math.PI;
+    assert.ok(name==='walk'?angle>128&&angle<175:angle>64&&angle<116,`${name} ${side} elbow ${angle.toFixed(1)} degrees`);
+   }
+  }
+ }
+});
+
+test('walking and running articulate heel strike and toe off instead of keeping flat boots',()=>{
+ const rider=createWizard();
+ for(const name of ['walk','run']){
+  const duration=rider.userData.characterAnimation.actions.get(name).getClip().duration;
+  const foot=rider.getObjectByName(PropertyBinding.sanitizeNodeName('foot.L'));
+  setAction(rider,name,duration*.01);const strike=foot.getWorldQuaternion(new Quaternion());
+  setAction(rider,name,duration*(CHARACTER_GROUND_MOTION[name+'Contact']-.02));const push=foot.getWorldQuaternion(new Quaternion());
+  assert.ok(strike.angleTo(push)>.40,`${name} must visibly roll from heel to toe during stance`);
+ }
+});
+
+test('ground motion keeps alternating support, level contact and a stable knee pole through gait changes',()=>{
+ const rider=createWizard();rider.position.y=1.3;
+ const groundSupport={x:0,z:0,y:0,normal:{x:0,y:1,z:0}};
+ updateCharacter(rider,{dt:1/60,mode:'grounded',groundSupport});
+ let phase=0,priorSpeed=0;
+ for(const name of ['walk','run','walk','ground_idle','run','ground_idle']){
+  const speed=name==='run'?CHARACTER_GROUND_MOTION.runSpeed:name==='walk'?CHARACTER_GROUND_MOTION.walkSpeed:0;
+  const cycle=name==='run'?CHARACTER_GROUND_MOTION.runCycle:CHARACTER_GROUND_MOTION.walkCycle;
+  if(speed&&!priorSpeed)phase=CHARACTER_GROUND_MOTION[name+'Contact']/2;
+  priorSpeed=speed;
+  for(let frame=0;frame<90;frame++){
+   if(speed){const distance=speed/60;phase=(phase+distance/(speed*cycle))%1;rider.position.z-=distance;}
+   updateCharacter(rider,{dt:1/60,mode:'grounded',groundSpeed:speed,gaitPhase:phase,groundSupport});
+   for(const leg of rider.userData.characterAnimation.feet){
+    const heel=leg.sole.getWorldPosition(new Vector3()),toe=leg.toe.getWorldPosition(new Vector3());
+    assert.ok(Math.min(heel.y,toe.y)>-.012,`${name} ${leg.side} boot penetrated support at ${frame}`);
+    const hip=leg.thigh.getWorldPosition(new Vector3()),knee=leg.calf.getWorldPosition(new Vector3()),ankle=leg.foot.getWorldPosition(new Vector3());
+    const axis=ankle.clone().sub(hip).normalize();const bend=knee.clone().sub(hip);bend.addScaledVector(axis,-bend.dot(axis));
+    assert.ok(bend.z<.005,`${name} ${leg.side} knee flipped backwards at ${frame}`);
+    if(speed&&frame>Math.ceil(cycle*60)+9)assert.equal(leg.lockBlocked,false,`${name} ${leg.side} repeatedly exceeded reach on flat ground at ${frame}`);
+   }
+  }
+ }
+});
+
+test('runtime foot support retains the authored heel and toe rotation on level ground',()=>{
+ for(const name of ['walk','run'])for(const phase of [.02,.12,CHARACTER_GROUND_MOTION[name+'Contact']-.02]){
+  const rider=createWizard();rider.position.y=1.3;
+  const speed=CHARACTER_GROUND_MOTION[name+'Speed'],cycle=CHARACTER_GROUND_MOTION[name+'Cycle'];
+  setAction(rider,name,phase*cycle);const foot=rider.getObjectByName(PropertyBinding.sanitizeNodeName('foot.L'));
+  const authored=foot.getWorldQuaternion(new Quaternion());
+  updateCharacter(rider,{dt:1/60,mode:'grounded',groundSpeed:speed,gaitPhase:phase,groundSupport:{x:0,z:0,y:0,normal:{x:0,y:1,z:0}}});
+  assert.ok(foot.getWorldQuaternion(new Quaternion()).angleTo(authored)<.006,`${name} ${phase}: support erased foot roll`);
+ }
+});
+
+test('ground transitions preserve normalized standing joint positions at both ground endpoints',()=>{
+ const rider=createWizard();
+ for(const node of ['sole.L','sole.R','calf.L','calf.R','hand.L','hand.R']){
+  setAction(rider,'ground_idle',0);const standing=worldPosition(rider,node);
+  setAction(rider,'mount',0);assert.ok(worldPosition(rider,node).distanceTo(standing)<.004,node+' mount ground endpoint');
+  setAction(rider,'dismount',1.2);assert.ok(worldPosition(rider,node).distanceTo(standing)<.004,node+' dismount ground endpoint');
+ }
+});
+
+test('shoulders counter the pelvis and the walking support leg extends at passing',t=>{
+ const rider=createWizard();
+ for(const name of ['walk','run'])for(const phase of [0,.10,.5,.60]){
+  setAction(rider,name,phase*CHARACTER_GROUND_MOTION[name+'Cycle']);
+  const hips=worldPosition(rider,'thigh.R').sub(worldPosition(rider,'thigh.L'));
+  const shoulders=worldPosition(rider,'upper.R').sub(worldPosition(rider,'upper.L'));
+  const hipYaw=Math.atan2(hips.z,hips.x),shoulderYaw=Math.atan2(shoulders.z,shoulders.x);
+  assert.ok(hipYaw*shoulderYaw<-.001,`${name} ${phase} pelvis and shoulders rotate together`);
+ }
+ for(const [name,minimum]of [['walk',150],['run',125]]){
+  setAction(rider,name,CHARACTER_GROUND_MOTION[name+'Contact']/2*CHARACTER_GROUND_MOTION[name+'Cycle']);
+  const hip=worldPosition(rider,'thigh.L'),knee=worldPosition(rider,'calf.L'),ankle=worldPosition(rider,'foot.L');
+  const degrees=hip.sub(knee).angleTo(ankle.sub(knee))*180/Math.PI;
+  t.diagnostic(`${name} passing support knee ${degrees.toFixed(2)} degrees`);
+  assert.ok(degrees>minimum,`${name} passing support knee remains crouched at ${degrees.toFixed(1)} degrees`);
+ }
+});
+
+test('moving heel and toe support follows modest uphill and downhill surfaces',()=>{
+ for(const grade of [-.12,.12])for(const name of ['walk','run']){
+  const rider=createWizard();rider.position.y=1.3;
+  const speed=CHARACTER_GROUND_MOTION[name+'Speed'],cycle=CHARACTER_GROUND_MOTION[name+'Cycle'];
+  let phase=CHARACTER_GROUND_MOTION[name+'Contact']/2;
+  const support=()=>({x:0,z:rider.position.z,y:grade*rider.position.z,normal:{x:0,y:1,z:-grade},heightAt:(_x,z)=>grade*z});
+  updateCharacter(rider,{dt:1/60,mode:'grounded',groundSupport:support()});
+  for(let frame=0;frame<100;frame++){
+   rider.position.z-=speed/60;rider.position.y=1.3+grade*rider.position.z;phase=(phase+1/(60*cycle))%1;
+   updateCharacter(rider,{dt:1/60,mode:'grounded',groundSpeed:speed,gaitPhase:phase,groundSupport:support()});
+   for(const leg of rider.userData.characterAnimation.feet){
+    const heel=leg.sole.getWorldPosition(new Vector3()),toe=leg.toe.getWorldPosition(new Vector3());
+    const clearance=Math.min(heel.y-grade*heel.z,toe.y-grade*toe.z);
+    assert.ok(clearance>-.013,`${name} grade${grade} ${leg.side} penetrates slope by ${clearance} at ${frame}`);
+    if(rider.userData.characterAnimation.contacts[leg.side])assert.ok(Math.abs(clearance)<.018,`${name} grade${grade} ${leg.side} contact floats ${clearance} at ${frame}`);
+   }
+  }
+ }
+});
+
+test('the raised grounded posture and hat remain inside declared standing headroom',t=>{
+ const rider=createWizard();const crown=skinnedMeshes(rider.getObjectByName('rider-hat-crown'));
+ assert.ok(crown.length);let maximum=-Infinity;
+ for(const name of ['ground_idle','walk','run']){
+  const duration=rider.userData.characterAnimation.actions.get(name).getClip().duration;
+  for(let i=0;i<72;i++){
+   setAction(rider,name,duration*i/72);
+   for(const mesh of crown)for(let vertex=0;vertex<mesh.geometry.attributes.position.count;vertex++){
+    const point=mesh.getVertexPosition(vertex,new Vector3()).applyMatrix4(mesh.matrixWorld);
+    maximum=Math.max(maximum,point.y-CHARACTER_GROUND_MOTION.soleY);
+   }
+  }
+ }
+ t.diagnostic(`Maximum animated ground hat height ${maximum.toFixed(4)} m; declared headroom ${CHARACTER_GROUND_MOTION.height} m`);
+ assert.ok(maximum<=CHARACTER_GROUND_MOTION.height,'animated hat exceeds grounded obstruction clearance');
 });

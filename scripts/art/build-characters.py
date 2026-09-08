@@ -1233,7 +1233,10 @@ def animate(r,kind):
         last={'boost_start':21,'boost_end':36,'cast':61}.get(state,401)
         for frame in range(1,last+1,1 if last<401 else 16):
             t=(frame-1)/(last-1);phase=t*TAU if last==401 else 0
-            for p in r.obj.pose.bones:p.rotation_mode='XYZ';p.rotation_euler=(0,0,0);p.location=(0,0,0);p.scale=(1,1,1)
+            for p in r.obj.pose.bones:
+                p.rotation_mode='XYZ';p.rotation_euler=(0,0,0);p.location=(0,0,0);p.scale=(1,1,1)
+                for constraint in p.constraints:
+                    constraint.influence=1;constraint.keyframe_insert(data_path='influence',frame=frame)
             if kind=='wizard':
                 speed={'idle':.15,'cruise':.45,'turn_left':.55,'turn_right':.55,'boost':1,'cast':.45,
                        'boost_start':mix(.45,1,smoothstep(.06,.83,t)),'boost_end':mix(1,.45,smoothstep(.04,.92,t))}[state]
@@ -1313,96 +1316,118 @@ def animate(r,kind):
 
 # Ground clips retain the flight bind pose. Absolute joint targets are converted
 # through each bone's rest/parent matrices; the exported animation is ordinary skinning.
-GROUND_ACTIONS={'ground_idle':2.0,'walk':1.0,'run':.70,'mount':1.20,'dismount':1.20,'ground_cast':.60}
-GROUND_SPEC={'soleY':-1.30,'height':3.24,'walkSpeed':1.6,'runSpeed':3.8,'walkCycle':1.0,'runCycle':.70,
-             'walkContact':.58,'runContact':.36,'mountDuration':1.20,'dismountDuration':1.20,
+GROUND_ACTIONS={'ground_idle':2.0,'walk':.72,'run':.58,'mount':1.20,'dismount':1.20,'ground_cast':.60}
+GROUND_SPEC={'soleY':-1.30,'height':3.28,'walkSpeed':3.2,'runSpeed':7.2,'walkCycle':.72,'runCycle':.58,
+             'walkContact':.52,'runContact':.32,'mountDuration':1.20,'dismountDuration':1.20,
              'castRelease':.18,'castDuration':.60}
 
 def ground_pose(r,state,t):
     bones=r.obj.pose.bones;data=r.obj.data.bones;matrices={}
     phase=t*TAU;walking=state=='walk';running=state=='run';moving=walking or running
-    duration=GROUND_ACTIONS[state];contact=.36 if running else .58
-    cycle_distance=(3.8*.70 if running else 1.6) if moving else 0
-    sway=(.018 if running else .013)*math.sin(phase) if moving else .006*math.sin(phase)
-    bob=(.037 if running else .018)*math.cos(phase*2) if moving else .004*math.cos(phase)
-    hip=Vector((sway,( -.018 if moving else .11)+bob,.035))
-    yaw=(.036 if running else .023)*math.sin(phase) if moving else .004*math.sin(phase)
-    lean=.045 if running else .018 if walking else 0
+    contact=GROUND_SPEC['runContact' if running else 'walkContact']
+    cycle_distance=GROUND_SPEC['runSpeed' if running else 'walkSpeed']*GROUND_ACTIONS[state] if moving else 0
+    sway=-(.025 if running else .018)*math.sin(phase) if moving else .003*math.sin(phase)
+    # Low, continuous walk clearance; the run compresses under load and rises
+    # through its real aerial phase. The flight bind pose itself is untouched.
+    bob=.10*math.cos(phase*2-1.2*math.pi) if running else -.059*math.cos(phase*2) if walking else .003*math.cos(phase)
+    if running:bob-=.045*((1+math.cos(phase*2))*.5)**4
+    hip=Vector((sway,(.08 if running else .099 if walking else .11)+bob,.035))
+    hip_yaw=(.095 if running else .065)*math.cos(phase) if moving else .004*math.sin(phase)
+    chest_yaw=-(.13 if running else .075)*math.cos(phase) if moving else 0
+    lean=.16 if running else .035 if walking else 0
     def posed(name):
         if name in matrices:return matrices[name]
         b=data[name]
         return posed(b.parent.name)@b.parent.matrix_local.inverted()@b.matrix_local if b.parent else b.matrix_local.copy()
-    def put(name,head,tail=None,rotation=None):
-        b=data[name];rest=b.matrix_local;rot=rest.to_quaternion()
+    def put(name,head,tail=None,rotation=None,stretch=False):
+        b=data[name];rest=b.matrix_local;rot=rest.to_quaternion();scale=Vector((1,1,1))
         if tail is not None:
             direction=V(Vector(tail)-Vector(head));rot=(b.tail_local-b.head_local).rotation_difference(direction)@rot
-            scale=Vector((1,1,1))
-        else:scale=Vector((1,1,1))
+            if stretch:scale=Vector((1,1,1))*(direction.length/b.length)
         if rotation is not None:rot=rotation@rot
         matrix=Matrix.LocRotScale(V(head),rot,scale);matrices[name]=matrix
         parent=posed(b.parent.name) if b.parent else Matrix.Identity(4)
         bones[name].matrix_basis=b.convert_local_to_pose(matrix,b.matrix_local,parent_matrix=parent,
           parent_matrix_local=b.parent.matrix_local if b.parent else Matrix.Identity(4),invert=True)
         return P(matrix@Vector((0,b.length,0)))
-    def knee_between(a,b,l1,l2,out):
+    def joint_between(a,b,l1,l2,out):
         axis=b-a;distance=min(axis.length,l1+l2-.001);unit=axis.normalized()
         along=(l1*l1-l2*l2+distance*distance)/(2*distance)
         pole=Vector(out);pole=(pole-unit*pole.dot(unit)).normalized()
         return a+unit*along+pole*math.sqrt(max(.0001,l1*l1-along*along))
-    # Stack the spine upright. A small forward lean belongs to moving clips only.
     head=hip
     for name in ['pelvis','spine','chest','neck','head']:
-        length=data[name].length;tail=head+Vector((0,length*math.cos(lean),-length*math.sin(lean)))
-        head=put(name,head,tail,Quaternion(V((0,1,0)),yaw if name=='chest' else 0))
-    for side,s in [('L',-1),('R',1)]:
-        # Preserve original segment lengths. Reachable ankle targets keep both
-        # soles planted; the longer right leg carries a little more knee flexion.
+        # Pelvis and shoulders rotate against each other; the head remains quiet.
+        yaw=hip_yaw if name=='pelvis' else hip_yaw*.3 if name=='spine' else chest_yaw if name=='chest' else chest_yaw*.25 if name=='neck' else 0
+        local_lean=lean*.5 if name in ['neck','head'] else lean
+        length=data[name].length;tail=head+Vector((0,length*math.cos(local_lean),-length*math.sin(local_lean)))
+        head=put(name,head,tail,Quaternion(V((0,1,0)),yaw))
+    for side,sign in [('L',-1),('R',1)]:
         p=(t+(0 if side=='L' else .5))%1
-        foot_z=(.31 if side=='R' else -.04) if not moving else 0;lift=0;roll=0
+        heel_z=.035;lift=0;roll=0
         if moving:
-            if p<contact:foot_z=cycle_distance*(p-contact/2)
+            if p<contact:
+                heel_z+=cycle_distance*(p-contact/2)
+                roll=(.16 if running else .23)*(1-smoothstep(0,contact*.23,p))
+                roll-=(.82 if running else .62)*smoothstep(contact*.62,contact,p)
             else:
-                swing=(p-contact)/(1-contact);smooth=swing*swing*(3-2*swing)
-                foot_z=cycle_distance*contact*(.5-smooth)
-                lift=(.28 if running else .15)*math.sin(math.pi*swing)**1.3
-                roll=-.23*math.sin(math.pi*swing)
-        ankle=Vector((s*.145,-1.10+lift,foot_z+.035))
+                swing=(p-contact)/(1-contact);u=swing;u2=u*u;u3=u2*u
+                start=cycle_distance*contact/2;velocity=cycle_distance*(1-contact)
+                # Match stance velocity at each end instead of stopping both
+                # feet at a smoothstep endpoint and abruptly reversing them.
+                heel_z+=(2*u3-3*u2+1)*start+(u3-2*u2+u)*velocity+(-2*u3+3*u2)*(-start)+(u3-u2)*velocity
+                lift=(.57 if running else .115)*math.sin(math.pi*swing)**(1.45 if running else 1.25)
+                roll=(-.82 if running else -.62)+( .98 if running else .85)*smoothstep(0,1,swing)
+                roll-=(.32 if running else .09)*math.sin(math.pi*swing)
+        foot_rotation=Quaternion(Vector((1,0,0)),roll)
+        heel=foot_rotation@Vector((0,-.20,.017));toe=foot_rotation@Vector((0,-.172,-.25))
+        # A rigid boot rolls about its low heel first, then its actual toe. The
+        # switch is continuous at the angle where both anchors reach the floor.
+        toe_contact=toe.y<heel.y
+        pivot=toe if toe_contact else heel
+        pivot_z=heel_z+(-.267 if toe_contact else 0)
+        ankle=Vector((sign*.145,GROUND_SPEC['soleY']+lift-pivot.y,pivot_z-pivot.z))
         hip_joint=P(posed('pelvis')@data['pelvis'].matrix_local.inverted()@data['thigh.'+side].head_local)
-        knee=knee_between(hip_joint,ankle,data['thigh.'+side].length,data['calf.'+side].length,(0,0,-1))
-        put('thigh.'+side,hip_joint,knee);put('calf.'+side,knee,ankle)
+        # The flight rig's left forearm and right calf were lengthened to reach
+        # the broom. Only ground poses restore matched anatomical segment sizes.
+        knee=joint_between(hip_joint,ankle,.625,.635,(0,0,-1))
+        put('thigh.'+side,hip_joint,knee,stretch=True);put('calf.'+side,knee,ankle,stretch=True)
         put('foot.'+side,ankle,rotation=Quaternion(V((1,0,0)),roll))
         clavicle='clavicle.'+side
         clav_head=P(posed('chest')@data['chest'].matrix_local.inverted()@data[clavicle].head_local)
-        shoulder=clav_head+Vector((s*data[clavicle].length,.018,-.014))
-        put(clavicle,clav_head,shoulder)
-        arm_swing=(.28 if running else .20)*math.sin(phase+(0 if side=='L' else math.pi)) if moving else .008*math.sin(phase+s)
-        wrist=Vector((s*(.36 if running else .34)+sway,.17 if running else .07,-.02+arm_swing))
-        hand_rotation=Quaternion(V((1,0,0)),-1.15 if side=='R' else .05)
+        shoulder=clav_head+Vector((sign*.255,.018,-sign*.255*math.sin(chest_yaw)))
+        put(clavicle,clav_head,shoulder,stretch=True)
+        swing_angle=(.88 if running else .45)*math.cos(phase+(.18*math.pi if running else 0)+(0 if side=='L' else math.pi)) if moving else .035+.012*math.sin(phase+sign)
+        bend=(1.52+.10*math.sin(phase+(0 if side=='L' else math.pi))) if running else .34+.05*math.sin(phase+(0 if side=='L' else math.pi)) if walking else .22
+        upper=Vector((sign*.07,-math.cos(swing_angle),math.sin(swing_angle))).normalized()
+        fore=Vector((-sign*.035,-math.cos(swing_angle-bend),math.sin(swing_angle-bend))).normalized()
+        elbow=shoulder+upper*.355;wrist=elbow+fore*.395
         if state=='ground_cast' and side=='R':
             seconds=t*.6;release=smoothstep(.10,.18,seconds)*(1-smoothstep(.30,.60,seconds))
             windup=smoothstep(0,.10,seconds)*(1-smoothstep(.10,.18,seconds))
             wrist+=Vector((-.025*release,.23*windup+.46*release,-.15*windup-.37*release))
-            hand_rotation=Quaternion(V((1,0,0)),-1.15+1.25*release+.22*windup)
-        elbow=knee_between(shoulder,wrist,data['upper.'+side].length,data['fore.'+side].length,(s,.0,.6))
-        put('upper.'+side,shoulder,elbow);put('fore.'+side,elbow,wrist)
-        put('hand.'+side,wrist,rotation=hand_rotation)
-    # Rehang the cloth behind the upright torso with explicit chain endpoints.
-    for side,s in [('L',-1),('C',0),('R',1)]:
-        name='cape.'+side+'0';start=P(posed('chest')@data['chest'].matrix_local.inverted()@data[name].head_local)
-        head=start
+            elbow=joint_between(shoulder,wrist,.355,.395,(sign*.2,0,.8));fore=(wrist-elbow).normalized()
+        put('upper.'+side,shoulder,elbow,stretch=True);put('fore.'+side,elbow,wrist,stretch=True)
+        hand_direction=Vector((fore.x,-math.cos(clamp(swing_angle-bend,-1.98,-.70)),math.sin(clamp(swing_angle-bend,-1.98,-.70)))).normalized() if running else fore
+        put('hand.'+side,wrist,wrist+hand_direction*data['hand.'+side].length)
+    # The cloth hangs at rest and trails with the hips. Its distal waves lag the
+    # shoulders, with greater drag and recovery in the running clip.
+    for side,sign in [('L',-1),('C',0),('R',1)]:
+        name='cape.'+side+'0';head=P(posed('chest')@data['chest'].matrix_local.inverted()@data[name].head_local)
         for j in range(4):
-            name='cape.'+side+str(j);wave=(.012+.007*j)*math.sin(phase-j*.7+s*.3)*(1.5 if running else 1)
-            end=head+Vector((s*.014+wave*.3,-data[name].length*.94,(.23 if j==0 else .07 if j==1 else .035)+wave+( .04 if moving else 0)))
+            name='cape.'+side+str(j);wave=(.016+.018*j)*math.sin(phase-j*.88+sign*.25)*(1.8 if running else 1)
+            drag=(.18 if running else .065 if walking else 0)*(j+1)/4
+            end=head+Vector((sign*.014+wave*.5,-data[name].length*.94,(.23 if j==0 else .07 if j==1 else .035)+wave+drag))
             head=put(name,head,end)
     head=P(posed('chest')@data['chest'].matrix_local.inverted()@data['scarf.0'].head_local)
     for j in range(4):
-        name='scarf.'+str(j);end=head+Vector((.055,-data[name].length*.87,.08+.02*math.sin(phase-j*.8)))
+        name='scarf.'+str(j);end=head+Vector((.055,-data[name].length*.87,.08+(.055 if running else .018 if walking else 0)+.025*math.sin(phase-j*.8)))
         head=put(name,head,end)
-    for side,s in [('L',-1),('R',1)]:
+    for side,sign in [('L',-1),('R',1)]:
         name='tail.'+side+'0';head=P(posed('pelvis')@data['pelvis'].matrix_local.inverted()@data[name].head_local)
         for j in range(3):
-            name='tail.'+side+str(j);wave=.013*math.sin(phase-j*.8+s)
-            end=head+Vector((s*.026,-data[name].length*.91,.065+wave+(.04 if moving else 0)))
+            name='tail.'+side+str(j);wave=.02*math.sin(phase-j*.8+sign)
+            end=head+Vector((sign*.026,-data[name].length*.91,.065+wave+(.095 if running else .03 if walking else 0)))
             head=put(name,head,end)
     return {p.name:p.matrix_basis.copy() for p in bones}
 
@@ -1417,6 +1442,7 @@ def transition_legs(r,ground,flight,progress):
         b=data[name];q=b.matrix_local.to_quaternion();scale=Vector((1,1,1))
         if tail is not None:
             direction=V(tail-head);q=(b.tail_local-b.head_local).rotation_difference(direction)@q
+            scale=Vector((1,1,1))*(direction.length/b.length)
         if rotation:q=rotation
         parent=matrix(b.parent.name) if b.parent else Matrix.Identity(4)
         bones[name].matrix_basis=b.convert_local_to_pose(Matrix.LocRotScale(V(head),q,scale),b.matrix_local,
@@ -1427,8 +1453,9 @@ def transition_legs(r,ground,flight,progress):
         ankle=P(gm.translation).lerp(P(fm.translation),amount)
         ankle+=Vector((s*.16,.17,0))*math.sin(math.pi*amount)
         hip=P(matrix('pelvis')@data['pelvis'].matrix_local.inverted()@data['thigh.'+side].head_local)
-        l1=data['thigh.'+side].length
-        l2=data['calf.'+side].length
+        ground_hip=P(matrix('thigh.'+side,ground).translation);ground_knee=P(matrix('calf.'+side,ground).translation)
+        l1=mix((ground_knee-ground_hip).length,data['thigh.'+side].length,amount)
+        l2=mix((P(gm.translation)-ground_knee).length,data['calf.'+side].length,amount)
         axis=ankle-hip;distance=min(axis.length,l1+l2-.001);unit=axis.normalized()
         along=(l1*l1-l2*l2+distance*distance)/(2*distance);pole=Vector((0,0,-1)).lerp(P(matrix('calf.'+side,flight).translation)-hip,amount);pole=(pole-unit*pole.dot(unit)).normalized()
         knee=hip+unit*along+pole*math.sqrt(max(.0001,l1*l1-along*along))
@@ -1439,14 +1466,19 @@ def animate_ground(r):
     scene=bpy.context.scene
     # Flight frame at t=0 is the exact endpoint shared by the new transitions.
     r.obj.animation_data.action=bpy.data.actions['idle'];scene.frame_set(1)
-    flight={p.name:p.matrix_basis.copy() for p in r.obj.pose.bones}
+    flight={p.name:p.bone.convert_local_to_pose(p.matrix,p.bone.matrix_local,
+        parent_matrix=p.parent.matrix if p.parent else Matrix.Identity(4),
+        parent_matrix_local=p.parent.bone.matrix_local if p.parent else Matrix.Identity(4),invert=True) for p in r.obj.pose.bones}
     for state,duration in GROUND_ACTIONS.items():
         action=bpy.data.actions.new(state);action.use_fake_user=True;r.obj.animation_data.action=action
         last=round(duration*100)+1
         frames=range(1,last+1)
         for frame in frames:
             t=(frame-1)/(last-1)
-            for p in r.obj.pose.bones:p.rotation_mode='XYZ';p.matrix_basis=Matrix.Identity(4)
+            for p in r.obj.pose.bones:
+                p.rotation_mode='XYZ';p.matrix_basis=Matrix.Identity(4)
+                for constraint in p.constraints:
+                    constraint.influence=0;constraint.keyframe_insert(data_path='influence',frame=frame)
             if state in ['mount','dismount']:
                 ground=ground_pose(r,'ground_idle',0)
                 amount=smoothstep(.12,.88,t if state=='mount' else 1-t)

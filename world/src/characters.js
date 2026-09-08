@@ -1,12 +1,13 @@
 import { AnimationMixer, LoopRepeat, LoopOnce, MathUtils, Quaternion, PropertyBinding, Vector3 } from 'three';
 import {loadGLTF} from './gltf-resource.js';
+import {GROUND_MOTION} from './ground-motion.js';
 import { clone as cloneSkeleton } from 'three/addons/utils/SkeletonUtils.js';
 import { createWizard as createFallbackWizard, createWisp as createFallbackWisp } from './models.js';
 
 // Imported safely by simulation tests. Network and image decoding start only on load.
 const templates = { wizard: null, wraith: null };
 export const CHARACTER_ACTION_TIMING = Object.freeze({ boostStart: .20, boostEnd: .35, cast: .60, castRelease: .18 });
-export const CHARACTER_GROUND_MOTION = Object.freeze({ soleY:-1.30, height:3.24, walkSpeed:1.6, runSpeed:3.8, walkCycle:1, runCycle:.70, walkContact:.58, runContact:.36, mountDuration:1.2, dismountDuration:1.2 });
+export const CHARACTER_GROUND_MOTION = Object.freeze({ soleY:-1.30, height:GROUND_MOTION.height, walkSpeed:GROUND_MOTION.walkSpeed, runSpeed:GROUND_MOTION.runSpeed, walkCycle:.72, runCycle:.58, walkContact:.52, runContact:.32, mountDuration:1.2, dismountDuration:1.2 });
 const oneShots = new Set(['boost_start', 'boost_end', 'cast', 'mount', 'dismount', 'ground_cast']);
 
 function prepareTemplate(gltf, kind) {
@@ -98,7 +99,7 @@ function animatedClone(template, kind, phase = 0) {
     group.traverse(node=>{if(node.isBone)group.userData.characterAnimation.bones.push(node);if(node.userData.broomPart)group.userData.characterAnimation.broom.push(node);});
     for(const side of ['L','R']){
       const node=name=>group.getObjectByName(PropertyBinding.sanitizeNodeName(name+'.'+side));
-      group.userData.characterAnimation.feet.push({side,thigh:node('thigh'),calf:node('calf'),foot:node('foot'),sole:node('sole'),lock:null});
+      group.userData.characterAnimation.feet.push({side,thigh:node('thigh'),calf:node('calf'),foot:node('foot'),sole:node('sole'),toe:node('toe'),lock:null,lockBlocked:false});
     }
     for (const side of ['L', 'C', 'R']) for (let index = 0; index < 4; index++) {
       const bone = group.getObjectByName(PropertyBinding.sanitizeNodeName(`cape.${side}${index}`));
@@ -153,7 +154,7 @@ function followCape(group, animation, delta, reset = false) {
 /** Explicit teleport/respawn reset; Game cancels/refunds its reservation first. */
 export function resetCharacterMotion(group,{mode='flying'}={}){
   const animation=group?.userData.characterAnimation;if(!animation)return;
-  cancelCharacterCast(group);for(const leg of animation.feet)leg.lock=null;animation.groundPoseName=null;animation.groundBlend=null;animation.mode=mode;animation.previousMode=mode;animation.transition=null;animation.boostIntent=false;animation.gaitPhase=0;animation.groundTime=0;
+  cancelCharacterCast(group);for(const leg of animation.feet){leg.lock=null;leg.lockBlocked=false;}animation.groundPoseName=null;animation.groundBlend=null;animation.mode=mode;animation.previousMode=mode;animation.transition=null;animation.boostIntent=false;animation.gaitPhase=0;animation.groundTime=0;
   const idle=mode==='grounded'?'ground_idle':'idle';
   for(const [name,action]of animation.actions){const weight=Number(name===idle);action.reset().play().setEffectiveWeight(weight);animation.weights.set(name,weight);}
   animation.mixer.update(0);for(const part of animation.broom)part.visible=mode!=='grounded';followCape(group,animation,0,true);
@@ -166,13 +167,16 @@ function updateGroundCharacter(group, animation, {delta, mode, groundSpeed, gait
   const result={castReleased:false,castSequence:animation.cast.sequence,castActive:animation.cast.active};
   const changing=mode==='mounting'||mode==='dismounting';
   if(changing&&animation.cast.active)cancelCharacterCast(group);
-  if(animation.mode!==mode){for(const leg of animation.feet)leg.lock=null;animation.groundPoseName=null;animation.groundBlend=null;}
+  if(animation.mode!==mode){for(const leg of animation.feet){leg.lock=null;leg.lockBlocked=false;}animation.groundPoseName=null;animation.groundBlend=null;}
   animation.mode=mode;animation.transition=null;animation.boostIntent=false;
   const speed=Math.max(0,Number.isFinite(groundSpeed)?groundSpeed:0);
   const running=speed>(CHARACTER_GROUND_MOTION.walkSpeed+CHARACTER_GROUND_MOTION.runSpeed)/2;
   const gait=running?'run':'walk';
   if(Number.isFinite(gaitPhase))animation.gaitPhase=((gaitPhase%1)+1)%1;
-  else if(speed>.03)animation.gaitPhase=(animation.gaitPhase+speed*delta/(running?2.66:1.6))%1;
+  else if(speed>.03){
+    const cycleDistance=running?CHARACTER_GROUND_MOTION.runSpeed*CHARACTER_GROUND_MOTION.runCycle:CHARACTER_GROUND_MOTION.walkSpeed*CHARACTER_GROUND_MOTION.walkCycle;
+    animation.gaitPhase=(animation.gaitPhase+speed*delta/cycleDistance)%1;
+  }
   let name=changing?(mode==='mounting'?'mount':'dismount'):speed>.03?gait:'ground_idle';
   let time=changing?MathUtils.clamp(transitionProgress??0,0,1)*1.2:name==='ground_idle'?(animation.groundTime+=delta)%2:animation.gaitPhase*actions.get(name).getClip().duration;
   if(animation.cast.active){
@@ -217,32 +221,54 @@ function fitGroundFeet(group,animation,support){
   const base=group.position.y+CHARACTER_GROUND_MOTION.soleY;
   let pelvisDrop=0;
   for(const leg of animation.feet){const sole=leg.sole.getWorldPosition(new Vector3());const sampled=support.heightAt?.(sole.x,sole.z);const y=Number.isFinite(sampled)?sampled:support.y-(normal.x*(sole.x-(support.x??group.position.x))+normal.z*(sole.z-(support.z??group.position.z)))/normal.y;pelvisDrop=Math.max(pelvisDrop,base-y);}
-  pelvisDrop=MathUtils.clamp(Math.max(pelvisDrop>0?pelvisDrop+.025:0,animation.groundBlend?.055:.025),0,.30);
+  pelvisDrop=MathUtils.clamp(Math.max(pelvisDrop>0?pelvisDrop+.025:0,animation.groundBlend?.035:0),0,.30);
   const pelvis=group.getObjectByName('pelvis');if(pelvis&&pelvisDrop){pelvis.position.y-=pelvisDrop;group.updateMatrixWorld(true);}
   for(const leg of animation.feet){
     const hip=leg.thigh.getWorldPosition(new Vector3()),knee=leg.calf.getWorldPosition(new Vector3()),ankle=leg.foot.getWorldPosition(new Vector3());
     const sole=leg.sole.getWorldPosition(new Vector3());
+    const toe=leg.toe.getWorldPosition(new Vector3());
     const tilt=new Quaternion().setFromUnitVectors(new Vector3(0,1,0),normal);
     const originalRotation=leg.foot.getWorldQuaternion(new Quaternion());
-    let footRotation=originalRotation.clone().premultiply(tilt);
+    const footRotation=originalRotation.clone().premultiply(tilt);
+    const correction=footRotation.clone().multiply(originalRotation.clone().invert());
+    const heelOffset=sole.clone().sub(ankle).applyQuaternion(correction),toeOffset=toe.clone().sub(ankle).applyQuaternion(correction);
+    // Keep the authored roll. Freezing the whole foot quaternion during contact
+    // discarded heel strike and toe-off, turning the baked walk into a shuffle.
+    const pivot=toeOffset.dot(normal)<heelOffset.dot(normal)?'toe':'heel';
+    const offset=pivot==='toe'?toeOffset:heelOffset;
     const contact=animation.contacts?.[leg.side]??true;
-    if(!contact)leg.lock=null;
-    if(contact&&!leg.lock)leg.lock={x:sole.x,z:sole.z,rotation:footRotation.clone()};
-    if(leg.lock)footRotation=leg.lock.rotation.clone();
-    const offset=sole.clone().sub(ankle).applyQuaternion(footRotation.clone().multiply(originalRotation.invert()));
+    if(!contact){leg.lock=null;leg.lockBlocked=false;}
+    if(contact&&!leg.lock&&!leg.lockBlocked){
+      leg.lock={x:ankle.x+offset.x,z:ankle.z+offset.z,pivot};
+    }else if(leg.lock&&leg.lock.pivot!==pivot){
+      const oldOffset=leg.lock.pivot==='toe'?toeOffset:heelOffset;
+      leg.lock.x+=offset.x-oldOffset.x;leg.lock.z+=offset.z-oldOffset.z;leg.lock.pivot=pivot;
+    }
     const sx=leg.lock?.x??ankle.x+offset.x,sz=leg.lock?.z??ankle.z+offset.z;
     const sampled=support.heightAt?.(sx,sz);
     const planeY=Number.isFinite(sampled)?sampled:support.y-(normal.x*(sx-(support.x??group.position.x))+normal.z*(sz-(support.z??group.position.z)))/normal.y;
-    // Retain the authored swing lift relative to the actor's neutral sole plane.
-    const target=ankle.clone();target.y+=pelvisDrop+MathUtils.clamp(planeY-base+(sole.y-ankle.y)-offset.y,-.32,.32);
+    const authoredLowest=Math.min(sole.y,toe.y);
+    // Retain swing clearance above the neutral plane, including rolled boots.
+    const target=ankle.clone();target.y+=pelvisDrop+MathUtils.clamp(planeY-base+(authoredLowest-ankle.y)-offset.y,-.32,.32);
     if(contact)target.y=planeY-offset.y;
+    else target.y=Math.max(target.y,planeY-offset.y+.004);
     if(leg.lock){target.x=leg.lock.x-offset.x;target.z=leg.lock.z-offset.z;}
     const l1=hip.distanceTo(knee),l2=knee.distanceTo(ankle),axis=target.clone().sub(hip);
-    if(axis.length()>l1+l2-.002&&leg.lock){leg.lock=null;target.x=ankle.x;target.z=ankle.z;axis.copy(target).sub(hip);}
+    if(axis.length()>l1+l2-.002&&leg.lock){
+      // A turn or abrupt step can exceed reach. Release once for this stance,
+      // rather than reacquiring/releasing the same impossible lock every frame.
+      leg.lock=null;leg.lockBlocked=true;target.x=ankle.x;target.z=ankle.z;
+      const releaseX=target.x+offset.x,releaseZ=target.z+offset.z;
+      const releaseSample=support.heightAt?.(releaseX,releaseZ);
+      const releaseY=Number.isFinite(releaseSample)?releaseSample:support.y-(normal.x*(releaseX-(support.x??group.position.x))+normal.z*(releaseZ-(support.z??group.position.z)))/normal.y;
+      target.y=releaseY-offset.y;axis.copy(target).sub(hip);
+    }
     const distance=MathUtils.clamp(axis.length(),.05,l1+l2-.0001);axis.normalize();
     const along=(l1*l1-l2*l2+distance*distance)/(2*distance);
     const pole=knee.clone().sub(hip);pole.addScaledVector(axis,-pole.dot(axis));
-    if(pole.lengthSq()<1e-8)pole.set(0,0,-1);pole.normalize();
+    const forward=new Vector3(0,0,-1).applyQuaternion(group.getWorldQuaternion(new Quaternion()));
+    forward.addScaledVector(axis,-forward.dot(axis));
+    if(pole.lengthSq()<1e-8||pole.dot(forward)<0)pole.copy(forward);pole.normalize();
     const goal=hip.clone().addScaledVector(axis,along).addScaledVector(pole,Math.sqrt(Math.max(0,l1*l1-along*along)));
     const rotate=(bone,from,to)=>{
       const world=bone.getWorldQuaternion(new Quaternion());world.premultiply(new Quaternion().setFromUnitVectors(from.normalize(),to.normalize()));
