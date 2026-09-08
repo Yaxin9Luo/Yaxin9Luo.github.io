@@ -37,3 +37,9 @@ Inspected `work/production-v3/captures/experience-v4-lilac-dusk-high-lod-native-
 The first integrated run passed 316/317. Extending the terrain test to shoulders exposed a real 1.38 mm buried shoulder triangle at a terrain crease. Shoulder geometry now has three cross-strip subdivisions and 35 mm outer clearance; visible vertices and their surface-support triangles still agree. Terrain plus production-world movement/raycast tests then passed 7/7. A final integrated rerun follows this geometry fix.
 
 Final integrated `npm test`: **317/317 passed**, 0 failures, approximately 34 seconds. Output: `/tmp/world-v5-foreground-polish-tests-final.log`. Final `git diff --check` passed. No browser visual acceptance or build is claimed by this worker.
+
+## Final grass pigment and missing-channel correction
+
+Viewed `work/production-v3/captures/experience-v5-lilac-dusk-high-lod-native-frame-20260908T181454256Z-1.png`. The physical-scale texture fixed the broad paint but revealed the source meadow's dry brown pigment. The grass base now mixes 72% toward a restrained fern-green pigment normalized to the original texel luminance. Fine texture contrast and luminance remain intact; humus and moss are blended afterwards and retain their separate colours. No geometry, normals, lights or paving changed in this final pass.
+
+Missing channels now have shared type-correct fallbacks: flat tangent normal `[128,128,255]` in `NoColorSpace`, white matte roughness in `NoColorSpace`, and the existing neutral sRGB rock colour. A new regression test verifies both never-loaded and HTTP-404-failed surfaces, the decoded tangent normal direction, shared fallback objects and the luminance-preserving grade ordering. Focused terrain/material tests: **6/6 passed**. `git diff --check` passed. Parent retains actual day/dusk/night and final full-suite/build acceptance.

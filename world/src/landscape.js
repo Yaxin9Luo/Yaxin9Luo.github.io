@@ -30,6 +30,9 @@ export async function loadMountainArt(options={}){
   return results.every(result=>result.status==='fulfilled'&&result.value!==false);
 }
 const neutralRock=new THREE.DataTexture(new Uint8Array([176,183,173,255]),1,1);neutralRock.colorSpace=THREE.SRGBColorSpace;neutralRock.needsUpdate=true;neutralRock.userData.sharedAsset=true;
+const neutralNormal=new THREE.DataTexture(new Uint8Array([128,128,255,255]),1,1),neutralRoughness=new THREE.DataTexture(new Uint8Array([255,255,255,255]),1,1);
+for(const texture of[neutralNormal,neutralRoughness]){texture.colorSpace=THREE.NoColorSpace;texture.needsUpdate=true;texture.userData.sharedAsset=true;}
+const neutralTerrainChannel={color:neutralRock,normal:neutralNormal,roughness:neutralRoughness};
 let environment = null;
 const wind = { value: 0 };
 export async function loadLandscapeSurfaces(options={}) {
@@ -99,7 +102,7 @@ export function groundMaterial() {
   m.addEventListener('dispose',()=>{for(const binding of bindings)terrainBindings.delete(binding);});
   m.onBeforeCompile=shader=>{
     for(const [uniformName,name,kind]of[['rockMap','mossy-rock','color'],['humusMap','forest-ground','color'],['mossNormal','mossy-rock','normal'],['humusNormal','forest-ground','normal'],['mossRoughness','mossy-rock','roughness'],['humusRoughness','forest-ground','roughness']]){
-      const uniform={value:maps[name]?.[kind]||maps.meadow?.[kind]||neutralRock},binding={name,kind,uniform};
+      const uniform={value:maps[name]?.[kind]||maps.meadow?.[kind]||neutralTerrainChannel[kind]},binding={name,kind,uniform};
       shader.uniforms[uniformName]=uniform;terrainBindings.add(binding);bindings.push(binding);
     }
     shader.vertexShader='varying vec3 terrainNormal; varying vec3 terrainPosition;\n'+shader.vertexShader;
@@ -111,6 +114,13 @@ export function groundMaterial() {
       float soilFbm(vec2 p){return soilNoise(p)*.57+soilNoise(p*2.03+17.1)*.29+soilNoise(p*4.13-8.7)*.14;}
     `+shader.fragmentShader;
     shader.fragmentShader=shader.fragmentShader.replace('#include <map_fragment>',`#include <map_fragment>
+      // Shift the dry photographic grass pigment toward fern green while
+      // retaining each texel's luminance, shade structure and fine contrast.
+      vec3 meadowLuminanceWeights=vec3(.2126,.7152,.0722);
+      float meadowLuminance=dot(diffuseColor.rgb,meadowLuminanceWeights);
+      vec3 meadowPigment=vec3(.65,1.16,.83);
+      meadowPigment/=dot(meadowPigment,meadowLuminanceWeights);
+      diffuseColor.rgb=mix(diffuseColor.rgb,meadowLuminance*meadowPigment,.72);
       float slope=1.-smoothstep(.55,.94,normalize(terrainNormal).y);
       float planting=soilFbm(terrainPosition.xz*.16+vec2(18,-4));
       float humusWeight=smoothstep(.40,.75,planting)*.18*(1.-slope);
@@ -126,7 +136,7 @@ export function groundMaterial() {
         roughnessFactor=mix(.82,1.,soilRoughness);
       #endif`);
   };
-  m.customProgramCacheKey=()=> 'terrain-three-layer-pbr-v6'; return m;
+  m.customProgramCacheKey=()=> 'terrain-three-layer-pbr-v7'; return m;
 }
 
 export function createLake(root, scene) {
