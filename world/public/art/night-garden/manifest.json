@@ -1,0 +1,72 @@
+{
+  "version": 1,
+  "title": "Moonlit garden art",
+  "total_bytes": 1343734,
+  "assets": [
+    {
+      "path": "/art/night-garden/moonlit-sky.webp",
+      "description": "Generated open cobalt star field with sparse thin low clouds",
+      "provider": "Built-in ImageGen",
+      "rights": "AI-generated for this project; not represented as CC0",
+      "bytes": 197398,
+      "sha256": "db3532a0ac2b7c80d67f8ee2aaf387690cd167bf80046494f88377812b923ad0",
+      "width": 1774,
+      "height": 887,
+      "mode": "RGB",
+      "generation_date": "2026-09-08",
+      "original_generated_filename": "exec-a8c25845-d37c-4d26-8a0b-59d768741af9.png",
+      "conversion": "Pillow 12.3.0 WebP quality 95, method 6; image content unchanged",
+      "generated_dimensions": [
+        1774,
+        887
+      ],
+      "previous_iteration": {
+        "sha256": "966167b9f6efe3397ab9a4fbb79743408c065ef4d15c8fd20aab070aaaf4cdea",
+        "original_generated_filename": "exec-7c46605b-7533-451f-b2a2-f5502258d3b5.png",
+        "reason_replaced": "Too much bright cloud coverage in the full-scene screenshot; replaced with a more open cobalt star field."
+      },
+      "reference_role": "Second full-scene ImageGen atmosphere target supplied as a sky color/cloud reference only; no scene/UI/landscape copied into the texture."
+    },
+    {
+      "path": "/art/night-garden/blossom-atlas.webp",
+      "description": "Generated transparent botanical atlas",
+      "provider": "Built-in ImageGen",
+      "rights": "AI-generated for this project; not represented as CC0",
+      "bytes": 688394,
+      "sha256": "b9db7dd8fcced188d191572cd93a6952678bccb49856d09a1f35b7514b40ef4d",
+      "width": 1254,
+      "height": 1254,
+      "mode": "RGBA",
+      "generation_date": "2026-09-08",
+      "original_generated_filename": "exec-7fd4636d-bb38-41a8-b2ec-8a6c256df0da.png",
+      "conversion": "Pillow 12.3.0 WebP quality 95, method 6; image content unchanged",
+      "generated_dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ]
+    },
+    {
+      "path": "/art/night-garden/moon-lroc-2k.jpg",
+      "description": "NASA LRO lunar color map",
+      "provider": "NASA Scientific Visualization Studio",
+      "rights": "NASA imagery usage guidelines / SVS public-domain statement; not represented as CC0",
+      "bytes": 457942,
+      "sha256": "f7130a1822681fa7512d7dcfd40db8c10b9ba4f06777910348698260ed7a2170",
+      "width": 2048,
+      "height": 1024,
+      "mode": "RGB",
+      "source_page": "https://svs.gsfc.nasa.gov/4720",
+      "download_url": "https://svs.gsfc.nasa.gov/vis/a000000/a004700/a004720/lroc_color_2k.jpg",
+      "credit": "NASA Scientific Visualization Studio / Ernie Wright / NASA-GSFC / LROC",
+      "usage_sources": [
+        "https://svs.gsfc.nasa.gov/help/",
+        "https://www.nasa.gov/nasa-brand-center/images-and-media/"
+      ],
+      "conversion": "Unmodified source JPEG"
+    }
+  ]
+}

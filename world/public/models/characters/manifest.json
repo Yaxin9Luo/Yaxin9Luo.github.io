@@ -1,0 +1,19 @@
+{
+  "generator": "Blender 5.1.2; original clothing/creature/broom, Blender Studio CC0 realistic head, Cortu Johnstone CC0 hair, Poly Haven CC0 cloth/leather",
+  "assets": [
+    {
+      "file": "wizard.glb",
+      "triangles": 89110,
+      "meshes": 20,
+      "bytes": 5007284,
+      "sha256": "46469585a6f9f07ed9f9c2930aeb9977ea68c071e11f5905f55666b6f8879fdc"
+    },
+    {
+      "file": "wraith.glb",
+      "triangles": 28674,
+      "meshes": 7,
+      "bytes": 1895056,
+      "sha256": "c90a8231f523a676c475b67fbc347f88cbf5fb7cfea13c0303396e2980b471c6"
+    }
+  ]
+}
