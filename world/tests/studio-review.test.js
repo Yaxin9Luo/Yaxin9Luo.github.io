@@ -4,6 +4,7 @@ import {readFile} from 'node:fs/promises';
 import vm from 'node:vm';
 import * as THREE from 'three';
 import {QUALITY,renderPixelRatio} from '../src/render-quality.js';
+import {CHARACTER_GROUND_MOTION} from '../src/characters.js';
 
 // Execute the actual studio module and its HTML against asynchronous device,
 // DOM and render boundaries. These are lifecycle/dispatch checks, not GPU proof.
@@ -43,7 +44,7 @@ async function fixture({startError=false,saveOK=true}={}){
   const models=Object.fromEntries(['createCastle','createLibrary','createWorkshop','createObservatory','createRuins','createOwlery'].map(name=>[name,specimen]));models.loadArchitectureAssets=async()=>{};
   const location={search:'?asset=rider'},DateBoundary=class extends Date{constructor(...args){super(...(args.length?args:[1788860000000+now]));}static now(){return 1788860000000+now;}};
   const context={THREE:{...THREE,WebGLRenderer:Renderer},OrbitControls:Orbit,HDRLoader:class{async loadAsync(){return new THREE.Texture();}},EffectComposer:Composer,RenderPass:Pass,UnrealBloomPass:Pass,OutputPass:Pass,SMAAPass:Pass,QUALITY,renderPixelRatio,models,
-    createGardenSpecimen:specimen,createWizard:specimen,createWisp:specimen,createTreeSpecimen:specimen,createSkyLantern:specimen,createPortal:specimen,createShield:specimen,createViaduct:specimen,createGardenLamp:specimen,createResearchBook:specimen,createTerrainSpecimen:specimen,createScannedRockSpecimen:specimen,createFootingSpecimen:specimen,
+    CHARACTER_GROUND_MOTION,createGardenSpecimen:specimen,createWizard:specimen,createWisp:specimen,createTreeSpecimen:specimen,createSkyLantern:specimen,createPortal:specimen,createShield:specimen,createViaduct:specimen,createGardenLamp:specimen,createResearchBook:specimen,createTerrainSpecimen:specimen,createScannedRockSpecimen:specimen,createFootingSpecimen:specimen,
     loadCharacterAssets:async()=>{},loadLandscapeAssets:async()=>{},surface:()=>new THREE.MeshStandardMaterial(),planarUV(){},
     updateCharacter:(actor,args)=>{updates.push({actor,args});},requestCharacterCast:actor=>{casts.push(actor);return {accepted:true,sequence:casts.length};},cancelCharacterCast(){},
     document,window:{MediaRecorder:Recorder,addEventListener:(type,handler)=>{listeners[type]=handler;}},MediaRecorder:Recorder,ResizeObserver:class{constructor(callback){this.callback=callback;}observe(){this.callback();}disconnect(){}},
@@ -60,6 +61,27 @@ test('studio pause and boost controls dispatch actual action intent without adva
   assert.equal(qa.updates.at(-1).args.boost,true);assert.ok(qa.updates.at(-1).args.dt>0);
   qa.element('[data-actor-play]').click();qa.tick(200);assert.equal(qa.updates.at(-1).args.paused,true);assert.equal(qa.updates.at(-1).args.dt,0);
   qa.element('[data-actor-play]').click();qa.element('[data-actor-cast]').click();qa.tick(300);assert.equal(qa.casts.length,1);assert.equal(qa.casts[0],qa.state().current);
+});
+
+test('walk and run previews consume elapsed time equally at 8, 10 and 60 FPS',async()=>{
+  for(const action of ['walk','run'])for(const fps of [8,10,60]){
+    const qa=await fixture(),select=qa.element('.actor-tools').querySelector('select');select.value=action;select.onchange({target:select});
+    for(let frame=1;frame<=fps;frame++)qa.tick(frame*1000/fps);
+    const args=qa.updates.at(-1).args,elapsed=qa.updates.reduce((sum,{args})=>sum+args.dt,0);
+    assert.ok(Math.abs(elapsed-1)<1e-8,`${action} at ${fps} FPS lost elapsed animation time: ${elapsed}`);
+    const phaseError=Math.abs(args.gaitPhase-((1/CHARACTER_GROUND_MOTION[action+'Cycle'])%1));
+    assert.ok(Math.min(phaseError,1-phaseError)<1e-8);
+    assert.equal(args.groundSpeed,CHARACTER_GROUND_MOTION[action+'Speed']);
+    assert.ok(qa.updates.every(({args})=>args.dt<=1/60+1e-8),'secondary motion needs bounded animation steps');
+  }
+});
+
+test('ground preview resumes without hidden time and completes mounting in real time',async()=>{
+  const qa=await fixture(),select=qa.element('.actor-tools').querySelector('select');select.value='mount';select.onchange({target:select});
+  qa.tick(100);qa.document.hidden=true;qa.listeners.visibilitychange();qa.at(10100);qa.document.hidden=false;qa.listeners.visibilitychange();
+  qa.tick(10200);assert.ok(Math.abs(qa.updates.reduce((sum,{args})=>sum+args.dt,0)-.2)<1e-8,'returning to the tab cannot advance the hidden interval');
+  for(let time=10300;time<=11200;time+=100)qa.tick(time);
+  assert.ok(Math.abs(qa.updates.at(-1).args.transitionProgress-1)<1e-8,'mounting should finish in 1.2 seconds of visible playback');
 });
 
 test('one 16-second sequence releases its stream and restores paused inspection state',async()=>{

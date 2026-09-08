@@ -10,7 +10,7 @@ import {QUALITY,renderPixelRatio} from './render-quality.js';
 import {createGardenSpecimen} from './gardens.js';
 import {loadBotanicalAssets} from './botanical-cache.js';
 import * as models from './models.js';
-import {loadCharacterAssets,createWizard,createWisp,updateCharacter,requestCharacterCast} from './characters.js';
+import {CHARACTER_GROUND_MOTION,loadCharacterAssets,createWizard,createWisp,updateCharacter,requestCharacterCast} from './characters.js';
 import {loadLandscapeAssets,createTreeSpecimen,surface,planarUV} from './landscape.js';
 import {createSkyLantern} from './atmosphere.js';
 import {createPortal,createShield} from './effects.js';
@@ -209,7 +209,7 @@ function updateRecording(now){
   }
   if(t>=16)stopRecording('completed',true);
 }
-document.addEventListener('visibilitychange',()=>{if(document.hidden){studioFrame=false;stopRecording('page-hidden');}});
+document.addEventListener('visibilitychange',()=>{last=performance.now();if(document.hidden){studioFrame=false;stopRecording('page-hidden');}});
 window.addEventListener('pagehide',()=>{
   capturePageHidden=true;studioFrame=false;stopRecording('page-hidden');
   for(const url of captureURLs)URL.revokeObjectURL(url);captureURLs.clear();captureResults.textContent='';
@@ -218,4 +218,27 @@ window.addEventListener('pageshow',()=>{capturePageHidden=false;last=performance
 
 new ResizeObserver(()=>{const r=canvas.getBoundingClientRect(),dpr=renderPixelRatio('high',r.width,r.height,devicePixelRatio);renderer.setPixelRatio(dpr);renderer.setSize(r.width,r.height,false);composer.setPixelRatio(dpr);composer.setSize(r.width,r.height);camera.aspect=r.width/r.height;camera.updateProjectionMatrix();}).observe(canvas);
 try{await Promise.all([loadLandscapeAssets(),models.loadArchitectureAssets?.(),loadCharacterAssets(),environmentReady]);await show(new URLSearchParams(location.search).get('asset')); document.querySelector('#loading').hidden=true;document.body.dataset.ready='true';}catch(error){document.querySelector('#loading').innerHTML='<div class="studio-error">Asset loading failed. The portfolio remains available from the link above.</div>';console.error(error);}
-function frame(now){requestAnimationFrame(frame);const dt=Math.min((now-last)/1000,.05);last=now;if(document.hidden||capturePageHidden)return;updateRecording(now);controls.update(dt);current?.userData.update?.(now/1000,false);if(actorPlaying){actorGroundTime+=dt;actorGaitPhase=(actorGaitPhase+dt/(actorAction==='run'?.7:1))%1;}const ground=groundActions.has(actorAction),mode=actorAction==='mount'?'mounting':actorAction==='dismount'?'dismounting':ground?'grounded':'flying';updateCharacter(current,{dt:actorPlaying?dt:0,paused:!actorPlaying,mode,groundSpeed:actorAction==='run'?3.8:actorAction==='walk'?1.6:0,gaitPhase:actorGaitPhase,transitionProgress:Math.min(1,actorGroundTime/1.2),boost:actorAction==='boost',speed:actorAction==='boost'?1:actorAction==='idle'?0:.55,turn:actorAction==='turn-left'?-1:actorAction==='turn-right'?1:0,state:actorAction==='channel'?'channel':undefined,reducedMotion:matchMedia('(prefers-reduced-motion: reduce)').matches});composer.render();if(studioFrame){studioFrame=false;const metadata=captureMetadata('frame');canvas.toBlob(blob=>{if(blob)saveCapture(blob,'png',metadata);else captureStatus.textContent='Frame encoding failed / 截图编码失败';});}}requestAnimationFrame(frame);
+function frame(now){
+  requestAnimationFrame(frame);
+  const elapsed=Math.max(0,Math.min((now-last)/1000,.25));last=now;
+  if(document.hidden||capturePageHidden)return;
+  updateRecording(now);controls.update(elapsed);current?.userData.update?.(now/1000,false);
+  const ground=groundActions.has(actorAction),mode=actorAction==='mount'?'mounting':actorAction==='dismount'?'dismounting':ground?'grounded':'flying';
+  const cycle=actorAction==='run'?CHARACTER_GROUND_MOTION.runCycle:CHARACTER_GROUND_MOTION.walkCycle;
+  const duration=actorAction==='dismount'?CHARACTER_GROUND_MOTION.dismountDuration:CHARACTER_GROUND_MOTION.mountDuration;
+  const steps=actorPlaying?Math.max(1,Math.ceil(elapsed/(1/60))):1,dt=actorPlaying?elapsed/steps:0;
+  // Match runtime cadence, including on machines rendering below 20 FPS.
+  // Substeps keep the cloth solver stable while consuming the visible interval.
+  for(let step=0;step<steps;step++){
+    if(actorPlaying){actorGroundTime+=dt;actorGaitPhase=(actorGaitPhase+dt/cycle)%1;}
+    updateCharacter(current,{dt,paused:!actorPlaying,mode,
+      groundSpeed:actorAction==='run'?CHARACTER_GROUND_MOTION.runSpeed:actorAction==='walk'?CHARACTER_GROUND_MOTION.walkSpeed:0,
+      gaitPhase:actorGaitPhase,transitionProgress:Math.min(1,actorGroundTime/duration),
+      boost:actorAction==='boost',speed:actorAction==='boost'?1:actorAction==='idle'?0:.55,
+      turn:actorAction==='turn-left'?-1:actorAction==='turn-right'?1:0,state:actorAction==='channel'?'channel':undefined,
+      reducedMotion:matchMedia('(prefers-reduced-motion: reduce)').matches});
+  }
+  composer.render();
+  if(studioFrame){studioFrame=false;const metadata=captureMetadata('frame');canvas.toBlob(blob=>{if(blob)saveCapture(blob,'png',metadata);else captureStatus.textContent='Frame encoding failed / 截图编码失败';});}
+}
+last=performance.now();requestAnimationFrame(frame);
