@@ -3,7 +3,7 @@ import { createWorld, createNavigationWorld, registerWorldLighting, terrainHeigh
 import { createWizard, createWisp, loadWizardAsset, loadWraithAsset, upgradeWizardMaterials, updateCharacter, requestCharacterCast, cancelCharacterCast, resetCharacterMotion, CHARACTER_GROUND_MOTION } from './characters.js';
 import { GROUND_MOTION, findSafeLanding, stepGroundMotion, queryGroundSupport } from './ground-motion.js';
 import {loadGLTF,mutableGeometry} from './gltf-resource.js';
-import {loadLandscapeSurfaces,loadNightEnvironment} from './landscape.js';
+import {loadLandscapeSurfaces,loadMountainArt,loadNightEnvironment} from './landscape.js';
 import {loadArchitectureAssets} from './architecture.js';
 import {loadAtmosphereAssets} from './atmosphere.js';
 import {loadEnvironmentSignage} from './environment-signage.js';
@@ -197,7 +197,7 @@ export class Game {
     this._enhancementContext=context;let degraded=false;
     const observe=promise=>promise.then(value=>{if(value===false)degraded=true;return value;},error=>{degraded=true;return null;});
     const tasks=[
-      observe(loadLandscapeSurfaces(options)),observe(loadArchitectureAssets(options)),
+      observe(loadLandscapeSurfaces(options)),observe(loadMountainArt(options)),observe(loadArchitectureAssets(options)),
       observe(loadAtmosphereAssets(options)),observe(loadEnvironmentSignage(options)),
       observe(loadWizardAsset(options).then(template=>{if(!signal.aborted)upgradeWizardMaterials(this.wizard,template);})),
       observe((async()=>{
@@ -301,6 +301,7 @@ export class Game {
       material.uniforms.baseColor.value.copy(HIGHLANDS.day[layer]).lerp(HIGHLANDS.night[layer], environment.night);
       material.uniforms.hazeColor.value.copy(environment.fog);
       material.uniforms.lightDirection.value.copy(environment.lightDirection);
+      if(material.uniforms.nightFactor)material.uniforms.nightFactor.value=environment.night;
     }
     const lighting = this.world.environmentLighting;
     for (const { material, baseIntensity } of lighting.emissiveMaterials) material.emissiveIntensity = baseIntensity * (.08 + .92 * environment.night);

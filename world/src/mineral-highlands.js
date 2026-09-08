@@ -1,31 +1,15 @@
 import * as THREE from 'three';
-import {createGroveTree} from './grove-foliage.js';
-import {botanicalReady} from './botanical-cache.js';
 
-// Original sculpted masses: overlapping mineral ridges, recessed valleys, open-water sight lines.
-// The colour/composition study references Chinese blue-green landscape painting, not a flat sky card.
-const clusters=[
-  [-330,-285,142,121,211,0],[-440,-180,135,110,246,0],[-385,80,135,140,182,0],
-  [335,-255,118,104,205,0],[455,-90,148,125,247,0],[348,175,125,114,161,0],
-  [-230,-530,143,124,258,1],[-492,-414,166,131,310,1],[260,-548,174,123,279,1],
-  [556,-345,130,145,326,1],[-536,275,134,137,281,1],[464,432,156,118,224,1],
-  [-158,-753,166,128,286,2],[81,-804,155,147,268,2],[546,-632,137,143,322,2],
-  [-627,-613,165,149,341,2],[40,701,240,125,170,2],[-412,630,165,141,237,2],
-];
 const rnd=(x,z)=>{const a=Math.sin(x*127.1+z*311.7)*43758.5453;return a-Math.floor(a);};
 function noise(x,z){const a=Math.floor(x),b=Math.floor(z);let u=x-a,v=z-b;u=u*u*(3-2*u);v=v*v*(3-2*v);return THREE.MathUtils.lerp(THREE.MathUtils.lerp(rnd(a,b),rnd(a+1,b),u),THREE.MathUtils.lerp(rnd(a,b+1),rnd(a+1,b+1),u),v);}
 function rockMass(width,depth,height,seed){
   const columns=94,rows=88,positions=[],indices=[],colours=[];
   for(let iz=0;iz<=rows;iz++)for(let ix=0;ix<=columns;ix++){
     const u=ix/columns*2-1,v=iz/rows*2-1,x=u*width,z=v*depth;
-    let mass=0;
-    for(const [ox,oz,r,h]of [[-.28,-.03,.71,.87],[.23,.11,.61,1],[.55,-.27,.41,.69],[-.57,.35,.39,.58]]){
-      const bend=.11*Math.sin(v*3.6+seed),shape=.82+.25*noise(u*3+seed,v*3.7);
-      const distance=Math.hypot(u-ox+bend,(v-oz)*1.18)/(r*shape);
-      const crown=Math.pow(Math.max(0,1-distance*distance),.97);
-      const relief=.76+.19*noise(u*7+seed,v*6)+.09*Math.abs(noise(u*18,v*16+seed)*2-1);
-      mass=Math.max(mass,crown*h*relief);
-    }
+    const spine=.17*Math.sin(u*4.1+seed)+.09*Math.sin(u*11.);
+    const profile=.30+.48*Math.max(0.,1.-Math.abs(u+.37)*2.6)+.31*Math.max(0.,1.-Math.abs(u-.21)*4.7)+.14*Math.max(0.,1.-Math.abs(u-.64)*7.);
+    const flank=Math.max(0.,1.-Math.abs(v-spine)/(.61+.11*Math.sin(u*5.+seed)));
+    const mass=profile*Math.pow(flank,.73)*(.91+.09*noise(u*13+seed,v*10));
     const strata=noise(x*.035+seed,z*.035)*.07+noise(x*.105,z*.105+seed)*.035;
     const taper=Math.min(1,Math.max(0,1-Math.max(Math.abs(u),Math.abs(v)))*7);
     const raw=(mass+strata*mass)*height*taper,terrace=raw/4.6,ledge=Math.floor(terrace)+THREE.MathUtils.smoothstep(terrace%1,.12,.91);
@@ -37,55 +21,88 @@ function rockMass(width,depth,height,seed){
   const geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));geometry.setAttribute('color',new THREE.Float32BufferAttribute(colours,3));geometry.setIndex(indices);geometry.computeVertexNormals();return geometry;
 }
 
-export function createMineralHighlands(root,{rockMap,wind={value:0}}={}){
-  const group=new THREE.Group();group.name='Blue-green mineral highlands';root.add(group);const materials=[];
-  for(let layer=0;layer<3;layer++){
-    const material=new THREE.ShaderMaterial({vertexColors:true,side:THREE.DoubleSide,toneMapped:false,
-      uniforms:{rockMap:{value:rockMap},baseColor:{value:new THREE.Color(['#25717d','#427e97','#6998b2'][layer])},hazeColor:{value:new THREE.Color('#7398b8')},layerDepth:{value:layer},lightDirection:{value:new THREE.Vector3(-.3,.5,-.7).normalize()}},
-      vertexShader:'varying vec3 p,n,ore;void main(){p=(modelMatrix*vec4(position,1.)).xyz;n=normalize(mat3(modelMatrix)*normal);ore=color;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
-      fragmentShader:`varying vec3 p,n,ore;uniform sampler2D rockMap;uniform vec3 baseColor,hazeColor,lightDirection;uniform float layerDepth;
-        void main(){vec3 normal=normalize(n),weights=pow(abs(normal),vec3(4.));weights/=max(dot(weights,vec3(1.)),.001);
-          vec3 scan=texture2D(rockMap,p.yz*.022).rgb*weights.x+texture2D(rockMap,p.xz*.022).rgb*weights.y+texture2D(rockMap,p.xy*.022).rgb*weights.z;
-          float mineral=dot(scan,vec3(.2126,.7152,.0722));
-          float ridgeLight=.53+max(0.,dot(normal,lightDirection))*.70+max(0.,normal.y)*.18;
-          float strata=.96+.04*sin(p.y*.43+sin(p.x*.037+p.z*.032)*3.);
-          vec3 colour=baseColor*ore*ridgeLight*(.55+mineral*1.35)*strata;
-          float lichen=smoothstep(.20,.48,mineral)*max(0.,normal.y);
-          colour=mix(colour,colour*vec3(1.08,1.16,.90),lichen*.55);
-          float air=smoothstep(430.,1800.,distance(cameraPosition,p))*.52+layerDepth*.018;
-          float valley=(1.-smoothstep(-12.,76.,p.y))*(.16+layerDepth*.055);
-          colour=mix(colour,hazeColor,clamp(air+valley,0.,.78));gl_FragColor=vec4(colour,1.);
-          #include <colorspace_fragment>
-        }`,
-    });material.userData.backgroundLayer=layer;materials.push(material);
+
+// One source image spans only 110 degrees. A world-fixed ring preserves parallax
+// and pixel density; the overlap receives a feather only over another sector.
+export const MATTE_SECTORS = [
+  {angle:-.55,radius:1250,height:735,layer:1,art:'main'},
+  {angle:Math.PI/2-.55,radius:1510,height:720,layer:2,art:'right'},
+  {angle:Math.PI-.55,radius:1460,height:680,layer:2,art:'main'},
+  {angle:Math.PI*1.5-.55,radius:1280,height:650,layer:1,art:'right'},
+];
+export function curvedMountainSector({angle,radius,height},segments=96){
+  const positions=[],uv=[],indices=[],span=THREE.MathUtils.degToRad(110);
+  for(let y=0;y<2;y++)for(let i=0;i<=segments;i++){
+    const u=i/segments,a=angle+(u-.5)*span;
+    // Feet remain below lake even in the reflection camera; no horizontal cut line.
+    positions.push(Math.sin(a)*radius,-105+y*height,-Math.cos(a)*radius);uv.push(u,y);
+    if(y===0&&i<segments){const j=i+segments+1;indices.push(i,j,i+1,i+1,j,j+1);}
   }
-  const forestSites=[];
-  clusters.forEach(([x,z,w,d,h,layer],i)=>{const mesh=new THREE.Mesh(rockMass(w*1.45,d*1.4,h*.62,i*19+3),materials[layer]);mesh.position.set(x*1.85,0,z*1.85);mesh.rotation.y=i*1.71;mesh.name=`Mineral ridge ${layer}-${i}`;mesh.userData.distantLandscape=true;group.add(mesh);mesh.updateMatrix();
-    const points=mesh.geometry.attributes.position,normals=mesh.geometry.attributes.normal;
-    for(let j=0,count=0;j<120&&count<7;j++){
-      const index=Math.floor(rnd(i*93+j,j*7.1)*points.count),y=points.getY(index);
-      if(y<20||normals.getY(index)<.66)continue;
-      const position=new THREE.Vector3().fromBufferAttribute(points,index).applyMatrix4(mesh.matrix);
-      if(forestSites.some(p=>p.position.distanceTo(position)<9))continue;
-      forestSites.push({position,scale:1.25+rnd(j,i)*.85,rotation:rnd(i,j)*6.28});count++;
-    }
-  });
-  if(botanicalReady('pine',168,'far')){
-    const tree=createGroveTree('pine',168,'far'),matrix=new THREE.Matrix4(),rotation=new THREE.Quaternion();
-    for(const part of [tree.branchesMesh,tree.leavesMesh]){
-      const material=new THREE.MeshStandardMaterial({color:part===tree.leavesMesh?'#436b65':'#555d57',map:part.material.map,normalMap:part.material.normalMap,vertexColors:true,roughness:1});
-      const instances=new THREE.InstancedMesh(part.geometry,material,forestSites.length);instances.name='Highland ridge conifers';
-      forestSites.forEach((p,i)=>{rotation.setFromAxisAngle(new THREE.Vector3(0,1,0),p.rotation);matrix.compose(p.position,rotation,new THREE.Vector3(p.scale,p.scale,p.scale));instances.setMatrixAt(i,matrix);});
-      instances.computeBoundingSphere();group.add(instances);
-    }
+  const geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));geometry.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2));geometry.setIndex(indices);geometry.computeVertexNormals();geometry.computeBoundingSphere();return geometry;
+}
+export const mountainMatteFragment=`
+  varying vec2 artUV;varying vec3 worldPoint;
+  uniform sampler2D mountainMap;
+  uniform vec3 baseColor,hazeColor,lightDirection;
+  uniform float nightFactor,layerDepth,ready;
+  void main(){
+    if(ready<.5)discard;
+    vec4 art=texture2D(mountainMap,artUV);
+    // Lossless source has exact black sky. Work in decoded linear colour;
+    // reject it before haze/grade so reflection cannot acquire a black rectangle.
+    float key=max(art.r,max(art.g,art.b));
+    if(key<.0008)discard;
+    float silhouette=smoothstep(.0008,.008,key);
+    float edge=smoothstep(0.,.065,artUV.x)*smoothstep(0.,.065,1.-artUV.x);
+    vec3 grade=mix(vec3(1.10,1.10,1.03),vec3(.56,.72,.91),nightFactor);
+    vec3 colour=art.rgb*grade;
+    float air=.035+layerDepth*.025;
+    float baseMist=(1.-smoothstep(-35.,72.,worldPoint.y))*.16;
+    colour=mix(colour,hazeColor,air+baseMist);
+    gl_FragColor=vec4(colour,silhouette*edge);
+    #include <colorspace_fragment>
+  }
+`;
+
+export function createMineralHighlands(root,{rockMap,wind={value:0},mountainMaps={}}={}){
+  const group=new THREE.Group();group.name='Blue-green mineral highlands';root.add(group);
+  const materials=[],matteMaterials=[];
+  const near=new THREE.ShaderMaterial({vertexColors:true,side:THREE.DoubleSide,toneMapped:false,
+    uniforms:{rockMap:{value:rockMap},baseColor:{value:new THREE.Color('#597f77')},hazeColor:{value:new THREE.Color('#7398b8')},lightDirection:{value:new THREE.Vector3(-.3,.5,-.7).normalize()}},
+    vertexShader:'varying vec3 p,n,ore;void main(){p=(modelMatrix*vec4(position,1.)).xyz;n=normalize(mat3(modelMatrix)*normal);ore=color;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
+    fragmentShader:`varying vec3 p,n,ore;uniform sampler2D rockMap;uniform vec3 baseColor,hazeColor,lightDirection;
+      void main(){vec3 normal=normalize(n),weights=pow(abs(normal),vec3(4.));weights/=max(dot(weights,vec3(1.)),.001);
+        vec3 scan=texture2D(rockMap,p.yz*.022).rgb*weights.x+texture2D(rockMap,p.xz*.022).rgb*weights.y+texture2D(rockMap,p.xy*.022).rgb*weights.z;
+        float mineral=dot(scan,vec3(.2126,.7152,.0722));
+        float light=.67+max(0.,dot(normal,lightDirection))*.48;
+        vec3 colour=baseColor*ore*light*(.79+mineral*.68);
+        float air=smoothstep(400.,1700.,distance(cameraPosition,p))*.18;
+        float valley=(1.-smoothstep(-15.,35.,p.y))*.20;
+        gl_FragColor=vec4(mix(colour,hazeColor,air+valley),1.);
+        #include <colorspace_fragment>
+      }`,
+  });near.userData.backgroundLayer=0;materials.push(near);
+  // Low, connected flanking ridges keep genuine geometry near the shoreline.
+  for(const [x,z,w,d,h,angle,seed] of [[-510,-200,245,100,100,-.8,3],[520,-120,210,85,77,.95,17]]){
+    const mesh=new THREE.Mesh(rockMass(w,d,h,seed),near);mesh.position.set(x,0,z);mesh.rotation.y=angle;mesh.name='Near connected mineral ridge';mesh.userData.distantLandscape=true;group.add(mesh);
+  }
+  for(const sector of MATTE_SECTORS){
+    const texture=mountainMaps[sector.art];
+    const material=new THREE.ShaderMaterial({transparent:true,depthWrite:false,side:THREE.DoubleSide,toneMapped:false,
+      uniforms:{mountainMap:{value:texture||null},ready:{value:texture?1:0},baseColor:{value:new THREE.Color('#ffffff')},hazeColor:{value:new THREE.Color('#7398b8')},lightDirection:{value:new THREE.Vector3(-.3,.5,-.7).normalize()},nightFactor:{value:0},layerDepth:{value:sector.layer}},
+      vertexShader:'varying vec2 artUV;varying vec3 worldPoint;void main(){artUV=uv;worldPoint=(modelMatrix*vec4(position,1.)).xyz;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',fragmentShader:mountainMatteFragment,
+    });material.userData.backgroundLayer=sector.layer;material.userData.mountainArt=sector.art;
+    const mesh=new THREE.Mesh(curvedMountainSector(sector),material);mesh.name=`Painted mineral sector ${sector.art} ${sector.angle.toFixed(2)}`;
+    // Distant transparencies paint first, then the nearer overlapping sectors.
+    mesh.renderOrder=sector.layer===2?-20:-10;mesh.userData.distantLandscape=true;group.add(mesh);matteMaterials.push(material);
   }
   const mistMaterial=new THREE.ShaderMaterial({transparent:true,depthWrite:false,side:THREE.DoubleSide,toneMapped:false,
     uniforms:{time:wind,tint:{value:new THREE.Color('#7899ae')},nightFactor:{value:1}},
     vertexShader:'varying vec2 uvMist;void main(){uvMist=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
-    fragmentShader:`varying vec2 uvMist;uniform float time,nightFactor;uniform vec3 tint;void main(){vec2 v=uvMist;float edge=pow(max(0.,sin(v.x*3.14159)*sin(v.y*3.14159)),1.7);float cloud=.62+.20*sin(v.x*23.+sin(v.x*11.)-time*.023)+.15*sin(v.x*71.+v.y*5.);gl_FragColor=vec4(tint,edge*cloud*.19*(.75+nightFactor*.25));
+    fragmentShader:`varying vec2 uvMist;uniform float time,nightFactor;uniform vec3 tint;void main(){vec2 v=uvMist;float edge=pow(max(0.,sin(v.x*3.14159)*sin(v.y*3.14159)),1.7);float cloud=.62+.20*sin(v.x*23.+sin(v.x*11.)-time*.023);gl_FragColor=vec4(tint,edge*cloud*.10*(.75+nightFactor*.25));
       #include <colorspace_fragment>
     }`,
   });
-  for(let i=0;i<clusters.length;i++){const [x,z,w,,h]=clusters[i],mist=new THREE.Mesh(new THREE.PlaneGeometry(w*3.1,22+h*.055),mistMaterial);mist.position.set(x*1.8,3+i%3*9,z*1.8);mist.lookAt(0,mist.position.y,0);mist.name=`Low valley mist ${i}`;group.add(mist);}
-  return {group,materials,mistMaterial};
+  for(const [x,z] of [[-510,-200],[520,-120]]){const mist=new THREE.Mesh(new THREE.PlaneGeometry(450,35),mistMaterial);mist.position.set(x,5,z);mist.lookAt(0,5,0);mist.name='Low mineral valley mist';group.add(mist);}
+  return {group,materials,matteMaterials,mistMaterial};
 }

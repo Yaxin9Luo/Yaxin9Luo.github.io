@@ -3,7 +3,7 @@ import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { Water } from 'three/addons/objects/Water.js';
 import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
 import { locations, court, bridges } from './locations.js';
-import {loadPBRTexture} from './asset-cache.js';
+import {loadPBRTexture,loadImageTexture} from './asset-cache.js';
 import {loadAtmosphereAssets} from './atmosphere.js';
 import {insideAuthoredGarden,landscapeGroves,groveAt,insideBlossomPark} from './environment-layout.js';
 import {createGroveTree,createGroveShrub,updateGroveWind} from './grove-foliage.js';
@@ -17,6 +17,18 @@ import {createMineralHighlands} from './mineral-highlands.js';
 const TAU=Math.PI*2;
 const maps = {};
 const materialBindings=new Map(),rockBindings=new Set();
+const mountainMaps={},mountainBindings=new Set();
+export async function loadMountainArt(options={}){
+  const results=await Promise.allSettled(['main','right'].map(async key=>{
+    const url=`/art/experience-v5/mineral-mountains${key==='right'?'-right':''}.webp`;
+    const texture=await loadImageTexture({id:`mountain-art:${key}`,url,phase:2},options);
+    if(options.signal?.aborted)return false;
+    mountainMaps[key]=texture;
+    for(const material of mountainBindings)if(material.userData.mountainArt===key){material.uniforms.mountainMap.value=texture;material.uniforms.ready.value=1;}
+    return true;
+  }));
+  return results.every(result=>result.status==='fulfilled'&&result.value!==false);
+}
 const neutralRock=new THREE.DataTexture(new Uint8Array([176,183,173,255]),1,1);neutralRock.colorSpace=THREE.SRGBColorSpace;neutralRock.needsUpdate=true;neutralRock.userData.sharedAsset=true;
 let environment = null;
 const wind = { value: 0 };
@@ -41,7 +53,7 @@ export async function loadNightEnvironment(scene,options={}){
   return true;
 }
 export async function loadLandscapeAssets(options={}) {
-  await Promise.allSettled([loadLandscapeSurfaces(options),loadAtmosphereAssets(options),loadScannedRockAssets(options),loadEnvironmentSignage(options),loadNightEnvironment(null,options)]);
+  await Promise.allSettled([loadLandscapeSurfaces(options),loadMountainArt(options),loadAtmosphereAssets(options),loadScannedRockAssets(options),loadEnvironmentSignage(options),loadNightEnvironment(null,options)]);
 }
 
 export function noise(x, z) {
@@ -249,7 +261,8 @@ export function createVegetation(root,heightAt,nearPath=()=>false,{lod=false,tre
 }
 
 export function createBackdrop(root,scene){
-  const result=createMineralHighlands(root,{rockMap:maps['mossy-rock']?.color||neutralRock,wind});
+  const result=createMineralHighlands(root,{rockMap:maps['mossy-rock']?.color||neutralRock,wind,mountainMaps});
   for(const material of result.materials){rockBindings.add(material.uniforms.rockMap);material.addEventListener('dispose',()=>rockBindings.delete(material.uniforms.rockMap));}
+  for(const material of result.matteMaterials){mountainBindings.add(material);material.addEventListener('dispose',()=>mountainBindings.delete(material));}
   return result;
 }

@@ -1,4 +1,4 @@
-// Generated from actual bytes by scripts/prepare-runtime-assets.mjs.
+// Generated from actual bytes by scripts/prepare-runtime-assets.mjs; art updated by scripts/update-art-manifest.mjs.
 export const assetManifest = {
   "wizard-core": {
     "id": "wizard-core",
@@ -593,5 +593,60 @@ export const assetManifest = {
     "variant": "full",
     "dependencies": [],
     "source": "/art/night-garden/blossom-atlas.webp"
+  },
+  "/art/experience-v5/mineral-mountains.webp": {
+    "id": "/art/experience-v5/mineral-mountains.webp",
+    "url": "/runtime/art-experience-v5-mineral-mountains-webp.cedb84e285493cb8.webp",
+    "bytes": 1465582,
+    "sha256": "cedb84e285493cb84d84639dcce98b7d4275361e5714c04ecb477cc18bd6b5eb",
+    "phase": 2,
+    "region": "shared",
+    "variant": "full",
+    "dependencies": [],
+    "source": "/art/experience-v5/mineral-mountains.webp"
+  },
+  "/art/experience-v5/mineral-mountains-right.webp": {
+    "id": "/art/experience-v5/mineral-mountains-right.webp",
+    "url": "/runtime/art-experience-v5-mineral-mountains-right-webp.455186c166da20ec.webp",
+    "bytes": 1520914,
+    "sha256": "455186c166da20ec33fdfbb3e1628f30169ce28d64f0f09f3b686d5a1d05e9c2",
+    "phase": 2,
+    "region": "shared",
+    "variant": "full",
+    "dependencies": [],
+    "source": "/art/experience-v5/mineral-mountains-right.webp"
+  },
+  "/textures/courtyard-paving/color.webp": {
+    "id": "/textures/courtyard-paving/color.webp",
+    "url": "/runtime/textures-courtyard-paving-color-webp.ae6d2925a459875d.webp",
+    "bytes": 6168894,
+    "sha256": "ae6d2925a459875d43ec761f54fac52a0463ed8d2ce01fcaccc822176d898401",
+    "phase": 2,
+    "region": "shared",
+    "variant": "full",
+    "dependencies": [],
+    "source": "/textures/courtyard-paving/color.webp"
+  },
+  "/textures/courtyard-paving/normal.webp": {
+    "id": "/textures/courtyard-paving/normal.webp",
+    "url": "/runtime/textures-courtyard-paving-normal-webp.c1da75e9d1649a65.webp",
+    "bytes": 8677858,
+    "sha256": "c1da75e9d1649a655584f2d147403652ab98e351fcab35a0eb82ded348fc97d5",
+    "phase": 2,
+    "region": "shared",
+    "variant": "full",
+    "dependencies": [],
+    "source": "/textures/courtyard-paving/normal.webp"
+  },
+  "/textures/courtyard-paving/roughness.webp": {
+    "id": "/textures/courtyard-paving/roughness.webp",
+    "url": "/runtime/textures-courtyard-paving-roughness-webp.6efd04d1f8c50083.webp",
+    "bytes": 5001678,
+    "sha256": "6efd04d1f8c5008353bdc14fc3d18f28fcfc6940e42106858febca32b6f06593",
+    "phase": 2,
+    "region": "shared",
+    "variant": "full",
+    "dependencies": [],
+    "source": "/textures/courtyard-paving/roughness.webp"
   }
 };
