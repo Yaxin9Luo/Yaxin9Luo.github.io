@@ -1,6 +1,6 @@
 // Pure ground support/movement. Positions here use the SOLE plane, not the flying
 // rider's seat origin. heightAt must sample the actual rendered terrain triangles.
-export const GROUND_MOTION = Object.freeze({ walkSpeed:1.6, runSpeed:3.8, radius:.32, height:3.24,
+export const GROUND_MOTION = Object.freeze({ walkSpeed:3.2, runSpeed:7.2, radius:.32, height:3.24,
   maxSlope:35, stepUp:.30, stepDown:.40, waterLevel:-15, skin:.006 });
 const EPS=1e-5;
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));

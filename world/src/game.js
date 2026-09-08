@@ -26,6 +26,8 @@ const MOVEMENT_KEYS = new Set(['KeyW', 'KeyA', 'KeyS', 'KeyD', 'ArrowUp', 'Arrow
 const ACTION_KEYS = new Set(['Digit1', 'Digit2', 'Digit3', 'KeyQ', 'KeyE', 'KeyV', 'KeyB', 'KeyL']);
 const PARTICLE_COUNT = 280;
 const PROJECTILE_COUNT = 36;
+const MAX_FRAME_DELTA = .25;
+const MAX_SIMULATION_STEP = 1 / 60;
 const Y_AXIS = new THREE.Vector3(0, 1, 0);
 const Z_AXIS = new THREE.Vector3(0, 0, 1);
 const TAU = Math.PI * 2;
@@ -1020,32 +1022,43 @@ export class Game {
     const rawDt = this._lastFrame ? Math.max(0, (timestamp - this._lastFrame) / 1000) : 0;
     this._lastFrame = timestamp;
     if (this._contextLost || document.hidden) return;
-    const dt = clamp(rawDt, 0, .05);
-    this._time += dt;
+    // Consume ordinary slow frames in full. A small movement delta must not
+    // become slow motion; only long stalls are capped, with no catch-up debt.
+    const dt = clamp(rawDt, 0, MAX_FRAME_DELTA);
     this.fps = damp(this.fps, 1 / Math.max(rawDt, .001), 2, dt);
-    const playing = this.started && !this._isPaused();
+    let playing = this.started && !this._isPaused();
     this._updateEnvironment(rawDt);
+    const steps = Math.max(1, Math.ceil(dt / MAX_SIMULATION_STEP - 1e-8));
+    const stepDt = dt / steps;
+    for (let step = 0; step < steps; step++) {
+      playing = this.started && !this._isPaused();
+      this._time += stepDt;
+      if (playing) {
+        this._simulationTime += stepDt;
+        this.cooldown = Math.max(0, this.cooldown - stepDt);
+        this.shield = Math.max(0, this.shield - stepDt);
+        this._invulnerable = Math.max(0, this._invulnerable - stepDt);
+        this._hitShake = Math.max(0, this._hitShake - stepDt);
+        this.mana = Math.min(100, this.mana + stepDt * 9);
+        this._move(stepDt);
+        this._updateEnemies(stepDt);
+        this._updateProjectiles(stepDt);
+        this._updateInteractions();
+        this._updateRace(stepDt);
+        if (this._controls.fire || this._keys.has('Space')) this.cast();
+        this._updateParticles(stepDt);
+      }
+      // Pose events share the movement clock: a charged spell releases at a
+      // simulated wand pose and advances only for the remaining substeps.
+      this._updateWizard(stepDt, playing);
+      for (const wisp of this.world.wisps) updateCharacter(wisp.group, { dt:stepDt, paused:this._isPaused(),speed: playing ? .22 : 0, reducedMotion: this.options.reducedMotion, state: this._combat && wisp.attack < .6 ? 'channel' : 'idle' });
+    }
+    playing = this.started && !this._isPaused();
+    if (!this.started) this._idleWisps();
     this.world.update(this._time, dt, this.options.reducedMotion,this.camera,{width:this.canvas.width,height:this.canvas.height});
     this.exhibitionStage.setFocused?.(Boolean(this.exhibition||this.nearestExhibition),{reducedMotion:this.options.reducedMotion});
     this.exhibitionStage.update(this._time,this._suspended?0:dt,this.options.reducedMotion);
     if(this.exhibitionStage.consumeShadowUpdate?.())this.renderer.shadowMap.needsUpdate=true;
-    if (playing) {
-      this._simulationTime += dt;
-      this.cooldown = Math.max(0, this.cooldown - dt);
-      this.shield = Math.max(0, this.shield - dt);
-      this._invulnerable = Math.max(0, this._invulnerable - dt);
-      this._hitShake = Math.max(0, this._hitShake - dt);
-      this.mana = Math.min(100, this.mana + dt * 9);
-      this._move(dt);
-      this._updateEnemies(dt);
-      this._updateProjectiles(dt);
-      this._updateInteractions();
-      this._updateRace(dt);
-      if (this._controls.fire || this._keys.has('Space')) this.cast();
-      this._updateParticles(dt);
-    } else if (!this.started) this._idleWisps();
-    this._updateWizard(dt, playing);
-    for (const wisp of this.world.wisps) updateCharacter(wisp.group, { dt, paused:this._isPaused(),speed: playing ? .22 : 0, reducedMotion: this.options.reducedMotion, state: this._combat && wisp.attack < .6 ? 'channel' : 'idle' });
     this._updateCamera(dt);
     this.world.updateVegetation?.(this.camera,{width:this.canvas.width,height:this.canvas.height});
     this.audio.setListener?.(this.camera.position,this.camera.getWorldDirection(this._forward));
@@ -1205,7 +1218,7 @@ export class Game {
     this.velocity.set(step.velocity.x,step.velocity.y,step.velocity.z);
     const speed=dt>0?step.distance/dt:0;
     if(speed>.01){
-      const running=speed>2.7;
+      const running=speed>(GROUND_MOTION.walkSpeed+GROUND_MOTION.runSpeed)/2;
       if(state.groundSpeed<.01)state.gaitPhase=running?CHARACTER_GROUND_MOTION.runContact/2:CHARACTER_GROUND_MOTION.walkContact/2;
       const stride=(running?GROUND_MOTION.runSpeed:GROUND_MOTION.walkSpeed)*(running?CHARACTER_GROUND_MOTION.runCycle:CHARACTER_GROUND_MOTION.walkCycle);
       state.gaitPhase=(state.gaitPhase+step.distance/stride)%1;

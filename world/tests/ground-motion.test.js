@@ -42,9 +42,9 @@ test('landing queries below the aircraft and respects headroom and water',()=>{
 test('walking climbs and descends a low foundation step without horizontal ejection',()=>{
  const world={...flat,colliders:[box('about/foundation',0,-1.8,8,2,0,.25)]};
  let state={position:{x:0,y:0,z:0},heading:0};
- for(let i=0;i<15;i++)state=stepGroundMotion(state,{x:0,z:-1},.1,world);
+ for(let i=0;i<200&&state.position.z> -2.3;i++)state=stepGroundMotion(state,{x:0,z:-1},.025,world);
  assert.ok(state.position.z<-2.2);assert.equal(state.position.y,.25);
- for(let i=0;i<15;i++)state=stepGroundMotion(state,{x:0,z:1},.1,world);
+ for(let i=0;i<200&&state.position.z<0;i++)state=stepGroundMotion(state,{x:0,z:1},.025,world);
  assert.ok(state.position.z>-.1);assert.equal(state.position.y,0);
 });
 

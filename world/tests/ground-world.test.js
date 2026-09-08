@@ -18,7 +18,7 @@ test('the recorded cherry-grove landing can walk and run continuously across bot
     blocked+=Number(moved.blocked);state=moved;
   }
   assert.equal(blocked,0,`stopped at ${JSON.stringify(state.position)}: ${state.reason}`);
-  assert.ok(Math.abs(state.position.z-(65-1.6*2.5-3.8*3))<1e-6);
+  assert.ok(Math.abs(state.position.z-(65-GROUND_MOTION.walkSpeed*2.5-GROUND_MOTION.runSpeed*3))<1e-6);
 });
 
 test('actual terrain and blossom triangle normals stay walkable across the previously blocked footprint',()=>{

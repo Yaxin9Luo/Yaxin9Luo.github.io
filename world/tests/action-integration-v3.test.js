@@ -5,7 +5,8 @@ import {createServer} from 'node:http';
 import {once} from 'node:events';
 import * as THREE from 'three';
 import {Game} from '../src/game.js';
-import {loadCharacterAssets,createWizard,CHARACTER_ACTION_TIMING} from '../src/characters.js';
+import {loadCharacterAssets,createWizard,CHARACTER_ACTION_TIMING,CHARACTER_GROUND_MOTION} from '../src/characters.js';
+import {GROUND_MOTION} from '../src/ground-motion.js';
 import {createActionEffects} from '../src/effects.js';
 import {spellDefinitions} from '../src/locations.js';
 
@@ -67,8 +68,35 @@ test('valid standing headroom does not allow summoning a broom through a low roo
 test('partial boosted touch input advances the walking gait by actual traveled distance',t=>{
   const {game}=gameFixture(t);grounded(game);game.setTouch(.5,0);game.setControl('boost',true);
   game._move(.05);step(game,.05);
-  assert.ok(Math.abs(game.position.x-.095)<1e-8);
-  assert.ok(Math.abs(game.locomotion.gaitPhase-(.29+.095/1.6))<1e-8);
+  assert.ok(Math.abs(game.position.x-.18)<1e-8);
+  const stride=GROUND_MOTION.walkSpeed*CHARACTER_GROUND_MOTION.walkCycle;
+  assert.ok(Math.abs(game.locomotion.gaitPhase-(CHARACTER_GROUND_MOTION.walkContact/2+.18/stride))<1e-8);
+});
+
+for(const fps of [60,15,9])test(`real frame dispatch releases an authored ground cast once on its animation clock at ${fps} FPS`,t=>{
+  const {game,launches}=gameFixture(t);grounded(game);
+  // Keep this flat support above the real island terrain used by spell impacts.
+  game.world.heightAt=()=>20;game.locomotion.support.y=20;game.position.y=20-CHARACTER_GROUND_MOTION.soleY;step(game,0);
+  for(const [name,value]of Object.entries({document:{hidden:false},requestAnimationFrame:()=>1})){
+    const descriptor=Object.getOwnPropertyDescriptor(globalThis,name);
+    Object.defineProperty(globalThis,name,{configurable:true,writable:true,value});
+    t.after(()=>descriptor?Object.defineProperty(globalThis,name,descriptor):delete globalThis[name]);
+  }
+  Object.assign(game,{_lastFrame:1000,_frameCount:0,_lastSnapshot:0,fps:60,_invulnerable:0,_hitShake:0,
+    canvas:{width:1280,height:720},exhibitionStage:{update(){}},rendering:{render(){}},_updateEnvironment(){},_updateInteractions(){}});
+  game.renderer.info={reset(){}};game.world.update=()=>{};game.audio.update=()=>{};
+  const released=[];const launch=game._launch.bind(game);
+  game._launch=(...args)=>{released.push(game._simulationTime);return launch(...args);};
+  game.cast(0);game.setTouch(1,0);
+  const frames=Math.ceil(.4*fps);
+  for(let frame=1;frame<=frames;frame++)game._tick(1000+frame*1000/fps);
+  assert.equal(launches.length,1);assert.equal(released.length,1);
+  assert.ok(released[0]>=CHARACTER_ACTION_TIMING.castRelease-1e-8);
+  assert.ok(released[0]<=CHARACTER_ACTION_TIMING.castRelease+1/60+1e-8,'release must not wait for the next slow render frame');
+  assert.ok(launches[0].origin.distanceTo(launches[0].tip)<1e-8);
+  const shot=active(game)[0],flightTime=game._simulationTime-released[0];
+  assert.ok(Math.abs(shot.mesh.position.distanceTo(launches[0].origin)-flightTime*spellDefinitions[0].speed)<1e-7,'a new spell advances only after its authored release');
+  assert.equal(game.position.x,0,'the casting stance holds ground movement');
 });
 
 test('grounded casting holds position and releases exactly once from the live wand',t=>{
