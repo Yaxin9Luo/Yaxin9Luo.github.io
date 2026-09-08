@@ -268,9 +268,10 @@ export class Game {
     this.fillLight = new THREE.DirectionalLight('#ffe2be', 1.8);
     this.fillLight.position.set(60, 80, 100);
     this.scene.add(this.fillLight);
-    // Warm reflected light at the inhabited facades, without lighting every lamp.
+    // Castle gate is at world z=-16 and the hall door at z=-35.
+    // Place warm washes in front of those facades, beneath the cool roof light.
     this.accentLights = [];
-    for(const [x,y,z,power] of [[0,20,0,220],[-70,13,18,75],[64,13,48,75]]){
+    for(const [x,y,z,power] of [[0,17,-10,320],[0,21,-29,240],[-70,13,18,75],[64,13,48,75]]){
       const light=new THREE.PointLight('#ffb965',power,55,2);light.position.set(x,y,z);this.scene.add(light);
       this.accentLights.push({ light, baseIntensity: power });
     }

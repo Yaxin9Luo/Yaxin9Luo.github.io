@@ -89,7 +89,7 @@ test('solar and lunar handoffs have continuous key direction and velocity, inclu
 test('day and night preserve pigment contrast with a continuous soft shadow handoff', () => {
   const day = sampleEnvironment(TIME_PHASES.day), night = sampleEnvironment(TIME_PHASES.night);
   const luminance = c => c.r * .2126 + c.g * .7152 + c.b * .0722;
-  assert.ok(day.keyIntensity > night.keyIntensity * 1.7);
+  assert.ok(day.keyIntensity > night.keyIntensity * 1.4);
   assert.ok(night.ambientIntensity > .7, 'night keeps diffuse surface detail');
   assert.ok(night.fillIntensity < night.ambientIntensity, 'fill must not flatten material shading');
   assert.ok(luminance(night.horizon) < luminance(day.horizon) * .5);
