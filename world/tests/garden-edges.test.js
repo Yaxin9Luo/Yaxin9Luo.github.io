@@ -58,3 +58,14 @@ test('edge dressing leaves all authored district collision solids unchanged',()=
   assert.deepEqual(gardens.contentAnchors.map(a=>a.position.toArray()),baseline.contentAnchors.map(a=>a.position.toArray()));
   assert.equal(edges.userData.colliders.length,0);
 });
+
+
+test('planted ground ribbons face upward and remain ray-visible from above',()=>{
+  const moss=edges.children.find(o=>o.material.name==='Garden edge ground cover');
+  const normals=moss.geometry.attributes.normal;
+  for(let i=0;i<normals.count;i++)assert.ok(normals.getY(i)>.9,'soil ribbon must face the sky');
+  const p=moss.geometry.attributes.position,center=new THREE.Vector3();
+  for(let i=0;i<3;i++)center.add(new THREE.Vector3().fromBufferAttribute(p,i));center.divideScalar(3);
+  moss.updateMatrixWorld(true);const ray=new THREE.Raycaster(center.clone().add(new THREE.Vector3(0,2,0)),new THREE.Vector3(0,-1,0));
+  assert.ok(ray.intersectObject(moss).length>0);
+});

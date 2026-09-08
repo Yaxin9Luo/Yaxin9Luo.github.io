@@ -12,7 +12,7 @@ export function createBlossomGroves(root,heightAt,{nearPath=()=>false,trees=true
   const definitions=[],support=createSurfaceSupport(heightAt),lampSites=[],colliders=[];
   const brass=new THREE.MeshStandardMaterial({color:'#a18c61',metalness:.65,roughness:.42});
   const wood=new THREE.MeshStandardMaterial({color:'#554a45',roughness:.88});
-  const stone=surface('castle-masonry',{color:'#a1a394',normalScale:new THREE.Vector2(.24,.24),roughness:.94});
+  const stone=surface('courtyard-paving',{color:'#ddceb4',albedoStrength:1,normalScale:new THREE.Vector2(.45,.45),roughness:.90,roughnessFloor:.60});
   const add=(geometry,material,name)=>{const mesh=new THREE.Mesh(geometry,material);mesh.name=name;mesh.castShadow=mesh.receiveShadow=true;group.add(mesh);return mesh;};
   const box=(x,y,z,w,h,d,material,name)=>{const mesh=add(new THREE.BoxGeometry(w,h,d),material,name);mesh.position.set(x,y,z);return mesh;};
   for(const park of blossomParks){
@@ -31,14 +31,14 @@ export function createBlossomGroves(root,heightAt,{nearPath=()=>false,trees=true
         }
       }
     });
-    const path=new THREE.BufferGeometry();path.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));path.setIndex(indices);path.computeVertexNormals();support.addGeometry(path);planarUV(path,.46);add(path,stone,`${park.id} stone walk`);
+    const path=new THREE.BufferGeometry();path.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));path.setIndex(indices);path.computeVertexNormals();support.addGeometry(path);planarUV(path,.5);add(path,stone,`${park.id} stone walk`);
     const placements=park.trees.filter(([x,z])=>heightAt(x,z)>.5&&!nearPath(x,z)).map(([x,z,s],i)=>({x,z,y:heightAt(x,z)-.035,s,r:i*2.399+park.seed}));
     if(trees)definitions.push({kind:park.kind,seed:park.seed,placements});
     const [ox,oz]=park.overlook,oy=heightAt(ox,oz)+.085;
     const daisGeometry=new THREE.CircleGeometry(2.8,72);daisGeometry.rotateX(-Math.PI/2);
     const daisPositions=daisGeometry.getAttribute('position');
     for(let i=0;i<daisPositions.count;i++){const x=ox+daisPositions.getX(i),z=oz+daisPositions.getZ(i);daisPositions.setXYZ(i,x,heightAt(x,z)+.13,z);}
-    daisGeometry.computeVertexNormals();support.addGeometry(daisGeometry);planarUV(daisGeometry,.46);add(daisGeometry,stone,`${park.id} circular overlook`);
+    daisGeometry.computeVertexNormals();support.addGeometry(daisGeometry);planarUV(daisGeometry,.5);add(daisGeometry,stone,`${park.id} circular overlook`);
     // Open-backed benches leave the water and mountains visible above the brass rail.
     for(const side of[-1,1]){
       const x=ox+side*2.4,z=oz;

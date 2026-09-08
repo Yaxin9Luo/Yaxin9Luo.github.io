@@ -209,7 +209,19 @@ function* assembleWorld(scene, navigation=null){
       for(let side=0;side<=across;side++){const offset=(side/across*2-1)*width,x=v.x+dir.z*offset,z=v.z-dir.x*offset;pos.push(x,renderedTerrainHeight(x,z)+.075,z);}
       if(k<points.length-1)for(let side=0;side<across;side++){const j=k*stride+side;idx.push(j,j+stride,j+1,j+1,j+stride,j+stride+1);}
     });
-    const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));g.setIndex(idx);g.computeVertexNormals();roadSupport.addGeometry(g);planarUV(g,.32);mesh(g,surface('castle-masonry',{color:'#b1b8a9',side:THREE.DoubleSide,normalScale:new THREE.Vector2(.15,.15)})).name=`road-${l.id}`;
+    const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));g.setIndex(idx);g.computeVertexNormals();roadSupport.addGeometry(g);planarUV(g,.5);mesh(g,surface('courtyard-paving',{color:'#e3d5bd',albedoStrength:1,roughness:.91,roughnessFloor:.60,side:THREE.DoubleSide,normalScale:new THREE.Vector2(.45,.45)})).name=`road-${l.id}`;
+    // A low, irregular soil shoulder joins paving to meadow. Every visible
+    // triangle uses the rendered terrain sampler and joins the support index.
+    for(const sign of[-1,1]){
+      const shoulder=[],faces=[];
+      points.forEach((v,k)=>{
+        const prev=points[Math.max(0,k-1)],next=points[Math.min(points.length-1,k+1)],dir=new THREE.Vector3().subVectors(next,prev).normalize(),fray=.35+.07*Math.sin(k*.31+l.x)+.03*Math.cos(k*.79);
+        for(let edge=0;edge<2;edge++){const offset=sign*(width+(edge?fray:0)),x=v.x+dir.z*offset,z=v.z-dir.x*offset;shoulder.push(x,renderedTerrainHeight(x,z)+(edge?.012:.074),z);}
+        if(k<points.length-1){const q=k*2;if(sign>0)faces.push(q,q+2,q+1,q+1,q+2,q+3);else faces.push(q,q+1,q+2,q+1,q+3,q+2);}
+      });
+      const edge=new THREE.BufferGeometry();edge.setAttribute('position',new THREE.Float32BufferAttribute(shoulder,3));edge.setIndex(faces);edge.computeVertexNormals();roadSupport.addGeometry(edge);planarUV(edge,.5);
+      mesh(edge,surface('forest-ground',{color:'#877b60',albedoStrength:1,roughness:1,normalScale:new THREE.Vector2(.45,.45)})).name=`road-${l.id}-planted-shoulder-${sign}`;
+    }
     yield {region:`road-${l.id}`};
     }
   }
@@ -219,7 +231,7 @@ function* assembleWorld(scene, navigation=null){
   }
   for(const [[ax,az],[bx,bz]] of Object.values(bridges)){bridge(ax,az,bx,bz);yield {region:"bridge"};}
   const gardenTrees=yield {prepare:"gardens"};
-  const gardens=createAuthoredGardens(root,null,nearPath,{trees:gardenTrees!==false});occluders.push(gardens.group);
+  const gardens=createAuthoredGardens(root,renderedTerrainHeight,nearPath,{trees:gardenTrees!==false});occluders.push(gardens.group);
   if(navigation){navigation.gardens=gardens;navigation.clockTargets=gardens.clockTargets;navigation.environmentColliders.push(...gardens.colliders);mergeEnvironmentLighting(navigation.environmentLighting,gardens.lighting);}
   yield {region:"gardens"};
   const composition=createEnvironmentComposition(root,renderedTerrainHeight,nearPath,{shoreline:terrain.shore,shoreField});occluders.push(composition.group);
@@ -235,7 +247,7 @@ function* assembleWorld(scene, navigation=null){
 
   yield {region:"wayfinding"};
   const landscapeTrees=yield {prepare:"vegetation"};
-  const vegetation=createVegetation(root,terrainHeight,nearPath,{lod:true,trees:landscapeTrees!==false});
+  const vegetation=createVegetation(root,renderedTerrainHeight,nearPath,{lod:true,trees:landscapeTrees!==false});
   yield {region:"vegetation"};
   const blossomTrees=yield {prepare:"blossom-walks"};
   const blossomGroves=createBlossomGroves(root,groundHeight,{nearPath,trees:blossomTrees!==false});occluders.push(blossomGroves.group);

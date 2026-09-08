@@ -5,7 +5,7 @@ import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
 import { locations, court, bridges } from './locations.js';
 import {loadPBRTexture,loadImageTexture} from './asset-cache.js';
 import {loadAtmosphereAssets} from './atmosphere.js';
-import {insideAuthoredGarden,landscapeGroves,groveAt,insideBlossomPark} from './environment-layout.js';
+import {insideAuthoredGarden,landscapeGroves,groveAt,insideBlossomPark,blossomParks} from './environment-layout.js';
 import {createGroveTree,createGroveShrub,updateGroveWind} from './grove-foliage.js';
 import {createFoliageLOD} from './foliage-lod.js';
 import {applyEnvironmentWind,attachWindShadows} from './environment-wind.js';
@@ -33,7 +33,7 @@ const neutralRock=new THREE.DataTexture(new Uint8Array([176,183,173,255]),1,1);n
 let environment = null;
 const wind = { value: 0 };
 export async function loadLandscapeSurfaces(options={}) {
-  const jobs = ['meadow', 'mossy-rock', 'forest-ground', 'castle-masonry', 'aged-wood', 'oxidized-copper', 'wool-cloth'].flatMap(name =>
+  const jobs = ['meadow', 'mossy-rock', 'forest-ground', 'castle-masonry', 'courtyard-paving', 'aged-wood', 'oxidized-copper', 'wool-cloth'].flatMap(name =>
     ['color', 'normal', 'roughness'].map(async kind => {
       const texture = await loadPBRTexture(name,kind,options);
       (maps[name] ||= {})[kind] = texture;
@@ -90,7 +90,7 @@ export function planarUV(geometry, scale=.2) {
   geometry.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2));return geometry;
 }
 export function groundMaterial() {
-  const m=surface('meadow',{vertexColors:true,color:'#e4ebd8',normalScale:new THREE.Vector2(.70,.70),roughness:1});
+  const m=surface('meadow',{vertexColors:true,color:'#cedbc2',normalScale:new THREE.Vector2(.70,.70),roughness:1});
   m.userData.albedoStrength=.82;
   const compileSurface=m.onBeforeCompile;
   m.onBeforeCompile=shader=>{
@@ -169,6 +169,9 @@ export function createVegetation(root,heightAt,nearPath=()=>false,{lod=false,tre
   };
   const kinds=['pine','silver','cherry'],groups=kinds.map(()=>[]),placed=[];
   const clear=(x,z)=>insideAuthoredGarden(x,z,3)||locations.some(l=>Math.hypot(x-l.x,z-l.z)<l.radius+4)||nearPath(x,z)||Math.hypot(x-court.x,z-court.z)<13;
+  const gardenWalks=blossomParks.map(park=>({park,points:new THREE.CatmullRomCurve3(park.path.map(([x,z])=>new THREE.Vector3(x,0,z))).getPoints(180)}));
+  // Low plants may fill tree setbacks, but their full footprint clears real paving.
+  const lowClear=(x,z)=>insideAuthoredGarden(x,z,.7)||locations.some(l=>Math.hypot(x-l.x,z-l.z)<l.radius+1.4)||nearPath(x,z)||Math.hypot(x-court.x,z-court.z)<13||gardenWalks.some(({park,points})=>Math.hypot(x-park.overlook[0],z-park.overlook[1])<3.5||points.some(p=>Math.hypot(x-p.x,z-p.z)<2.2));
   // A broad approach corridor frames the castle and stays clear of tall crowns.
   const treeClear=(x,z)=>clear(x,z)||Math.pow((x-court.x-6)/32,2)+Math.pow((z-court.z-14)/42,2)<1||nearPath(x+5,z)||nearPath(x-5,z)||nearPath(x,z+5)||nearPath(x,z-5);
   const sampleIsland=()=>{const grove=landscapeGroves[Math.floor(rand()*landscapeGroves.length)],a=rand()*TAU,r=Math.sqrt(rand())*.95;return{x:grove.x+Math.cos(a)*grove.rx*r,z:grove.z+Math.sin(a)*grove.rz*r,kind:grove.kind};};
@@ -206,13 +209,15 @@ export function createVegetation(root,heightAt,nearPath=()=>false,{lod=false,tre
     }
     if(j%3===0&&noise(x*.12+5,z*.12)>.32)flowers.push({x,y:h,z,s:.64+rand()*.54,r:rand()*6.28});
   }
-  for(let j=0;j<16000;j++){
+  const ferns=[];
+  for(let j=0;j<62000;j++){
     const x=(rand()-.5)*255,z=(rand()-.5)*250+12,h=heightAt(x,z);
-    if(h<.6||clear(x,z))continue;
+    if(h<.6||lowClear(x,z))continue;
     const patch=noise(x*.055+18,z*.055-4),edge=nearPath(x+2,z)||nearPath(x-2,z)||nearPath(x,z+2)||nearPath(x,z-2);
-    if(patch<.49&&!edge)continue;
-    grass.push({x,y:h-.025,z,s:.55+rand()*.62,r:rand()*TAU});
-    if(j%9===0&&patch>.55)flowers.push({x,y:h-.01,z,s:.8+rand()*.75,r:rand()*TAU});
+    if(patch<.35&&!edge)continue;
+    grass.push({x,y:h-.025,z,s:.78+rand()*.76,r:rand()*TAU});
+    if(j%7===0&&(patch>.52||edge))flowers.push({x,y:h-.01,z,s:.66+rand()*.68,r:rand()*TAU});
+    if(j%3===0&&(patch>.44||edge))ferns.push({x,y:h-.02,z,s:.65+rand()*.68,r:rand()*TAU});
     if(j%71===0)pebbles.push({x,y:h-.07,z,s:.16+rand()*.33,r:rand()*TAU});
   }
   addScannedRocks(root,[...rocks.map((p,i)=>({...p,kind:'moss',piece:i%7,sy:(p.sy||1)*.7})),...pebbles.map((p,i)=>({...p,kind:'moss',piece:i%7}))],'Scanned mossy grove stones');
@@ -230,6 +235,22 @@ export function createVegetation(root,heightAt,nearPath=()=>false,{lod=false,tre
   }
   const gg=new THREE.BufferGeometry();gg.setAttribute('position',new THREE.Float32BufferAttribute(vertices,3));gg.setAttribute('color',new THREE.Float32BufferAttribute(colors,3));gg.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2));gg.setIndex(indices);gg.computeVertexNormals();
   const gm=leafMaterial(null,'#acc2ab');gm.vertexColors=true;gm.alphaTest=0;batch(gg,gm,grass,'Grouped silver green ground cover',false);
+  // Seven arching fronds with paired curved leaflets: one instanced geometry,
+  // continuous shaded understory without adding a draw call for each plant.
+  const fp=[],fc=[],fi=[],fernDark=new THREE.Color('#315941'),fernLight=new THREE.Color('#829b59');
+  for(let frond=0;frond<7;frond++){
+    const angle=frond*2.399,length=.74+(frond%3)*.14;
+    const point=(t,side,width)=>new THREE.Vector3(Math.cos(angle)*t*length-Math.sin(angle)*side*width,Math.sin(t*Math.PI*.84)*.52+.025,Math.sin(angle)*t*length+Math.cos(angle)*side*width);
+    for(let row=1;row<10;row++)for(const side of[-1,1]){
+      const t=row/11,w=Math.sin(t*Math.PI)*.19,base=point(t,0,0),tip=point(t+.11,side,w),mid=base.clone().lerp(tip,.5);mid.y+=.028;
+      const left=point(t-.025,side,w*.48),right=point(t+.055,side,w*.52),at=fp.length/3;
+      for(const [i,v]of[base,left,tip,right,mid].entries()){fp.push(v.x,v.y,v.z);const c=fernDark.clone().lerp(fernLight,t*.58+(i===4?.16:0));fc.push(c.r,c.g,c.b);}
+      fi.push(at,at+1,at+4,at+1,at+2,at+4,at+2,at+3,at+4,at+3,at,at+4);
+    }
+  }
+  const fernGeometry=new THREE.BufferGeometry();fernGeometry.setAttribute('position',new THREE.Float32BufferAttribute(fp,3));fernGeometry.setAttribute('color',new THREE.Float32BufferAttribute(fc,3));fernGeometry.setIndex(fi);fernGeometry.computeVertexNormals();
+  const fernMaterial=new THREE.MeshStandardMaterial({vertexColors:true,roughness:.82,side:THREE.DoubleSide});applyEnvironmentWind(fernMaterial,{amplitude:.027,minHeight:0,maxHeight:.7});
+  batch(fernGeometry,fernMaterial,ferns,'Layered arching fern beds');
   // Curved petals and stems remain three-dimensional when seen from above.
   const petals=[],stems=[],centres=[];
   for(let n=0;n<5;n++){

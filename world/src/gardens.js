@@ -40,12 +40,12 @@ function palette(){
   };
   const stone=(name,color,options={})=>pbr(name,'castle-masonry',color,{roughness:.98,...options});
   const result={
-    stone:stone('Garden warm limestone','#c8ccbd',{albedoStrength:.78}),
-    trim:stone('Carved garden coping','#cccdbc',{normal:.15,albedoStrength:.24,roughness:.95,roughnessFloor:.80}),
+    stone:stone('Garden warm limestone','#c6c3ac',{albedoStrength:.94}),
+    trim:stone('Carved garden coping','#ded5ba',{normal:.21,albedoStrength:.68,roughness:.67,roughnessFloor:.60}),
     base:pbr('Garden foundation stone','mossy-rock','#a5ac9b',{metres:3,normal:.82,albedoStrength:.83,roughness:.99,roughnessFloor:.78}),
-    paving:stone('Garden honed paving','#c6c7b6',{normal:.36,albedoStrength:.56,roughness:.94,roughnessFloor:.74}),
-    pavingLight:stone('Garden pale paving','#d2d0bf',{normal:.28,albedoStrength:.44,roughness:.98,roughnessFloor:.80}),
-    pavingDark:stone('Garden slate inlay','#77909a',{normal:.26,albedoStrength:.46,roughness:.92,roughnessFloor:.74}),
+    paving:pbr('Garden honed paving','courtyard-paving','#e1d4bc',{metres:2,normal:.45,albedoStrength:1,roughness:.87,roughnessFloor:.60}),
+    pavingLight:pbr('Garden pale paving','courtyard-paving','#eaddc5',{metres:2,normal:.40,albedoStrength:1,roughness:.82,roughnessFloor:.60}),
+    pavingDark:stone('Garden slate inlay','#5e655e',{normal:.26,albedoStrength:.46,roughness:.92,roughnessFloor:.74}),
     soil:pbr('Cultivated garden earth','forest-ground','#8b8063',{metres:2.14,normal:.95,albedoStrength:.94,roughness:1,roughnessFloor:.88}),
     wood:pbr('Garden oiled walnut','aged-wood','#b29a7a',{metres:2,normal:.60,albedoStrength:.90,roughness:.91,roughnessFloor:.61}),
     woodLight:pbr('Garden oak edges','aged-wood','#d0b58e',{metres:2,normal:.42,albedoStrength:.84,roughness:.94,roughnessFloor:.68}),

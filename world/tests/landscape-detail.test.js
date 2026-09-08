@@ -9,7 +9,11 @@ import {bridges} from '../src/locations.js';
 test('dense ground cover remains attached to land and keeps a walking corridor clear',()=>{
   const root=new THREE.Group(),heightAt=(x,z)=>z<0?-22:6+Math.sin(x*.03),nearPath=x=>Math.abs(x)<5;
   const detail=createVegetation(root,heightAt,nearPath);
-  assert.ok(detail.grassCount>100,'the corridor check must exercise a populated meadow');
+  assert.ok(detail.grassCount>5000,'continuous meadow coverage survives corridor exclusions');
+  const ferns=root.children.find(o=>o.name==='Layered arching fern beds');
+  assert.ok(ferns?.isInstancedMesh&&ferns.count>1000,'fern beds use shared geometry at meadow scale');
+  assert.ok(ferns.geometry.index.count/3>=400,'paired leaflets retain dimensional frond detail');
+  assert.ok(ferns.customDepthMaterial,'wind follows the visible fern in shadow passes');
   const matrix=new THREE.Matrix4(),position=new THREE.Vector3();
   for(const mesh of root.children.filter(o=>o.isInstancedMesh)){
     for(let i=0;i<mesh.count;i++){
@@ -21,7 +25,7 @@ test('dense ground cover remains attached to land and keeps a walking corridor c
   }
 });
 
-test('all plant batches clear the bridge plane while preserving every outside instance and flower colour',()=>{
+test('all layered plant batches clear the bridge plane with a deterministic authored layout',()=>{
   const root=new THREE.Group();createVegetation(root,()=>6,()=>false);
   const blocked=(x,z)=>Object.values(bridges).some(([a,b])=>{const length=Math.hypot(b[0]-a[0],b[1]-a[1]),dx=(b[0]-a[0])/length,dz=(b[1]-a[1])/length,along=(x-a[0])*dx+(z-a[1])*dz,across=(x-a[0])*dz-(z-a[1])*dx;return along>-3&&along<length+3&&Math.abs(across)<4.5;});
   const matrix=new THREE.Matrix4(),entries=[];
@@ -36,7 +40,7 @@ test('all plant batches clear the bridge plane while preserving every outside in
   }
   // Approved seeded layout reserves both bridges and the two curated blossom groves.
   // Retains a deterministic placement/pigment baseline for all remaining plants.
-  assert.equal(crypto.createHash('sha256').update(JSON.stringify(entries)).digest('hex'),'cfc92ed944068b8287658c61d2f94990acb44fd70557ec3e7063094b6e9ad153');
+  assert.equal(crypto.createHash('sha256').update(JSON.stringify(entries)).digest('hex'),'fa167567f8933eecc3d60e761049f347b2f4dcf41aa8eea373041ecbf8db3804');
 });
 
 test('lake normals are filtered continuously rather than producing square specular cells',()=>{

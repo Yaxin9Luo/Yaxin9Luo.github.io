@@ -44,8 +44,27 @@ function botanicalMaps(bark=false,pine=false){
   const result={map:texture(color,true),normalMap:texture(normal,false)};plantMaps.set(key,result);return result;
 }
 function plantMaterial(name,bark=false,pine=false){
-  const m=new THREE.MeshStandardMaterial({name,color:'#ffffff',vertexColors:true,...botanicalMaps(bark,pine),normalScale:new THREE.Vector2(bark?.55:.42,bark?.55:.42),roughness:bark?.94:.78,metalness:0,side:bark?THREE.FrontSide:THREE.DoubleSide});
-  if(!bark)applyEnvironmentWind(m);
+  const m=new THREE.MeshStandardMaterial({name,color:'#ffffff',vertexColors:true,...botanicalMaps(bark,pine),normalScale:new THREE.Vector2(bark?.55:.18,bark?.55:.18),roughness:bark?.94:.78,metalness:0,side:bark?THREE.FrontSide:THREE.DoubleSide});
+  if(!bark){
+    applyEnvironmentWind(m);
+    const windCompile=m.onBeforeCompile,windKey=m.customProgramCacheKey();
+    m.onBeforeCompile=shader=>{
+      windCompile(shader);
+      shader.vertexShader='varying vec3 crownPosition;\n'+shader.vertexShader;
+      shader.vertexShader=shader.vertexShader.replace('#include <begin_vertex>','#include <begin_vertex>\ncrownPosition=position;');
+      shader.fragmentShader='varying vec3 crownPosition;\n'+shader.fragmentShader;
+      shader.fragmentShader=shader.fragmentShader.replace('#include <lights_fragment_end>',`#include <lights_fragment_end>
+        // Enclosed lower boughs receive less diffuse sky; the outer crown
+        // retains its petal pigment and direct-light response.
+        float crownInterior=(1.-smoothstep(.8,3.4,length(crownPosition.xz)))*smoothstep(1.5,3.,crownPosition.y)*(1.-smoothstep(4.,7.5,crownPosition.y));
+        reflectedLight.indirectDiffuse*=1.-crownInterior*.22;
+        #if NUM_DIR_LIGHTS > 0
+          float transmitted=max(0.,dot(-normal,directionalLights[0].direction));
+          reflectedLight.directDiffuse+=directionalLights[0].color*diffuseColor.rgb*transmitted*.055;
+        #endif`);
+    };
+    m.customProgramCacheKey=()=>`${windKey}-botanical-diffuse-v5`;
+  }
   return m;
 }
 class PlantBuilder {

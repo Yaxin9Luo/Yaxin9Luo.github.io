@@ -53,3 +53,21 @@ test('takeoff accepts open grove paths using the standing footprint datum and st
   const roof={id:'test/late-roof',bottom:feetY+3.4,top:feetY+3.6,planes:[[1,0,0,-64],[-1,0,0,68],[0,0,1,67],[0,0,-1,-63],[0,1,0,feetY+3.6],[0,-1,0,-feetY-3.4]]};
   assert.equal(takeoff(-66,65,feetY,{...world,colliders:[...world.colliders,roof]}).reason,'blocked');
 });
+
+test('weathered roads and irregular shoulders retain upward visible support triangles',()=>{
+  rendered.root.updateMatrixWorld(true);
+  const roads=[];rendered.root.traverse(o=>{if(o.isMesh&&(o.name.startsWith('road-')||/stone walk|circular overlook/.test(o.name)))roads.push(o);});
+  const shoulders=roads.filter(o=>o.name.includes('planted-shoulder'));
+  assert.ok(shoulders.length>=6);
+  const ray=new THREE.Raycaster(),point=new THREE.Vector3();let checked=0;
+  for(const mesh of shoulders){
+    const p=mesh.geometry.attributes.position,index=mesh.geometry.index;
+    for(let face=0;face<index.count;face+=Math.max(3,Math.floor(index.count/30/3)*3)){
+      point.set(0,0,0);for(let i=0;i<3;i++)point.add(new THREE.Vector3().fromBufferAttribute(p,index.getX(face+i)));point.divideScalar(3);
+      ray.set(new THREE.Vector3(point.x,100,point.z),new THREE.Vector3(0,-1,0));const hits=ray.intersectObjects(roads,false);
+      assert.ok(hits.length,'shoulder is visible from above');
+      assert.ok(Math.abs(rendered.heightAt(point.x,point.z)-hits[0].point.y)<1e-4,'feet and rendered road triangles agree');checked++;
+    }
+  }
+  assert.ok(checked>100);
+});
