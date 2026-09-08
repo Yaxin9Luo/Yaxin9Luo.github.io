@@ -7,7 +7,7 @@ import {cvForLanguage} from './content.js';
 
 const ui=new Interface(document.querySelector('#app'));
 let attachedGame=null;
-const lifecycle=[];
+const lifecycle=[],stages=[];
 const callbacks={
   onFrame:s=>{if(attachedGame){ui.update(s);ui.applyExhibitState(s.exhibition);}},
   onMessage:m=>ui.toast(m),onInteract:id=>ui.open(id),onExhibit:id=>ui.openPaper(id),
@@ -21,7 +21,10 @@ const coordinator=createLoadingCoordinator({
     // This is the only game import: no renderer, model or landscape traffic before intent.
     const {Game}=await import('./game.js');
     context.signal.throwIfAborted();
-    return Game.createAsync(ui.canvas,callbacks,ui.options,context);
+    return Game.createAsync(ui.canvas,callbacks,ui.options,{...context,onProgress:event=>{
+      if(['assembly','assembling','first-frame','enhancements'].includes(event.phase)){stages.push({...event,attemptId:context.attemptId,elapsedMs:performance.now()-(context.deadline-20000)});if(stages.length>100)stages.shift();}
+      context.onProgress(event);
+    }});
   },
 });
 const unsubscribe=resourceLoader.subscribe(event=>{
@@ -33,7 +36,7 @@ function diagnostics(){
     activeResource:state.activeResource?redactResourceURL(typeof state.activeResource==='string'?state.activeResource:state.activeResource.url||state.activeResource.id):null,
     receivedBytes:state.receivedBytes,totalBytes:state.totalBytes,slow:state.slow,
     error:state.error?{type:state.error.type,status:state.error.status,elapsedMs:state.error.elapsedMs}:undefined,
-  })),resources:resourceLoader.diagnostics()};
+  })),stages:stages.map(event=>({...event})),resources:resourceLoader.diagnostics()};
 }
 function downloadDiagnostics(){
   const url=URL.createObjectURL(new Blob([JSON.stringify(diagnostics(),null,2)],{type:'application/json'}));

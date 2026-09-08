@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import * as THREE from 'three';
 import crypto from 'node:crypto';
 import {createLake,createVegetation} from '../src/landscape.js';
+import {insideBlossomPark} from '../src/environment-layout.js';
 import {bridges} from '../src/locations.js';
 
 test('dense ground cover remains attached to land and keeps a walking corridor clear',()=>{
@@ -28,13 +29,14 @@ test('all plant batches clear the bridge plane while preserving every outside in
     const matrices=[];
     for(let i=0;i<mesh.count;i++){
       mesh.getMatrixAt(i,matrix);assert.equal(blocked(matrix.elements[12],matrix.elements[14]),false,`${mesh.name} occupies the bridge`);
+      if(/Garden trunks|crowns/.test(mesh.name))assert.equal(insideBlossomPark(matrix.elements[12],matrix.elements[14]),false,'generic trees must leave curated groves clear');
       matrices.push([...matrix.elements,...(mesh.instanceColor?Array.from(mesh.instanceColor.array.slice(i*3,i*3+3)):[])]);
     }
     entries.push([mesh.name,matrices]);
   }
-  // Captured from the pre-fix seeded layout after excluding only the bridge
-  // rectangles. This catches early filtering that changes later RNG draws.
-  assert.equal(crypto.createHash('sha256').update(JSON.stringify(entries)).digest('hex'),'54b3bbcdcc440db87e967d793b9190e3317d62d1ea4f966e6b1cde7a8b7e0fef');
+  // Approved seeded layout reserves both bridges and the two curated blossom groves.
+  // Retains a deterministic placement/pigment baseline for all remaining plants.
+  assert.equal(crypto.createHash('sha256').update(JSON.stringify(entries)).digest('hex'),'cfc92ed944068b8287658c61d2f94990acb44fd70557ec3e7063094b6e9ad153');
 });
 
 test('lake normals are filtered continuously rather than producing square specular cells',()=>{

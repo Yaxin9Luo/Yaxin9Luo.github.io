@@ -4,12 +4,12 @@ The supplied `罗亚鑫_简历.html`, `罗亚鑫_简历.pdf`, and `Yaxin_Luo_Res
 
 ## Resume files and GitHub snapshot
 
-GitHub's repository API was checked on 2026-09-08:
+GitHub's repository API was rechecked before the v4 publication on 2026-09-09 (Asia/Shanghai); FigMirror increased from 509 to 510 since the initial resume refresh:
 
 | Project | Repository | Stars |
 | --- | --- | ---: |
 | AutoDesign | https://github.com/Yaxin9Luo/AutoDesign | 197 |
-| FigMirror | https://github.com/VILA-Lab/FigMirror | 509 |
+| FigMirror | https://github.com/VILA-Lab/FigMirror | 510 |
 
 The canonical project spelling is **FigMirror**. `_data/open-source.json` stores the count and timestamp. Both editable resumes, PDF exports, traditional pages, and interactive project readers show this dated snapshot. These are verified snapshot counts, not a continuously polled live counter.
 

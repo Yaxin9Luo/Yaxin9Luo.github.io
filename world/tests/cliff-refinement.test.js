@@ -1,7 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
-import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {createWorld} from '../src/world.js';
 import {cliffScanBounds} from '../src/environment-composition.js';
 import {loadScannedRockAssets,scannedRockSource,addScannedRocks} from '../src/rock-scans.js';
@@ -11,9 +10,7 @@ import {readScanGeometry} from './helpers/scan-geometry.js';
 
 // Real GLB triangles and the actual clipped coast. Only browser image decoding
 // is substituted; the regression must never pass using empty source bounds.
-const load=GLTFLoader.prototype.loadAsync;
-GLTFLoader.prototype.loadAsync=async url=>readScanGeometry(url);
-try{await loadScannedRockAssets();}finally{GLTFLoader.prototype.loadAsync=load;}
+assert.equal(await loadScannedRockAssets({loadGLTFImpl:async asset=>readScanGeometry(asset.url)}),true);
 const world=createWorld(new THREE.Scene()),rocks=world.composition.stats.placements.filter(p=>p.type==='cliff-refine');
 
 test('cliff support uses full volumetric scans without modifying source topology or UVs',()=>{

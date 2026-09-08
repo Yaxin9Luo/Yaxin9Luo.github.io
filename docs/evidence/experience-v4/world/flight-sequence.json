@@ -1,0 +1,693 @@
+{
+  "createdAt": "2026-09-08T17:02:47.647Z",
+  "finishedAt": "2026-09-08T17:03:11.759Z",
+  "run": 2,
+  "kind": "record",
+  "build": "experience-v4",
+  "view": "flight",
+  "timeOfDay": "night",
+  "quality": "high",
+  "foliage": "lod",
+  "sampling": "native",
+  "reducedMotion": false,
+  "sound": false,
+  "canvas": {
+    "width": 2560,
+    "height": 1440,
+    "backingWidth": 2560,
+    "backingHeight": 1440,
+    "cssWidth": 1024,
+    "cssHeight": 576,
+    "dpr": 2.5,
+    "nativeDpr": 2.5,
+    "msaaSamples": 4
+  },
+  "camera": {
+    "eye": [
+      -77.6023620039434,
+      9.413518816627821,
+      -35.47359292038649
+    ],
+    "target": null,
+    "fov": 43
+  },
+  "rider": {
+    "position": [
+      -84,
+      13,
+      -53
+    ],
+    "mode": "flying",
+    "speed": 0
+  },
+  "completed": true,
+  "invalid": false,
+  "reason": "completed",
+  "expectedDurationMs": 24000,
+  "elapsedDurationMs": 24003.09999999404,
+  "warmup": {
+    "requiredMs": 0,
+    "elapsedMs": 0,
+    "completed": true
+  },
+  "workload": "scripted-flight",
+  "motionSamples": [
+    {
+      "seconds": 0.04190000000596046,
+      "stage": 0,
+      "position": [
+        18,
+        27,
+        74
+      ],
+      "mode": "flying",
+      "speed": 0,
+      "transition": 0,
+      "illumination": false
+    },
+    {
+      "seconds": 0.6095999999940396,
+      "stage": 0,
+      "position": [
+        18,
+        27,
+        74
+      ],
+      "mode": "flying",
+      "speed": 0,
+      "transition": 0,
+      "illumination": false
+    },
+    {
+      "seconds": 1.147699999988079,
+      "stage": 0,
+      "position": [
+        18,
+        27,
+        74
+      ],
+      "mode": "flying",
+      "speed": 0,
+      "transition": 0,
+      "illumination": false
+    },
+    {
+      "seconds": 1.7085999999940396,
+      "stage": 0,
+      "position": [
+        18,
+        27,
+        74
+      ],
+      "mode": "flying",
+      "speed": 0,
+      "transition": 0,
+      "illumination": false
+    },
+    {
+      "seconds": 2.2245999999940396,
+      "stage": 1,
+      "position": [
+        17.790069638655417,
+        27,
+        73.42489322253567
+      ],
+      "mode": "flying",
+      "speed": 0,
+      "transition": 0,
+      "illumination": false
+    },
+    {
+      "seconds": 2.8006999999880793,
+      "stage": 1,
+      "position": [
+        15.883576748804225,
+        27,
+        68.20203276958156
+      ],
+      "mode": "flying",
+      "speed": 0,
+      "transition": 0,
+      "illumination": false
+    },
+    {
+      "seconds": 3.3009000000059605,
+      "stage": 1,
+      "position": [
+        13.700202939130655,
+        27,
+        62.22065367015573
+      ],
+      "mode": "flying",
+      "speed": 0,
+      "transition": 0,
+      "illumination": false
+    },
+    {
+      "seconds": 3.8587999999821188,
+      "stage": 1,
+      "position": [
+        10.995562066100414,
+        27,
+        54.8112571125344
+      ],
+      "mode": "flying",
+      "speed": 0,
+      "transition": 0,
+      "illumination": false
+    },
+    {
+      "seconds": 4.4036999999880795,
+      "stage": 1,
+      "position": [
+        8.248038456323407,
+        27,
+        47.28438277618053
+      ],
+      "mode": "flying",
+      "speed": 0,
+      "transition": 0,
+      "illumination": false
+    },
+    {
+      "seconds": 4.94009999999404,
+      "stage": 1,
+      "position": [
+        5.490655012493767,
+        27,
+        39.730497304552905
+      ],
+      "mode": "flying",
+      "speed": 0,
+      "transition": 0,
+      "illumination": false
+    },
+    {
+      "seconds": 5.458699999988079,
+      "stage": 2,
+      "position": [
+        1.7750908041998263,
+        27,
+        29.551663978075144
+      ],
+      "mode": "flying",
+      "speed": 0,
+      "transition": 0,
+      "illumination": false
+    },
+    {
+      "seconds": 5.967,
+      "stage": 2,
+      "position": [
+        -2.960847980924439,
+        27,
+        16.57750209155074
+      ],
+      "mode": "flying",
+      "speed": 0,
+      "transition": 0,
+      "illumination": false
+    },
+    {
+      "seconds": 6.50890000000596,
+      "stage": 2,
+      "position": [
+        -8.64752067281157,
+        27,
+        0.9987931073962315
+      ],
+      "mode": "flying",
+      "speed": 0,
+      "transition": 0,
+      "illumination": false
+    },
+    {
+      "seconds": 7.0475,
+      "stage": 2,
+      "position": [
+        -14.394410211873662,
+        27,
+        -14.744880661775765
+      ],
+      "mode": "flying",
+      "speed": 0,
+      "transition": 0,
+      "illumination": false
+    },
+    {
+      "seconds": 7.55840000000596,
+      "stage": 2,
+      "position": [
+        -20.15252260416831,
+        27,
+        -21.048000000000002
+      ],
+      "mode": "flying",
+      "speed": 0,
+      "transition": 0,
+      "illumination": false
+    },
+    {
+      "seconds": 8.07229999998212,
+      "stage": 3,
+      "position": [
+        -26.274492250411747,
+        27.176959373542875,
+        -23.815450260542566
+      ],
+      "mode": "flying",
+      "speed": 0,
+      "transition": 0,
+      "illumination": false
+    },
+    {
+      "seconds": 8.596199999988078,
+      "stage": 3,
+      "position": [
+        -22.418855419377465,
+        32.9718200918007,
+        -29.9630316829138
+      ],
+      "mode": "flying",
+      "speed": 0,
+      "transition": 0,
+      "illumination": false
+    },
+    {
+      "seconds": 9.116,
+      "stage": 3,
+      "position": [
+        -12.540622487672069,
+        41.124830062964676,
+        -34.65634581915098
+      ],
+      "mode": "flying",
+      "speed": 0,
+      "transition": 0,
+      "illumination": false
+    },
+    {
+      "seconds": 9.6245,
+      "stage": 3,
+      "position": [
+        -3.796095608331885,
+        47.69320851026848,
+        -37.96061733522335
+      ],
+      "mode": "flying",
+      "speed": 0,
+      "transition": 0,
+      "illumination": false
+    },
+    {
+      "seconds": 10.124799999982118,
+      "stage": 3,
+      "position": [
+        6.990020582727505,
+        55.69949095962734,
+        -41.919601746454205
+      ],
+      "mode": "flying",
+      "speed": 0,
+      "transition": 0,
+      "illumination": false
+    },
+    {
+      "seconds": 10.625900000005961,
+      "stage": 3,
+      "position": [
+        17.84998872095308,
+        63.744152883861126,
+        -45.8864223259557
+      ],
+      "mode": "flying",
+      "speed": 0,
+      "transition": 0,
+      "illumination": false
+    },
+    {
+      "seconds": 11.12940000000596,
+      "stage": 4,
+      "position": [
+        27.375005097751707,
+        71.1933079880977,
+        -49.36364435703514
+      ],
+      "mode": "flying",
+      "speed": 0,
+      "transition": 0,
+      "illumination": false
+    },
+    {
+      "seconds": 11.654299999982118,
+      "stage": 4,
+      "position": [
+        21.29850627446228,
+        72.73797878904065,
+        -47.14558909902746
+      ],
+      "mode": "flying",
+      "speed": 0,
+      "transition": 0,
+      "illumination": false
+    },
+    {
+      "seconds": 12.170699999988079,
+      "stage": 4,
+      "position": [
+        10.706740714489607,
+        72.84753700447038,
+        -43.27929717861703
+      ],
+      "mode": "flying",
+      "speed": 0,
+      "transition": 0,
+      "illumination": false
+    },
+    {
+      "seconds": 12.68259999999404,
+      "stage": 4,
+      "position": [
+        -0.07444894846812378,
+        72.85576694280836,
+        -39.3438562330134
+      ],
+      "mode": "flying",
+      "speed": 0,
+      "transition": 0,
+      "illumination": false
+    },
+    {
+      "seconds": 13.1965,
+      "stage": 4,
+      "position": [
+        -11.15020728900791,
+        72.85643698317119,
+        -35.30088889653828
+      ],
+      "mode": "flying",
+      "speed": 0,
+      "transition": 0,
+      "illumination": false
+    },
+    {
+      "seconds": 13.70059999999404,
+      "stage": 4,
+      "position": [
+        -22.01689250964744,
+        72.85648873311754,
+        -31.334239153584324
+      ],
+      "mode": "flying",
+      "speed": 0,
+      "transition": 0,
+      "illumination": false
+    },
+    {
+      "seconds": 14.228299999982118,
+      "stage": 5,
+      "position": [
+        -30.422235738141044,
+        72.8564929502191,
+        -24.709770970094898
+      ],
+      "mode": "flying",
+      "speed": 0,
+      "transition": 0,
+      "illumination": false
+    },
+    {
+      "seconds": 14.744699999988079,
+      "stage": 5,
+      "position": [
+        -25.926903012979007,
+        72.85649325883993,
+        -6.944379470946224
+      ],
+      "mode": "flying",
+      "speed": 0,
+      "transition": 0,
+      "illumination": false
+    },
+    {
+      "seconds": 15.260199999988078,
+      "stage": 5,
+      "position": [
+        -19.81564968364001,
+        72.85649328106744,
+        10.386551803825185
+      ],
+      "mode": "flying",
+      "speed": 0,
+      "transition": 0,
+      "illumination": false
+    },
+    {
+      "seconds": 15.83459999999404,
+      "stage": 5,
+      "position": [
+        -14.101541167215597,
+        72.85649328337549,
+        26.127181887107625
+      ],
+      "mode": "flying",
+      "speed": 0,
+      "transition": 0,
+      "illumination": false
+    },
+    {
+      "seconds": 16.36509999999404,
+      "stage": 5,
+      "position": [
+        -9.06915906369723,
+        72.85649328367397,
+        39.928758180079214
+      ],
+      "mode": "flying",
+      "speed": 0,
+      "transition": 0,
+      "illumination": false
+    },
+    {
+      "seconds": 16.86859999999404,
+      "stage": 5,
+      "position": [
+        -4.750403884779448,
+        72.85649328372274,
+        51.76331384802386
+      ],
+      "mode": "flying",
+      "speed": 0,
+      "transition": 0,
+      "illumination": false
+    },
+    {
+      "seconds": 17.44740000000596,
+      "stage": 6,
+      "position": [
+        -0.43290388191774853,
+        70.86615907057966,
+        63.592155740319264
+      ],
+      "mode": "flying",
+      "speed": 0,
+      "transition": 0,
+      "illumination": false
+    },
+    {
+      "seconds": 17.98540000000596,
+      "stage": 6,
+      "position": [
+        2.2824255403478735,
+        66.69308024756393,
+        71.0310471936518
+      ],
+      "mode": "flying",
+      "speed": 0,
+      "transition": 0,
+      "illumination": false
+    },
+    {
+      "seconds": 18.5235,
+      "stage": 6,
+      "position": [
+        4.747510563726922,
+        62.032965270184874,
+        77.78423814428733
+      ],
+      "mode": "flying",
+      "speed": 0,
+      "transition": 0,
+      "illumination": false
+    },
+    {
+      "seconds": 19.05219999998808,
+      "stage": 6,
+      "position": [
+        7.141612755752781,
+        57.264177837684656,
+        84.34292738635996
+      ],
+      "mode": "flying",
+      "speed": 0,
+      "transition": 0,
+      "illumination": false
+    },
+    {
+      "seconds": 19.63679999998212,
+      "stage": 6,
+      "position": [
+        9.515580381852951,
+        52.47114230286953,
+        90.8464454356376
+      ],
+      "mode": "flying",
+      "speed": 0,
+      "transition": 0,
+      "illumination": false
+    },
+    {
+      "seconds": 20.213199999988078,
+      "stage": 7,
+      "position": [
+        -84,
+        13,
+        -53
+      ],
+      "mode": "flying",
+      "speed": 0,
+      "transition": 0,
+      "illumination": false
+    },
+    {
+      "seconds": 20.71990000000596,
+      "stage": 7,
+      "position": [
+        -84,
+        13,
+        -53
+      ],
+      "mode": "flying",
+      "speed": 0,
+      "transition": 0,
+      "illumination": false
+    },
+    {
+      "seconds": 21.23169999998808,
+      "stage": 7,
+      "position": [
+        -84,
+        13,
+        -53
+      ],
+      "mode": "flying",
+      "speed": 0,
+      "transition": 0,
+      "illumination": false
+    },
+    {
+      "seconds": 21.743,
+      "stage": 7,
+      "position": [
+        -84,
+        13,
+        -53
+      ],
+      "mode": "flying",
+      "speed": 0,
+      "transition": 0,
+      "illumination": false
+    },
+    {
+      "seconds": 22.27090000000596,
+      "stage": 8,
+      "position": [
+        -84,
+        13,
+        -53
+      ],
+      "mode": "flying",
+      "speed": 0,
+      "transition": 0,
+      "illumination": false
+    },
+    {
+      "seconds": 22.78159999999404,
+      "stage": 8,
+      "position": [
+        -84,
+        13,
+        -53
+      ],
+      "mode": "flying",
+      "speed": 0,
+      "transition": 0,
+      "illumination": false
+    },
+    {
+      "seconds": 23.30240000000596,
+      "stage": 8,
+      "position": [
+        -84,
+        13,
+        -53
+      ],
+      "mode": "flying",
+      "speed": 0,
+      "transition": 0,
+      "illumination": false
+    },
+    {
+      "seconds": 23.81229999998212,
+      "stage": 8,
+      "position": [
+        -84,
+        13,
+        -53
+      ],
+      "mode": "flying",
+      "speed": 0,
+      "transition": 0,
+      "illumination": false
+    }
+  ],
+  "captureErrors": [],
+  "framesMs": {
+    "count": 0,
+    "mean": null,
+    "p50": null,
+    "p95": null,
+    "p99": null,
+    "fps": null
+  },
+  "renderSubmitCpuMs": {
+    "count": 0,
+    "mean": null,
+    "p50": null,
+    "p95": null,
+    "p99": null,
+    "fps": null
+  },
+  "gpuMs": {
+    "count": 0,
+    "mean": null,
+    "p50": null,
+    "p95": null,
+    "p99": null,
+    "fps": null
+  },
+  "gpuTimerAvailable": true,
+  "gpuQueries": {
+    "issued": 0,
+    "collected": 0,
+    "pending": 0,
+    "pendingAtStop": 0,
+    "abandoned": 0,
+    "disjointEvents": 0,
+    "tailTimedOut": false
+  },
+  "meanDrawCalls": null,
+  "meanSubmittedTriangles": null,
+  "last": null,
+  "note": "Composer totals include shadows, reflection and postprocessing. CPU submission is not GPU time. Geometry/texture values are counts, not memory bytes."
+}

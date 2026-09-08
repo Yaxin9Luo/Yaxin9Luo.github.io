@@ -7,6 +7,7 @@ import { locations, ringPositions, crystalPositions, spellDefinitions, worldBoun
 import { SAVE_KEY, freshProgress } from '../src/logic.js';
 import { EnvironmentClock } from '../src/environment-time.js';
 import { createExhibitionStage } from '../src/exhibits.js';
+import { resourceLoader } from '../src/resource-loader.js';
 
 // Exercise the actual simulation methods without constructing a WebGL renderer.
 // These tests do not establish browser, GPU, rendering, or audible-output quality.
@@ -26,6 +27,7 @@ function simulation(t) {
   const messages = [];
   const progressEvents = [];
   Object.assign(game, {
+    locomotion:{mode:'flying',progress:0,gaitPhase:0,groundSpeed:0,support:null},
     started: true, paused: false, _suspended: false, _contextLost: false, _disposed: false, _combat: false,
     options: { quality: 'balanced', reducedMotion: false, sound: false },
     mana: 100, health: 100, spell: 0, shield: 0, cooldown: 0, race: null,
@@ -183,12 +185,34 @@ test('ordinary portfolio visits do not activate combat and the real clock contro
   assert.equal(game.cast(), false); assert.equal(game.activateShield(), false);
   assert.equal(game.mana, 100); assert.equal(game._combat, false);
   game.environmentClock = new EnvironmentClock('night'); game.environment = { label: 'night' };
+  game._updateEnvironment=dt=>{game.environment=game.environmentClock.update(dt);};
   const modes = []; game.callbacks.onTimeChange = mode => modes.push(mode);
-  game.cycleTime(); assert.equal(game.environmentClock.mode, 'dawn'); assert.deepEqual(modes, ['dawn']);
-  game.setOption('timeOfDay', 'noonish'); assert.equal(game.environmentClock.mode, 'dawn');
+  game.cycleTime(); assert.equal(game.environmentClock.mode, 'auto'); assert.deepEqual(modes, ['auto']);
+  game._updateEnvironment(2.4);assert.ok(game.environmentClock.phase<.02,'midnight jump continues running');
+  game.setOption('timeOfDay', 'noonish'); assert.equal(game.environmentClock.mode, 'auto');
   const opened = []; game.callbacks.onExhibition = id => opened.push(id);
   game.nearestExhibition = 'autodesign'; game.nearest = 'projects';
   game.interact(); assert.deepEqual(opened, ['autodesign']);
+});
+
+for(const action of ['fixed','jump'])test(`an explicit ${action} time choice retries a failed HDR without a per-frame retry loop`,async t=>{
+  const {game}=simulation(t),originalLoad=resourceLoader.load,texture=new THREE.Texture();let requests=0;
+  resourceLoader.load=async()=>{requests++;if(requests===1)throw new Error('temporary outage');return texture;};
+  t.after(()=>{resourceLoader.load=originalLoad;texture.dispose();});
+  game.environmentClock=new EnvironmentClock('night');game._enhancementController=new AbortController();
+  game.renderer={shadowMap:{}};game.scene.background=new THREE.Color();game.scene.fog=new THREE.FogExp2();game._lights();game._landscapeLighting=[];
+  game.world.atmosphere={setEnvironment(){}};game.world.environmentLighting={emissiveMaterials:[],lights:[],nightMaterials:[],nightObjects:[]};
+  game.world.lake={water:{material:{uniforms:{sunDirection:{value:new THREE.Vector3()},sunColor:{value:new THREE.Color()},waterColor:{value:new THREE.Color()}}}}};
+  game.audio.setEnvironment=()=>{};
+  game._updateEnvironment(0);await new Promise(resolve=>setImmediate(resolve));
+  assert.equal(requests,1);assert.equal(game._nightRequest,null);
+  for(let i=0;i<30;i++)game._updateEnvironment(.05);
+  assert.equal(requests,1,'clock ticks do not retry a failed network request');
+  if(action==='fixed')game.setOption('timeOfDay','night');else game.jumpToTime('night');
+  assert.equal(requests,2);await game._nightRequest;
+  assert.equal(game.scene.environment,texture,'the recovered HDR is actually installed');
+  game.setOption('timeOfDay','night');game.jumpToTime('night');game._updateEnvironment(.05);
+  assert.equal(requests,2,'pending and successful HDRs remain deduplicated');
 });
 
 test('physical media arrows enter at the requested image and preserve in-stage navigation', t => {
@@ -502,6 +526,41 @@ test('view presets support below-rider and overhead cameras without losing terra
   assert.equal(game.setCameraView('invalid'),false);
   game.position.set(18,10,74);game.setCameraView('low');game._updateCamera(.1,true);
   assert.ok(game.camera.position.y>=terrainHeight(game.camera.position.x,game.camera.position.z)+2.2);
+});
+
+test('ground follow frames the whole standing rider below tree crowns and blends back into flight',t=>{
+  const {game}=simulation(t);
+  Object.assign(game,{zoom:1,zoomTarget:1,buildingColliders:[],_cameraGoal:new THREE.Vector3(),_lookGoal:new THREE.Vector3(),_lookAt:new THREE.Vector3()});
+  game.position.set(-66,terrainHeight(-66,65)+1.3,65);game.cameraYaw=0;game.setCameraView('follow');
+  game._updateCamera(.1,true);const flying=game.camera.position.clone();
+  game.locomotion.mode='grounded';game._updateCamera(1/60);
+  assert.ok(game._groundCameraBlend>0&&game._groundCameraBlend<1,'landing changes the boom gradually');
+  assert.ok(game.camera.position.distanceTo(flying)<1,'one ordinary frame must not snap the camera');
+  for(let i=0;i<180;i++)game._updateCamera(1/60);
+  assert.ok(game.camera.position.distanceTo(game.position)<8.1,'walking stays inside the distant crown line');
+  assert.ok(game.camera.position.y-game.position.y<1.8,'walking keeps the camera at shoulder height');
+  for(const height of [-1.3,1.94]){
+    const p=game.position.clone().add(new THREE.Vector3(0,height,0)).project(game.camera);
+    assert.ok(p.y>-.95&&p.y<.95&&p.z>-1&&p.z<1,'both soles and hat remain in frame');
+  }
+  game.locomotion.mode='mounting';game.locomotion.progress=.5;game._updateCamera(1/60);
+  assert.ok(game._groundCameraBlend>.5&&game._groundCameraBlend<1,'mounting restores distance along its animation');
+  game.locomotion.mode='flying';for(let i=0;i<240;i++)game._updateCamera(1/60);
+  assert.ok(game.camera.position.distanceTo(flying)<.01,'flight restores its original viewing distance');
+});
+
+test('ground camera preserves orbit pitch and the explicit bird and low views',t=>{
+  const {game}=simulation(t);
+  Object.assign(game,{zoom:1,zoomTarget:1,buildingColliders:[],_cameraGoal:new THREE.Vector3(),_lookGoal:new THREE.Vector3(),_lookAt:new THREE.Vector3()});
+  game.position.set(18,65,74);game.locomotion.mode='grounded';game.setCameraView('follow');
+  game.cameraView='custom';game.cameraElevation=.55;game._updateCamera(.1,true);
+  assert.equal(game.cameraElevation,.55);
+  assert.ok(Math.abs((game.camera.position.y-game.position.y)/7.8-Math.sin(.55))<1e-8);
+  for(const view of ['overlook','low']){
+    game.setCameraView(view);game._updateCamera(.1,true);const grounded=game.camera.position.clone();
+    game.locomotion.mode='flying';game._updateCamera(.1,true);assert.ok(game.camera.position.distanceTo(grounded)<1e-8);
+    game.locomotion.mode='grounded';
+  }
 });
 
 test('research book interaction points to the real paper without unlocking gates', (t) => {

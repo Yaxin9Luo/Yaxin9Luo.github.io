@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import {beveledBlock,assignArchitecturalUVs} from './architecture.js';
+import {loadImageTexture} from './asset-cache.js';
 
 export const environmentSignLabels = [
   {id:'about',en:'ABOUT',zh:'关于我',motif:'THE GRAND ACADEMY',motifZh:'中央魔法学院'},
@@ -10,12 +11,15 @@ export const environmentSignLabels = [
   {id:'contact',en:'CONTACT · CV',zh:'联系 · 简历',motif:'THE OWL POST',motifZh:'猫头鹰邮局'},
 ];
 const textures=new Map();
-export async function loadEnvironmentSignage(){
-  await Promise.all(environmentSignLabels.map(async label=>{
+const faces=new Map();
+export async function loadEnvironmentSignage(options={}){
+  const results=await Promise.allSettled(environmentSignLabels.map(async label=>{
     if(textures.has(label.id))return;
-    const texture=await new THREE.TextureLoader().loadAsync(`/textures/wayfinding/${label.id}.png`);
+    const texture=await loadImageTexture({id:`sign:${label.id}`,url:`/textures/wayfinding/${label.id}.png`,phase:2},options);
     texture.colorSpace=THREE.SRGBColorSpace;texture.anisotropy=8;texture.name=`Bilingual ${label.id} enamel sign`;textures.set(label.id,texture);
+    for(const material of faces.get(label.id)||[]){material.map=texture;material.needsUpdate=true;}
   }));
+  return results.every(result=>result.status==='fulfilled');
 }
 export function createEnvironmentSign(id,stone){
   const label=environmentSignLabels.find(item=>item.id===id),group=new THREE.Group();group.name=`${label.en} / ${label.zh} — physical wayfinding`;
@@ -29,6 +33,7 @@ export function createEnvironmentSign(id,stone){
   const face=add(new THREE.PlaneGeometry(2.98,1.15),new THREE.MeshStandardMaterial({color:'#ffffff',map:textures.get(id)||null,metalness:.08,roughness:.69}),0,1.60,.116);
   face.name=`${label.en} / ${label.zh} / ${label.motif} / ${label.motifZh}`;
   face.userData.wayfindingLabel=label;
+  if(!faces.has(id))faces.set(id,new Set());faces.get(id).add(face.material);face.material.addEventListener('dispose',()=>faces.get(id)?.delete(face.material));
   group.userData.label=label;
   return group;
 }

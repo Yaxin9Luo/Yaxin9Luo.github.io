@@ -72,7 +72,7 @@ class PlantBuilder {
     this.leafCount++;
   }
   bloom(center,radius,detailed=false){
-    const angle=this.rand()*Math.PI*2,normal=new THREE.Vector3((this.rand()-.5)*.48,1,(this.rand()-.5)*.48).normalize(),side=new THREE.Vector3().crossVectors(normal,axisZ).normalize(),tangent=new THREE.Vector3().crossVectors(side,normal).normalize();
+    const angle=this.rand()*Math.PI*2,tilt=.18+this.rand()*.82,radial=Math.sqrt(1-tilt*tilt),normal=new THREE.Vector3(Math.cos(angle)*radial,tilt,Math.sin(angle)*radial),side=new THREE.Vector3().crossVectors(normal,axisZ).normalize(),tangent=new THREE.Vector3().crossVectors(side,normal).normalize();
     for(let petal=0;petal<5;petal++){
       const a=angle+petal*Math.PI*2/5,forward=side.clone().multiplyScalar(Math.cos(a)).addScaledVector(tangent,Math.sin(a)),across=new THREE.Vector3().crossVectors(normal,forward).normalize(),p=(x,y,z)=>center.clone().addScaledVector(forward,z*radius).addScaledVector(across,x*radius).addScaledVector(normal,y*radius);
       const tint=this.palette[2].clone().lerp(this.palette[3],this.rand());
@@ -120,11 +120,15 @@ class PlantBuilder {
       for(const sign of[-1,1]){
         const base=twig.getPoint(t),out=forward.clone().multiplyScalar(.30+(i/7)*.3).addScaledVector(side,sign*(.78-this.rand()*.15)).addScaledVector(up,.10+(this.rand()-.5)*.4).normalize();
         this.leaf(base,out,(.27+this.rand()*.09)*leafScale,(.11+this.rand()*.035)*leafScale,null,(this.rand()-.5)*.85);
-        if(flower&&sign===1&&i%2===0)this.bloom(base.clone().addScaledVector(out,.12*leafScale),.09*leafScale);
+        if(flower){
+          const flowerBase=base.clone().addScaledVector(out,.17*leafScale);
+          this.bloom(flowerBase,(.13+this.rand()*.025)*leafScale);
+          if(i%2===0)this.bloom(flowerBase.clone().addScaledVector(up,.075).addScaledVector(side,sign*.11),.105*leafScale);
+        }
       }
     }
     this.leaf(end.clone().addScaledVector(forward,-.07),forward,.31*leafScale,.12*leafScale);
-    if(flower)for(let i=0;i<3;i++){const a=i*Math.PI*2/3;this.bloom(end.clone().addScaledVector(side,Math.cos(a)*.08*leafScale).addScaledVector(up,.05+Math.sin(a)*.04),.085*leafScale);}
+    if(flower)for(let i=0;i<5;i++){const a=i*Math.PI*2/5;this.bloom(end.clone().addScaledVector(side,Math.cos(a)*.16*leafScale).addScaledVector(up,.07+Math.sin(a)*.12),.12*leafScale);}
   }
   coniferSpray(start,direction,length,scale=1){
     const forward=direction.clone().normalize(),side=new THREE.Vector3().crossVectors(forward,up).normalize(),end=start.clone().addScaledVector(forward,length),twig=this.branch([start,start.clone().lerp(end,.55).addScaledVector(up,.04),end],.015*scale,.003,4);
@@ -147,6 +151,7 @@ class PlantBuilder {
 }
 function createBroadleafTree(kind,seed,detail){
   const b=new PlantBuilder(kind,seed,detail),rand=b.rand,flower=kind==='cherry'||kind==='lilac';
+  if(flower)return createFloweringTree(b,kind,seed);
   const trunk=[new THREE.Vector3(0,-.04,0),new THREE.Vector3(.10,1.7,.04),new THREE.Vector3(-.04,3.2,.07),new THREE.Vector3(.21,4.9,-.06),new THREE.Vector3(-.08,6.45,.08),new THREE.Vector3(.13,8.1,.04)];
   const stem=b.branch(trunk,.28,.024,30);
   for(let i=0;i<11;i++){
@@ -163,6 +168,27 @@ function createBroadleafTree(kind,seed,detail){
   }
   for(let i=0;i<7;i++){const a=i*2.39,start=atHeight(stem,7.1+i*.11);b.spray(start,new THREE.Vector3(Math.cos(a)*.7,.9,Math.sin(a)*.7),.6+rand()*.35,.85);}
   return b.finish(`Detailed ${kind} grove tree`);
+}
+
+function createFloweringTree(b,kind,seed){
+  const rand=b.rand,lean=kind==='cherry'?1:-1;
+  const stem=b.branch([new THREE.Vector3(0,-.04,0),new THREE.Vector3(.20*lean,1.4,-.12),new THREE.Vector3(-.28*lean,2.9,.12),new THREE.Vector3(.26*lean,4.7,.06),new THREE.Vector3(.65*lean,6.7,-.19)],.43,.037,36);
+  // Wide, irregular boughs give the blossoms a mature silhouette and a readable trunk.
+  for(let i=0;i<14;i++){
+    const t=i/13,a=i*2.399+seed*.17,start=atHeight(stem,2.1+t*3.1),radius=3.35-Math.pow(t,2)*1.40+(rand()-.5)*.55;
+    const end=new THREE.Vector3(Math.cos(a)*radius,4.3+t*2.2+(rand()-.5)*.5,Math.sin(a)*radius);
+    const bough=b.branch([start,start.clone().lerp(end,.38).addScaledVector(up,-.36),end.clone().addScaledVector(up,-.22),end],.16-t*.073,.025,14);
+    for(let fan=0;fan<5;fan++){
+      const angle=a+(fan-2)*.44,origin=bough.getPoint(.33+(fan%3)*.18),tip=end.clone().add(new THREE.Vector3(Math.cos(angle)*(.50+rand()*.35),.23+(fan%2)*.27,Math.sin(angle)*(.50+rand()*.35)));
+      const twig=b.branch([origin,origin.clone().lerp(tip,.52).addScaledVector(up,.16),tip],.043,.009,8);
+      for(let shoot=0;shoot<5;shoot++){
+        const root=twig.getPoint(.10+shoot*.20),az=angle+(shoot%2?-1:1)*(.6+rand()*.6);
+        b.spray(root,new THREE.Vector3(Math.cos(az),.28+rand()*.48,Math.sin(az)),.75+rand()*.37,.94+rand()*.27);
+      }
+    }
+  }
+  for(let i=0;i<9;i++){const a=i*2.39,start=atHeight(stem,5.75+i*.095);b.spray(start,new THREE.Vector3(Math.cos(a)*.9,.9,Math.sin(a)*.9),.9,1.1);}
+  return b.finish(`Mature ${kind} tree — arched boughs and five-petal blossom clusters`);
 }
 const cachedPlantSurfaces=new Map();
 function createCachedGroveTree(kind,detail,parts){

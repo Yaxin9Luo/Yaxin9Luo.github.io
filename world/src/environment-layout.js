@@ -41,3 +41,15 @@ export const landscapeGroves = [
 export function groveAt(x,z,margin=0) {
   return landscapeGroves.find(g=>((x-g.x)/(g.rx+margin))**2+((z-g.z)/(g.rz+margin))**2<1);
 }
+
+export const blossomParks=[
+  {id:'cherry-walk',kind:'cherry',seed:881,centre:[-71,66],radius:20,
+    path:[[-55,62],[-64,63],[-74,65],[-78,73]],
+    trees:[[-60,57,1.08],[-70,57,1.14],[-81,59,.95],[-85,68,1.06],[-77,81,.97],[-68,74,1.05],[-59,72,.91]],
+    lamps:[[-59,64],[-69,61],[-79,67],[-75,74]],overlook:[-78,73]},
+  {id:'lilac-walk',kind:'lilac',seed:910,centre:[51,79],radius:21,
+    path:[[33,70],[39,77],[48,80],[58,77],[69,72]],
+    trees:[[32,80,.95],[41,69,1.02],[44,87,1.0],[53,71,1.09],[61,83,.93],[73,77,.96]],
+    lamps:[[36,75],[44,78],[55,79],[65,73]],overlook:[48,80]},
+];
+export function insideBlossomPark(x,z){return blossomParks.some(p=>Math.hypot(x-p.centre[0],z-p.centre[1])<p.radius);}

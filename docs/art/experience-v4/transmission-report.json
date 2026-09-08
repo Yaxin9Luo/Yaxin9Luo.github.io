@@ -1,0 +1,128 @@
+{
+  "meshopt": "1.2.0",
+  "gltfTransform": "4.5.0",
+  "normalBits": 14,
+  "positionBits": 16,
+  "assets": [
+    {
+      "id": "wizard-core",
+      "sourceBytes": 23473556,
+      "bytes": 7515560,
+      "ratio": 0.3201713451511139,
+      "nodes": 82,
+      "clips": [
+        "boost",
+        "boost_end",
+        "boost_start",
+        "cast",
+        "cruise",
+        "dismount",
+        "ground_cast",
+        "ground_idle",
+        "idle",
+        "mount",
+        "run",
+        "turn_left",
+        "turn_right",
+        "walk"
+      ],
+      "meshSimplification": false,
+      "textureResize": [
+        1024,
+        1024
+      ]
+    },
+    {
+      "id": "/models/characters/wizard.glb",
+      "sourceBytes": 23473556,
+      "bytes": 16186484,
+      "ratio": 0.689562501735996,
+      "nodes": 82,
+      "clips": [
+        "boost",
+        "boost_end",
+        "boost_start",
+        "cast",
+        "cruise",
+        "dismount",
+        "ground_cast",
+        "ground_idle",
+        "idle",
+        "mount",
+        "run",
+        "turn_left",
+        "turn_right",
+        "walk"
+      ],
+      "meshSimplification": false,
+      "textureResize": null
+    },
+    {
+      "id": "wraith",
+      "sourceBytes": 5761252,
+      "bytes": 4071588,
+      "ratio": 0.7067193033736417,
+      "nodes": 36,
+      "clips": [
+        "approach",
+        "channel",
+        "idle"
+      ],
+      "meshSimplification": false,
+      "textureResize": null
+    },
+    {
+      "id": "rock_face_02-preview",
+      "sourceBytes": 18219896,
+      "bytes": 5545172,
+      "ratio": 0.30434707201402245,
+      "nodes": 1,
+      "clips": [],
+      "meshSimplification": false,
+      "textureResize": [
+        2048,
+        2048
+      ]
+    },
+    {
+      "id": "rock_moss_set_02-preview",
+      "sourceBytes": 13597844,
+      "bytes": 4182788,
+      "ratio": 0.30760670588660965,
+      "nodes": 7,
+      "clips": [],
+      "meshSimplification": false,
+      "textureResize": [
+        2048,
+        2048
+      ]
+    },
+    {
+      "id": "/models/environment/scans/rock_face_02.glb",
+      "sourceBytes": 18219896,
+      "bytes": 17776760,
+      "ratio": 0.9756784561229109,
+      "nodes": 1,
+      "clips": [],
+      "meshSimplification": false,
+      "textureResize": null
+    },
+    {
+      "id": "/models/environment/scans/rock_moss_set_02.glb",
+      "sourceBytes": 13597844,
+      "bytes": 12758372,
+      "ratio": 0.9382643307277242,
+      "nodes": 7,
+      "clips": [],
+      "meshSimplification": false,
+      "textureResize": null
+    },
+    {
+      "id": "navigation-terrain",
+      "bytes": 7632436,
+      "offlineGeometryMs": 2676.1905,
+      "gridSpacing": 0.5,
+      "meshSimplification": false
+    }
+  ]
+}

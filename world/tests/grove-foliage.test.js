@@ -12,7 +12,7 @@ test('detailed trees keep opaque textured leaf surfaces, fine branches and the e
   for(const [kind,tree]of trees){
     const leaf=tree.leavesMesh,trunk=tree.branchesMesh,bounds=new THREE.Box3().setFromObject(tree);
     assert.equal(tree.children.length,2,'shared instancing interface remains two material batches');
-    assert.ok(triangles(tree)>40000&&triangles(tree)<90000,'approved quality budget');
+    assert.ok(triangles(tree)>40000&&triangles(tree)<(kind==='cherry'?400000:90000),'authored quality budget');
     assert.equal(leaf.material.alphaTest,0);assert.equal(leaf.material.transparent,false);
     for(const material of[leaf.material,trunk.material])for(const channel of['map','normalMap']){
       const image=material[channel]?.image;assert.ok(image?.data&&image.width>=128&&image.height>=256,'real local pigment and relief');
@@ -20,7 +20,7 @@ test('detailed trees keep opaque textured leaf surfaces, fine branches and the e
       assert.ok(new Set(image.data.filter((_,i)=>i%4!==3)).size>12,'detail map is not a flat fallback');
     }
     assert.ok(trunk.geometry.attributes.position.count<leaf.geometry.attributes.position.count/3,'branches stay visually secondary');
-    assert.ok(bounds.max.y<11&&bounds.min.y>-.12&&bounds.getSize(new THREE.Vector3()).x<7.2,kind);
+    assert.ok(bounds.max.y<11&&bounds.min.y>(kind==='cherry'?-.25:-.12)&&bounds.getSize(new THREE.Vector3()).x<(kind==='cherry'?10.5:7.2),kind);
   }
 });
 

@@ -1,10 +1,11 @@
 import * as THREE from 'three';
-import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+import {loadGLTF,mutableGeometry} from './gltf-resource.js';
 import {placementMatrix} from './foliage-lod.js';
 import {bridges} from './locations.js';
 
 const scans = new Map();
-let pending = null;
+const pending = new Map();
+let revision=0;
 const ids = ['rock_face_02', 'rock_moss_set_02'];
 
 export function scannedRockSource(kind='moss',piece=0){
@@ -23,17 +24,21 @@ export function scanClearsBridgeDeck(geometry,placement){
   return true;
 }
 
-export function loadScannedRockAssets() {
-  if (pending) return pending;
-  pending = Promise.all(ids.map(async id => {
-    const {scene} = await new GLTFLoader().loadAsync(`/models/environment/scans/${id}.glb`);
+export function loadScannedRockAssets(options={}) {
+  const {loadGLTFImpl=loadGLTF,...resourceOptions}=options;
+  const variant=options.variant||'full';
+  if (pending.has(variant)) return pending.get(variant);
+  const request = Promise.allSettled(ids.map(async id => {
+    const resourceId=variant==='preview'?`${id}-preview`:`/models/environment/scans/${id}.glb`;
+    const {scene} = await loadGLTFImpl({id:resourceId,url:`/models/environment/scans/${id}.glb`,phase:2},resourceOptions);
     scene.updateMatrixWorld(true);
     const pieces = [];
     scene.traverse(object => {
       if (!object.isMesh) return;
       const position = new THREE.Vector3(), rotation = new THREE.Quaternion(), scale = new THREE.Vector3();
       object.matrixWorld.decompose(position, rotation, scale);
-      const geometry = object.geometry.clone(); geometry.applyQuaternion(rotation); geometry.scale(...scale.toArray());
+      const geometry = mutableGeometry(object.geometry); geometry.applyQuaternion(rotation); geometry.scale(...scale.toArray());
+      geometry.userData.sharedAsset=true;
       geometry.computeBoundingBox();
       const center = geometry.boundingBox.getCenter(new THREE.Vector3()), bottom = geometry.boundingBox.min.y;
       geometry.translate(-center.x, -bottom, -center.z); geometry.computeBoundingBox(); geometry.computeBoundingSphere();
@@ -47,9 +52,10 @@ export function loadScannedRockAssets() {
       pieces.push(mesh);
     });
     if (!pieces.length) throw new Error(`Scanned rock asset has no geometry: ${id}`);
-    scans.set(id, pieces);
-  })).catch(error => {pending = null; throw error;});
-  return pending;
+    // A late preview cannot replace a full-resolution template.
+    if(variant==='full'||scans.get(id)?.variant!=='full'){pieces.variant=variant;scans.set(id,pieces);revision++;}
+  })).then(results=>{const ready=results.every(result=>result.status==='fulfilled');if(!ready)pending.delete(variant);return ready;});
+  pending.set(variant,request);return request;
 }
 
 export function scannedRockReady() {return ids.every(id => scans.has(id));}
@@ -87,6 +93,15 @@ export function addScannedRocks(root, placements, name = 'Authored scanned field
     mesh.userData.scanSource = batch.source.userData.scanSource; group.add(mesh);
     triangles += batch.source.geometry.index.count / 3 * mesh.count;
   }
-  group.userData = {assetReady: scannedRockReady(), placements: entries, instanceCount: entries.length, triangles};
+  group.userData = {assetReady: scannedRockReady(), revision, placements: entries, sourcePlacements:placements, scanBatch:true, instanceCount: entries.length, triangles};
   return group;
+}
+
+export function hydrateScannedRocks(root){
+  if(!scans.size)return;
+  const pending=[];root.traverse(object=>{if(object.userData.scanBatch&&object.userData.revision!==revision)pending.push(object);});
+  for(const group of pending){
+    const replacement=addScannedRocks(group.parent,group.userData.sourcePlacements,group.name);
+    replacement.position.copy(group.position);replacement.quaternion.copy(group.quaternion);replacement.scale.copy(group.scale);group.traverse(mesh=>{if(mesh.isInstancedMesh)mesh.dispose();});group.removeFromParent();
+  }
 }

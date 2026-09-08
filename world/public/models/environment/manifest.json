@@ -7,10 +7,10 @@
     {
       "id": "courtyard",
       "file": "courtyard.glb",
-      "bytes": 86582776,
-      "triangles": 636442,
+      "bytes": 48443552,
+      "triangles": 912086,
       "meshes": 27,
-      "colliders": 41,
+      "colliders": 215,
       "materials": [
         "Garden foundation stone",
         "Carved garden coping",
@@ -36,7 +36,7 @@
         ],
         "max": [
           18,
-          7.462939262390137,
+          6.816887855529785,
           21
         ]
       },
@@ -51,10 +51,10 @@
     {
       "id": "reading",
       "file": "reading.glb",
-      "bytes": 30756112,
+      "bytes": 30823152,
       "triangles": 236108,
       "meshes": 30,
-      "colliders": 7,
+      "colliders": 72,
       "materials": [
         "Garden foundation stone",
         "Carved garden coping",
@@ -98,10 +98,10 @@
     {
       "id": "atelier",
       "file": "atelier.glb",
-      "bytes": 8950864,
+      "bytes": 9057368,
       "triangles": 72196,
       "meshes": 18,
-      "colliders": 3,
+      "colliders": 106,
       "materials": [
         "Garden foundation stone",
         "Carved garden coping",
@@ -144,10 +144,10 @@
     {
       "id": "journey",
       "file": "journey.glb",
-      "bytes": 16082352,
+      "bytes": 16143332,
       "triangles": 123812,
       "meshes": 17,
-      "colliders": 4,
+      "colliders": 63,
       "materials": [
         "Garden foundation stone",
         "Carved garden coping",
@@ -187,10 +187,10 @@
     {
       "id": "post",
       "file": "post.glb",
-      "bytes": 17410260,
+      "bytes": 17455336,
       "triangles": 133112,
       "meshes": 22,
-      "colliders": 6,
+      "colliders": 51,
       "materials": [
         "Garden foundation stone",
         "Carved garden coping",
@@ -233,10 +233,10 @@
     {
       "id": "astral",
       "file": "astral.glb",
-      "bytes": 8575684,
+      "bytes": 8612468,
       "triangles": 66912,
       "meshes": 17,
-      "colliders": 4,
+      "colliders": 41,
       "materials": [
         "Garden foundation stone",
         "Carved garden coping",

@@ -5,27 +5,43 @@ import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
 import { locations, court, bridges } from './locations.js';
 import {loadPBRTexture} from './asset-cache.js';
 import {loadAtmosphereAssets} from './atmosphere.js';
-import {insideAuthoredGarden,landscapeGroves,groveAt} from './environment-layout.js';
+import {insideAuthoredGarden,landscapeGroves,groveAt,insideBlossomPark} from './environment-layout.js';
 import {createGroveTree,createGroveShrub,updateGroveWind} from './grove-foliage.js';
 import {createFoliageLOD} from './foliage-lod.js';
 import {applyEnvironmentWind,attachWindShadows} from './environment-wind.js';
 import {loadScannedRockAssets,addScannedRocks} from './rock-scans.js';
 import {loadEnvironmentSignage} from './environment-signage.js';
+import {resourceLoader} from './resource-loader.js';
+import {createMineralHighlands} from './mineral-highlands.js';
 
 const TAU=Math.PI*2;
 const maps = {};
+const materialBindings=new Map(),rockBindings=new Set();
+const neutralRock=new THREE.DataTexture(new Uint8Array([176,183,173,255]),1,1);neutralRock.colorSpace=THREE.SRGBColorSpace;neutralRock.needsUpdate=true;neutralRock.userData.sharedAsset=true;
 let environment = null;
 const wind = { value: 0 };
-export async function loadLandscapeAssets() {
+export async function loadLandscapeSurfaces(options={}) {
   const jobs = ['meadow', 'mossy-rock', 'forest-ground', 'castle-masonry', 'aged-wood', 'oxidized-copper', 'wool-cloth'].flatMap(name =>
     ['color', 'normal', 'roughness'].map(async kind => {
-      const texture = await loadPBRTexture(name,kind);
+      const texture = await loadPBRTexture(name,kind,options);
       (maps[name] ||= {})[kind] = texture;
+      for(const material of materialBindings.get(name)||[]){material[{color:'map',normal:'normalMap',roughness:'roughnessMap'}[kind]]=texture;material.needsUpdate=true;}
+      if(name==='mossy-rock'&&kind==='color')for(const uniform of rockBindings)uniform.value=texture;
     }));
-  await Promise.all([...jobs,loadAtmosphereAssets(),loadScannedRockAssets(),loadEnvironmentSignage()]);
-  try { environment = await new HDRLoader().loadAsync('/textures/environment/night.hdr');
-    environment.mapping = THREE.EquirectangularReflectionMapping;
-  } catch { /* The authored sky and direct lighting remain available offline. */ }
+  const results=await Promise.allSettled(jobs);
+  return results.every(result=>result.status==='fulfilled');
+}
+export async function loadNightEnvironment(scene,options={}){
+  const texture=await resourceLoader.load({id:'night-hdr',url:'/textures/environment/night.hdr',phase:3},{...options,parse:buffer=>{
+    const data=new HDRLoader().parse(buffer),texture=new THREE.DataTexture(data.data,data.width,data.height,THREE.RGBAFormat,data.type);
+    texture.mapping=THREE.EquirectangularReflectionMapping;texture.colorSpace=THREE.LinearSRGBColorSpace;texture.minFilter=THREE.LinearFilter;texture.magFilter=THREE.LinearFilter;texture.generateMipmaps=false;texture.flipY=true;texture.userData.sharedAsset=true;texture.needsUpdate=true;return texture;
+  },dispose:texture=>texture.dispose()});
+  if(options.signal?.aborted)return false;
+  environment=texture;if(scene){scene.environment=texture;scene.environmentIntensity=.14;}
+  return true;
+}
+export async function loadLandscapeAssets(options={}) {
+  await Promise.allSettled([loadLandscapeSurfaces(options),loadAtmosphereAssets(options),loadScannedRockAssets(options),loadEnvironmentSignage(options),loadNightEnvironment(null,options)]);
 }
 
 export function noise(x, z) {
@@ -42,6 +58,8 @@ export function surface(name, extra = {}) {
   const m=new THREE.MeshStandardMaterial({color:'#d9d9cb',map:t.color??null,normalMap:t.normal??null,normalScale:new THREE.Vector2(normal,normal),roughnessMap:t.roughness??null,roughness:1,...materialOptions});
   const influence=albedoStrength??(name==='mossy-rock'?.86:name==='castle-masonry'?.76:.82);
   m.userData.surface=name;m.userData.albedoStrength=influence;m.userData.roughnessFloor=roughnessFloor;
+  if(!materialBindings.has(name))materialBindings.set(name,new Set());materialBindings.get(name).add(m);
+  m.addEventListener('dispose',()=>materialBindings.get(name)?.delete(m));
   m.onBeforeCompile=shader=>{
     shader.fragmentShader=shader.fragmentShader.replace('#include <map_fragment>',`vec3 authoredBase=diffuseColor.rgb;\n#include <map_fragment>\ndiffuseColor.rgb=mix(authoredBase,diffuseColor.rgb,${influence.toFixed(3)});`);
     shader.fragmentShader=shader.fragmentShader.replace('#include <roughnessmap_fragment>',`float roughnessFactor=roughness;
@@ -65,7 +83,8 @@ export function groundMaterial() {
   const compileSurface=m.onBeforeCompile;
   m.onBeforeCompile=shader=>{
     compileSurface(shader);
-    shader.uniforms.rockMap={value:maps['mossy-rock']?.color};
+    shader.uniforms.rockMap={value:maps['mossy-rock']?.color||neutralRock};rockBindings.add(shader.uniforms.rockMap);
+    m.addEventListener('dispose',()=>rockBindings.delete(shader.uniforms.rockMap),{once:true});
     shader.vertexShader='varying vec3 terrainNormal; varying vec3 terrainPosition;\n'+shader.vertexShader;
     shader.vertexShader=shader.vertexShader.replace('#include <begin_vertex>','#include <begin_vertex>\nterrainNormal=normal; terrainPosition=position;');
     shader.fragmentShader='uniform sampler2D rockMap; varying vec3 terrainNormal; varying vec3 terrainPosition;\n'+shader.fragmentShader;
@@ -88,7 +107,7 @@ export function createLake(root, scene) {
     data[i]=(n.x*.5+.5)*255;data[i+1]=(n.y*.5+.5)*255;data[i+2]=(n.z*.5+.5)*255;data[i+3]=255;
   }
   const normals=new THREE.DataTexture(data,size,size);normals.wrapS=normals.wrapT=THREE.RepeatWrapping;normals.magFilter=THREE.LinearFilter;normals.minFilter=THREE.LinearMipmapLinearFilter;normals.generateMipmaps=true;normals.anisotropy=4;normals.needsUpdate=true;
-  const water=new Water(new THREE.PlaneGeometry(2200,2200),{textureWidth:2048,textureHeight:2048,waterNormals:normals,sunDirection:new THREE.Vector3(-.16,.18,-.84).normalize(),sunColor:'#a8d9ff',waterColor:'#123955',distortionScale:1.15,fog:true});
+  const water=new Water(new THREE.PlaneGeometry(10000,10000),{textureWidth:2048,textureHeight:2048,waterNormals:normals,sunDirection:new THREE.Vector3(-.16,.18,-.84).normalize(),sunColor:'#a8d9ff',waterColor:'#123955',distortionScale:1.15,fog:true});
   const reflection=water.material.uniforms.mirrorSampler.value;reflection.generateMipmaps=true;reflection.minFilter=THREE.LinearMipmapLinearFilter;
   water.name='Reflective lake';water.rotation.x=-Math.PI/2;water.position.y=-15;
   water.material.uniforms.size.value=2.5;
@@ -120,7 +139,7 @@ export function createTreeSpecimen(kind='pine') {
   return createGroveTree(variant,221);
 }
 
-export function createVegetation(root,heightAt,nearPath=()=>false,{lod=false}={}) {
+export function createVegetation(root,heightAt,nearPath=()=>false,{lod=false,trees=true}={}) {
   let state=48623;const rand=()=>{state=(Math.imul(state,1664525)+1013904223)|0;return(state>>>0)/4294967296;};
   const bridgeSpans=Object.values(bridges).map(([a,b])=>{const length=Math.hypot(b[0]-a[0],b[1]-a[1]);return {x:a[0],z:a[1],length,dx:(b[0]-a[0])/length,dz:(b[1]-a[1])/length};});
   const bridgeClear=p=>!bridgeSpans.some(b=>{const along=(p.x-b.x)*b.dx+(p.z-b.z)*b.dz,across=(p.x-b.x)*b.dz-(p.z-b.z)*b.dx;return along>-3&&along<b.length+3&&Math.abs(across)<4.5;});
@@ -141,13 +160,14 @@ export function createVegetation(root,heightAt,nearPath=()=>false,{lod=false}={}
   const sampleIsland=()=>{const grove=landscapeGroves[Math.floor(rand()*landscapeGroves.length)],a=rand()*TAU,r=Math.sqrt(rand())*.95;return{x:grove.x+Math.cos(a)*grove.rx*r,z:grove.z+Math.sin(a)*grove.rz*r,kind:grove.kind};};
   for(let j=0;j<1800&&placed.length<64;j++){
     const{x,z,kind}=sampleIsland(),h=heightAt(x,z);
-    if(h<.5||treeClear(x,z)||noise(x*.044+9,z*.044)<.3)continue;
+    if(h<.5||treeClear(x,z)||insideBlossomPark(x,z)||noise(x*.044+9,z*.044)<.3)continue;
     if(placed.some(p=>Math.hypot(x-p.x,z-p.z)<6.8))continue;
     const k=kinds.indexOf(kind),foreground=x>25&&z>court.z-8;
     const p={x,y:h-.12,z,s:(.78+rand()*.33)*(foreground?.76:1),r:rand()*6.28};groups[k].push(p);placed.push(p);
   }
-  const lodController=lod?createFoliageLOD(root,kinds.map((kind,k)=>({kind,seed:168+k*331,placements:groups[k].filter(bridgeClear)}))):null;
-  if(!lod)for(let k=0;k<kinds.length;k++){
+  const lodController=lod&&trees?createFoliageLOD(root,kinds.map((kind,k)=>({kind,seed:168+k*331,placements:groups[k].filter(bridgeClear)}))):null;
+  if(!lod&&trees)for(let k=0;k<kinds.length;k++){
+    if(!groups[k].length)continue;
     const specimen=createGroveTree(kinds[k],168+k*331);
     batch(specimen.branchesMesh.geometry,specimen.branchesMesh.material,groups[k],`Garden trunks ${k}`);
     batch(specimen.leavesMesh.geometry,specimen.leavesMesh.material,groups[k],`Garden ${kinds[k]} crowns ${k}`);
@@ -226,67 +246,8 @@ export function createVegetation(root,heightAt,nearPath=()=>false,{lod=false}={}
   return {treeCount:placed.filter(bridgeClear).length,treeLimit:64,flowerTreeCount:groups[2].filter(bridgeClear).length,understoryCount:understory.filter(bridgeClear).length,grassCount:grass.filter(bridgeClear).length,flowerCount:flowers.filter(bridgeClear).length,groveCount:landscapeGroves.length,lod:lodController?.stats??null,lodController,update:(camera,viewport)=>lodController?.update(camera,viewport)};
 }
 
-export function createBackdrop(root, scene) {
-  if(!scene.background)scene.background=new THREE.Color('#102b50');
-  const wrap=a=>Math.atan2(Math.sin(a),Math.cos(a));
-  // Separate, irregular ridgelines leave open water and sky between headlands.
-  // Their materials have a bounded night palette so foreground lights cannot
-  // turn the entire mountain ring into a brighter wall behind the castle.
-  const summits=[[.35,84,.26],[1.35,64,.30],[2.32,90,.23],[2.85,62,.27],[3.98,76,.25],[4.62,105,.32],[5.57,72,.26]];
-  for(let layer=0;layer<3;layer++){
-    const positions=[],indices=[],segments=640,bands=40;
-    for(let s=0;s<=segments;s++){
-      const a=s/segments*Math.PI*2,shift=(layer-1)*.13;
-      let peaks=0;
-      for(const [angle,height,width] of summits){
-        const signed=wrap(a-angle-shift),offset=Math.abs(signed);
-        const shoulderWidth=width*(signed>0?1.24:.76);
-        peaks+=height*Math.exp(-Math.pow(offset/shoulderWidth,1.8));
-        peaks+=height*.26*Math.exp(-Math.pow(wrap(a-angle-shift-width*.91)/(width*.35),2.));
-      }
-      const moonValley=1-.68*Math.exp(-Math.pow(wrap(a+2.95)/.30,2));
-      const ridge=340+layer*145+noise(Math.sin(a)*4+layer*2.3,Math.cos(a)*4)*85;
-      const weathering=.86+.23*fbm(Math.sin(a)*35+layer*7,Math.cos(a)*35-layer*3);
-      const crest=(14+layer*7+peaks*(.72+layer*.035))*moonValley*weathering;
-      for(let b=0;b<=bands;b++){
-        const t=b/bands;
-        const channel=Math.sin(a*47+Math.sin(a*13)*2.4+t*2.8+fbm(a*8,t*5)*2)*.5+.5;
-        const foothill=.54+.46*Math.pow(Math.sin(t*Math.PI),.4);
-        const width=190+layer*35;
-        const r=ridge+(t-.43)*width+Math.sin(a*21+t*5)*8*Math.sin(t*Math.PI);
-        const silhouette=Math.pow(Math.max(0,Math.sin(t*Math.PI)),1.25);
-        const ribs=.75+.17*channel+.12*fbm(Math.sin(a)*32+t*5,Math.cos(a)*32-layer*2);
-        const h=-24+crest*silhouette*ribs*foothill;
-        positions.push(Math.sin(a)*r,h,Math.cos(a)*r);
-        if(s<segments&&b<bands){const q=s*(bands+1)+b;indices.push(q,q+1,q+bands+1,q+1,q+bands+2,q+bands+1);}
-      }
-    }
-    const geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));geometry.setIndex(indices);geometry.computeVertexNormals();
-    const material=new THREE.ShaderMaterial({side:THREE.DoubleSide,fog:false,toneMapped:false,
-      uniforms:{rockMap:{value:maps['mossy-rock']?.color||null},hasRock:{value:maps['mossy-rock']?.color?1:0},baseColor:{value:new THREE.Color(['#304252','#40556a','#556d83'][layer])},hazeColor:{value:new THREE.Color('#46617c')},layerDepth:{value:layer},lightDirection:{value:new THREE.Vector3(-.28,.48,-.72).normalize()}},
-      vertexShader:'varying vec3 mountainPosition;varying vec3 mountainNormal;void main(){mountainPosition=(modelMatrix*vec4(position,1.)).xyz;mountainNormal=normalize(mat3(modelMatrix)*normal);gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
-      fragmentShader:`varying vec3 mountainPosition;varying vec3 mountainNormal;
-        uniform sampler2D rockMap;uniform float hasRock;uniform vec3 baseColor;uniform vec3 hazeColor;uniform float layerDepth;uniform vec3 lightDirection;
-        void main(){vec3 p=mountainPosition;vec3 n=normalize(mountainNormal);vec3 weights=pow(abs(n),vec3(3.));weights/=max(dot(weights,vec3(1.)),.001);
-          vec3 tx=texture2D(rockMap,p.zy*.11).rgb;vec3 ty=texture2D(rockMap,p.xz*.11).rgb;vec3 tz=texture2D(rockMap,p.xy*.11).rgb;
-          float grain=dot(tx*weights.x+ty*weights.y+tz*weights.z,vec3(.2126,.7152,.0722));
-          float rockDetail=mix(1.,.72+grain*.46,hasRock);
-          float moonFacing=max(0.,dot(n,lightDirection));
-          float skyFacing=max(0.,dot(n,normalize(vec3(.18,.35,.84))));
-          float faceLight=.48+moonFacing*.46+skyFacing*.28+max(0.,n.y)*.18;
-          float slopeBands=.97+.03*sin(p.y*.21+sin(p.x*.027+p.z*.034)*2.);
-          vec3 color=baseColor*faceLight*rockDetail*slopeBands;
-          float distanceHaze=smoothstep(280.,1080.,distance(cameraPosition,p))*.42;
-          float valleyHaze=(1.-smoothstep(-16.,65.,p.y))*(.08+layerDepth*.03);
-          color=mix(color,hazeColor,distanceHaze+valleyHaze);
-          gl_FragColor=vec4(color,1.);
-          #include <colorspace_fragment>
-        }`,
-    });
-    material.userData.backgroundLayer=layer;
-    const mesh=new THREE.Mesh(geometry,material);mesh.name=`Layered navy highlands ${layer}`;mesh.castShadow=false;mesh.receiveShadow=false;root.add(mesh);
-  }
-  // Valley mist remains dark and translucent; it does not brighten the skyline.
-  const fogMat=new THREE.ShaderMaterial({transparent:true,depthWrite:false,side:THREE.DoubleSide,uniforms:{t:wind},vertexShader:'varying vec2 v;void main(){v=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',fragmentShader:'varying vec2 v;uniform float t;void main(){float a=pow(sin(v.x*3.14159)*sin(v.y*3.14159),2.);float wisps=.65+.35*sin(v.x*19.+sin(v.x*33.)+t*.05);gl_FragColor=vec4(.08,.15,.25,a*wisps*.045);}' });
-  for(let i=0;i<7;i++){const a=i/7*Math.PI*2,m=new THREE.Mesh(new THREE.PlaneGeometry(150,16),fogMat);m.position.set(Math.sin(a)*280,2+i%3*4,Math.cos(a)*280);m.rotation.y=a;root.add(m);}
+export function createBackdrop(root,scene){
+  const result=createMineralHighlands(root,{rockMap:maps['mossy-rock']?.color||neutralRock,wind});
+  for(const material of result.materials){rockBindings.add(material.uniforms.rockMap);material.addEventListener('dispose',()=>rockBindings.delete(material.uniforms.rockMap));}
+  return result;
 }

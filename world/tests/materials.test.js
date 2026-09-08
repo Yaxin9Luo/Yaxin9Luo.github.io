@@ -7,6 +7,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { createCastle, loadArchitectureAssets } from '../src/models.js';
 import { loadLandscapeAssets, groundMaterial, surface } from '../src/landscape.js';
 import { createGardenSpecimen } from '../src/gardens.js';
+import {assetManifest} from '../src/asset-manifest.js';
 
 // Keep the shared binding path; Node substitutes browser image/model decoding.
 const loaded = [];
@@ -61,7 +62,8 @@ test('loaded building surfaces keep real PBR channels and distinguish broad surf
     assert.ok(material.userData.albedoStrength >= .7, `${name} texture was almost erased`);
     assert.ok(material.normalScale.x >= .5, `${name} relief was almost erased`);
     assert.equal(material.map.wrapS, THREE.RepeatWrapping);
-    assert.ok(loaded.includes(`/textures/${material.userData.surface}/color.webp`));
+    const source=`/textures/${material.userData.surface}/color.webp`;
+    assert.ok(loaded.includes(assetManifest[source]?.url||source));
   }
   const wall = materials.get('limestone'), trim = materials.get('carved-limestone');
   assert.equal(wall.map, trim.map, 'shared material channels do not require duplicate GPU textures');

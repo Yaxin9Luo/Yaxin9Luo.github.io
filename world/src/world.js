@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import {createSurfaceSupport} from './surface-support.js';
 import {createPortal} from './effects.js';
 import {createAtmosphere} from './atmosphere.js';
 import {locations,ringPositions,crystalPositions,wispPositions,islands,bridges,court,exhibitSites} from './locations.js';
@@ -10,6 +11,7 @@ import {gradeGardenTerrain,insideAuthoredGarden} from './environment-layout.js';
 import {createAuthoredGardens} from './gardens.js';
 import {createEnvironmentComposition} from './environment-composition.js';
 import {environmentWind} from './environment-wind.js';
+import {createBlossomGroves} from './blossom-groves.js';
 
 let seed=131;
 function random(){seed=(Math.imul(seed,1664525)+1013904223)|0;return (seed>>>0)/4294967296;}
@@ -72,7 +74,7 @@ export function cliffPlanarUV(geometry,scale=.22){
 
 // Clip one shared grid to the union of the islands. Boundary vertices are reused
 // by the cliff shells, so neither overlapping ground nor open shoreline seams remain.
-function islandGeometry(){
+export function islandGeometry(){
   const step=TERRAIN_STEP,positions=[],colors=[],indices=[],shore=[],vertices=new Map(),cuts=new Map();
   const minX=Math.floor(Math.min(...islands.map(i=>i.x-i.rx*1.08))/step)*step;
   const maxX=Math.ceil(Math.max(...islands.map(i=>i.x+i.rx*1.08))/step)*step;
@@ -165,33 +167,34 @@ export function createTerrainSpecimen(){
   ground.receiveShadow=true;cliffs.receiveShadow=true;group.add(ground,cliffs);return group;
 }
 
-export function createWorld(scene){
+function* assembleWorld(scene, navigation=null){
   seed=131;
-  const root=new THREE.Group();scene.add(root);
+  const root=navigation?.root||new THREE.Group();if(!navigation)scene.add(root);
   const stone=surface('castle-masonry',{color:'#bcc6bd'}),brass=mat('#b59455',{metalness:.65,roughness:.4});
-  const animated=[],portals=[],ringMeshes=[],crystals=[],wisps=[];
+  const animated=navigation?.animated||[],portals=navigation?.portals||[],ringMeshes=[],crystals=[],wisps=[];
   const mesh=(geo,material,parent=root)=>{const m=new THREE.Mesh(geo,material);m.castShadow=true;m.receiveShadow=true;parent.add(m);return m;};
   const box=(x,y,z,w,h,d,material,parent=root)=>{const m=mesh(new THREE.BoxGeometry(w,h,d),material,parent);m.position.set(x,y,z);return m;};
   const glowMat=new THREE.MeshBasicMaterial({color:'#ffd997',toneMapped:false});
-  const terrain=islandGeometry();
-  const ground=mesh(terrain.ground,groundMaterial());ground.name='island-ground';
-  const cliffs=mesh(terrain.cliffs,surface('mossy-rock',{vertexColors:true,color:'#b8b6ab'}));cliffs.name='shoreline-cliffs';
-  const occluders=[ground,cliffs];
-  // Retain the existing seeded tree/rock/lantern distribution after replacing
-  // the old 23×97 polar samples and 96×3×6 cliff samples per island.
+  const terrain=navigation?.terrain||islandGeometry();
+  const ground=navigation?.ground||mesh(terrain.ground,groundMaterial());ground.name='island-ground';
+  const cliffs=navigation?.cliffs||mesh(terrain.cliffs,surface('mossy-rock',{vertexColors:true,color:'#b8b6ab'}));cliffs.name='shoreline-cliffs';
+  const occluders=navigation?.occluders||[ground,cliffs];
   for(let i=0;i<islands.length*(23*97+96*3*6);i++)random();
-  const lake=createLake(root,scene);
+  const lake=navigation?.lake||createLake(root,scene);
   const makers=[createCastle,createLibrary,createWorkshop,createObservatory,createRuins,createOwlery];
-  locations.forEach((l,i)=>{const m=makers[i]();m.position.set(l.x,l.y,l.z);root.add(m);occluders.push(m);
+  const order=[...locations].sort((a,b)=>(navigation?.priority(a.id)??0)-(navigation?.priority(b.id)??0));
+  for(const l of order){const i=locations.indexOf(l),m=makers[i]();m.position.set(l.x,l.y,l.z);root.add(m);occluders.push(m);
     // Portals sit at the approach to each building and also serve as map destinations.
-    const portal=createPortal(l.color);portal.position.set(l.x,l.y+3.1,l.z+l.radius+3);root.add(portal);
+    const portal=navigation?.portals.find(item=>item.id===l.id)?.group||createPortal(l.color);portal.position.set(l.x,l.y+3.1,l.z+l.radius+3);root.add(portal);
     box(0,-3.05,0,7,.3,3,stone,portal);
     // Weathered gate piers frame the spell, so its light has a physical setting.
     for(const sign of [-1,1]){box(sign*3.65,-1.1,0,.65,4.2,.9,stone,portal);box(sign*3.65,1.15,0,.85,.3,1.1,stone,portal);}
-    animated.push({type:'portal',group:portal});portals.push({id:l.id,group:portal});
-  });
+    if(!navigation){animated.push({type:'portal',group:portal});portals.push({id:l.id,group:portal});}
+    yield {region:l.id,group:m};
+  }
 
-  const paths=[];
+  const paths=[],roadSupport=createSurfaceSupport(renderedTerrainHeight),groundHeight=roadSupport.heightAt;
+  if(navigation)navigation.heightAt=groundHeight;
   for(const l of locations){
     const gate=new THREE.Vector3(l.x,0,l.z+l.radius+3),ends=bridges[l.id];
     const p=ends?new THREE.Vector3(ends[0][0],0,ends[0][1]):gate;
@@ -204,18 +207,23 @@ export function createWorld(scene){
     const width=l.id==='about'?3.2:2,across=Math.ceil(width*2/.22),stride=across+1;
     points.forEach((v,k)=>{const next=points[Math.min(k+1,points.length-1)],prev=points[Math.max(k-1,0)];const dir=new THREE.Vector3().subVectors(next,prev).normalize();
       for(let side=0;side<=across;side++){const offset=(side/across*2-1)*width,x=v.x+dir.z*offset,z=v.z-dir.x*offset;pos.push(x,renderedTerrainHeight(x,z)+.075,z);}
-      if(k<points.length-1)for(let side=0;side<across;side++){const j=k*stride+side;idx.push(j,j+1,j+stride,j+1,j+stride+1,j+stride);}
+      if(k<points.length-1)for(let side=0;side<across;side++){const j=k*stride+side;idx.push(j,j+stride,j+1,j+1,j+stride,j+stride+1);}
     });
-    const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));g.setIndex(idx);g.computeVertexNormals();planarUV(g,.32);mesh(g,surface('castle-masonry',{color:'#b1b8a9',side:THREE.DoubleSide,normalScale:new THREE.Vector2(.15,.15)})).name=`road-${l.id}`;
+    const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));g.setIndex(idx);g.computeVertexNormals();roadSupport.addGeometry(g);planarUV(g,.32);mesh(g,surface('castle-masonry',{color:'#b1b8a9',side:THREE.DoubleSide,normalScale:new THREE.Vector2(.15,.15)})).name=`road-${l.id}`;
+    yield {region:`road-${l.id}`};
     }
   }
   const nearPath=(x,z)=>paths.some(p=>p.some((v,i)=>i%3===0&&Math.hypot(v.x-x,v.z-z)<3.7));
   function bridge(ax,az,bx,bz){
     const group=createViaduct(Math.hypot(bx-ax,bz-az));group.position.set((ax+bx)/2,6.82,(az+bz)/2);group.rotation.y=Math.atan2(bx-ax,bz-az);root.add(group);occluders.push(group);
   }
-  for(const [[ax,az],[bx,bz]] of Object.values(bridges))bridge(ax,az,bx,bz);
-  const gardens=createAuthoredGardens(root,null,nearPath);occluders.push(gardens.group);
+  for(const [[ax,az],[bx,bz]] of Object.values(bridges)){bridge(ax,az,bx,bz);yield {region:"bridge"};}
+  const gardenTrees=yield {prepare:"gardens"};
+  const gardens=createAuthoredGardens(root,null,nearPath,{trees:gardenTrees!==false});occluders.push(gardens.group);
+  if(navigation){navigation.gardens=gardens;navigation.clockTargets=gardens.clockTargets;navigation.environmentColliders.push(...gardens.colliders);mergeEnvironmentLighting(navigation.environmentLighting,gardens.lighting);}
+  yield {region:"gardens"};
   const composition=createEnvironmentComposition(root,renderedTerrainHeight,nearPath,{shoreline:terrain.shore,shoreField});occluders.push(composition.group);
+  yield {region:"shore-details"};
 
   // Hand-worked lamps along the paths. Instance each material across the grounds.
   const lamp=createGardenLamp(),lampSites=[];
@@ -225,10 +233,19 @@ export function createWorld(scene){
   const groundGlow=createLampGroundGlow([...lampSites,...gardens.lampSites.map(p=>[...p,4.2])],renderedTerrainHeight);root.add(groundGlow);
   const exhibits=exhibitSites.map(({id,x,z,color})=>{const group=createResearchBook(id,color);group.position.set(x,terrainHeight(x,z),z);group.rotation.y=-.24;root.add(group);return {id,group};});
 
-  const vegetation=createVegetation(root,terrainHeight,nearPath,{lod:true});
+  yield {region:"wayfinding"};
+  const landscapeTrees=yield {prepare:"vegetation"};
+  const vegetation=createVegetation(root,terrainHeight,nearPath,{lod:true,trees:landscapeTrees!==false});
+  yield {region:"vegetation"};
+  const blossomTrees=yield {prepare:"blossom-walks"};
+  const blossomGroves=createBlossomGroves(root,groundHeight,{nearPath,trees:blossomTrees!==false});occluders.push(blossomGroves.group);
+  if(navigation){navigation.heightAt=blossomGroves.heightAt;navigation.environmentColliders.push(...blossomGroves.colliders);mergeEnvironmentLighting(navigation.environmentLighting,blossomGroves.lighting);}
+  else gardens.colliders.push(...blossomGroves.colliders);
+  yield {region:"blossom-walks"};
   root.userData.vegetation=vegetation;
   createBackdrop(root,scene);
-  const atmosphere=createAtmosphere(scene,{heightAt:terrainHeight});
+  yield {region:"highlands"};
+  const atmosphere=navigation?.atmosphere||createAtmosphere(scene,{heightAt:terrainHeight});
 
   ringPositions.forEach((p,i)=>{const group=new THREE.Group();group.position.fromArray(p);const next=ringPositions[(i+1)%ringPositions.length];group.lookAt(new THREE.Vector3(...next));root.add(group);
     const material=new THREE.MeshBasicMaterial({color:i===0?'#ffe3a6':'#d9b676',transparent:true,opacity:i===0?1:.4,toneMapped:false});
@@ -240,7 +257,7 @@ export function createWorld(scene){
     const m=mesh(new THREE.OctahedronGeometry(.65,0),new THREE.MeshStandardMaterial({color:'#b0edef',emissive:'#72cad4',emissiveIntensity:.38,metalness:.3,roughness:.2}),group);m.scale.y=1.65;
     const band=mesh(new THREE.TorusGeometry(1.2,.028,4,32),brass,group);band.rotation.x=Math.PI/2;crystals.push({id:i,group,baseY:p[1]});
   });
-  wispPositions.forEach((p,i)=>{const group=createWisp();group.position.fromArray(p);root.add(group);wisps.push({id:i,group,home:new THREE.Vector3(...p),hp:3,respawn:0,attack:2+i*.4});});
+  if(!navigation)wispPositions.forEach((p,i)=>{const group=createWisp();group.position.fromArray(p);root.add(group);wisps.push({id:i,group,home:new THREE.Vector3(...p),hp:3,respawn:0,attack:2+i*.4});});
   const lanternGeo=new THREE.SphereGeometry(.08,6,4),lanterns=[];
   for(let i=0;i<16;i++){const p={x:(random()-.5)*125,y:10+random()*18,z:(random()-.5)*140,s:1};const m=mesh(lanternGeo,glowMat);m.castShadow=false;m.position.set(p.x,p.y,p.z);lanterns.push({mesh:m,base:p.y,x:p.x,z:p.z,phase:random()*6});}
   const motes=new Float32Array(140*3);
@@ -251,14 +268,15 @@ export function createWorld(scene){
   const birds=[];
   const bg=new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-.8,0,.2),new THREE.Vector3(0,0,0),new THREE.Vector3(.8,0,.2)]);
   for(let i=0;i<12;i++){const bird=new THREE.Line(bg,new THREE.LineBasicMaterial({color:'#111f24'}));root.add(bird);birds.push(bird);}
-  const environmentLighting=gardens.lighting;
+  const environmentLighting=navigation?.environmentLighting||gardens.lighting;
+  mergeEnvironmentLighting(environmentLighting,blossomGroves.lighting);
   const known=new Set(environmentLighting.emissiveMaterials.map(e=>e.material));
   root.traverse(o=>{for(const m of(o.material?Array.isArray(o.material)?o.material:[o.material]:[])){
-    if(!known.has(m)&&m.emissiveIntensity>0&&m.emissive?.getHex()>0){known.add(m);environmentLighting.emissiveMaterials.push({material:m,baseIntensity:m.emissiveIntensity});}
+    if(!known.has(m)&&m.emissiveIntensity>0&&m.emissive?.getHex()>0){known.add(m);environmentLighting.emissiveMaterials.push({material:m,baseIntensity:m.userData.authoredEmissiveIntensity??=m.emissiveIntensity});}
     if(m.uniforms?.nightFactor&&!environmentLighting.nightMaterials.some(e=>e.material===m))environmentLighting.nightMaterials.push({material:m,uniform:'nightFactor',baseValue:1});
   }});
   environmentLighting.nightObjects=[{object:sparks,baseOpacity:.7},...lanterns.map(l=>({object:l.mesh,baseOpacity:1}))];
-  return {root,portals,ringMeshes,crystals,wisps,exhibits,occluders,atmosphere,lake,gardens,composition,vegetation,updateVegetation:(camera,viewport)=>vegetation.update(camera,viewport),clockTargets:gardens.clockTargets,environmentLighting,environmentColliders:gardens.colliders,releaseLantern:position=>atmosphere.releaseLantern(position),
+  return {root,heightAt:blossomGroves.heightAt,blossomGroves,portals,ringMeshes,crystals,wisps:navigation?.wisps||wisps,exhibits,occluders,atmosphere,lake,gardens,composition,vegetation,updateVegetation:(camera,viewport)=>{vegetation.update(camera,viewport);blossomGroves.update(camera,viewport);},clockTargets:gardens.clockTargets,environmentLighting,environmentColliders:navigation?.environmentColliders||gardens.colliders,releaseLantern:position=>atmosphere.releaseLantern(position),
     update(time,dt,reducedMotion=false,camera=null,viewport=null){
       vegetation.update(camera,viewport);
       lake.update(time,reducedMotion);
@@ -274,4 +292,51 @@ export function createWorld(scene){
     },
     setRingState(index,active){ringMeshes.forEach((r,i)=>{r.group.visible=active;r.material.opacity=active?(i<index?.07:i===index?1:.22):(i===0?.8:.16);r.material.color.set(i===index?'#ffde8b':'#c9c5a0');});},
   };
+}
+
+export function createWorld(scene){const iterator=assembleWorld(scene);let item;do{item=iterator.next();}while(!item.done);return item.value;}
+
+export function mergeEnvironmentLighting(target,source){
+  for(const key of ['lights','emissiveMaterials','nightMaterials','nightObjects'])for(const item of source[key]||[]){
+    const identity=item.material||item.light||item.object;
+    if(!target[key].some(entry=>(entry.material||entry.light||entry.object)===identity))target[key].push(item);
+  }
+}
+export function registerWorldLighting(world,root=world.root){
+  root.traverse(object=>{for(const material of object.material?(Array.isArray(object.material)?object.material:[object.material]):[]){
+    if(material.emissive?.getHex()>0){
+      material.userData.authoredEmissiveIntensity??=material.emissiveIntensity;
+      if(!world.environmentLighting.emissiveMaterials.some(entry=>entry.material===material))world.environmentLighting.emissiveMaterials.push({material,baseIntensity:material.userData.authoredEmissiveIntensity});
+    }
+    if(material.uniforms?.nightFactor&&!world.environmentLighting.nightMaterials.some(entry=>entry.material===material))world.environmentLighting.nightMaterials.push({material,uniform:'nightFactor',baseValue:1});
+  }});
+}
+
+/** Small playable scene; all high-detail districts are installed after its first frame. */
+export function createNavigationWorld(scene,terrain){
+  const root=new THREE.Group();root.name='Academy world';scene.add(root);
+  const ground=new THREE.Mesh(terrain.ground,groundMaterial()),cliffs=new THREE.Mesh(terrain.cliffs,surface('mossy-rock',{vertexColors:true,color:'#b8b6ab'}));
+  ground.name='island-ground';cliffs.name='shoreline-cliffs';ground.receiveShadow=cliffs.receiveShadow=true;root.add(ground,cliffs);
+  const lake=createLake(root,scene),atmosphere=createAtmosphere(scene,{heightAt:terrainHeight});
+  const portals=[],animated=[];
+  for(const location of locations){const portal=createPortal(location.color);portal.position.set(location.x,location.y+3.1,location.z+location.radius+3);root.add(portal);portals.push({id:location.id,group:portal});animated.push({type:'portal',group:portal});}
+  const world={root,terrain,ground,cliffs,lake,atmosphere,portals,animated,ringMeshes:[],crystals:[],wisps:[],exhibits:[],occluders:[ground,cliffs],clockTargets:[],environmentColliders:[],
+    environmentLighting:{lights:[],emissiveMaterials:[],nightMaterials:[],nightObjects:[]},
+    heightAt:renderedTerrainHeight,priority:()=>0,complete:false,
+    update(time,dt,reduced){lake.update(time,reduced);atmosphere.update(time,dt,reduced);for(const portal of portals)portal.group.userData.update(time,reduced);world.gardens?.update(time,reduced);},
+    setRingState(){},releaseLantern:position=>atmosphere.releaseLantern(position),
+    async enhance({signal,onRegion=()=>{},prepareRegion=async()=>true}={}){
+      const iterator=assembleWorld(scene,world);let prepared;
+      while(true){
+        // Yield to input, rendering and cancellation between authored districts.
+        await new Promise(resolve=>setTimeout(resolve,12));signal?.throwIfAborted();
+        const begin=performance.now(),item=iterator.next(prepared);prepared=undefined;
+        if(item.value?.prepare){prepared=await prepareRegion(item.value.prepare);continue;}
+        registerWorldLighting(world);
+        if(item.done){Object.assign(world,item.value,{complete:true});onRegion({region:'complete',assemblyMs:performance.now()-begin});return;}
+        onRegion({...item.value,assemblyMs:performance.now()-begin});
+      }
+    },
+  };
+  registerWorldLighting(world);return world;
 }

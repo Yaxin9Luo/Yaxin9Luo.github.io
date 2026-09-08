@@ -9,6 +9,10 @@ import {createGardenSpecimen} from '../../../world/src/gardens.js';
 import {gardenDistricts} from '../../../world/src/environment-layout.js';
 import {createGroveTree,createGroveShrub,createGardenFlower} from '../../../world/src/grove-foliage.js';
 import {CanvasElement,ImageData} from '@napi-rs/canvas';
+import {NodeIO} from '../../../world/node_modules/@gltf-transform/core/dist/index.js';
+import {ALL_EXTENSIONS} from '../../../world/node_modules/@gltf-transform/extensions/dist/index.js';
+import {meshopt} from '../../../world/node_modules/@gltf-transform/functions/dist/index.js';
+import {MeshoptEncoder} from '../../../world/node_modules/meshoptimizer/index.js';
 
 // Standard canvas encoding keeps the runtime DataTexture leaf veins and bark
 // relief in these review GLBs. The native canvas is an art-tool dependency only.
@@ -41,9 +45,19 @@ const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../../..')
 const output=path.join(root,'world/public/models/environment');
 await fs.mkdir(output,{recursive:true});
 const assets=[];
+await MeshoptEncoder.ready;
+const reviewIO=new NodeIO().registerExtensions(ALL_EXTENSIONS).registerDependencies({'meshopt.encoder':MeshoptEncoder});
+async function exportReview(object){
+  const original=await new GLTFExporter().parseAsync(object,{binary:true,onlyVisible:true});
+  if(original.byteLength<95_000_000)return original;
+  // Keep the full source topology; large review assets also fit GitHub's file limit.
+  const doc=await reviewIO.readBinary(new Uint8Array(original));
+  await doc.transform(meshopt({encoder:MeshoptEncoder,level:'medium',quantizePosition:16,quantizeNormal:14,quantizeTexcoord:16,quantizeColor:16}));
+  return reviewIO.writeBinary(doc);
+}
 for(const district of gardenDistricts){
   const object=prepareTexturesForExport(createGardenSpecimen(district.id)),bounds=new THREE.Box3().setFromObject(object);
-  const binary=await new GLTFExporter().parseAsync(object,{binary:true,onlyVisible:true});
+  const binary=await exportReview(object);
   const filename=`${district.id}.glb`;
   await fs.writeFile(path.join(output,filename),Buffer.from(binary));
   let triangles=0,meshes=0,colliders=0;const materials=new Set();

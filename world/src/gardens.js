@@ -101,13 +101,35 @@ function slab(b,x,z,w,d,bottom,height,mat,cut=.6){
   const g=new THREE.ExtrudeGeometry(clippedRectangle(w,d,Math.min(cut,w*.2,d*.2)),{depth:height,bevelEnabled:false,steps:1});g.rotateX(-Math.PI/2);b.add(g,mat,[x,bottom,z]);g.dispose();
 }
 function paving(b,width,depth){
+  const slabSupport=(w,d,bottom,top,cut)=>{
+    cut=Math.min(cut,w*.2,d*.2);
+    const planes=[[1,0,0,w/2],[-1,0,0,w/2],[0,0,1,d/2],[0,0,-1,d/2],[0,-1,0,-bottom],[0,1,0,top]];
+    for(const x of[-1,1])for(const z of[-1,1])planes.push([x/Math.SQRT2,0,z/Math.SQRT2,(w/2+d/2-cut)/Math.SQRT2]);
+    b.solids.push({name:'garden paving slab',walkable:true,bottom,top,planes});
+  };
+  const blockSupport=(x,y,z,w,h,d)=>{
+    const geometry=beveledBlock(w,h,d,Math.min(.065,h*.2)),p=geometry.attributes.position,n=geometry.attributes.normal,unique=new Map();
+    for(let i=0;i<p.count;i+=3){
+      const nx=n.getX(i),ny=n.getY(i),nz=n.getZ(i),distance=nx*(x+p.getX(i))+ny*(y+p.getY(i))+nz*(z+p.getZ(i));
+      if(ny<0)continue;
+      const plane=[nx,ny,nz,distance];unique.set(plane.map(value=>value.toFixed(6)).join('/'),plane);
+    }
+    // Support connects the dressed upper face to the foundation underneath;
+    // millimeter construction gaps below tiles are not airborne ceilings.
+    b.solids.push({name:'garden paving block',walkable:true,bottom:-.32,top:y+h/2,planes:[...unique.values(),[0,-1,0,.32]]});
+  };
+  slabSupport(width,depth,-.32,.06,1.15);
+  slabSupport(width-.16,depth-.16,.06,.12,1.06);
+  slabSupport(width-1.08,depth-1.08,.121,.141,.86);
   slab(b,0,0,width,depth,-.32,.38,b.m.base,1.15);
   slab(b,0,0,width-.16,depth-.16,.06,.06,b.m.trim,1.06);
   slab(b,0,0,width-1.08,depth-1.08,.121,.02,b.m.pavingDark,.86);
   const w=width-1.5,d=depth-1.5,nx=Math.ceil(w/2.8),nz=Math.ceil(d/3.2),tw=w/nx,td=d/nz;
+  for(let i=0;i<nx;i++)for(let j=0;j<nz;j++)blockSupport(-w/2+(i+.5)*tw,.157,-d/2+(j+.5)*td,tw-.022,.028,td-.022);
   for(let i=0;i<nx;i++)for(let j=0;j<nz;j++)b.box(-w/2+(i+.5)*tw,.157,-d/2+(j+.5)*td,tw-.022,.028,td-.022,(i+j*3)%7===0?b.m.pavingLight:b.m.paving);
   // Broad bands read at flight height; mortar joints stay secondary.
   for(const sign of[-1,1])b.box(sign*(width/2-.77),.186,0,.095,.014,depth-2,b.m.brass);
+  for(const sign of[-1,1])blockSupport(sign*(width/2-.77),.186,0,.095,.014,depth-2);
 }
 function planter(b,x,z,w,d,height=.65){
   slab(b,x,z,w+.18,d+.18,.14,.2,b.m.base,.64);
@@ -161,6 +183,7 @@ function flowers(b,x,y,z,length,orientation=0,tint='pink'){
   }
 }
 function tree(b,x,y,z,scale=1,blossom=false,rotation=0){
+  if(b.m.skipTrees)return;
   stampPlant(b,botanicalAsset(b,'tree',blossom?'cherry':'silver'),[x,y,z],[scale*.78,scale*.67,scale*.78],rotation);
   b.roundSolid('ornamental tree trunk',x,z,.28*scale,y,y+2.9*scale);
 }
@@ -378,7 +401,7 @@ function worldColliders(group){
     for(const [index,solid]of(object.userData.colliders||[]).entries()){
       const planes=solid.planes.map(([x,y,z,d])=>{const normal=new THREE.Vector3(x,y,z),point=normal.clone().multiplyScalar(d).applyMatrix4(matrix);normal.applyMatrix3(normalMatrix).normalize();return [...normal.toArray(),normal.dot(point)];});
       const base=new THREE.Vector3(0,solid.bottom,0).applyMatrix4(matrix),top=new THREE.Vector3(0,solid.top,0).applyMatrix4(matrix);
-      list.push({id:`garden/${object.name}/${index}`,buildingId:'garden',planes,bottom:base.y,top:top.y});
+      list.push({id:`garden/${object.name}/${index}`,name:solid.name,walkable:solid.walkable===true||solid.name==='bridge threshold deck',buildingId:'garden',planes,bottom:base.y,top:top.y});
     }
   });return list;
 }
@@ -434,8 +457,8 @@ function gardenEdges(m,heightAt,nearPath){
   stones.forEach(g=>g.dispose());const group=b.finish();Object.assign(group.userData,{transitionGroups:groups.length,shrubCount,rockCount,edgePlacements:placements});return group;
 }
 
-export function createAuthoredGardens(root,heightAt=null,nearPath=()=>false){
-  const materials=palette(),group=new THREE.Group();group.name='Authored academy gardens';root.add(group);
+export function createAuthoredGardens(root,heightAt=null,nearPath=()=>false,{trees=true}={}){
+  const materials=palette();materials.skipTrees=!trees;const group=new THREE.Group();group.name='Authored academy gardens';root.add(group);
   const lampSites=[],fountains=[],districts=[];
   for(const district of gardenDistricts){
     const built=factories[district.id](materials);built.group.position.set(district.x,district.y,district.z);group.add(built.group);districts.push(built.group);

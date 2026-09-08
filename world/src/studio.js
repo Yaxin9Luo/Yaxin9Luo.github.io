@@ -8,6 +8,7 @@ import {OutputPass} from 'three/addons/postprocessing/OutputPass.js';
 import {SMAAPass} from 'three/addons/postprocessing/SMAAPass.js';
 import {QUALITY,renderPixelRatio} from './render-quality.js';
 import {createGardenSpecimen} from './gardens.js';
+import {loadBotanicalAssets} from './botanical-cache.js';
 import * as models from './models.js';
 import {loadCharacterAssets,createWizard,createWisp,updateCharacter,requestCharacterCast} from './characters.js';
 import {loadLandscapeAssets,createTreeSpecimen,surface,planarUV} from './landscape.js';
@@ -88,7 +89,10 @@ const specimens=new Map();
 document.querySelector('#rotate').setAttribute('aria-pressed',String(controls.autoRotate));
 document.querySelector('aside').append(document.querySelector('.caption'));
 const buttons=document.querySelector('#assets');assets.forEach(([id,name])=>{const b=document.createElement('button');b.textContent=name;b.dataset.asset=id;b.addEventListener('click',()=>show(id));buttons.insertBefore(b,document.querySelector('.caption'));});
-function show(id){const selected=assets.find(a=>a[0]===id)||assets[0];if(current)scene.remove(current);if(!specimens.has(selected[0]))specimens.set(selected[0],selected[2]());current=specimens.get(selected[0]);scene.add(current);current.updateMatrixWorld(true);const box=new THREE.Box3().setFromObject(current),size=box.getSize(new THREE.Vector3()),center=box.getCenter(new THREE.Vector3()),radius=Math.max(size.x,size.y,size.z)*.72;
+async function show(id){
+  const kind=['cherry','lilac'].includes(id)?id:null;
+  if(kind)await loadBotanicalAssets({families:[{kind,seed:221}],levels:['near'],deadline:performance.now()+90000});
+  const selected=assets.find(a=>a[0]===id)||assets[0];if(current)scene.remove(current);if(!specimens.has(selected[0]))specimens.set(selected[0],selected[2]());current=specimens.get(selected[0]);scene.add(current);current.updateMatrixWorld(true);const box=new THREE.Box3().setFromObject(current),size=box.getSize(new THREE.Vector3()),center=box.getCenter(new THREE.Vector3()),radius=Math.max(size.x,size.y,size.z)*.72;
   studioView='overview';
   floor.position.y=box.min.y-.035;
   const lightSpan=Math.max(size.x,size.y,size.z,1)*1.1,front=['rider','wraith'].includes(selected[0])?-1:1;key.position.copy(center).add(new THREE.Vector3(-.8,1.5,front).multiplyScalar(lightSpan));key.target.position.copy(center);rim.position.copy(center).add(new THREE.Vector3(1,.8,-front).multiplyScalar(lightSpan));rim.target.position.copy(center);Object.assign(key.shadow.camera,{left:-lightSpan,right:lightSpan,top:lightSpan,bottom:-lightSpan,near:.1,far:lightSpan*5});key.shadow.camera.updateProjectionMatrix();key.shadow.normalBias=Math.min(.04,lightSpan*.002);
@@ -213,5 +217,5 @@ window.addEventListener('pagehide',()=>{
 window.addEventListener('pageshow',()=>{capturePageHidden=false;last=performance.now();});
 
 new ResizeObserver(()=>{const r=canvas.getBoundingClientRect(),dpr=renderPixelRatio('high',r.width,r.height,devicePixelRatio);renderer.setPixelRatio(dpr);renderer.setSize(r.width,r.height,false);composer.setPixelRatio(dpr);composer.setSize(r.width,r.height);camera.aspect=r.width/r.height;camera.updateProjectionMatrix();}).observe(canvas);
-try{await Promise.all([loadLandscapeAssets(),models.loadArchitectureAssets?.(),loadCharacterAssets(),environmentReady]);show(new URLSearchParams(location.search).get('asset'));document.querySelector('#loading').hidden=true;document.body.dataset.ready='true';}catch(error){document.querySelector('#loading').innerHTML='<div class="studio-error">Asset loading failed. The portfolio remains available from the link above.</div>';console.error(error);}
+try{await Promise.all([loadLandscapeAssets(),models.loadArchitectureAssets?.(),loadCharacterAssets(),environmentReady]);await show(new URLSearchParams(location.search).get('asset')); document.querySelector('#loading').hidden=true;document.body.dataset.ready='true';}catch(error){document.querySelector('#loading').innerHTML='<div class="studio-error">Asset loading failed. The portfolio remains available from the link above.</div>';console.error(error);}
 function frame(now){requestAnimationFrame(frame);const dt=Math.min((now-last)/1000,.05);last=now;if(document.hidden||capturePageHidden)return;updateRecording(now);controls.update(dt);current?.userData.update?.(now/1000,false);if(actorPlaying){actorGroundTime+=dt;actorGaitPhase=(actorGaitPhase+dt/(actorAction==='run'?.7:1))%1;}const ground=groundActions.has(actorAction),mode=actorAction==='mount'?'mounting':actorAction==='dismount'?'dismounting':ground?'grounded':'flying';updateCharacter(current,{dt:actorPlaying?dt:0,paused:!actorPlaying,mode,groundSpeed:actorAction==='run'?3.8:actorAction==='walk'?1.6:0,gaitPhase:actorGaitPhase,transitionProgress:Math.min(1,actorGroundTime/1.2),boost:actorAction==='boost',speed:actorAction==='boost'?1:actorAction==='idle'?0:.55,turn:actorAction==='turn-left'?-1:actorAction==='turn-right'?1:0,state:actorAction==='channel'?'channel':undefined,reducedMotion:matchMedia('(prefers-reduced-motion: reduce)').matches});composer.render();if(studioFrame){studioFrame=false;const metadata=captureMetadata('frame');canvas.toBlob(blob=>{if(blob)saveCapture(blob,'png',metadata);else captureStatus.textContent='Frame encoding failed / 截图编码失败';});}}requestAnimationFrame(frame);

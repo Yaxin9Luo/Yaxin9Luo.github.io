@@ -57,6 +57,7 @@ let loading = null;
 let registered = null;
 export function registerArchitectureMaterials(materials) {
   registered = materials;
+  for(const material of Object.values(materials))if(material?.isMaterial)material.userData.sharedAsset=true;
   for (const key of ['stone', 'stoneLight', 'stoneDark', 'mortar']) if(materials[key]) Object.assign(materials[key].userData, { surface: 'castle-masonry', metresPerRepeat: 2.085 });
   for (const key of ['slate', 'rock']) if(materials[key]) Object.assign(materials[key].userData, { surface: 'mossy-rock', metresPerRepeat: 3 });
   for (const key of ['roof', 'roofLight', 'roofDark', 'roofSeam']) if(materials[key]) Object.assign(materials[key].userData, { surface: 'slate-roof', metresPerRepeat: 3 });
@@ -65,7 +66,7 @@ export function registerArchitectureMaterials(materials) {
 }
 
 /** Explicit preload keeps imports and procedural geometry usable in Node tools. */
-export function loadArchitectureAssets() {
+export function loadArchitectureAssets(options={}) {
   if (loading) return loading;
   if (typeof document === 'undefined') return Promise.resolve();
   if (!registered) throw new Error('Architecture materials have not been registered.');
@@ -79,20 +80,20 @@ export function loadArchitectureAssets() {
     'oxidized-copper': ['color', 'normal', 'roughness', 'metalness'],
   })) {
     sets[name] = {};
-    for (const channel of channels) tasks.push(loadPBRTexture(name, channel).then(texture => {
+    for (const channel of channels) tasks.push(loadPBRTexture(name, channel, options).then(texture => {
       sets[name][channel] = texture;
     }));
   }
-  loading = Promise.all(tasks).then(() => {
+  loading = Promise.allSettled(tasks).then(results => {
     const bind = (keys, setName, normalStrength, metres, albedoStrength, roughnessFloor) => {
       const set = sets[setName];
       for (const key of keys) {
         const material = registered[key];
         if (!material) continue;
-        material.map = set.color;
-        material.normalMap = set.normal;
+        material.map = set.color||material.map;
+        material.normalMap = set.normal||material.normalMap;
         material.normalScale.setScalar(normalStrength);
-        material.roughnessMap = set.roughness;
+        material.roughnessMap = set.roughness||material.roughnessMap;
         if (set.metalness) material.metalnessMap = set.metalness;
         material.userData.surface = setName;
         material.userData.metresPerRepeat = metres;
@@ -122,6 +123,7 @@ export function loadArchitectureAssets() {
     bind(['roofSeam'], 'slate-roof', .035, 3, .36, .86);
     bind(['wood', 'woodLight'], 'aged-wood', .58, 2, .84, .66);
     bind(['copper'], 'oxidized-copper', .46, 1, .88, .42);
+    const ready=results.every(result=>result.status==='fulfilled');if(!ready)loading=null;return ready;
   });
   return loading;
 }

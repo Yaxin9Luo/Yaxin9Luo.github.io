@@ -1,10 +1,19 @@
 import * as THREE from 'three';
-import { createWorld, terrainHeight } from './world.js';
-import { createWizard, updateCharacter, requestCharacterCast, cancelCharacterCast } from './characters.js';
-import { EnvironmentClock, TIME_MODES } from './environment-time.js';
+import { createWorld, createNavigationWorld, registerWorldLighting, terrainHeight } from './world.js';
+import { createWizard, createWisp, loadWizardAsset, loadWraithAsset, upgradeWizardMaterials, updateCharacter, requestCharacterCast, cancelCharacterCast, resetCharacterMotion, CHARACTER_GROUND_MOTION } from './characters.js';
+import { GROUND_MOTION, findSafeLanding, stepGroundMotion, queryGroundSupport } from './ground-motion.js';
+import {loadGLTF,mutableGeometry} from './gltf-resource.js';
+import {loadLandscapeSurfaces,loadNightEnvironment} from './landscape.js';
+import {loadArchitectureAssets} from './architecture.js';
+import {loadAtmosphereAssets} from './atmosphere.js';
+import {loadEnvironmentSignage} from './environment-signage.js';
+import {loadBotanicalAssets} from './botanical-cache.js';
+import {loadScannedRockAssets,hydrateScannedRocks} from './rock-scans.js';
+import { EnvironmentClock, TIME_MODES, TIME_PERIODS, TIME_PHASES } from './environment-time.js';
+import {createWandIllumination} from './illumination.js';
 import { createExhibitionStage } from './exhibits.js';
 import { getProject, projectIds } from './exhibition-content.js';
-import { locations, ringPositions, spellDefinitions, spawn, worldBounds, bridges } from './locations.js';
+import { locations, ringPositions, wispPositions, spellDefinitions, spawn, worldBounds, bridges } from './locations.js';
 import { SAVE_KEY, clamp, damp, parseProgress, freshProgress, progressEvent, movementVector, segmentDistance, canCast } from './logic.js';
 import { WorldAudio } from './audio.js';
 import { createRendering } from './rendering.js';
@@ -14,7 +23,7 @@ import {cameraViews,tourStops} from './navigation.js';
 import {createBuildingColliders,createBridgeColliders,resolveRiderCollision,shortenCameraBoom} from './collision.js';
 
 const MOVEMENT_KEYS = new Set(['KeyW', 'KeyA', 'KeyS', 'KeyD', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ShiftLeft', 'ShiftRight', 'KeyR', 'KeyF', 'Space']);
-const ACTION_KEYS = new Set(['Digit1', 'Digit2', 'Digit3', 'KeyQ', 'KeyE', 'KeyV']);
+const ACTION_KEYS = new Set(['Digit1', 'Digit2', 'Digit3', 'KeyQ', 'KeyE', 'KeyV', 'KeyB', 'KeyL']);
 const PARTICLE_COUNT = 280;
 const PROJECTILE_COUNT = 36;
 const Y_AXIS = new THREE.Vector3(0, 1, 0);
@@ -23,13 +32,47 @@ const TAU = Math.PI * 2;
 const WATER_LEVEL = -15;
 const MIN_FLIGHT_ALTITUDE = WATER_LEVEL + 3.2; // Keep the rider above the lake, including under bridges.
 const BUILDING_COLLIDERS=createBuildingColliders(locations).concat(createBridgeColliders(bridges));
-const HIGHLANDS = { night: ['#304252','#40556a','#556d83'].map(color => new THREE.Color(color)), day: ['#64817a','#7d9496','#93a9b5'].map(color => new THREE.Color(color)) };
+const HIGHLANDS = { night: ['#315a67','#506f85','#758c9f'].map(color => new THREE.Color(color)), day: ['#597f77','#75989b','#9aaeb8'].map(color => new THREE.Color(color)) };
 const turnDelta = (from, to) => THREE.MathUtils.euclideanModulo(to - from + Math.PI, TAU) - Math.PI;
 const copyProgress = (p) => ({ ...p, visited: [...p.visited], crystals: [...p.crystals] });
 
 /** Playable flight, discoveries, dueling, and an ordered broom race. */
 export class Game {
-  constructor(canvas, callbacks = {}, options = {}) {
+  static async createAsync(canvas,callbacks={},options={},context={}){
+    const {signal,onProgress=()=>{},deadline=performance.now()+20000}=context;
+    signal?.throwIfAborted();
+    // Capability detection and all decoding use the one renderer that will display the world.
+    const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:false,powerPreference:'high-performance'});
+    let game;
+    try{
+      const [,gltf]=await Promise.all([
+        loadWizardAsset({...context,variant:'core'}),
+        loadGLTF({id:'navigation-terrain',url:'/runtime/navigation-terrain.glb',phase:1},context),
+      ]);
+      signal?.throwIfAborted();onProgress({phase:'assembling',activeResource:'navigation'});
+      gltf.scene.updateMatrixWorld(true);
+      const terrain={shore:gltf.scene.userData.shore||[]};
+      for(const name of ['ground','cliffs']){
+        const mesh=gltf.scene.getObjectByName(name);if(!mesh)throw new Error(`Navigation mesh missing: ${name}`);
+        // Meshopt's quantization transform is baked once, retaining original world-space UVs.
+        if(!mesh.userData.worldGeometry){mesh.userData.worldGeometry=mutableGeometry(mesh.geometry).applyMatrix4(mesh.matrixWorld);mesh.userData.worldGeometry.userData.sharedAsset=true;}
+        terrain[name]=mesh.userData.worldGeometry;
+      }
+      await new Promise(resolve=>setTimeout(resolve,0));signal?.throwIfAborted();
+      game=new Game(canvas,callbacks,options,{renderer,terrain,progressive:true});
+      await new Promise((resolve,reject)=>{
+        const cancel=()=>{game.dispose();reject(signal.reason);};signal?.addEventListener('abort',cancel,{once:true});
+        game._firstFrame=()=>{signal?.removeEventListener('abort',cancel);if(performance.now()>=deadline){game.dispose();const error=new Error('Core render deadline exceeded');error.type='timeout';reject(error);}else resolve();};
+      });
+      signal?.throwIfAborted();
+      onProgress({phase:'first-frame'});
+      // Schedule after the readiness promise. Enhancement failures cannot revoke interactivity.
+      game._enhancementTimer=setTimeout(()=>game._beginEnhancements(context),0);
+      return game;
+    }catch(error){if(game)game.dispose();else renderer.dispose();throw error;}
+  }
+
+  constructor(canvas, callbacks = {}, options = {}, bootstrap={}) {
     if (!canvas || typeof canvas.getContext !== 'function') throw new Error('The world needs a canvas.');
     this.canvas = canvas;
     this.callbacks = callbacks;
@@ -47,6 +90,7 @@ export class Game {
     this.race = null;
     this.position = new THREE.Vector3(spawn.x, spawn.y, spawn.z);
     this.velocity = new THREE.Vector3();
+    this.locomotion = { mode:'flying', progress:0, gaitPhase:0, groundSpeed:0, support:null };
     this.heading = .35;
     this.cameraYaw = .35;
     this.cameraElevation = cameraViews.follow.elevation;
@@ -98,19 +142,19 @@ export class Game {
     this.scene = new THREE.Scene();
     this.scene.background = new THREE.Color('#243f5c');
     this.scene.fog = new THREE.FogExp2('#233f63', .0012);
-    this.camera = new THREE.PerspectiveCamera(43, 1, .15, 1250);
+    this.camera = new THREE.PerspectiveCamera(43, 1, .15, 3600);
     this.camera.position.set(105,58,150);
     this.camera.lookAt(this._lookAt);
 
     try {
-      this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false, powerPreference: 'high-performance' });
+      this.renderer = bootstrap.renderer||new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false, powerPreference: 'high-performance' });
       this.renderer.outputColorSpace = THREE.SRGBColorSpace;
       this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
       this.renderer.toneMappingExposure = 1.23;
       this.renderer.shadowMap.type = THREE.PCFShadowMap;
       this.renderer.shadowMap.autoUpdate = false;
       this._lights();
-      this.world = createWorld(this.scene);
+      this.world = bootstrap.progressive?createNavigationWorld(this.scene,bootstrap.terrain):createWorld(this.scene);
       this._landscapeLighting = [];
       this.world.root.traverse(object => { if (Number.isInteger(object.material?.userData.backgroundLayer)) this._landscapeLighting.push(object.material); });
       this.buildingColliders = BUILDING_COLLIDERS.concat(this.world.environmentColliders || []);
@@ -146,6 +190,69 @@ export class Game {
     }
   }
 
+  async _beginEnhancements(context){
+    if(this._disposed)return;
+    this._enhancementController=new AbortController();const signal=this._enhancementController.signal;
+    const options={signal,deadline:performance.now()+90000,attemptId:context.attemptId};
+    this._enhancementContext=context;let degraded=false;
+    const observe=promise=>promise.then(value=>{if(value===false)degraded=true;return value;},error=>{degraded=true;return null;});
+    const tasks=[
+      observe(loadLandscapeSurfaces(options)),observe(loadArchitectureAssets(options)),
+      observe(loadAtmosphereAssets(options)),observe(loadEnvironmentSignage(options)),
+      observe(loadWizardAsset(options).then(template=>{if(!signal.aborted)upgradeWizardMaterials(this.wizard,template);})),
+      observe((async()=>{
+        await loadScannedRockAssets({...options,variant:'preview'});if(signal.aborted)return;
+        hydrateScannedRocks(this.world.root);
+        const ready=await loadScannedRockAssets({...options,deadline:performance.now()+90000});if(!signal.aborted)hydrateScannedRocks(this.world.root);return ready;
+      })()),
+    ];
+    if(this.environment.night>.05)tasks.push(observe(this._loadNightEnvironment(options)));
+    if(this.options.gameplay)tasks.push(observe(this._loadEncounters(options)));
+    this.world.priority=id=>{
+      if(this._requestedRegion===id)return -10000;
+      const location=locations.find(item=>item.id===id);return location?Math.hypot(location.x-this.position.x,location.z-this.position.z):10000;
+    };
+    tasks.push(observe(this.world.enhance({signal,prepareRegion:async region=>{
+      const families=region==='gardens'?[{kind:'silver',seed:154},{kind:'cherry',seed:154}]:region==='vegetation'?[{kind:'pine',seed:168},{kind:'silver',seed:499}]:[{kind:'cherry',seed:881},{kind:'lilac',seed:910}];
+      try{
+        await loadBotanicalAssets({...options,deadline:performance.now()+90000,families,levels:region==='gardens'?['near']:['near','mid','far']});
+        return true;
+      }catch(error){signal.throwIfAborted();degraded=true;return false;}
+    },onRegion:region=>{
+      if(this._disposed)return;
+      this._refreshWorldBindings();hydrateScannedRocks(this.world.root);
+      context.onProgress?.({phase:'assembly',region:region.region,assemblyMs:region.assemblyMs});
+    }})));
+    await Promise.all(tasks);
+    if(signal.aborted||this._disposed)return;
+    this._refreshWorldBindings();
+    context.onProgress?.({phase:'enhancements',enhancements:degraded?'degraded':'ready'});
+  }
+
+  _refreshWorldBindings(){
+    this._landscapeLighting.length=0;
+    this.world.root.traverse(object=>{if(Number.isInteger(object.material?.userData.backgroundLayer))this._landscapeLighting.push(object.material);});
+    registerWorldLighting(this.world);registerWorldLighting(this.world,this.exhibitionStage.group);
+    this.buildingColliders=BUILDING_COLLIDERS.concat(this.world.environmentColliders||[],this.exhibitionStage.colliders||[]);
+    this._recoverGroundSupport();
+    this._updateEnvironment(0);this._syncDiscoveries();this.renderer.shadowMap.needsUpdate=true;
+  }
+
+  _loadNightEnvironment(options={}){
+    this._nightAttempted=true;
+    if(!this._nightRequest)this._nightRequest=loadNightEnvironment(this.scene,options).catch(error=>{this._nightRequest=null;throw error;});
+    return this._nightRequest;
+  }
+
+  _loadEncounters(options={}){
+    if(this._encountersRequest)return this._encountersRequest;
+    this._encountersRequest=loadWraithAsset(options).then(()=>{
+      if(this._disposed||options.signal?.aborted)return;
+      if(!this.world.wisps.length)wispPositions.forEach((position,id)=>{const group=createWisp();group.position.fromArray(position);this.world.root.add(group);this.world.wisps.push({id,group,home:new THREE.Vector3(...position),hp:3,respawn:0,attack:2+id*.4});});
+      this._syncDiscoveries();
+    }).catch(error=>{this._encountersRequest=null;throw error;});return this._encountersRequest;
+  }
+
   _lights() {
     this.ambientLight = new THREE.HemisphereLight('#8cbfe7', '#45516d', 2.5);
     this.scene.add(this.ambientLight);
@@ -170,10 +277,11 @@ export class Game {
   }
 
   _updateEnvironment(dt) {
-    const environment = this.environmentClock.update(dt, { paused: this._isPaused(), reducedMotion: this.options.reducedMotion });
+    const environment = this.environmentClock.update(dt, { paused: !this.started||this._isPaused(), reducedMotion: this.options.reducedMotion });
     this.environment = environment;
+    if(environment.night>.05&&this._enhancementController&&!this._nightAttempted)this._loadNightEnvironment({signal:this._enhancementController.signal,deadline:performance.now()+90000}).catch(()=>{});
     this.scene.background.copy(environment.horizon);
-    this.scene.fog.color.copy(environment.fog);
+    this.scene.fog.color.copy(environment.horizon);
     this.scene.fog.density = environment.fogDensity;
     this.renderer.toneMappingExposure = environment.exposure;
     this.scene.environmentIntensity = .14 + (1 - environment.night) * .08;
@@ -247,6 +355,7 @@ export class Game {
     this._targetMesh.visible = false;
     this.effects.add(this._targetMesh);
     this.actionEffects=createActionEffects();this.effects.add(this.actionEffects.group);
+    this.illumination=createWandIllumination();this.effects.add(this.illumination.group);
   }
 
   _listen(target, event, callback, options) {
@@ -341,6 +450,8 @@ export class Game {
     else if (event.code === 'KeyQ') this.activateShield();
     else if (event.code === 'KeyV') this.setCameraView(Object.keys(cameraViews)[(Object.keys(cameraViews).indexOf(this.cameraView)+1)%3]);
     else if (event.code === 'KeyE') this.interact();
+    else if (event.code === 'KeyB') this.toggleBroom();
+    else if (event.code === 'KeyL') this.toggleIllumination();
   }
 
   _pointerDown(event) {
@@ -423,12 +534,26 @@ export class Game {
   }
 
   cycleTime() {
-    const modes = ['dawn', 'day', 'dusk', 'night'];
-    const current = this.environmentClock.mode === 'auto' ? this.environment?.label : this.environmentClock.mode;
-    const next = modes[(modes.indexOf(current) + 1) % modes.length];
+    const modes = TIME_PERIODS;
+    const current = this.environmentClock.mode === 'auto' ? this.environment?.period : this.environmentClock.mode;
+    const next = this.environmentClock.mode==='auto'
+      ? [...modes].sort((a,b)=>TIME_PHASES[a]-TIME_PHASES[b]).find(mode=>TIME_PHASES[mode]>this.environmentClock.phase+1e-6)||'midnight'
+      : modes[(modes.indexOf(current) + 1) % modes.length];
     this.audio.unlock();
-    this.setOption('timeOfDay', next);
-    this.callbacks.onTimeChange?.(next);
+    this.jumpToTime(next);
+  }
+
+  jumpToTime(period) {
+    if(!this.environmentClock.jumpTo(period,this._isPaused()||!this.started||this.options.reducedMotion))return false;
+    if(!this._nightRequest)this._nightAttempted=false;
+    this.options.timeOfDay='auto';this.audio.play('clock');this._updateEnvironment(0);
+    this.callbacks.onTimeChange?.('auto');this._emitFrame();return true;
+  }
+
+  toggleIllumination() {
+    if(!this.started||this._isPaused()||!this.illumination)return false;
+    this.illumination.setEnabled(!this.illumination.getState().enabled,{immediate:this.options.reducedMotion});
+    this._emitFrame();return true;
   }
 
   _stageAction(target) {
@@ -465,6 +590,7 @@ export class Game {
     this.started = true;
     this.paused = false;
     this.tour = null;
+    this._lastFrame=0;
     this.exhibition = { projectId, mediaIndex: clamp(Number.isInteger(mediaIndex) ? mediaIndex : 0, 0, Math.max(0, project.media.length - 1)) };
     this.exhibitionStage.setProject(projectId);
     this.exhibitionStage.setMedia(this.exhibition.mediaIndex);
@@ -565,6 +691,7 @@ export class Game {
     const first = !this.started;
     this.started = true;
     this.paused = false;
+    this._lastFrame=0;
     this._suspended = Boolean(document.hidden);
     this.audio.setSuspended(this._suspended);
     this.audio.unlock();
@@ -579,9 +706,11 @@ export class Game {
   travel(id) {
     const location = locations.find((item) => item.id === id);
     if (!location || this._disposed) return false;
+    this._requestedRegion = id;
     if (this.exhibition) this.leaveExhibit();
     this.started = true;
     this.paused = false;
+    this._lastFrame=0;
     this._suspended = Boolean(document.hidden);
     this.audio.setSuspended(this._suspended);
     this.audio.unlock();
@@ -611,9 +740,11 @@ export class Game {
     this._endRace();
     this.started = false;
     this.paused = false;
+    this._lastFrame=0;
     this.tour = null;
     this._combat = false;
     this._cancelPendingCast();
+    this._resetLocomotion();
     this.position.set(spawn.x, spawn.y, spawn.z);
     this._previous.copy(this.position);
     this.heading = .35;
@@ -630,6 +761,7 @@ export class Game {
 
   _teleport(x, y, z) {
     this._cancelPendingCast();
+    this._resetLocomotion();
     this.position.set(x, Math.max(y, terrainHeight(x, z) + 3.2), z);
     this._previous.copy(this.position);
     this.velocity.set(0, 0, 0);
@@ -665,6 +797,7 @@ export class Game {
 
   changeAltitude(delta) {
     if (!this.started || this._isPaused() || !Number.isFinite(delta)) return false;
+    if(this.locomotion.mode !== 'flying') return false;
     this.tour = null;
     const floor=Math.max(terrainHeight(this.position.x,this.position.z)+3.2,MIN_FLIGHT_ALTITUDE);
     this._altitudeTarget=clamp((this._altitudeTarget??this.position.y)+delta,floor,worldBounds.ceiling);
@@ -725,6 +858,7 @@ export class Game {
   cast(index) {
     if (Number.isInteger(index) && !this.selectSpell(index)) return false;
     if (!this.started || this._isPaused() || this.options.gameplay === false || this._pendingCast) return false;
+    if(this.locomotion && !['flying','grounded'].includes(this.locomotion.mode)) return false;
     const spell = spellDefinitions[this.spell];
     if (!canCast(this.mana, this.cooldown, spell)) {
       if (this.mana < spell.cost) this._message('Let your magic recover, or collect a crystal to replenish it.', '等待魔力恢复，或收集水晶补充魔力。', 'mana', 3);
@@ -828,13 +962,20 @@ export class Game {
 
   setOption(key, value) {
     if (key === 'quality' && Object.hasOwn(QUALITY, value)) { this.options.quality = value; this._applyQuality(); }
-    else if (key === 'reducedMotion') this.options.reducedMotion = Boolean(value);
+    else if (key === 'reducedMotion') {this.options.reducedMotion = Boolean(value);this._lastFrame=0;}
     else if (key === 'sound') { this.options.sound = Boolean(value); this.audio.setEnabled(value); if (value) this.audio.unlock(); }
-    else if (key === 'timeOfDay' && this.environmentClock.setMode(value, this.options.reducedMotion)) { this.options.timeOfDay = value; this.audio.play('clock'); }
+    else if (key === 'timeOfDay' && this.environmentClock.setMode(value, this._isPaused()||!this.started||this.options.reducedMotion)) {
+      this.options.timeOfDay = value;
+      // A deliberate time selection retries a failed HDR; ordinary clock ticks
+      // keep the previous attempt guard so an outage cannot cause a retry loop.
+      if(!this._nightRequest)this._nightAttempted=false;
+      this.audio.play('clock');this._updateEnvironment(0);
+    }
     else if (['musicVolume', 'effectsVolume'].includes(key) && Number.isFinite(value)) { this.options[key] = clamp(value, 0, 1); this.audio.setVolumes({ music: this.options.musicVolume, effects: this.options.effectsVolume }); }
     else if (key === 'lang' && ['en', 'zh'].includes(value)) { this.options.lang = value; this.exhibitionStage?.setLanguage(value); }
     else if (key === 'gameplay') {
       this.options.gameplay = Boolean(value);
+      if(value && this._enhancementController) this._loadEncounters({signal:this._enhancementController.signal,deadline:performance.now()+90000}).catch(()=>{});
       if (!value) { this._cancelPendingCast();this._combat = false; this._endRace(); this.shield = 0; for (const projectile of this._projectiles) this._retireProjectile(projectile); }
       this._syncDiscoveries();
     }
@@ -873,14 +1014,14 @@ export class Game {
   _tick(timestamp) {
     if (this._disposed) return;
     this._animation = requestAnimationFrame(this._tick);
-    const rawDt = this._lastFrame ? Math.max(0, (timestamp - this._lastFrame) / 1000) : 1 / 60;
+    const rawDt = this._lastFrame ? Math.max(0, (timestamp - this._lastFrame) / 1000) : 0;
     this._lastFrame = timestamp;
     if (this._contextLost || document.hidden) return;
     const dt = clamp(rawDt, 0, .05);
     this._time += dt;
     this.fps = damp(this.fps, 1 / Math.max(rawDt, .001), 2, dt);
     const playing = this.started && !this._isPaused();
-    this._updateEnvironment(dt);
+    this._updateEnvironment(rawDt);
     this.world.update(this._time, dt, this.options.reducedMotion,this.camera,{width:this.canvas.width,height:this.canvas.height});
     this.exhibitionStage.setFocused?.(Boolean(this.exhibition||this.nearestExhibition),{reducedMotion:this.options.reducedMotion});
     this.exhibitionStage.update(this._time,this._suspended?0:dt,this.options.reducedMotion);
@@ -912,10 +1053,12 @@ export class Game {
     this.renderer.info.reset();
     this.rendering.render(dt);
     this._frameCount++;
+    if(this._firstFrame){const ready=this._firstFrame;this._firstFrame=null;ready();}
     if (this._time - this._lastSnapshot >= .1) this._emitFrame();
   }
 
   _move(dt) {
+    if(this.locomotion.mode !== 'flying') { this._moveOnGround(dt); return; }
     this._previous.copy(this.position);
     let x = this._touch.x + Number(this._keys.has('KeyD') || this._keys.has('ArrowRight')) - Number(this._keys.has('KeyA') || this._keys.has('ArrowLeft'));
     let z = this._touch.z + Number(this._keys.has('KeyS') || this._keys.has('ArrowDown')) - Number(this._keys.has('KeyW') || this._keys.has('ArrowUp'));
@@ -973,6 +1116,149 @@ export class Game {
     }
   }
 
+  _groundWorld() {
+    return {heightAt:this.world.heightAt||terrainHeight,colliders:this.buildingColliders||BUILDING_COLLIDERS,waterLevel:WATER_LEVEL};
+  }
+
+  _resetLocomotion() {
+    this.locomotion={mode:'flying',progress:0,gaitPhase:0,groundSpeed:0,support:null};
+    this._characterCastActive=false;
+    resetCharacterMotion(this.wizard,{mode:'flying'});
+  }
+
+  toggleBroom() {
+    if(!this.started||this._isPaused()||this._pendingCast||this._characterCastActive) return false;
+    const state=this.locomotion;
+    if(!['flying','grounded'].includes(state.mode))return false;
+    if(state.mode==='grounded') {
+      if(!this._takeoffClear()){this._message('There is not enough room above you to take off.','上方空间不足，请先走到开阔处。','takeoff',2);return false;}
+      state.mode='mounting';state.progress=0;state.originY=this.position.y;
+      this.actionEffects?.burst(this.position,'#d0e6cf',1.3,.7);
+    } else {
+      const support=findSafeLanding(this.position,this._groundWorld());
+      if(!support.valid){
+        this._message('Find open, level ground before landing.','请先飞到平坦、开阔的地面上方。','landing',2);
+        return false;
+      }
+      state.mode='landing';state.progress=0;state.support=support;
+    }
+    this._clearControls();this._destination=null;this._destinationMesh.visible=false;
+    this._altitudeTarget=null;this.tour=null;this._endRace();this.velocity.set(0,0,0);
+    this._emitFrame();return true;
+  }
+
+  _moveOnGround(dt) {
+    if(this._recoverGroundSupport())return;
+    const state=this.locomotion,world=this._groundWorld();
+    this._previous.copy(this.position);
+    if(state.mode==='landing'){
+      const support=findSafeLanding(this.position,world);
+      if(!support.valid){this._resetLocomotion();return;}
+      state.support=support;
+      const target=support.y-CHARACTER_GROUND_MOTION.soleY;
+      const nextY=Math.max(target,this.position.y-dt*7);
+      const next={x:this.position.x,y:nextY,z:this.position.z};
+      const hit=resolveRiderCollision(next,{x:0,y:-7,z:0},world.colliders);
+      if(Math.hypot(hit.position.x-next.x,hit.position.y-next.y,hit.position.z-next.z)>.15){
+        this._resetLocomotion();this._message('This landing path is obstructed. Move to an open area.','降落路线有遮挡，请移到开阔地面。','landing-path',2);return;
+      }
+      this.position.y=nextY;this.velocity.set(0,0,0);
+      if(Math.abs(nextY-target)<.005){state.mode='dismounting';state.progress=0;state.originY=target;}
+      return;
+    }
+    if(state.mode==='mounting'||state.mode==='dismounting'){
+      const mounting=state.mode==='mounting';
+      if(mounting&&!this._takeoffClear()){
+        this.position.y=state.originY;state.mode='grounded';state.progress=0;state.groundSpeed=0;
+        resetCharacterMotion(this.wizard,{mode:'grounded'});this.velocity.set(0,0,0);this._recoverGroundSupport();return;
+      }
+      state.progress=clamp(state.progress+dt/(mounting?CHARACTER_GROUND_MOTION.mountDuration:CHARACTER_GROUND_MOTION.dismountDuration),0,1);
+      if(state.progress>1-1e-8)state.progress=1;
+      if(mounting){
+        const lift=THREE.MathUtils.smoothstep(state.progress,.42,1);
+        this.position.y=THREE.MathUtils.lerp(state.originY,state.support.y+3.2,lift);
+      }
+      this.velocity.set(0,0,0);
+      if(state.progress>=1){
+        if(mounting)this._resetLocomotion();
+        else{state.mode='grounded';state.groundSpeed=0;state.gaitPhase=0;resetCharacterMotion(this.wizard,{mode:'grounded'});this._message('WASD to walk · Shift to run · B to fly','WASD 行走 · Shift 跑步 · B 召唤扫把','landed',2);}
+      }
+      return;
+    }
+    let x=this._touch.x+Number(this._keys.has('KeyD')||this._keys.has('ArrowRight'))-Number(this._keys.has('KeyA')||this._keys.has('ArrowLeft'));
+    let z=this._touch.z+Number(this._keys.has('KeyS')||this._keys.has('ArrowDown'))-Number(this._keys.has('KeyW')||this._keys.has('ArrowUp'));
+    const manual=Math.hypot(x,z)>.03;
+    let direction=movementVector(x,z,this.cameraYaw);
+    if(manual){this._destination=null;this._destinationMesh.visible=false;}
+    else if(this._destination){
+      const distance=Math.hypot(this._destination.x-this.position.x,this._destination.z-this.position.z);
+      if(distance<.18){this._destination=null;this._destinationMesh.visible=false;}
+      else direction={x:(this._destination.x-this.position.x)/distance,z:(this._destination.z-this.position.z)/distance};
+    }
+    if(this._characterCastActive||this._pendingCast)direction={x:0,z:0};
+    const run=Boolean(this._controls.boost||this._keys.has('ShiftLeft')||this._keys.has('ShiftRight'));
+    const step=stepGroundMotion({position:{x:this.position.x,y:this.position.y+CHARACTER_GROUND_MOTION.soleY,z:this.position.z},heading:this.heading}, {...direction,run},dt,world);
+    this.position.set(step.position.x,step.position.y-CHARACTER_GROUND_MOTION.soleY,step.position.z);
+    this.velocity.set(step.velocity.x,step.velocity.y,step.velocity.z);
+    const speed=dt>0?step.distance/dt:0;
+    if(speed>.01){
+      const running=speed>2.7;
+      if(state.groundSpeed<.01)state.gaitPhase=running?CHARACTER_GROUND_MOTION.runContact/2:CHARACTER_GROUND_MOTION.walkContact/2;
+      const stride=(running?GROUND_MOTION.runSpeed:GROUND_MOTION.walkSpeed)*(running?CHARACTER_GROUND_MOTION.runCycle:CHARACTER_GROUND_MOTION.walkCycle);
+      state.gaitPhase=(state.gaitPhase+step.distance/stride)%1;
+      this.heading+=turnDelta(this.heading,step.heading)*(1-Math.exp(-12*dt));
+    }
+    state.groundSpeed=speed;state.support=step.support;this._bank=0;
+    if(step.blocked&&step.distance<.001){this._destination=null;this._destinationMesh.visible=false;}
+  }
+
+  _takeoffClear() {
+    const support=this.locomotion.support;
+    return !!support?.valid&&queryGroundSupport({x:this.position.x,z:this.position.z,feetY:support.y,maxRise:GROUND_MOTION.stepUp,maxDrop:GROUND_MOTION.stepDown,allowSteps:true,radius:1,height:GROUND_MOTION.height+3.2+CHARACTER_GROUND_MOTION.soleY},this._groundWorld()).valid;
+  }
+
+  _recoverGroundSupport() {
+    const state=this.locomotion;
+    if(!state||!['grounded','dismounting'].includes(state.mode))return false;
+    const world=this._groundWorld(),feetY=this.position.y+CHARACTER_GROUND_MOTION.soleY;
+    const sample=(x,z)=>queryGroundSupport({x,z,feetY,allowSteps:true},world);
+    const current=sample(this.position.x,this.position.z);
+    if(current.valid){
+      state.support=current;
+      this.position.y=current.y-CHARACTER_GROUND_MOTION.soleY;
+      if(state.mode==='dismounting')state.originY=this.position.y;
+      return false;
+    }
+    // Scenery is installed between frames. Recover the occupied point before
+    // movement can settle inside its newly registered collision geometry.
+    let destination=null;
+    for(let radius=.25;radius<=3&&!destination;radius+=.25){
+      const count=Math.max(12,Math.ceil(TAU*radius/.25));
+      for(let i=0;i<count;i++){
+        const angle=TAU*i/count,x=this.position.x+Math.cos(angle)*radius,z=this.position.z+Math.sin(angle)*radius;
+        if(Math.abs(x)>worldBounds.x||Math.abs(z)>worldBounds.z)continue;
+        const support=sample(x,z);
+        if(support.valid){destination={x,z,support};break;}
+      }
+    }
+    this._clearControls();this._cancelPendingCast();this._characterCastActive=false;this._bank=0;
+    if(destination){
+      const {x,z,support}=destination;
+      this.position.set(x,support.y-CHARACTER_GROUND_MOTION.soleY,z);this._previous.copy(this.position);
+      this.locomotion={mode:'grounded',progress:0,gaitPhase:0,groundSpeed:0,support};
+      resetCharacterMotion(this.wizard,{mode:'grounded'});this.wizard.position.copy(this.position);
+    }else{
+      // The normal spawn is the last resort. Raise its flight envelope if an
+      // enhancement has also occupied that location; never return embedded.
+      const position={x:spawn.x,y:Math.max(spawn.y,terrainHeight(spawn.x,spawn.z)+3.2),z:spawn.z};
+      const ceiling=Math.max(position.y,...world.colliders.map(solid=>solid.top+2.01));
+      while(position.y<=ceiling&&resolveRiderCollision(position,{x:0,y:0,z:0},world.colliders,{radius:1,halfHeight:2}).collided)position.y+=2;
+      this._teleport(position.x,position.y,position.z);
+    }
+    this._message('Moved to a clear position as the scenery arrived.','场景加载完成，已移到安全位置。','ground-recovery',2);
+    this._emitFrame();return true;
+  }
+
   _avoidBuildings() {
     const hit=resolveRiderCollision(this.position,this.velocity,this.buildingColliders || BUILDING_COLLIDERS);
     this.position.copy(hit.position);this.velocity.copy(hit.velocity);
@@ -981,13 +1267,21 @@ export class Game {
   _updateWizard(dt, playing) {
     const speed = Math.hypot(this.velocity.x, this.velocity.z);
     const moving = playing && !this.options.reducedMotion;
+    const locomotion=this.locomotion;
+    const flying=locomotion.mode==='flying'||locomotion.mode==='landing';
     this.wizard.position.copy(this.position);
-    if (!this.options.reducedMotion&&!this._isPaused()) this.wizard.position.y += Math.sin(this._time * 2) * .09;
-    this.wizard.rotation.set(moving ? -speed * .0015 : 0, this.heading, moving ? this._bank * .5 : 0);
-    const action=updateCharacter(this.wizard, { dt,paused:this._isPaused(),boost:playing&&Boolean(this._controls.boost||this._keys.has('ShiftLeft')||this._keys.has('ShiftRight')),speed: playing ? speed / 42 : 0, turn: this._bank / .27, vertical: this.velocity.y / 23, reducedMotion: this.options.reducedMotion });
+    if (flying&&!this.options.reducedMotion&&!this._isPaused()) this.wizard.position.y += Math.sin(this._time * 2) * .09;
+    this.wizard.rotation.set(flying&&moving ? -speed * .0015 : 0, this.heading, flying&&moving ? this._bank * .5 : 0);
+    const support=locomotion.support;
+    const groundSupport=support?.valid?{...support,x:this.position.x,z:this.position.z,heightAt:(x,z)=>{
+      const hit=queryGroundSupport({x,z,feetY:support.y,maxRise:.4,maxDrop:.5,radius:.03,allowSteps:true},this._groundWorld());return hit.valid?hit.y:support.y;
+    }}:undefined;
+    const action=updateCharacter(this.wizard, { dt,paused:this._isPaused(),mode:flying?'flying':locomotion.mode,groundSpeed:playing?locomotion.groundSpeed:0,gaitPhase:locomotion.gaitPhase,transitionProgress:locomotion.progress,groundSupport,boost:playing&&Boolean(this._controls.boost||this._keys.has('ShiftLeft')||this._keys.has('ShiftRight')),speed: playing ? speed / 42 : 0, turn: this._bank / .27, vertical: this.velocity.y / 23, reducedMotion: this.options.reducedMotion });
+    this._characterCastActive=Boolean(action?.castActive);
     if(action?.castReleased&&this._pendingCast?.sequence===action.castSequence){const index=this._pendingCast.spell;this._pendingCast=null;this._releaseSpell(index);}
     this.wizard.updateWorldMatrix(true,true);
     this.wizard.userData.wandTip?.getWorldPosition(this._castOrigin);
+    this.illumination?.update(dt,this._castOrigin,{paused:this._isPaused(),reducedMotion:this.options.reducedMotion,visible:this.started&&!this.exhibition});
     this.actionEffects?.update(this._isPaused()?0:dt,this._time,this._castOrigin,this.camera,this.options.reducedMotion);
     this._shieldMesh.visible = this.shield > 0 && this.started && !this.exhibition && this.options.gameplay !== false;
     this._shieldMesh.position.copy(this.position).addScaledVector(Y_AXIS, .5);
@@ -1040,6 +1334,10 @@ export class Game {
 
   _updateCamera(dt, immediate = false) {
     this.zoom = damp(this.zoom, this.zoomTarget, 7, dt);
+    const mode=this.locomotion?.mode, progress=this.locomotion?.progress || 0;
+    const groundFollow=!this.tour&&(this.cameraView==='follow'||this.cameraView==='custom');
+    const groundTarget=groundFollow?(mode==='grounded'?1:mode==='dismounting'?progress:mode==='mounting'?1-progress:0):0;
+    this._groundCameraBlend=immediate?groundTarget:damp(this._groundCameraBlend || 0,groundTarget,6,dt);
     if (this.exhibition) {
       const stage = this.exhibitionStage.camera, mobile = this.camera.aspect < .8;
       this._cameraGoal.copy(mobile ? stage.mobilePosition : stage.position);
@@ -1058,12 +1356,16 @@ export class Game {
       this._lookGoal.set(0,16,0);
     } else {
       const portraitTourOffset = this.tour && this.camera.aspect < .8 ? 35 : 0;
-      const distance = ((this.cameraDistance || 17) + portraitTourOffset) * this.zoom;
-      const horizontal = Math.cos(this.cameraElevation) * distance;
-      this._cameraGoal.set(this.position.x + Math.sin(this.cameraYaw) * horizontal, this.position.y + Math.sin(this.cameraElevation) * distance, this.position.z + Math.cos(this.cameraYaw) * horizontal);
+      // Walking needs a shoulder-height boom below the blossom canopy. Blend
+      // through landing and mounting; a manually orbited elevation stays yours.
+      const requestedDistance=(this.cameraDistance || 17)+portraitTourOffset;
+      const distance=THREE.MathUtils.lerp(requestedDistance,Math.min(requestedDistance,7.8),this._groundCameraBlend)*this.zoom;
+      const elevation=this.cameraView==='follow'?THREE.MathUtils.lerp(this.cameraElevation,.16,this._groundCameraBlend):this.cameraElevation;
+      const horizontal = Math.cos(elevation) * distance;
+      this._cameraGoal.set(this.position.x + Math.sin(this.cameraYaw) * horizontal, this.position.y + Math.sin(elevation) * distance, this.position.z + Math.cos(this.cameraYaw) * horizontal);
       this._cameraGoal.y = Math.max(this._cameraGoal.y, terrainHeight(this._cameraGoal.x, this._cameraGoal.z) + 2.3, WATER_LEVEL + .8);
       this._lookGoal.copy(this.position).addScaledVector(this.velocity, .23);
-      this._lookGoal.y += 1.3;
+      this._lookGoal.y += THREE.MathUtils.lerp(1.3,1.05,this._groundCameraBlend);
       if(this.tour){const stop=locations[this.tour.index];this._lookGoal.set(stop.x,stop.y+stop.height*.52,stop.z);}
       if (this._hitShake > 0 && !this.options.reducedMotion) this._cameraGoal.x += Math.sin(this._time * 70) * this._hitShake * .45;
       this._scratch.copy(this.position).addScaledVector(Y_AXIS,1.3);
@@ -1358,9 +1660,11 @@ export class Game {
       return { id: location.id, x: (this._projected.x + 1) / 2, y: (1 - this._projected.y) / 2, visible: this._projected.z > -1 && this._projected.z < 1 && Math.abs(this._projected.x) < 1 && Math.abs(this._projected.y) < 1 };
     });
     this.callbacks.onFrame({
+      locomotion:{mode:this.locomotion.mode,progress:this.locomotion.progress},
       cameraView: this.cameraView, altitudeTarget:this._altitudeTarget, tour:this.tour ? {...this.tour} : null,
       exhibition: this.exhibition ? { ...this.exhibition } : null,
-      environment: this.environment ? { mode: this.environmentClock.mode, phase: this.environment.phase, label: this.environment.label, night: this.environment.night } : null,
+      environment:this.environmentClock.getSnapshot({started:this.started,paused:this._isPaused(),reducedMotion:this.options.reducedMotion,pauseReason:this._contextLost?'graphics':this._suspended?'hidden':this.exhibition?'exhibition':this.paused?'reading':null}),
+      illumination:{...this.illumination.getState(),available:this.started&&!this._isPaused()},
       audio: { enabled: this.options.sound, status: this.audio.musicStatus, contextState: this.audio.context?.state || 'idle' },
       nearestExhibition: this.started ? this.nearestExhibition : null, nearestClock: this.started && this.nearestClock,
       nearestArtifact: this.started ? this.nearestArtifact : null,
@@ -1378,6 +1682,7 @@ export class Game {
   dispose() {
     if (this._disposed) return;
     this._disposed = true;
+    clearTimeout(this._enhancementTimer);this._enhancementController?.abort();
     cancelAnimationFrame(this._animation);
     this._removeDprListener?.();
     this._removeDprListener = null;
@@ -1387,6 +1692,7 @@ export class Game {
     if (this._previousTouchAction !== undefined) this.canvas.style.touchAction = this._previousTouchAction;
     if (this._addedTabIndex) this.canvas.removeAttribute('tabindex');
     this.audio.dispose();
+    this.illumination?.dispose();
     this.exhibitionStage?.dispose();
     this.rendering?.dispose();
     const geometries = new Set();
@@ -1401,9 +1707,9 @@ export class Game {
       });
       object.shadow?.dispose?.();
     });
-    geometries.forEach((geometry) => geometry.dispose());
-    textures.forEach((texture) => texture.dispose());
-    materials.forEach((material) => material.dispose());
+    geometries.forEach((geometry) => {if(!geometry.userData.sharedAsset)geometry.dispose();});
+    textures.forEach((texture) => {if(!texture.userData.sharedAsset)texture.dispose();});
+    materials.forEach((material) => {if(!material.userData.sharedAsset)material.dispose();});
     this.renderer?.renderLists?.dispose();
     this.renderer?.dispose();
     this.scene?.clear();

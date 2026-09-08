@@ -3,25 +3,28 @@ import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { locations, islands, worldBounds } from './locations.js';
 import { sampleEnvironment, TIME_PHASES } from './environment-time.js';
 import { environmentWind } from './environment-wind.js';
+import {loadImageTexture} from './asset-cache.js';
 
 const assets = {};
 let loading;
+const skyBindings=new Set(),moonBindings=new Set();
 export const moonDirection = new THREE.Vector3(-.16, .18, -.84).normalize();
 
 /** Called by the landscape preload. Importing this module never touches the DOM. */
-export function loadAtmosphereAssets() {
+export function loadAtmosphereAssets(options={}) {
   if (typeof document === 'undefined') return Promise.resolve(assets);
   if (!loading) loading = Promise.allSettled([
     ['sky', '/art/academy/cloud-panorama.webp'],
     ['moon', '/art/night-garden/moon-lroc-2k.jpg'],
     ['blossoms', '/art/night-garden/blossom-atlas.webp'],
   ].map(async ([key, path]) => {
-    const texture = await new THREE.TextureLoader().loadAsync(path);
+    const texture = await loadImageTexture({id:`atmosphere:${key}`,url:path,phase:2},options);
     texture.colorSpace = THREE.SRGBColorSpace;
     texture.anisotropy = key === 'blossoms' ? 8 : 2;
     texture.name = path;
     assets[key] = texture;
-  })).then(() => assets);
+    for(const uniforms of key==='sky'?skyBindings:key==='moon'?moonBindings:[]){uniforms[key==='sky'?'skyMap':'moonMap'].value=texture;uniforms.hasMap.value=1;}
+  })).then(results => {const ready=results.every(result=>result.status==='fulfilled');if(!ready)loading=null;return ready;});
   return loading;
 }
 
@@ -110,16 +113,22 @@ export function createAtmosphere(scene, { heightAt=()=>6, lanternCount=26, firef
         // The starless texture contributes cloud structure only. All lighting
         // comes from the shared environment palette, including cloud shadows.
         float cloud=smoothstep(.16,.8,source.r)*hasMap;
-        float seam=abs(fract(uv.x)-.5)*2.;cloud*=1.-smoothstep(.97,1.,seam);
+        float seam=abs(fract(uv.x)-.5)*2.;cloud*=(1.-smoothstep(.97,1.,seam))*smoothstep(.015,.16,d.y);
         vec3 c=mix(horizon,zenith,pow(clamp(h,0.,1.),.46));
         float sunlight=pow(max(0.,dot(d,sunDirection)),8.)*(1.-night)*.18;
         c=mix(c,cloudTint*(.78+.28*source.r),cloud*.83);
         c+=vec3(.58,.28,.10)*sunlight;
-        c=mix(horizon*.37,c,smoothstep(-.16,.025,d.y));
+        c=mix(horizon*.37,c,smoothstep(-.20,-.03,d.y));
         gl_FragColor=vec4(c,1.);
         #include <colorspace_fragment>
       }`,
   }));sky.name='Authored day and night cloud sky';sky.renderOrder=-1000;sky.frustumCulled=false;root.add(sky);
+  // A sky is infinitely distant: keep its angular horizon centred on the active
+  // view, including the water's reflected camera, instead of the island origin.
+  sky.onBeforeRender=(_renderer,_scene,camera)=>{
+    camera.getWorldPosition(sky.position);root.worldToLocal(sky.position);sky.updateMatrixWorld();
+  };
+  skyBindings.add(sky.material.uniforms);sky.material.addEventListener('dispose',()=>skyBindings.delete(sky.material.uniforms));
 
   const moon=new THREE.Mesh(new THREE.SphereGeometry(20,48,32),new THREE.ShaderMaterial({
     uniforms:{moonMap:{value:assets.moon||null},hasMap:{value:assets.moon?1:0},opacity:{value:1}},toneMapped:false,transparent:true,depthWrite:false,
@@ -132,6 +141,7 @@ export function createAtmosphere(scene, { heightAt=()=>6, lanternCount=26, firef
       #include <colorspace_fragment>
       }`,
   }));moon.position.copy(dir).multiplyScalar(760);moon.rotation.y=-1.3;moon.name='LROC detailed full moon';root.add(moon);
+  moonBindings.add(moon.material.uniforms);moon.material.addEventListener('dispose',()=>moonBindings.delete(moon.material.uniforms));
   const moonHalo=new THREE.Mesh(new THREE.PlaneGeometry(155,155),haloMaterial('#8bc9ff',.19,3));
   moonHalo.position.copy(moon.position).multiplyScalar(.994);moonHalo.lookAt(0,0,0);moonHalo.name='Soft lunar corona';root.add(moonHalo);
 

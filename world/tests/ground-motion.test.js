@@ -47,3 +47,18 @@ test('walking climbs and descends a low foundation step without horizontal eject
  for(let i=0;i<15;i++)state=stepGroundMotion(state,{x:0,z:1},.1,world);
  assert.ok(state.position.z>-.1);assert.equal(state.position.y,0);
 });
+
+test('a shallow walkable strip under the footprint is a step while a floating shelf remains an obstruction',()=>{
+ const strip={...box('paving/strip',.2,0,.035,2,-.1,.025),walkable:true};
+ const supported=queryGroundSupport({x:0,z:0,feetY:0,allowSteps:true},{...flat,colliders:[strip]});
+ assert.equal(supported.valid,true);assert.equal(supported.y,.025);
+ const shelf={...strip,bottom:.012,planes:strip.planes.map(p=>p[1]===-1?[0,-1,0,-.012]:p)};
+ assert.equal(queryGroundSupport({x:0,z:0,feetY:0,allowSteps:true},{...flat,colliders:[shelf]}).reason,'blocked');
+});
+
+test('a millimeter bevel on a shallow walkable step does not count as a steep hillside',()=>{
+ const tile={...box('paving/tile',0,0,2,2,-.1,.03),walkable:true};
+ tile.planes.push([Math.SQRT1_2,Math.SQRT1_2,0,1.025*Math.SQRT1_2]);
+ const support=queryGroundSupport({x:.998,z:0,feetY:.03,allowSteps:true},{...flat,colliders:[tile]});
+ assert.equal(support.valid,true);assert.equal(support.y,.03);
+});

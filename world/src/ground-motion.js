@@ -5,24 +5,36 @@ export const GROUND_MOTION = Object.freeze({ walkSpeed:1.6, runSpeed:3.8, radius
 const EPS=1e-5;
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const walkable=solid=>solid.walkable===true || (solid.walkable!==false && /(?:\/foundation|\/upper-terrace|\/cloister-deck-[^/]+|^bridge\/[^/]+\/deck|^exhibition\/platform-(?:base|upper|deck|step-low|step-high))$/.test(solid.id||''));
-function pointSurface(x,z,ceiling,world){
+function pointSurface(x,z,ceiling,world,groundFeetY){
   const heightAt=world.heightAt;
-  const y=heightAt(x,z),epsilon=.08;
-  const dx=(heightAt(x+epsilon,z)-heightAt(x-epsilon,z))/(2*epsilon);
-  const dz=(heightAt(x,z+epsilon)-heightAt(x,z-epsilon))/(2*epsilon);
-  const length=Math.hypot(dx,1,dz);
-  let best=Number.isFinite(y)&&y<=ceiling+EPS?{y,normal:{x:-dx/length,y:1/length,z:-dz/length},surfaceId:'terrain'}:null;
+  const surface=heightAt.surfaceAt?.(x,z),y=surface?.height??heightAt(x,z);
+  let normal=surface?.normal;
+  if(!normal){
+    const epsilon=.08,dx=(heightAt(x+epsilon,z)-heightAt(x-epsilon,z))/(2*epsilon),dz=(heightAt(x,z+epsilon)-heightAt(x,z-epsilon))/(2*epsilon),length=Math.hypot(dx,1,dz);
+    normal={x:-dx/length,y:1/length,z:-dz/length};
+  }
+  let best=Number.isFinite(y)&&y<=ceiling+EPS?{y,normal,surfaceId:'terrain'}:null;
   for(const solid of world.colliders||[]){
-    if(!walkable(solid)||solid.bottom>ceiling)continue;
+    if(!walkable(solid)||solid.bottom>ceiling||Number.isFinite(groundFeetY)&&solid.bottom>groundFeetY+GROUND_MOTION.skin)continue;
     for(const [nx,ny,nz,d]of solid.planes){
       if(ny<=EPS)continue;
       const top=(d-nx*x-nz*z)/ny;
       if(top>ceiling+EPS||best&&top<best.y-EPS)continue;
       if(!solid.planes.every(([a,b,c,e])=>a*x+b*top+c*z<=e+EPS))continue;
-      best={y:top,normal:{x:nx,y:ny,z:nz},surfaceId:solid.id};
+      best={y:top,normal:{x:nx,y:ny,z:nz},surfaceId:solid.id,bottom:solid.bottom,top:solid.top};
     }
   }
   return best;
+}
+function footprintStep(x,z,feetY,radius,maxRise,hit,world){
+  for(const solid of world.colliders||[]){
+    if(!walkable(solid)||solid.bottom>feetY+GROUND_MOTION.skin||solid.top>feetY+maxRise+EPS||solid.top<(hit?.y??-Infinity)-EPS)continue;
+    // A narrow riser may lie between the eight perimeter samples. Its upper
+    // face can still support the footprint; airborne shelves cannot be steps.
+    if(!solid.planes.every(([nx,ny,nz,d])=>nx*x+ny*solid.top+nz*z<=d+radius*Math.hypot(nx,nz)+EPS))continue;
+    hit={y:solid.top,normal:{x:0,y:1,z:0},surfaceId:solid.id,bottom:solid.bottom,top:solid.top};
+  }
+  return hit;
 }
 function obstructed(x,y,z,radius,height,world){
   const centre=y+GROUND_MOTION.skin+height/2;
@@ -35,16 +47,18 @@ function obstructed(x,y,z,radius,height,world){
 export function queryGroundSupport({x,z,feetY=0,maxRise=GROUND_MOTION.stepUp,maxDrop=GROUND_MOTION.stepDown,
   radius=GROUND_MOTION.radius,height=GROUND_MOTION.height,allowSteps=false},world){
   if(!world||typeof world.heightAt!=='function'||![x,z,feetY,maxRise,maxDrop,radius,height].every(Number.isFinite))return {valid:false,reason:'no-support'};
-  let hit=pointSurface(x,z,feetY+maxRise,world);
+  let hit=pointSurface(x,z,feetY+maxRise,world,allowSteps?feetY:undefined);
+  if(allowSteps)hit=footprintStep(x,z,feetY,radius,maxRise,hit,world);
   if(!hit)return {valid:false,reason:'no-support'};
   if(hit.y<=(world.waterLevel??GROUND_MOTION.waterLevel)+.05)return {...hit,valid:false,reason:'water'};
   const minNormal=Math.cos((world.maxSlope??GROUND_MOTION.maxSlope)*Math.PI/180);
   if(hit.normal.y<minNormal)return {...hit,valid:false,reason:'slope'};
   if(hit.y<feetY-maxDrop-EPS)return {...hit,valid:false,reason:'edge'};
   for(let i=0;i<8;i++){
-    const angle=i*Math.PI/4,sample=pointSurface(x+Math.cos(angle)*radius,z+Math.sin(angle)*radius,allowSteps?feetY+maxRise:hit.y+radius*Math.tan(GROUND_MOTION.maxSlope*Math.PI/180)+.015,world);
+    const angle=i*Math.PI/4,sample=pointSurface(x+Math.cos(angle)*radius,z+Math.sin(angle)*radius,allowSteps?feetY+maxRise:hit.y+radius*Math.tan(GROUND_MOTION.maxSlope*Math.PI/180)+.015,world,allowSteps?feetY:undefined);
     if(!sample||sample.y<=(world.waterLevel??GROUND_MOTION.waterLevel)+.05||Math.abs(sample.y-hit.y)>(allowSteps?Math.max(maxRise,maxDrop):Math.max(.035,radius*Math.tan(GROUND_MOTION.maxSlope*Math.PI/180)+.015)))return {...hit,valid:false,reason:'edge'};
-    if(sample.normal.y<minNormal)return {...hit,valid:false,reason:'slope'};
+    const smallBevel=allowSteps&&sample.top<=feetY+maxRise+EPS&&sample.bottom<=feetY+GROUND_MOTION.skin&&sample.top-sample.y<=GROUND_MOTION.skin;
+    if(sample.normal.y<minNormal&&!smallBevel)return {...hit,valid:false,reason:'slope'};
     if(allowSteps&&sample.y>hit.y&&sample.y<=feetY+maxRise+EPS)hit=sample;
   }
   if(obstructed(x,hit.y,z,radius,height,world))return {...hit,valid:false,reason:'blocked'};

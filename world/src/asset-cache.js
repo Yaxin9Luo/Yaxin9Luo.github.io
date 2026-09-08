@@ -15,8 +15,17 @@ export function loadPBRTexture(name,channel,options={}){
       }
       const texture=new THREE.Texture(image);texture.flipY=typeof createImageBitmap!=='function';
       texture.wrapS=texture.wrapT=THREE.RepeatWrapping;texture.anisotropy=8;
-      texture.colorSpace=channel==='color'?THREE.SRGBColorSpace:THREE.NoColorSpace;texture.name=key;texture.needsUpdate=true;return texture;
+      texture.colorSpace=channel==='color'?THREE.SRGBColorSpace:THREE.NoColorSpace;texture.name=key;texture.userData.sharedAsset=true;texture.needsUpdate=true;return texture;
     },
     dispose:texture=>{texture.image?.close?.();texture.dispose();},
   });
+}
+
+export function loadImageTexture(resource,options={}){
+  return resourceLoader.load(resource,{...options,parse:async buffer=>{
+    const blob=new Blob([buffer]);let image;
+    if(typeof createImageBitmap==='function')image=await createImageBitmap(blob,{imageOrientation:'flipY',premultiplyAlpha:'none'});
+    else{const url=URL.createObjectURL(blob);try{image=new Image();image.src=url;await image.decode();}finally{URL.revokeObjectURL(url);}}
+    const texture=new THREE.Texture(image);texture.flipY=typeof createImageBitmap!=='function';texture.colorSpace=THREE.SRGBColorSpace;texture.anisotropy=8;texture.userData.sharedAsset=true;texture.needsUpdate=true;return texture;
+  },dispose:texture=>{texture.image?.close?.();texture.dispose();}});
 }

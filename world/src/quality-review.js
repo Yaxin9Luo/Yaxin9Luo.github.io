@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import {loadBotanicalAssets} from './botanical-cache.js';
 import {Game} from './game.js';
 import {loadLandscapeAssets} from './landscape.js';
 import {loadArchitectureAssets} from './models.js';
@@ -8,7 +9,7 @@ import {ReviewMetrics,evidenceFilename} from './review-metrics.js';
 const $=id=>document.getElementById(id),canvas=document.querySelector('canvas');
 const warmupMs=3500,files=[],controlIds=['measure','record','audition','view','light','quality','foliage','sampling','reduced-motion','reset','frame','sound','json'];
 let game,metrics,session=null,run=0,lastReport=null,pose=null,saveFrame=null,audition=-1,stage=-1,disposed=false;
-const poses={court:{eye:[30,27,79],target:[0,10,28]},overview:{eye:[130,162,180],target:[-2,12,-4]},bridge:{eye:[-27,26,-23],target:[-65,5,-53]},shore:{eye:[93,4,115],target:[45,2,73]},
+const poses={cherry:{eye:[-45,17,85],target:[-73,9,66]},lilac:{eye:[69,17,97],target:[48,10,77]},highlands:{eye:[130,94,184],target:[-2,44,-40]},court:{eye:[30,27,79],target:[0,10,28]},overview:{eye:[130,162,180],target:[-2,12,-4]},bridge:{eye:[-27,26,-23],target:[-65,5,-53]},shore:{eye:[93,4,115],target:[45,2,73]},
   'castle-footing':{eye:[39,16,-8],target:[27,9,-24]},'contact-bridge':{eye:[59,15,-23],target:[52,3,-42]},'shore-detail':{eye:[111,6,16],target:[99,-2,2]}};
 const status=text=>{$('status').textContent=text;};
 async function download(blob,name){
@@ -31,11 +32,12 @@ function resetScene(config=conditions()){
   pose=poses[config.view]||null;
   if(config.view==='exhibit')game.enterExhibit('autodesign');
   if(config.view==='flight'){game._teleport(18,27,74);game.setOption('gameplay',true);}
+  if(config.view==='ground'){game._teleport(-66,9,65);game.heading=0;game.cameraYaw=0;game.setOption('gameplay',true);game.toggleBroom();}
   game.world.updateVegetation?.(game.camera,{width:canvas.width,height:canvas.height});
   game.renderer.shadowMap.needsUpdate=true;stage=-1;
 }
 function reset(){if(session||disposed)return;resetScene();}
-function frameState(){return {canvas:{width:canvas.width,height:canvas.height,backingWidth:canvas.width,backingHeight:canvas.height,cssWidth:canvas.clientWidth,cssHeight:canvas.clientHeight,dpr:game.renderer.getPixelRatio(),nativeDpr:globalThis.devicePixelRatio||1},camera:{eye:game.camera.position.toArray(),target:pose?.target||null,fov:game.camera.fov}};}
+function frameState(){return {canvas:{width:canvas.width,height:canvas.height,backingWidth:canvas.width,backingHeight:canvas.height,cssWidth:canvas.clientWidth,cssHeight:canvas.clientHeight,dpr:game.renderer.getPixelRatio(),nativeDpr:globalThis.devicePixelRatio||1,msaaSamples:game.rendering.samples},camera:{eye:game.camera.position.toArray(),target:pose?.target||null,fov:game.camera.fov},rider:{position:game.position?.toArray(),mode:game.locomotion?.mode,speed:game.locomotion?.groundSpeed}};}
 function applySampling(){
   const sampling=session?.metadata.sampling||$('sampling').value,dpr=sampling==='2x'?2:sampling==='2.5x'?2.5:null;
   if(dpr!==null){
@@ -47,7 +49,7 @@ function applySampling(){
 }
 function acquire(kind){
   if(session||disposed)return null;
-  const current={id:++run,kind,phase:'preparing',metadata:conditions(),createdAt:new Date().toISOString(),requestedAt:performance.now(),startedAt:null,stoppedAt:null,expectedDurationMs:kind==='measure'?20000:24000,captureErrors:[]};
+  const current={id:++run,kind,phase:'preparing',metadata:conditions(),createdAt:new Date().toISOString(),requestedAt:performance.now(),startedAt:null,stoppedAt:null,expectedDurationMs:kind==='measure'?20000:24000,captureErrors:[],motionSamples:[]};
   session=current;setLocked(true);saveFrame=null;metrics.reset();resetScene(current.metadata);audition=-1;
   status(kind==='audition'?'准备声音资产…':'准备验收…');return current;
 }
@@ -71,7 +73,7 @@ function stop(reason='interrupted',completed=false){
     lastReport={createdAt:current.createdAt,finishedAt:new Date().toISOString(),run:current.id,kind:current.kind,...current.metadata,...current.finalState,
       completed:current.completed,invalid:!current.completed,reason:current.reason,expectedDurationMs:current.expectedDurationMs,elapsedDurationMs,
       warmup:{requiredMs:current.kind==='measure'?warmupMs:0,elapsedMs:current.warmupStartedAt===undefined?0:(current.startedAt??current.stoppedAt)-current.warmupStartedAt,completed:current.startedAt!==null},
-      workload:current.metadata.view==='flight'?'scripted-flight':current.metadata.timeOfDay==='auto'?'daylight-cycle':'fixed-view',captureErrors:current.captureErrors,...result};
+      workload:current.metadata.view==='ground'?'scripted-ground':current.metadata.view==='flight'?'scripted-flight':current.metadata.timeOfDay==='auto'?'daylight-cycle':'fixed-view',motionSamples:current.motionSamples,captureErrors:current.captureErrors,...result};
     $('metrics').textContent=JSON.stringify(lastReport,null,2);
     if(session===current){session=null;setLocked(disposed);status(current.completed?'完成；测量记录可下载。':`已中断：${current.reason}；导出标记为 invalid。`);}
     return lastReport;
@@ -90,6 +92,19 @@ function flight(t){
   if(next===7)game.travel('research');
   if(next===8)game.setCameraView('low');
 }
+function groundSequence(t){
+  const marks=[0,2.5,5,8,10,12,14,17,20,22],next=marks.filter(n=>t>=n).length-1;
+  if(next===stage)return;stage=next;clearInput();
+  if(next===1)game.setTouch(0,-1);
+  if(next===2){game.setTouch(0,-1);game.setControl('boost',true);}
+  if(next===3)game.setTouch(1,0);
+  if(next===4){game.toggleIllumination();game.cast(0);}
+  if(next===5)game.toggleBroom();
+  if(next===6){game.setTouch(1,0);game.setControl('up',true);}
+  if(next===7)game.travel('publications');
+  if(next===8)game.toggleBroom();
+  if(next===9)game.toggleIllumination();
+}
 const soundSequence=[[0,'page'],[2,'clock'],[5,'boost'],[7,'cast-start'],[7.2,'lumos'],[10,'travel-start'],[10.2,'travel'],[13,'incendio'],[16,'shield'],[19,'collect'],[21,'page']];
 function updateSequence(){
   const current=session;if(!current||current.phase==='preparing'||current.phase==='finalizing')return;
@@ -103,6 +118,10 @@ function updateSequence(){
   }
   const t=(now-current.startedAt)/1000;
   if(current.metadata.view==='flight')flight(t);
+  if(current.metadata.view==='ground')groundSequence(t);
+  if(['ground','flight'].includes(current.metadata.view)&&(!current.motionSamples.length||t-current.motionSamples.at(-1).seconds>=.5)){
+    current.motionSamples.push({seconds:t,stage,...frameState().rider,transition:game.locomotion?.progress,illumination:game.illumination?.getState()?.enabled});
+  }
   if(current.kind==='audition'){
     while(audition+1<soundSequence.length&&t>=soundSequence[audition+1][0]){audition++;game.audio.play(soundSequence[audition][1]);}
     game.audio.setEnvironment({night:Math.min(1,t/18),reading:t>18,position:game.position});
@@ -158,8 +177,8 @@ function addDiagnosticControls(){
   const readout=document.createElement('span');readout.id='sampling-size';$('reset').parentElement.append(readout);
 }
 try{
-  await Promise.all([loadLandscapeAssets(),loadArchitectureAssets(),loadCharacterAssets()]);
-  game=new Game(canvas,{onMessage:()=>{},onFrame:s=>{if(!session&&!lastReport&&game&&$('sampling'))$('metrics').textContent=JSON.stringify({fps:s.fps,sampling:$('sampling').value,reducedMotion:Boolean(game.options.reducedMotion),...frameState(),drawCalls:s.drawCalls,submittedTriangles:s.triangles,lod:game.world.vegetation?.lod,audio:s.audio},null,2);}}, {quality:'high',timeOfDay:'night',gameplay:false,lang:'zh'});
+  await Promise.all([loadLandscapeAssets(),loadArchitectureAssets(),loadCharacterAssets(),loadBotanicalAssets({deadline:performance.now()+180000})]);
+  game=new Game(canvas,{onMessage:()=>{},onFrame:s=>{if(!session&&!lastReport&&game&&$('sampling'))$('metrics').textContent=JSON.stringify({fps:s.fps,locomotion:s.locomotion,illumination:s.illumination,sampling:$('sampling').value,reducedMotion:Boolean(game.options.reducedMotion),...frameState(),drawCalls:s.drawCalls,submittedTriangles:s.triangles,lod:game.world.vegetation?.lod,audio:s.audio},null,2);}}, {quality:'high',timeOfDay:'night',gameplay:false,lang:'zh'});
   metrics=new ReviewMetrics(game.renderer);addFoliageControl();addDiagnosticControls();
   const resize=game._resize.bind(game);
   game._resize=(...args)=>{resize(...args);applySampling();};

@@ -41,7 +41,7 @@ async function fixture({musicPromise=null,lod=true,save=null,capture=null,startE
     async finish(data='video'){if(data)this.ondataavailable({data:new Blob([data])});this.state='inactive';await this.onstop();}
   }
   const context={document,window:{MediaRecorder:Recorder,addEventListener:(name,handler)=>{listeners[name]=handler;}},devicePixelRatio:nativeDpr,MediaRecorder:Recorder,Game,THREE:{Vector3:class{constructor(...values){this.values=values;}}},ReviewMetrics,evidenceFilename,
-    loadLandscapeAssets:async()=>{},loadArchitectureAssets:async()=>{},loadCharacterAssets:async()=>{},performance:{now:()=>now},Blob,AbortSignal,setTimeout,
+    loadBotanicalAssets:async()=>{},loadLandscapeAssets:async()=>{},loadArchitectureAssets:async()=>{},loadCharacterAssets:async()=>{},performance:{now:()=>now},Blob,AbortSignal,setTimeout,
     URL:{createObjectURL:()=>`blob:${downloads.length}`,revokeObjectURL(){}},fetch:save||(async()=>({ok:true})),console:{error:error=>errors.push(error)}};
   const api=await vm.runInNewContext(`(async()=>{${source}\nreturn {begin,record,stop,updateSequence,reset,state:()=>({session,lastReport,metrics,game})};})()`,context,{filename:'quality-review.js'});
   assert.equal(errors.length,0);assert.equal(document.body.dataset.ready,'true');

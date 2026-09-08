@@ -1,11 +1,10 @@
 import { AnimationMixer, LoopRepeat, LoopOnce, MathUtils, Quaternion, PropertyBinding, Vector3 } from 'three';
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import {loadGLTF} from './gltf-resource.js';
 import { clone as cloneSkeleton } from 'three/addons/utils/SkeletonUtils.js';
 import { createWizard as createFallbackWizard, createWisp as createFallbackWisp } from './models.js';
 
 // Imported safely by simulation tests. Network and image decoding start only on load.
 const templates = { wizard: null, wraith: null };
-let pendingLoad = null;
 export const CHARACTER_ACTION_TIMING = Object.freeze({ boostStart: .20, boostEnd: .35, cast: .60, castRelease: .18 });
 export const CHARACTER_GROUND_MOTION = Object.freeze({ soleY:-1.30, height:3.24, walkSpeed:1.6, runSpeed:3.8, walkCycle:1, runCycle:.70, walkContact:.58, runContact:.36, mountDuration:1.2, dismountDuration:1.2 });
 const oneShots = new Set(['boost_start', 'boost_end', 'cast', 'mount', 'dismount', 'ground_cast']);
@@ -43,26 +42,34 @@ function prepareTemplate(gltf, kind) {
   return { scene, animations };
 }
 
-/** Load once before constructing Game or the art studio; failures remain visible to the caller. */
-export function loadCharacterAssets({ baseURL = '/models/characters/' } = {}) {
-  if (templates.wizard && templates.wraith) return Promise.resolve({ loaded: true });
-  if (pendingLoad) return pendingLoad;
-  const loader = new GLTFLoader();
-  const base = baseURL.endsWith('/') ? baseURL : `${baseURL}/`;
-  pendingLoad = Promise.all([
-    loader.loadAsync(`${base}wizard.glb?v=academy-tailored-v11-cut-panels-20260908c`),
-    loader.loadAsync(`${base}wraith.glb?v=academy-guardian-v8-final-20260908b`),
-  ]).then(([wizard, wraith]) => {
-    const preparedWizard = prepareTemplate(wizard, 'wizard');
-    const preparedWraith = prepareTemplate(wraith, 'wraith');
-    templates.wizard = preparedWizard;
-    templates.wraith = preparedWraith;
-    return { loaded: true };
-  }).catch((error) => {
-    pendingLoad = null;
-    throw error;
-  });
-  return pendingLoad;
+export async function loadWizardAsset(options={}){
+  const {baseURL='/models/characters/',variant='full',...context}=options;
+  const base=baseURL.endsWith('/')?baseURL:`${baseURL}/`;
+  const id=variant==='core'&&baseURL==='/models/characters/'?'wizard-core':`${base}wizard.glb`;
+  const gltf=await loadGLTF({id,url:`${base}wizard.glb`,phase:variant==='core'?1:2},context);
+  templates.wizard=prepareTemplate(gltf,'wizard');
+  return templates.wizard;
+}
+export async function loadWraithAsset(options={}){
+  const {baseURL='/models/characters/',...context}=options;
+  const base=baseURL.endsWith('/')?baseURL:`${baseURL}/`;
+  templates.wraith=prepareTemplate(await loadGLTF({id:baseURL==='/models/characters/'?'wraith':`${base}wraith.glb`,url:`${base}wraith.glb`,phase:3},context),'wraith');
+  return templates.wraith;
+}
+/** Studios request both characters; gameplay only requires the wizard. */
+export async function loadCharacterAssets(options={}){
+  await Promise.all([loadWizardAsset(options),loadWraithAsset(options)]);
+  return {loaded:true};
+}
+
+/** Upgrade only maps: keep the live skeleton, motion phase, garment geometry and attachments. */
+export function upgradeWizardMaterials(actor,template){
+  const materials=new Map();template.scene.traverse(o=>{for(const m of o.material?(Array.isArray(o.material)?o.material:[o.material]):[])materials.set(m.name,m);});
+  actor.traverse(o=>{for(const m of o.material?(Array.isArray(o.material)?o.material:[o.material]):[]){
+    const source=materials.get(m.name);if(!source)continue;
+    for(const key of ['map','normalMap','roughnessMap','metalnessMap','aoMap','emissiveMap','sheenColorMap','sheenRoughnessMap','specularColorMap','specularIntensityMap'])if(key in source)m[key]=source[key];
+    m.needsUpdate=true;
+  }});
 }
 
 function animatedClone(template, kind, phase = 0) {

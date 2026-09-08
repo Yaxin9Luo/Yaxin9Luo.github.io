@@ -34,3 +34,72 @@ test('a late synchronous completion cannot beat a delayed browser deadline timer
   let now=0,disposed=0;const coordinator=createLoadingCoordinator({now:()=>now,createCore:async()=>{now=20001;return {dispose(){disposed++;}};}});
   assert.equal(await coordinator.start(),null);assert.equal(disposed,1);assert.equal(coordinator.snapshot.error.type,'timeout');
 });
+
+test('individual resources cannot declare the initial enhancement batch ready',async()=>{
+  let progress;const coordinator=createLoadingCoordinator({createCore:async context=>{progress=context.onProgress;return {dispose(){}};}});
+  await coordinator.start();
+  coordinator.enhancement({id:'sky',phase:'queued',attemptId:1});
+  coordinator.enhancement({id:'sky',phase:'ready',attemptId:1});
+  assert.equal(coordinator.snapshot.enhancements,'loading-enhancements');
+  coordinator.enhancement({id:'night-hdr',phase:'fetching',attemptId:1});
+  progress({phase:'enhancements',enhancements:'ready'});
+  assert.equal(coordinator.snapshot.enhancements,'loading-enhancements');
+  coordinator.enhancement({id:'night-hdr',phase:'ready',attemptId:1});
+  assert.equal(coordinator.snapshot.enhancements,'ready');
+});
+
+test('a successful late optional request restores ready after every transfer phase',async()=>{
+  let progress;const coordinator=createLoadingCoordinator({createCore:async context=>{progress=context.onProgress;return {dispose(){}};}});
+  await coordinator.start();progress({phase:'enhancements',enhancements:'ready'});
+  // On-demand requests omit attemptId; repeated byte progress and a retry are one resource.
+  for(const phase of ['queued','fetching','fetching','retrying','fetching','parsing']){
+    coordinator.enhancement({id:'wraith',phase,stage:3});
+    assert.equal(coordinator.snapshot.enhancements,'loading-enhancements');
+  }
+  coordinator.enhancement({id:'wraith',phase:'ready',stage:3});
+  assert.equal(coordinator.snapshot.enhancements,'ready');
+  assert.equal(coordinator.snapshot.availability,'interactive');
+});
+
+test('concurrent late optional requests must all settle before ready returns',async()=>{
+  let progress;const coordinator=createLoadingCoordinator({createCore:async context=>{progress=context.onProgress;return {dispose(){}};}});
+  await coordinator.start();progress({phase:'enhancements',enhancements:'ready'});
+  coordinator.enhancement({id:'night-hdr',phase:'queued',stage:3});
+  coordinator.enhancement({id:'wraith',phase:'queued',stage:3});
+  coordinator.enhancement({id:'night-hdr',phase:'ready',stage:3});
+  assert.equal(coordinator.snapshot.enhancements,'loading-enhancements');
+  coordinator.enhancement({id:'wraith',phase:'ready',stage:3});
+  assert.equal(coordinator.snapshot.enhancements,'ready');
+});
+
+test('failed or cancelled optional resources keep the current attempt degraded',async()=>{
+  for(const terminalPhase of ['failed','cancelled']){
+    let progress;const coordinator=createLoadingCoordinator({createCore:async context=>{progress=context.onProgress;return {dispose(){}};}});
+    await coordinator.start();progress({phase:'enhancements',enhancements:'ready'});
+    coordinator.enhancement({id:'night-hdr',phase:'queued'});
+    coordinator.enhancement({id:'wraith',phase:'queued'});
+    coordinator.enhancement({id:'night-hdr',phase:terminalPhase});
+    coordinator.enhancement({id:'wraith',phase:'ready'});
+    progress({phase:'enhancements',enhancements:'ready'});
+    assert.equal(coordinator.snapshot.enhancements,'degraded');
+    assert.equal(coordinator.snapshot.availability,'interactive');
+  }
+});
+
+test('a new core attempt resets optional state and ignores prior-generation events',async()=>{
+  const progress=[];const coordinator=createLoadingCoordinator({createCore:async context=>{progress.push(context.onProgress);return {dispose(){}};}});
+  await coordinator.start();progress[0]({phase:'enhancements',enhancements:'ready'});
+  coordinator.enhancement({id:'old-pending',phase:'queued',attemptId:1});
+  coordinator.enhancement({id:'old-failed',phase:'failed',attemptId:1});
+  assert.equal(coordinator.snapshot.enhancements,'degraded');
+  coordinator.dispose();await coordinator.start();
+  assert.equal(coordinator.snapshot.enhancements,'idle');
+  progress[0]({phase:'enhancements',enhancements:'degraded'});
+  coordinator.enhancement({id:'old-failed',phase:'failed',attemptId:1});
+  coordinator.enhancement({id:'old-pending',phase:'fetching',attemptId:1});
+  assert.equal(coordinator.snapshot.enhancements,'idle');
+  coordinator.enhancement({id:'new-detail',phase:'ready',attemptId:2});
+  assert.equal(coordinator.snapshot.enhancements,'loading-enhancements');
+  progress[1]({phase:'enhancements',enhancements:'ready'});
+  assert.equal(coordinator.snapshot.enhancements,'ready');
+});

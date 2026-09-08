@@ -23,7 +23,7 @@ export const crystalPositions = [[15,12,51],[-32,12,48],[-63,14,24],[-83,16,-33]
 export const wispPositions = [[32,12,40],[-28,13,42],[-86,14,28],[87,17,11],[48,31,-78],[-42,33,-87]];
 export const spawn = {x:18,y:18,z:74};
 export const spellDefinitions = [
-  {id:'lumos', name:{en:'Lumos',zh:'荧光闪烁'}, subtitle:{en:'A swift bolt of starlight',zh:'迅捷的星光弹'},color:'#a9e5ef',cost:7,cooldown:.26,damage:1,speed:49},
+  {id:'lumos', name:{en:'Starbolt',zh:'星光弹'}, subtitle:{en:'A swift bolt of starlight',zh:'迅捷的星光弹'},color:'#a9e5ef',cost:7,cooldown:.26,damage:1,speed:49},
   {id:'incendio',name:{en:'Incendio',zh:'火焰熊熊'},subtitle:{en:'An ember burst that spreads',zh:'绽放并扩散的火焰'},color:'#ffb16c',cost:20,cooldown:.8,damage:2,speed:35,radius:7},
   {id:'avada',name:{en:'Avada Kedavra',zh:'阿瓦达索命'},subtitle:{en:'A powerful emerald curse',zh:'强力的翡翠色咒语'},color:'#a2f29a',cost:38,cooldown:1.5,damage:4,speed:58},
 ];

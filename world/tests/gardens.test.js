@@ -7,10 +7,34 @@ import {createAuthoredGardens,createGardenSpecimen} from '../src/gardens.js';
 import {gardenDistricts,insideAuthoredGarden,gradeGardenTerrain} from '../src/environment-layout.js';
 import {terrainHeight,renderedTerrainHeight,createTerrainSpecimen} from '../src/world.js';
 import {resolveRiderCollision,shortenCameraBoom} from '../src/collision.js';
+import {queryGroundSupport,stepGroundMotion} from '../src/ground-motion.js';
 
 const gardens=createAuthoredGardens(new THREE.Group());
 const velocity={x:0,y:0,z:0};
 const clear=position=>!resolveRiderCollision(position,velocity,gardens.colliders).collided;
+
+test('paving support follows each rendered slab, grout gap, bevel and clipped corner',()=>{
+  const district=gardenDistricts.find(d=>d.id==='courtyard'),group=gardens.districts.find(g=>g.name==='Grand Academy fountain courtyard');
+  const ray=new THREE.Raycaster();gardens.group.updateMatrixWorld(true);
+  const world={heightAt:()=>district.y,colliders:gardens.colliders.filter(s=>s.name?.startsWith('garden paving'))};
+  // Local points avoid furniture and cover tile, grout, inlay, trim, base and
+  // both sides of the clipped outer corner, plus the raised brass border.
+  for(const [x,z]of [[16,0],[17.3,0],[17.6,0],[17.95,0],[17.5,20.5],[17.9,20.9],[0,0],[14.596153846,0],[17.225,1]]){
+    ray.set(new THREE.Vector3(district.x+x,district.y+1,district.z+z),new THREE.Vector3(0,-1,0));
+    const hits=ray.intersectObjects(group.children.filter(o=>o.isMesh),false),rendered=hits[0]?.point.y??district.y;
+    const support=queryGroundSupport({x:district.x+x,z:district.z+z,feetY:district.y+.25,radius:0,height:0},world);
+    assert.equal(support.valid,true,`${x},${z}`);
+    assert.ok(Math.abs(support.y-rendered)<.001,`${x},${z}: support ${support.y}, render ${rendered}`);
+  }
+});
+
+test('walking crosses grout, shallow brass strips and the stepped paving border without becoming trapped',()=>{
+  const d=gardenDistricts.find(d=>d.id==='courtyard');
+  const world={heightAt:()=>d.y,colliders:gardens.colliders.filter(s=>s.name?.startsWith('garden paving'))};
+  let state={position:{x:d.x+14.4,y:d.y+.171,z:d.z+.7},heading:0};
+  for(let i=0;i<55;i++)state=stepGroundMotion(state,{x:1,z:0},.05,world);
+  assert.ok(state.position.x>d.x+18.7,`blocked at ${state.position.x-d.x}: ${state.reason}`);
+});
 
 test('continuous courtyard floors meet their authored grades and preserve landmark coordinates',()=>{
   for(const d of gardenDistricts){

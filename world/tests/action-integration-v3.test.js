@@ -31,6 +31,7 @@ after(async()=>{globalThis.ProgressEvent=previousProgress;if(server)await new Pr
 function gameFixture(t){
   const game=Object.create(Game.prototype),sounds=[],launches=[];
   Object.assign(game,{started:true,paused:false,_suspended:false,_contextLost:false,_disposed:false,_combat:false,
+    locomotion:{mode:'flying',progress:0,gaitPhase:0,groundSpeed:0,support:null},
     options:{gameplay:true,reducedMotion:false},mana:100,health:100,spell:0,shield:0,cooldown:0,race:null,_pendingCast:null,_boostIntent:false,
     scene:new THREE.Scene(),position:new THREE.Vector3(0,12,15),velocity:new THREE.Vector3(),heading:0,_bank:0,_time:0,_simulationTime:0,
     _scratch:new THREE.Vector3(),_scratch2:new THREE.Vector3(),_forward:new THREE.Vector3(),_projected:new THREE.Vector3(),_castOrigin:new THREE.Vector3(),_previous:new THREE.Vector3(),
@@ -47,6 +48,46 @@ function gameFixture(t){
 }
 function step(game,dt){game._time+=dt;game._updateWizard(dt,game.started&&!game._isPaused());}
 const active=game=>game._projectiles.filter(projectile=>projectile.active&&!projectile.enemy);
+function grounded(game){
+  game.world.heightAt=()=>0;game.position.set(0,1.3,0);game.velocity.set(0,0,0);
+  game.locomotion={mode:'grounded',progress:0,gaitPhase:0,groundSpeed:0,support:{valid:true,y:0,normal:{x:0,y:1,z:0}}};
+  step(game,0);
+}
+
+test('valid standing headroom does not allow summoning a broom through a low roof',t=>{
+  const {game}=gameFixture(t);grounded(game);
+  game.buildingColliders=[{id:'test/roof',bottom:3.4,top:3.6,planes:[[1,0,0,3],[-1,0,0,3],[0,0,1,3],[0,0,-1,3],[0,1,0,3.6],[0,-1,0,-3.4]]}];
+  assert.equal(game.toggleBroom(),false);assert.equal(game.locomotion.mode,'grounded');assert.equal(game.position.y,1.3);
+  game.buildingColliders=[];assert.equal(game.toggleBroom(),true);
+  game._move(.3);step(game,.3);
+  game.buildingColliders=[{id:'late/beam',bottom:3.4,top:3.6,planes:[[1,0,0,3],[-1,0,0,3],[0,0,1,3],[0,0,-1,3],[0,1,0,3.6],[0,-1,0,-3.4]]}];
+  game._move(.05);step(game,.05);assert.equal(game.locomotion.mode,'grounded');assert.equal(game.position.y,1.3);
+});
+
+test('partial boosted touch input advances the walking gait by actual traveled distance',t=>{
+  const {game}=gameFixture(t);grounded(game);game.setTouch(.5,0);game.setControl('boost',true);
+  game._move(.05);step(game,.05);
+  assert.ok(Math.abs(game.position.x-.095)<1e-8);
+  assert.ok(Math.abs(game.locomotion.gaitPhase-(.29+.095/1.6))<1e-8);
+});
+
+test('grounded casting holds position and releases exactly once from the live wand',t=>{
+  const {game,sounds,launches}=gameFixture(t);grounded(game);assert.equal(game.cast(0),true);game.setTouch(1,0);
+  for(let i=0;i<7;i++){game._move(.05);step(game,.05);assert.equal(game.position.x,0);}
+  assert.equal(launches.length,1);assert.deepEqual(sounds,['cast-start','lumos']);assert.ok(launches[0].origin.distanceTo(launches[0].tip)<1e-5);
+});
+
+test('mounting and dismounting reach their authored endpoints and preserve broom visibility',t=>{
+  const {game}=gameFixture(t);grounded(game);assert.equal(game.toggleBroom(),true);
+  for(let i=0;i<24;i++){game._move(.05);step(game,.05);}
+  assert.equal(game.locomotion.mode,'flying');assert.ok(Math.abs(game.position.y-3.2)<1e-8);
+  assert.ok(game.wizard.userData.characterAnimation.broom.every(part=>part.visible));
+  assert.equal(game.toggleBroom(),true);
+  for(let i=0;i<34;i++){game._move(.05);step(game,.05);}
+  assert.equal(game.locomotion.mode,'grounded');assert.ok(Math.abs(game.position.y-1.3)<1e-8);
+  assert.ok(game.wizard.userData.characterAnimation.broom.every(part=>!part.visible));
+  const mode=game.locomotion.mode;game.paused=true;assert.equal(game.toggleBroom(),false);step(game,1);assert.equal(game.locomotion.mode,mode);
+});
 
 test('shipped cast releases one reserved spell at the animated wand tip, never on button press',t=>{
   const {game,sounds,launches}=gameFixture(t),before=game.wizard.userData.wandTip.getWorldPosition(new THREE.Vector3());
