@@ -13,7 +13,7 @@ export function curvedMountainSector({angle,radius,height,span,flip=false},segme
   for(let y=0;y<2;y++)for(let i=0;i<=segments;i++){
     const u=i/segments,a=angle+(u-.5)*span;
     // Feet remain below lake even in the reflection camera; no horizontal cut line.
-    positions.push(Math.sin(a)*radius,-70+y*height,-Math.cos(a)*radius);uv.push(flip?1-u:u,y);
+    positions.push(Math.sin(a)*radius,-105+y*height,-Math.cos(a)*radius);uv.push(flip?1-u:u,y);
     if(y===0&&i<segments){const j=i+segments+1;indices.push(i,j,i+1,i+1,j,j+1);}
   }
   const geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));geometry.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2));geometry.setIndex(indices);geometry.computeVertexNormals();geometry.computeBoundingSphere();return geometry;
@@ -22,11 +22,11 @@ export const mountainMatteFragment=`
   varying vec2 artUV;varying vec3 worldPoint;
   uniform sampler2D mountainMap;
   uniform vec3 baseColor,hazeColor,lightDirection;
-  uniform float nightFactor,layerDepth,ready;
+  uniform float nightFactor,layerDepth,ready,reflectionMix,mainArt;
   float colourKey(vec3 rgb){return max(rgb.r,max(rgb.g,rgb.b));}
   void main(){
     if(ready<.5)discard;
-    vec4 art=texture2D(mountainMap,artUV);
+    vec4 art=texture2D(mountainMap,artUV,reflectionMix*1.2);
     // Lossless source has exact black sky. Work in decoded linear colour;
     // reject it before haze/grade so reflection cannot acquire a black rectangle.
     float key=colourKey(art.rgb);
@@ -43,17 +43,25 @@ export const mountainMatteFragment=`
     vec3 colour=art.rgb*grade;
     float luminance=dot(colour,vec3(.2126,.7152,.0722));
     colour=mix(colour,vec3(luminance),.12);
-    float air=.025+layerDepth*.018;
-    float bank=5.*sin(worldPoint.x*.013)+4.*sin(worldPoint.z*.019);
-    // Let the lake and live atmosphere show through before reaching the water
-    // plane. No opaque, straight contact edge survives in its reflection.
-    float baseFade=smoothstep(-10.+bank,65.+bank,worldPoint.y);
-    float baseMist=(1.-smoothstep(0.,90.,worldPoint.y))*.24;
+    float air=.075+layerDepth*.018;
+    float bank=11.*sin(worldPoint.x*.009)+7.*sin(worldPoint.z*.017);
+    // The authored left/right promontories have thin air and exposed coastal
+    // edges. Recessed valleys carry deeper fog, breaking the continuous strip.
+    float leftCape=exp(-pow((artUV.x-.24)/.14,2.))*mainArt;
+    float rightCape=exp(-pow((artUV.x-.83)/.13,2.));
+    float cape=max(leftCape,rightCape);
+    float shoreStart=mix(-3.,-65.,cape)+bank;
+    float shoreEnd=mix(90.,12.,cape)+bank;
+    float baseFade=smoothstep(shoreStart,shoreEnd,worldPoint.y);
+    float baseMist=(1.-smoothstep(0.,mix(110.,28.,cape),worldPoint.y))*.19*(1.-cape*.65);
     // Keep the mountain-foot air in the lake's blue-grey family during dusk;
     // the warm sky remains above it rather than forming an orange waterline.
     vec3 lowAir=vec3(hazeColor.b*.72,hazeColor.g*.88,hazeColor.b);
     colour=mix(colour,hazeColor,air);
     colour=mix(colour,lowAir,baseMist);
+    // Only the mirrored mountain layer loses contrast, leaving the lake's own
+    // moving highlights and the direct-view forest/rock detail untouched.
+    colour=mix(colour,lowAir,reflectionMix*.30);
     gl_FragColor=vec4(colour,silhouette*edge*baseFade);
     #include <colorspace_fragment>
   }
@@ -67,11 +75,16 @@ export function createMineralHighlands(root,{mountainMaps={}}={}){
   for(const sector of MATTE_SECTORS){
     const texture=mountainMaps[sector.art];
     const material=new THREE.ShaderMaterial({transparent:true,depthWrite:false,side:THREE.DoubleSide,toneMapped:false,
-      uniforms:{mountainMap:{value:texture||null},ready:{value:texture?1:0},baseColor:{value:new THREE.Color('#ffffff')},hazeColor:{value:new THREE.Color('#7398b8')},lightDirection:{value:new THREE.Vector3(-.3,.5,-.7).normalize()},nightFactor:{value:0},layerDepth:{value:sector.layer}},
+      uniforms:{reflectionMix:{value:0},mainArt:{value:sector.art==='main'?1:0},mountainMap:{value:texture||null},ready:{value:texture?1:0},baseColor:{value:new THREE.Color('#ffffff')},hazeColor:{value:new THREE.Color('#7398b8')},lightDirection:{value:new THREE.Vector3(-.3,.5,-.7).normalize()},nightFactor:{value:0},layerDepth:{value:sector.layer}},
       vertexShader:'varying vec2 artUV;varying vec3 worldPoint;void main(){artUV=uv;worldPoint=(modelMatrix*vec4(position,1.)).xyz;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',fragmentShader:mountainMatteFragment,
     });material.userData.backgroundLayer=sector.layer;material.userData.mountainArt=sector.art;
     const mesh=new THREE.Mesh(curvedMountainSector(sector),material);mesh.name=`Painted mineral sector ${sector.art} ${sector.angle.toFixed(2)}`;
     // Distant transparencies paint first, then the nearer overlapping sectors.
+    const passEye=new THREE.Vector3();
+    mesh.onBeforeRender=(_renderer,_scene,camera)=>{
+      camera.getWorldPosition(passEye);
+      material.uniforms.reflectionMix.value=passEye.y<-15?1:0;
+    };
     mesh.renderOrder=sector.layer===2?-20:-10;mesh.userData.distantLandscape=true;group.add(mesh);matteMaterials.push(material);
   }
   return {group,materials,matteMaterials};

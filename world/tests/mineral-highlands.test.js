@@ -11,7 +11,7 @@ test('mountain sectors cover all directions with overlap, world-space radius and
   for(const sector of MATTE_SECTORS){
     assert.ok(Math.abs(sector.radius*sector.span/sector.height-2)<1e-8,'native painting aspect must not squash into a horizontal band');
     const geometry=curvedMountainSector(sector),p=geometry.attributes.position;
-    for(let i=0;i<p.count;i++){assert.ok(Math.abs(Math.hypot(p.getX(i),p.getZ(i))-sector.radius)<.001);assert.ok(p.getY(i)===-70||Math.abs(p.getY(i)-(sector.height-70))<.001);}
+    for(let i=0;i<p.count;i++){assert.ok(Math.abs(Math.hypot(p.getX(i),p.getZ(i))-sector.radius)<.001);assert.ok(p.getY(i)===-105||Math.abs(p.getY(i)-(sector.height-105))<.001);}
     assert.ok(geometry.boundingSphere.radius<3600);geometry.dispose();
   }
 });
@@ -48,4 +48,15 @@ test('late optional delivery skips disposed backdrops and aborted consumers, and
     const retry=loadMountainArt();deliveries.splice(0).forEach(deliver=>deliver());assert.equal(await retry,true);
     assert.ok(second.matteMaterials.every((material,i)=>material.uniforms.mountainMap.value!==before[i]));dispose(second);
   }finally{resourceLoader.load=original;textures.forEach(texture=>texture.dispose());}
+});
+
+ test('reflection grading uses world camera height and restores full direct-view detail each draw',()=>{
+  const root=new THREE.Group(),result=createMineralHighlands(root),camera=new THREE.PerspectiveCamera(),rig=new THREE.Group();rig.add(camera);
+  // Parent transforms matter; camera-local height alone can misclassify a pass.
+  rig.position.y=-100;camera.position.y=84;rig.updateMatrixWorld(true);
+  for(const mesh of result.group.children){mesh.onBeforeRender(null,null,camera);assert.equal(mesh.material.uniforms.reflectionMix.value,1);}
+  camera.position.y=85;rig.updateMatrixWorld(true);
+  for(const mesh of result.group.children){mesh.onBeforeRender(null,null,camera);assert.equal(mesh.material.uniforms.reflectionMix.value,0,'water boundary must not remain in reflection mode');}
+  camera.position.y=225;rig.updateMatrixWorld(true);
+  for(const mesh of result.group.children){mesh.onBeforeRender(null,null,camera);assert.equal(mesh.material.uniforms.reflectionMix.value,0);mesh.geometry.dispose();mesh.material.dispose();}
 });
