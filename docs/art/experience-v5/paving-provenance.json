@@ -1,0 +1,20 @@
+[
+  {
+    "channel": "color",
+    "source": "https://dl.polyhaven.org/file/ph-assets/Textures/png/4k/cobblestone_floor_08/cobblestone_floor_08_diff_4k.png",
+    "md5": "d9a99286eb9895277e8cfa7da68524d8",
+    "bytes": 27535490
+  },
+  {
+    "channel": "normal",
+    "source": "https://dl.polyhaven.org/file/ph-assets/Textures/png/4k/cobblestone_floor_08/cobblestone_floor_08_nor_gl_4k.png",
+    "md5": "b3be01247248cce7dae6ac98163db9b3",
+    "bytes": 31988323
+  },
+  {
+    "channel": "roughness",
+    "source": "https://dl.polyhaven.org/file/ph-assets/Textures/png/4k/cobblestone_floor_08/cobblestone_floor_08_rough_4k.png",
+    "md5": "eb17deb65d37a1b21b509f80c2b10c2f",
+    "bytes": 9694372
+  }
+]
