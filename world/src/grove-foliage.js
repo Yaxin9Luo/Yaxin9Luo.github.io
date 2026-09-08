@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import {getBotanicalParts} from './botanical-cache.js';
 import {mergeGeometries,mergeVertices} from 'three/addons/utils/BufferGeometryUtils.js';
 import {applyEnvironmentWind,attachWindShadows,updateEnvironmentWind} from './environment-wind.js';
 
@@ -163,7 +164,23 @@ function createBroadleafTree(kind,seed,detail){
   for(let i=0;i<7;i++){const a=i*2.39,start=atHeight(stem,7.1+i*.11);b.spray(start,new THREE.Vector3(Math.cos(a)*.7,.9,Math.sin(a)*.7),.6+rand()*.35,.85);}
   return b.finish(`Detailed ${kind} grove tree`);
 }
-export function createGroveTree(kind='silver',seed=0,detail='near'){return kind==='pine'?createPineTree(seed,detail):createBroadleafTree(kind,seed,detail);}
+const cachedPlantSurfaces=new Map();
+function createCachedGroveTree(kind,detail,parts){
+  if(!cachedPlantSurfaces.has(kind)){
+    const materials=[plantMaterial('Ridged silver bark and tapered twigs',true),plantMaterial(`Detailed ${kind} foliage with authored vein relief`,false,kind==='pine')];
+    for(const material of materials){material.userData.sharedAsset=true;for(const value of Object.values(material))if(value?.isTexture)value.userData.sharedAsset=true;}
+    cachedPlantSurfaces.set(kind,materials);
+  }
+  const [bark,foliage]=cachedPlantSurfaces.get(kind),group=new THREE.Group();group.name=parts.name||`Detailed ${kind} grove tree`;
+  const branchMesh=new THREE.Mesh(parts.branches,bark),leafMesh=new THREE.Mesh(parts.leaves,foliage);
+  branchMesh.name='Curved trunk, branches and fine leaf-bearing twigs';leafMesh.name='Overlapping botanical leaf sprays';attachWindShadows(leafMesh);
+  for(const mesh of[branchMesh,leafMesh]){mesh.castShadow=true;mesh.receiveShadow=true;group.add(mesh);}
+  group.branchesMesh=branchMesh;group.leavesMesh=leafMesh;group.userData.botanicalDetail={...parts.botanicalDetail};group.userData.detailLevel=detail;return group;
+}
+export function createGroveTreeSource(kind='silver',seed=0,detail='near'){return kind==='pine'?createPineTree(seed,detail):createBroadleafTree(kind,seed,detail);}
+export function createGroveTree(kind='silver',seed=0,detail='near'){
+  const parts=getBotanicalParts(kind,seed,detail);return parts?createCachedGroveTree(kind,detail,parts):createGroveTreeSource(kind,seed,detail);
+}
 
 function createPineTree(seed,detail){
   const b=new PlantBuilder('pine',seed,detail),rand=b.rand;

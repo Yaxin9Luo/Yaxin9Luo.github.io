@@ -35,11 +35,15 @@ export function createFoliageLOD(root, definitions, policy = FOLIAGE_LOD) {
   const stats = {enabled: true, treeCount: 0, nearCount: 0, midCount: 0, farCount: 0, chunkCount: 0,
     activeBatches: 0, submittedTriangles: 0, fullDetailTriangles: 0, transitions: 0, updates: 0};
   for (const {kind, seed, placements} of definitions) {
+    if (!placements.length) continue;
     const variants = names.map(level => createGroveTree(kind, seed, level));
     // All tiers use the exact same material and clock. Pigment is independent
     // of tessellation and no leaves, flowers or fine shoots are deleted.
     for (const variant of variants.slice(1)) {
-      variant.branchesMesh.material.dispose(); variant.leavesMesh.material.dispose();
+      for (const part of ['branchesMesh', 'leavesMesh']) {
+        const material = variant[part].material;
+        if (material !== variants[0][part].material && !material.userData.sharedAsset) material.dispose();
+      }
       variant.branchesMesh.material = variants[0].branchesMesh.material;
       variant.leavesMesh.material = variants[0].leavesMesh.material;
     }
