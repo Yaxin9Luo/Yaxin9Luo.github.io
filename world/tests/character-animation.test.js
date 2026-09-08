@@ -7,7 +7,7 @@ import { createHash } from 'node:crypto';
 import { inflateSync } from 'node:zlib';
 import { Vector3, Box3, Quaternion, PropertyBinding, Raycaster } from 'three';
 import { loadCharacterAssets, createWizard, createWisp, updateCharacter, requestCharacterCast,
-  cancelCharacterCast, CHARACTER_ACTION_TIMING } from '../src/characters.js';
+  cancelCharacterCast, CHARACTER_ACTION_TIMING, CHARACTER_GROUND_MOTION } from '../src/characters.js';
 
 const modelRoot = new URL('../public/models/characters/', import.meta.url);
 const originals = new Map();
@@ -137,7 +137,7 @@ test('published assets carry complete skins/actions and respect per-character bu
     assert.ok(triangles <= (kind === 'wizard' ? 500000 : 120000));
     assert.ok(buffer.length <= (kind === 'wizard' ? 24000000 : 12000000));
     assert.ok(json.skins.length >= 1);
-    const required = kind === 'wizard' ? ['idle', 'cruise', 'turn_left', 'turn_right', 'boost', 'boost_start', 'boost_end', 'cast'] : ['idle', 'approach', 'channel'];
+    const required = kind === 'wizard' ? ['idle', 'cruise', 'turn_left', 'turn_right', 'boost', 'boost_start', 'boost_end', 'cast', 'ground_idle', 'walk', 'run', 'mount', 'dismount', 'ground_cast'] : ['idle', 'approach', 'channel'];
     assert.deepEqual(json.animations.map((clip) => clip.name).sort(), required.sort());
     for (const primitive of json.meshes.flatMap((mesh) => mesh.primitives)) {
       assert.ok(Number.isInteger(primitive.attributes.JOINTS_0));
@@ -433,8 +433,8 @@ test('exported cloth changes shape, loops continuously and stays finite for ever
     const bounds = new Box3();
     for (const name of group.userData.characterAnimation.actions.keys()) {
       const duration = group.userData.characterAnimation.actions.get(name).getClip().duration;
-      const oneShotDuration = { boost_start: .2, boost_end: .35, cast: .6 }[name];
-      if (factory === createWizard) assert.ok(Math.abs(duration - (oneShotDuration || 4)) < 1e-5, 'clips must start at zero and use the authored duration');
+      const oneShotDuration = { boost_start: .2, boost_end: .35, cast: .6, ground_cast:.6, mount:1.2, dismount:1.2 }[name];
+      if (factory === createWizard) assert.ok(Math.abs(duration - (oneShotDuration || {ground_idle:2,walk:1,run:.7}[name] || 4)) < 1e-5, 'clips must start at zero and use the authored duration');
       setAction(group, name, 0);
       const start = cloth.getVertexPosition(index, new Vector3());
       for (const time of [0, .0625, .125, .25, .375, .5, .625, .75, .875, .999975].map((phase) => phase * duration)) {
@@ -614,4 +614,81 @@ test('cape follows a torso turn with delayed orientation and settles without uns
   for (let i = 0; i < 100; i++) { updateCharacter(rider, { dt: .016 }); assertNormalized(rider); }
   const settled = cape.getWorldQuaternion(new Quaternion()).angleTo(beforeCape);
   assert.ok(settled > .7 && settled < .9, 'cape must settle behind the torso rather than lag indefinitely');
+});
+
+
+test('ground poses plant sole anchors and isolated broom visibility preserves clothing and wand',()=>{
+ const rider=createWizard();setAction(rider,'ground_idle',0);
+ for(const side of ['L','R'])assert.ok(Math.abs(worldPosition(rider,'sole.'+side).y-CHARACTER_GROUND_MOTION.soleY)<.003,side+' '+worldPosition(rider,'sole.'+side).y);
+ const feet=rider.userData.characterAnimation.feet;assert.equal(feet.length,2);
+ updateCharacter(rider,{dt:.02,mode:'grounded'});
+ const parts=rider.userData.characterAnimation.broom;assert.ok(parts.length>=3);assert.ok(parts.every(p=>!p.visible));
+ assert.equal(rider.getObjectByName('rider-mask').visible,true);assert.ok(rider.userData.wandTip);
+ updateCharacter(rider,{dt:.02,mode:'flying'});assert.ok(parts.every(p=>p.visible));
+});
+test('authored stance foot displacement cancels world travel throughout walk and run contact',()=>{
+ const rider=createWizard();
+ for(const [name,speed,duration,contact]of [['walk',1.6,1,.58],['run',3.8,.7,.36]]){
+  for(const side of ['L','R']){
+   const offset=side==='L'?0:.5;let origin;
+   for(const p of [.025,.075,.15,.25,.33].filter(p=>p<contact)){
+    const phase=(p-offset+1)%1;setAction(rider,name,phase*duration);
+    const foot=worldPosition(rider,'sole.'+side);foot.z-=speed*p*duration;
+    if(!origin)origin=foot.clone();
+    assert.ok(Math.abs(foot.y-CHARACTER_GROUND_MOTION.soleY)<.006,`${name} ${side} foot height ${foot.y}`);
+    assert.ok(Math.abs(foot.z-origin.z)<.006,`${name} ${side} foot slid ${foot.z-origin.z}`);
+   }
+  }
+ }
+});
+test('grounded cast retains a standing pose and emits its release once even with reduced motion',()=>{
+ for(const reducedMotion of [false,true]){
+  const rider=createWizard();updateCharacter(rider,{dt:.02,mode:'grounded'});
+  assert.equal(requestCharacterCast(rider).accepted,true);let releases=0;
+  for(let i=0;i<45;i++){const result=updateCharacter(rider,{dt:.02,mode:'grounded',reducedMotion});releases+=Number(result.castReleased);}
+  assert.equal(releases,1);assert.ok(Math.abs(worldPosition(rider,'sole.L').y-CHARACTER_GROUND_MOTION.soleY)<.003);
+ }
+});
+test('mount and dismount endpoints match standing and flight while pause freezes the selected transition',()=>{
+ const rider=createWizard();
+ setAction(rider,'ground_idle',0);const standing=worldPosition(rider,'head');
+ setAction(rider,'mount',0);assert.ok(worldPosition(rider,'head').distanceTo(standing)<.001);
+ setAction(rider,'idle',0);const flying=worldPosition(rider,'head');
+ setAction(rider,'mount',1.2);assert.ok(worldPosition(rider,'head').distanceTo(flying)<.002);
+ for(const name of ['sole.L','sole.R','calf.L','calf.R','hand.L']){setAction(rider,'idle',0);const expected=worldPosition(rider,name);setAction(rider,'mount',1.2);assert.ok(worldPosition(rider,name).distanceTo(expected)<.003,name+' mount endpoint');}
+ updateCharacter(rider,{dt:.02,mode:'mounting',transitionProgress:.5});const midpoint=worldPosition(rider,'head');
+ updateCharacter(rider,{dt:.02,paused:true,mode:'mounting',transitionProgress:1});assert.ok(worldPosition(rider,'head').distanceTo(midpoint)<1e-9);
+});
+
+test('ground contact report measures dense samples and standing body clearance',t=>{
+ const rider=createWizard();let maxHeight=0,maxDrift=0;
+ for(const [name,speed,duration,contact]of [['walk',1.6,1,.58],['run',3.8,.7,.36]])for(const side of ['L','R']){
+  let origin;for(let i=1;i<36;i++){
+   const p=contact*i/36,phase=(p-(side==='L'?0:.5)+1)%1;setAction(rider,name,phase*duration);
+   const foot=worldPosition(rider,'sole.'+side);foot.z-=speed*p*duration;
+   origin??=foot.clone();maxHeight=Math.max(maxHeight,Math.abs(foot.y-CHARACTER_GROUND_MOTION.soleY));maxDrift=Math.max(maxDrift,Math.abs(foot.z-origin.z));
+  }
+ }
+ setAction(rider,'ground_idle',0);const bounds=new Box3();
+ for(const mesh of skinnedMeshes(rider)){
+  if(mesh.userData.broomPart)continue;
+  for(let i=0;i<mesh.geometry.attributes.position.count;i+=13)bounds.expandByPoint(mesh.getVertexPosition(i,new Vector3()).applyMatrix4(mesh.matrixWorld));
+ }
+ t.diagnostic(`Ground sole height error ${(maxHeight*1000).toFixed(3)} mm; stance drift ${(maxDrift*1000).toFixed(3)} mm; stand bounds ${bounds.min.toArray()} / ${bounds.max.toArray()}; full height above sole ${(bounds.max.y-CHARACTER_GROUND_MOTION.soleY).toFixed(3)} m`);
+ assert.ok(maxHeight<.006);assert.ok(maxDrift<.006);
+});
+
+test('runtime foot correction follows a slope and preserves pause without changing actor displacement',()=>{
+ const rider=createWizard();rider.position.y=1.3;
+ const support={x:0,z:0,y:0,normal:{x:-.2,y:1,z:0}};
+ updateCharacter(rider,{dt:.02,mode:'grounded',groundSupport:support});
+ for(const side of ['L','R']){const sole=worldPosition(rider,'sole.'+side);assert.ok(Math.abs(sole.y-.2*sole.x)<.007,side+' slope '+sole.y);}
+ const before=worldPosition(rider,'sole.L');updateCharacter(rider,{dt:.1,paused:true,mode:'grounded',groundSupport:{...support,y:4}});
+ assert.ok(worldPosition(rider,'sole.L').distanceTo(before)<1e-9);assert.equal(rider.position.y,1.3);
+});
+
+test('actual distance motion retains the stance foot through idle-to-walk blending',()=>{
+ const rider=createWizard();rider.position.y=1.3;const groundSupport={x:0,z:0,y:0,normal:{x:0,y:1,z:0}};
+ updateCharacter(rider,{dt:.02,mode:'grounded',groundSupport});const planted=worldPosition(rider,'sole.L');
+ for(let i=1;i<=10;i++){rider.position.z=-i*.032;updateCharacter(rider,{dt:.02,mode:'grounded',groundSpeed:1.6,gaitPhase:.29+i*.02,groundSupport});const foot=worldPosition(rider,'sole.L');assert.ok(foot.distanceTo(planted)<.007,'frame '+i+' stance shifted '+foot.distanceTo(planted)+' lock '+JSON.stringify(rider.userData.characterAnimation.feet[0].lock));}
 });

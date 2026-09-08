@@ -13,7 +13,7 @@ from mathutils.bvhtree import BVHTree
 
 ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / 'world/public/models/characters'
-QA = ROOT.parent / 'qa/production-v3/characters'
+QA = Path(next((x.split('=',1)[1] for x in sys.argv if x.startswith('--qa=')), str(ROOT.parent / 'qa/production-v3/characters')))
 SOURCE = OUT / 'source/blender-studio-anatomy-cc0.blend'
 UPSTREAM = ROOT.parent.parent / 'work/character-assets/human-base-meshes/human-base-meshes-bundle-v1.4.1/human_base_meshes_bundle.blend'
 QUICK = '--preview' in sys.argv
@@ -1086,6 +1086,13 @@ def wizard():
     r=rider_rig();source,*eyes=source_body()
     rider_tailoring(source,r);rider_mask_hat(r)
     rider_gloves_boots(r);rider_garment_linings(r);separate_rider_sleeves(r);rider_cloth(r);rider_broom(r)
+    for o in bpy.context.scene.objects:
+        if o.type=='MESH' and o.vertex_groups.get('broom'):o['broomPart']=True
+    for side in ['L','R']:
+        ankle=r.bones['foot.'+side][0]
+        r.anchor('sole.'+side,ankle+Vector((0,-.20,.017)),'foot.'+side)
+        r.anchor('toe.'+side,ankle+Vector((0,-.172,-.25)),'foot.'+side)
+    r.obj['groundMotion']=GROUND_SPEC
     r.anchor('gripContact',r.bones['hand.L'][0],'fore.L')
     for o in [source,*eyes]:bpy.data.objects.remove(o,do_unlink=True)
     return r
@@ -1300,7 +1307,160 @@ def animate(r,kind):
             for p in r.obj.pose.bones:
                 p.keyframe_insert(data_path='rotation_euler',frame=frame,group=p.name)
                 p.keyframe_insert(data_path='location',frame=frame,group=p.name)
+                p.keyframe_insert(data_path='scale',frame=frame,group=p.name)
         print('ACTION_AUTHORED',state,len(r.obj.pose.bones))
+    r.obj.animation_data.action=bpy.data.actions['idle'];scene.frame_set(1)
+
+# Ground clips retain the flight bind pose. Absolute joint targets are converted
+# through each bone's rest/parent matrices; the exported animation is ordinary skinning.
+GROUND_ACTIONS={'ground_idle':2.0,'walk':1.0,'run':.70,'mount':1.20,'dismount':1.20,'ground_cast':.60}
+GROUND_SPEC={'soleY':-1.30,'height':3.24,'walkSpeed':1.6,'runSpeed':3.8,'walkCycle':1.0,'runCycle':.70,
+             'walkContact':.58,'runContact':.36,'mountDuration':1.20,'dismountDuration':1.20,
+             'castRelease':.18,'castDuration':.60}
+
+def ground_pose(r,state,t):
+    bones=r.obj.pose.bones;data=r.obj.data.bones;matrices={}
+    phase=t*TAU;walking=state=='walk';running=state=='run';moving=walking or running
+    duration=GROUND_ACTIONS[state];contact=.36 if running else .58
+    cycle_distance=(3.8*.70 if running else 1.6) if moving else 0
+    sway=(.018 if running else .013)*math.sin(phase) if moving else .006*math.sin(phase)
+    bob=(.037 if running else .018)*math.cos(phase*2) if moving else .004*math.cos(phase)
+    hip=Vector((sway,( -.018 if moving else .11)+bob,.035))
+    yaw=(.036 if running else .023)*math.sin(phase) if moving else .004*math.sin(phase)
+    lean=.045 if running else .018 if walking else 0
+    def posed(name):
+        if name in matrices:return matrices[name]
+        b=data[name]
+        return posed(b.parent.name)@b.parent.matrix_local.inverted()@b.matrix_local if b.parent else b.matrix_local.copy()
+    def put(name,head,tail=None,rotation=None):
+        b=data[name];rest=b.matrix_local;rot=rest.to_quaternion()
+        if tail is not None:
+            direction=V(Vector(tail)-Vector(head));rot=(b.tail_local-b.head_local).rotation_difference(direction)@rot
+            scale=Vector((1,1,1))
+        else:scale=Vector((1,1,1))
+        if rotation is not None:rot=rotation@rot
+        matrix=Matrix.LocRotScale(V(head),rot,scale);matrices[name]=matrix
+        parent=posed(b.parent.name) if b.parent else Matrix.Identity(4)
+        bones[name].matrix_basis=b.convert_local_to_pose(matrix,b.matrix_local,parent_matrix=parent,
+          parent_matrix_local=b.parent.matrix_local if b.parent else Matrix.Identity(4),invert=True)
+        return P(matrix@Vector((0,b.length,0)))
+    def knee_between(a,b,l1,l2,out):
+        axis=b-a;distance=min(axis.length,l1+l2-.001);unit=axis.normalized()
+        along=(l1*l1-l2*l2+distance*distance)/(2*distance)
+        pole=Vector(out);pole=(pole-unit*pole.dot(unit)).normalized()
+        return a+unit*along+pole*math.sqrt(max(.0001,l1*l1-along*along))
+    # Stack the spine upright. A small forward lean belongs to moving clips only.
+    head=hip
+    for name in ['pelvis','spine','chest','neck','head']:
+        length=data[name].length;tail=head+Vector((0,length*math.cos(lean),-length*math.sin(lean)))
+        head=put(name,head,tail,Quaternion(V((0,1,0)),yaw if name=='chest' else 0))
+    for side,s in [('L',-1),('R',1)]:
+        # Preserve original segment lengths. Reachable ankle targets keep both
+        # soles planted; the longer right leg carries a little more knee flexion.
+        p=(t+(0 if side=='L' else .5))%1
+        foot_z=(.31 if side=='R' else -.04) if not moving else 0;lift=0;roll=0
+        if moving:
+            if p<contact:foot_z=cycle_distance*(p-contact/2)
+            else:
+                swing=(p-contact)/(1-contact);smooth=swing*swing*(3-2*swing)
+                foot_z=cycle_distance*contact*(.5-smooth)
+                lift=(.28 if running else .15)*math.sin(math.pi*swing)**1.3
+                roll=-.23*math.sin(math.pi*swing)
+        ankle=Vector((s*.145,-1.10+lift,foot_z+.035))
+        hip_joint=P(posed('pelvis')@data['pelvis'].matrix_local.inverted()@data['thigh.'+side].head_local)
+        knee=knee_between(hip_joint,ankle,data['thigh.'+side].length,data['calf.'+side].length,(0,0,-1))
+        put('thigh.'+side,hip_joint,knee);put('calf.'+side,knee,ankle)
+        put('foot.'+side,ankle,rotation=Quaternion(V((1,0,0)),roll))
+        clavicle='clavicle.'+side
+        clav_head=P(posed('chest')@data['chest'].matrix_local.inverted()@data[clavicle].head_local)
+        shoulder=clav_head+Vector((s*data[clavicle].length,.018,-.014))
+        put(clavicle,clav_head,shoulder)
+        arm_swing=(.28 if running else .20)*math.sin(phase+(0 if side=='L' else math.pi)) if moving else .008*math.sin(phase+s)
+        wrist=Vector((s*(.36 if running else .34)+sway,.17 if running else .07,-.02+arm_swing))
+        hand_rotation=Quaternion(V((1,0,0)),-1.15 if side=='R' else .05)
+        if state=='ground_cast' and side=='R':
+            seconds=t*.6;release=smoothstep(.10,.18,seconds)*(1-smoothstep(.30,.60,seconds))
+            windup=smoothstep(0,.10,seconds)*(1-smoothstep(.10,.18,seconds))
+            wrist+=Vector((-.025*release,.23*windup+.46*release,-.15*windup-.37*release))
+            hand_rotation=Quaternion(V((1,0,0)),-1.15+1.25*release+.22*windup)
+        elbow=knee_between(shoulder,wrist,data['upper.'+side].length,data['fore.'+side].length,(s,.0,.6))
+        put('upper.'+side,shoulder,elbow);put('fore.'+side,elbow,wrist)
+        put('hand.'+side,wrist,rotation=hand_rotation)
+    # Rehang the cloth behind the upright torso with explicit chain endpoints.
+    for side,s in [('L',-1),('C',0),('R',1)]:
+        name='cape.'+side+'0';start=P(posed('chest')@data['chest'].matrix_local.inverted()@data[name].head_local)
+        head=start
+        for j in range(4):
+            name='cape.'+side+str(j);wave=(.012+.007*j)*math.sin(phase-j*.7+s*.3)*(1.5 if running else 1)
+            end=head+Vector((s*.014+wave*.3,-data[name].length*.94,(.23 if j==0 else .07 if j==1 else .035)+wave+( .04 if moving else 0)))
+            head=put(name,head,end)
+    head=P(posed('chest')@data['chest'].matrix_local.inverted()@data['scarf.0'].head_local)
+    for j in range(4):
+        name='scarf.'+str(j);end=head+Vector((.055,-data[name].length*.87,.08+.02*math.sin(phase-j*.8)))
+        head=put(name,head,end)
+    for side,s in [('L',-1),('R',1)]:
+        name='tail.'+side+'0';head=P(posed('pelvis')@data['pelvis'].matrix_local.inverted()@data[name].head_local)
+        for j in range(3):
+            name='tail.'+side+str(j);wave=.013*math.sin(phase-j*.8+s)
+            end=head+Vector((s*.026,-data[name].length*.91,.065+wave+(.04 if moving else 0)))
+            head=put(name,head,end)
+    return {p.name:p.matrix_basis.copy() for p in bones}
+
+def transition_legs(r,ground,flight,progress):
+    data=r.obj.data.bones;bones=r.obj.pose.bones
+    def matrix(name,bases=None):
+        b=data[name];local=b.matrix_local
+        parent=matrix(b.parent.name,bases) if b.parent else Matrix.Identity(4)
+        parent_rest=b.parent.matrix_local if b.parent else Matrix.Identity(4)
+        return parent@parent_rest.inverted()@local@(bases[name] if bases is not None else bones[name].matrix_basis)
+    def put(name,head,tail=None,rotation=None):
+        b=data[name];q=b.matrix_local.to_quaternion();scale=Vector((1,1,1))
+        if tail is not None:
+            direction=V(tail-head);q=(b.tail_local-b.head_local).rotation_difference(direction)@q
+        if rotation:q=rotation
+        parent=matrix(b.parent.name) if b.parent else Matrix.Identity(4)
+        bones[name].matrix_basis=b.convert_local_to_pose(Matrix.LocRotScale(V(head),q,scale),b.matrix_local,
+            parent_matrix=parent,parent_matrix_local=b.parent.matrix_local if b.parent else Matrix.Identity(4),invert=True)
+    for side,s in [('L',-1),('R',1)]:
+        amount=smoothstep(.36 if side=='L' else .18,.93 if side=='L' else .82,progress)
+        name='foot.'+side;gm=matrix(name,ground);fm=matrix(name,flight)
+        ankle=P(gm.translation).lerp(P(fm.translation),amount)
+        ankle+=Vector((s*.16,.17,0))*math.sin(math.pi*amount)
+        hip=P(matrix('pelvis')@data['pelvis'].matrix_local.inverted()@data['thigh.'+side].head_local)
+        l1=data['thigh.'+side].length
+        l2=data['calf.'+side].length
+        axis=ankle-hip;distance=min(axis.length,l1+l2-.001);unit=axis.normalized()
+        along=(l1*l1-l2*l2+distance*distance)/(2*distance);pole=Vector((0,0,-1)).lerp(P(matrix('calf.'+side,flight).translation)-hip,amount);pole=(pole-unit*pole.dot(unit)).normalized()
+        knee=hip+unit*along+pole*math.sqrt(max(.0001,l1*l1-along*along))
+        put('thigh.'+side,hip,knee);put('calf.'+side,knee,ankle)
+        put(name,ankle,rotation=gm.to_quaternion().slerp(fm.to_quaternion(),amount))
+
+def animate_ground(r):
+    scene=bpy.context.scene
+    # Flight frame at t=0 is the exact endpoint shared by the new transitions.
+    r.obj.animation_data.action=bpy.data.actions['idle'];scene.frame_set(1)
+    flight={p.name:p.matrix_basis.copy() for p in r.obj.pose.bones}
+    for state,duration in GROUND_ACTIONS.items():
+        action=bpy.data.actions.new(state);action.use_fake_user=True;r.obj.animation_data.action=action
+        last=round(duration*100)+1
+        frames=range(1,last+1)
+        for frame in frames:
+            t=(frame-1)/(last-1)
+            for p in r.obj.pose.bones:p.rotation_mode='XYZ';p.matrix_basis=Matrix.Identity(4)
+            if state in ['mount','dismount']:
+                ground=ground_pose(r,'ground_idle',0)
+                amount=smoothstep(.12,.88,t if state=='mount' else 1-t)
+                for p in r.obj.pose.bones:
+                    ga,gq,gs=ground[p.name].decompose();fa,fq,fs=flight[p.name].decompose()
+                    local=smoothstep(.05,.57,t if state=='mount' else 1-t) if p.name.startswith('hand.') else amount
+                    p.matrix_basis=Matrix.LocRotScale(ga.lerp(fa,local),gq.slerp(fq,local),gs.lerp(fs,local))
+                transition_legs(r,ground,flight,t if state=='mount' else 1-t)
+            else:ground_pose(r,state,t)
+            for p in r.obj.pose.bones:
+                p.keyframe_insert(data_path='rotation_euler',frame=frame,group=p.name)
+                p.keyframe_insert(data_path='location',frame=frame,group=p.name)
+                p.keyframe_insert(data_path='scale',frame=frame,group=p.name)
+        print('GROUND_ACTION_AUTHORED',state,duration)
     r.obj.animation_data.action=bpy.data.actions['idle'];scene.frame_set(1)
 
 def consolidate(r):
@@ -1310,12 +1470,12 @@ def consolidate(r):
       'Notched riding lapel -1','Notched riding lapel 1','Claret waistcoat panel -1','Claret waistcoat panel 1','Inset ivory linen shirt'}
     for o in list(bpy.context.scene.objects):
         if o.type!='MESH' or o.name in keep:continue
-        groups[o.data.materials[0].name].append(o)
-    for mat,objects in groups.items():
+        groups[('broom' if o.get('broomPart') else '',o.data.materials[0].name)].append(o)
+    for (part,mat),objects in groups.items():
         if len(objects)<2:continue
         bpy.ops.object.select_all(action='DESELECT')
         for o in objects:o.select_set(True)
-        bpy.context.view_layer.objects.active=objects[0];bpy.ops.object.join();objects[0].name=mat
+        bpy.context.view_layer.objects.active=objects[0];bpy.ops.object.join();objects[0].name=('rider-broom-' if part else '')+mat
     for o in bpy.context.scene.objects:
         if o.type=='MESH':
             for poly in o.data.polygons:poly.use_smooth=True
@@ -1361,6 +1521,7 @@ def export(r,kind):
       'bones':len(r.obj.data.bones),'animations':[a.get('name') for a in data.get('animations',[])],
       'sha256':hashlib.sha256(raw).hexdigest()}
     info['surfaceVariant']=SURFACE
+    if kind=='wizard':info['groundMotion']=GROUND_SPEC
     info['actionDurations']={a['name']:max(data['accessors'][s['input']]['max'][0] for s in a['samplers']) for a in data.get('animations',[])}
     if not info['skins'] or len(info['animations'])<(8 if kind=='wizard' else 3):raise RuntimeError('Skeletal export contract failed: '+str(info))
     if triangles>(500000 if kind=='wizard' else 120000) and not QUICK:raise RuntimeError('Triangle budget exceeded: '+str(info))
@@ -1441,10 +1602,11 @@ def record_sources():
             if digest!=asset['sha256']:raise RuntimeError('Changed retained texture source: '+str(path))
             consumed.append({'file':asset['path'],'bytes':path.stat().st_size,'sha256':digest,'role':channel,'tileMeters':source['tileMeters']})
     generated=provenance['generated']
-    generated['originalWork']='Masks, hat, garment cutting, independent sleeves and seams, lapels, cuffs, fitted belt, gravity-shaped split cape, carved/bound broom, guardian layered drapery, rigs, weights, eight rider actions and three guardian actions.'
+    generated['originalWork']='Masks, hat, garment cutting, independent sleeves and seams, lapels, cuffs, fitted belt, gravity-shaped split cape, carved/bound broom, guardian layered drapery, rigs, weights, eight flight and six ground rider actions and three guardian actions.'
     generated['materials']='Selected hybrid: linear garment palette multiplied by restrained normalized scan luminance, explicitly encoded to sRGB. Coat, pressed lapel facings and worsted waistcoat use wool scan detail at 0.27 m; leather at 0.40 m. Normal and roughness images remain Non-Color. Satin lining, linen shirt, trousers, scarf and felt retain authored weave. Full authored/scans/hybrid comparisons use identical geometry, lights and cameras.'
     generated['builderSha256']=hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
     generated['textureInputs']=consumed
+    generated['groundMotion']=GROUND_SPEC
     generated['actionTimingsSeconds']={'boost_start':.2,'boost_end':.35,'cast':.6,'cast_release':.18}
     generated['rigSourceRecords']=[{'file':name,'bytes':(OUT/'source'/name).stat().st_size,'sha256':hashlib.sha256((OUT/'source'/name).read_bytes()).hexdigest()} for name in generated['rigSources']]
     generated['artReferences']=[{'url':url,'usage':'Reference URL supplied in production brief; no model or texture copied'} for url in
@@ -1455,12 +1617,13 @@ summary=[]
 for kind,build in [('wizard',wizard),('wraith',wraith)]:
     if ONLY and ONLY!=kind:continue
     clear();materials();rig=build();consolidate(rig);animate(rig,kind)
+    if kind=='wizard':animate_ground(rig)
     summary.append(export(rig,kind))
     if not NO_RENDER:studio(rig,kind)
     if MATERIAL_AB and kind=='wizard':material_comparison(rig,kind)
 manifest=OUT/'manifest.json'
 if ONLY and manifest.exists():
     prior=json.loads(manifest.read_text());summary += [x for x in prior.get('assets',[]) if x['file']!=ONLY+'.glb']
-manifest.write_text(json.dumps({'generator':'Blender 5.1.2; production v3 independent garment patterns, masked rider, gravity cape, hybrid scanned surfaces and eight baked rider actions','coordinateSystem':'Y up; forward -Z','assets':summary},indent=2)+'\n')
+manifest.write_text(json.dumps({'generator':'Blender 5.1.2; production v3 independent garment patterns, masked rider, gravity cape, hybrid scanned surfaces and fourteen baked rider actions','coordinateSystem':'Y up; forward -Z','assets':summary},indent=2)+'\n')
 record_sources()
 print('CHARACTER_ASSETS_COMPLETE '+json.dumps(summary))

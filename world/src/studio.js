@@ -65,17 +65,18 @@ const captureURLs=new Set(),captureStatus=document.createElement('p'),captureRes
 captureStatus.id='capture-status';captureStatus.setAttribute('role','status');captureStatus.setAttribute('aria-live','polite');captureResults.id='capture-results';
 document.querySelector('.caption').append(captureStatus,captureResults);
 controls.addEventListener('start',()=>{studioView='orbit';});
-let actorAction='idle',actorPlaying=true;
+let actorAction='idle',actorPlaying=true,actorGroundTime=0,actorGaitPhase=0;
+const groundActions=new Set(['ground_idle','walk','run','mount','dismount']);
 const actorTools=document.createElement('div');actorTools.className='actor-tools';actorTools.hidden=true;
-actorTools.innerHTML='<label>Action / 动作 <select aria-label="Character action"><option value="idle">Hover / 悬停</option><option value="cruise">Cruise / 飞行</option><option value="turn-left">Turn left / 左转</option><option value="turn-right">Turn right / 右转</option><option value="boost">Boost / 加速</option><option value="channel">Channel / 施法</option></select></label><button data-actor-play aria-pressed="true">Animate / 动画</button><button data-actor-cast>Cast / 施法</button><button data-actor-record>Record 16s / 录制</button><div class="actor-views"><button data-actor-view="front">Front / 正面</button><button data-actor-view="side">Side / 侧面</button><button data-actor-view="back">Back / 背面</button><button data-actor-view="garment">Coat / 服装</button><button data-actor-view="mask">Mask / 面具</button></div>';
+actorTools.innerHTML='<label>Action / 动作 <select aria-label="Character action"><option value="idle">Hover / 悬停</option><option value="cruise">Cruise / 飞行</option><option value="turn-left">Turn left / 左转</option><option value="turn-right">Turn right / 右转</option><option value="boost">Boost / 加速</option><option value="ground_idle">Stand / 站立</option><option value="walk">Walk / 行走</option><option value="run">Run / 跑动</option><option value="mount">Mount broom / 上扫帚</option><option value="dismount">Dismount / 下扫帚</option><option value="channel">Channel / 施法</option></select></label><button data-actor-play aria-pressed="true">Animate / 动画</button><button data-actor-cast>Cast / 施法</button><button data-actor-record>Record 16s / 录制</button><div class="actor-views"><button data-actor-view="front">Front / 正面</button><button data-actor-view="side">Side / 侧面</button><button data-actor-view="back">Back / 背面</button><button data-actor-view="garment">Coat / 服装</button><button data-actor-view="mask">Mask / 面具</button></div>';
 document.querySelector('.stage').append(actorTools);
 actorTools.querySelector('[data-actor-cast]').onclick=()=>{if(current)requestCharacterCast(current);};
 actorTools.querySelector('[data-actor-record]').onclick=recordActor;
-actorTools.querySelector('select').onchange=e=>{actorAction=e.target.value;};
+actorTools.querySelector('select').onchange=e=>{actorAction=e.target.value;actorGroundTime=0;actorGaitPhase=0;if(groundActions.has(actorAction))floor.position.y=-1.30;};
 actorTools.querySelector('[data-actor-play]').onclick=e=>{actorPlaying=!actorPlaying;e.currentTarget.setAttribute('aria-pressed',String(actorPlaying));};
 actorTools.querySelectorAll('[data-actor-view]').forEach(button=>button.onclick=()=>{
   if(!current)return;controls.autoRotate=false;document.querySelector('#rotate').setAttribute('aria-pressed','false');
-  current.updateMatrixWorld(true);const box=new THREE.Box3().setFromObject(current),size=box.getSize(new THREE.Vector3()),center=box.getCenter(new THREE.Vector3()),radius=Math.max(size.x,size.y,size.z)*1.55;
+  current.updateMatrixWorld(true);current.traverse(o=>{if(o.isSkinnedMesh)o.computeBoundingBox();});const box=new THREE.Box3().setFromObject(current),size=box.getSize(new THREE.Vector3()),center=box.getCenter(new THREE.Vector3()),radius=Math.max(size.x,size.y,size.z)*1.55;
   const view=button.dataset.actorView,directions={front:[0,.18,-1],side:[1,.18,0],back:[0,.18,1],garment:[.25,.12,-1],mask:[.16,.04,-1]};
   studioView=view;
   if(view==='garment')center.y=box.min.y+size.y*.57;
@@ -102,6 +103,8 @@ function show(id){const selected=assets.find(a=>a[0]===id)||assets[0];if(current
   actorTools.hidden=!['rider','wraith'].includes(selected[0]);
   actorTools.querySelector('[data-actor-cast]').hidden=selected[0]!=='rider';
   actorTools.querySelector('[value=channel]').hidden=selected[0]!=='wraith';
+  for(const action of groundActions)actorTools.querySelector(`[value=${action}]`).hidden=selected[0]!=='rider';
+  if(groundActions.has(actorAction)&&selected[0]!=='rider'){actorAction='idle';actorTools.querySelector('select').value='idle';}
   if(actorAction==='channel'&&selected[0]!=='wraith'){actorAction='idle';actorTools.querySelector('select').value='idle';}
 }
 document.querySelector('#rotate').onclick=e=>{controls.autoRotate=!controls.autoRotate;e.currentTarget.setAttribute('aria-pressed',String(controls.autoRotate));};
@@ -116,7 +119,7 @@ document.querySelector('#frame').onclick=()=>{studioFrame=true;};
 document.querySelector('#shadows').onclick=e=>{renderer.shadowMap.enabled=!renderer.shadowMap.enabled;key.castShadow=renderer.shadowMap.enabled;renderer.shadowMap.needsUpdate=true;scene.traverse(object=>{if(object.material)for(const material of Array.isArray(object.material)?object.material:[object.material])material.needsUpdate=true;});e.currentTarget.setAttribute('aria-pressed',String(renderer.shadowMap.enabled));};
 function captureMetadata(kind){
   return {kind,asset:document.body.dataset.asset,light:studioLight,shadows:renderer.shadowMap.enabled,view:controls.autoRotate?'orbit':studioView,
-    action:kind==='record'?'sequence':current?.userData.characterAnimation?.cast?.active?'cast':actorAction,
+    action:kind==='record'?(groundActions.has(actorAction)?'ground-sequence':'sequence'):current?.userData.characterAnimation?.cast?.active?'cast':actorAction,
     playing:actorPlaying,wire,reducedMotion:matchMedia('(prefers-reduced-motion: reduce)').matches,
     camera:{eye:camera.position.toArray(),target:controls.target.toArray(),fov:camera.fov},
     canvas:{width:canvas.width,height:canvas.height,cssWidth:canvas.clientWidth,cssHeight:canvas.clientHeight,dpr:renderer.getPixelRatio()},
@@ -174,7 +177,7 @@ function stopRecording(reason,completed=false){
 function recordActor(){
   if(recording||document.hidden||capturePageHidden)return;
   if(!window.MediaRecorder||!canvas.captureStream){captureStatus.textContent='Recording is unavailable in this browser / 此浏览器不支持录制';return;}
-  const capture={metadata:{...captureMetadata('record'),playing:true},previous:{action:actorAction,playing:actorPlaying,rotate:controls.autoRotate,controlsEnabled:controls.enabled},
+  const capture={groundSequence:groundActions.has(actorAction),metadata:{...captureMetadata('record'),playing:true},previous:{action:actorAction,playing:actorPlaying,rotate:controls.autoRotate,controlsEnabled:controls.enabled},
     disabled:[...document.querySelectorAll('button,select')].map(element=>[element,element.disabled]),stream:null,recorder:null,chunks:[],started:null,stage:-1,invalid:false,stopping:false};
   recording=capture;
   try{
@@ -192,12 +195,13 @@ function recordActor(){
 }
 function updateRecording(now){
   if(!recording||recording.recorder.state!=='recording')return;
-  const t=(now-recording.started)/1000,next=t<2?0:t<4?1:t<8?2:t<10?3:t<12?4:5;
+  const t=(now-recording.started)/1000,next=recording.groundSequence?(t<2?0:t<4?1:t<8?2:t<10?3:t<11.2?4:t<12?5:t<13.2?6:t<14?7:8):(t<2?0:t<4?1:t<8?2:t<10?3:t<12?4:5);
   actorTools.querySelector('[data-actor-record]').textContent=`${t.toFixed(1)} / 16 s`;
   if(next!==recording.stage){
     recording.stage=next;
-    actorAction=recording.metadata.asset==='wraith'?['idle','cruise','cruise','idle','channel','cruise'][next]:['idle','cruise','boost','cruise','idle','turn-left'][next];
-    actorTools.querySelector('select').value=actorAction;if(next===4&&recording.metadata.asset==='rider')requestCharacterCast(current);
+    actorGroundTime=0;
+    actorAction=recording.groundSequence?['ground_idle','walk','run','ground_idle','mount','idle','dismount','ground_idle','ground_idle'][next]:recording.metadata.asset==='wraith'?['idle','cruise','cruise','idle','channel','cruise'][next]:['idle','cruise','boost','cruise','idle','turn-left'][next];
+    actorTools.querySelector('select').value=actorAction;if((recording.groundSequence?next===8:next===4)&&recording.metadata.asset==='rider')requestCharacterCast(current);
   }
   if(t>=16)stopRecording('completed',true);
 }
@@ -210,4 +214,4 @@ window.addEventListener('pageshow',()=>{capturePageHidden=false;last=performance
 
 new ResizeObserver(()=>{const r=canvas.getBoundingClientRect(),dpr=renderPixelRatio('high',r.width,r.height,devicePixelRatio);renderer.setPixelRatio(dpr);renderer.setSize(r.width,r.height,false);composer.setPixelRatio(dpr);composer.setSize(r.width,r.height);camera.aspect=r.width/r.height;camera.updateProjectionMatrix();}).observe(canvas);
 try{await Promise.all([loadLandscapeAssets(),models.loadArchitectureAssets?.(),loadCharacterAssets(),environmentReady]);show(new URLSearchParams(location.search).get('asset'));document.querySelector('#loading').hidden=true;document.body.dataset.ready='true';}catch(error){document.querySelector('#loading').innerHTML='<div class="studio-error">Asset loading failed. The portfolio remains available from the link above.</div>';console.error(error);}
-function frame(now){requestAnimationFrame(frame);const dt=Math.min((now-last)/1000,.05);last=now;if(document.hidden||capturePageHidden)return;updateRecording(now);controls.update(dt);current?.userData.update?.(now/1000,false);updateCharacter(current,{dt:actorPlaying?dt:0,paused:!actorPlaying,boost:actorAction==='boost',speed:actorAction==='boost'?1:actorAction==='idle'?0:.55,turn:actorAction==='turn-left'?-1:actorAction==='turn-right'?1:0,state:actorAction==='channel'?'channel':undefined,reducedMotion:matchMedia('(prefers-reduced-motion: reduce)').matches});composer.render();if(studioFrame){studioFrame=false;const metadata=captureMetadata('frame');canvas.toBlob(blob=>{if(blob)saveCapture(blob,'png',metadata);else captureStatus.textContent='Frame encoding failed / 截图编码失败';});}}requestAnimationFrame(frame);
+function frame(now){requestAnimationFrame(frame);const dt=Math.min((now-last)/1000,.05);last=now;if(document.hidden||capturePageHidden)return;updateRecording(now);controls.update(dt);current?.userData.update?.(now/1000,false);if(actorPlaying){actorGroundTime+=dt;actorGaitPhase=(actorGaitPhase+dt/(actorAction==='run'?.7:1))%1;}const ground=groundActions.has(actorAction),mode=actorAction==='mount'?'mounting':actorAction==='dismount'?'dismounting':ground?'grounded':'flying';updateCharacter(current,{dt:actorPlaying?dt:0,paused:!actorPlaying,mode,groundSpeed:actorAction==='run'?3.8:actorAction==='walk'?1.6:0,gaitPhase:actorGaitPhase,transitionProgress:Math.min(1,actorGroundTime/1.2),boost:actorAction==='boost',speed:actorAction==='boost'?1:actorAction==='idle'?0:.55,turn:actorAction==='turn-left'?-1:actorAction==='turn-right'?1:0,state:actorAction==='channel'?'channel':undefined,reducedMotion:matchMedia('(prefers-reduced-motion: reduce)').matches});composer.render();if(studioFrame){studioFrame=false;const metadata=captureMetadata('frame');canvas.toBlob(blob=>{if(blob)saveCapture(blob,'png',metadata);else captureStatus.textContent='Frame encoding failed / 截图编码失败';});}}requestAnimationFrame(frame);

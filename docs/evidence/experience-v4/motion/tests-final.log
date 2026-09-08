@@ -1,0 +1,64 @@
+✔ published assets carry complete skins/actions and respect per-character budgets (175.314667ms)
+✔ exported cloth sheen preserves the authored low-intensity material finish (1.757542ms)
+✔ selected scan detail carries physical scale and traceable texture inputs (6.249917ms)
+✔ embedded cloth pigment PNGs decode to the intended linear palette with subtle weave variation (432.398708ms)
+ℹ Academy midnight wool: RGB8 mean 64.34,91.03,115.91; linear mean 0.05200,0.10505,0.17496; relative weave variation 0.1092
+ℹ Burgundy satin lining: RGB8 mean 129.14,50.05,61.89; linear mean 0.22005,0.03196,0.04801; relative weave variation 0.0152
+ℹ Graphite twill riding trousers: RGB8 mean 54.06,65.69,73.71; linear mean 0.03697,0.05398,0.06794; relative weave variation 0.0158
+ℹ Claret woven scarf: RGB8 mean 148.87,64.46,69.84; linear mean 0.29997,0.05201,0.06097; relative weave variation 0.0153
+ℹ Deep indigo wizard hat felt: RGB8 mean 35.15,45.73,64.46; linear mean 0.01693,0.02703,0.05201; relative weave variation 0.0168
+ℹ Tailored deep indigo facing: RGB8 mean 49.99,69.73,93.84; linear mean 0.03199,0.06099,0.11194; relative weave variation 0.1095
+ℹ Claret worsted waistcoat: RGB8 mean 128.91,49.99,61.76; linear mean 0.21995,0.03199,0.04797; relative weave variation 0.1094
+ℹ Warm ivory linen: RGB8 mean 209.34,198.82,175.23; linear mean 0.63996,0.57003,0.42997; relative weave variation 0.0150
+ℹ Guardian indigo wool: RGB8 mean 61.86,83.19,123.52; linear mean 0.04800,0.08698,0.20000; relative weave variation 0.0484
+ℹ Guardian twilight lining: RGB8 mean 45.73,57.05,81.77; linear mean 0.02703,0.04098,0.08390; relative weave variation 0.0153
+ℹ Guardian moon blue satin: RGB8 mean 82.34,114.53,151.11; linear mean 0.08510,0.16996,0.31001; relative weave variation 0.0151
+✔ each character has independent bones and actions while sharing GPU geometry (9.4805ms)
+✔ rider actions maintain the broom seat and gripping hand, with bone-following sockets (3.670084ms)
+✔ one-shot action curves keep the seat, broom and supporting grip fixed (3.183958ms)
+✔ rider exports a complete mask and felt hat with no exposed-face material (2.42475ms)
+✔ tailored rider has separate sleeves and a slim two-panel cape (1.070875ms)
+✔ upper cape clears the underlying coat in neutral, boost and cast poses (3855.012833ms)
+✔ thin chest layers remain outside the coat through flight and cast deformation (19613.171417ms)
+ℹ Chest layers: 720 deformed surface samples; minimum forward clearance 3.07 mm
+✔ exported cloth changes shape, loops continuously and stays finite for every action (179.553417ms)
+✔ input blending changes the pose and reduced-motion holds a chosen idle frame (11.414666ms)
+✔ explicit boost intent starts immediately and interruptions settle into the latest intent (12.088666ms)
+✔ cast uses the shipped authored action, releases once, then returns to flight (6.989334ms)
+✔ repeated cast requests and cancellation cannot emit a stale release (1.892417ms)
+✔ pause and zero dt freeze pose, cloth, blend state and cast event clock (1.892125ms)
+✔ reduced motion retains one cast release event while holding a static pose (1.111666ms)
+✔ cape follows a torso turn with delayed orientation and settles without unstable weights (4.528916ms)
+✔ ground poses plant sole anchors and isolated broom visibility preserves clothing and wand (1.483959ms)
+✔ authored stance foot displacement cancels world travel throughout walk and run contact (1.199041ms)
+✔ grounded cast retains a standing pose and emits its release once even with reduced motion (5.257166ms)
+✔ mount and dismount endpoints match standing and flight while pause freezes the selected transition (1.685166ms)
+✔ ground contact report measures dense samples and standing body clearance (7.833ms)
+ℹ Ground sole height error 1.183 mm; stance drift 0.331 mm; stand bounds -0.5624851773169057,-1.299999745383864,-0.3400540400953439 / 0.4170604046976444,1.8882217784768343,0.4765976596036636; full height above sole 3.188 m
+✔ runtime foot correction follows a slope and preserves pause without changing actor displacement (1.196542ms)
+✔ actual distance motion retains the stance foot through idle-to-walk blending (1.597666ms)
+✔ ground support follows the supplied rendered surface and rejects steep slopes and water (0.684292ms)
+✔ bridge support selects its real deck over water and rejects an unsupported edge (0.908375ms)
+✔ platform steps are walkable while narrow roofs and overhead obstructions are not landing sites (0.20475ms)
+✔ motion clips against a wall, stops before water and advances gait by actual distance (0.40775ms)
+✔ landing queries below the aircraft and respects headroom and water (0.092666ms)
+✔ walking climbs and descends a low foundation step without horizontal ejection (2.190875ms)
+✔ studio pause and boost controls dispatch actual action intent without advancing a paused actor (60.019291ms)
+✔ one 16-second sequence releases its stream and restores paused inspection state (4.354ms)
+✔ recorder start failure releases its stream, clears the lock and leaves retry available (2.786833ms)
+✔ asynchronous PNG encoding retains the rendered asset, light, shadow, view and action conditions (8.80475ms)
+✔ hiding a recording stops and releases immediately, and the exported take is explicitly invalid (2.452209ms)
+✔ pagehide releases active capture and revokes result links including late finalization (4.389958ms)
+✔ local save failures remain visible beside a usable browser download (1.831042ms)
+✔ shadow toggle updates renderer, caster and material state in both directions (1.353792ms)
+✔ device errors and spontaneous stops cannot be exported as completed 16-second takes (5.288125ms)
+✔ a page exit between stop request and final chunks invalidates that take without double release (5.677042ms)
+✔ the guardian sequence dispatches its channel action instead of a rider-only cast request (2.0525ms)
+ℹ tests 43
+ℹ suites 0
+ℹ pass 43
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 24484.295042

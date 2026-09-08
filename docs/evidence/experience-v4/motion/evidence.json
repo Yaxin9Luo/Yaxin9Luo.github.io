@@ -1,0 +1,85 @@
+{
+  "type": "Blender source-rig render evidence; not Three.js gameplay capture",
+  "blender": "5.1.2",
+  "sourceGLB": "world/public/models/characters/wizard.glb",
+  "sourceGLBSha256": "6f1a9ad3f526855a5299ab948db0b4cd1331122b44c81089b074ff24068ee588",
+  "images": [
+    {
+      "file": "stand-front.png",
+      "bytes": 954943,
+      "sha256": "5b0be2a9321577ab33384d2f3a61e6676cf78fd511c50392e5cda0fb218f59c4",
+      "width": 840,
+      "height": 1050
+    },
+    {
+      "file": "stand-side.png",
+      "bytes": 957683,
+      "sha256": "0883a50135b65373be7f82bd3d67949aa4477fd8cf8e0b1bf06333edeb4a8fb1",
+      "width": 840,
+      "height": 1050
+    },
+    {
+      "file": "stand-back.png",
+      "bytes": 917051,
+      "sha256": "1b004d25505e39fb9518d675897ed867879286f2cbe418eed87b3843afe96769",
+      "width": 840,
+      "height": 1050
+    },
+    {
+      "file": "stand-day.png",
+      "bytes": 956923,
+      "sha256": "13c9a1e28b537f3de887c2cfae3645a4b4ac813964bb87ceb6e11fc53f4a211a",
+      "width": 840,
+      "height": 1050
+    },
+    {
+      "file": "stand-night.png",
+      "bytes": 896274,
+      "sha256": "10ac4e9135aaa893aa1c2b1b38c7d2c4148b3ff992f49c469e90e0f2b12cdc16",
+      "width": 840,
+      "height": 1050
+    },
+    {
+      "file": "walk-contact.png",
+      "bytes": 965886,
+      "sha256": "46d7db958b5c13187496f3bcc09329e3c31dcc5e50b8d428604a30d98e69cd38",
+      "width": 840,
+      "height": 1050
+    },
+    {
+      "file": "walk-passing.png",
+      "bytes": 965556,
+      "sha256": "f1fbb836ef6059b8b6847926ac12f688632719dbe06d7a44784230f46e8205f1",
+      "width": 840,
+      "height": 1050
+    },
+    {
+      "file": "run-contact.png",
+      "bytes": 966420,
+      "sha256": "8e95eb246cb2e1aaa0093b611712efa1ba72725b62a607901a068825c7219d43",
+      "width": 840,
+      "height": 1050
+    },
+    {
+      "file": "run-flight.png",
+      "bytes": 970742,
+      "sha256": "859a6da9da598151f3f80cbbdcffa1f64bce400d4eb0bd0be687a990423c5467",
+      "width": 840,
+      "height": 1050
+    },
+    {
+      "file": "mount-middle.png",
+      "bytes": 995501,
+      "sha256": "63eea8c40137d107fad0aa0fc8e4565abb0354ac5de4d4b047c903a5a12fee80",
+      "width": 840,
+      "height": 1050
+    },
+    {
+      "file": "cast-release.png",
+      "bytes": 957816,
+      "sha256": "580be00e82ade12169d54166ac0cac95a14ba95d3df35c8bf1feadde62be33ed",
+      "width": 840,
+      "height": 1050
+    }
+  ]
+}
