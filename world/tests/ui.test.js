@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {Interface} from '../src/ui.js';
+import {Interface,readPrefs} from '../src/ui.js';
 import {ReadingMemory} from '../src/exhibition-state.js';
 import {freshProgress} from '../src/logic.js';
 
@@ -163,5 +163,68 @@ test('changing language in a pending exhibition keeps the requested destination'
   const {ui,restore}=reader();try{
     ui.openExhibition('autodesign');const pending=ui.pendingStart;
     ui.toggleLanguage();assert.equal(ui.pendingStart,pending);assert.equal(ui.options.lang,'zh');
+  }finally{restore();}
+});
+
+test('legacy time preferences migrate without changing fixed modes and new presets survive reload',()=>{
+  const originalStorage=Object.getOwnPropertyDescriptor(globalThis,'localStorage'),originalMedia=globalThis.matchMedia;
+  globalThis.matchMedia=()=>({matches:false});
+  Object.defineProperty(globalThis,'localStorage',{configurable:true,writable:true,value:null});
+  try{
+    for(const timeOfDay of ['auto','dawn','day','noon','dusk','night','midnight']){
+      globalThis.localStorage={getItem:()=>JSON.stringify({timeOfDay,gameplay:false})};
+      assert.equal(readPrefs().timeOfDay,timeOfDay);assert.equal(readPrefs().gameplay,false);
+    }
+    globalThis.localStorage={getItem:()=>'{broken'};assert.equal(readPrefs().timeOfDay,'auto');
+    globalThis.localStorage={getItem:()=>JSON.stringify({timeOfDay:'unknown'})};assert.equal(readPrefs().timeOfDay,'auto');
+  }finally{
+    if(originalStorage===undefined)delete globalThis.localStorage;else Object.defineProperty(globalThis,'localStorage',originalStorage);
+    if(originalMedia===undefined)delete globalThis.matchMedia;else globalThis.matchMedia=originalMedia;
+  }
+});
+
+test('one HUD contains prompt, clock, exploration, combat and touch controls when optional play is off',()=>{
+  const {ui,restore}=reader();try{
+    ui.options={lang:'en',gameplay:false};ui.snapshot.position={x:0,y:10,z:0};ui.render();
+    const hud=ui.root.innerHTML.match(/<section class="world-hud"[^>]*>([\s\S]*?)<\/section>/)?.[1];assert.ok(hud);
+    for(const feature of ['interaction-prompt','world-clock','exploration-actions','flight-hud','touch-controls'])assert.ok(hud.includes(`class="${feature}"`),feature);
+    assert.match(hud,/class="world-clock"[^>]*aria-live="off"/);assert.match(hud,/<time id="world-clock-time">/);
+    assert.ok(hud.indexOf('data-action="illumination"')<hud.indexOf('class="spellbar"'));
+    assert.match(ui.controlsContent(),/<kbd>L<\/kbd>/);assert.match(ui.controlsContent(),/<kbd>B<\/kbd>/);
+  }finally{restore();}
+});
+
+test('clock display is rate-limited and fixed/paused changes appear immediately',()=>{
+  const {ui,element,restore}=reader();try{
+    const base={started:true,paused:false,locomotion:'grounded',illumination:{enabled:false,available:true},environment:{mode:'auto',phase:.5,period:'noon',clockText:'12:00',clockState:'auto'}};
+    ui.updateWorldHUD(base,{now:0});assert.equal(element('#world-clock-time').textContent,'12:00');
+    const later={...base,environment:{...base.environment,clockText:'12:01'}};
+    ui.updateWorldHUD(later,{now:100});assert.equal(element('#world-clock-time').textContent,'12:00');
+    ui.updateWorldHUD(later,{now:250});assert.equal(element('#world-clock-time').textContent,'12:01');
+    ui.updateWorldHUD({...base,environment:{...base.environment,mode:'noon',clockState:'fixed'}},{now:260});assert.equal(element('.world-clock').dataset.state,'fixed');
+    ui.updateWorldHUD({...base,paused:true,environment:{...base.environment,clockState:'paused',pauseReason:'reduced-motion'}},{now:270});assert.equal(element('#world-clock-state').textContent,'clockMotion');
+    assert.equal(element('[data-action="illumination"]').disabled,true);
+  }finally{restore();}
+});
+
+test('illumination and mount controls work outside gameplay and reflect movement state',()=>{
+  const {ui,element,restore}=reader();try{
+    ui.options.gameplay=false;const calls=[];ui.game={toggleIllumination:()=>calls.push('light'),toggleBroom:()=>calls.push('broom')};
+    const state={started:true,locomotion:{mode:'grounded'},illumination:{enabled:true,available:true}};
+    ui.updateWorldHUD(state,{now:0});assert.equal(element('[data-action="illumination"]').disabled,false);assert.equal(element('[data-action="illumination"]').getAttribute('aria-pressed'),'true');
+    assert.equal(element('[data-hud-label="broom"]').textContent,'summonBroom');ui.action('illumination');ui.action('broom');assert.deepEqual(calls,['light','broom']);
+    ui.updateWorldHUD({...state,locomotion:'flying'},{now:10});assert.equal(element('[data-hud-label="broom"]').textContent,'landBroom');
+    ui.updateWorldHUD({...state,locomotion:'mounting'},{now:20});assert.equal(element('[data-action="broom"]').disabled,true);
+    ui.view='settings';ui.action('illumination');ui.action('broom');assert.deepEqual(calls,['light','broom']);
+  }finally{restore();}
+});
+
+test('time settings distinguish a fixed preset from an explicit jump-and-continue action',()=>{
+  const {ui,restore}=reader();try{
+    const calls=[];ui.game={started:true,setPaused:value=>calls.push(['pause',value]),jumpToTime:value=>calls.push(['jump',value])};ui.options.timeOfDay='night';
+    const settings=ui.timeSettingsContent();assert.match(settings,/value="night" selected>fixed: night/);assert.match(settings,/data-action="time-jump" data-id="midnight"/);
+    ui.view='settings';ui.action('time-jump','dawn');assert.deepEqual(calls,[['pause',false],['jump','dawn']]);assert.equal(ui.view,null);
+    ui.action('time-jump','unknown');assert.equal(calls.length,2);
+    ui.applyTimeMode('auto');assert.equal(ui.options.timeOfDay,'auto');
   }finally{restore();}
 });
