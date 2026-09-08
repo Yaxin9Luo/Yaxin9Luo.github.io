@@ -1,0 +1,51 @@
+{
+  "device": {
+    "model": "Mac14,10",
+    "chip": "Apple M2 Pro",
+    "memory": "16 GB",
+    "graphics": [
+      {
+        "model": "Apple M2 Pro",
+        "cores": "19",
+        "metal": "spdisplays_metal4"
+      }
+    ]
+  },
+  "browser": "Codex in-app Chromium; same engine and explicit canvas sampling. Temporary tab was recreated before current measurements.",
+  "conditions": "1024x576 CSS / 2560x1440 backing / DPR 2.5 / high / 4x MSAA / 4096 shadow / fixed night / reduced motion off / sound off / 3.5s warmup / 20s measurement. Baseline uses full foliage, current uses production spatial LOD.",
+  "limitations": [
+    "Single local machine; includes whole-version differences, not an isolated causal benchmark.",
+    "No physical mobile performance, first-load timing, subjective audio listening, or input-latency measurement.",
+    "GPU elapsed queries may overlap queued execution; do not convert their inverse into displayed FPS."
+  ],
+  "runs": [
+    {
+      "label": "旧版 338d112 · 庭院",
+      "file": "baseline-court-metrics.json",
+      "fps": 22.008693433880147,
+      "p95": 52,
+      "triangles": 22040450.376417235
+    },
+    {
+      "label": "旧版 338d112 · 鸟瞰",
+      "file": "baseline-overview-metrics.json",
+      "fps": 23.552473009658993,
+      "p95": 47.900000005960464,
+      "triangles": 22929156.008474577
+    },
+    {
+      "label": "最终 V3 · 庭院",
+      "file": "current-court-metrics.json",
+      "fps": 19.648137937947972,
+      "p95": 62.69999998807907,
+      "triangles": 20964837.888040714
+    },
+    {
+      "label": "最终 V3 · 鸟瞰",
+      "file": "current-overview-metrics.json",
+      "fps": 17.22238910583759,
+      "p95": 71.7999999821186,
+      "triangles": 26724886.498550724
+    }
+  ]
+}

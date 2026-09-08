@@ -3,14 +3,16 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import * as THREE from 'three';
 import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { createCastle, loadArchitectureAssets } from '../src/models.js';
 import { loadLandscapeAssets, groundMaterial, surface } from '../src/landscape.js';
 import { createGardenSpecimen } from '../src/gardens.js';
 
-// Keep the real shared loader/binding path; Node substitutes only image decoding.
+// Keep the shared binding path; Node substitutes browser image/model decoding.
 const loaded = [];
 const originalTextureLoad = THREE.TextureLoader.prototype.loadAsync;
 const originalHDRLoad = HDRLoader.prototype.loadAsync;
+const originalGLTFLoad = GLTFLoader.prototype.loadAsync;
 const originalDocument = globalThis.document;
 THREE.TextureLoader.prototype.loadAsync = async function (url) {
   assert.ok(fs.existsSync(new URL(`../public${url}`, import.meta.url)), `missing local texture ${url}`);
@@ -18,13 +20,23 @@ THREE.TextureLoader.prototype.loadAsync = async function (url) {
   return new THREE.Texture();
 };
 HDRLoader.prototype.loadAsync = async () => new THREE.DataTexture();
+GLTFLoader.prototype.loadAsync = async url => {
+  assert.ok(fs.existsSync(new URL(`../public${url}`, import.meta.url)), `missing local model ${url}`);
+  const scene = new THREE.Group();
+  scene.add(new THREE.Mesh(new THREE.PlaneGeometry(1, 1, 2, 2), new THREE.MeshStandardMaterial()));
+  return {scene};
+};
 globalThis.document = {};
-await loadArchitectureAssets();
-await loadLandscapeAssets();
-THREE.TextureLoader.prototype.loadAsync = originalTextureLoad;
-HDRLoader.prototype.loadAsync = originalHDRLoad;
-if (originalDocument === undefined) delete globalThis.document;
-else globalThis.document = originalDocument;
+try {
+  await loadArchitectureAssets();
+  await loadLandscapeAssets();
+} finally {
+  THREE.TextureLoader.prototype.loadAsync = originalTextureLoad;
+  HDRLoader.prototype.loadAsync = originalHDRLoad;
+  GLTFLoader.prototype.loadAsync = originalGLTFLoad;
+  if (originalDocument === undefined) delete globalThis.document;
+  else globalThis.document = originalDocument;
+}
 
 const castle = createCastle();
 const materials = new Map();

@@ -1,0 +1,134 @@
+{
+  "source": "current-court-night-high-lod-2-5x-audition-20260908T123348464Z-9.webm",
+  "sample_rate": 48000,
+  "channels": 2,
+  "duration_seconds": 24.0,
+  "peak_amplitude": 0.12842319905757904,
+  "peak_dBFS": -17.827130317770738,
+  "rms_dBFS": -33.03812594086479,
+  "non_finite_samples": 0,
+  "clipped_samples": 0,
+  "seconds": [
+    {
+      "second": 0,
+      "rms_dBFS": -43.55144276830246,
+      "peak_dBFS": -31.048967098827326
+    },
+    {
+      "second": 1,
+      "rms_dBFS": -39.743809463977215,
+      "peak_dBFS": -28.098236076189455
+    },
+    {
+      "second": 2,
+      "rms_dBFS": -33.772319851334224,
+      "peak_dBFS": -22.369476452634096
+    },
+    {
+      "second": 3,
+      "rms_dBFS": -31.233895265695814,
+      "peak_dBFS": -20.423871437872066
+    },
+    {
+      "second": 4,
+      "rms_dBFS": -30.649509022599815,
+      "peak_dBFS": -19.804486300698855
+    },
+    {
+      "second": 5,
+      "rms_dBFS": -32.555642357148265,
+      "peak_dBFS": -19.34701672318335
+    },
+    {
+      "second": 6,
+      "rms_dBFS": -31.301853253118885,
+      "peak_dBFS": -19.620834697107384
+    },
+    {
+      "second": 7,
+      "rms_dBFS": -32.901093580430036,
+      "peak_dBFS": -20.289276576558986
+    },
+    {
+      "second": 8,
+      "rms_dBFS": -30.969647790421728,
+      "peak_dBFS": -17.935273621204402
+    },
+    {
+      "second": 9,
+      "rms_dBFS": -31.64374841166303,
+      "peak_dBFS": -20.27321447617191
+    },
+    {
+      "second": 10,
+      "rms_dBFS": -30.857574043323726,
+      "peak_dBFS": -18.994906155042276
+    },
+    {
+      "second": 11,
+      "rms_dBFS": -31.682342074977687,
+      "peak_dBFS": -18.75440280322111
+    },
+    {
+      "second": 12,
+      "rms_dBFS": -30.90855322930555,
+      "peak_dBFS": -18.513795648120986
+    },
+    {
+      "second": 13,
+      "rms_dBFS": -31.96963640561076,
+      "peak_dBFS": -20.95524214552499
+    },
+    {
+      "second": 14,
+      "rms_dBFS": -31.720842188062722,
+      "peak_dBFS": -19.199649559088748
+    },
+    {
+      "second": 15,
+      "rms_dBFS": -30.472399907164384,
+      "peak_dBFS": -17.827130317770738
+    },
+    {
+      "second": 16,
+      "rms_dBFS": -32.897742175552885,
+      "peak_dBFS": -20.25680940341154
+    },
+    {
+      "second": 17,
+      "rms_dBFS": -32.934522021922724,
+      "peak_dBFS": -19.050851914766206
+    },
+    {
+      "second": 18,
+      "rms_dBFS": -34.11410147104386,
+      "peak_dBFS": -20.57446874150507
+    },
+    {
+      "second": 19,
+      "rms_dBFS": -38.46745933833196,
+      "peak_dBFS": -23.04644388388724
+    },
+    {
+      "second": 20,
+      "rms_dBFS": -39.10817293434849,
+      "peak_dBFS": -27.291760070221088
+    },
+    {
+      "second": 21,
+      "rms_dBFS": -38.4415089103007,
+      "peak_dBFS": -25.093696897229194
+    },
+    {
+      "second": 22,
+      "rms_dBFS": -41.839131642442624,
+      "peak_dBFS": -29.799725106197954
+    },
+    {
+      "second": 23,
+      "rms_dBFS": -43.31447196775876,
+      "peak_dBFS": -27.523170312342067
+    }
+  ],
+  "scope": "Actual post-limiter browser capture of both decoded local music layers plus scripted events. Technical signal analysis only; subjective listening is not claimed."
+}

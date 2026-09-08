@@ -1,0 +1,200 @@
+{
+  "description": "Frozen production sources used for final measurements, captures and build.",
+  "files": [
+    {
+      "path": "world/src/architecture.js",
+      "bytes": 6397,
+      "sha256": "ac5f91e7606f6c5d50abe344be06c30b86d6eca9ddff1c6095ea71831fcd8401"
+    },
+    {
+      "path": "world/src/asset-cache.js",
+      "bytes": 650,
+      "sha256": "65a9b9644a9c64828159cdf88ac3a8c153902cbaa7b19d01a350c17de07d1b14"
+    },
+    {
+      "path": "world/src/atmosphere.js",
+      "bytes": 14994,
+      "sha256": "f82f244f3927c6097cd16a62a0a6e133362bcfc4e6037c72048bc94c4a538616"
+    },
+    {
+      "path": "world/src/audio.js",
+      "bytes": 16083,
+      "sha256": "830a21aa38b0311dc07309ca6de40421a0f7916db3ba2e29b8b68f39515720d0"
+    },
+    {
+      "path": "world/src/characters.js",
+      "bytes": 13033,
+      "sha256": "2107fa62ab29fbc612511f4969e3651a8cc7849ae537b17efdf8254f8178016b"
+    },
+    {
+      "path": "world/src/collision.js",
+      "bytes": 21117,
+      "sha256": "02f210d3289fbdf623613adb6513721148a7c221ba9fb3e78c9b6ffe21df46ba"
+    },
+    {
+      "path": "world/src/content.js",
+      "bytes": 23544,
+      "sha256": "80dba5182bbc9e2be006adf29f7f3b0741e5524639ca4d9adaa735a747733041"
+    },
+    {
+      "path": "world/src/effects.js",
+      "bytes": 7367,
+      "sha256": "e6874305ca1cc7cdb84c8a8cf595ab1bb63301b895ec7962fe4e1df7b6ae66a4"
+    },
+    {
+      "path": "world/src/environment-composition.js",
+      "bytes": 22049,
+      "sha256": "8e1d0b22a67445cbc98a44d1b20e7f7dac099ac91db5e0546154b5112c167cd2"
+    },
+    {
+      "path": "world/src/environment-layout.js",
+      "bytes": 1758,
+      "sha256": "45ad259da756024d871326999d016b999b50f1140bba53fbab1f6d52e766fd41"
+    },
+    {
+      "path": "world/src/environment-signage.js",
+      "bytes": 2234,
+      "sha256": "381dc39dc199ebedc7cde2817ba8469469c9335bb8724f75edd88b84d04b5c1e"
+    },
+    {
+      "path": "world/src/environment-time.js",
+      "bytes": 5080,
+      "sha256": "24036280ddcc3c86d0ad75adc4f0de717c96522d4795ef5d16263891bfbaff2e"
+    },
+    {
+      "path": "world/src/environment-wind.js",
+      "bytes": 2839,
+      "sha256": "25bc614e7051aa068df5210aadf3a0d70834b3b5049c4625d7ec66faed50c3f5"
+    },
+    {
+      "path": "world/src/exhibit-materials.js",
+      "bytes": 3191,
+      "sha256": "f132d9a15481844e87bcedabfc083e3e12d232b8fc4f5bc62935dbe58e94577b"
+    },
+    {
+      "path": "world/src/exhibit-motion.js",
+      "bytes": 1361,
+      "sha256": "38f2e202702bcf011c6b2dc6e23363b9e5e6546ecddab3ab57a30000afa403d7"
+    },
+    {
+      "path": "world/src/exhibit-studio.js",
+      "bytes": 9891,
+      "sha256": "9d7a0a69b9ef84680048a775060f08159845fe488e7a4b221e351cfaa92fc92a"
+    },
+    {
+      "path": "world/src/exhibition-content.js",
+      "bytes": 8619,
+      "sha256": "3bec5172c7d90a5bc245170a769799744ef4375257fc2194b5acd01a4f3c53f4"
+    },
+    {
+      "path": "world/src/exhibition-state.js",
+      "bytes": 2998,
+      "sha256": "ff00223109354d8bc4fa55d42dd3b3f55b269a505bd61ea0e234fce67ca714b6"
+    },
+    {
+      "path": "world/src/exhibits.js",
+      "bytes": 28267,
+      "sha256": "be11d7579811010d53bb63e24e31e0a2b8e29bafbb52c0bba596e977fda8a87a"
+    },
+    {
+      "path": "world/src/foliage-lod.js",
+      "bytes": 7226,
+      "sha256": "9662eff04f4ac3122513c9f19f9b240d204aae00d1d6002ffcfebf9b2b323cb0"
+    },
+    {
+      "path": "world/src/game.js",
+      "bytes": 73786,
+      "sha256": "1bd7f9ea3ec38b8fd6e958b5189d3645321b1a8521d04817c217bed14c842bf0"
+    },
+    {
+      "path": "world/src/gardens.js",
+      "bytes": 36319,
+      "sha256": "78244699afffec168b63d4e15649d7a724eb0c2d32b94a2e1d27728918a63639"
+    },
+    {
+      "path": "world/src/grove-foliage.js",
+      "bytes": 20599,
+      "sha256": "4ed5d054b881b104e9e7f98e119502d9806c0ec72e4d30224dbe986a2bd9faf6"
+    },
+    {
+      "path": "world/src/journal.js",
+      "bytes": 27354,
+      "sha256": "2619976e0ed83bf227884b4664ff153318ded01e4abe62aadd9e7fd36ba08054"
+    },
+    {
+      "path": "world/src/landscape.js",
+      "bytes": 21698,
+      "sha256": "1495ef4de9f367c6e8210113af712a6625658006dac7aabbbf800d9cd9505d5c"
+    },
+    {
+      "path": "world/src/locations.js",
+      "bytes": 2852,
+      "sha256": "4af2483772c96c99592b7bae4f3d9c2c3723d10be16ab10be3d6e273489441f2"
+    },
+    {
+      "path": "world/src/logic.js",
+      "bytes": 2600,
+      "sha256": "386f1483fbe2d297f9eb507d70f79cf5c738dc8f7f58f0ab9999048f3003c2f5"
+    },
+    {
+      "path": "world/src/main.js",
+      "bytes": 1118,
+      "sha256": "7085aeb79d1ee8d1b0200c194fb671ba91c7b96e3c1b9a1fae37715acd5c03eb"
+    },
+    {
+      "path": "world/src/models.js",
+      "bytes": 55329,
+      "sha256": "d26deeea0d0836ea93e74a2fbf3a0d04879e9c6304dd28c7b2a2713c6b5d957e"
+    },
+    {
+      "path": "world/src/navigation.js",
+      "bytes": 2359,
+      "sha256": "640e1b766625e7e1aae3ebd14127f73c515d27819fa992788bcb300ea4722369"
+    },
+    {
+      "path": "world/src/quality-review.js",
+      "bytes": 16038,
+      "sha256": "e13b20443d1f644dfbfbf543a68138bf2d76a6ea912830bf39768d99feb3533c"
+    },
+    {
+      "path": "world/src/render-quality.js",
+      "bytes": 855,
+      "sha256": "15c00ca4d9bdcf1f69b302e6f9a3c53cf1b8630555c8fa09dac4fc1a8aadca3c"
+    },
+    {
+      "path": "world/src/rendering.js",
+      "bytes": 4331,
+      "sha256": "f3654c5a67b6bef563fa3047383dbd930f9fc93d5dd6c78668f28af080ee0bc3"
+    },
+    {
+      "path": "world/src/review-metrics.js",
+      "bytes": 4422,
+      "sha256": "9904642a5049406209e878816c943b7e8fed273215269128df8e9c3900e3cde8"
+    },
+    {
+      "path": "world/src/rock-scans.js",
+      "bytes": 5310,
+      "sha256": "b033ecb02469b7e322ab08c16db06379abb2c178bc22c29675eb626f7399f652"
+    },
+    {
+      "path": "world/src/site-details.js",
+      "bytes": 8267,
+      "sha256": "ef31da2a8a32e4ca4d0b76509a6b380448c1f8c64fb2bff397548e69d8dec0a2"
+    },
+    {
+      "path": "world/src/studio.js",
+      "bytes": 25175,
+      "sha256": "f8a13858e449368b9ab472c22770cd99adef363a126376dfe533f7e9fff6a04d"
+    },
+    {
+      "path": "world/src/ui.js",
+      "bytes": 65185,
+      "sha256": "5063a1359a76cbccd1291f8b0e1ee9da0db27a2a887c23d23bd6034329a30621"
+    },
+    {
+      "path": "world/src/world.js",
+      "bytes": 21220,
+      "sha256": "876799c22fb777feb43d2dbe3ac12c473308d3ad664dc83439d22de7f0370b9d"
+    }
+  ]
+}

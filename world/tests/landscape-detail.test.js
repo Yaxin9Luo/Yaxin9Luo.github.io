@@ -1,7 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
+import crypto from 'node:crypto';
 import {createLake,createVegetation} from '../src/landscape.js';
+import {bridges} from '../src/locations.js';
 
 test('dense ground cover remains attached to land and keeps a walking corridor clear',()=>{
   const root=new THREE.Group(),heightAt=(x,z)=>z<0?-22:6+Math.sin(x*.03),nearPath=x=>Math.abs(x)<5;
@@ -16,6 +18,23 @@ test('dense ground cover remains attached to land and keeps a walking corridor c
       assert.ok(Math.abs(position.y-heightAt(position.x,position.z))<.5,`${mesh.name} floats above its planting surface`);
     }
   }
+});
+
+test('all plant batches clear the bridge plane while preserving every outside instance and flower colour',()=>{
+  const root=new THREE.Group();createVegetation(root,()=>6,()=>false);
+  const blocked=(x,z)=>Object.values(bridges).some(([a,b])=>{const length=Math.hypot(b[0]-a[0],b[1]-a[1]),dx=(b[0]-a[0])/length,dz=(b[1]-a[1])/length,along=(x-a[0])*dx+(z-a[1])*dz,across=(x-a[0])*dz-(z-a[1])*dx;return along>-3&&along<length+3&&Math.abs(across)<4.5;});
+  const matrix=new THREE.Matrix4(),entries=[];
+  for(const mesh of root.children.filter(o=>o.isInstancedMesh)){
+    const matrices=[];
+    for(let i=0;i<mesh.count;i++){
+      mesh.getMatrixAt(i,matrix);assert.equal(blocked(matrix.elements[12],matrix.elements[14]),false,`${mesh.name} occupies the bridge`);
+      matrices.push([...matrix.elements,...(mesh.instanceColor?Array.from(mesh.instanceColor.array.slice(i*3,i*3+3)):[])]);
+    }
+    entries.push([mesh.name,matrices]);
+  }
+  // Captured from the pre-fix seeded layout after excluding only the bridge
+  // rectangles. This catches early filtering that changes later RNG draws.
+  assert.equal(crypto.createHash('sha256').update(JSON.stringify(entries)).digest('hex'),'54b3bbcdcc440db87e967d793b9190e3317d62d1ea4f966e6b1cde7a8b7e0fef');
 });
 
 test('lake normals are filtered continuously rather than producing square specular cells',()=>{

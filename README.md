@@ -1,4 +1,12 @@
-# Academic Pages
+# Yaxin Luo · Personal website
+
+A bilingual research portfolio with a Three.js broom-flight world, physical project exhibits, optional exploration, and the preserved Academic Pages site at `/traditional/` (`/traditional/zh/` in Chinese).
+
+Run `npm --prefix world ci` and `npm --prefix world run dev` for the interactive site. Run `npm --prefix world test` for its checks and `npm run build:site` to assemble the full website, including the Ruby/Jekyll traditional site, in `dist/`.
+
+The [production v3 review](docs/production-v3-review.md) records the character, environment, interaction and sound changes, actual browser evidence, measured costs and source licenses. [Original screenshots and recordings](docs/evidence/production-v3/) accompany the report.
+
+## Original Academic Pages template documentation
 **Academic Pages is a Github Pages template for academic websites.**
 
 ![Academic Pages template example](images/homepage.png "Academic Pages template example")

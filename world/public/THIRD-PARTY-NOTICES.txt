@@ -14,6 +14,18 @@ textures/manifest.json and docs/world-asset-sources.md in the repository.
 License evidence: https://polyhaven.com/license
                   https://docs.ambientcg.com/license/
 
+Scanned rock geometry
+=====================
+Rock Face 02 — Dario Barresi; processing by Rico Cilliers.
+https://polyhaven.com/a/rock_face_02
+Rock Moss Set 02 — Kless Gyzen.
+https://polyhaven.com/a/rock_moss_set_02
+Both are CC0 1.0 Universal from Poly Haven. Original mesh detail and 4K
+texture dimensions are retained; textures are encoded locally as WebP and
+the original mesh pieces are placed into new landscape compositions.
+Exact sources, retained geometry and runtime checksums:
+models/environment/scans/manifest.json
+
 Character source geometry
 =========================
 Blender Studio Human Base Meshes v1.4.1 — Body Male - Realistic

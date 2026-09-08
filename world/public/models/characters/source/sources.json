@@ -28,6 +28,37 @@
       "download": "http://files2.makehumancommunity.org/asset_packs/hair01/hair01_cc0.zip",
       "changes": "Retained original CC0 source files from the previous hair-card revision; unused by the current build.",
       "status": "archived; unused by the current masked build"
+    },
+    {
+      "assetId": "poly_wool_herringbone",
+      "title": "Poly Wool Herringbone",
+      "provider": "Poly Haven",
+      "authors": {
+        "colormass": "Photography",
+        "Rico Cilliers": "Processing"
+      },
+      "sourceUrl": "https://polyhaven.com/a/poly_wool_herringbone",
+      "license": "CC0-1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "tileMeters": [
+        0.2701,
+        0.2757
+      ]
+    },
+    {
+      "assetId": "brown_leather",
+      "title": "Brown Leather",
+      "provider": "Poly Haven",
+      "authors": {
+        "Rob Tuytel": "All"
+      },
+      "sourceUrl": "https://polyhaven.com/a/brown_leather",
+      "license": "CC0-1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "tileMeters": [
+        0.4,
+        0.4
+      ]
     }
   ],
   "files": [
@@ -64,8 +95,103 @@
       "wizard-academy-rig.blend",
       "wraith-academy-rig.blend"
     ],
-    "originalWork": "Character design, full-face silver masks, felt hat, head cowl, targeted garment fold sculptures, rolled linings/cuffs/hems, gloves, boots, cloth panels, broom, crown, props, weights, rigs, shoulder motion and looping actions.",
-    "materials": "Original procedural 256px weave albedo encodes the linear source palette into sRGB pixel values. The 512px tangent-space textile normal/roughness images stay Non-Color. Authored PBR material values and cloth sheen are retained. Current GLBs do not load the archived Cortu hair images or external cloth/leather texture packs.",
-    "gltfSheenMapping": "The builder normalizes KHR_materials_sheen.sheenColorFactor to source Principled Sheen Tint multiplied by Sheen Weight, correcting Blender 5.1's omitted weight. Editable source rigs retain their authored shader values. This normalization preserves all non-sheen material fields and all binary mesh, skin, image and animation chunks."
+    "originalWork": "Masks, hat, garment cutting, independent sleeves and seams, lapels, cuffs, fitted belt, gravity-shaped split cape, carved/bound broom, guardian layered drapery, rigs, weights, eight rider actions and three guardian actions.",
+    "materials": "Selected hybrid: linear garment palette multiplied by restrained normalized scan luminance, explicitly encoded to sRGB. Coat, pressed lapel facings and worsted waistcoat use wool scan detail at 0.27 m; leather at 0.40 m. Normal and roughness images remain Non-Color. Satin lining, linen shirt, trousers, scarf and felt retain authored weave. Full authored/scans/hybrid comparisons use identical geometry, lights and cameras.",
+    "gltfSheenMapping": "The builder normalizes KHR_materials_sheen.sheenColorFactor to source Principled Sheen Tint multiplied by Sheen Weight, correcting Blender 5.1's omitted weight. Editable source rigs retain their authored shader values. This normalization preserves all non-sheen material fields and all binary mesh, skin, image and animation chunks.",
+    "builderSha256": "12d389e28352655b5244d6e0a42b462394454ebb686dc02c5ef5cb45411aa4f8",
+    "textureInputs": [
+      {
+        "file": "/textures/wool-cloth/color.webp",
+        "bytes": 357818,
+        "sha256": "cf52442fc7c645b3d782938c2f5ec7662e2326f514de2b73bc8279d0144ee986",
+        "role": "color",
+        "tileMeters": [
+          0.2701,
+          0.2757
+        ]
+      },
+      {
+        "file": "/textures/wool-cloth/normal.webp",
+        "bytes": 520820,
+        "sha256": "3a568c178b5b8f2a13b2dedde4063c9e0b2209a82902683e2b711e595f478c24",
+        "role": "normal",
+        "tileMeters": [
+          0.2701,
+          0.2757
+        ]
+      },
+      {
+        "file": "/textures/wool-cloth/roughness.webp",
+        "bytes": 457940,
+        "sha256": "b4e9cebf602557f85e8a2e8aeddab44f8ada81acb1221ef6e48722d67361c508",
+        "role": "roughness",
+        "tileMeters": [
+          0.2701,
+          0.2757
+        ]
+      },
+      {
+        "file": "/textures/dark-leather/color.webp",
+        "bytes": 272794,
+        "sha256": "99b8608c14d1532d858aa5fafee1564b25f389b1134aaca874feec27350f9290",
+        "role": "color",
+        "tileMeters": [
+          0.4,
+          0.4
+        ]
+      },
+      {
+        "file": "/textures/dark-leather/normal.webp",
+        "bytes": 463102,
+        "sha256": "2d31609a071a9568954aef44de8be531a87d1a538399cf10805677db81d3ffc3",
+        "role": "normal",
+        "tileMeters": [
+          0.4,
+          0.4
+        ]
+      },
+      {
+        "file": "/textures/dark-leather/roughness.webp",
+        "bytes": 607426,
+        "sha256": "457da1e941e1142f72f350057ed6e8c008a91b6ca72892f64fa7b816f2144797",
+        "role": "roughness",
+        "tileMeters": [
+          0.4,
+          0.4
+        ]
+      }
+    ],
+    "actionTimingsSeconds": {
+      "boost_start": 0.2,
+      "boost_end": 0.35,
+      "cast": 0.6,
+      "cast_release": 0.18
+    },
+    "rigSourceRecords": [
+      {
+        "file": "wizard-academy-rig.blend",
+        "bytes": 21508722,
+        "sha256": "3eb2e4cff4900603b0f6836cfc857b2213fe14ccecf38b836af17ac206d73630"
+      },
+      {
+        "file": "wraith-academy-rig.blend",
+        "bytes": 11068406,
+        "sha256": "9fed9c5cc2251f8616dd6ea87f145ff13cc817726210cb6ea9adde6d6d2bfef3"
+      }
+    ],
+    "artReferences": [
+      {
+        "url": "https://www.artstation.com/artwork/39w5PA",
+        "usage": "Reference URL supplied in production brief; no model or texture copied"
+      },
+      {
+        "url": "https://www.artstation.com/artwork/xDJ9mm",
+        "usage": "Reference URL supplied in production brief; no model or texture copied"
+      },
+      {
+        "url": "https://ellierpbrown.artstation.com/projects/JvwR5d",
+        "usage": "Reference URL supplied in production brief; no model or texture copied"
+      }
+    ]
   }
 }

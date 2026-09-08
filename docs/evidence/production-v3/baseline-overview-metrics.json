@@ -1,0 +1,92 @@
+{
+  "createdAt": "2026-09-08T13:16:30.787Z",
+  "finishedAt": "2026-09-08T13:16:54.501Z",
+  "run": 2,
+  "kind": "measure",
+  "build": "338d112-baseline",
+  "view": "overview",
+  "timeOfDay": "night",
+  "quality": "high",
+  "foliage": "full",
+  "sampling": "2.5x",
+  "reducedMotion": false,
+  "sound": false,
+  "canvas": {
+    "width": 2560,
+    "height": 1440,
+    "backingWidth": 2560,
+    "backingHeight": 1440,
+    "cssWidth": 1024,
+    "cssHeight": 576,
+    "dpr": 2.5,
+    "nativeDpr": 2.5
+  },
+  "camera": {
+    "eye": [
+      130,
+      162,
+      180
+    ],
+    "target": [
+      -2,
+      12,
+      -4
+    ],
+    "fov": 43
+  },
+  "completed": true,
+  "invalid": false,
+  "reason": "completed",
+  "expectedDurationMs": 20000,
+  "elapsedDurationMs": 20049.40000000596,
+  "warmup": {
+    "requiredMs": 3500,
+    "elapsedMs": 3533.5999999940395,
+    "completed": true
+  },
+  "workload": "fixed-view",
+  "captureErrors": [],
+  "framesMs": {
+    "count": 471,
+    "mean": 42.458386411902254,
+    "p50": 42.19999998807907,
+    "p95": 47.900000005960464,
+    "p99": 52,
+    "fps": 23.552473009658993
+  },
+  "renderSubmitCpuMs": {
+    "count": 472,
+    "mean": 11.157627118972398,
+    "p50": 8.300000011920929,
+    "p95": 37.80000001192093,
+    "p99": 43.69999998807907,
+    "fps": 89.6247911260274
+  },
+  "gpuMs": {
+    "count": 472,
+    "mean": 58.1137834851695,
+    "p50": 58.840874,
+    "p95": 74.295999,
+    "p99": 81.053291,
+    "fps": 17.207621669568248
+  },
+  "gpuTimerAvailable": true,
+  "gpuQueries": {
+    "issued": 472,
+    "collected": 472,
+    "pending": 0,
+    "pendingAtStop": 4,
+    "abandoned": 0,
+    "disjointEvents": 0,
+    "tailTimedOut": false
+  },
+  "meanDrawCalls": 1788.1101694915253,
+  "meanSubmittedTriangles": 22929156.008474577,
+  "last": {
+    "calls": 1455,
+    "triangles": 18564532,
+    "geometries": 749,
+    "textures": 180
+  },
+  "note": "Composer totals include shadows, reflection and postprocessing. CPU submission is not GPU time. Geometry/texture values are counts, not memory bytes."
+}

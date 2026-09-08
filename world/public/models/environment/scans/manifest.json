@@ -1,0 +1,280 @@
+{
+  "version": 3,
+  "builder": "scripts/art/environment/build-rock-scans.py",
+  "originalDownloads": "work/production-v3/environment-sources/downloads.json",
+  "assets": [
+    {
+      "id": "rock_face_02",
+      "source": "https://polyhaven.com/a/rock_face_02",
+      "authors": {
+        "Dario Barresi": "All",
+        "Rico Cilliers": "processing"
+      },
+      "license": "CC0-1.0",
+      "licenseURL": "https://polyhaven.com/license",
+      "file": "rock_face_02.glb",
+      "bytes": 18219896,
+      "sha256": "105b5661c5970457aaf6c3ef7782298381ab3d59dfdbd33ee5c8dea34f11d4de",
+      "units": "metres",
+      "geometry": "Original 4K glTF vertex/index buffer unchanged; no decimation",
+      "triangles": 29566,
+      "runtimePlacement": "Each piece keeps source scale, is centred in XZ and grounded at minY; source layout translations are omitted.",
+      "meshes": [
+        {
+          "name": "rock_face_02",
+          "triangles": 29566,
+          "sourceLocalBounds": {
+            "min": [
+              -2.2611024379730225,
+              -0.13961930572986603,
+              -1.188185453414917
+            ],
+            "max": [
+              0.45009371638298035,
+              2.3323476314544678,
+              0.938514769077301
+            ]
+          },
+          "sourceNodeScale": [
+            1,
+            1,
+            1
+          ]
+        }
+      ],
+      "textures": [
+        {
+          "source": "rock_face_02_nor_gl_4k.jpg",
+          "width": 4096,
+          "height": 4096,
+          "encoding": "WebP quality 100, method 6, no resizing",
+          "bytes": 7994750,
+          "sha256": "760cf3017d14b9dc576c499671b8b340894e94682eea29ac831ab565671d964a",
+          "colorSpace": "non-color"
+        },
+        {
+          "source": "rock_face_02_diff_4k.jpg",
+          "width": 4096,
+          "height": 4096,
+          "encoding": "WebP quality 95, method 6, no resizing",
+          "bytes": 5640700,
+          "sha256": "14faa8ccc1a9fb9ed5bbdcc49969d45661fcb02c11404c5fff6277e9de52221b",
+          "colorSpace": "sRGB"
+        },
+        {
+          "source": "rock_face_02_arm_4k.jpg",
+          "width": 4096,
+          "height": 4096,
+          "encoding": "WebP quality 95, method 6, no resizing",
+          "bytes": 3880090,
+          "sha256": "fb493dbea9b2b64825cbbe36ba4e12a516b71580eca77bbdc59f2216698b2fa0",
+          "colorSpace": "non-color"
+        }
+      ],
+      "sourceBuffer": {
+        "byteOffset": 0,
+        "byteLength": 702068,
+        "sha256": "cfa3dea8f0f91525b5dfe93d889acacf961d20f7174aae100eae2c6e101edf31"
+      }
+    },
+    {
+      "id": "rock_moss_set_02",
+      "source": "https://polyhaven.com/a/rock_moss_set_02",
+      "authors": {
+        "Kless Gyzen": "All"
+      },
+      "license": "CC0-1.0",
+      "licenseURL": "https://polyhaven.com/license",
+      "file": "rock_moss_set_02.glb",
+      "bytes": 13597844,
+      "sha256": "b4e4be70eddcdea6ecfc6c178e0ef848f69ebaa20780db183558cdf390e3dfdb",
+      "units": "metres",
+      "geometry": "Original 4K glTF vertex/index buffer unchanged; no decimation",
+      "triangles": 57647,
+      "runtimePlacement": "Each piece keeps source scale, is centred in XZ and grounded at minY; source layout translations are omitted.",
+      "meshes": [
+        {
+          "name": "rock_moss_set_02_rock08",
+          "triangles": 8000,
+          "sourceLocalBounds": {
+            "min": [
+              -0.534639835357666,
+              -0.011003829538822174,
+              -0.44412750005722046
+            ],
+            "max": [
+              0.6716915369033813,
+              0.5176680684089661,
+              0.5395184755325317
+            ]
+          },
+          "sourceNodeScale": [
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "name": "rock_moss_set_02_rock09",
+          "triangles": 7894,
+          "sourceLocalBounds": {
+            "min": [
+              -0.7779536247253418,
+              -0.03787674382328987,
+              -0.5260857939720154
+            ],
+            "max": [
+              0.8509746789932251,
+              0.571977972984314,
+              0.4853838384151459
+            ]
+          },
+          "sourceNodeScale": [
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "name": "rock_moss_set_02_rock12",
+          "triangles": 7999,
+          "sourceLocalBounds": {
+            "min": [
+              -0.7580254077911377,
+              -0.032221224159002304,
+              -0.7263228297233582
+            ],
+            "max": [
+              0.8215271830558777,
+              0.7037891149520874,
+              0.7171337008476257
+            ]
+          },
+          "sourceNodeScale": [
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "name": "rock_moss_set_02_rock13",
+          "triangles": 7928,
+          "sourceLocalBounds": {
+            "min": [
+              -1.0845192670822144,
+              -0.6590298414230347,
+              -1.1344274282455444
+            ],
+            "max": [
+              1.006909966468811,
+              0.5974030494689941,
+              0.003854435868561268
+            ]
+          },
+          "sourceNodeScale": [
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "name": "rock_moss_set_02_rock10",
+          "triangles": 8000,
+          "sourceLocalBounds": {
+            "min": [
+              -1.0639867782592773,
+              -0.024319272488355637,
+              -0.7845621705055237
+            ],
+            "max": [
+              1.1389367580413818,
+              0.7441345453262329,
+              0.7670738697052002
+            ]
+          },
+          "sourceNodeScale": [
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "name": "rock_moss_set_02_rock11",
+          "triangles": 8000,
+          "sourceLocalBounds": {
+            "min": [
+              -0.9855588674545288,
+              -0.2573341727256775,
+              -0.953721284866333
+            ],
+            "max": [
+              0.9681395888328552,
+              1.0531895160675049,
+              0.5751612186431885
+            ]
+          },
+          "sourceNodeScale": [
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "name": "rock_moss_set_02_rock07",
+          "triangles": 9826,
+          "sourceLocalBounds": {
+            "min": [
+              -1.3140548467636108,
+              -0.47013798356056213,
+              -0.9021351337432861
+            ],
+            "max": [
+              1.1793811321258545,
+              0.6267833113670349,
+              0.8875125646591187
+            ]
+          },
+          "sourceNodeScale": [
+            0.678986132144928,
+            0.678986132144928,
+            0.678986132144928
+          ]
+        }
+      ],
+      "textures": [
+        {
+          "source": "rock_moss_set_02_nor_gl_4k.jpg",
+          "width": 4096,
+          "height": 4096,
+          "encoding": "WebP quality 100, method 6, no resizing",
+          "bytes": 6461948,
+          "sha256": "c657c027ea3508b0edcd2e4ea27c1a8b64c27c6b9539a04957804e864b822b5e",
+          "colorSpace": "non-color"
+        },
+        {
+          "source": "rock_moss_set_02_diff_4k.jpg",
+          "width": 4096,
+          "height": 4096,
+          "encoding": "WebP quality 95, method 6, no resizing",
+          "bytes": 4011396,
+          "sha256": "bace54d91fa434aaef01dedf277d46c57c6dc5b1b19b3a78ca156fde65a328c0",
+          "colorSpace": "sRGB"
+        },
+        {
+          "source": "rock_moss_set_02_rough_4k.jpg",
+          "width": 4096,
+          "height": 4096,
+          "encoding": "WebP quality 95, method 6, no resizing",
+          "bytes": 1800518,
+          "sha256": "426f79974a2ddff2157d6331e287687aba7a1b560f85b3016786892ba760ff21",
+          "colorSpace": "non-color"
+        }
+      ],
+      "sourceBuffer": {
+        "byteOffset": 0,
+        "byteLength": 1316572,
+        "sha256": "2df9d8eaaca4207529b0f613d4886d3962d0b9ffc0cdfd2bc4bf35dbcd391cb5"
+      }
+    }
+  ]
+}

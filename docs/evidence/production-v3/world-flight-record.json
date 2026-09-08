@@ -1,0 +1,83 @@
+{
+  "createdAt": "2026-09-08T13:36:20.289Z",
+  "finishedAt": "2026-09-08T13:36:44.491Z",
+  "run": 3,
+  "kind": "record",
+  "build": "current",
+  "view": "flight",
+  "timeOfDay": "night",
+  "quality": "high",
+  "foliage": "lod",
+  "sampling": "2.5x",
+  "reducedMotion": false,
+  "sound": false,
+  "canvas": {
+    "width": 2560,
+    "height": 1440,
+    "backingWidth": 2560,
+    "backingHeight": 1440,
+    "cssWidth": 1024,
+    "cssHeight": 576,
+    "dpr": 2.5,
+    "nativeDpr": 2.5
+  },
+  "camera": {
+    "eye": [
+      -77.60228264683263,
+      9.412694314089274,
+      -35.4733755206167
+    ],
+    "target": null,
+    "fov": 43
+  },
+  "completed": true,
+  "invalid": false,
+  "reason": "completed",
+  "expectedDurationMs": 24000,
+  "elapsedDurationMs": 24008,
+  "warmup": {
+    "requiredMs": 0,
+    "elapsedMs": 0,
+    "completed": true
+  },
+  "workload": "scripted-flight",
+  "captureErrors": [],
+  "framesMs": {
+    "count": 0,
+    "mean": null,
+    "p50": null,
+    "p95": null,
+    "p99": null,
+    "fps": null
+  },
+  "renderSubmitCpuMs": {
+    "count": 0,
+    "mean": null,
+    "p50": null,
+    "p95": null,
+    "p99": null,
+    "fps": null
+  },
+  "gpuMs": {
+    "count": 0,
+    "mean": null,
+    "p50": null,
+    "p95": null,
+    "p99": null,
+    "fps": null
+  },
+  "gpuTimerAvailable": true,
+  "gpuQueries": {
+    "issued": 0,
+    "collected": 0,
+    "pending": 0,
+    "pendingAtStop": 0,
+    "abandoned": 0,
+    "disjointEvents": 0,
+    "tailTimedOut": false
+  },
+  "meanDrawCalls": null,
+  "meanSubmittedTriangles": null,
+  "last": null,
+  "note": "Composer totals include shadows, reflection and postprocessing. CPU submission is not GPU time. Geometry/texture values are counts, not memory bytes."
+}

@@ -1,0 +1,92 @@
+{
+  "createdAt": "2026-09-08T13:15:30.419Z",
+  "finishedAt": "2026-09-08T13:15:54.146Z",
+  "run": 1,
+  "kind": "measure",
+  "build": "338d112-baseline",
+  "view": "court",
+  "timeOfDay": "night",
+  "quality": "high",
+  "foliage": "full",
+  "sampling": "2.5x",
+  "reducedMotion": false,
+  "sound": false,
+  "canvas": {
+    "width": 2560,
+    "height": 1440,
+    "backingWidth": 2560,
+    "backingHeight": 1440,
+    "cssWidth": 1024,
+    "cssHeight": 576,
+    "dpr": 2.5,
+    "nativeDpr": 2.5
+  },
+  "camera": {
+    "eye": [
+      30,
+      27,
+      79
+    ],
+    "target": [
+      0,
+      10,
+      28
+    ],
+    "fov": 43
+  },
+  "completed": true,
+  "invalid": false,
+  "reason": "completed",
+  "expectedDurationMs": 20000,
+  "elapsedDurationMs": 20039.59999999404,
+  "warmup": {
+    "requiredMs": 3500,
+    "elapsedMs": 3540.699999988079,
+    "completed": true
+  },
+  "workload": "fixed-view",
+  "captureErrors": [],
+  "framesMs": {
+    "count": 440,
+    "mean": 45.436590909145096,
+    "p50": 45,
+    "p95": 52,
+    "p99": 60.80000001192093,
+    "fps": 22.008693433880147
+  },
+  "renderSubmitCpuMs": {
+    "count": 441,
+    "mean": 5.668480724974825,
+    "p50": 5,
+    "p95": 9.5,
+    "p99": 12.600000023841858,
+    "fps": 176.41411314924093
+  },
+  "gpuMs": {
+    "count": 441,
+    "mean": 70.9392331473922,
+    "p50": 71.0635,
+    "p95": 90.50375,
+    "p99": 96.055708,
+    "fps": 14.096571891639641
+  },
+  "gpuTimerAvailable": true,
+  "gpuQueries": {
+    "issued": 441,
+    "collected": 441,
+    "pending": 0,
+    "pendingAtStop": 4,
+    "abandoned": 0,
+    "disjointEvents": 0,
+    "tailTimedOut": false
+  },
+  "meanDrawCalls": 1004.3877551020408,
+  "meanSubmittedTriangles": 22040450.376417235,
+  "last": {
+    "calls": 1282,
+    "triangles": 25202993,
+    "geometries": 607,
+    "textures": 171
+  },
+  "note": "Composer totals include shadows, reflection and postprocessing. CPU submission is not GPU time. Geometry/texture values are counts, not memory bytes."
+}

@@ -2,11 +2,15 @@ import * as THREE from 'three';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { Water } from 'three/addons/objects/Water.js';
 import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
-import { locations, court } from './locations.js';
+import { locations, court, bridges } from './locations.js';
 import {loadPBRTexture} from './asset-cache.js';
 import {loadAtmosphereAssets} from './atmosphere.js';
 import {insideAuthoredGarden,landscapeGroves,groveAt} from './environment-layout.js';
 import {createGroveTree,createGroveShrub,updateGroveWind} from './grove-foliage.js';
+import {createFoliageLOD} from './foliage-lod.js';
+import {applyEnvironmentWind,attachWindShadows} from './environment-wind.js';
+import {loadScannedRockAssets,addScannedRocks} from './rock-scans.js';
+import {loadEnvironmentSignage} from './environment-signage.js';
 
 const TAU=Math.PI*2;
 const maps = {};
@@ -18,7 +22,7 @@ export async function loadLandscapeAssets() {
       const texture = await loadPBRTexture(name,kind);
       (maps[name] ||= {})[kind] = texture;
     }));
-  await Promise.all([...jobs,loadAtmosphereAssets()]);
+  await Promise.all([...jobs,loadAtmosphereAssets(),loadScannedRockAssets(),loadEnvironmentSignage()]);
   try { environment = await new HDRLoader().loadAsync('/textures/environment/night.hdr');
     environment.mapping = THREE.EquirectangularReflectionMapping;
   } catch { /* The authored sky and direct lighting remain available offline. */ }
@@ -106,29 +110,29 @@ function leafMaterial(map,color='#b4c8dd',silvering=0) {
     shader.fragmentShader=shader.fragmentShader.replace('#include <map_fragment>',`#include <map_fragment>
       float leafLight=dot(diffuseColor.rgb,vec3(.2126,.7152,.0722));
       diffuseColor.rgb=mix(diffuseColor.rgb,(.075+leafLight*1.5)*vec3(.97,1.22,1.09),leafSilvering);`);
-    shader.vertexShader='uniform float windTime;\n'+shader.vertexShader;
-    shader.vertexShader=shader.vertexShader.replace('#include <begin_vertex>',`#include <begin_vertex>
-      float phase=position.y*.53+position.x*.27;
-      transformed.x+=sin(windTime*.9+phase)*.18*uv.y;
-      transformed.z+=cos(windTime*.7+phase)*.11*uv.y;`);
     shader.fragmentShader=shader.fragmentShader.replace('#include <opaque_fragment>',`outgoingLight+=diffuseColor.rgb*.045;
       #include <opaque_fragment>`);
   };
-  m.customProgramCacheKey=()=> 'leaves-wind-garden-v3';return m;
+  applyEnvironmentWind(m,{amplitude:.18,minHeight:0,maxHeight:.7});return m;
 }
 export function createTreeSpecimen(kind='pine') {
   const variant=kind==='ash'?'silver':kind;
   return createGroveTree(variant,221);
 }
 
-export function createVegetation(root,heightAt,nearPath=()=>false) {
+export function createVegetation(root,heightAt,nearPath=()=>false,{lod=false}={}) {
   let state=48623;const rand=()=>{state=(Math.imul(state,1664525)+1013904223)|0;return(state>>>0)/4294967296;};
+  const bridgeSpans=Object.values(bridges).map(([a,b])=>{const length=Math.hypot(b[0]-a[0],b[1]-a[1]);return {x:a[0],z:a[1],length,dx:(b[0]-a[0])/length,dz:(b[1]-a[1])/length};});
+  const bridgeClear=p=>!bridgeSpans.some(b=>{const along=(p.x-b.x)*b.dx+(p.z-b.z)*b.dz,across=(p.x-b.x)*b.dz-(p.z-b.z)*b.dx;return along>-3&&along<b.length+3&&Math.abs(across)<4.5;});
   const dummy=new THREE.Object3D();
   const batch=(geo,mat,placements,name,shadow=true)=>{
+    // Filter at assembly, after all seeded sampling. A bridge exclusion must
+    // not consume different random values or move plants elsewhere in the map.
+    placements=placements.filter(bridgeClear);
     if(!placements.length)return;
     const mesh=new THREE.InstancedMesh(geo,mat,placements.length);mesh.name=name;
     placements.forEach((p,i)=>{dummy.position.set(p.x,p.y,p.z);dummy.rotation.set(p.rx||0,p.r||0,p.rz||0);dummy.scale.set(p.sx||p.s||1,p.sy||p.s||1,p.sz||p.s||1);dummy.updateMatrix();mesh.setMatrixAt(i,dummy.matrix);});
-    mesh.castShadow=shadow;mesh.receiveShadow=true;mesh.computeBoundingSphere();root.add(mesh);return mesh;
+    mesh.castShadow=shadow;mesh.receiveShadow=true;attachWindShadows(mesh);mesh.computeBoundingSphere();root.add(mesh);return mesh;
   };
   const kinds=['pine','silver','cherry'],groups=kinds.map(()=>[]),placed=[];
   const clear=(x,z)=>insideAuthoredGarden(x,z,3)||locations.some(l=>Math.hypot(x-l.x,z-l.z)<l.radius+4)||nearPath(x,z)||Math.hypot(x-court.x,z-court.z)<13;
@@ -142,7 +146,8 @@ export function createVegetation(root,heightAt,nearPath=()=>false) {
     const k=kinds.indexOf(kind),foreground=x>25&&z>court.z-8;
     const p={x,y:h-.12,z,s:(.78+rand()*.33)*(foreground?.76:1),r:rand()*6.28};groups[k].push(p);placed.push(p);
   }
-  for(let k=0;k<kinds.length;k++){
+  const lodController=lod?createFoliageLOD(root,kinds.map((kind,k)=>({kind,seed:168+k*331,placements:groups[k].filter(bridgeClear)}))):null;
+  if(!lod)for(let k=0;k<kinds.length;k++){
     const specimen=createGroveTree(kinds[k],168+k*331);
     batch(specimen.branchesMesh.geometry,specimen.branchesMesh.material,groups[k],`Garden trunks ${k}`);
     batch(specimen.leavesMesh.geometry,specimen.leavesMesh.material,groups[k],`Garden ${kinds[k]} crowns ${k}`);
@@ -176,10 +181,7 @@ export function createVegetation(root,heightAt,nearPath=()=>false) {
     if(j%9===0&&patch>.55)flowers.push({x,y:h-.01,z,s:.8+rand()*.75,r:rand()*TAU});
     if(j%71===0)pebbles.push({x,y:h-.07,z,s:.16+rand()*.33,r:rand()*TAU});
   }
-  const rockGeo=new THREE.IcosahedronGeometry(1,6),p=rockGeo.attributes.position;
-  for(let i=0;i<p.count;i++){const x=p.getX(i),y=p.getY(i),z=p.getZ(i),s=.78+fbm(x*3+7,z*3+y)*.48;p.setXYZ(i,x*s,y*s*.84,z*s);}
-  rockGeo.computeVertexNormals();planarUV(rockGeo,.45);const rockMat=surface('mossy-rock',{color:'#9ba99d'});
-  batch(rockGeo,rockMat,rocks,'Scanned mossy outcrops');batch(rockGeo,rockMat,pebbles,'Ground stones',false);
+  addScannedRocks(root,[...rocks.map((p,i)=>({...p,kind:'moss',piece:i%7,sy:(p.sy||1)*.7})),...pebbles.map((p,i)=>({...p,kind:'moss',piece:i%7}))],'Scanned mossy grove stones');
   const vertices=[],colors=[],indices=[],uv=[],c=new THREE.Color();
   for(let b=0;b<18;b++){
     const a=rand()*6.28,bx=(rand()-.5)*.4,bz=(rand()-.5)*.4,h=.28+rand()*.45,w=.025+rand()*.032,at=vertices.length/3;
@@ -213,18 +215,15 @@ export function createVegetation(root,heightAt,nearPath=()=>false) {
   }
   const flowerMaterial=color=>{
     const material=new THREE.MeshStandardMaterial({color,roughness:.88,side:THREE.DoubleSide});
-    material.onBeforeCompile=shader=>{shader.uniforms.windTime=wind;shader.vertexShader='uniform float windTime;\n'+shader.vertexShader;shader.vertexShader=shader.vertexShader.replace('#include <begin_vertex>',`#include <begin_vertex>
-      transformed.x+=sin(windTime*.85+position.x*.7)*.035*position.y*position.y;
-      transformed.z+=cos(windTime*.67+position.z*.5)*.025*position.y*position.y;`);};
-    material.customProgramCacheKey=()=> 'meadow-whole-stem-wind-v1';return material;
+    applyEnvironmentWind(material,{amplitude:.035,minHeight:0,maxHeight:.8});return material;
   };
   const petalMaterial=flowerMaterial('#cbb5e3');
   const flowerMesh=batch(mergeGeometries(petals),petalMaterial,flowers,'Sculpted lavender meadow flowers',false);
-  if(flowerMesh){const color=new THREE.Color();flowers.forEach((_,i)=>{color.set(['#f1dbf5','#bfc8ff','#fff0d2'][i%3]);flowerMesh.setColorAt(i,color);});flowerMesh.instanceColor.needsUpdate=true;}
+  if(flowerMesh){const color=new THREE.Color();let instance=0;flowers.forEach((p,i)=>{if(!bridgeClear(p))return;color.set(['#f1dbf5','#bfc8ff','#fff0d2'][i%3]);flowerMesh.setColorAt(instance++,color);});flowerMesh.instanceColor.needsUpdate=true;}
   batch(mergeGeometries(stems),flowerMaterial('#608259'),flowers,'Meadow flower stems',false);
   batch(mergeGeometries(centres),flowerMaterial('#ddbf69'),flowers,'Golden meadow flower centres',false);
   [...petals,...stems,...centres].forEach(g=>g.dispose());
-  return {treeCount:placed.length,treeLimit:64,flowerTreeCount:groups[2].length,understoryCount:understory.length,grassCount:grass.length,flowerCount:flowers.length,groveCount:landscapeGroves.length};
+  return {treeCount:placed.filter(bridgeClear).length,treeLimit:64,flowerTreeCount:groups[2].filter(bridgeClear).length,understoryCount:understory.filter(bridgeClear).length,grassCount:grass.filter(bridgeClear).length,flowerCount:flowers.filter(bridgeClear).length,groveCount:landscapeGroves.length,lod:lodController?.stats??null,lodController,update:(camera,viewport)=>lodController?.update(camera,viewport)};
 }
 
 export function createBackdrop(root, scene) {

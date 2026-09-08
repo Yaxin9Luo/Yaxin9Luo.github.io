@@ -1,0 +1,12 @@
+{
+  "model": "Mac14,10",
+  "chip": "Apple M2 Pro",
+  "memory": "16 GB",
+  "graphics": [
+    {
+      "model": "Apple M2 Pro",
+      "cores": "19",
+      "metal": "spdisplays_metal4"
+    }
+  ]
+}

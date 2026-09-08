@@ -7,7 +7,7 @@
     {
       "id": "courtyard",
       "file": "courtyard.glb",
-      "bytes": 86582380,
+      "bytes": 86582776,
       "triangles": 636442,
       "meshes": 27,
       "colliders": 41,
@@ -51,8 +51,8 @@
     {
       "id": "reading",
       "file": "reading.glb",
-      "bytes": 30383832,
-      "triangles": 232252,
+      "bytes": 30756112,
+      "triangles": 236108,
       "meshes": 30,
       "colliders": 7,
       "materials": [
@@ -62,8 +62,8 @@
         "Garden pale paving",
         "Garden honed paving",
         "Garden aged brass",
-        "Garden warm limestone",
         "Cultivated garden earth",
+        "Garden warm limestone",
         "Ridged silver bark and tapered twigs",
         "Detailed silver foliage with authored vein relief",
         "Detailed cherry foliage with authored vein relief",
@@ -98,8 +98,8 @@
     {
       "id": "atelier",
       "file": "atelier.glb",
-      "bytes": 8667376,
-      "triangles": 69264,
+      "bytes": 8950864,
+      "triangles": 72196,
       "meshes": 18,
       "colliders": 3,
       "materials": [
@@ -109,8 +109,8 @@
         "Garden pale paving",
         "Garden honed paving",
         "Garden aged brass",
-        "Garden warm limestone",
         "Cultivated garden earth",
+        "Garden warm limestone",
         "Ridged silver bark and tapered twigs",
         "Detailed silver foliage with authored vein relief",
         "Detailed cherry foliage with authored vein relief",
@@ -144,8 +144,8 @@
     {
       "id": "journey",
       "file": "journey.glb",
-      "bytes": 15858140,
-      "triangles": 121488,
+      "bytes": 16082352,
+      "triangles": 123812,
       "meshes": 17,
       "colliders": 4,
       "materials": [
@@ -155,8 +155,8 @@
         "Garden pale paving",
         "Garden honed paving",
         "Garden aged brass",
-        "Garden warm limestone",
         "Cultivated garden earth",
+        "Garden warm limestone",
         "Ridged silver bark and tapered twigs",
         "Detailed silver foliage with authored vein relief",
         "Garden oak edges",
@@ -187,8 +187,8 @@
     {
       "id": "post",
       "file": "post.glb",
-      "bytes": 17202868,
-      "triangles": 130964,
+      "bytes": 17410260,
+      "triangles": 133112,
       "meshes": 22,
       "colliders": 6,
       "materials": [
@@ -198,8 +198,8 @@
         "Garden pale paving",
         "Garden honed paving",
         "Garden aged brass",
-        "Garden warm limestone",
         "Cultivated garden earth",
+        "Garden warm limestone",
         "Ridged silver bark and tapered twigs",
         "Detailed silver foliage with authored vein relief",
         "Detailed cherry foliage with authored vein relief",
@@ -233,8 +233,8 @@
     {
       "id": "astral",
       "file": "astral.glb",
-      "bytes": 8241644,
-      "triangles": 63452,
+      "bytes": 8575684,
+      "triangles": 66912,
       "meshes": 17,
       "colliders": 4,
       "materials": [
@@ -244,8 +244,8 @@
         "Garden pale paving",
         "Garden honed paving",
         "Garden aged brass",
-        "Garden warm limestone",
         "Cultivated garden earth",
+        "Garden warm limestone",
         "Ridged silver bark and tapered twigs",
         "Detailed silver foliage with authored vein relief",
         "Garden oak edges",

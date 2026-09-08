@@ -240,10 +240,14 @@ export class Interface {
     this.writeRoute(entity?{...entity,...(entity.kind==='project'?{mediaIndex:saved.mediaIndex,spatial:false}:{})}:{kind:'section',id:view},mode);
   }
   openPaper(id,options={}){if(!publications.some(p=>p.id===id)){this.open('publications',options);return;}this.open('publications',{...options,entity:{kind:'paper',id}});}
-  openProject(id,{mediaIndex,history:mode='push',focus=true}={}){
+  openProject(id,{mediaIndex,history:mode='push',focus=true,section}={}){
     if(!getProject(id)){this.open('projects',{history:mode});return;}
     if(mediaIndex!==undefined)this.readingMemory.save('project',id,{mediaIndex});
     this.open('projects',{history:mode,entity:{kind:'project',id},focus});
+    if(['method','role'].includes(section)){
+      const target=this.root.querySelector(`[data-project-section="${section}"]`);
+      if(target){target.tabIndex=-1;target.scrollIntoView({block:'start',behavior:'instant'});if(focus)target.focus({preventScroll:true});}
+    }
   }
   openExhibition(id,{mediaIndex,history:mode='push',returnOrigin=null}={}){
     if(!getProject(id)){this.open('projects',{history:mode});return;}

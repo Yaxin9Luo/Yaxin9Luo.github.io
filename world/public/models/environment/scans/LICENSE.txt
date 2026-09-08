@@ -1,0 +1,8 @@
+Poly Haven scans: CC0 1.0 Universal.
+Rock Face 02: Dario Barresi (All), Rico Cilliers (processing).
+Rock Moss Set 02: Kless Gyzen (All).
+https://polyhaven.com/a/rock_face_02
+https://polyhaven.com/a/rock_moss_set_02
+https://polyhaven.com/license
+https://creativecommons.org/publicdomain/zero/1.0/
+Original geometry and source material maps retained locally; see manifest.json for derivative encoding and hashes.

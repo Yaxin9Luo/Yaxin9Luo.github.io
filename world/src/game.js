@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { createWorld, terrainHeight } from './world.js';
-import { createWizard, updateCharacter } from './characters.js';
+import { createWizard, updateCharacter, requestCharacterCast, cancelCharacterCast } from './characters.js';
 import { EnvironmentClock, TIME_MODES } from './environment-time.js';
 import { createExhibitionStage } from './exhibits.js';
 import { getProject, projectIds } from './exhibition-content.js';
@@ -9,7 +9,7 @@ import { SAVE_KEY, clamp, damp, parseProgress, freshProgress, progressEvent, mov
 import { WorldAudio } from './audio.js';
 import { createRendering } from './rendering.js';
 import { QUALITY, renderPixelRatio } from './render-quality.js';
-import {createShield} from './effects.js';
+import {createShield,createActionEffects} from './effects.js';
 import {cameraViews,tourStops} from './navigation.js';
 import {createBuildingColliders,createBridgeColliders,resolveRiderCollision,shortenCameraBoom} from './collision.js';
 
@@ -88,6 +88,8 @@ export class Game {
     this._lookGoal = new THREE.Vector3();
     this._lookAt = new THREE.Vector3(-18,34,-25);
     this._castOrigin = new THREE.Vector3();
+    this._pendingCast = null;
+    this._boostIntent = false;
     this._raycaster = new THREE.Raycaster();
     this._pointerNDC = new THREE.Vector2();
     this._flightPlane = new THREE.Plane(Y_AXIS, -spawn.y);
@@ -183,6 +185,7 @@ export class Game {
     this.keyLight.position.copy(this.keyLight.target.position).addScaledVector(environment.lightDirection, 240);
     this.fillLight.color.copy(environment.fill);
     this.fillLight.intensity = environment.fillIntensity;
+    this.fillLight.position.set(THREE.MathUtils.lerp(60,-45,environment.night),80,100);
     this.world.atmosphere.setEnvironment(environment);
     for (const material of this._landscapeLighting) {
       const layer = material.userData.backgroundLayer;
@@ -243,6 +246,7 @@ export class Game {
     this._targetMesh = new THREE.Mesh(new THREE.TorusGeometry(1.65, .035, 4, 40), new THREE.MeshBasicMaterial({ color: '#f5d4a0', transparent: true, opacity: .75, depthWrite: false, toneMapped: false }));
     this._targetMesh.visible = false;
     this.effects.add(this._targetMesh);
+    this.actionEffects=createActionEffects();this.effects.add(this.actionEffects.group);
   }
 
   _listen(target, event, callback, options) {
@@ -430,8 +434,11 @@ export class Game {
   _stageAction(target) {
     if (!target) return;
     const id = this.exhibition?.projectId || this.exhibitionStage.projectId;
-    if (target.action === 'open') this.callbacks.onExhibition?.(id);
-    else if (target.action === 'detail') this.callbacks.onExhibitionDetail?.(id);
+    if (target.action === 'open') {
+      if(this.exhibition&&this.callbacks.onExhibitionMedia)this.callbacks.onExhibitionMedia(id);
+      else this.callbacks.onExhibition?.(id);
+    }
+    else if (target.action === 'detail') this.callbacks.onExhibitionDetail?.(id,{section:target.section});
     else if (target.action.endsWith('Project')) {
       const step = target.action === 'nextProject' ? 1 : -1;
       this.callbacks.onExhibition?.(projectIds[(projectIds.indexOf(id) + step + projectIds.length) % projectIds.length]);
@@ -461,6 +468,7 @@ export class Game {
     this.exhibition = { projectId, mediaIndex: clamp(Number.isInteger(mediaIndex) ? mediaIndex : 0, 0, Math.max(0, project.media.length - 1)) };
     this.exhibitionStage.setProject(projectId);
     this.exhibitionStage.setMedia(this.exhibition.mediaIndex);
+    this.exhibitionStage.setOpen?.(true,{reducedMotion:this.options.reducedMotion});
     this.wizard.visible = false;
     this.effects.visible = false;
     this._syncDiscoveries();
@@ -475,6 +483,7 @@ export class Game {
     if (!this.exhibition) return false;
     const saved = this._exhibitionReturn;
     this.exhibition = null;
+    this.exhibitionStage.setOpen?.(false,{reducedMotion:this.options.reducedMotion});
     this._exhibitionReturn = null;
     this._clearControls();
     if (saved) {
@@ -580,6 +589,8 @@ export class Game {
     this.tour = null;
     this._endRace();
     this._combat = false;
+    this.actionEffects?.burst(this.position,'#d4c493',2.1,.3);
+    this.audio.play('travel-start');
     this._teleport(location.x, location.y + 6, location.z + location.radius + 5);
     this.shield = Math.max(this.shield, 2);
     this.heading = 0;
@@ -602,6 +613,7 @@ export class Game {
     this.paused = false;
     this.tour = null;
     this._combat = false;
+    this._cancelPendingCast();
     this.position.set(spawn.x, spawn.y, spawn.z);
     this._previous.copy(this.position);
     this.heading = .35;
@@ -617,10 +629,12 @@ export class Game {
   }
 
   _teleport(x, y, z) {
+    this._cancelPendingCast();
     this.position.set(x, Math.max(y, terrainHeight(x, z) + 3.2), z);
     this._previous.copy(this.position);
     this.velocity.set(0, 0, 0);
     this.wizard.position.copy(this.position);
+    this.actionEffects?.burst(this.position,'#e7d2a0',2.4,.8,true);
     for (const projectile of this._projectiles) this._retireProjectile(projectile);
     this._updateCamera(1, true);
     this.renderer.shadowMap.needsUpdate = true;
@@ -710,7 +724,7 @@ export class Game {
 
   cast(index) {
     if (Number.isInteger(index) && !this.selectSpell(index)) return false;
-    if (!this.started || this._isPaused() || this.options.gameplay === false) return false;
+    if (!this.started || this._isPaused() || this.options.gameplay === false || this._pendingCast) return false;
     const spell = spellDefinitions[this.spell];
     if (!canCast(this.mana, this.cooldown, spell)) {
       if (this.mana < spell.cost) this._message('Let your magic recover, or collect a crystal to replenish it.', '等待魔力恢复，或收集水晶补充魔力。', 'mana', 3);
@@ -719,16 +733,31 @@ export class Game {
     const projectile = this._projectiles.find((item) => !item.active);
     if (!projectile) return false;
     this.audio.unlock();
+    const action=requestCharacterCast(this.wizard);
+    this.mana-=spell.cost;this.cooldown=spell.cooldown;this._combat=true;
+    if(action.accepted){
+      this._pendingCast={spell:this.spell,sequence:action.sequence,cost:spell.cost};
+      this.actionEffects?.charge(spell.color);this.audio.play('cast-start');this._emitFrame();return true;
+    }
+    this._releaseSpell(this.spell,projectile);return true;
+  }
+
+  _cancelPendingCast(){
+    if(this._pendingCast)this.mana=Math.min(100,this.mana+this._pendingCast.cost);
+    this._pendingCast=null;cancelCharacterCast(this.wizard);this.actionEffects?.cancel();
+  }
+
+  _releaseSpell(index,projectile=this._projectiles.find(item=>!item.active)){
+    const spell=spellDefinitions[index];
+    if(!projectile){this.mana=Math.min(100,this.mana+spell.cost);this.actionEffects?.cancel();this._emitFrame();return false;}
     this.wizard.updateWorldMatrix(true, true);
     if (this.wizard.userData.wandTip) this.wizard.userData.wandTip.getWorldPosition(this._castOrigin);
     else this._castOrigin.copy(this.position).add(this._forward.set(-Math.sin(this.heading), .5, -Math.cos(this.heading)));
     const target = this._findTarget();
     if (target) this._scratch.copy(target.group.position).addScaledVector(Y_AXIS, .35).sub(this._castOrigin).normalize();
     else this._scratch.set(-Math.sin(this.heading), 0, -Math.cos(this.heading));
-    this._launch(projectile, this._castOrigin, this._scratch, spell.speed, spell.color, spell.damage, this.spell, false, spell.radius || 0);
-    this._combat = true;
-    this.mana -= spell.cost;
-    this.cooldown = spell.cooldown;
+    this._launch(projectile, this._castOrigin, this._scratch, spell.speed, spell.color, spell.damage, index, false, spell.radius || 0);
+    this.actionEffects?.release();
     this.audio.play(spell.id);
     this._particlesAt(this._castOrigin, spell.color, 7, 2, .3);
     this._emitFrame();
@@ -806,7 +835,7 @@ export class Game {
     else if (key === 'lang' && ['en', 'zh'].includes(value)) { this.options.lang = value; this.exhibitionStage?.setLanguage(value); }
     else if (key === 'gameplay') {
       this.options.gameplay = Boolean(value);
-      if (!value) { this._combat = false; this._endRace(); this.shield = 0; for (const projectile of this._projectiles) this._retireProjectile(projectile); }
+      if (!value) { this._cancelPendingCast();this._combat = false; this._endRace(); this.shield = 0; for (const projectile of this._projectiles) this._retireProjectile(projectile); }
       this._syncDiscoveries();
     }
     this._emitFrame();
@@ -852,8 +881,10 @@ export class Game {
     this.fps = damp(this.fps, 1 / Math.max(rawDt, .001), 2, dt);
     const playing = this.started && !this._isPaused();
     this._updateEnvironment(dt);
-    this.world.update(this._time, dt, this.options.reducedMotion);
-    this.exhibitionStage.update(this._time);
+    this.world.update(this._time, dt, this.options.reducedMotion,this.camera,{width:this.canvas.width,height:this.canvas.height});
+    this.exhibitionStage.setFocused?.(Boolean(this.exhibition||this.nearestExhibition),{reducedMotion:this.options.reducedMotion});
+    this.exhibitionStage.update(this._time,this._suspended?0:dt,this.options.reducedMotion);
+    if(this.exhibitionStage.consumeShadowUpdate?.())this.renderer.shadowMap.needsUpdate=true;
     if (playing) {
       this._simulationTime += dt;
       this.cooldown = Math.max(0, this.cooldown - dt);
@@ -870,8 +901,10 @@ export class Game {
       this._updateParticles(dt);
     } else if (!this.started) this._idleWisps();
     this._updateWizard(dt, playing);
-    for (const wisp of this.world.wisps) updateCharacter(wisp.group, { dt, speed: playing ? .22 : 0, reducedMotion: this.options.reducedMotion, state: this._combat && wisp.attack < .6 ? 'channel' : 'idle' });
+    for (const wisp of this.world.wisps) updateCharacter(wisp.group, { dt, paused:this._isPaused(),speed: playing ? .22 : 0, reducedMotion: this.options.reducedMotion, state: this._combat && wisp.attack < .6 ? 'channel' : 'idle' });
     this._updateCamera(dt);
+    this.world.updateVegetation?.(this.camera,{width:this.canvas.width,height:this.canvas.height});
+    this.audio.setListener?.(this.camera.position,this.camera.getWorldDirection(this._forward));
     this._target = playing && this.options.gameplay !== false ? this._findTarget() : null;
     this._updateTarget();
     this.audio.update(this._time, playing ? this.velocity.length() : 0);
@@ -889,6 +922,8 @@ export class Game {
     const manual = Math.hypot(x, z) > .03;
     if (manual && this.tour) this.tour = null;
     const boost = this._controls.boost || this._keys.has('ShiftLeft') || this._keys.has('ShiftRight');
+    if(boost&&!this._boostIntent)this.audio.play('boost');
+    this._boostIntent=boost;
     let speed = boost ? 42 : 23;
     let direction = movementVector(x, z, this.cameraYaw);
     if (manual) { this._destination = null; this._destinationMesh.visible = false; }
@@ -947,9 +982,13 @@ export class Game {
     const speed = Math.hypot(this.velocity.x, this.velocity.z);
     const moving = playing && !this.options.reducedMotion;
     this.wizard.position.copy(this.position);
-    if (!this.options.reducedMotion) this.wizard.position.y += Math.sin(this._time * 2) * .09;
+    if (!this.options.reducedMotion&&!this._isPaused()) this.wizard.position.y += Math.sin(this._time * 2) * .09;
     this.wizard.rotation.set(moving ? -speed * .0015 : 0, this.heading, moving ? this._bank * .5 : 0);
-    updateCharacter(this.wizard, { dt, speed: playing ? speed / 42 : 0, turn: this._bank / .27, vertical: this.velocity.y / 23, reducedMotion: this.options.reducedMotion });
+    const action=updateCharacter(this.wizard, { dt,paused:this._isPaused(),boost:playing&&Boolean(this._controls.boost||this._keys.has('ShiftLeft')||this._keys.has('ShiftRight')),speed: playing ? speed / 42 : 0, turn: this._bank / .27, vertical: this.velocity.y / 23, reducedMotion: this.options.reducedMotion });
+    if(action?.castReleased&&this._pendingCast?.sequence===action.castSequence){const index=this._pendingCast.spell;this._pendingCast=null;this._releaseSpell(index);}
+    this.wizard.updateWorldMatrix(true,true);
+    this.wizard.userData.wandTip?.getWorldPosition(this._castOrigin);
+    this.actionEffects?.update(this._isPaused()?0:dt,this._time,this._castOrigin,this.camera,this.options.reducedMotion);
     this._shieldMesh.visible = this.shield > 0 && this.started && !this.exhibition && this.options.gameplay !== false;
     this._shieldMesh.position.copy(this.position).addScaledVector(Y_AXIS, .5);
     this._shieldMesh.rotation.y = this.options.reducedMotion ? 0 : this._time * .45;
@@ -1168,6 +1207,7 @@ export class Game {
   _hitWisp(wisp, damage, color) {
     if (wisp.hp <= 0) return;
     wisp.hp -= damage;
+    this.actionEffects?.burst(wisp.group.position,color,1.5,.45);
     this._particlesAt(wisp.group.position, color, 13, 4, .55);
     if (wisp.hp > 0) { this.audio.play('hit'); return; }
     wisp.group.visible = false;

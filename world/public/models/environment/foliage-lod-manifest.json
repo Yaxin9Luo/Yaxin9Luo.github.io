@@ -1,0 +1,120 @@
+{
+  "version": 3,
+  "source": "world/src/grove-foliage.js",
+  "selector": "world/src/foliage-lod.js",
+  "policy": {
+    "chunkSize": 40,
+    "nearEnterPixels": 260,
+    "nearExitPixels": 220,
+    "nearEnterDistance": 34,
+    "nearExitDistance": 43,
+    "farEnterPixels": 76,
+    "farExitPixels": 96,
+    "farEnterDistance": 125,
+    "farExitDistance": 108
+  },
+  "geometry": "Near uses the approved v2 leaf/branch geometry unchanged. Every tier retains all botanical pieces. Distant broadleaf outline and interior petal triangulation are simplified; cherry petal outlines remain complete.",
+  "materials": "All tiers share the same opaque PBR pigment, normal maps, world-space wind clock and matched depth/distance shadow shader.",
+  "coverageEvidence": "work/production-v3/foliage-lod-coverage.json",
+  "assets": [
+    {
+      "kind": "silver",
+      "seed": 168,
+      "levels": [
+        {
+          "level": "near",
+          "triangles": 74016,
+          "botanicalDetail": {
+            "leaves": 4065,
+            "branches": 327,
+            "flowers": 0
+          }
+        },
+        {
+          "level": "mid",
+          "triangles": 39296,
+          "botanicalDetail": {
+            "leaves": 4065,
+            "branches": 327,
+            "flowers": 0
+          }
+        },
+        {
+          "level": "far",
+          "triangles": 30274,
+          "botanicalDetail": {
+            "leaves": 4065,
+            "branches": 327,
+            "flowers": 0
+          }
+        }
+      ]
+    },
+    {
+      "kind": "pine",
+      "seed": 168,
+      "levels": [
+        {
+          "level": "near",
+          "triangles": 78280,
+          "botanicalDetail": {
+            "leaves": 17380,
+            "branches": 256,
+            "flowers": 0
+          }
+        },
+        {
+          "level": "mid",
+          "triangles": 40772,
+          "botanicalDetail": {
+            "leaves": 17380,
+            "branches": 256,
+            "flowers": 0
+          }
+        },
+        {
+          "level": "far",
+          "triangles": 39588,
+          "botanicalDetail": {
+            "leaves": 17380,
+            "branches": 256,
+            "flowers": 0
+          }
+        }
+      ]
+    },
+    {
+      "kind": "cherry",
+      "seed": 168,
+      "levels": [
+        {
+          "level": "near",
+          "triangles": 76010,
+          "botanicalDetail": {
+            "leaves": 1647,
+            "branches": 239,
+            "flowers": 915
+          }
+        },
+        {
+          "level": "mid",
+          "triangles": 51484,
+          "botanicalDetail": {
+            "leaves": 1647,
+            "branches": 239,
+            "flowers": 915
+          }
+        },
+        {
+          "level": "far",
+          "triangles": 50592,
+          "botanicalDetail": {
+            "leaves": 1647,
+            "branches": 239,
+            "flowers": 915
+          }
+        }
+      ]
+    }
+  ]
+}

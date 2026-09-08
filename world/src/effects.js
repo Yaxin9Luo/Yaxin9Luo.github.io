@@ -54,3 +54,37 @@ export function createShield() {
   const mesh=new THREE.Mesh(new THREE.SphereGeometry(2.1,48,32),material);mesh.name='Protego membrane';
   mesh.userData.update=(time,reduced=false,strength=.65)=>{uniforms.time.value=reduced?0:time;uniforms.strength.value=strength;};return mesh;
 }
+
+/** Small, staged effects follow the actual action; they never cover the reader. */
+export function createActionEffects() {
+  const group=new THREE.Group();group.name='Action choreography';
+  const focus=new THREE.Group();focus.visible=false;group.add(focus);
+  const material=new THREE.MeshBasicMaterial({color:'#b6e5ee',transparent:true,opacity:0,depthWrite:false,blending:THREE.AdditiveBlending,toneMapped:false});
+  for(const [radius,tilt]of [[.25,0],[.36,.65]]){
+    const ring=new THREE.Mesh(new THREE.TorusGeometry(radius,.009,8,80),material);ring.rotation.x=tilt;focus.add(ring);
+  }
+  const core=new THREE.Mesh(new THREE.SphereGeometry(.06,20,12),material);focus.add(core);
+  const bursts=Array.from({length:5},()=>{
+    const mat=material.clone(),ring=new THREE.Mesh(new THREE.TorusGeometry(1,.013,8,96),mat);
+    ring.visible=false;group.add(ring);return {ring,life:0,duration:1,size:1};
+  });
+  let charge=0,release=0,cursor=0,phase=0;
+  return {group,
+    charge(color){charge=1;release=0;material.color.set(color);focus.visible=true;},
+    release(){charge=0;release=.18;},
+    cancel(){charge=release=0;focus.visible=false;},
+    burst(position,color,size=2.5,duration=.7,ground=false){const b=bursts[cursor++%bursts.length];b.life=b.duration=duration;b.size=size;b.ring.position.copy(position);b.ring.material.color.set(color);b.ring.rotation.set(ground?-Math.PI/2:0,0,0);b.ring.visible=true;},
+    update(dt,time,wand,camera,reduced=false){
+      const delta=Math.max(0,Math.min(dt||0,.1));
+      phase+=delta;
+      if(charge||release>0){
+        if(wand)focus.position.copy(wand);if(camera)focus.quaternion.copy(camera.quaternion);
+        release=Math.max(0,release-delta);material.opacity=charge ? .5 : release/.18*.7;
+        focus.scale.setScalar(reduced ? .8 : charge ? (.85+.08*Math.sin(phase*12)) : 1.1+(1-release/.18)*.6);
+        if(!reduced){focus.children[0].rotation.z=phase*1.8;focus.children[1].rotation.z=-phase*1.2;}
+        focus.visible=Boolean(charge||release>0);
+      }
+      for(const b of bursts){if(b.life<=0)continue;b.life=Math.max(0,b.life-delta);const t=1-b.life/b.duration;b.ring.visible=b.life>0;b.ring.material.opacity=(1-t)*.62;b.ring.scale.setScalar(b.size*(reduced?.8:.35+.65*(1-(1-t)**3)));}
+    },
+  };
+}

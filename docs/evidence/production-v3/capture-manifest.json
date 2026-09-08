@@ -1,0 +1,38 @@
+[
+  {
+    "file": "world-night.png",
+    "source": "current-overview-night-high-lod-2-5x-frame-20260908T133424563Z-3.png",
+    "bytes": 5120145,
+    "sha256": "19400bc5bf474ad16b3463279767dec1a13661748f33a04f23e1d24f9dc8b7d7"
+  },
+  {
+    "file": "world-day.png",
+    "source": "current-overview-day-high-lod-2-5x-frame-20260908T133448983Z-4.png",
+    "bytes": 5188693,
+    "sha256": "941a340884ffcd9996db5b9191f63ac3dbdd36ae6cb3e4bea778e6d5d0076bf6"
+  },
+  {
+    "file": "bridge-final.png",
+    "source": "current-bridge-night-high-lod-2-5x-frame-20260908T133520075Z-5.png",
+    "bytes": 6636377,
+    "sha256": "0c33e316497b78eadaf545b2f66443656e49e7c9be5ce04097ef8712fe95209b"
+  },
+  {
+    "file": "shore-final.png",
+    "source": "current-shore-night-high-lod-2-5x-frame-20260908T133536754Z-6.png",
+    "bytes": 5799918,
+    "sha256": "91f444b2ec6ab5662851d553424f2890ca051a99591880613cf0b3052a7674bf"
+  },
+  {
+    "file": "shore-detail-final.png",
+    "source": "current-shore-detail-night-high-lod-2-5x-frame-20260908T132529269Z-1.png",
+    "bytes": 6480715,
+    "sha256": "51508e159a83b6c02a9c73ab7899f67cedfe0bbb19999f2332b5039e41a17103"
+  },
+  {
+    "file": "world-flight.webm",
+    "source": "current-flight-night-high-lod-2-5x-record-20260908T133644386Z-7.webm",
+    "bytes": 20297071,
+    "sha256": "0673758393690a45dd7bdf1e2d1b191d300b93977676419f5715607a9dfde6c1"
+  }
+]

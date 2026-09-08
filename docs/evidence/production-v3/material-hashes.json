@@ -1,0 +1,190 @@
+{
+  "verified_files": 37,
+  "files": [
+    {
+      "path": "/textures/castle-masonry/color.webp",
+      "bytes": 1343684,
+      "sha256": "a65c1bdc90bcfe9b1998d93b0174940992ca1747f2196dd69508c87cc93a27d4"
+    },
+    {
+      "path": "/textures/castle-masonry/normal.webp",
+      "bytes": 2045592,
+      "sha256": "3735d2dbabee7dc76fa5c8e1a0d165e7aecb14628ec7e84d723536ddc932211f"
+    },
+    {
+      "path": "/textures/castle-masonry/roughness.webp",
+      "bytes": 16240,
+      "sha256": "06510453b7724cd5316c09f8e32704ba2d6045372feb379d28393af164a1c74d"
+    },
+    {
+      "path": "/textures/slate-roof/color.webp",
+      "bytes": 919740,
+      "sha256": "3213827fd80f1ba036e2f0fb79780dbdf22a0bb657644854ccde53f9ea31b32a"
+    },
+    {
+      "path": "/textures/slate-roof/normal.webp",
+      "bytes": 1537462,
+      "sha256": "5deb6fd94d8b92ed2f866672c3b1dee248984d85694aea2577bcdd6c4db51c4b"
+    },
+    {
+      "path": "/textures/slate-roof/roughness.webp",
+      "bytes": 760424,
+      "sha256": "4f394aae5e83392ee958d0873cc2571f4423aeb974a65bee3d4aaf5c9b604b46"
+    },
+    {
+      "path": "/textures/mossy-rock/color.webp",
+      "bytes": 453490,
+      "sha256": "d59a092722eb97d20c7e54bc3fe3c0bc944c97fef618b7c10defa823efa6fa52"
+    },
+    {
+      "path": "/textures/mossy-rock/normal.webp",
+      "bytes": 480794,
+      "sha256": "84a310f08d2054db59e16e3ee3e733a002080c7109f3f3aa1ce693a5289c60c5"
+    },
+    {
+      "path": "/textures/mossy-rock/roughness.webp",
+      "bytes": 425734,
+      "sha256": "801d9198377c49145142dc90f95c2f9f550d858fd6a417bc28c6f60bcdbce68d"
+    },
+    {
+      "path": "/textures/forest-ground/color.webp",
+      "bytes": 552148,
+      "sha256": "8aaaa3ed32e9b0714df187dc180949796c96a24332927fb35ea0b88c0b3c8957"
+    },
+    {
+      "path": "/textures/forest-ground/normal.webp",
+      "bytes": 688856,
+      "sha256": "983e0701be3676ebded13b65c39c4d4271a29ae41493833cfcebc986ebbdde6e"
+    },
+    {
+      "path": "/textures/forest-ground/roughness.webp",
+      "bytes": 401860,
+      "sha256": "088863248984f379de0829f56d21e15c682c89e146cfa91793249272732ea2b3"
+    },
+    {
+      "path": "/textures/meadow/color.webp",
+      "bytes": 335138,
+      "sha256": "4142f57cd397bf7ee1553797d93220ac7f40c2c41d0468f4713a3eedc53f0e4b"
+    },
+    {
+      "path": "/textures/meadow/normal.webp",
+      "bytes": 493262,
+      "sha256": "b390b29f47a873fc7c1915835732f94018cef39f5fd51d551cab578f12bd3a5e"
+    },
+    {
+      "path": "/textures/meadow/roughness.webp",
+      "bytes": 305636,
+      "sha256": "91eaa64d91cc2dc13417758fc23789c7d9b4577fe47785113e1bc2e9d9a6ce63"
+    },
+    {
+      "path": "/textures/aged-wood/color.webp",
+      "bytes": 133654,
+      "sha256": "08e9208c0924796858dd3853989c729f0e73af8c92bc689cffb08b231f068e22"
+    },
+    {
+      "path": "/textures/aged-wood/normal.webp",
+      "bytes": 268670,
+      "sha256": "7fcca29512d62d753be94a58653c090b83a301c51cb72f3c52e21ba2543a9af9"
+    },
+    {
+      "path": "/textures/aged-wood/roughness.webp",
+      "bytes": 18408,
+      "sha256": "2f76569ccbe849ff4dc704b70950510ddb01b3b100d7411c4ed65d6e70eabd0c"
+    },
+    {
+      "path": "/textures/pine-bark/color.webp",
+      "bytes": 269422,
+      "sha256": "5c3e07a18c39b6638dded8ef13d6098a561c99db6f849ea8757ff376aa755147"
+    },
+    {
+      "path": "/textures/pine-bark/normal.webp",
+      "bytes": 560852,
+      "sha256": "d762910ef6c8c43530a76f287a43cd84af5653b8bbd4d2d633356bef43a05cb5"
+    },
+    {
+      "path": "/textures/pine-bark/roughness.webp",
+      "bytes": 191416,
+      "sha256": "e7636ee05b394f0a328019dd80403a6a5717e798f47742c666d6838a6e6f4a21"
+    },
+    {
+      "path": "/textures/wool-cloth/color.webp",
+      "bytes": 357818,
+      "sha256": "cf52442fc7c645b3d782938c2f5ec7662e2326f514de2b73bc8279d0144ee986"
+    },
+    {
+      "path": "/textures/wool-cloth/normal.webp",
+      "bytes": 520820,
+      "sha256": "3a568c178b5b8f2a13b2dedde4063c9e0b2209a82902683e2b711e595f478c24"
+    },
+    {
+      "path": "/textures/wool-cloth/roughness.webp",
+      "bytes": 457940,
+      "sha256": "b4e9cebf602557f85e8a2e8aeddab44f8ada81acb1221ef6e48722d67361c508"
+    },
+    {
+      "path": "/textures/dark-leather/color.webp",
+      "bytes": 272794,
+      "sha256": "99b8608c14d1532d858aa5fafee1564b25f389b1134aaca874feec27350f9290"
+    },
+    {
+      "path": "/textures/dark-leather/normal.webp",
+      "bytes": 463102,
+      "sha256": "2d31609a071a9568954aef44de8be531a87d1a538399cf10805677db81d3ffc3"
+    },
+    {
+      "path": "/textures/dark-leather/roughness.webp",
+      "bytes": 607426,
+      "sha256": "457da1e941e1142f72f350057ed6e8c008a91b6ca72892f64fa7b816f2144797"
+    },
+    {
+      "path": "/textures/oxidized-copper/color.webp",
+      "bytes": 250772,
+      "sha256": "1b32ebda3452c7109e1d439ae73d7e04f39a5479257aae0ed73795bafe3b26df"
+    },
+    {
+      "path": "/textures/oxidized-copper/normal.webp",
+      "bytes": 105422,
+      "sha256": "ea8b96d42728780e1b71f4fba921d0a7583ef45de5eb3e6213a35dcdfab190a4"
+    },
+    {
+      "path": "/textures/oxidized-copper/roughness.webp",
+      "bytes": 152150,
+      "sha256": "fdf08acc9912dae9bdbab373cf8c06283aea150306a737c326aa156c3a03c73e"
+    },
+    {
+      "path": "/textures/oxidized-copper/metalness.webp",
+      "bytes": 538788,
+      "sha256": "c69016b6f371f9d6781d1129a41c6a11a4307e6ba6dc1107498441f4c193f7c4"
+    },
+    {
+      "path": "/textures/foliage/color.webp",
+      "bytes": 60216,
+      "sha256": "85baf662d8355e23cb19e09d3a703a55f592ae830cbcfa9763469a9272418100"
+    },
+    {
+      "path": "/textures/foliage/normal.webp",
+      "bytes": 72164,
+      "sha256": "8f988df72ea3a0aaef7ced3cb9aa6d0a9bba34654fa4a311247b06e62e2179e0"
+    },
+    {
+      "path": "/textures/foliage/roughness.webp",
+      "bytes": 26610,
+      "sha256": "e39c3e73e4f101badead52c648b74487a251712916eaa98b68f70eab3e6c493a"
+    },
+    {
+      "path": "/textures/foliage/alpha.webp",
+      "bytes": 24414,
+      "sha256": "3b77fac0cc0144c372ec845915b1b67b8c0c7266023016039749de26b65e628f"
+    },
+    {
+      "path": "/textures/environment/night.hdr",
+      "bytes": 1672754,
+      "sha256": "4f597078024bd81429431e872d466d8808653ad62a8bc8c61d8052af7466c3aa"
+    },
+    {
+      "path": "/textures/environment/sky.hdr",
+      "bytes": 4434394,
+      "sha256": "99451201586489ef3288c97bfac2a2ac232a5491c51a1faf0ec8ea39f3ccd533"
+    }
+  ]
+}

@@ -8,6 +8,8 @@ import {createWisp} from './characters.js';
 import {createViaduct,createGardenLamp,createResearchBook,createLampGroundGlow} from './site-details.js';
 import {gradeGardenTerrain,insideAuthoredGarden} from './environment-layout.js';
 import {createAuthoredGardens} from './gardens.js';
+import {createEnvironmentComposition} from './environment-composition.js';
+import {environmentWind} from './environment-wind.js';
 
 let seed=131;
 function random(){seed=(Math.imul(seed,1664525)+1013904223)|0;return (seed>>>0)/4294967296;}
@@ -43,6 +45,29 @@ export function renderedTerrainHeight(x,z){
   const b=terrainHeight(x0,z0+TERRAIN_STEP),c=terrainHeight(x0+TERRAIN_STEP,z0);
   if(u+v<=1){const a=terrainHeight(x0,z0);return a+(c-a)*u+(b-a)*v;}
   const d=terrainHeight(x0+TERRAIN_STEP,z0+TERRAIN_STEP);return d+(b-d)*(1-u)+(c-d)*(1-v);
+}
+
+// Pick one projection for the whole face. Only UV-axis seams split vertices;
+// copied smooth normals and triangle order retain the original cliff shell.
+export function cliffPlanarUV(geometry,scale=.22){
+  const p=geometry.attributes.position,index=geometry.index,a=new THREE.Vector3(),b=new THREE.Vector3(),c=new THREE.Vector3();
+  const cache=new Int32Array(p.count*3).fill(-1),indices=[],uv=[],attributes=Object.entries(geometry.attributes).filter(([name])=>name!=='uv'),values=Object.fromEntries(attributes.map(([name])=>[name,[]]));
+  for(let i=0;i<index.count;i+=3){
+    a.fromBufferAttribute(p,index.getX(i));b.fromBufferAttribute(p,index.getX(i+1));c.fromBufferAttribute(p,index.getX(i+2));const normal=b.sub(a).cross(c.sub(a));
+    const x=Math.abs(normal.x),y=Math.abs(normal.y),z=Math.abs(normal.z),axis=y>=x&&y>=z?1:x>z?0:2;
+    for(let corner=0;corner<3;corner++){
+      const old=index.getX(i+corner),key=old*3+axis;let vertex=cache[key];
+      if(vertex===-1){
+        vertex=uv.length/2;cache[key]=vertex;
+        for(const [name,attribute]of attributes)for(let component=0;component<attribute.itemSize;component++)values[name].push(attribute.array[old*attribute.itemSize+component]);
+        uv.push((axis===0?p.getZ(old):p.getX(old))*scale,(axis===1?p.getZ(old):p.getY(old))*scale);
+      }
+      indices.push(vertex);
+    }
+  }
+  const result=new THREE.BufferGeometry();
+  for(const [name,attribute]of attributes)result.setAttribute(name,new THREE.BufferAttribute(new attribute.array.constructor(values[name]),attribute.itemSize,attribute.normalized));
+  result.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2));result.setIndex(indices);return result;
 }
 
 // Clip one shared grid to the union of the islands. Boundary vertices are reused
@@ -127,10 +152,11 @@ function islandGeometry(){
     const topA=cliffVertex(a,band),topB=cliffVertex(b,band),lowA=cliffVertex(a,band+1),lowB=cliffVertex(b,band+1);
     cliffIndices.push(topA,lowA,topB,topB,lowA,lowB);
   }
-  const cliffs=new THREE.BufferGeometry();
-  cliffs.setAttribute('position',new THREE.Float32BufferAttribute(cliffPositions,3));
-  cliffs.setAttribute('color',new THREE.Float32BufferAttribute(cliffColors,3));cliffs.setIndex(cliffIndices);cliffs.computeVertexNormals();
-  planarUV(ground,.067);planarUV(cliffs,.22);return {ground,cliffs};
+  const cliffGeometry=new THREE.BufferGeometry();
+  cliffGeometry.setAttribute('position',new THREE.Float32BufferAttribute(cliffPositions,3));
+  cliffGeometry.setAttribute('color',new THREE.Float32BufferAttribute(cliffColors,3));cliffGeometry.setIndex(cliffIndices);cliffGeometry.computeVertexNormals();
+  const cliffs=cliffPlanarUV(cliffGeometry,.22);cliffGeometry.dispose();
+  planarUV(ground,.067);return {ground,cliffs,shore};
 }
 
 export function createTerrainSpecimen(){
@@ -188,7 +214,8 @@ export function createWorld(scene){
     const group=createViaduct(Math.hypot(bx-ax,bz-az));group.position.set((ax+bx)/2,6.82,(az+bz)/2);group.rotation.y=Math.atan2(bx-ax,bz-az);root.add(group);occluders.push(group);
   }
   for(const [[ax,az],[bx,bz]] of Object.values(bridges))bridge(ax,az,bx,bz);
-  const gardens=createAuthoredGardens(root,renderedTerrainHeight,nearPath);occluders.push(gardens.group);
+  const gardens=createAuthoredGardens(root,null,nearPath);occluders.push(gardens.group);
+  const composition=createEnvironmentComposition(root,renderedTerrainHeight,nearPath,{shoreline:terrain.shore,shoreField});occluders.push(composition.group);
 
   // Hand-worked lamps along the paths. Instance each material across the grounds.
   const lamp=createGardenLamp(),lampSites=[];
@@ -198,7 +225,7 @@ export function createWorld(scene){
   const groundGlow=createLampGroundGlow([...lampSites,...gardens.lampSites.map(p=>[...p,4.2])],renderedTerrainHeight);root.add(groundGlow);
   const exhibits=exhibitSites.map(({id,x,z,color})=>{const group=createResearchBook(id,color);group.position.set(x,terrainHeight(x,z),z);group.rotation.y=-.24;root.add(group);return {id,group};});
 
-  const vegetation=createVegetation(root,terrainHeight,nearPath);
+  const vegetation=createVegetation(root,terrainHeight,nearPath,{lod:true});
   root.userData.vegetation=vegetation;
   createBackdrop(root,scene);
   const atmosphere=createAtmosphere(scene,{heightAt:terrainHeight});
@@ -215,7 +242,7 @@ export function createWorld(scene){
   });
   wispPositions.forEach((p,i)=>{const group=createWisp();group.position.fromArray(p);root.add(group);wisps.push({id:i,group,home:new THREE.Vector3(...p),hp:3,respawn:0,attack:2+i*.4});});
   const lanternGeo=new THREE.SphereGeometry(.08,6,4),lanterns=[];
-  for(let i=0;i<16;i++){const p={x:(random()-.5)*125,y:10+random()*18,z:(random()-.5)*140,s:1};const m=mesh(lanternGeo,glowMat);m.castShadow=false;m.position.set(p.x,p.y,p.z);lanterns.push({mesh:m,base:p.y,phase:random()*6});}
+  for(let i=0;i<16;i++){const p={x:(random()-.5)*125,y:10+random()*18,z:(random()-.5)*140,s:1};const m=mesh(lanternGeo,glowMat);m.castShadow=false;m.position.set(p.x,p.y,p.z);lanterns.push({mesh:m,base:p.y,x:p.x,z:p.z,phase:random()*6});}
   const motes=new Float32Array(140*3);
   for(let i=0;i<140;i++){motes[i*3]=(random()-.5)*160;motes[i*3+1]=3+random()*45;motes[i*3+2]=(random()-.5)*160;}
   const mg=new THREE.BufferGeometry();mg.setAttribute('position',new THREE.BufferAttribute(motes,3));
@@ -231,8 +258,9 @@ export function createWorld(scene){
     if(m.uniforms?.nightFactor&&!environmentLighting.nightMaterials.some(e=>e.material===m))environmentLighting.nightMaterials.push({material:m,uniform:'nightFactor',baseValue:1});
   }});
   environmentLighting.nightObjects=[{object:sparks,baseOpacity:.7},...lanterns.map(l=>({object:l.mesh,baseOpacity:1}))];
-  return {root,portals,ringMeshes,crystals,wisps,exhibits,occluders,atmosphere,lake,gardens,clockTargets:gardens.clockTargets,environmentLighting,environmentColliders:gardens.colliders,releaseLantern:position=>atmosphere.releaseLantern(position),
-    update(time,dt,reducedMotion=false){
+  return {root,portals,ringMeshes,crystals,wisps,exhibits,occluders,atmosphere,lake,gardens,composition,vegetation,updateVegetation:(camera,viewport)=>vegetation.update(camera,viewport),clockTargets:gardens.clockTargets,environmentLighting,environmentColliders:gardens.colliders,releaseLantern:position=>atmosphere.releaseLantern(position),
+    update(time,dt,reducedMotion=false,camera=null,viewport=null){
+      vegetation.update(camera,viewport);
       lake.update(time,reducedMotion);
       atmosphere.update(time,dt,reducedMotion);
       gardens.update(time,reducedMotion);
@@ -240,7 +268,7 @@ export function createWorld(scene){
       animated.forEach(a=>{if(a.type==='portal'){a.group.userData.update(time,reducedMotion);}else a.mesh.rotation.y=time*.15;});
       exhibits.forEach((e,i)=>{e.group.userData.book.position.y=4.25+Math.sin(time*1.4+i)*.25;e.group.userData.book.rotation.y=Math.sin(time*.3+i)*.12;});
       crystals.forEach(c=>{c.group.rotation.y=time*.6;c.group.position.y=c.baseY+Math.sin(time*1.6+c.id)*.25;});
-      lanterns.forEach(l=>l.mesh.position.y=l.base+Math.sin(time*.5+l.phase)*.5);
+      lanterns.forEach(l=>{const drift=Math.sin(time*.065+l.phase)*1.8;l.mesh.position.set(l.x+environmentWind.direction.x*drift,l.base+Math.sin(time*.5+l.phase)*.5,l.z+environmentWind.direction.y*drift);});
       sparks.rotation.y=time*.006;
       birds.forEach((b,i)=>{const a=time*.075+i*.52;b.position.set(Math.cos(a)*37,32+Math.sin(a*2+i)*3,-27+Math.sin(a)*26);b.rotation.y=-a;b.rotation.z=Math.sin(time*5+i)*.15;});
     },

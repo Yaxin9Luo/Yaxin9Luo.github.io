@@ -8,7 +8,7 @@ const smooth = value => value * value * (3 - 2 * value);
 // Art-directed palettes. Lighting and sky share these values; surfaces keep
 // their own albedo instead of receiving a full-screen colour filter.
 const palettes = {
-  night: { zenith: '#152d59', horizon: '#6382a0', cloud: '#6386a4', fog: '#46617c', key: '#c3deff', sky: '#b6d1eb', ground: '#737b83', fill: '#ffdab8', water: '#173d50', keyIntensity: 3.1, ambientIntensity: 2.1, fillIntensity: 1.25, fogDensity: .00135, exposure: 1.16, night: 1 },
+  night: { zenith: '#152d59', horizon: '#6382a0', cloud: '#6386a4', fog: '#46617c', key: '#c3deff', sky: '#b6d1eb', ground: '#596d88', fill: '#b7ccec', water: '#173d50', keyIntensity: 3.35, ambientIntensity: 1.75, fillIntensity: .90, fogDensity: .00135, exposure: 1.16, night: 1 },
   dawn: { zenith: '#7195c4', horizon: '#edbdb0', cloud: '#f0d1c0', fog: '#a8a9bc', key: '#ffd4b8', sky: '#cad6f0', ground: '#9f9694', fill: '#9aafdf', water: '#537481', keyIntensity: 3.3, ambientIntensity: 1.8, fillIntensity: .65, fogDensity: .0011, exposure: 1.02, night: .12 },
   day: { zenith: '#397bb1', horizon: '#c9e4e9', cloud: '#fff3dd', fog: '#abc6d5', key: '#fff0d5', sky: '#b3d6f2', ground: '#9d9d83', fill: '#bed8ef', water: '#236775', keyIntensity: 3.4, ambientIntensity: 2.0, fillIntensity: 1.15, fogDensity: .00095, exposure: 1.02, night: 0 },
   dusk: { zenith: '#6979ad', horizon: '#efac87', cloud: '#f4bc96', fog: '#b49da6', key: '#ffd2a5', sky: '#c2b9e0', ground: '#a39390', fill: '#a6bbe9', water: '#53697f', keyIntensity: 3.35, ambientIntensity: 1.8, fillIntensity: .7, fogDensity: .0012, exposure: 1.0, night: .28 },

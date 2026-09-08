@@ -5,8 +5,9 @@ import { createServer } from 'node:http';
 import { once } from 'node:events';
 import { createHash } from 'node:crypto';
 import { inflateSync } from 'node:zlib';
-import { Vector3, Box3, PropertyBinding } from 'three';
-import { loadCharacterAssets, createWizard, createWisp, updateCharacter } from '../src/characters.js';
+import { Vector3, Box3, Quaternion, PropertyBinding, Raycaster } from 'three';
+import { loadCharacterAssets, createWizard, createWisp, updateCharacter, requestCharacterCast,
+  cancelCharacterCast, CHARACTER_ACTION_TIMING } from '../src/characters.js';
 
 const modelRoot = new URL('../public/models/characters/', import.meta.url);
 const originals = new Map();
@@ -91,7 +92,7 @@ function skinnedMeshes(group) {
 
 function setAction(group, name, time) {
   const { actions, mixer } = group.userData.characterAnimation;
-  for (const [key, action] of actions) action.setEffectiveWeight(key === name ? 1 : 0);
+  for (const [key, action] of actions) action.reset().play().setEffectiveWeight(key === name ? 1 : 0);
   mixer.setTime(time);
   group.updateMatrixWorld(true);
 }
@@ -133,10 +134,10 @@ test('published assets carry complete skins/actions and respect per-character bu
     const triangles = json.meshes.flatMap((mesh) => mesh.primitives)
       .reduce((sum, primitive) => sum + json.accessors[primitive.indices].count / 3, 0);
     assert.equal(entry.triangles, triangles);
-    assert.ok(triangles <= (kind === 'wizard' ? 400000 : 30000));
-    assert.ok(buffer.length <= (kind === 'wizard' ? 12000000 : 3000000));
+    assert.ok(triangles <= (kind === 'wizard' ? 500000 : 120000));
+    assert.ok(buffer.length <= (kind === 'wizard' ? 24000000 : 12000000));
     assert.ok(json.skins.length >= 1);
-    const required = kind === 'wizard' ? ['idle', 'cruise', 'turn_left', 'turn_right', 'boost'] : ['idle', 'approach', 'channel'];
+    const required = kind === 'wizard' ? ['idle', 'cruise', 'turn_left', 'turn_right', 'boost', 'boost_start', 'boost_end', 'cast'] : ['idle', 'approach', 'channel'];
     assert.deepEqual(json.animations.map((clip) => clip.name).sort(), required.sort());
     for (const primitive of json.meshes.flatMap((mesh) => mesh.primitives)) {
       assert.ok(Number.isInteger(primitive.attributes.JOINTS_0));
@@ -161,6 +162,8 @@ test('exported cloth sheen preserves the authored low-intensity material finish'
       'Burgundy satin lining': .055,
       'Graphite twill riding trousers': .055,
       'Tailored deep indigo facing': .055,
+      'Claret worsted waistcoat': .055,
+      'Warm ivory linen': .055,
       'Deep indigo wizard hat felt': .025,
     },
     wraith: {
@@ -185,6 +188,30 @@ test('exported cloth sheen preserves the authored low-intensity material finish'
   }
 });
 
+test('selected scan detail carries physical scale and traceable texture inputs', async () => {
+  const provenance = JSON.parse(await readFile(new URL('source/sources.json', modelRoot), 'utf8'));
+  assert.equal(provenance.generated.textureInputs.length, 6);
+  for (const input of provenance.generated.textureInputs) {
+    const bytes = await readFile(new URL(`../..${input.file}`, modelRoot));
+    assert.equal(input.bytes, bytes.length);
+    assert.equal(input.sha256, createHash('sha256').update(bytes).digest('hex'));
+  }
+  for (const [kind, entries] of [['wizard', [['Academy midnight wool', 'wool-cloth', .27],
+    ['Tailored deep indigo facing', 'wool-cloth', .27], ['Claret worsted waistcoat', 'wool-cloth', .27],
+    ['Dark walnut riding leather', 'dark-leather', .4]]],
+    ['wraith', [['Guardian indigo wool', 'wool-cloth', .27]]]]) {
+    const { json } = parseGLB(originals.get(kind));
+    for (const [name, family, scale] of entries) {
+      const material = json.materials.find(item => item.name === name);
+      assert.equal(material.extras.surfaceFamily, family);
+      assert.equal(material.extras.surfaceVariant, 'hybrid');
+      assert.ok(Math.abs(material.extras.tileMeters - scale) < 1e-6);
+      assert.ok(Number.isInteger(material.normalTexture.index));
+      assert.ok(Number.isInteger(material.pbrMetallicRoughness.metallicRoughnessTexture.index));
+    }
+  }
+});
+
 test('embedded cloth pigment PNGs decode to the intended linear palette with subtle weave variation', t => {
   const palette = {
     wizard: {
@@ -194,6 +221,8 @@ test('embedded cloth pigment PNGs decode to the intended linear palette with sub
       'Claret woven scarf': [.30, .052, .061],
       'Deep indigo wizard hat felt': [.017, .027, .052],
       'Tailored deep indigo facing': [.032, .061, .112],
+      'Claret worsted waistcoat': [.22, .032, .048],
+      'Warm ivory linen': [.64, .57, .43],
     },
     wraith: {
       'Guardian indigo wool': [.048, .087, .20],
@@ -232,8 +261,9 @@ test('embedded cloth pigment PNGs decode to the intended linear palette with sub
       }
       const average = brightnessSum / count;
       const relativeVariation = Math.sqrt(Math.max(0, brightnessSquared / count - average * average)) / average;
-      assert.ok(relativeVariation > .005 && relativeVariation < .04, `${name}: preserve a subtle, non-flat weave`);
-      t.diagnostic(`${name}: RGB8 mean ${encodedSum.map(value => (value / count).toFixed(2))}; linear mean ${mean.map(value => value.toFixed(5))}`);
+      const scan = material.extras?.surfaceFamily === 'wool-cloth';
+      assert.ok(relativeVariation > .005 && relativeVariation < (scan ? .16 : .04), `${name}: preserve dyed-fiber variation without full-scan mottling; relative variation ${relativeVariation}`);
+      t.diagnostic(`${name}: RGB8 mean ${encodedSum.map(value => (value / count).toFixed(2))}; linear mean ${mean.map(value => value.toFixed(5))}; relative weave variation ${relativeVariation.toFixed(4)}`);
     }
   }
 });
@@ -289,6 +319,24 @@ test('rider actions maintain the broom seat and gripping hand, with bone-followi
   assert.ok(kneeMotion > .008, 'seated leg follow-through must change the knee pose');
 });
 
+test('one-shot action curves keep the seat, broom and supporting grip fixed', () => {
+  const rider = createWizard();
+  setAction(rider, 'idle', 0);
+  const seat = worldPosition(rider, 'pelvis');
+  const grip = worldPosition(rider, 'hand.L');
+  const tail = worldPosition(rider, 'broomTail');
+  for (const name of ['boost_start', 'boost_end', 'cast']) {
+    const duration = rider.userData.characterAnimation.actions.get(name).getClip().duration;
+    for (const phase of [0, .15, .3, .5, .75, .99, 1]) {
+      setAction(rider, name, phase * duration);
+      assert.ok(worldPosition(rider, 'pelvis').distanceTo(seat) < 1e-5, `${name}: seat drift`);
+      assert.ok(worldPosition(rider, 'hand.L').distanceTo(grip) < 1e-5, `${name}: grip drift`);
+      assert.ok(worldPosition(rider, 'gripContact').distanceTo(grip) < .003, `${name}: supporting elbow IK missed the handle`);
+      assert.ok(worldPosition(rider, 'broomTail').distanceTo(tail) < 1e-5, `${name}: broom moved independently of seat`);
+    }
+  }
+});
+
 test('rider exports a complete mask and felt hat with no exposed-face material', () => {
   const rider = createWizard();
   for (const name of ['rider-mask', 'rider-hat-brim', 'rider-hat-crown']) {
@@ -302,6 +350,78 @@ test('rider exports a complete mask and felt hat with no exposed-face material',
   assert.ok(json.materials.every((material) => !/skin|iris|pupil|sclera/i.test(material.name)));
 });
 
+test('tailored rider has separate sleeves and a slim two-panel cape', () => {
+  const rider = createWizard();
+  for (const name of ['Tailored_coat_torso', 'Independent_set_in_sleeve_L', 'Independent_set_in_sleeve_R']) {
+    assert.ok(rider.getObjectByName(name), `missing independently authored garment ${name}`);
+  }
+  const meshes = skinnedMeshes(rider.getObjectByName('rider-cape'));
+  assert.ok(meshes.length >= 2, 'cape must preserve wool and substantial lining');
+  const bounds = new Box3();
+  for (const mesh of meshes) {
+    mesh.geometry.computeBoundingBox(); bounds.union(mesh.geometry.boundingBox);
+  }
+  const size = bounds.getSize(new Vector3());
+  assert.ok(size.x < .85, `cape broadside silhouette widened to ${size.x}`);
+  assert.ok(size.y > .8, 'heavy cape must descend below shoulder height');
+  assert.ok(size.z > .9 && size.z < 1.4, 'cape should trail with a bounded gravity silhouette');
+});
+
+test('upper cape clears the underlying coat in neutral, boost and cast poses', () => {
+  const rider = createWizard();
+  const torso = rider.getObjectByName('Tailored_coat_torso');
+  const cape = rider.getObjectByName('rider-cape');
+  const ray = new Raycaster(); let samples = 0;
+  for (const [action, time] of [['idle', 0], ['boost', 1.3], ['cast', .18], ['boost_start', .15]]) {
+    setAction(rider, action, time);
+    for (const x of [-.15, -.06, .06, .15]) for (const y of [.43, .50, .57, .63]) {
+      ray.set(new Vector3(x, y, 2), new Vector3(0, 0, -1));
+      const bodyHit = ray.intersectObject(torso, true)[0];
+      const capeHit = ray.intersectObject(cape, true)[0];
+      if (!bodyHit || !capeHit) continue;
+      samples++;
+      assert.ok(capeHit.point.z > bodyHit.point.z + .003,
+        `${action}: cape cuts through upper back at x=${x}, y=${y}; gap=${capeHit.point.z - bodyHit.point.z}`);
+    }
+  }
+  assert.ok(samples >= 32, `expected representative upper-back intersections, found ${samples}`);
+});
+
+test('thin chest layers remain outside the coat through flight and cast deformation', t => {
+  const rider = createWizard();
+  const torso = rider.getObjectByName('Tailored_coat_torso');
+  const ray = new Raycaster(); let samples = 0, smallestGap = Infinity;
+  const layers = ['Notched riding lapel -1', 'Notched riding lapel 1',
+    'Claret waistcoat panel -1', 'Claret waistcoat panel 1', 'Inset ivory linen shirt'];
+  for (const [action, time] of [['idle', 0], ['boost', 1.3], ['cast', .18], ['cast', .45], ['boost_start', .15]]) {
+    setAction(rider, action, time);
+    for (const name of layers) {
+      const layer = rider.getObjectByName(PropertyBinding.sanitizeNodeName(name));
+      assert.ok(layer?.isSkinnedMesh, `${name}: keep the independently cut chest panel`);
+      const positions = layer.geometry.attributes.position;
+      const checkPoint = point => {
+        ray.set(new Vector3(point.x, point.y, -1.5), new Vector3(0, 0, 1));
+        const hit = ray.intersectObject(torso, true)[0];
+        if (!hit) return;
+        const gap = hit.point.z - point.z;
+        samples++; smallestGap = Math.min(smallestGap, gap);
+        assert.ok(gap > .001, `${action} ${name}: layer crosses the coat at ${point.toArray()}; gap ${gap}`);
+      };
+      for (let i = 0; i < positions.count; i += 47) {
+        checkPoint(layer.getVertexPosition(i, new Vector3()).applyMatrix4(layer.matrixWorld));
+      }
+      const indices = layer.geometry.index;
+      for (let i = 0; i < indices.count; i += 177) {
+        const center = new Vector3();
+        for (let j = 0; j < 3; j++) center.add(layer.getVertexPosition(indices.getX(i + j), new Vector3()));
+        checkPoint(center.divideScalar(3).applyMatrix4(layer.matrixWorld));
+      }
+    }
+  }
+  assert.ok(samples > 200, `expected representative panel intersections, found ${samples}`);
+  t.diagnostic(`Chest layers: ${samples} deformed surface samples; minimum forward clearance ${(smallestGap * 1000).toFixed(2)} mm`);
+});
+
 test('exported cloth changes shape, loops continuously and stays finite for every action', () => {
   for (const factory of [createWizard, createWisp]) {
     const group = factory();
@@ -313,7 +433,8 @@ test('exported cloth changes shape, loops continuously and stays finite for ever
     const bounds = new Box3();
     for (const name of group.userData.characterAnimation.actions.keys()) {
       const duration = group.userData.characterAnimation.actions.get(name).getClip().duration;
-      if (factory === createWizard) assert.ok(Math.abs(duration - 4) < 1e-5, 'rider loops must start at zero without a frame-one delay');
+      const oneShotDuration = { boost_start: .2, boost_end: .35, cast: .6 }[name];
+      if (factory === createWizard) assert.ok(Math.abs(duration - (oneShotDuration || 4)) < 1e-5, 'clips must start at zero and use the authored duration');
       setAction(group, name, 0);
       const start = cloth.getVertexPosition(index, new Vector3());
       for (const time of [0, .0625, .125, .25, .375, .5, .625, .75, .875, .999975].map((phase) => phase * duration)) {
@@ -331,7 +452,7 @@ test('exported cloth changes shape, loops continuously and stays finite for ever
       }
       setAction(group, name, duration - .0001);
       const loopDistance = cloth.getVertexPosition(index, new Vector3()).distanceTo(start);
-      assert.ok(loopDistance < .003, `${group.userData.characterAnimation.kind} ${name} loop seam: ${loopDistance}`);
+      if (!oneShotDuration) assert.ok(loopDistance < .003, `${group.userData.characterAnimation.kind} ${name} loop seam: ${loopDistance}`);
     }
     assert.ok(clothMotion > .012, 'cloth must actually deform across a loop');
     const size = bounds.getSize(new Vector3());
@@ -356,4 +477,141 @@ test('input blending changes the pose and reduced-motion holds a chosen idle fra
   rider.updateMatrixWorld(true);
   assert.deepEqual(head.quaternion.toArray(), frozen.toArray());
   assert.ok(cloth.getVertexPosition(0, new Vector3()).distanceTo(frozenVertex) < 1e-8);
+});
+
+function assertNormalized(group) {
+  const { actions, weights } = group.userData.characterAnimation;
+  const sum = [...weights.values()].reduce((a, b) => a + b, 0);
+  const effective = [...actions.values()].reduce((a, action) => a + action.getEffectiveWeight(), 0);
+  assert.ok(Math.abs(sum - 1) < 1e-10, `stored action sum ${sum}`);
+  assert.ok(Math.abs(effective - 1) < 1e-10, `effective action sum ${effective}`);
+  for (const weight of weights.values()) assert.ok(Number.isFinite(weight) && weight >= 0 && weight <= 1);
+}
+
+test('explicit boost intent starts immediately and interruptions settle into the latest intent', () => {
+  const rider = createWizard();
+  const animation = rider.userData.characterAnimation;
+  updateCharacter(rider, { dt: .016, speed: 0, boost: true });
+  assert.equal(animation.transition.name, 'boost_start');
+  assert.ok(animation.weights.get('boost_start') > .25, 'start pose must react before speed has risen');
+  updateCharacter(rider, { dt: .02, speed: .25, boost: false });
+  assert.equal(animation.transition.name, 'boost_end');
+  updateCharacter(rider, { dt: .01, speed: .3, boost: true });
+  assert.equal(animation.transition.name, 'boost_start');
+  assert.ok(Math.abs(animation.actions.get('boost_start').time - .01) < 1e-9, 'interrupted start restarts at its first sample');
+  for (let i = 0; i < 90; i++) {
+    updateCharacter(rider, { dt: 1 / 60, speed: 1, boost: true });
+    assertNormalized(rider);
+  }
+  assert.equal(animation.transition, null);
+  assert.ok(animation.weights.get('boost') > .999);
+  for (let i = 0; i < 100; i++) {
+    updateCharacter(rider, { dt: 1 / 60, speed: .45, boost: false });
+    assertNormalized(rider);
+  }
+  assert.equal(animation.transition, null);
+  assert.ok(animation.weights.get('cruise') > .999);
+  assert.ok(animation.weights.get('boost_start') < 1e-7 && animation.weights.get('boost_end') < 1e-7);
+});
+
+test('cast uses the shipped authored action, releases once, then returns to flight', () => {
+  const rider = createWizard();
+  const wandBefore = worldPosition(rider, 'wandTip');
+  const request = requestCharacterCast(rider);
+  assert.deepEqual(request, { accepted: true, releaseDelay: .18, duration: .6, sequence: 1 });
+  assert.equal(CHARACTER_ACTION_TIMING.castRelease, .18);
+  let events = 0; let releaseAt = 0; let maximumTravel = 0;
+  for (let frame = 1; frame <= 100; frame++) {
+    const event = updateCharacter(rider, { dt: .01, speed: .45, boost: false });
+    if (event.castReleased) { events++; releaseAt = frame * .01; assert.equal(event.castSequence, request.sequence); }
+    rider.updateMatrixWorld(true);
+    maximumTravel = Math.max(maximumTravel, worldPosition(rider, 'wandTip').distanceTo(wandBefore));
+    assertNormalized(rider);
+  }
+  assert.equal(events, 1);
+  assert.ok(Math.abs(releaseAt - .18) < 1e-9);
+  assert.ok(maximumTravel > .2, `cast must visibly wind up and extend the wand: ${maximumTravel}`);
+  assert.equal(rider.userData.characterAnimation.cast.active, false);
+  assert.ok(rider.userData.characterAnimation.weights.get('cast') < 1e-5);
+  assert.ok(rider.userData.characterAnimation.weights.get('cruise') > .999);
+});
+
+test('repeated cast requests and cancellation cannot emit a stale release', () => {
+  const rider = createWizard();
+  const a = requestCharacterCast(rider);
+  updateCharacter(rider, { dt: .1, speed: .4 });
+  const b = requestCharacterCast(rider);
+  assert.equal(b.sequence, a.sequence + 1);
+  assert.equal(updateCharacter(rider, { dt: .1 }).castReleased, false);
+  const event = updateCharacter(rider, { dt: .1 });
+  assert.equal(event.castReleased, true);
+  assert.equal(event.castSequence, b.sequence);
+  assert.equal(updateCharacter(rider, { dt: .1 }).castReleased, false);
+  const c = requestCharacterCast(rider);
+  updateCharacter(rider, { dt: .1 });
+  assert.equal(cancelCharacterCast(rider), true);
+  assertNormalized(rider);
+  for (let i = 0; i < 10; i++) assert.equal(updateCharacter(rider, { dt: .1 }).castReleased, false);
+  assert.equal(rider.userData.characterAnimation.cast.sequence, c.sequence);
+  assert.equal(cancelCharacterCast(rider), false);
+});
+
+test('pause and zero dt freeze pose, cloth, blend state and cast event clock', () => {
+  const rider = createWizard();
+  requestCharacterCast(rider);
+  updateCharacter(rider, { dt: .1, boost: true, speed: .2, vertical: .7 });
+  const snapshot = () => {
+    const poses = [];
+    rider.traverse(node => { if (node.isBone) poses.push([...node.position.toArray(), ...node.quaternion.toArray()]); });
+    const a = rider.userData.characterAnimation;
+    return JSON.stringify({ poses, time: a.mixer.time, cast: a.cast, transition: a.transition, weights: [...a.weights] });
+  };
+  const before = snapshot();
+  for (let i = 0; i < 20; i++) {
+    assert.equal(updateCharacter(rider, { dt: 0, boost: false, vertical: -1 }).castReleased, false);
+    assert.equal(updateCharacter(rider, { dt: .1, paused: true, boost: false, reducedMotion: true }).castReleased, false);
+  }
+  assert.equal(snapshot(), before);
+  assert.equal(updateCharacter(rider, { dt: .079, boost: true }).castReleased, false);
+  assert.equal(updateCharacter(rider, { dt: .021, boost: true }).castReleased, true);
+});
+
+test('reduced motion retains one cast release event while holding a static pose', () => {
+  const rider = createWizard();
+  updateCharacter(rider, { dt: .016, reducedMotion: true });
+  const head = rider.userData.characterAnimation.head;
+  const before = head.quaternion.clone();
+  requestCharacterCast(rider);
+  let events = 0;
+  for (let i = 0; i < 12; i++) {
+    const event = updateCharacter(rider, { dt: .1, speed: 1, boost: true, reducedMotion: true });
+    events += Number(event.castReleased);
+    assert.equal(head.quaternion.angleTo(before), 0);
+    assertNormalized(rider);
+  }
+  assert.equal(events, 1);
+  assert.equal(rider.userData.characterAnimation.cast.active, false);
+  const next = requestCharacterCast(rider);
+  updateCharacter(rider, { dt: .1, reducedMotion: true });
+  const event = updateCharacter(rider, { dt: .1, reducedMotion: false });
+  assert.equal(event.castSequence, next.sequence);
+  assert.equal(event.castReleased, true);
+  assert.ok(rider.userData.characterAnimation.weights.get('cast') > 0);
+});
+
+test('cape follows a torso turn with delayed orientation and settles without unstable weights', () => {
+  const rider = createWizard();
+  const cape = rider.getObjectByName(PropertyBinding.sanitizeNodeName('cape.C0'));
+  const chest = rider.getObjectByName('chest');
+  rider.updateMatrixWorld(true);
+  const beforeCape = cape.getWorldQuaternion(new Quaternion());
+  const beforeChest = chest.getWorldQuaternion(new Quaternion());
+  rider.rotation.y = .8;
+  updateCharacter(rider, { dt: .016 });
+  const capeMotion = cape.getWorldQuaternion(new Quaternion()).angleTo(beforeCape);
+  const torsoMotion = chest.getWorldQuaternion(new Quaternion()).angleTo(beforeChest);
+  assert.ok(torsoMotion > .7 && capeMotion < torsoMotion * .6, 'cloth must lag a sharp torso turn');
+  for (let i = 0; i < 100; i++) { updateCharacter(rider, { dt: .016 }); assertNormalized(rider); }
+  const settled = cape.getWorldQuaternion(new Quaternion()).angleTo(beforeCape);
+  assert.ok(settled > .7 && settled < .9, 'cape must settle behind the torso rather than lag indefinitely');
 });

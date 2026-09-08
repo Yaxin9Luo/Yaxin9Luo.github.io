@@ -1,0 +1,92 @@
+{
+  "retrievedFrom": "Official Poly Haven asset page pageProps.files and pageProps.data; same records as public API.",
+  "assets": [
+    {
+      "id": "rock_face_02",
+      "info": {
+        "name": "Rock Face 02",
+        "authors": {
+          "Dario Barresi": "All",
+          "Rico Cilliers": "processing"
+        },
+        "polycount": 29566,
+        "dimensions": [
+          4870.411515235901,
+          3472.859501838684,
+          4734.235167503357
+        ],
+        "files_hash": "18e36d9aade0f369471717db252fdfd3c1c28ca1"
+      },
+      "package": {
+        "include": {
+          "textures/rock_face_02_diff_4k.jpg": {
+            "size": 12090498,
+            "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/4k/rock_face_02/rock_face_02_diff_4k.jpg",
+            "md5": "d99d76832eb241ba3a794c360858cb9a"
+          },
+          "textures/rock_face_02_nor_gl_4k.jpg": {
+            "size": 13992890,
+            "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/4k/rock_face_02/rock_face_02_nor_gl_4k.jpg",
+            "md5": "f8ef6ba909e3dee857fc89862c0094a8"
+          },
+          "textures/rock_face_02_arm_4k.jpg": {
+            "size": 10595740,
+            "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/4k/rock_face_02/rock_face_02_arm_4k.jpg",
+            "md5": "b3879ae3c49d75fa0779b78672f79292"
+          },
+          "rock_face_02.bin": {
+            "size": 702068,
+            "url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/8k/rock_face_02/rock_face_02.bin",
+            "md5": "add01c9b573fdddd688acb6378c78c3b"
+          }
+        },
+        "size": 2794,
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/4k/rock_face_02/rock_face_02_4k.gltf",
+        "md5": "af6ded92025f1ddb5678a3ee934095f5"
+      }
+    },
+    {
+      "id": "rock_moss_set_02",
+      "info": {
+        "name": "Rock Moss Set 02",
+        "authors": {
+          "Kless Gyzen": "All"
+        },
+        "polycount": 57647,
+        "dimensions": [
+          8278.153419494629,
+          3410.416603088379,
+          1368.368238210678
+        ],
+        "files_hash": "b67decad66a9030c0c8c8c730c06194af880eebf"
+      },
+      "package": {
+        "include": {
+          "textures/rock_moss_set_02_nor_gl_4k.jpg": {
+            "size": 3597653,
+            "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/4k/rock_moss_set_02/rock_moss_set_02_nor_gl_4k.jpg",
+            "md5": "a719a2d3f901ba275970f125488ede09"
+          },
+          "textures/rock_moss_set_02_rough_4k.jpg": {
+            "size": 1663773,
+            "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/4k/rock_moss_set_02/rock_moss_set_02_rough_4k.jpg",
+            "md5": "3a713fbcb0512e69f7c042e954095169"
+          },
+          "rock_moss_set_02.bin": {
+            "size": 1316572,
+            "url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/8k/rock_moss_set_02/rock_moss_set_02.bin",
+            "md5": "a63878339f14feceab7347cc28110eaa"
+          },
+          "textures/rock_moss_set_02_diff_4k.jpg": {
+            "size": 2893305,
+            "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/4k/rock_moss_set_02/rock_moss_set_02_diff_4k.jpg",
+            "md5": "b16253d14fa2f3b23f182767779cb775"
+          }
+        },
+        "size": 11608,
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/4k/rock_moss_set_02/rock_moss_set_02_4k.gltf",
+        "md5": "f14e2640ad380c371b1d5423fdc362d0"
+      }
+    }
+  ]
+}

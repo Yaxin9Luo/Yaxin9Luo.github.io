@@ -3,17 +3,20 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import * as THREE from 'three';
 import {HDRLoader} from 'three/addons/loaders/HDRLoader.js';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {loadLandscapeAssets,surface} from '../src/landscape.js';
 import {createAuthoredGardens} from '../src/gardens.js';
 import {insideAuthoredGarden} from '../src/environment-layout.js';
 
-// Exercise the real local PBR binding path, substituting only browser decoding.
-const textureLoad=THREE.TextureLoader.prototype.loadAsync,hdrLoad=HDRLoader.prototype.loadAsync,document=globalThis.document;
+// Exercise local PBR binding; browser image/model decoding is a test boundary.
+const textureLoad=THREE.TextureLoader.prototype.loadAsync,hdrLoad=HDRLoader.prototype.loadAsync,gltfLoad=GLTFLoader.prototype.loadAsync,document=globalThis.document;
 THREE.TextureLoader.prototype.loadAsync=async url=>{assert.ok(fs.existsSync(new URL(`../public${url}`,import.meta.url)),url);return new THREE.Texture();};
 HDRLoader.prototype.loadAsync=async()=>new THREE.DataTexture();globalThis.document={};
-await loadLandscapeAssets();
-THREE.TextureLoader.prototype.loadAsync=textureLoad;HDRLoader.prototype.loadAsync=hdrLoad;
-if(document===undefined)delete globalThis.document;else globalThis.document=document;
+GLTFLoader.prototype.loadAsync=async url=>{assert.ok(fs.existsSync(new URL(`../public${url}`,import.meta.url)),url);const scene=new THREE.Group();scene.add(new THREE.Mesh(new THREE.PlaneGeometry(1,1,2,2),new THREE.MeshStandardMaterial()));return {scene};};
+try{await loadLandscapeAssets();}finally{
+  THREE.TextureLoader.prototype.loadAsync=textureLoad;HDRLoader.prototype.loadAsync=hdrLoad;GLTFLoader.prototype.loadAsync=gltfLoad;
+  if(document===undefined)delete globalThis.document;else globalThis.document=document;
+}
 
 const heightAt=(x,z)=>6+z*.006,nearPath=(x,z)=>z>15&&z<22;
 const gardens=createAuthoredGardens(new THREE.Group(),heightAt,nearPath),edges=gardens.group.children.find(o=>o.name==='Planted transitions around academy courts');

@@ -91,7 +91,7 @@ test('horizon protection preserves all four manual palettes and their authored i
     dawn: {colors: ['7195c4', 'edbdb0', 'f0d1c0', 'a8a9bc', 'ffd4b8', 'cad6f0', '9f9694', '9aafdf', '537481'], numbers: [3.3, 1.8, .65, .0011, 1.02, .12]},
     day: {colors: ['397bb1', 'c9e4e9', 'fff3dd', 'abc6d5', 'fff0d5', 'b3d6f2', '9d9d83', 'bed8ef', '236775'], numbers: [3.4, 2.0, 1.15, .00095, 1.02, 0]},
     dusk: {colors: ['6979ad', 'efac87', 'f4bc96', 'b49da6', 'ffd2a5', 'c2b9e0', 'a39390', 'a6bbe9', '53697f'], numbers: [3.35, 1.8, .7, .0012, 1.0, .28]},
-    night: {colors: ['152d59', '6382a0', '6386a4', '46617c', 'c3deff', 'b6d1eb', '737b83', 'ffdab8', '173d50'], numbers: [3.1, 2.1, 1.25, .00135, 1.16, 1]},
+    night: {colors: ['152d59', '6382a0', '6386a4', '46617c', 'c3deff', 'b6d1eb', '596d88', 'b7ccec', '173d50'], numbers: [3.35, 1.75, .90, .00135, 1.16, 1]},
   };
   for (const [mode, expected] of Object.entries(presets)) {
     const actual = sampleEnvironment(TIME_PHASES[mode]);

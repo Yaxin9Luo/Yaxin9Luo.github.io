@@ -13,12 +13,15 @@ from mathutils.bvhtree import BVHTree
 
 ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / 'world/public/models/characters'
-QA = ROOT.parent / 'qa/academy-v2'
+QA = ROOT.parent / 'qa/production-v3/characters'
 SOURCE = OUT / 'source/blender-studio-anatomy-cc0.blend'
 UPSTREAM = ROOT.parent.parent / 'work/character-assets/human-base-meshes/human-base-meshes-bundle-v1.4.1/human_base_meshes_bundle.blend'
 QUICK = '--preview' in sys.argv
 ONLY = next((x.split('=', 1)[1] for x in sys.argv if x.startswith('--only=')), None)
 NO_RENDER = '--no-render' in sys.argv
+SURFACE = next((x.split('=', 1)[1] for x in sys.argv if x.startswith('--material=')), 'hybrid')
+MATERIAL_AB = '--material-ab' in sys.argv
+VIEWS = next((x.split('=', 1)[1].split(',') for x in sys.argv if x.startswith('--views=')), None)
 OUT.mkdir(parents=True, exist_ok=True); QA.mkdir(parents=True, exist_ok=True)
 random.seed(187)
 TAU = math.tau
@@ -34,6 +37,7 @@ def smoothstep(a,b,x):
 def clear():
     bpy.ops.object.select_all(action='SELECT'); bpy.ops.object.delete(use_global=False)
     for a in list(bpy.data.actions): bpy.data.actions.remove(a)
+    bpy.data.orphans_purge(do_recursive=True)
 
 def pigment_weave(color):
     """Encode the linear palette and its quiet weave for an eight-bit sRGB image."""
@@ -47,7 +51,57 @@ def pigment_weave(color):
     pixels[:,:,:3]=np.where(linear<=.0031308,12.92*linear,1.055*np.power(linear,1/2.4)-.055)
     return pixels
 
-def material(name, color, rough=.7, metal=0, cloth=False, emission=0):
+def srgb_encode(linear):
+    return np.where(linear<=.0031308,12.92*linear,1.055*np.power(linear,1/2.4)-.055)
+
+def scanned_surface(m, bs, color, rough, family, mode):
+    """Pack traceable scan detail at provider scale, preserving the linear palette.
+
+    The hybrid keeps a dyed pigment, using a restrained scan luminance rather
+    than uniformly brightening the material. Normals/roughness stay Non-Color.
+    """
+    directory=ROOT/'world/public/textures'/family
+    m['surfaceFamily']=family;m['tileMeters']=.27 if family=='wool-cloth' else .40
+    m['surfaceVariant']=mode
+    rider_wool=family=='wool-cloth' and m.name.startswith(('Academy midnight wool','Tailored deep indigo facing','Claret worsted waistcoat'))
+    for socket in ['Base Color','Normal','Roughness']:
+        for link in list(bs.inputs[socket].links):m.node_tree.links.remove(link)
+    albedo=bpy.data.images.load(str(directory/'color.webp'),check_existing=False)
+    albedo.colorspace_settings.name='Non-Color'
+    w,h=albedo.size;encoded=np.asarray(albedo.pixels[:],dtype=np.float32).reshape(h,w,4)[:,:,:3]
+    linear=np.where(encoded<=.04045,encoded/12.92,((encoded+.055)/1.055)**2.4)
+    luminance=np.sum(linear*np.asarray([.2126,.7152,.0722]),axis=2)
+    variation=np.maximum(.1,luminance/max(.001,float(luminance.mean())))
+    # The close-review rider keeps more of the woven scan's dyed-fiber detail.
+    # The guardian and leather retain their separately reviewed surface treatment.
+    variation=np.power(variation,1 if mode=='scans' else (.50 if rider_wool else .22))
+    variation/=variation.mean()
+    pigment=np.clip(np.asarray(color)[None,None,:]*variation[:,:,None],0,1)
+    pixels=np.ones((h,w,4),dtype=np.float32);pixels[:,:,:3]=srgb_encode(pigment)
+    image=bpy.data.images.new(m.name+' dyed scan pigment',width=w,height=h,alpha=True)
+    image.colorspace_settings.name='sRGB';image.pixels.foreach_set(pixels.ravel());image.pack()
+    texture=m.node_tree.nodes.new('ShaderNodeTexImage');texture.image=image
+    m.node_tree.links.new(texture.outputs['Color'],bs.inputs['Base Color'])
+    bpy.data.images.remove(albedo)
+    normal=bpy.data.images.load(str(directory/'normal.webp'),check_existing=True)
+    normal.colorspace_settings.name='Non-Color';normal.pack()
+    texture=m.node_tree.nodes.new('ShaderNodeTexImage');texture.image=normal
+    node=m.node_tree.nodes.new('ShaderNodeNormalMap')
+    node.inputs['Strength'].default_value=(.60 if mode=='scans' else (.48 if rider_wool else .32)) if family=='wool-cloth' else .46
+    m.node_tree.links.new(texture.outputs['Color'],node.inputs['Color']);m.node_tree.links.new(node.outputs['Normal'],bs.inputs['Normal'])
+    source=bpy.data.images.load(str(directory/'roughness.webp'),check_existing=True)
+    source.colorspace_settings.name='Non-Color'
+    w,h=source.size;pixels=np.asarray(source.pixels[:],dtype=np.float32).reshape(h,w,4).copy()
+    values=pixels[:,:,:3].mean(axis=2)
+    # Keep authored macro roughness while retaining the scan's local response.
+    values=np.clip(rough+(values-values.mean())*(.85 if mode=='scans' else (.62 if rider_wool else .48)),.14,.98)
+    pixels[:,:,:3]=values[:,:,None];pixels[:,:,3]=1
+    image=bpy.data.images.new(m.name+' scan roughness',width=w,height=h,alpha=True)
+    image.colorspace_settings.name='Non-Color';image.pixels.foreach_set(pixels.ravel());image.pack()
+    texture=m.node_tree.nodes.new('ShaderNodeTexImage');texture.image=image
+    m.node_tree.links.new(texture.outputs['Color'],bs.inputs['Roughness'])
+
+def material(name, color, rough=.7, metal=0, cloth=False, emission=0, scan=None):
     m=bpy.data.materials.new(name); m.diffuse_color=(*color,1); m.use_nodes=True
     bs=m.node_tree.nodes.get('Principled BSDF')
     bs.inputs['Base Color'].default_value=(*color,1)
@@ -85,6 +139,10 @@ def material(name, color, rough=.7, metal=0, cloth=False, emission=0):
             texture=m.node_tree.nodes.new('ShaderNodeTexImage');texture.image=image
             m.node_tree.links.new(texture.outputs['Color'],bs.inputs['Roughness'])
             bs.inputs['Sheen Weight'].default_value=.12 if cloth=='wool' else .055
+    if scan:
+        m['tileMeters']=.27 if scan=='wool-cloth' else .4
+        m['surfaceFamily']=scan;m['surfaceVariant']=SURFACE
+        if SURFACE!='authored':scanned_surface(m,bs,color,rough,scan,SURFACE)
     if emission:
         bs.inputs['Emission Color'].default_value=(*color,1)
         bs.inputs['Emission Strength'].default_value=emission
@@ -94,13 +152,14 @@ M={}
 def materials():
     global M
     M={
-      'coat':material('Academy midnight wool',(.052,.105,.175),.84,cloth='wool'),
-      'edge':material('Tailored deep indigo facing',(.032,.061,.112),.76,cloth='twill'),
+      'coat':material('Academy midnight wool',(.052,.105,.175),.84,cloth='wool',scan='wool-cloth'),
+      'edge':material('Tailored deep indigo facing',(.032,.061,.112),.86,cloth='twill',scan='wool-cloth'),
+      'vest':material('Claret worsted waistcoat',(.22,.032,.048),.82,cloth='twill',scan='wool-cloth'),
       'lining':material('Burgundy satin lining',(.22,.032,.048),.43,cloth='satin'),
-      'scarf':material('Claret woven scarf',(.30,.052,.061),.73,cloth='wool'),
-      'shirt':material('Warm ivory linen',(.64,.57,.43),.88,cloth=True),
+      'scarf':material('Claret woven scarf',(.30,.052,.061),.84,cloth='wool'),
+      'shirt':material('Warm ivory linen',(.64,.57,.43),.88,cloth='twill'),
       'pants':material('Graphite twill riding trousers',(.037,.054,.068),.9,cloth='twill'),
-      'leather':material('Dark walnut riding leather',(.054,.030,.020),.48),
+      'leather':material('Dark walnut riding leather',(.054,.030,.020),.48,scan='dark-leather'),
       'leatherEdge':material('Warm leather edge',(.15,.079,.034),.58),
       'sole':material('Boot sole',(.018,.023,.028),.88),
       'brass':material('Antique brass',(.48,.29,.094),.33,.75),
@@ -112,7 +171,7 @@ def materials():
       'wood':material('Polished walnut broom',(.22,.094,.035),.45),
       'twig':material('Honey birch bristles',(.19,.09,.031),.81),
       'twigDark':material('Deep birch bristles',(.13,.063,.026),.86),
-      'guardian':material('Guardian indigo wool',(.048,.087,.20),.82,cloth=True),
+      'guardian':material('Guardian indigo wool',(.048,.087,.20),.82,cloth=True,scan='wool-cloth'),
       'guardianSilk':material('Guardian moon blue satin',(.085,.17,.31),.51,cloth=True),
       'guardianInner':material('Guardian twilight lining',(.027,.041,.084),.74,cloth=True),
       'ivory':material('Carved ivory porcelain',(.69,.64,.49),.47),
@@ -127,9 +186,12 @@ def mesh(name, verts, faces, mat, sub=0, uv=None, smooth=True):
     for poly in d.polygons: poly.use_smooth=smooth
     layer=d.uv_layers.new(name='UVMap')
     for poly in d.polygons:
+        n=P(poly.normal);axis=max(range(3),key=lambda k:abs(n[k]));tile=float(mat.get('tileMeters',.333333))
         for li in poly.loop_indices:
             vi=d.loops[li].vertex_index
-            layer.data[li].uv=uv[vi] if uv else (verts[vi][0]*3+verts[vi][2]*.3,verts[vi][1]*3)
+            p=verts[vi]
+            projected=(p[2],p[1]) if axis==0 else (p[0],p[2]) if axis==1 else (p[0],p[1])
+            layer.data[li].uv=uv[vi] if uv else (projected[0]/tile,projected[1]/tile)
     if sub:
         mod=o.modifiers.new('Designed surface subdivision','SUBSURF'); mod.levels=sub; mod.render_levels=sub
     return o
@@ -334,6 +396,15 @@ def anatomy_piece(name,source,rig,keep,mat,inflate=0,sub=1,kind='coat',cut_high=
             amount+=.008*math.exp(-((co.z-1.18)/.18)**2)+.004*math.exp(-((co.z-1.34)/.055)**2)
         elif kind=='coat':amount+=.004*math.exp(-((co.z-1.07)/.08)**2)
         co+=normal*amount
+        if kind=='coat':
+            # A cut front panel bridges the sternum/pectoral hollows instead of
+            # tracing every muscle from the anatomy source. Ease is in the panel;
+            # the later fold pass only compresses it near seams and the belt.
+            front_weight=smoothstep(.025,.10,-original[i].y)*(1-smoothstep(.125,.185,abs(co.x)))
+            front_weight*=smoothstep(.935,.99,co.z)*(1-smoothstep(1.345,1.395,co.z))
+            depth=float(np.interp(co.z,[.94,1.02,1.10,1.18,1.25,1.32,1.39],[-.155,-.158,-.160,-.163,-.155,-.122,-.079]))
+            curvature=float(np.interp(co.z,[1.0,1.16,1.26,1.39],[3.5,2.9,2.0,1.8]))
+            co.y=mix(co.y,depth+curvature*co.x*co.x,front_weight)
         w=adult_weights(original[i]);source_points.append(co);weights.append(w)
     verts=[rig.source_point(co,w) for co,w in zip(source_points,weights)]
     obj=mesh(name,verts,[tuple(remap[i] for i in f) for f in faces],mat,0)
@@ -406,10 +477,15 @@ def sculpt_garment(obj,rig,kind):
                         elbow+outer*.107+Vector((0,0,shift*.4)),mix(elbow,wrist,.39)+outer*.080]
                 bezier(points,.024,.010)
             region='torso'
-            bezier([(s*.247,.634,-.328),(s*.211,.535,-.400),(s*.155,.427,-.369),(s*.111,.338,-.340)],.020,.016)
-            bezier([(s*.235,.536,-.279),(s*.192,.439,-.333),(s*.191,.315,-.283),(s*.199,.222,-.216)],.018,.015)
-            for level,amp in [(.275,.015),(.323,.014),(.368,.010)]:
-                bezier([(s*.066,level-.018,-.356),(s*.115,level+.008,-.35),(s*.164,level+.029,-.307),(s*.22,level+.037,-.231)],.015,amp)
+            bezier([(s*.247,.634,-.328),(s*.224,.548,-.368),(s*.186,.485,-.362),(s*.165,.450,-.343)],.015,.009)
+            bezier([(s*.235,.536,-.279),(s*.209,.443,-.307),(s*.197,.335,-.283),(s*.199,.245,-.216)],.021,.009)
+            # Diagonal, unequal slack gathers terminate at the cinched side waist.
+            # Repeated horizontal, mirrored crests made the old coat look muscular.
+            if side=='L':
+                bezier([(-.072,.260,-.350),(-.125,.291,-.354),(-.179,.333,-.298),(-.207,.376,-.241)],.020,.008)
+                bezier([(-.151,.246,-.312),(-.180,.270,-.278),(-.205,.298,-.226),(-.219,.319,-.190)],.014,.006)
+            else:
+                bezier([(.098,.259,-.343),(.150,.307,-.330),(.195,.367,-.269),(.212,.425,-.241)],.025,.007)
             bezier([(s*.198,.618,-.086),(s*.128,.505,.069),(s*.139,.341,.109),(s*.166,.236,.108)],.027,.012)
         else:
             hip,knee=rig.bones['thigh.'+side][:2];ankle=rig.bones['calf.'+side][1]
@@ -453,76 +529,182 @@ def rider_tailoring(source,r):
     pants=anatomy_piece('Anatomical seated riding trousers',source,r,
       lambda f,v:all(.255<v[i].z<1.004 and abs(v[i].x)<.26 for i in f.vertices),M['pants'],.010,2,'pants')
     sculpt_garment(coat,r,'coat');sculpt_garment(pants,r,'pants')
-    # Fitted front V and folded lapels, sampled on the anatomy rather than a hard collar ring.
+    # Cut chest layers follow the finished cloth, with the same skin weights.
+    # Offsetting a second copy of the naked body caused layers to intersect after
+    # cloth sculpting and made the approximated piping weights slide through it.
     bpy.context.view_layer.update();body_surface=BVHTree.FromObject(source,bpy.context.evaluated_depsgraph_get())
     def front(x,z,offset=.028):
         hit=body_surface.ray_cast(Vector((x,-1,z)),Vector((0,1,0)),2)[0]
         return Vector((x,hit.y-offset if hit else -.15,z))
-    rows=18;cols=8;vv=[];ff=[];weights=[]
-    for j in range(rows+1):
-        t=j/rows;z=.966+t*.371;width=.032+.051*t
-        for i in range(cols+1):
-            p=front((i/cols*2-1)*width,z,.032);w=adult_weights(p);vv.append(r.source_point(p,w));weights.append(w)
-    for j in range(rows):
-        for i in range(cols):k=j*(cols+1)+i;ff.append((k,k+1,k+cols+2,k+cols+1))
-    waistcoat=mesh('Fitted claret waistcoat',vv,ff,M['lining']);r.bind(waistcoat,weights)
+    coat_weights=[{coat.vertex_groups[g.group].name:g.weight for g in v.groups} for v in coat.data.vertices]
+    torso_faces=[tuple(f.vertices) for f in coat.data.polygons
+      if sum(sum(coat_weights[i].get(key,0) for key in ['upper.L','fore.L','upper.R','fore.R']) for i in f.vertices)/len(f.vertices)<.25]
+    coat_surface=BVHTree.FromPolygons([v.co.copy() for v in coat.data.vertices],torso_faces)
+    coat_skin=cloth_skin_weights(coat)
+    def on_coat(x,z,lift):
+        source_p=front(x,z);q=r.source_point(source_p,adult_weights(source_p))
+        hit=coat_surface.ray_cast(V(q+Vector((0,0,-.45))),V((0,0,1)),.9)
+        if hit[0] is None:hit=coat_surface.find_nearest(V(q))
+        normal=hit[1]
+        if normal.dot(V((0,0,-1)))<0:normal=-normal
+        p=P(hit[0]+normal*lift)
+        return p,coat_skin(P(hit[0])),P(normal)
+    def panel(name,pattern,mat,lift,roll=0,thickness=.0024):
+        # Longitudinal samples resolve the bent chest without rounding off the
+        # actual pattern notch. Close edge rows make a narrow sewn turn, not padding.
+        samples=[]
+        for a,b in zip(pattern,pattern[1:]):
+            for t in np.linspace(0,1,4,endpoint=False):samples.append(tuple(mix(x,y,t) for x,y in zip(a,b)))
+        samples.append(pattern[-1]);across=[0,.025,.075,.20,.40,.60,.80,.925,.975,1]
+        vv=[];ww=[];ff=[]
+        for z,inner,outer in samples:
+            for u in across:
+                p,w,_=on_coat(mix(inner,outer,u),z,lift+roll*math.sin(u*math.pi))
+                vv.append(p);ww.append(w)
+        count=len(across)
+        for j in range(len(samples)-1):
+            for i in range(count-1):k=j*count+i;ff.append((k,k+1,k+count+1,k+count))
+        if pattern[0][1]>pattern[0][2]:ff=[tuple(reversed(f)) for f in ff]
+        o=mesh(name,vv,ff,mat);r.bind(o,ww)
+        solid=o.modifiers.new('Sewn cloth panel thickness','SOLIDIFY');solid.thickness=thickness;solid.offset=-1
+        bpy.context.view_layer.objects.active=o;bpy.ops.object.modifier_move_up(modifier=solid.name);bpy.ops.object.modifier_apply(modifier=solid.name)
+        o['layerClearanceMeters']=lift-thickness
+        return o,vv,count
+    panel('Inset ivory linen shirt',[(1.384,-.071,.071),(1.345,-.073,.073),(1.28,-.041,.041),(1.248,-.008,.008)],M['shirt'],.005,thickness=.0015)
+    vest_pattern=[(1.384,.061,.082),(1.35,.044,.101),(1.31,.018,.088),(1.27,0,.078),
+                  (1.19,0,.071),(1.10,0,.056),(1.006,0,.048)]
     for side in [-1,1]:
-        vv=[];ff=[];ww=[];edge=[]
-        for j in range(15):
-            t=j/14;z=1.342-.275*t;inner=.045*(1-t)+.014*t;outer=.123*(1-t)+.038*t
-            for i in range(5):
-                p=front(side*mix(inner,outer,i/4),z,.043+.006*math.sin(i/4*math.pi));w=adult_weights(p);vv.append(r.source_point(p,w));ww.append(w)
-            edge.append(vv[-5])
-        for j in range(14):
-            for i in range(4):k=j*5+i;ff.append((k,k+1,k+6,k+5))
-        o=mesh('Soft rolled lapel '+str(side),vv,ff,M['edge']);r.bind(o,ww)
-        r.bind(curve('Lapel understated piping '+str(side),edge,.0017,M['brass']),torso_weights)
-    for z in [1.004,1.085,1.164,1.239]:
-        p=front(0,z,.045);q=r.source_point(p,adult_weights(p));r.bind(ellipsoid('Antique waistcoat button',q,(.010,.010,.005),M['brass'],12,6),adult_weights(p))
-    # Quiet seam lines and belt make the torso fitted without surface noise.
+        panel('Claret waistcoat panel '+str(side),[(z,side*inner,side*outer) for z,inner,outer in vest_pattern],M['vest'],.0085,thickness=.0025)
     for side in [-1,1]:
-        pts=[r.source_point(front(side*x,z,.033),adult_weights((side*x,0,z))) for x,z in [(.108,1.31),(.105,1.22),(.092,1.12),(.104,1.015)]]
-        r.bind(curve('Tailored princess seam '+str(side),pts,.0017,M['edge']),torso_weights)
-    belt=loft('Waist riding belt',[(0,.169,.011,.221,.158),(0,.199,-.003,.216,.156),(0,.234,-.022,.208,.152)],M['leather'],32,0)
-    r.bind(belt,'pelvis')
-    r.bind(curve('Belt brass buckle',[(-.033,.166,-.160),(.033,.166,-.160),(.033,.218,-.184),(-.033,.218,-.184),(-.033,.166,-.160)],.005,M['brass']),'pelvis')
+        pattern=[(1.389,.056,.090),(1.355,.058,.120),(1.331,.063,.140),
+                 (1.308,.064,.120),(1.300,.061,.133),(1.251,.050,.107),
+                 (1.183,.032,.078),(1.116,.015,.052),(1.067,.008,.022)]
+        o,vv,count=panel('Notched riding lapel '+str(side),[(z,side*inner,side*outer) for z,inner,outer in pattern],M['edge'],.016,.0025,.0032)
+        lapel_skin=cloth_skin_weights(o)
+        # A restrained wool topstitch sits on the panel and shares its deformation.
+        stitch=[vv[i+1] for i in range(0,len(vv),count)]
+        r.bind(curve('Lapel sewn edge '+str(side),stitch,.00075,M['edge']),lapel_skin)
+    for z in [1.055,1.125,1.195,1.259]:
+        q,w,normal=on_coat(0,z,.012)
+        r.bind(ellipsoid('Antique waistcoat button',q,(.0065,.0065,.0025),M['brass'],12,6),w)
+    # Low-relief darts terminate into the belt. Projected stitches share exact
+    # surface skinning; approximate torso weights previously exposed floating cords.
+    for side in [-1,1]:
+        pts=[on_coat(side*float(np.interp(z,[1.04,1.17,1.29],[.105,.093,.116])),z,.0012)[0] for z in np.linspace(1.04,1.29,30)]
+        r.bind(curve('Tailored front dart '+str(side),pts,.00085,M['edge']),coat_skin)
+    belt_surface=BVHTree.FromPolygons([v.co.copy() for v in source.data.vertices],
+      [tuple(f.vertices) for f in source.data.polygons if all(abs(source.data.vertices[i].co.x)<.22 for i in f.vertices)])
+    vv=[];ww=[];ff=[];sides=64
+    for z in [.975,.981,1.021,1.027]:
+        for i in range(sides):
+            a=i/sides*TAU;radial=Vector((math.sin(a),-math.cos(a),0))
+            hit,normal,*_=belt_surface.ray_cast(radial+Vector((0,0,z)),-radial,2)
+            p=hit+normal*.029 if hit is not None else Vector((.18*math.sin(a),-.14*math.cos(a),z))
+            amount=smoothstep(.94,1.065,z);w={'pelvis':1-amount,'spine':amount}
+            q=r.source_point(p,w);hit=coat_surface.find_nearest(V(q))
+            vv.append(P(hit[0]+hit[1]*.006));ww.append(coat_skin(P(hit[0])))
+    for j in range(3):
+        for i in range(sides):ff.append((j*sides+i,j*sides+(i+1)%sides,(j+1)*sides+(i+1)%sides,(j+1)*sides+i))
+    belt=mesh('Fitted waist riding belt',vv,ff,M['leather'],0);r.bind(belt,ww)
+    belt_skin=cloth_skin_weights(belt)
+    for j in [0,3]:r.bind(curve('Belt stitched raised edge',vv[j*sides:(j+1)*sides]+[vv[j*sides]],.0024,M['leatherEdge']),belt_skin)
+    buckle=[]
+    for x,z in [(-.034,.981),(.034,.981),(.034,1.023),(-.034,1.023),(-.034,.981)]:
+        buckle.append(on_coat(x,z,.013)[0])
+    r.bind(curve('Belt brass buckle',buckle,.0048,M['brass']),coat_skin)
+    for side in [-1,1]:
+        q,w,_=on_coat(side*.095,1.002,.011)
+        r.bind(ellipsoid('Waist belt brass stud '+str(side),q,(.0045,.0045,.003),M['brass'],10,6),w)
     # The scarf is tucked into the standing collar. Its compact lower fold turns
     # under itself instead of spreading into a thin bib across the shoulders.
     vv=[];ff=[];cols=32
-    profile=[(.087,.079,.883,-.337),(.105,.088,.861,-.328),(.124,.098,.810,-.311),
-             (.143,.112,.788,-.308),(.145,.114,.775,-.309),(.141,.110,.768,-.309),
-             (.131,.103,.778,-.308)]
+    profile=[(.086,.072,.884,-.322),(.094,.074,.860,-.318),(.101,.075,.813,-.314),
+             (.106,.076,.796,-.312),(.107,.076,.788,-.311),(.104,.072,.784,-.311),
+             (.100,.070,.792,-.311)]
     for radius,depth,y,z in profile:
         for i in range(cols):
             a=i/cols*TAU
-            vv.append((radius*math.sin(a),y+.006*math.sin(a+.35),z-depth*math.cos(a)))
+            fold=.0035*math.exp(-((a-1.2)/.3)**2)-.0025*math.exp(-((a-3.9)/.4)**2)
+            vv.append(((radius+fold)*math.sin(a),y+.008*math.sin(a+.35),z-(depth+fold)*math.cos(a)))
     for j in range(len(profile)-1):
         for i in range(cols):ff.append((j*cols+i,j*cols+(i+1)%cols,(j+1)*cols+(i+1)%cols,(j+1)*cols+i))
     cowl=mesh('Draped claret scarf cowl',vv,ff,M['scarf'],1)
     cowl.data.materials.append(M['lining'])
-    thick=cowl.modifiers.new('Scarf cowl sewn thickness','SOLIDIFY');thick.thickness=.010;thick.offset=0
+    thick=cowl.modifiers.new('Scarf cowl sewn thickness','SOLIDIFY');thick.thickness=.004;thick.offset=0
     thick.material_offset=1;thick.material_offset_rim=1;r.bind(cowl,'chest')
     for side in [-1,1]:
         p=(side*.20,.675,-.318)
         r.bind(ellipsoid('Cape shoulder brooch '+str(side),p,(.021,.022,.008),M['brass'],16,8),'chest')
     r.bind(curve('Draped cape clasp',[(-.20,.672,-.330),(-.12,.61,-.357),(0,.585,-.379),(.12,.611,-.357),(.20,.672,-.330)],.0025,M['brass']),'chest')
 
+def separate_rider_sleeves(r):
+    """Cut the finished anatomical coat into torso and independent set-in sleeves.
+
+    Both sides retain the exact original boundary vertices and normals. A narrow
+    raised seam is sewn over the join; it is not a second inflated arm volume.
+    """
+    coat=bpy.data.objects['Anatomically tailored coat and sleeves']
+    surface=BVHTree.FromPolygons([v.co.copy() for v in coat.data.vertices],[tuple(p.vertices) for p in coat.data.polygons])
+    regions={name:[] for name in ['torso','L','R']}
+    weights=[{coat.vertex_groups[g.group].name:g.weight for g in v.groups} for v in coat.data.vertices]
+    for poly in coat.data.polygons:
+        sums={side:sum(sum(weights[i].get(k+side,0) for k in ['upper.','fore.']) for i in poly.vertices)/len(poly.vertices) for side in ['L','R']}
+        side=max(sums,key=sums.get);regions[side if sums[side]>.52 else 'torso'].append(tuple(poly.vertices))
+    for region,faces in regions.items():
+        used=sorted({i for face in faces for i in face});indices={old:new for new,old in enumerate(used)}
+        vertices=[P(coat.data.vertices[i].co) for i in used]
+        name='Tailored coat torso' if region=='torso' else 'Independent set in sleeve '+region
+        obj=mesh(name,vertices,[tuple(indices[i] for i in face) for face in faces],M['coat'])
+        r.bind(obj,[weights[i] for i in used])
+        obj.data.normals_split_custom_set_from_vertices([coat.data.vertices[i].normal for i in used])
+        if region=='torso':continue
+        counts=defaultdict(int)
+        for face in faces:
+            for a,b in zip(face,face[1:]+face[:1]):counts[tuple(sorted((a,b)))]+=1
+        adjacency=defaultdict(list)
+        for (a,b),count in counts.items():
+            if count==1:adjacency[a].append(b);adjacency[b].append(a)
+        remaining=set(adjacency)
+        while remaining:
+            first=min(remaining);ring=[];current=first;previous=None
+            while current not in ring:
+                ring.append(current);remaining.discard(current)
+                choices=[i for i in adjacency[current] if i!=previous]
+                if not choices:break
+                previous,current=current,choices[0]
+            if len(ring)<4:continue
+            points=[P(coat.data.vertices[i].co) for i in ring]
+            center=sum(points,Vector((0,0,0)))/len(points)
+            if center.y<.48:continue
+            tree=cloth_skin_weights(obj)
+            for _ in range(5):points=[points[(i-1)%len(points)]*.25+p*.5+points[(i+1)%len(points)]*.25 for i,p in enumerate(points)]
+            projected=[]
+            for p in points:
+                hit=surface.find_nearest(V(p));projected.append(P(hit[0]+hit[1]*.002))
+            points=projected
+            points.append(points[0])
+            r.bind(curve('Set in shoulder seam '+region,points,.0025,M['edge']),tree)
+    bpy.data.objects.remove(coat,do_unlink=True)
+
 def cape_point(u,t):
-    q=u*2-1;width=.295+.38*math.sin(t*math.pi*.86)+.025*t
-    x=q*width+.045*t*t
-    y=.70-.36*t-.40*t**3+.16*math.sin(t*math.pi)+.075*q*t
-    z=-.105+1.55*t+.06*math.sin(t*math.pi)-.10*q*q*(1-t)
-    # Cloth hangs between the shoulder fastenings before the wind lifts it.
-    y-=.060*(1-q*q)*math.exp(-((t-.15)/.11)**2)
-    # Four long folds spread from the shoulders; open panels stay taut between them.
-    for centre,drift,amplitude,width in [(-.72,.08,.055,.15),(-.24,-.04,-.067,.20),(.24,.09,.073,.18),(.73,-.06,-.040,.13)]:
-        fold=amplitude*math.exp(-((q-centre-drift*t)/width)**2)*math.sin(t*math.pi)**.72
-        y+=fold;z+=fold*.38
-    # The rear and side hems turn over gradually, revealing the heavy lining.
-    roll=smoothstep(.86,.98,t)
-    y+=.066*roll*(.8+.2*q)-.022*smoothstep(.985,1,t)
-    z-=.043*roll*roll
-    y+=.022*math.exp(-((abs(q)-.965)/.027)**2)*math.sin(t*math.pi)
+    q=u*2-1;width=.278+.095*t+.018*math.sin(t*math.pi)
+    x=q*width+.018*t*t
+    # Heavy shoulder cloth has a continuously descending gravity silhouette.
+    # It clears the back/seat, then trails; there is no convex umbrella midspan.
+    y=.687-.91*t-.16*t*t+.023*q*t
+    z=-.105+.76*t+.46*t*t-.075*q*q*(1-t)
+    # A fitted shoulder yoke clears the underlying back before the hanging panels
+    # descend. Without this clearance a gravity profile cuts through the coat.
+    z+=.16*(1-math.exp(-t/.065))*math.exp(-t/.25)
+    y-=.027*(1-q*q)*math.exp(-((t-.17)/.16)**2)
+    for centre,drift,amplitude,width in [(-.77,.025,.045,.17),(-.34,-.045,-.062,.17),(.27,.04,.066,.16),(.74,-.025,-.047,.15)]:
+        fold=amplitude*math.exp(-((q-centre-drift*t)/width)**2)*math.sin(t*math.pi*.93)**.65
+        z+=fold;y+=fold*.22
+    # Split tails cut upward in the centre. The turned hem exposes a narrow lining.
+    notch=.17*math.exp(-(q/.17)**2)*smoothstep(.63,1,t)
+    y+=notch;z-=notch*.50
+    roll=smoothstep(.90,.985,t)
+    y+=.018*roll-.009*smoothstep(.987,1,t);z-=.026*roll
     return Vector((x,y,z))
 
 def scarf_point(u,t):
@@ -544,8 +726,8 @@ def chain_weights(t,prefix,count):
     return {prefix+str(i):1-v,prefix+str(j):v} if i!=j else {prefix+str(i):1}
 
 def cape_weights(p,u=None,t=None):
-    if t is None:t=clamp((p.z+.21)/1.48)
-    if u is None:u=clamp((p.x-.06*t*t)/(.32+.315*math.sin(t*math.pi*.81))/2+.5)
+    if t is None:t=clamp((p.z+.14)/1.24)
+    if u is None:u=clamp((p.x-.018*t*t)/(.278+.095*t+.018*math.sin(t*math.pi))/2+.5)
     if u<.5:a,b,f='L','C',u*2
     else:a,b,f='C','R',(u-.5)*2
     result=defaultdict(float)
@@ -555,9 +737,14 @@ def cape_weights(p,u=None,t=None):
 
 def cloth_surface(name,point,rows,cols,mat,rig,weight,lining=None,thickness=.007):
     vv=[];ww=[];uv=[]
+    tile=float(mat.get('tileMeters',.333333));longitudes=np.zeros(cols+1)
     for j in range(rows+1):
+        across=0
         for i in range(cols+1):
-            u=i/cols;t=j/rows;p=point(u,t);vv.append(p);ww.append(weight(p,u,t));uv.append((u*2,t*2))
+            u=i/cols;t=j/rows;p=point(u,t)
+            if i:across+=(p-vv[-1]).length
+            if j:longitudes[i]+=(p-vv[(j-1)*(cols+1)+i]).length
+            vv.append(p);ww.append(weight(p,u,t));uv.append((across/tile,longitudes[i]/tile))
     ff=[]
     for j in range(rows):
         for i in range(cols):k=j*(cols+1)+i;ff.append((k,k+1,k+cols+2,k+cols+1))
@@ -595,13 +782,26 @@ def cloth_skin_weights(obj):
     return sample
 
 def rider_cloth(r):
-    cape=cloth_surface('rider-cape',cape_point,40,32,M['coat'],r,cape_weights,M['lining'],.014)
+    panels=[]
+    for side in [-1,1]:
+        def panel(u,t,side=side):
+            full_u=u*.5 if side<0 else .5+u*.5
+            p=cape_point(full_u,t)
+            p.x+=side*.018*smoothstep(.55,1,t)*(1-abs(full_u*2-1))
+            return p
+        panels.append(cloth_surface('Cape left panel' if side<0 else 'Cape right panel',panel,40,20,M['coat'],r,
+          lambda p,u,t,side=side:cape_weights(p,u*.5 if side<0 else .5+u*.5,t),M['lining'],.011))
+    bpy.ops.object.select_all(action='DESELECT')
+    for p in panels:p.select_set(True)
+    bpy.context.view_layer.objects.active=panels[0];bpy.ops.object.join();cape=panels[0];cape.name='rider-cape'
     cape_skin=cloth_skin_weights(cape)
     for u in [.006,.994]:
         pts=[cape_point(u,t)+Vector((0,.002,-.006)) for t in np.linspace(0,1,31)]
         r.bind(curve('Cape fine sewn brass edge',pts,.0028,M['brass']),cape_skin)
-    pts=[cape_point(u,.995)+Vector((0,.004,-.005)) for u in np.linspace(0,1,41)]
-    r.bind(curve('Cape lined hem piping',pts,.0034,M['brass']),cape_skin)
+    for side in [-1,1]:
+        values=np.linspace(.005,.49,25) if side<0 else np.linspace(.51,.995,25)
+        pts=[cape_point(u,.995)+Vector((side*.018*(1-abs(u*2-1)),.004,-.005)) for u in values]
+        r.bind(curve('Cape split lined hem piping '+str(side),pts,.0027,M['brass']),cape_skin)
     # One subdued celestial device, kept large enough to read without gold noise.
     for radius in [.042,.059]:
         pts=[cape_point(.72+radius*math.cos(a),.74+radius*.66*math.sin(a))+Vector((0,.006,-.010)) for a in np.linspace(0,TAU,41)]
@@ -725,36 +925,67 @@ def rider_garment_linings(r):
         t=j/rows
         for i in range(cols+1):
             a=.40+(TAU-.80)*i/cols
-            radius=.119+.008*math.sin(t*math.pi)
+            radius=.119+.004*math.sin(t*math.pi)
             vv.append((math.sin(a)*radius,.778+.095*t+.022*t*(1-math.cos(a))/2,-.310-math.cos(a)*radius*.82))
     for j in range(rows):
-        for i in range(cols):k=j*(cols+1)+i;ff.append((k,k+1,k+cols+2,k+cols+1))
-    collar=mesh('Thick lined open front riding collar',vv,ff,M['edge'],1);collar.data.materials.append(M['lining'])
-    solid=collar.modifiers.new('True lined riding collar thickness','SOLIDIFY');solid.thickness=.015;solid.material_offset=1;solid.material_offset_rim=1
+        for i in range(cols):k=j*(cols+1)+i;ff.append((k,k+cols+1,k+cols+2,k+1))
+    # Counter-clockwise outside faces keep satin on the inside of the turned
+    # collar. The former winding put the glossy lining over the visible wool.
+    collar=mesh('Turned wool riding collar',vv,ff,M['edge'],1);collar.data.materials.append(M['lining'])
+    solid=collar.modifiers.new('True lined riding collar thickness','SOLIDIFY');solid.thickness=.0055;solid.material_offset=1;solid.material_offset_rim=1
     r.bind(collar,'chest')
+    cowl=bpy.data.objects['Draped claret scarf cowl']
+    def surface(o):return BVHTree.FromPolygons([v.co.copy() for v in o.data.vertices],[tuple(f.vertices) for f in o.data.polygons])
+    intersections=surface(collar).overlap(surface(cowl))
+    if intersections:raise RuntimeError(f'Scarf must sit inside the turned collar; {len(intersections)} intersecting triangle pairs')
+    print('TAILORING_CLEARANCE scarf/collar: no intersecting triangle pairs')
 
 
 def rider_broom(r):
-    points=[(0,.16,-1.61),(.004,.135,-1.40),(0,.076,-1.01),(0,-.027,-.40),(0,-.103,.06),(0,-.198,.79),(0,-.205,1.29)]
-    r.bind(swept_lobe('Hand carved walnut broom',points,[.038,.041,.036,.036,.039,.046,.051],[.038,.041,.036,.036,.039,.046,.051],M['wood'],16,1),'broom')
-    for j in range(15):
-        z=-1.40+j*.026
-        y=.135+(.076-.135)*((z+1.40)/.39)
-        pts=[(.043*math.sin(a),y+.043*math.cos(a),z+a/TAU*.026) for a in np.linspace(0,TAU,17)]
-        r.bind(curve('Leather broom grip wrap',pts,.0045,M['leather']),'broom')
-    for z in [.86,1.025]:
-        pts=[(.105*math.sin(a),-.198+.088*math.cos(a),z) for a in np.linspace(0,TAU,33)]
-        r.bind(curve('Antique broom ferrule',pts,.013,M['brass'],2),'broom')
-    # Seven bristle volumes, a few loose tapered strands. Their silhouette has hierarchy.
-    for i in range(11):
-        a=i/11*TAU
-        p=[(.04*math.sin(a),-.20+.04*math.cos(a),.84),(.085*math.sin(a),-.22+.085*math.cos(a),1.20),(.16*math.sin(a),-.29+.14*math.cos(a),1.58),(.12*math.sin(a),-.33+.11*math.cos(a),1.98+.06*math.sin(i*3))]
-        r.bind(swept_lobe('Swept birch bundle '+str(i),p,[.020,.058,.045,.001],[.020,.039,.028,.001],M['twig'] if i%3 else M['twigDark'],10,1),'broom')
-    for i in range(48):
-        a=i/48*TAU
-        rad=.14+random.random()*.025
-        pts=[(.06*math.sin(a),-.20+.06*math.cos(a),1.03),(rad*.75*math.sin(a),-.25+rad*.6*math.cos(a),1.42),(rad*math.sin(a),-.34+rad*.8*math.cos(a),1.84+random.random()*.18)]
-        r.bind(swept_lobe('Loose birch contour '+str(i),pts,[.003,.004,.0004],[.003,.004,.0004],M['twigDark'] if i%3 else M['twig'],5,0),'broom')
+    points=[(-.025,.205,-1.66),(-.009,.178,-1.56),(.004,.135,-1.40),(0,.076,-1.01),(0,-.027,-.40),(0,-.103,.06),(.008,-.198,.79),(0,-.205,1.29)]
+    radii=[.015,.028,.039,.035,.034,.038,.045,.049]
+    r.bind(swept_lobe('Hand carved tapered bent walnut broom',points,radii,radii,M['wood'],24,1),'broom')
+    # The operational grip is directly beneath the curled left hand.
+    for start,count,pitch in [(-1.38,10,.025),(-.98,13,.019)]:
+        for j in range(count):
+            z=start+j*pitch;y=.076+(-.027-.076)*((z+1.01)/.61)
+            pts=[(.039*math.sin(a),y+.039*math.cos(a),z+a/TAU*pitch) for a in np.linspace(0,TAU,25)]
+            r.bind(curve('Leather broom grip wrap',pts,.0055,M['leather']),'broom')
+    for a in [1.8,2.15,2.65,4.25,4.7]:
+        pts=[Vector(p)+Vector((math.sin(a)*rad*.998,math.cos(a)*rad*.998,0)) for p,rad in zip(points[3:],radii[3:])]
+        r.bind(curve('Carved lengthwise walnut grain',pts,.0012,M['twigDark']),'broom')
+    # A continuous stepped metal sleeve binds the structured tail, with raised lips
+    # and actual rivet heads. It replaces two oversized floating wire rings.
+    vv=[];ff=[];sides=48
+    profile=[(.80,.050),(.812,.054),(.825,.068),(.84,.069),(.855,.062),(.972,.071),(.987,.079),(1.003,.079),(1.016,.070)]
+    for z,radius in profile:
+        for i in range(sides):
+            a=i/sides*TAU;vv.append((radius*math.sin(a),-.201+radius*.87*math.cos(a),z))
+    for j in range(len(profile)-1):
+        for i in range(sides):ff.append((j*sides+i,j*sides+(i+1)%sides,(j+1)*sides+(i+1)%sides,(j+1)*sides+i))
+    collar=mesh('Stepped brass broom binding collar',vv,ff,M['brass'],1)
+    solid=collar.modifiers.new('Ferrule wall thickness','SOLIDIFY');solid.thickness=.004;r.bind(collar,'broom')
+    for z,radius in [(.872,.065),(.955,.071)]:
+        for i in range(8):
+            a=i/8*TAU+.15
+            r.bind(ellipsoid('Peened ferrule rivet',(radius*math.sin(a),-.201+radius*.87*math.cos(a),z),(.005,.005,.005),M['brass'],10,6),'broom')
+    for i in range(9):
+        a=i/9*TAU
+        p=[(.035*math.sin(a),-.20+.035*math.cos(a),.84),(.07*math.sin(a),-.23+.06*math.cos(a),1.20),(.115*math.sin(a),-.31+.10*math.cos(a),1.56),(.08*math.sin(a+.2),-.36+.07*math.cos(a+.2),1.88+.06*math.sin(i*3))]
+        r.bind(swept_lobe('Bound birch core bundle '+str(i),p,[.015,.034,.024,.0007],[.012,.024,.016,.0007],M['twig'] if i%3 else M['twigDark'],10,1),'broom')
+    for i in range(112):
+        a=i/112*TAU+random.uniform(-.05,.05);rad=random.uniform(.08,.165);length=random.uniform(.79,1.13)
+        pts=[]
+        for t in [0,.19,.42,.67,.86,1]:
+            spread=.035+(rad-.035)*math.sin(t*math.pi*.80)
+            angle=a+.10*math.sin(t*3+i*.7)
+            pts.append((spread*math.sin(angle)+.012*math.sin(t*5+i)*t,-.201-.16*t+spread*.78*math.cos(angle),.91+length*t))
+        thickness=random.uniform(.0025,.0051)
+        radii=[thickness*.85,thickness,thickness*.86,thickness*.60,thickness*.34,.0002]
+        r.bind(swept_lobe('Curved individual birch twig '+str(i),pts,radii,[w*.8 for w in radii],M['twigDark'] if i%3 else M['twig'],6,0),'broom')
+    for z in [1.06,1.10]:
+        pts=[(.079*math.sin(a),-.219+.065*math.cos(a),z+.004*math.sin(a*3)) for a in np.linspace(0,TAU,49)]
+        r.bind(curve('Waxed thread secondary tail binding',pts,.005,M['leather']),'broom')
     wand=[(.312,.252,-.804),(.30,.285,-1.02),(.273,.359,-1.48)]
     r.bind(swept_lobe('Walnut wand',wand,[.017,.013,.004],[.017,.013,.004],M['wood'],12,1),'hand.R')
     r.bind(ellipsoid('Wand antique pommel',wand[0],(.021,.023,.024),M['brass'],12,8),'hand.R')
@@ -774,7 +1005,10 @@ def rider_mask_hat(r):
              (1.099,.133,-.518,-.278),(1.142,.126,-.486,-.268),(1.179,.114,-.463,-.255),(1.206,.086,-.431,-.246)]
     cols=40;vv=[];ff=[];back=[]
     def face_at(q,y,width,front,side):
-        z=side+(front-side)*(1-abs(q)**1.42)
+        # Broad forehead and cheek planes meet at supported bevels; the mask
+        # should read as chased silver rather than a smoothly inflated face.
+        profile_q=[0,.18,.52,.75,1];profile_z=[1,.98,.78,.46,0]
+        z=side+(front-side)*float(np.interp(abs(q),profile_q,profile_z))
         # A raised nasal ridge, not the old smooth oval mask.
         z-=.050*math.exp(-(q/.20)**2-((y-1.01)/.055)**2)
         z-=.010*math.exp(-((abs(q)-.68)/.18)**2-((y-.981)/.031)**2)
@@ -794,7 +1028,7 @@ def rider_mask_hat(r):
             q=(i+.5)/cols*2-1;k=j*(cols+1)+i
             if not (j==6 and .23<abs(q)<.79):ff.append((k,k+1,k+cols+2,k+cols+1))
     mask=mesh('rider-mask',vv,ff,M['maskSilver'],1)
-    shell=mask.modifiers.new('Ceremonial mask wall thickness','SOLIDIFY');shell.thickness=.006;shell.offset=-1
+    shell=mask.modifiers.new('Ceremonial mask wall thickness','SOLIDIFY');shell.thickness=.007;shell.offset=-1
     r.bind(mask,'head')
     all_faces=[]
     for j in range(len(profile)-1):
@@ -814,7 +1048,7 @@ def rider_mask_hat(r):
     rows=8;cols=48;vv=[];ff=[]
     def brim_point(a,t):
         rx=mix(.139,.343,t);rz=mix(.151,.365,t)
-        ripple=(.023*math.sin(a+.4)+.012*math.sin(a*2-1))*t*t
+        ripple=(.027*math.sin(a+.4)+.016*math.sin(a*2-1))*t*t
         upturn=.044*max(0,math.sin(a-1.1))**3*t**3
         return Vector((math.sin(a)*rx,1.184-.037*t+.010*math.sin(t*math.pi)+ripple+upturn,-.293-math.cos(a)*rz))
     for j in range(rows+1):
@@ -832,7 +1066,9 @@ def rider_mask_hat(r):
     # Small sewn compression folds live at the base, leaving a clean upper silhouette.
     for vertex in crown.data.vertices:
         p=P(vertex.co)
-        amount=.006*math.exp(-((p.y-1.28)/.055)**2)*math.sin(math.atan2(p.x,-p.z-.293)*3+p.y*30)
+        angle=math.atan2(p.x,-p.z-.293)
+        amount=.009*math.exp(-((p.y-1.28)/.055)**2)*math.sin(angle*3+p.y*30)
+        amount+=.008*math.exp(-((p.y-1.47)/.12)**2)*math.sin(angle*2+p.y*19)
         vertex.co.z+=amount
     r.bind(crown,'head')
     band=loft('Wizard hat claret leather band',[(0,1.187,-.292,.157,.169),(-.002,1.217,-.291,.159,.168),(-.005,1.252,-.288,.154,.162),(-.006,1.262,-.287,.152,.160)],M['lining'],40,1,caps=False)
@@ -849,7 +1085,7 @@ def rider_mask_hat(r):
 def wizard():
     r=rider_rig();source,*eyes=source_body()
     rider_tailoring(source,r);rider_mask_hat(r)
-    rider_gloves_boots(r);rider_garment_linings(r);rider_cloth(r);rider_broom(r)
+    rider_gloves_boots(r);rider_garment_linings(r);separate_rider_sleeves(r);rider_cloth(r);rider_broom(r)
     r.anchor('gripContact',r.bones['hand.L'][0],'fore.L')
     for o in [source,*eyes]:bpy.data.objects.remove(o,do_unlink=True)
     return r
@@ -859,17 +1095,22 @@ def guardian_panel(u,t,side=0):
         q=u*2-1;width=.255+.09*math.sin(t*math.pi)-.185*t**2
         x=q*width+.31*math.sin(t*3.2)*t+.24*t*t
         y=.68-1.86*t+.10*math.sin(q*5+.4)*t**6
-        z=.07+.18*t+.19*math.sin(t*math.pi)+.040*math.cos(q*10+t*2)*(1-.45*t)-.13*(1-q*q)
+        z=.07+.18*t+.19*math.sin(t*math.pi)-.13*(1-q*q)
+        for center,depth in [(-.78,.032),(-.39,-.043),(.04,.031),(.45,-.036),(.79,.024)]:
+            z+=depth*math.exp(-((q-center-.075*math.sin(t*3))/ .15)**2)*(1-.35*t)
+        y+=.045*math.exp(-(q/.14)**2)*smoothstep(.72,1,t)
+        z+=.009*math.sin(q*27+t*11)*math.exp(-((t-.12)/.13)**2)
     else:
         q=u*2-1;width=.14+.11*math.sin(t*math.pi)
         x=side*(.31+.32*math.sin(t*2.4)+.26*t)+(q*width*((1-t)**.55+.02))+.10*math.sin(t*5)*t
         y=.79-1.35*t+.25*math.sin(t*math.pi)+side*.15*t
-        z=.035+.70*t+.08*math.cos(q*5+t*3)
+        z=.035+.70*t+.070*math.cos(q*5+t*3)+.018*math.cos(q*13+t*4)*math.sin(t*math.pi)
     return Vector((x,y,z))
 
 def guardian_back(u,t):
     q=u*2-1
-    return Vector((q*(.30+.1*math.sin(t*math.pi)-.21*t*t)-.16*t*t,.77-1.78*t+.13*math.sin(q*5)*t**5,.12+.55*t+.08*math.cos(q*9+t*3)))
+    return Vector((q*(.30+.1*math.sin(t*math.pi)-.21*t*t)-.16*t*t,.77-1.78*t+.13*math.sin(q*5)*t**5,
+      .12+.55*t+.18*smoothstep(0,.20,t)+.062*math.cos(q*9+t*3)+.012*math.sin(q*21-t*2)*(1-t)))
 
 def guardian_rig():
     r=Rig('ArchiveGuardianRig');r.bone('root',(0,0,0),(0,.2,0))
@@ -916,7 +1157,9 @@ def guardian_mask(r):
             if not eye:ff.append(face)
             if 3<=j<=5 and math.cos(centre)>.3 and .12<abs(x)<.92:backing.append(face)
     ff+=[tuple(range(sides-1,-1,-1)),tuple((len(rings)-1)*sides+i for i in range(sides))]
-    o=mesh('Sculpted porcelain guardian mask',vv,ff,M['ivory'],1);r.bind(o,'mask')
+    o=mesh('Sculpted porcelain guardian mask',vv,ff,M['ivory'],1)
+    solid=o.modifiers.new('Guardian porcelain eye aperture thickness','SOLIDIFY');solid.thickness=.007;solid.offset=-1
+    r.bind(o,'mask')
     # The dark cavity follows the actual curved face; an ellipsoid placed at a
     # single depth protrudes at the outer corners and reads as a painted eyelash.
     r.bind(mesh('Guardian recessed curved eye lining',[p+Vector((0,0,.018)) for p in vv],backing,M['void'],1),'mask')
@@ -924,6 +1167,10 @@ def guardian_mask(r):
         points=[mix(face_point(4,side*a),face_point(5,side*a),.50)+Vector((0,0,.006)) for a in [.31,.43,.57,.71,.82]]
         r.bind(curve('Guardian inset soul slit '+str(side),points,.0018,M['spirit']),'mask')
         r.bind(curve('Guardian cheek gold inset '+str(side),[(side*.123,1.00,-.236),(side*.095,.947,-.253),(side*.058,.874,-.237),(.006*side,.789,-.208)],.0024,M['brass']),'mask')
+        # Leave the eye apertures uninterrupted: separate brow and cheek inlays.
+        for rows in [[(7,.49),(6,.58)],[(3,.84),(2,.79),(1,.66),(0,.2)]]:
+            edge=[face_point(j,side*a)+Vector((0,0,-.003)) for j,a in rows]
+            r.bind(curve('Guardian carved facial edge '+str(side),edge,.0016,M['silver']),'mask')
     r.bind(curve('Mask forehead crest',[(0,1.253,-.168),(0,1.21,-.218),(0,1.145,-.255),(0,1.095,-.282)],.004,M['brass']),'mask')
     r.bind(mesh('Carved central mask planes',[(0,1.176,-.249),(-.027,1.04,-.275),(0,.912,-.263),(.027,1.04,-.275),(0,1.039,-.311)],[(0,1,4),(1,2,4),(2,3,4),(3,0,4)],M['ivory'],0,smooth=False),'mask')
     # A substantial crescent pair with a shoulder and blade silhouette, not antenna wires.
@@ -937,19 +1184,25 @@ def guardian_mask(r):
 
 def wraith():
     r=guardian_rig()
-    cloth_surface('Guardian S curved front robe',guardian_panel,20,16,M['guardian'],r,gown_weights,M['guardianInner'])
-    cloth_surface('Guardian swept back train',guardian_back,20,14,M['guardianInner'],r,lambda p,u,t:chain_weights(t,'train.',4),M['guardianSilk'])
+    front=cloth_surface('Guardian S curved front robe',guardian_panel,36,28,M['guardian'],r,gown_weights,M['guardianInner'],.010)
+    front_skin=cloth_skin_weights(front)
+    for u in [.018,.982]:
+        r.bind(curve('Guardian robe sewn facing',[guardian_panel(u,t)+Vector((0,0,-.005)) for t in np.linspace(.02,.99,61)],.0024,M['guardianSilk']),front_skin)
+    cloth_surface('Guardian swept back train',guardian_back,32,24,M['guardianInner'],r,lambda p,u,t:chain_weights(t,'train.',4),M['guardianSilk'],.011)
     for side in [-1,1]:
         tag='L' if side<0 else 'R'
-        cloth_surface('Guardian floating shoulder panel '+tag,lambda u,t:guardian_panel(u,t,side),20,10,M['guardianSilk'],r,lambda p,u,t:chain_weights(t,'wing.'+tag,4),M['guardianInner'])
+        panel=cloth_surface('Guardian floating shoulder panel '+tag,lambda u,t:guardian_panel(u,t,side),32,18,M['guardianSilk'],r,lambda p,u,t:chain_weights(t,'wing.'+tag,4),M['guardianInner'],.010)
+        panel_skin=cloth_skin_weights(panel)
         pts=[guardian_panel(.02,t,side)+Vector((0,.004,-.006)) for t in np.linspace(0,1,31)]
-        r.bind(curve('Guardian moon wing piping '+tag,pts,.0024,M['brass']),lambda p:chain_weights(clamp((.79-p.y)/1.35),'wing.'+tag,4))
+        r.bind(curve('Guardian moon wing piping '+tag,pts,.0024,M['brass']),panel_skin)
+        for t in [.21,.235]:
+            r.bind(curve('Guardian woven shoulder band '+tag,[guardian_panel(u,t,side)+Vector((0,0,-.004)) for u in np.linspace(.03,.97,25)],.0017,M['silver']),panel_skin)
     # A fitted chest plate and overlapping pointed shoulder yokes establish a waist.
-    torso=loft('Guardian upper draped core',[(0,.26,.065,.125,.102),(0,.41,.042,.148,.11),(0,.65,.021,.236,.135),(0,.82,.01,.25,.12),(0,.89,.015,.12,.09)],M['guardian'],32,1);r.bind(torso,'core')
+    torso=loft('Guardian upper draped core',[(0,.35,.08,.110,.087),(0,.43,.067,.139,.10),(0,.65,.042,.218,.123),(0,.82,.032,.235,.113),(0,.89,.03,.12,.085)],M['guardian'],40,1);r.bind(torso,'core')
     vv=[];ff=[];sides=40
     for radius,y in [(.115,.891),(.20,.85),(.35,.774),(.43,.731),(.435,.718)]:
         for i in range(sides):
-            a=i/sides*TAU;vv.append((math.sin(a)*radius,y+.018*math.cos(a*2),.035-math.cos(a)*radius*.65))
+            a=i/sides*TAU;vv.append((math.sin(a)*radius,y+.018*math.cos(a*2)+.009*math.sin(a*8)*(radius/.43),.035-math.cos(a)*radius*.65))
     for j in range(4):
         for i in range(sides):ff.append((j*sides+i,j*sides+(i+1)%sides,(j+1)*sides+(i+1)%sides,(j+1)*sides+i))
     mantle=mesh('Guardian continuous pointed shoulder mantle',vv,ff,M['guardianSilk'],1)
@@ -965,16 +1218,18 @@ def wraith():
     return r
 
 def animate(r,kind):
-    scene=bpy.context.scene;scene.render.fps=24;scene.frame_start=1;scene.frame_end=97
+    scene=bpy.context.scene;scene.render.fps=100;scene.frame_start=1;scene.frame_end=401
     r.obj.animation_data_create()
-    states=['idle','cruise','turn_left','turn_right','boost'] if kind=='wizard' else ['idle','approach','channel']
+    states=['idle','cruise','turn_left','turn_right','boost','boost_start','boost_end','cast'] if kind=='wizard' else ['idle','approach','channel']
     for state in states:
         act=bpy.data.actions.new(state);act.use_fake_user=True;r.obj.animation_data.action=act
-        for frame in range(1,98,4):
-            t=(frame-1)/96;phase=t*TAU
+        last={'boost_start':21,'boost_end':36,'cast':61}.get(state,401)
+        for frame in range(1,last+1,1 if last<401 else 16):
+            t=(frame-1)/(last-1);phase=t*TAU if last==401 else 0
             for p in r.obj.pose.bones:p.rotation_mode='XYZ';p.rotation_euler=(0,0,0);p.location=(0,0,0);p.scale=(1,1,1)
             if kind=='wizard':
-                speed={'idle':.15,'cruise':.45,'turn_left':.55,'turn_right':.55,'boost':1}[state]
+                speed={'idle':.15,'cruise':.45,'turn_left':.55,'turn_right':.55,'boost':1,'cast':.45,
+                       'boost_start':mix(.45,1,smoothstep(.06,.83,t)),'boost_end':mix(1,.45,smoothstep(.04,.92,t))}[state]
                 direction=-1 if state=='turn_left' else 1 if state=='turn_right' else 0
                 bones=r.obj.pose.bones
                 bones['spine'].rotation_euler.x=.023*math.sin(phase)-.095*speed
@@ -995,6 +1250,15 @@ def animate(r,kind):
                 bones['hand.R'].rotation_euler.z=direction*.045
                 basis=r.obj.data.bones['hand.R'].matrix_local.to_3x3().inverted()
                 bones['hand.R'].location=basis@V((.008*math.sin(phase+.6),.015*speed+.008*math.sin(phase),-.020*speed))
+                if state=='cast':
+                    seconds=t*.6
+                    windup=smoothstep(0,.105,seconds)*(1-smoothstep(.105,.18,seconds))
+                    release=smoothstep(.10,.18,seconds)*(1-smoothstep(.26,.60,seconds))
+                    bones['hand.R'].location+=basis@V((.025*windup+.045*release,.115*windup+.165*release,.15*windup-.16*release))
+                    bones['hand.R'].rotation_euler.x+=.17*windup-.34*release
+                    bones['hand.R'].rotation_euler.z-=.12*release
+                    bones['chest'].rotation_euler.y+=.045*windup-.060*release
+                    bones['head'].rotation_euler.y-=.035*release
                 bones['thigh.L'].rotation_euler.x=-.026*speed+.022*math.sin(phase+.8)-direction*.012
                 bones['thigh.R'].rotation_euler.x=.038*speed+.026*math.sin(phase+1.8)-direction*.014
                 bones['calf.L'].rotation_euler.x=-.058*speed+.029*math.sin(phase+1)
@@ -1004,8 +1268,11 @@ def animate(r,kind):
                 for side,s in [('L',-1),('C',0),('R',1)]:
                     for j in range(4):
                         p=bones['cape.'+side+str(j)]
-                        p.rotation_euler.x=(.014+.025*j)*math.sin(phase-j*.74+s*.23)*(.6+.80*speed)+speed*.034*j
-                        p.rotation_euler.z=(.007+.011*j)*math.sin(phase-j*.58+s*.35)+direction*.021*j
+                        cloth_speed=speed
+                        if state=='boost_start':cloth_speed=mix(.45,1,smoothstep(.18+j*.10,1.05+j*.12,t))
+                        elif state=='boost_end':cloth_speed=mix(1,.45,smoothstep(.12+j*.08,.94+j*.10,t))
+                        p.rotation_euler.x=(.009+.017*j)*math.sin(phase-j*.74+s*.23)*(.6+.65*cloth_speed)+cloth_speed*.043*j
+                        p.rotation_euler.z=(.005+.009*j)*math.sin(phase-j*.58+s*.35)+direction*.018*j
                 for j in range(4):
                     p=bones['scarf.'+str(j)];p.rotation_euler.x=(.023+.019*j)*math.sin(phase-j*.75)+.025*speed
                     p.rotation_euler.z=(.018+.018*j)*math.sin(phase-j*.55+.7)+direction*.023
@@ -1038,7 +1305,9 @@ def animate(r,kind):
 
 def consolidate(r):
     """Merge by principal material, preserving all named cloth and socket objects."""
-    groups=defaultdict(list);keep={'rider-cape','rider-scarf','rider-mask','rider-hat-brim','rider-hat-crown'}
+    groups=defaultdict(list);keep={'rider-cape','rider-scarf','rider-mask','rider-hat-brim','rider-hat-crown',
+      'Tailored coat torso','Independent set in sleeve L','Independent set in sleeve R',
+      'Notched riding lapel -1','Notched riding lapel 1','Claret waistcoat panel -1','Claret waistcoat panel 1','Inset ivory linen shirt'}
     for o in list(bpy.context.scene.objects):
         if o.type!='MESH' or o.name in keep:continue
         groups[o.data.materials[0].name].append(o)
@@ -1080,10 +1349,10 @@ def normalize_sheen(file):
 def export(r,kind):
     bpy.ops.object.select_all(action='SELECT');bpy.context.view_layer.objects.active=r.obj
     file=OUT/(kind+'.glb')
-    bpy.ops.export_scene.gltf(filepath=str(file),export_format='GLB',use_selection=True,export_yup=True,
+    bpy.ops.export_scene.gltf(filepath=str(file),export_format='GLB',use_selection=True,export_yup=True,export_extras=True,
       export_apply=False,export_materials='EXPORT',export_image_format='AUTO',export_cameras=False,export_lights=False,
       export_animations=True,export_animation_mode='ACTIONS',export_force_sampling=True,
-      export_anim_slide_to_zero=True,export_frame_step=2,export_skins=True,export_all_influences=False,export_def_bones=True)
+      export_anim_slide_to_zero=True,export_frame_step=1,export_skins=True,export_all_influences=False,export_def_bones=True)
     raw,data=normalize_sheen(file)
     triangles=0
     for m in data.get('meshes',[]):
@@ -1091,16 +1360,19 @@ def export(r,kind):
     info={'file':kind+'.glb','triangles':triangles,'bytes':len(raw),'meshes':len(data.get('meshes',[])),'skins':len(data.get('skins',[])),
       'bones':len(r.obj.data.bones),'animations':[a.get('name') for a in data.get('animations',[])],
       'sha256':hashlib.sha256(raw).hexdigest()}
-    if not info['skins'] or len(info['animations'])<(5 if kind=='wizard' else 3):raise RuntimeError('Skeletal export contract failed: '+str(info))
-    if triangles>(400000 if kind=='wizard' else 30000) and not QUICK:raise RuntimeError('Triangle budget exceeded: '+str(info))
-    if len(raw)>(12000000 if kind=='wizard' else 3000000):raise RuntimeError('GLB byte budget exceeded: '+str(info))
+    info['surfaceVariant']=SURFACE
+    info['actionDurations']={a['name']:max(data['accessors'][s['input']]['max'][0] for s in a['samplers']) for a in data.get('animations',[])}
+    if not info['skins'] or len(info['animations'])<(8 if kind=='wizard' else 3):raise RuntimeError('Skeletal export contract failed: '+str(info))
+    if triangles>(500000 if kind=='wizard' else 120000) and not QUICK:raise RuntimeError('Triangle budget exceeded: '+str(info))
+    if len(raw)>(24000000 if kind=='wizard' else 12000000):raise RuntimeError('GLB byte budget exceeded: '+str(info))
     (OUT/'source').mkdir(exist_ok=True)
+    bpy.context.preferences.filepaths.save_version=0
     bpy.ops.wm.save_as_mainfile(filepath=str(OUT/'source'/(kind+'-academy-rig.blend')),compress=True)
     return info
 
-def studio(r,kind,only_view=None):
+def studio(r,kind,only_view=None,prefix='character-'):
     scene=bpy.context.scene;scene.render.engine='CYCLES';scene.cycles.samples=12 if QUICK else 40;scene.cycles.use_denoising=True
-    scene.render.resolution_x=1050;scene.render.resolution_y=1150;scene.render.resolution_percentage=70 if QUICK else 100
+    scene.render.resolution_x=1050;scene.render.resolution_y=1150;scene.render.resolution_percentage=80 if QUICK else 100
     scene.world.use_nodes=True;scene.world.node_tree.nodes['Background'].inputs[0].default_value=(.085,.105,.15,1);scene.world.node_tree.nodes['Background'].inputs[1].default_value=.45
     scene.view_settings.view_transform='AgX'
     floor_mat=material('Studio midnight floor',(.065,.078,.10),.86)
@@ -1112,25 +1384,72 @@ def studio(r,kind,only_view=None):
     camera=bpy.data.objects.new('Studio camera',bpy.data.cameras.new('Studio camera'));scene.collection.objects.link(camera);scene.camera=camera;camera.data.type='ORTHO'
     views=[('front',(-.8,1.4,-6)),('three-quarter',(-4,2.0,-6)),('side',(-6,1.15,.05)),('back',(4,1.7,6))]
     if kind=='wizard':views.append(('garment',(-3.4,.95,-4.5)))
+    if kind=='wizard':views.append(('broom',(-3,.6,.6)))
+    if kind=='wizard':views += [('textile',(-.8,.8,-1.8)),('leather',(-1.6,-.52,-.8))]
+    if kind=='wraith':views += [('face',(-.38,1.25,-2.8))]
     for label,pos in views:
         if only_view and label!=only_view:continue
+        if not only_view and VIEWS and label not in VIEWS:continue
         camera.data.ortho_scale=(4.6 if label=='side' else 3.9) if kind=='wizard' else 3.55
         target=Vector((0,.04,.14)) if kind=='wizard' else Vector((.04,.22,.1))
         if label=='garment':camera.data.ortho_scale=2.15;target=Vector((0,.31,-.29))
+        if label=='broom':camera.data.ortho_scale=2.30;target=Vector((0,-.14,1.06))
+        if label=='textile':camera.data.ortho_scale=.82;target=Vector((-.04,.52,-.30))
+        if label=='leather':camera.data.ortho_scale=.50;target=Vector((-.26,-.67,-.15))
+        if label=='face' and kind=='wraith':camera.data.ortho_scale=1.23;target=Vector((0,1.16,-.08))
         camera.location=V(pos);camera.rotation_euler=(V(target)-camera.location).to_track_quat('-Z','Y').to_euler()
-        scene.render.filepath=str(QA/('character-'+kind+'-'+label+'.png'));bpy.ops.render.render(write_still=True)
-    if kind=='wizard' and (not only_view or only_view=='face'):
+        scene.render.filepath=str(QA/(prefix+kind+'-'+label+'.png'));bpy.ops.render.render(write_still=True)
+    if kind=='wizard' and (only_view=='face' or (not only_view and (not VIEWS or 'face' in VIEWS))):
         camera.data.ortho_scale=1.20;camera.location=V((-.55,1.43,-2.7));camera.rotation_euler=(V((0,1.295,-.30))-camera.location).to_track_quat('-Z','Y').to_euler()
-        scene.render.filepath=str(QA/'character-wizard-face.png');bpy.ops.render.render(write_still=True)
+        scene.render.filepath=str(QA/(prefix+'wizard-face.png'));bpy.ops.render.render(write_still=True)
     # Actual rig frames establish deformation evidence separate from the base views.
     camera.data.ortho_scale=3.9 if kind=='wizard' else 3.55
     camera.location=V((-4,2,-6));camera.rotation_euler=(V((0,.08,.10))-camera.location).to_track_quat('-Z','Y').to_euler()
-    for state in (['boost','turn_left','turn_right'] if kind=='wizard' else ['approach','channel']):
+    for state in (['boost','turn_left','turn_right','boost_start','boost_end','cast'] if kind=='wizard' else ['approach','channel']):
         if only_view and state!=only_view:continue
-        r.obj.animation_data.action=bpy.data.actions[state];scene.frame_set(33)
-        scene.render.filepath=str(QA/('character-'+kind+'-'+state+'.png'));bpy.ops.render.render(write_still=True)
+        if not only_view and VIEWS and state not in VIEWS:continue
+        r.obj.animation_data.action=bpy.data.actions[state];scene.frame_set({'boost_start':16,'boost_end':22,'cast':19}.get(state,134))
+        scene.render.filepath=str(QA/(prefix+kind+'-'+state+'.png'));bpy.ops.render.render(write_still=True)
     r.obj.animation_data.action=bpy.data.actions['idle'];scene.frame_set(1)
     for o in [floor,camera,*lights]:bpy.data.objects.remove(o,do_unlink=True)
+
+def material_comparison(r,kind):
+    global SURFACE,M
+    original=M.copy();variant=SURFACE
+    slots=[(o,i,next((key for key,mat in original.items() if mat==slot.material),None),slot.material)
+      for o in bpy.context.scene.objects if o.type=='MESH' for i,slot in enumerate(o.material_slots)]
+    for mode in ['authored','scans','hybrid']:
+        SURFACE=mode;materials()
+        for o,index,key,prior in slots:
+            if key:o.material_slots[index].material=M[key]
+        for view in ['textile','leather']:studio(r,kind,view,'material-'+mode+'-')
+    for o,index,key,prior in slots:o.material_slots[index].material=prior
+    SURFACE=variant;M=original
+
+def record_sources():
+    file=OUT/'source/sources.json'
+    provenance=json.loads(file.read_text())
+    texture_manifest=json.loads((ROOT/'world/public/textures/manifest.json').read_text())
+    provenance['sources']=[entry for entry in provenance['sources'] if entry.get('assetId') not in ['poly_wool_herringbone','brown_leather']]
+    consumed=[]
+    for family in ['wool-cloth','dark-leather']:
+        source=texture_manifest['materials'][family]
+        provenance['sources'].append({key:source[key] for key in ['assetId','title','provider','authors','sourceUrl','license','licenseUrl','tileMeters']})
+        for channel in ['color','normal','roughness']:
+            asset=source['files'][channel];path=ROOT/'world/public'/asset['path'].lstrip('/')
+            digest=hashlib.sha256(path.read_bytes()).hexdigest()
+            if digest!=asset['sha256']:raise RuntimeError('Changed retained texture source: '+str(path))
+            consumed.append({'file':asset['path'],'bytes':path.stat().st_size,'sha256':digest,'role':channel,'tileMeters':source['tileMeters']})
+    generated=provenance['generated']
+    generated['originalWork']='Masks, hat, garment cutting, independent sleeves and seams, lapels, cuffs, fitted belt, gravity-shaped split cape, carved/bound broom, guardian layered drapery, rigs, weights, eight rider actions and three guardian actions.'
+    generated['materials']='Selected hybrid: linear garment palette multiplied by restrained normalized scan luminance, explicitly encoded to sRGB. Coat, pressed lapel facings and worsted waistcoat use wool scan detail at 0.27 m; leather at 0.40 m. Normal and roughness images remain Non-Color. Satin lining, linen shirt, trousers, scarf and felt retain authored weave. Full authored/scans/hybrid comparisons use identical geometry, lights and cameras.'
+    generated['builderSha256']=hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
+    generated['textureInputs']=consumed
+    generated['actionTimingsSeconds']={'boost_start':.2,'boost_end':.35,'cast':.6,'cast_release':.18}
+    generated['rigSourceRecords']=[{'file':name,'bytes':(OUT/'source'/name).stat().st_size,'sha256':hashlib.sha256((OUT/'source'/name).read_bytes()).hexdigest()} for name in generated['rigSources']]
+    generated['artReferences']=[{'url':url,'usage':'Reference URL supplied in production brief; no model or texture copied'} for url in
+      ['https://www.artstation.com/artwork/39w5PA','https://www.artstation.com/artwork/xDJ9mm','https://ellierpbrown.artstation.com/projects/JvwR5d']]
+    file.write_text(json.dumps(provenance,indent=2)+'\n')
 
 summary=[]
 for kind,build in [('wizard',wizard),('wraith',wraith)]:
@@ -1138,8 +1457,10 @@ for kind,build in [('wizard',wizard),('wraith',wraith)]:
     clear();materials();rig=build();consolidate(rig);animate(rig,kind)
     summary.append(export(rig,kind))
     if not NO_RENDER:studio(rig,kind)
+    if MATERIAL_AB and kind=='wizard':material_comparison(rig,kind)
 manifest=OUT/'manifest.json'
 if ONLY and manifest.exists():
     prior=json.loads(manifest.read_text());summary += [x for x in prior.get('assets',[]) if x['file']!=ONLY+'.glb']
-manifest.write_text(json.dumps({'generator':'Blender 5.1.2; anatomical garment topology, original masked academy rider, tailored felt hat, skinned cloth and baked actions','coordinateSystem':'Y up; forward -Z','assets':summary},indent=2)+'\n')
+manifest.write_text(json.dumps({'generator':'Blender 5.1.2; production v3 independent garment patterns, masked rider, gravity cape, hybrid scanned surfaces and eight baked rider actions','coordinateSystem':'Y up; forward -Z','assets':summary},indent=2)+'\n')
+record_sources()
 print('CHARACTER_ASSETS_COMPLETE '+json.dumps(summary))

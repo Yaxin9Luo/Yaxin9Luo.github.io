@@ -9,6 +9,7 @@ import {FontLoader} from 'three/addons/loaders/FontLoader.js';
 import {TextGeometry} from 'three/addons/geometries/TextGeometry.js';
 import signageFontData from './signage-font.json' with {type:'json'};
 import {createGroveTree,createGroveShrub,createGardenFlower} from './grove-foliage.js';
+import {attachWindShadows} from './environment-wind.js';
 
 const TAU=Math.PI*2;
 const signageFont=new FontLoader().parse(signageFontData);
@@ -89,7 +90,7 @@ class Builder {
   beam(a,b,r,mat=this.m.wood,top=r){const av=new THREE.Vector3(...a),bv=new THREE.Vector3(...b),delta=bv.clone().sub(av),g=new THREE.CylinderGeometry(top,r,delta.length(),12);g.applyQuaternion(new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0,1,0),delta.normalize()));this.add(g,mat,av.add(bv).multiplyScalar(.5).toArray());g.dispose();return this;}
   boxSolid(name,x,z,w,d,bottom,top){this.solids.push({name,bottom,top,planes:[[1,0,0,x+w/2],[-1,0,0,-x+w/2],[0,0,1,z+d/2],[0,0,-1,-z+d/2],[0,-1,0,-bottom],[0,1,0,top]]});}
   roundSolid(name,x,z,r,bottom,top){const planes=[[0,-1,0,-bottom],[0,1,0,top]];for(let i=0;i<16;i++){const a=i*TAU/16,nx=Math.cos(a),nz=Math.sin(a);planes.push([nx,0,nz,r+nx*x+nz*z]);}this.solids.push({name,bottom,top,planes});}
-  finish(){for(const [mat,parts]of this.parts){const mesh=new THREE.Mesh(mergeGeometries(parts),mat);mesh.name=`${this.group.name} — ${mat.name}`;mesh.castShadow=true;mesh.receiveShadow=true;this.group.add(mesh);parts.forEach(g=>g.dispose());}this.group.userData.colliders=this.solids;this.parts.clear();return this.group;}
+  finish(){for(const [mat,parts]of this.parts){const mesh=new THREE.Mesh(mergeGeometries(parts),mat);mesh.name=`${this.group.name} — ${mat.name}`;mesh.castShadow=true;mesh.receiveShadow=true;attachWindShadows(mesh);this.group.add(mesh);parts.forEach(g=>g.dispose());}this.group.userData.colliders=this.solids;this.parts.clear();return this.group;}
 }
 
 function clippedRectangle(w,d,cut=.65){
@@ -115,6 +116,29 @@ function planter(b,x,z,w,d,height=.65){
   slab(b,x,z,w-.47,d-.47,height+.365,.012,b.m.soil,.39);
   b.boxSolid('raised flowerbed',x,z,w+.18,d+.18,.14,height+.36);
   return height+.39;
+}
+
+// Outer districts use irregular fieldstone beds. The central courtyard keeps
+// its formal limestone parterres and unchanged approach/collision contract.
+function meadowBed(b,x,z,w,d,height=.65){
+  const phase=x*.23+z*.17,points=[];
+  for(let i=0;i<48;i++){
+    const a=i/48*TAU,r=.93+.045*Math.sin(a*3+phase)+.022*Math.cos(a*5-phase);
+    points.push(new THREE.Vector3(Math.cos(a)*w*.5*r,0,Math.sin(a)*d*.5*r));
+  }
+  const shape=new THREE.Shape(points.map(p=>new THREE.Vector2(p.x,-p.z)));
+  const soil=new THREE.ExtrudeGeometry(shape,{depth:height+.19,steps:1,bevelEnabled:true,bevelSegments:3,bevelSize:.055,bevelThickness:.045});
+  soil.rotateX(-Math.PI/2);b.add(soil,b.m.soil,[x,.15,z]);soil.dispose();
+  const path=new THREE.CatmullRomCurve3(points,true),length=path.getLength(),stones=Math.ceil(length/.70);
+  for(let i=0;i<stones;i++){
+    const t=(i+.5)/stones,p=path.getPointAt(t),tangent=path.getTangentAt(t),rotation=Math.atan2(tangent.x,tangent.z),h=height+.15+.065*Math.sin(i*1.7+phase);
+    b.box(x+p.x,.17+h*.5,z+p.z,.36,h,length/stones-.026,i%5?b.m.base:b.m.stone,rotation);
+  }
+  // The collider follows a conservative elliptical ring of short fieldstones;
+  // its bounds stay inside the previous bed envelope and existing view lanes.
+  const solid={name:'organic fieldstone planting bed',bottom:.14,top:height+.39,planes:[[0,-1,0,-.14],[0,1,0,height+.39]]};
+  for(let i=0;i<16;i++){const a=i*TAU/16,nx=Math.cos(a)/(w*.5),nz=Math.sin(a)/(d*.5),length=Math.hypot(nx,nz);solid.planes.push([nx/length,0,nz/length,(1+nx*x+nz*z)/length]);}
+  b.solids.push(solid);return height+.39;
 }
 
 function botanicalAsset(b,type,kind){
@@ -276,9 +300,9 @@ function centralGarden(m){
 }
 function readingGarden(m){
   const b=new Builder('Library reading garden',m);paving(b,29,18);
-  const y=planter(b,-10.6,1.8,4.4,10,.6);tree(b,-10.5,y,-.9,1.16,false,.4);
+  const y=meadowBed(b,-10.6,1.8,4.4,10,.6);tree(b,-10.5,y,-.9,1.16,false,.4);
   for(const z of[-1,2.2,5.4])shrub(b,-10.7,y,z,1.3,'green');flowers(b,-10.6,y,5.7,3.1);
-  const y2=planter(b,8.8,5.8,8.1,3.7,.42);for(const x of[6.3,9.1,11.5])shrub(b,x,y2,5.8,1.12,'green');flowers(b,9,y2,6.6,6.8,0,'lilac');
+  const y2=meadowBed(b,8.8,5.8,8.1,3.7,.42);for(const x of[6.3,9.1,11.5])shrub(b,x,y2,5.8,1.12,'green');flowers(b,9,y2,6.6,6.8,0,'lilac');
   readingDesk(b,1.5,2.4);bench(b,1.5,5.1,3.6);
   const shelf=new Builder('Publications reference shelf',m);libraryShelf(shelf,5,-5.9);
   shelf.box(5,2.91,-5.18,3.3,.32,.04,m.ink);sign(shelf,'PUBLICATIONS',.20,[5,2.835,-5.152]);
@@ -290,8 +314,8 @@ function readingGarden(m){
 }
 function workshopGarden(m){
   const b=new Builder('Atelier materials court',m);paving(b,40,23);
-  const y=planter(b,-17.3,8.2,3.6,4.2,.48);shrub(b,-17.3,y,8.2,1.23,'green');flowers(b,-17.3,y,9.2,2.6);
-  const y2=planter(b,16.8,-8.2,5,4.3,.5);for(const x of[15.5,18])shrub(b,x,y2,-8.2,1.1,'green');
+  const y=meadowBed(b,-17.3,8.2,3.6,4.2,.48);shrub(b,-17.3,y,8.2,1.23,'green');flowers(b,-17.3,y,9.2,2.6);
+  const y2=meadowBed(b,16.8,-8.2,5,4.3,.5);for(const x of[15.5,18])shrub(b,x,y2,-8.2,1.1,'green');
   // Real tools and material samples occupy one compact working corner.
   const x=-15,z=-8.8;readingDesk(b,x,z);
   for(let i=0;i<3;i++){b.cylinder(x-.8+i*.57,2.5,z-.15,.17,.67,m.brass,.15,12);b.ring(x-.8+i*.57,2.6,z-.15,.175,.02,m.wood);}
@@ -303,7 +327,7 @@ function journeyGarden(m){
   const b=new Builder('Wayfarer map landing',m);paving(b,24,18);
   const ring=new THREE.RingGeometry(2.1,3.5,48);ring.rotateX(-Math.PI/2);b.add(ring,m.pavingDark,[0,.19,2.1]);ring.dispose();
   for(let i=0;i<8;i++){const a=i*TAU/8;b.box(Math.sin(a)*2.8,.213,2.1+Math.cos(a)*2.8,.13,.025,i%2?.42:.82,m.brass,a);}
-  const y=planter(b,8,0,4.2,12.7,.45);for(const z of[-4.8,-1.8,1.4,4.6])shrub(b,8,y,z,1.13,'green');tree(b,8,y,-4.6,.92,false);
+  const y=meadowBed(b,8,0,4.2,12.7,.45);for(const z of[-4.8,-1.8,1.4,4.6])shrub(b,8,y,z,1.13,'green');tree(b,8,y,-4.6,.92,false);
   bench(b,-8.4,2.2,4.1,-Math.PI/2);
   b.cylinder(-7.7,.98,-4.7,.58,1.56,m.stone,.43,12);b.box(-7.7,1.87,-4.7,2.2,.2,1.5,m.brass);
   const chart=new Builder('Experience timeline board',m);chart.box(-7.7,2.035,-4.7,1.95,.1,1.24,m.ink);
@@ -318,7 +342,7 @@ function journeyGarden(m){
 }
 function postGarden(m){
   const b=new Builder('Owl post correspondence landing',m);paving(b,23,17);
-  const y=planter(b,8.7,0,3.4,11.4,.5);tree(b,8.6,y,-2.7,.94,false);for(const z of[0,2.9,4])shrub(b,8.7,y,z,1,'green');flowers(b,8.7,y,4.4,2.3);
+  const y=meadowBed(b,8.7,0,3.4,11.4,.5);tree(b,8.6,y,-2.7,.94,false);for(const z of[0,2.9,4])shrub(b,8.7,y,z,1,'green');flowers(b,8.7,y,4.4,2.3);
   readingDesk(b,4.4,3.1,0,false);b.box(5.3,2.13,3.03,.73,.09,.56,m.paper,.2);b.box(5.3,2.19,3.03,.14,.028,.14,m.redBook,.2);
   const folder=new Builder('CV correspondence folder',m);folder.box(3.88,2.13,3.16,1.08,.085,1.1,m.ink);folder.box(3.88,2.185,3.16,.99,.04,1.03,m.paper);folder.box(3.88,2.225,3.16,1.08,.035,1.1,m.ink);
   folder.box(4.24,2.24,2.69,.31,.04,.18,m.brass);sign(folder,'CV',.39,[3.88,2.251,3.3],[-Math.PI/2,0,0]);
@@ -331,7 +355,7 @@ function postGarden(m){
 }
 function astralGarden(m){
   const b=new Builder('Observatory instrument terrace',m);paving(b,22,14);
-  for(const x of[-8.9,8.9]){const y=planter(b,x,1.3,2.1,8.3,.4);for(const z of[-1.7,1.5,4.3])shrub(b,x,y,z,.74,'green');}
+  for(const x of[-8.9,8.9]){const y=meadowBed(b,x,1.3,2.1,8.3,.4);for(const z of[-1.7,1.5,4.3])shrub(b,x,y,z,.74,'green');}
   const instrument=new Builder('Research instrument',m);
   instrument.cylinder(-5,1.17,3.5,.58,1.88,m.stone,.42,12);instrument.cylinder(-5,2.22,3.5,1.15,.16,m.brass,1.1,32);
   instrument.beam([-5,2.33,3.1],[-5,3.08,3.76],.04,m.brass);instrument.ring(-5,2.32,3.5,.85,.024,m.pavingDark);

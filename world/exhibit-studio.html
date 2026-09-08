@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex">
+  <title>Research Atelier · Asset Studio</title>
+  <style>
+    *{box-sizing:border-box}body{margin:0;background:#202a2c;color:#eee8dc;font:14px system-ui,sans-serif}a{color:#e0c48d}button,select{font:inherit;color:inherit;background:#ffffff08;border:1px solid #c0b28d55;border-radius:5px;padding:9px 11px}button{cursor:pointer}button[aria-pressed=true]{background:#b39a6440;border-color:#d8bd82}button:focus-visible,a:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid #f2d49e;outline-offset:3px}header{min-height:75px;padding:18px 24px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #ffffff20}h1{font:23px Georgia,serif;margin:0 0 4px}header p{margin:0;color:#b5bcb9;font-size:11px}main{display:grid;grid-template-columns:275px minmax(0,1fr);height:calc(100dvh - 79px);min-height:360px}aside{padding:22px;overflow:auto;border-right:1px solid #ffffff20}aside label{display:block;margin-bottom:16px;color:#c9c7bc;font-size:12px}aside select{display:block;width:100%;margin-top:7px}aside p{font-size:12px;line-height:1.65;color:#b8bcb4}h2{font:18px Georgia;margin:0 0 12px}.views,.states{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0 20px}.views button{font-size:12px}.states button{flex:1}canvas{width:100%;height:100%;min-width:0;min-height:0;display:block;touch-action:none}.viewport{position:relative;min-width:0;min-height:0}#loading{position:absolute;inset:0;display:grid;place-content:center;pointer-events:none;color:#e9dac0;background:#202a2c}#loading[hidden]{display:none}#status{display:block;border-top:1px solid #ffffff25;padding-top:14px;font-size:11px;line-height:1.6;color:#d4c198}.toggle{display:flex!important;align-items:center;gap:8px}dialog{background:#ede8dc;color:#243d43;border:none;border-radius:9px;max-width:min(92vw,1080px);max-height:91dvh;padding:20px}dialog::backdrop{background:#091318bd}dialog>button{color:#243d43;float:right;border-color:#50646b66}dialog img{display:block;max-width:100%;max-height:73dvh;object-fit:contain;margin:auto}dialog p{font-size:13px;line-height:1.6;max-width:880px}dialog a{color:#2e626d}.reader-copy h2{margin-top:22px}.reader-copy{max-width:640px}select option{background:#263438}
+    @media(max-width:700px){header{padding:12px 16px;min-height:68px}h1{font-size:19px}main{height:calc(100dvh - 68px);grid-template-columns:1fr;grid-template-rows:auto minmax(320px,1fr)}aside{padding:12px 15px;border-right:0;border-bottom:1px solid #ffffff20;display:flex;gap:9px;flex-wrap:wrap;max-height:230px;overflow:auto}aside h2,aside .instructions,aside .credit{display:none}aside label{margin:0;flex:1;min-width:105px}aside select{margin-top:3px;padding:7px}.views,.states{margin:0}.views button,.states button{padding:7px;font-size:11px}#status{border:0;padding:0;flex-basis:100%}.toggle{min-width:150px!important}header>a{font-size:12px}}
+  </style>
+</head>
+<body>
+  <header><div><h1>Research Atelier / 研究展台</h1><p>ACTUAL GEOMETRY · LOCAL MATERIALS · PROJECT SOURCES</p></div><a href="/">Portfolio ↗</a></header>
+  <main>
+    <aside>
+      <h2>Inspect the workbench</h2>
+      <label>Project / 项目<select id="project"></select></label>
+      <label>Image / 图像<select id="media"></select></label>
+      <label>Light / 灯光<select id="light"><option value="neutral">Neutral / 中性</option><option value="day">Day / 日光</option><option value="night">Night / 夜光</option></select></label>
+      <label>Language / 语言<select id="language"><option value="en">English</option><option value="zh">中文</option></select></label>
+      <div class="states"><button id="open" aria-pressed="true">Open / 展开</button><button id="focus" aria-pressed="true">Focus / 聚焦</button></div>
+      <div class="views" aria-label="Camera views"><button data-view="wide">Whole / 全景</button><button data-view="desk">Desk / 桌面</button><button data-view="folio">Folio / 方法书</button><button data-view="instrument">Dial / 仪表</button><button data-view="role">Role / 贡献</button><button data-view="media">Output / 产物</button></div>
+      <label class="toggle"><input id="reduced" type="checkbox">Reduced motion / 减少动态</label>
+      <p class="instructions">Drag to orbit; scroll to zoom. Click the screen to enlarge its actual image, the method folio to read the approach, or the plaque to inspect the author role.</p>
+      <p><a id="reader-link" href="/#project/autodesign">Open the full reader / 阅读项目 ↗</a></p>
+      <output id="status" aria-live="polite">Loading exhibit…</output>
+      <p class="credit"><a href="/textures/LICENSE.txt">Local CC0 material credits</a> · Existing project media retain their original sources.</p>
+    </aside>
+    <section class="viewport" aria-label="Interactive research exhibition"><canvas aria-label="Research atelier 3D preview"></canvas><div id="loading">Loading the actual exhibit / 正在载入展台</div></section>
+  </main>
+  <dialog id="detail"><button id="close-detail" aria-label="Close / 关闭">Close / 关闭 ×</button><div id="detail-body"></div></dialog>
+  <script type="module" src="/src/exhibit-studio.js"></script>
+</body>
+</html>

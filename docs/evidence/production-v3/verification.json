@@ -1,0 +1,925 @@
+{
+  "base": "http://127.0.0.1:4200/",
+  "http_count": 156,
+  "models_verified": [
+    {
+      "path": "models/characters/wizard.glb",
+      "bytes": 22859032,
+      "triangles": 255660,
+      "sha256": "40f3112ed006a08fe33fed49de9e512dff634d28e2c35039ab1d554c24f0c514"
+    },
+    {
+      "path": "models/characters/wraith.glb",
+      "bytes": 5761252,
+      "triangles": 68116,
+      "sha256": "2ddad8db1534982c9b82410e93fe41be9f62e7d2b5aa4d691ee8b5a1481f6fa2"
+    },
+    {
+      "path": "models/architecture/castle.glb",
+      "bytes": 40698440,
+      "triangles": 423667,
+      "sha256": "a2ded473d3d60c4c3dcc9d06ce161cd5e1666a818daf3de6f0a4de891876d545"
+    },
+    {
+      "path": "models/architecture/library.glb",
+      "bytes": 3007420,
+      "triangles": 31062,
+      "sha256": "a9e2f034e671e6a06d2fa947537cdbefb8283234ca3fcee52bfbc042871c35ac"
+    },
+    {
+      "path": "models/architecture/observatory.glb",
+      "bytes": 2078444,
+      "triangles": 21434,
+      "sha256": "e6072f56a763044ba45c76018e98b14ab66a1bb0dbe54fc0543d633a605b4a70"
+    },
+    {
+      "path": "models/architecture/workshop.glb",
+      "bytes": 1322428,
+      "triangles": 13494,
+      "sha256": "f8b844ca865bdeddcf4996880614184f16dea9c42e8f8fd7094ea5fb65a4e15f"
+    },
+    {
+      "path": "models/architecture/owlery.glb",
+      "bytes": 3051776,
+      "triangles": 31530,
+      "sha256": "c66550ab9ef4e669674d441627b68c1371e612830388105efd9d004bb6995b06"
+    },
+    {
+      "path": "models/architecture/ruins.glb",
+      "bytes": 962632,
+      "triangles": 9900,
+      "sha256": "4901646732e9aeb7c9e5249ee4168f83ba5b95efc848f4aeb30cd90da8bfd477"
+    },
+    {
+      "path": "models/environment/courtyard.glb",
+      "bytes": 86582776,
+      "triangles": 636442,
+      "sha256": "e81f2a44ba68a722663dde7b218c11387fe4da22b4751eb43c1385f014013b40"
+    },
+    {
+      "path": "models/environment/reading.glb",
+      "bytes": 30756112,
+      "triangles": 236108,
+      "sha256": "4838b931550bbb9c9c5a31a6f1beb4242ebee8aae00b82a3d2a0ff1144af501c"
+    },
+    {
+      "path": "models/environment/atelier.glb",
+      "bytes": 8950864,
+      "triangles": 72196,
+      "sha256": "940fa3f0531d269261db15734636cd155926c1b0ec22d80bf49fddb382892f94"
+    },
+    {
+      "path": "models/environment/journey.glb",
+      "bytes": 16082352,
+      "triangles": 123812,
+      "sha256": "89c19f35e6818bc7fe00205f8b5251630b32a5f22a41b70d245ec8cff738efbc"
+    },
+    {
+      "path": "models/environment/post.glb",
+      "bytes": 17410260,
+      "triangles": 133112,
+      "sha256": "00c053a4939a1df5532322b3de2f352eb53e57a0c33e39b4af931a72097b5ada"
+    },
+    {
+      "path": "models/environment/astral.glb",
+      "bytes": 8575684,
+      "triangles": 66912,
+      "sha256": "8a3edfff5f70bfc6b62502b078ed9b0a63d0ee3894e82a502cfd24a0f647681d"
+    },
+    {
+      "path": "models/environment/grove-pine.glb",
+      "bytes": 5142392,
+      "triangles": 78280,
+      "sha256": "c2ec609fa90ea17341ff7d6a9ddb5bf2c48bba23027bebf8375d69f065192d1e"
+    },
+    {
+      "path": "models/environment/grove-silver.glb",
+      "bytes": 4252444,
+      "triangles": 74016,
+      "sha256": "3656771a14f858401d1556ddd3ff4719bf62d0478b0790ed69254dffdf487ade"
+    },
+    {
+      "path": "models/environment/grove-cherry.glb",
+      "bytes": 4757072,
+      "triangles": 76010,
+      "sha256": "7fef99187895244dfcc0ed5140481fba9c35cee8b2c6da81bdd28576e212cead"
+    },
+    {
+      "path": "models/environment/garden-shrub.glb",
+      "bytes": 581196,
+      "triangles": 9456,
+      "sha256": "37bd561d2c67672b7c1112b5387a52cede12ac6c1fec10344e62503c89f938f2"
+    },
+    {
+      "path": "models/environment/garden-flower.glb",
+      "bytes": 223384,
+      "triangles": 3288,
+      "sha256": "b7d5d1b6928daca608ae6b9ffac8bd4af8c8ca0510c8ce48bd9fa9474b6c8646"
+    },
+    {
+      "path": "models/environment/scans/rock_face_02.glb",
+      "bytes": 18219896,
+      "triangles": 29566,
+      "sha256": "105b5661c5970457aaf6c3ef7782298381ab3d59dfdbd33ee5c8dea34f11d4de"
+    },
+    {
+      "path": "models/environment/scans/rock_moss_set_02.glb",
+      "bytes": 13597844,
+      "triangles": 57647,
+      "sha256": "b4e4be70eddcdea6ecfc6c178e0ef848f69ebaa20780db183558cdf390e3dfdb"
+    }
+  ],
+  "additional_manifest_hashes": [
+    "art/academy/cloud-panorama.webp",
+    "audio/academy/day-theme.mp3",
+    "audio/academy/night-theme.mp3",
+    "media/exhibitions/autodesign-poster-autodesign.webp",
+    "media/exhibitions/autodesign-slides-autodesign-formal-academic.webp",
+    "media/exhibitions/autodesign-webpage-autodesign.webp",
+    "media/exhibitions/autodesign-poster-underwater-sam-claude.webp",
+    "media/exhibitions/autodesign-qualitative-trajectory.webp"
+  ],
+  "failures": [],
+  "http": [
+    {
+      "path": "THIRD-PARTY-NOTICES.txt",
+      "status": 200,
+      "bytes": 6667
+    },
+    {
+      "path": "art/academy/cloud-panorama.webp",
+      "status": 200,
+      "bytes": 197136
+    },
+    {
+      "path": "art/academy/manifest.json",
+      "status": 200,
+      "bytes": 742
+    },
+    {
+      "path": "art/environment-target.png",
+      "status": 200,
+      "bytes": 2878850
+    },
+    {
+      "path": "art/night-garden/blossom-atlas.webp",
+      "status": 200,
+      "bytes": 688394
+    },
+    {
+      "path": "art/night-garden/manifest.json",
+      "status": 200,
+      "bytes": 2947
+    },
+    {
+      "path": "art/night-garden/moon-lroc-2k.jpg",
+      "status": 200,
+      "bytes": 457942
+    },
+    {
+      "path": "art/night-garden/moonlit-sky.webp",
+      "status": 200,
+      "bytes": 197398
+    },
+    {
+      "path": "art/world-concept.png",
+      "status": 200,
+      "bytes": 2293088
+    },
+    {
+      "path": "art/world-concept.webp",
+      "status": 200,
+      "bytes": 194858
+    },
+    {
+      "path": "asset-studio.html",
+      "status": 200,
+      "bytes": 5977
+    },
+    {
+      "path": "assets/GLTFLoader-Cls85C6w.js",
+      "status": 200,
+      "bytes": 43282
+    },
+    {
+      "path": "assets/HDRLoader-D1LibKnC.js",
+      "status": 200,
+      "bytes": 347036
+    },
+    {
+      "path": "assets/OrbitControls--19eBXsM.js",
+      "status": 200,
+      "bytes": 19650
+    },
+    {
+      "path": "assets/architecture-CIgvvHEU.js",
+      "status": 200,
+      "bytes": 297128
+    },
+    {
+      "path": "assets/characters-BP4MVhAi.js",
+      "status": 200,
+      "bytes": 78
+    },
+    {
+      "path": "assets/characters-Dwd9sIf2.js",
+      "status": 200,
+      "bytes": 6856
+    },
+    {
+      "path": "assets/exhibit-CRIP5hK2.js",
+      "status": 200,
+      "bytes": 7305
+    },
+    {
+      "path": "assets/exhibition-state-ZFQnRKOQ.js",
+      "status": 200,
+      "bytes": 30742
+    },
+    {
+      "path": "assets/exhibits-rtd_NyPm.js",
+      "status": 200,
+      "bytes": 22945
+    },
+    {
+      "path": "assets/game-C4_7Y1AJ.js",
+      "status": 200,
+      "bytes": 104415
+    },
+    {
+      "path": "assets/game-DO11PgI3.js",
+      "status": 200,
+      "bytes": 57
+    },
+    {
+      "path": "assets/landscape-BhNiknLU.js",
+      "status": 200,
+      "bytes": 77
+    },
+    {
+      "path": "assets/landscape-mJImc5r1.js",
+      "status": 200,
+      "bytes": 59343
+    },
+    {
+      "path": "assets/locations-DjeAiYMl.js",
+      "status": 200,
+      "bytes": 2570
+    },
+    {
+      "path": "assets/main-CC74EOW7.js",
+      "status": 200,
+      "bytes": 84598
+    },
+    {
+      "path": "assets/main-WjQ-tUFL.css",
+      "status": 200,
+      "bytes": 96484
+    },
+    {
+      "path": "assets/models-CcxSugHm.js",
+      "status": 200,
+      "bytes": 112
+    },
+    {
+      "path": "assets/models-CkLhtVlf.js",
+      "status": 200,
+      "bytes": 33476
+    },
+    {
+      "path": "assets/modulepreload-polyfill-P2Xu9kJm.js",
+      "status": 200,
+      "bytes": 670
+    },
+    {
+      "path": "assets/navigation-D7IUaUiF.js",
+      "status": 200,
+      "bytes": 3959
+    },
+    {
+      "path": "assets/review-DuSmUiic.js",
+      "status": 200,
+      "bytes": 14733
+    },
+    {
+      "path": "assets/studio-7-TIlKTA.js",
+      "status": 200,
+      "bytes": 18104
+    },
+    {
+      "path": "assets/world-DpWvgVoa.js",
+      "status": 200,
+      "bytes": 160870
+    },
+    {
+      "path": "audio/academy/day-theme.mp3",
+      "status": 200,
+      "bytes": 1316581
+    },
+    {
+      "path": "audio/academy/night-theme.mp3",
+      "status": 200,
+      "bytes": 766291
+    },
+    {
+      "path": "audio/academy/sources.json",
+      "status": 200,
+      "bytes": 985
+    },
+    {
+      "path": "crest.svg",
+      "status": 200,
+      "bytes": 378
+    },
+    {
+      "path": "exhibit-studio.html",
+      "status": 200,
+      "bytes": 5840
+    },
+    {
+      "path": "files/CV_YaxinLuo.pdf",
+      "status": 200,
+      "bytes": 192483
+    },
+    {
+      "path": "fonts/OFL-cormorant.txt",
+      "status": 200,
+      "bytes": 4386
+    },
+    {
+      "path": "fonts/OFL-inter.txt",
+      "status": 200,
+      "bytes": 4376
+    },
+    {
+      "path": "fonts/cormorant.ttf",
+      "status": 200,
+      "bytes": 290236
+    },
+    {
+      "path": "fonts/inter.ttf",
+      "status": 200,
+      "bytes": 324820
+    },
+    {
+      "path": "index.html",
+      "status": 200,
+      "bytes": 1772
+    },
+    {
+      "path": "media/exhibitions/README.md",
+      "status": 200,
+      "bytes": 2227
+    },
+    {
+      "path": "media/exhibitions/autodesign-poster-autodesign.webp",
+      "status": 200,
+      "bytes": 373582
+    },
+    {
+      "path": "media/exhibitions/autodesign-poster-underwater-sam-claude.webp",
+      "status": 200,
+      "bytes": 188310
+    },
+    {
+      "path": "media/exhibitions/autodesign-qualitative-trajectory.webp",
+      "status": 200,
+      "bytes": 149852
+    },
+    {
+      "path": "media/exhibitions/autodesign-slides-autodesign-formal-academic.webp",
+      "status": 200,
+      "bytes": 93100
+    },
+    {
+      "path": "media/exhibitions/autodesign-webpage-autodesign.webp",
+      "status": 200,
+      "bytes": 102130
+    },
+    {
+      "path": "media/exhibitions/sources.json",
+      "status": 200,
+      "bytes": 1869
+    },
+    {
+      "path": "models/architecture/castle-courtyard.png",
+      "status": 200,
+      "bytes": 3301986
+    },
+    {
+      "path": "models/architecture/castle-crown.png",
+      "status": 200,
+      "bytes": 2866342
+    },
+    {
+      "path": "models/architecture/castle-iteration-1.png",
+      "status": 200,
+      "bytes": 2757923
+    },
+    {
+      "path": "models/architecture/castle-studio.blend",
+      "status": 200,
+      "bytes": 26407752
+    },
+    {
+      "path": "models/architecture/castle-studio.png",
+      "status": 200,
+      "bytes": 2767665
+    },
+    {
+      "path": "models/architecture/castle.glb",
+      "status": 200,
+      "bytes": 40698440
+    },
+    {
+      "path": "models/architecture/library-studio.blend",
+      "status": 200,
+      "bytes": 9636235
+    },
+    {
+      "path": "models/architecture/library-studio.png",
+      "status": 200,
+      "bytes": 2972181
+    },
+    {
+      "path": "models/architecture/library.glb",
+      "status": 200,
+      "bytes": 3007420
+    },
+    {
+      "path": "models/architecture/manifest.json",
+      "status": 200,
+      "bytes": 3176
+    },
+    {
+      "path": "models/architecture/observatory-studio.blend",
+      "status": 200,
+      "bytes": 9592737
+    },
+    {
+      "path": "models/architecture/observatory-studio.png",
+      "status": 200,
+      "bytes": 2596533
+    },
+    {
+      "path": "models/architecture/observatory.glb",
+      "status": 200,
+      "bytes": 2078444
+    },
+    {
+      "path": "models/architecture/owlery-studio.blend",
+      "status": 200,
+      "bytes": 9527018
+    },
+    {
+      "path": "models/architecture/owlery-studio.png",
+      "status": 200,
+      "bytes": 2483465
+    },
+    {
+      "path": "models/architecture/owlery.glb",
+      "status": 200,
+      "bytes": 3051776
+    },
+    {
+      "path": "models/architecture/ruins-studio.blend",
+      "status": 200,
+      "bytes": 5150974
+    },
+    {
+      "path": "models/architecture/ruins-studio.png",
+      "status": 200,
+      "bytes": 2524587
+    },
+    {
+      "path": "models/architecture/ruins.glb",
+      "status": 200,
+      "bytes": 962632
+    },
+    {
+      "path": "models/architecture/workshop-studio.blend",
+      "status": 200,
+      "bytes": 9276012
+    },
+    {
+      "path": "models/architecture/workshop-studio.png",
+      "status": 200,
+      "bytes": 2955215
+    },
+    {
+      "path": "models/architecture/workshop.glb",
+      "status": 200,
+      "bytes": 1322428
+    },
+    {
+      "path": "models/characters/manifest.json",
+      "status": 200,
+      "bytes": 1341
+    },
+    {
+      "path": "models/characters/source/LICENSE.txt",
+      "status": 200,
+      "bytes": 2817
+    },
+    {
+      "path": "models/characters/source/blender-studio-anatomy-cc0.blend",
+      "status": 200,
+      "bytes": 639977
+    },
+    {
+      "path": "models/characters/source/blender-studio-head-cc0.blend",
+      "status": 200,
+      "bytes": 712626
+    },
+    {
+      "path": "models/characters/source/cortu-short-messy-hair/short_messy.mhmat",
+      "status": 200,
+      "bytes": 854
+    },
+    {
+      "path": "models/characters/source/cortu-short-messy-hair/short_messy.obj",
+      "status": 200,
+      "bytes": 52093
+    },
+    {
+      "path": "models/characters/source/cortu-short-messy-hair/short_messy_diff.png",
+      "status": 200,
+      "bytes": 530185
+    },
+    {
+      "path": "models/characters/source/sources.json",
+      "status": 200,
+      "bytes": 7780
+    },
+    {
+      "path": "models/characters/source/wizard-academy-rig.blend",
+      "status": 200,
+      "bytes": 21508722
+    },
+    {
+      "path": "models/characters/source/wraith-academy-rig.blend",
+      "status": 200,
+      "bytes": 11068406
+    },
+    {
+      "path": "models/characters/wizard.glb",
+      "status": 200,
+      "bytes": 22859032
+    },
+    {
+      "path": "models/characters/wraith.glb",
+      "status": 200,
+      "bytes": 5761252
+    },
+    {
+      "path": "models/environment/astral.glb",
+      "status": 200,
+      "bytes": 8575684
+    },
+    {
+      "path": "models/environment/atelier.glb",
+      "status": 200,
+      "bytes": 8950864
+    },
+    {
+      "path": "models/environment/courtyard.glb",
+      "status": 200,
+      "bytes": 86582776
+    },
+    {
+      "path": "models/environment/foliage-lod-manifest.json",
+      "status": 200,
+      "bytes": 2892
+    },
+    {
+      "path": "models/environment/foliage-manifest.json",
+      "status": 200,
+      "bytes": 3065
+    },
+    {
+      "path": "models/environment/garden-flower.glb",
+      "status": 200,
+      "bytes": 223384
+    },
+    {
+      "path": "models/environment/garden-shrub.glb",
+      "status": 200,
+      "bytes": 581196
+    },
+    {
+      "path": "models/environment/grove-cherry.glb",
+      "status": 200,
+      "bytes": 4757072
+    },
+    {
+      "path": "models/environment/grove-pine.glb",
+      "status": 200,
+      "bytes": 5142392
+    },
+    {
+      "path": "models/environment/grove-silver.glb",
+      "status": 200,
+      "bytes": 4252444
+    },
+    {
+      "path": "models/environment/journey.glb",
+      "status": 200,
+      "bytes": 16082352
+    },
+    {
+      "path": "models/environment/manifest.json",
+      "status": 200,
+      "bytes": 6884
+    },
+    {
+      "path": "models/environment/post.glb",
+      "status": 200,
+      "bytes": 17410260
+    },
+    {
+      "path": "models/environment/reading.glb",
+      "status": 200,
+      "bytes": 30756112
+    },
+    {
+      "path": "models/environment/scans/LICENSE.txt",
+      "status": 200,
+      "bytes": 411
+    },
+    {
+      "path": "models/environment/scans/manifest.json",
+      "status": 200,
+      "bytes": 8086
+    },
+    {
+      "path": "models/environment/scans/rock_face_02.glb",
+      "status": 200,
+      "bytes": 18219896
+    },
+    {
+      "path": "models/environment/scans/rock_moss_set_02.glb",
+      "status": 200,
+      "bytes": 13597844
+    },
+    {
+      "path": "models/environment/scans/source-downloads.json",
+      "status": 200,
+      "bytes": 4068
+    },
+    {
+      "path": "models/environment/scans/sources.json",
+      "status": 200,
+      "bytes": 3504
+    },
+    {
+      "path": "quality-review.html",
+      "status": 200,
+      "bytes": 4360
+    },
+    {
+      "path": "textures/LICENSE.txt",
+      "status": 200,
+      "bytes": 402
+    },
+    {
+      "path": "textures/aged-wood/color.webp",
+      "status": 200,
+      "bytes": 133654
+    },
+    {
+      "path": "textures/aged-wood/normal.webp",
+      "status": 200,
+      "bytes": 268670
+    },
+    {
+      "path": "textures/aged-wood/roughness.webp",
+      "status": 200,
+      "bytes": 18408
+    },
+    {
+      "path": "textures/castle-masonry/color.webp",
+      "status": 200,
+      "bytes": 1343684
+    },
+    {
+      "path": "textures/castle-masonry/normal.webp",
+      "status": 200,
+      "bytes": 2045592
+    },
+    {
+      "path": "textures/castle-masonry/roughness.webp",
+      "status": 200,
+      "bytes": 16240
+    },
+    {
+      "path": "textures/dark-leather/color.webp",
+      "status": 200,
+      "bytes": 272794
+    },
+    {
+      "path": "textures/dark-leather/normal.webp",
+      "status": 200,
+      "bytes": 463102
+    },
+    {
+      "path": "textures/dark-leather/roughness.webp",
+      "status": 200,
+      "bytes": 607426
+    },
+    {
+      "path": "textures/environment/night.hdr",
+      "status": 200,
+      "bytes": 1672754
+    },
+    {
+      "path": "textures/environment/sky.hdr",
+      "status": 200,
+      "bytes": 4434394
+    },
+    {
+      "path": "textures/foliage/alpha.webp",
+      "status": 200,
+      "bytes": 24414
+    },
+    {
+      "path": "textures/foliage/color.webp",
+      "status": 200,
+      "bytes": 60216
+    },
+    {
+      "path": "textures/foliage/normal.webp",
+      "status": 200,
+      "bytes": 72164
+    },
+    {
+      "path": "textures/foliage/roughness.webp",
+      "status": 200,
+      "bytes": 26610
+    },
+    {
+      "path": "textures/forest-ground/color.webp",
+      "status": 200,
+      "bytes": 552148
+    },
+    {
+      "path": "textures/forest-ground/normal.webp",
+      "status": 200,
+      "bytes": 688856
+    },
+    {
+      "path": "textures/forest-ground/roughness.webp",
+      "status": 200,
+      "bytes": 401860
+    },
+    {
+      "path": "textures/manifest.json",
+      "status": 200,
+      "bytes": 48899
+    },
+    {
+      "path": "textures/meadow/color.webp",
+      "status": 200,
+      "bytes": 335138
+    },
+    {
+      "path": "textures/meadow/normal.webp",
+      "status": 200,
+      "bytes": 493262
+    },
+    {
+      "path": "textures/meadow/roughness.webp",
+      "status": 200,
+      "bytes": 305636
+    },
+    {
+      "path": "textures/mossy-rock/color.webp",
+      "status": 200,
+      "bytes": 453490
+    },
+    {
+      "path": "textures/mossy-rock/normal.webp",
+      "status": 200,
+      "bytes": 480794
+    },
+    {
+      "path": "textures/mossy-rock/roughness.webp",
+      "status": 200,
+      "bytes": 425734
+    },
+    {
+      "path": "textures/oxidized-copper/color.webp",
+      "status": 200,
+      "bytes": 250772
+    },
+    {
+      "path": "textures/oxidized-copper/metalness.webp",
+      "status": 200,
+      "bytes": 538788
+    },
+    {
+      "path": "textures/oxidized-copper/normal.webp",
+      "status": 200,
+      "bytes": 105422
+    },
+    {
+      "path": "textures/oxidized-copper/roughness.webp",
+      "status": 200,
+      "bytes": 152150
+    },
+    {
+      "path": "textures/pine-bark/color.webp",
+      "status": 200,
+      "bytes": 269422
+    },
+    {
+      "path": "textures/pine-bark/normal.webp",
+      "status": 200,
+      "bytes": 560852
+    },
+    {
+      "path": "textures/pine-bark/roughness.webp",
+      "status": 200,
+      "bytes": 191416
+    },
+    {
+      "path": "textures/slate-roof/color.webp",
+      "status": 200,
+      "bytes": 919740
+    },
+    {
+      "path": "textures/slate-roof/normal.webp",
+      "status": 200,
+      "bytes": 1537462
+    },
+    {
+      "path": "textures/slate-roof/roughness.webp",
+      "status": 200,
+      "bytes": 760424
+    },
+    {
+      "path": "textures/wayfinding/about.png",
+      "status": 200,
+      "bytes": 38607
+    },
+    {
+      "path": "textures/wayfinding/contact.png",
+      "status": 200,
+      "bytes": 48108
+    },
+    {
+      "path": "textures/wayfinding/journey.png",
+      "status": 200,
+      "bytes": 39267
+    },
+    {
+      "path": "textures/wayfinding/projects.png",
+      "status": 200,
+      "bytes": 34150
+    },
+    {
+      "path": "textures/wayfinding/publications.png",
+      "status": 200,
+      "bytes": 33653
+    },
+    {
+      "path": "textures/wayfinding/research.png",
+      "status": 200,
+      "bytes": 38260
+    },
+    {
+      "path": "textures/wool-cloth/color.webp",
+      "status": 200,
+      "bytes": 357818
+    },
+    {
+      "path": "textures/wool-cloth/normal.webp",
+      "status": 200,
+      "bytes": 520820
+    },
+    {
+      "path": "textures/wool-cloth/roughness.webp",
+      "status": 200,
+      "bytes": 457940
+    },
+    {
+      "path": "traditional/assets/css/main.css",
+      "status": 200,
+      "bytes": 178875
+    },
+    {
+      "path": "traditional/cv/index.html",
+      "status": 200,
+      "bytes": 14815
+    },
+    {
+      "path": "traditional/index.html",
+      "status": 200,
+      "bytes": 33279
+    },
+    {
+      "path": "traditional/zh/index.html",
+      "status": 200,
+      "bytes": 20399
+    }
+  ]
+}

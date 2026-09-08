@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { locations, islands, worldBounds } from './locations.js';
 import { sampleEnvironment, TIME_PHASES } from './environment-time.js';
+import { environmentWind } from './environment-wind.js';
 
 const assets = {};
 let loading;
@@ -199,9 +200,9 @@ export function createAtmosphere(scene, { heightAt=()=>6, lanternCount=26, firef
     update(t,dt=0,reduced=false){
       const time=reduced?0:t;
       sky.material.uniforms.skyTime.value=time;
-      for(const item of lanterns){const p=item.base;item.object.position.set(p.x+Math.sin(time*.065+item.phase)*2.3,p.y+Math.sin(time*.11+item.phase)*1.5,p.z+Math.cos(time*.07+item.phase)*1.6);item.object.rotation.set(Math.sin(time*.16+item.phase)*.045,item.phase,Math.cos(time*.13+item.phase)*.055);}
+      for(const item of lanterns){const p=item.base,sway=Math.sin(time*.065+item.phase)*2.3,d=environmentWind.direction;item.object.position.set(p.x+d.x*sway,p.y+Math.sin(time*.11+item.phase)*1.5,p.z+d.y*sway);item.object.rotation.set(Math.sin(time*.16+item.phase)*.045,item.phase,Math.cos(time*.13+item.phase)*.055);}
       for(const item of released){if(!item.object.visible)continue;if(!reduced)item.age+=Math.min(Math.max(dt,0),.1);
-        const a=item.age;item.object.position.set(item.base.x+Math.sin(a*.18+item.phase)*a*.07,item.base.y+a*.9,item.base.z-a*.19);item.object.rotation.z=Math.sin(time*.2+item.phase)*.045;
+        const a=item.age,d=environmentWind.direction,drift=a*.23+Math.sin(a*.18+item.phase)*a*.035;item.object.position.set(item.base.x+d.x*drift,item.base.y+a*.9,item.base.z+d.y*drift);item.object.rotation.z=Math.sin(time*.2+item.phase)*.045;
         if(a>100||item.object.position.y>worldBounds.ceiling+65)item.object.visible=false;
       }
       for(let i=0;i<fireflyBases.length;i++){const [x,y,z,p]=fireflyBases[i];fireflyPositions[i*3]=x+Math.sin(time*.31+p)*.65;fireflyPositions[i*3+1]=y+Math.sin(time*.6+p)*.35;fireflyPositions[i*3+2]=z+Math.cos(time*.27+p)*.65;}

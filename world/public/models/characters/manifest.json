@@ -1,27 +1,41 @@
 {
-  "generator": "Blender 5.1.2; anatomical garment topology, original masked academy rider, tailored felt hat, skinned cloth and baked actions",
+  "generator": "Blender 5.1.2; production v3 independent garment patterns, masked rider, gravity cape, hybrid scanned surfaces and eight baked rider actions",
   "coordinateSystem": "Y up; forward -Z",
   "assets": [
     {
       "file": "wizard.glb",
-      "triangles": 210652,
-      "bytes": 7963620,
-      "meshes": 20,
+      "triangles": 255660,
+      "bytes": 22859032,
+      "meshes": 28,
       "skins": 1,
       "bones": 43,
       "animations": [
         "boost",
+        "boost_end",
+        "boost_start",
+        "cast",
         "cruise",
         "idle",
         "turn_left",
         "turn_right"
       ],
-      "sha256": "8446fbace8aafdbb8e302681cbcacdb6a3e1945334ad6110885c657b8020e70d"
+      "sha256": "40f3112ed006a08fe33fed49de9e512dff634d28e2c35039ab1d554c24f0c514",
+      "surfaceVariant": "hybrid",
+      "actionDurations": {
+        "boost": 4,
+        "boost_end": 0.35,
+        "boost_start": 0.2,
+        "cast": 0.6,
+        "cruise": 4,
+        "idle": 4,
+        "turn_left": 4,
+        "turn_right": 4
+      }
     },
     {
       "file": "wraith.glb",
-      "triangles": 28692,
-      "bytes": 1223028,
+      "triangles": 68116,
+      "bytes": 5761252,
       "meshes": 8,
       "skins": 1,
       "bones": 27,
@@ -30,7 +44,13 @@
         "channel",
         "idle"
       ],
-      "sha256": "5b30f134f64b723259128e2c419fd769b94a70ec67903967fe653f0bdd5010ee"
+      "sha256": "2ddad8db1534982c9b82410e93fe41be9f62e7d2b5aa4d691ee8b5a1481f6fa2",
+      "surfaceVariant": "hybrid",
+      "actionDurations": {
+        "approach": 4,
+        "channel": 4,
+        "idle": 4
+      }
     }
   ]
 }

@@ -6,7 +6,7 @@
     {
       "id": "pine",
       "file": "grove-pine.glb",
-      "bytes": 5142292,
+      "bytes": 5142392,
       "triangles": 78280,
       "meshes": 2,
       "detail": {
@@ -32,7 +32,7 @@
     {
       "id": "silver",
       "file": "grove-silver.glb",
-      "bytes": 4252344,
+      "bytes": 4252444,
       "triangles": 74016,
       "meshes": 2,
       "detail": {
@@ -58,7 +58,7 @@
     {
       "id": "cherry",
       "file": "grove-cherry.glb",
-      "bytes": 4756972,
+      "bytes": 4757072,
       "triangles": 76010,
       "meshes": 2,
       "detail": {
@@ -84,7 +84,7 @@
     {
       "id": "shrub",
       "file": "garden-shrub.glb",
-      "bytes": 581096,
+      "bytes": 581196,
       "triangles": 9456,
       "meshes": 2,
       "detail": {
@@ -110,7 +110,7 @@
     {
       "id": "flower",
       "file": "garden-flower.glb",
-      "bytes": 223284,
+      "bytes": 223384,
       "triangles": 3288,
       "meshes": 2,
       "detail": {

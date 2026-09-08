@@ -11,6 +11,13 @@ blender-studio-anatomy-cc0.blend is an adapted subset containing the body and tw
 GENERATED WORK
 scripts/art/build-characters.py authors the masks, felt hat, head cowl, linings, accessories, gloves, boots, cloth panels, broom, guardian crown, rigs, weights, actions and procedural material images. The wizard-academy-rig.blend and wraith-academy-rig.blend files preserve the generated editable meshes and armatures. The rider garment topology remains derived from the CC0 source above. This notice records external-source provenance and does not assign a new license to the repository's original work.
 
+ACTIVE — Poly Wool Herringbone and Brown Leather
+Provider: Poly Haven
+Source pages: https://polyhaven.com/a/poly_wool_herringbone and https://polyhaven.com/a/brown_leather
+License: Creative Commons CC0 1.0 Universal
+Provider license: https://polyhaven.com/license
+The retained /textures/wool-cloth and /textures/dark-leather color, OpenGL normal and roughness files supply scanned detail. The production hybrid preserves the original dyed color palette using restrained normalized scan luminance; normal and roughness maps remain non-color data. Provider scales are 0.27 m for wool and 0.40 m for leather. Authors, original provider URLs, retained-file hashes and conversions are recorded in /textures/manifest.json; the consumed hashes are repeated in sources.json.
+
 ARCHIVED — Realistic Head (Animation)
 Author: Dan Ulrich / Blender Studio
 License: Creative Commons CC0 1.0 Universal
