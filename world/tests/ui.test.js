@@ -117,3 +117,51 @@ test('settings report actual audio readiness and offer retry only for enabled fa
     }
   }finally{restore();}
 });
+
+test('explore and travel enqueue explicit intent; opening a paper prevents late focus transfer',()=>{
+  const {ui,element,restore}=reader();try{
+    let attempts=0,started=0;ui.toast=()=>{};ui.setLoadingController({start(){attempts++;}});
+    ui.action('start');assert.equal(attempts,1);assert.equal(ui.pendingStart.kind,'start');
+    ui.travel('research');assert.equal(ui.pendingStart.kind,'travel');assert.equal(ui.pendingStart.id,'research');
+    ui.openPaper('dvin');const focus=document.activeElement;
+    ui.setGame({start(){started++;},setPaused(value){assert.equal(value,true);}});
+    assert.equal(started,0);assert.equal(ui.paperId,'dvin');assert.equal(document.activeElement,focus);assert.equal(element('.modal-backdrop').hidden,false);
+  }finally{restore();}
+});
+
+test('a pending teleport is performed once on attachment and closing invalidates the intent',()=>{
+  const {ui,restore}=reader();try{
+    const teleports=[];ui.flash=()=>{};ui.toast=()=>{};
+    ui.travel('research');ui.setGame({travel:id=>teleports.push(id),setPaused(){}});
+    assert.deepEqual(teleports,['research']);assert.equal(ui.pendingStart,null);
+    ui.game=null;ui.action('start');ui.close({history:'replace',all:true});assert.equal(ui.pendingStart,null);
+  }finally{restore();}
+});
+
+test('requested spatial exhibition starts loading but subsequent paper navigation remains in place',()=>{
+  const {ui,restore}=reader();try{
+    let attempts=0;ui.setLoadingController({start(){attempts++;}});ui.openExhibition('autodesign');
+    assert.equal(attempts,1);assert.equal(ui.pendingStart.kind,'exhibition');
+    ui.openPaper('apl');const focus=document.activeElement;
+    ui.setGame({enterExhibit(){throw new Error('stale exhibition stole focus');},setPaused(){}});
+    assert.equal(ui.paperId,'apl');assert.equal(document.activeElement,focus);
+  }finally{restore();}
+});
+
+test('loading UI shows bytes, bounded slow notice and retry while retaining the explore entry',()=>{
+  const {ui,element,restore}=reader();try{
+    ui.applyLoadingState({availability:'loading-core-3d',phase:'parsing',receivedBytes:1200000,slow:true});
+    assert.equal(element('.world-loading').hidden,false);assert.equal(element('.world-loading-status').textContent,'coreParsing');
+    assert.match(element('.world-loading-detail').textContent,/1.2 MB received.*coreSlow/);assert.doesNotMatch(element('.world-loading-detail').textContent,/%/);
+    ui.applyLoadingState({availability:'static-only',error:{type:'timeout'}});
+    assert.equal(element('[data-action="world-retry"]').hidden,false);assert.equal(element('#explore-button').getAttribute('aria-busy'),'false');
+    ui.applyLoadingState({availability:'loading-core-3d',phase:'engine'});assert.equal(ui.failed,false);
+  }finally{restore();}
+});
+
+test('changing language in a pending exhibition keeps the requested destination',()=>{
+  const {ui,restore}=reader();try{
+    ui.openExhibition('autodesign');const pending=ui.pendingStart;
+    ui.toggleLanguage();assert.equal(ui.pendingStart,pending);assert.equal(ui.options.lang,'zh');
+  }finally{restore();}
+});

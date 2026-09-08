@@ -26,11 +26,15 @@ GLTFLoader.prototype.loadAsync = async url => {
   scene.add(new THREE.Mesh(new THREE.PlaneGeometry(1, 1, 2, 2), new THREE.MeshStandardMaterial()));
   return {scene};
 };
+const originalFetch=globalThis.fetch,originalBitmap=globalThis.createImageBitmap;
+globalThis.fetch=async url=>{const path=new URL(`../public${url}`,import.meta.url);assert.ok(fs.existsSync(path),`missing local texture ${url}`);loaded.push(url);return new Response(fs.readFileSync(path));};
+globalThis.createImageBitmap=async()=>({width:1,height:1,close(){}});
 globalThis.document = {};
 try {
   await loadArchitectureAssets();
   await loadLandscapeAssets();
 } finally {
+  globalThis.fetch=originalFetch;if(originalBitmap===undefined)delete globalThis.createImageBitmap;else globalThis.createImageBitmap=originalBitmap;
   THREE.TextureLoader.prototype.loadAsync = originalTextureLoad;
   HDRLoader.prototype.loadAsync = originalHDRLoad;
   GLTFLoader.prototype.loadAsync = originalGLTFLoad;

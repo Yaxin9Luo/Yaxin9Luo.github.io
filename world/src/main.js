@@ -1,11 +1,47 @@
 import './style.css';
 import './journal.css';
 import {Interface} from './ui.js';
+import {createLoadingCoordinator} from './loading-coordinator.js';
+import {resourceLoader,redactResourceURL} from './resource-loader.js';
+import {cvForLanguage} from './content.js';
 
 const ui=new Interface(document.querySelector('#app'));
-// Portfolio content becomes interactive before the optional 3D engine loads.
-Promise.all([import('./game.js'),import('./landscape.js').then(m=>m.loadLandscapeAssets()),import('./models.js').then(m=>m.loadArchitectureAssets?.()),import('./characters.js').then(m=>m.loadCharacterAssets())]).then(([{Game}])=>{
-  const game=new Game(ui.canvas,{onFrame:s=>{ui.update(s);ui.applyExhibitState(s.exhibition);},onMessage:m=>ui.toast(m),onInteract:id=>ui.open(id),onExhibit:id=>ui.openPaper(id),onExhibition:(id,options)=>ui.openExhibition(id,options),onExhibitionDetail:(id,options)=>ui.openProject(id,options),onExhibitionMedia:()=>ui.enlargeMedia(),onArtifact:action=>{if(action.kind==='cv')window.open('/files/CV_YaxinLuo.pdf','_blank','noopener,noreferrer');else ui.open(action.id);},onTimeChange:mode=>ui.applyTimeMode?.(mode),onProgress:p=>ui.snapshot.progress=p,onTravel:()=>{}},ui.options);
-  ui.setGame(game);
-  if(ui.view)game.setPaused(true);
-}).catch(error=>ui.fail(error));
+let attachedGame=null;
+const lifecycle=[];
+const callbacks={
+  onFrame:s=>{if(attachedGame){ui.update(s);ui.applyExhibitState(s.exhibition);}},
+  onMessage:m=>ui.toast(m),onInteract:id=>ui.open(id),onExhibit:id=>ui.openPaper(id),
+  onExhibition:(id,options)=>ui.openExhibition(id,options),onExhibitionDetail:(id,options)=>ui.openProject(id,options),onExhibitionMedia:()=>ui.enlargeMedia(),
+  onArtifact:action=>{if(action.kind==='cv')window.open(cvForLanguage(ui.options.lang),'_blank','noopener,noreferrer');else ui.open(action.id);},
+  onTimeChange:mode=>ui.applyTimeMode?.(mode),onProgress:p=>ui.snapshot.progress=p,onTravel:()=>{},
+};
+const coordinator=createLoadingCoordinator({
+  onChange:state=>{lifecycle.push({...state});if(lifecycle.length>150)lifecycle.shift();ui.applyLoadingState(state);},
+  createCore:async context=>{
+    // This is the only game import: no renderer, model or landscape traffic before intent.
+    const {Game}=await import('./game.js');
+    context.signal.throwIfAborted();
+    return Game.createAsync(ui.canvas,callbacks,ui.options,context);
+  },
+});
+const unsubscribe=resourceLoader.subscribe(event=>{
+  if(coordinator.snapshot.availability==='interactive')coordinator.enhancement(event);
+});
+function diagnostics(){
+  return {version:1,lifecycle:lifecycle.map(state=>({
+    attemptId:state.attemptId,availability:state.availability,enhancements:state.enhancements,phase:state.phase,
+    activeResource:state.activeResource?redactResourceURL(typeof state.activeResource==='string'?state.activeResource:state.activeResource.url||state.activeResource.id):null,
+    receivedBytes:state.receivedBytes,totalBytes:state.totalBytes,slow:state.slow,
+    error:state.error?{type:state.error.type,status:state.error.status,elapsedMs:state.error.elapsedMs}:undefined,
+  })),resources:resourceLoader.diagnostics()};
+}
+function downloadDiagnostics(){
+  const url=URL.createObjectURL(new Blob([JSON.stringify(diagnostics(),null,2)],{type:'application/json'}));
+  const link=document.createElement('a');link.href=url;link.download='portfolio-loading-diagnostics.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+ui.setLoadingController({
+  start:()=>coordinator.start().then(game=>{if(game&&attachedGame!==game){attachedGame=game;ui.setGame(game);}}),
+  cancel:()=>coordinator.cancel(),downloadDiagnostics,
+});
+window.portfolioLoading={snapshot:()=>coordinator.snapshot,diagnostics,downloadDiagnostics};
+window.addEventListener('pagehide',event=>{if(!event.persisted){unsubscribe();coordinator.dispose();}});

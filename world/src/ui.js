@@ -48,7 +48,10 @@ const copy={
   name:['Yaxin Luo','Yaxin Luo'],role:['ML PHD STUDENT · MBZUAI','机器学习博士生 · MBZUAI'],
   footnote:['MULTIMODAL DESIGN · AGENTIC DESIGN','多模态设计 · 智能体设计'],hint:['No quests required. All my work is one click away.','无需完成任务，所有资料一点即达。'],
   sceneLabel:['THE GRAND ACADEMY','中央魔法学院'],sceneSub:['About me','关于我'],travel:['Cast a portkey','施展瞬移魔法'],
-  loading:['Lighting the lanterns…','正在点亮灯火…'],ready:['YOUR WORLD IS READY','魔法世界已就绪'],error:['The 3D world couldn’t open here. My portfolio is still ready to read.','当前设备未能打开 3D 世界。你仍然可以完整查阅我的个人资料。'],
+  staticMode:['Browsing the portfolio. You can try 3D whenever you like.','正在浏览资料，随时可以重试 3D。'],
+  shellReady:['Portfolio ready · 3D starts when you explore','资料已就绪 · 点击探索后开启 3D'],
+  coreEngine:['Preparing the 3D engine…','正在准备 3D 引擎…'],coreFetching:['Receiving core scene…','正在接收核心场景…'],coreParsing:['Preparing the character and materials…','正在解析角色与材质…'],coreScene:['Building the playable scene…','正在构建可操作场景…'],coreSlow:['This is taking longer. You can keep reading; this attempt stops after 20 seconds.','加载较慢，你可以继续阅读；本次尝试最多等待 20 秒。'],coreRetry:['Retry 3D','重试 3D'],coreCancel:['Continue with the portfolio','继续阅读资料'],coreDiagnostics:['Save loading diagnostics','保存加载诊断'],
+  loading:['Preparing the 3D world…','正在准备 3D 世界…'],ready:['YOUR WORLD IS READY','魔法世界已就绪'],error:['The 3D world couldn’t open here. My portfolio is still ready to read.','当前设备未能打开 3D 世界。你仍然可以完整查阅我的个人资料。'],
   journal:['Portfolio','个人资料'],journalSub:['RESEARCH & SELECTED WORK','研究与作品'],close:['Go back','返回'],
   explorationJournal:['Exploration','探索记录'],
   about:['About me','关于我'],publications:['Publications','学术论文'],research:['Research','研究方向'],journey:['Experience','经历'],contact:['Get in touch','联系我'],
@@ -105,7 +108,8 @@ export class Interface {
       <section class="welcome"><div class="eyebrow"><span></span><span data-i18n="eyebrow">${t('eyebrow')}</span></div><h1 data-i18n-html="hero">${t('hero')}</h1><div class="hero-person"><small data-i18n="role">${t('role')}</small></div><p class="hero-intro" data-i18n="intro">${t('intro')}</p><div class="welcome-actions"><button class="button primary" data-action="section" data-id="about">${icon('book')}<span data-i18n="primary">${t('primary')}</span>${icon('arrow')}</button><button class="button ghost" id="explore-button" data-action="start">${icon('wand')}<span data-i18n="explore">${t('explore')}</span></button></div><div class="quick-links"><button data-action="section" data-id="publications" data-i18n="papers">${t('papers')}</button><span>·</span><button data-action="section" data-id="projects" data-i18n="projects">${t('projects')}</button><span>·</span><a href="${cvForLanguage(this.options.lang)}" target="_blank" rel="noopener noreferrer" data-i18n="cv">${t('cv')}</a></div><p class="no-gate" data-i18n="hint">${t('hint')}</p></section>
       <div class="arrival-card"><span class="arrival-number">I</span><div><span class="small-label" data-i18n="sceneLabel">${t('sceneLabel')}</span><p data-i18n="sceneSub">${t('sceneSub')}</p><button data-action="travel" data-id="about">${icon('portal')}<span data-i18n="travel">${t('travel')}</span>${icon('arrow')}</button></div></div>
       <div id="landmark-labels" class="landmark-labels" aria-hidden="true"></div>
-      <footer class="intro-footer"><span><i class="status-dot"></i><span id="load-status">${t('loading')}</span></span><span data-i18n="footnote">${t('footnote')}</span><span>01 <i>—</i> 06</span></footer>
+      <footer class="intro-footer"><span><i class="status-dot"></i><span id="load-status">${t('shellReady')}</span></span><span data-i18n="footnote">${t('footnote')}</span><span>01 <i>—</i> 06</span></footer>
+      <aside class="world-loading" hidden aria-label="3D loading / 3D 加载"><p class="world-loading-status" role="status" aria-live="polite"></p><p class="world-loading-detail"></p><div><button data-action="world-retry" data-i18n="coreRetry">${t('coreRetry')}</button><button data-action="world-cancel" data-i18n="coreCancel">${t('coreCancel')}</button><button data-action="world-diagnostics" data-i18n="coreDiagnostics">${t('coreDiagnostics')}</button></div></aside>
       <div class="game-interface" hidden><button class="optional-play-toggle" data-action="gameplay" aria-pressed="${this.options.gameplay}">${icon('spark')}<span data-i18n="gameplay">${t('gameplay')}</span></button>
         <aside class="flight-tools" aria-label="${t('camera')}"><button class="flight-tools-toggle" data-action="flight-tools" aria-expanded="false"><span data-i18n="flightTools">${t('flightTools')}</span>${icon('chevron')}</button><div class="view-heading"><span data-i18n="camera">${t('camera')}</span><kbd>V</kbd></div><div class="camera-presets">${Object.entries(cameraViews).map(([id,p])=>`<button data-action="camera" data-id="${id}" aria-pressed="${id==='follow'}">${p.label[this.options.lang]}</button>`).join('')}</div><div class="altimeter"><button data-action="altitude" data-id="-12" aria-label="${t('altitudeDown')}">${icon('down')}<kbd>F</kbd></button><div><small data-i18n="altitude">${t('altitude')}</small><output id="altitude-value">18 <small>m</small></output><span class="altitude-track"><i id="altitude-fill"></i></span></div><button data-action="altitude" data-id="12" aria-label="${t('altitudeUp')}">${icon('up')}<kbd>R</kbd></button></div><div class="world-actions"><button data-action="tour" data-id="0">${icon('compass')}<span data-i18n="tour">${t('tour')}</span></button><button data-action="lantern">${icon('sun')}<span data-i18n="lantern">${t('lantern')}</span></button><button data-action="start-race">${icon('trophy')}<span data-i18n="flightTrial">${t('flightTrial')}</span></button></div></aside>
         <aside class="tour-card" hidden><div class="tour-heading"><span data-i18n="tour">${t('tour')}</span><b id="tour-count">01 / 06</b><button data-action="tour-end" aria-label="${t('tourEnd')}">${icon('close')}</button></div><h2 id="tour-title"></h2><p id="tour-description"></p><button class="tour-read" data-action="tour-read"><span data-i18n="tourRead">${t('tourRead')}</span>${icon('arrow')}</button><div class="tour-navigation"><button data-action="tour-prev" aria-label="${t('tourPrev')}">${icon('chevron')}</button><button data-action="tour-next"><span data-i18n="tourNext">${t('tourNext')}</span>${icon('arrow')}</button></div></aside>
@@ -124,10 +128,44 @@ export class Interface {
     </main>`;
     this.canvas=this.root.querySelector('#world');
   }
-  setGame(game){this.game=game;if(this.pendingExhibition){const pending=this.pendingExhibition;this.pendingExhibition=null;this.openExhibition(pending.id,{mediaIndex:pending.mediaIndex,history:'replace',returnOrigin:pending.returnOrigin});}}
-  loaded(){this.ready=true;document.querySelector('.experience').classList.add('world-ready');this.updateStatus();}
-  fail(error){this.failed=true;this.pendingExhibition=null;if(this.exhibition){const id=this.exhibition.projectId;this.removeExhibition();this.openProject(id,{history:'replace'});}document.querySelector('.experience').classList.add('world-failed');this.updateStatus();this.toast({en:copy.error[0],zh:copy.error[1]},9000);console.error('World initialization failed:',error);}
-  updateStatus(){document.querySelector('#load-status').textContent=this.failed?this.t('error'):this.ready?this.t('ready'):this.t('loading');}
+  setLoadingController(controller){this.loadingController=controller;if(this.pendingStart)controller.start();}
+  requestWorld(intent){
+    this.pendingStart=intent;this.lastWorldIntent=intent;this.failed=false;
+    this.loadingController?.start();
+  }
+  setGame(game){
+    this.game=game;this.loaded();
+    const pending=this.pendingStart;this.pendingStart=null;this.pendingExhibition=null;
+    if(!pending){game.setPaused(!!this.view);return;}
+    if(pending.kind==='exhibition')this.openExhibition(pending.id,pending.options);
+    else if(pending.kind==='travel')this.travel(pending.id);
+    else this.action('start');
+  }
+  loaded(){this.ready=true;this.failed=false;this.root.querySelector('.experience').classList.add('world-ready');this.root.querySelector('.experience').classList.remove('world-failed');this.updateStatus();}
+  fail(error){
+    this.failed=true;this.pendingStart=null;this.pendingExhibition=null;
+    this.root.querySelector('.experience').classList.add('world-failed');this.updateStatus();
+  }
+  applyLoadingState(state){
+    this.loadingState=state;
+    if(state.availability==='static-only')this.fail(state.error);
+    else{this.failed=false;this.root.querySelector('.experience').classList.remove('world-failed');this.updateStatus();}
+  }
+  updateStatus(){
+    const state=this.loadingState||{availability:'shell-ready'},loading=state.availability==='loading-core-3d';
+    const failureKey=state.error?.type==='cancelled'?'staticMode':'error';
+    const key=this.failed?failureKey:this.ready?'ready':loading?'loading':'shellReady';
+    this.root.querySelector('#load-status').textContent=this.t(key);
+    const panel=this.root.querySelector('.world-loading');if(!panel)return;
+    panel.hidden=!loading&&!this.failed;
+    const phase=state.phase==='engine'?'coreEngine':['fetching','retrying'].includes(state.phase)?'coreFetching':state.phase==='parsing'?'coreParsing':'coreScene';
+    panel.querySelector('.world-loading-status').textContent=this.t(this.failed?failureKey:phase);
+    const bytes=state.receivedBytes>0?`${(state.receivedBytes/1000000).toFixed(1)} MB ${this.options.lang==='zh'?'已接收':'received'}`:'';
+    panel.querySelector('.world-loading-detail').textContent=[bytes,state.slow?this.t('coreSlow'):''].filter(Boolean).join(' · ');
+    panel.querySelector('[data-action="world-retry"]').hidden=!this.failed;
+    panel.querySelector('[data-action="world-cancel"]').hidden=!loading;
+    const button=this.root.querySelector('#explore-button');button?.setAttribute('aria-busy',String(loading));
+  }
   bind(){
     this.root.addEventListener('click',e=>{const b=e.target.closest('[data-action]');if(!b)return;e.preventDefault();this.action(b.dataset.action,b.dataset.id);});
     this.root.addEventListener('change',e=>{if(e.target.matches('[data-project-select]')){this.openExhibition(e.target.value);return;}const key=e.target.dataset.option;if(!key)return;this.options[key]=e.target.type==='checkbox'?e.target.checked:e.target.type==='range'?Number(e.target.value):e.target.value;this.persist();this.game?.setOption(key,this.options[key]);this.syncOptions();});
@@ -170,7 +208,10 @@ export class Interface {
     if(action==='close')this.close();
     if(action==='home'){this.close({history:'replace',all:true});this.game?.returnHome?.();this.syncStarted(false);}
     if(action==='audio-retry'){this.options.sound=true;this.persist();this.game?.setOption('sound',true);this.syncOptions();}
-    if(action==='start'){if(!this.game){this.toast({en:'The world is still preparing. You can read my portfolio now.',zh:'世界仍在准备中，你可以先阅读个人资料。'});return;}this.close({history:'replace',all:true});this.game.start();this.playing();this.toast({en:'WASD to fly · R / F to rise / descend · M for instant portkeys',zh:'WASD 飞行 · R / F 升降 · M 打开瞬移地图'},6500);}
+    if(action==='world-retry'){const intent=this.lastWorldIntent||{kind:'start'};this.close({history:'replace',all:true});this.requestWorld(intent);return;}
+    if(action==='world-cancel'){this.pendingStart=null;this.pendingExhibition=null;this.loadingController?.cancel();return;}
+    if(action==='world-diagnostics'){this.loadingController?.downloadDiagnostics();return;}
+    if(action==='start'){if(!this.game){this.close({history:'replace',all:true});this.requestWorld({kind:'start'});return;}this.close({history:'replace',all:true});this.game.start();this.playing();this.toast({en:'WASD to fly · R / F to rise / descend · M for instant portkeys',zh:'WASD 飞行 · R / F 升降 · M 打开瞬移地图'},6500);}
     if(action==='flight-tools'){const panel=this.root.querySelector('.flight-tools');const expanded=panel.classList.toggle('expanded');panel.querySelector('.flight-tools-toggle').setAttribute('aria-expanded',String(expanded));}
     if(action==='camera')this.game?.setCameraView(id);
     if(action==='altitude')this.game?.changeAltitude(Number(id));
@@ -205,7 +246,7 @@ export class Interface {
     this.options.timeOfDay=mode;this.persist();const select=this.root.querySelector('[data-option="timeOfDay"]');if(select)select.value=mode;this.root.querySelector('.experience').dataset.timeOfDay=mode;return true;
   }
   audioStatusText(audio=this.snapshot.audio){return this.t(!audio?.enabled?'audioMuted':audio.status==='ready'?'audioReady':audio.status==='unavailable'?'audioUnavailable':'audioLoading');}
-  travel(id){if(!this.game){this.open(id);return;}this.close({history:'replace',all:true});this.playing();this.game.travel(id);this.flash(id);}
+  travel(id){if(!this.game){this.close({history:'replace',all:true});this.requestWorld({kind:'travel',id});return;}this.close({history:'replace',all:true});this.playing();this.game.travel(id);this.flash(id);}
   flash(id){if(this.options.reducedMotion)return;const l=locations.find(l=>l.id===id);if(!l)return;const el=this.root.querySelector('.portal-transition');el.classList.remove('active');this.root.querySelector('#portal-destination').textContent=l.name[this.options.lang];requestAnimationFrame(()=>el.classList.add('active'));clearTimeout(this.flashTimer);this.flashTimer=setTimeout(()=>el.classList.remove('active'),1100);}
   saveReading(){
     if(!this.view)return;const kind=this.entity?.kind||'section',id=this.entity?.id||this.view;
@@ -229,7 +270,7 @@ export class Interface {
     this.restoreReturnFocus();
   }
   open(view,{history:mode='push',entity=null,focus=true}={}){
-    this.pendingExhibition=null;this.saveReading();if(!this.view)this.lastFocus=document.activeElement;
+    this.pendingStart=null;this.pendingExhibition=null;this.saveReading();if(!this.view)this.lastFocus=document.activeElement;
     this.paperId=entity?.kind==='paper'?entity.id:null;this.entity=entity;this.view=view;if(locations.some(l=>l.id===view))this.lastSection=view;
     this.game?.setPaused(true);this.root.querySelector('.modal-backdrop').hidden=false;this.root.querySelector('.exhibition-overlay').hidden=true;this.setIsolation(true);this.root.querySelector('.experience').classList.add('reading');
     this.root.querySelectorAll('.chapter-nav button').forEach(b=>{b.classList.toggle('active',b.dataset.id===view);b.setAttribute('aria-current',b.dataset.id===view?'page':'false');});
@@ -254,7 +295,7 @@ export class Interface {
     if(mediaIndex!==undefined)this.readingMemory.save('project',id,{mediaIndex});
     const index=this.readingMemory.read('project',id).mediaIndex,focused=document.activeElement;
     const origin=returnOrigin||this.exhibitionReturn||{route:this.route&&!this.route.spatial?{...this.route}:null,depth:this.historyDepth,focus:focused?.dataset?.action?{action:focused.dataset.action,id:focused.dataset.id||''}:null};
-    if(!this.game?.enterExhibit||this.failed){this.openProject(id,{history:mode});this.pendingExhibition=this.failed?null:{id,mediaIndex:index,returnOrigin:origin};return;}
+    if(!this.game?.enterExhibit){this.openProject(id,{history:mode});this.pendingExhibition={id,mediaIndex:index,returnOrigin:origin};this.requestWorld({kind:'exhibition',id,options:{mediaIndex:index,history:'replace',returnOrigin:origin}});return;}
     this.saveReading();if(!this.exhibition){this.exhibitionFocus=document.activeElement;this.exhibitionReturn=origin;}
     this.exhibition={projectId:id,mediaIndex:index};this.entity=null;this.paperId=null;this.view=null;
     this.root.querySelector('.modal-backdrop').hidden=true;this.setIsolation(false);this.root.querySelector('.experience').classList.remove('reading');this.root.querySelector('.experience').classList.add('exhibiting');
@@ -289,18 +330,20 @@ export class Interface {
   close({history:mode='back',all=false}={}){
     if(this.lightboxOpen&&!all){this.closeMedia();return;}
     if(!all&&mode==='back'&&this.exhibition&&!this.view){this.closeExhibition();return;}
-    this.pendingExhibition=null;this.saveReading();
+    this.pendingStart=null;this.pendingExhibition=null;this.saveReading();
     if(mode==='back'&&this.historyDepth>0){history.back();return;}
     this.closeMedia();this.view=null;this.entity=null;this.paperId=null;this.root.querySelector('.modal-backdrop').hidden=true;this.root.querySelector('.experience').classList.remove('reading');this.removeExhibition();this.setIsolation(false);this.game?.setPaused(false);
     if(mode!=='none'){this.historyDepth=0;this.writeRoute(null,'replace');}else this.route=null;
     const focus=this.exhibitionFocus||this.lastFocus;this.exhibitionFocus=null;if(focus?.isConnected&&!focus.closest('[inert],[hidden]'))focus.focus?.({preventScroll:true});else if(this.game?.started)this.canvas.focus({preventScroll:true});
   }
-  setIsolation(active){this.root.querySelectorAll('.topbar,.welcome,.arrival-card,.intro-footer,.game-interface,.skip-link,#world,.exhibition-overlay').forEach(el=>{el.inert=active||(this.game?.started&&el.matches('.welcome,.arrival-card,.intro-footer'));});}
+  setIsolation(active){this.root.querySelectorAll('.topbar,.welcome,.arrival-card,.intro-footer,.game-interface,.world-loading,.skip-link,#world,.exhibition-overlay').forEach(el=>{el.inert=active||(this.game?.started&&el.matches('.welcome,.arrival-card,.intro-footer'));});}
   syncOptions(){this.root.querySelector('.sound-button').innerHTML=icon(this.options.sound?'sound':'mute');document.documentElement.classList.toggle('reduce-motion',this.options.reducedMotion);this.root.querySelector('.experience').classList.toggle('gameplay-enabled',this.options.gameplay);this.root.querySelector('[data-action="gameplay"]')?.setAttribute('aria-pressed',String(this.options.gameplay));}
   trapFocus(e){const panel=this.root.querySelector(this.lightboxOpen?'.media-lightbox':'.grimoire');const nodes=[...panel.querySelectorAll('a[href],button,input,select,[tabindex="0"]')].filter(el=>!el.disabled&&el.getClientRects().length);const first=nodes[0],last=nodes[nodes.length-1];if(!first)return;if(e.shiftKey&&(document.activeElement===first||!panel.contains(document.activeElement))){e.preventDefault();last.focus();}else if(!e.shiftKey&&(document.activeElement===last||!panel.contains(document.activeElement))){e.preventDefault();first.focus();}}
   toggleLanguage(){
     this.saveReading();const focusAction=document.activeElement?.dataset.action;this.options.lang=this.options.lang==='en'?'zh':'en';this.persist();this.applyLanguage();this.game?.setOption('lang',this.options.lang);
+    const pending=this.pendingStart,pendingExhibition=this.pendingExhibition;
     const current=this.view,entity=this.entity;if(entity?.kind==='paper')this.openPaper(entity.id,{history:'replace',focus:false});else if(entity?.kind==='project')this.openProject(entity.id,{history:'replace',focus:false});else if(current)this.open(current,{history:'replace',focus:false});
+    this.pendingStart=pending;this.pendingExhibition=pendingExhibition;
     this.renderExhibition();if(focusAction)this.root.querySelector(`${this.view?'.grimoire':'.topbar'} [data-action="${focusAction}"]`)?.focus({preventScroll:true});
     const url=new URL(location.href);url.searchParams.set('lang',this.options.lang);history.replaceState(history.state,'',url);
   }
@@ -330,7 +373,7 @@ export class Interface {
     this.canvas.setAttribute('aria-label',this.options.lang==='zh'?'扫把飞行魔法世界':'Magical broom flight world');this.updateStatus();
   }
   update(s){
-    this.snapshot=s;if(!this.ready)this.loaded();this.syncStarted(s.started);
+    this.snapshot=s;this.syncStarted(s.started);
     this.root.querySelector('#discovery-count').textContent=`${s.progress.visited.length} / 6`;this.root.querySelector('#crystal-count').textContent=`${s.progress.crystals.length} / 8`;
     for(const [key,value] of [['health',s.health],['mana',s.mana]]){this.root.querySelector(`#${key}-fill`).style.width=`${Math.max(0,value)}%`;this.root.querySelector(`#${key}-value`).textContent=Math.round(value);}
     this.root.querySelectorAll('.spell-button').forEach((b,i)=>{b.classList.toggle('selected',i===s.spell);b.setAttribute('aria-pressed',String(i===s.spell));b.classList.toggle('depleted',s.mana<spellDefinitions[i].cost);});
