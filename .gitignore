@@ -14,6 +14,9 @@ package-lock.json
 
 # Ignore local Ruby bundle installs
 vendor/
+/vendor
+__pycache__/
+*.blend1
 
 # Generated combined site, game output, and local build/runtime scratch.
 /dist/

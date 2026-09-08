@@ -1,0 +1,26 @@
+[
+  {
+    "file": "day-theme.mp3",
+    "title": "Town Theme",
+    "author": "The Cynic Project / cynicmusic",
+    "license": "CC0-1.0",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "source": "https://opengameart.org/content/town-theme-rpg",
+    "download": "https://opengameart.org/sites/default/files/TownTheme.mp3",
+    "sha256": "2657861d5107d4a3c01ef81cb6a4d61ddd5e7a054b6da57e658373d79d0c3466",
+    "bytes": 1316581,
+    "accessed": "2026-09-08"
+  },
+  {
+    "file": "night-theme.mp3",
+    "title": "A New Town",
+    "author": "The Cynic Project / cynicmusic",
+    "license": "CC0-1.0",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "source": "https://opengameart.org/content/a-new-town-rpg-theme",
+    "download": "https://opengameart.org/sites/default/files/025_A_New_Town.mp3",
+    "sha256": "8a83b97f06cad1052eea0a3fa8f65966db742e68275a1d82816773c820578ad2",
+    "bytes": 766291,
+    "accessed": "2026-09-08"
+  }
+]

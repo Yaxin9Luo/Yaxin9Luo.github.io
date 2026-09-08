@@ -1,0 +1,37 @@
+{
+  "retrieved": "2026-09-08",
+  "repository": "https://github.com/Yaxin9Luo/AutoDesign",
+  "commit": "bd635851ef8a2ae257e2bf4c8cd4e984ea3fff1e",
+  "assets": [
+    {
+      "file": "autodesign-poster-autodesign.webp",
+      "source": "https://raw.githubusercontent.com/Yaxin9Luo/AutoDesign/bd635851ef8a2ae257e2bf4c8cd4e984ea3fff1e/assets/readme/demo/poster-autodesign.webp",
+      "bytes": 373582,
+      "sha256": "a8babf627a6124968d79a1b0d8c8068eea21c867d9138ed2b61c785df76f1f98"
+    },
+    {
+      "file": "autodesign-slides-autodesign-formal-academic.webp",
+      "source": "https://raw.githubusercontent.com/Yaxin9Luo/AutoDesign/bd635851ef8a2ae257e2bf4c8cd4e984ea3fff1e/assets/readme/demo/slides-autodesign-formal-academic.webp",
+      "bytes": 93100,
+      "sha256": "fc9f947ff6de4fa0e34ba5987463424c5a28a90e3d648369d3f19ab5dba6d390"
+    },
+    {
+      "file": "autodesign-webpage-autodesign.webp",
+      "source": "https://raw.githubusercontent.com/Yaxin9Luo/AutoDesign/bd635851ef8a2ae257e2bf4c8cd4e984ea3fff1e/assets/readme/demo/webpage-autodesign.webp",
+      "bytes": 102130,
+      "sha256": "d49bb3709440e0c1e3ecd93a235ca8c52d8912c94099b9041157096941ae232e"
+    },
+    {
+      "file": "autodesign-poster-underwater-sam-claude.webp",
+      "source": "https://raw.githubusercontent.com/Yaxin9Luo/AutoDesign/bd635851ef8a2ae257e2bf4c8cd4e984ea3fff1e/assets/readme/demo/poster-underwater-sam-claude.webp",
+      "bytes": 188310,
+      "sha256": "4df56a94755bd847b4db928a592333ca664c1c44ead0c56c578b8cf6a4bc52ef"
+    },
+    {
+      "file": "autodesign-qualitative-trajectory.webp",
+      "source": "https://raw.githubusercontent.com/Yaxin9Luo/AutoDesign/bd635851ef8a2ae257e2bf4c8cd4e984ea3fff1e/assets/readme/research/qualitative-trajectory.webp",
+      "bytes": 149852,
+      "sha256": "b94934f4200d8f4d94ab8768f6ea05fa574d9d5822db6b4270d53034db92d5a5"
+    }
+  ]
+}

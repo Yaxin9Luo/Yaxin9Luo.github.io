@@ -1,17 +1,27 @@
 Retained character source assets
 
-Blender Studio Human Base Meshes v1.4.1 — Realistic Head (Animation)
+ACTIVE — Human Base Meshes v1.4.1 — Body Male - Realistic
+Author: Blender Studio and community contributors
+License: Creative Commons CC0 1.0 Universal
+Official source and license evidence: https://www.blender.org/download/demo-files/
+Official bundle: https://download.blender.org/demo/asset-bundles/human-base-meshes/human-base-meshes-bundle-v1.4.1.zip
+CC0 legal text: https://creativecommons.org/publicdomain/zero/1.0/legalcode
+blender-studio-anatomy-cc0.blend is an adapted subset containing the body and two eye objects with modifiers removed. Only body garment regions are used by the current build; source head and eyes are not exported. The resulting coat and trousers have been cut, reshaped, weighted and posed.
+
+GENERATED WORK
+scripts/art/build-characters.py authors the masks, felt hat, head cowl, linings, accessories, gloves, boots, cloth panels, broom, guardian crown, rigs, weights, actions and procedural material images. The wizard-academy-rig.blend and wraith-academy-rig.blend files preserve the generated editable meshes and armatures. The rider garment topology remains derived from the CC0 source above. This notice records external-source provenance and does not assign a new license to the repository's original work.
+
+ARCHIVED — Realistic Head (Animation)
 Author: Dan Ulrich / Blender Studio
 License: Creative Commons CC0 1.0 Universal
-Official license evidence: https://www.blender.org/download/demo-files/
-CC0 legal text: https://creativecommons.org/publicdomain/zero/1.0/legalcode
-The retained .blend contains only the head and ocular geometry, with the bundled multiresolution detail applied. This is an adapted subset, not the complete upstream bundle.
+Official source: https://www.blender.org/download/demo-files/
+blender-studio-head-cc0.blend retains the earlier head and ocular geometry, with bundled multiresolution detail applied. Unused by the current masked build.
 
-Short Messy Hair / short_messy
+ARCHIVED — Short Messy Hair / short_messy
 Author: Cortu Johnstone
 License: Creative Commons CC0 1.0 Universal
 Official asset pack: https://static.makehumancommunity.org/assets/assetpacks/hair01.html
 The upstream .mhmat header independently states "Cortu Johnstone - CC0".
-The OBJ and PNG remain source copies; the build refits, layers and tints the hair.
+The OBJ and PNG remain source copies. Unused by the current masked build.
 
-Exact download URLs and source-file hashes are in sources.json.
+Exact download URLs, adaptations and source-file hashes are in sources.json.

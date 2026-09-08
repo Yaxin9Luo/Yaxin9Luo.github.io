@@ -1,0 +1,137 @@
+{
+  "version": 2,
+  "source": "world/src/grove-foliage.js",
+  "provenance": "Original curved branches, individual folded leaf/needle surfaces, separate flower petals and stamens. Shared local pigment and normal DataTextures are baked unchanged into standard PBR review textures. No alpha-masked leaves or large spherical crown shells.",
+  "assets": [
+    {
+      "id": "pine",
+      "file": "grove-pine.glb",
+      "bytes": 5142292,
+      "triangles": 78280,
+      "meshes": 2,
+      "detail": {
+        "leaves": 17380,
+        "branches": 256,
+        "flowers": 0
+      },
+      "bounds": {
+        "min": [
+          -2.8764522075653076,
+          -0.06536715477705002,
+          -3.0929102897644043
+        ],
+        "max": [
+          3.1558735370635986,
+          9.746810913085938,
+          2.8632705211639404
+        ]
+      },
+      "opaque": true,
+      "units": "metres"
+    },
+    {
+      "id": "silver",
+      "file": "grove-silver.glb",
+      "bytes": 4252344,
+      "triangles": 74016,
+      "meshes": 2,
+      "detail": {
+        "leaves": 4065,
+        "branches": 327,
+        "flowers": 0
+      },
+      "bounds": {
+        "min": [
+          -2.8442490100860596,
+          -0.08570080995559692,
+          -3.0048913955688477
+        ],
+        "max": [
+          3.0642309188842773,
+          8.786137580871582,
+          3.3457345962524414
+        ]
+      },
+      "opaque": true,
+      "units": "metres"
+    },
+    {
+      "id": "cherry",
+      "file": "grove-cherry.glb",
+      "bytes": 4756972,
+      "triangles": 76010,
+      "meshes": 2,
+      "detail": {
+        "leaves": 1647,
+        "branches": 239,
+        "flowers": 915
+      },
+      "bounds": {
+        "min": [
+          -2.833864688873291,
+          -0.08570080995559692,
+          -2.980123996734619
+        ],
+        "max": [
+          3.0688910484313965,
+          8.54670524597168,
+          3.067322254180908
+        ]
+      },
+      "opaque": true,
+      "units": "metres"
+    },
+    {
+      "id": "shrub",
+      "file": "garden-shrub.glb",
+      "bytes": 581096,
+      "triangles": 9456,
+      "meshes": 2,
+      "detail": {
+        "leaves": 540,
+        "branches": 48,
+        "flowers": 0
+      },
+      "bounds": {
+        "min": [
+          -0.6552315354347229,
+          -0.008204679004848003,
+          -0.6518568992614746
+        ],
+        "max": [
+          0.6847867369651794,
+          0.7941180467605591,
+          0.6777908205986023
+        ]
+      },
+      "opaque": true,
+      "units": "metres"
+    },
+    {
+      "id": "flower",
+      "file": "garden-flower.glb",
+      "bytes": 223284,
+      "triangles": 3288,
+      "meshes": 2,
+      "detail": {
+        "leaves": 6,
+        "branches": 6,
+        "flowers": 6
+      },
+      "bounds": {
+        "min": [
+          -0.23038941621780396,
+          -0.0022989753633737564,
+          -0.289009153842926
+        ],
+        "max": [
+          0.2901213765144348,
+          0.4912014901638031,
+          0.2202259600162506
+        ]
+      },
+      "opaque": true,
+      "units": "metres"
+    }
+  ]
+}

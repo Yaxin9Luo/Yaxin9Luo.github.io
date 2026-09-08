@@ -1,0 +1,15 @@
+{
+  "file": "cloud-panorama.webp",
+  "type": "generated sky texture",
+  "generator": "Built-in ImageGen",
+  "generated": "2026-09-08",
+  "usage": "Cloud-density texture in the real-time sky shader. Sun, moon, stars and lighting are separate runtime objects; this is not a rendered-world screenshot.",
+  "dimensions": [
+    1774,
+    887
+  ],
+  "bytes": 197136,
+  "sha256": "7224fbdb3ad6ebf036070770b11bad3a7f7926795bf803c09c8c7f3a1b3aa17a",
+  "brief": "A starless blue sky with sweeping cirrus and silver-cream cloud edges, broad clear areas, a 2:1 panoramic composition, no terrain, architecture, people, sun or moon. Mature fantasy atmosphere with a bright readable horizon.",
+  "processing": "PNG to WebP, quality 94; no content edits."
+}

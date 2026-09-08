@@ -59,7 +59,7 @@ export function registerArchitectureMaterials(materials) {
   registered = materials;
   for (const key of ['stone', 'stoneLight', 'stoneDark', 'mortar']) if(materials[key]) Object.assign(materials[key].userData, { surface: 'castle-masonry', metresPerRepeat: 2.085 });
   for (const key of ['slate', 'rock']) if(materials[key]) Object.assign(materials[key].userData, { surface: 'mossy-rock', metresPerRepeat: 3 });
-  for (const key of ['roof', 'roofLight', 'roofDark']) if(materials[key]) Object.assign(materials[key].userData, { surface: 'slate-roof', metresPerRepeat: 3 });
+  for (const key of ['roof', 'roofLight', 'roofDark', 'roofSeam']) if(materials[key]) Object.assign(materials[key].userData, { surface: 'slate-roof', metresPerRepeat: 3 });
   for (const key of ['wood', 'woodLight']) if(materials[key]) Object.assign(materials[key].userData, { surface: 'aged-wood', metresPerRepeat: 2 });
   if(materials.copper) Object.assign(materials.copper.userData, { surface: 'oxidized-copper', metresPerRepeat: 1 });
 }
@@ -84,7 +84,7 @@ export function loadArchitectureAssets() {
     }));
   }
   loading = Promise.all(tasks).then(() => {
-    const bind = (keys, setName, normalStrength, metres) => {
+    const bind = (keys, setName, normalStrength, metres, albedoStrength, roughnessFloor) => {
       const set = sets[setName];
       for (const key of keys) {
         const material = registered[key];
@@ -96,14 +96,32 @@ export function loadArchitectureAssets() {
         if (set.metalness) material.metalnessMap = set.metalness;
         material.userData.surface = setName;
         material.userData.metresPerRepeat = metres;
+        material.userData.normalStrength=normalStrength;
+        material.userData.albedoStrength=albedoStrength;
+        material.userData.roughnessFloor=roughnessFloor;
+        material.onBeforeCompile=shader=>{
+          shader.fragmentShader=shader.fragmentShader.replace('#include <map_fragment>',`vec3 authoredBase=diffuseColor.rgb;\n#include <map_fragment>\ndiffuseColor.rgb=mix(authoredBase,diffuseColor.rgb,${albedoStrength.toFixed(3)});`);
+          shader.fragmentShader=shader.fragmentShader.replace('#include <roughnessmap_fragment>',`float roughnessFactor=roughness;
+            #ifdef USE_ROUGHNESSMAP
+              float surfaceRoughness=texture2D(roughnessMap,vRoughnessMapUv).g;
+              roughnessFactor=mix(${roughnessFloor.toFixed(3)},roughness,surfaceRoughness);
+            #endif`);
+        };
+        material.customProgramCacheKey=()=>`academy-pbr-${setName}-${albedoStrength}-${roughnessFloor}`;
         material.needsUpdate = true;
       }
     };
-    bind(['stone', 'stoneLight', 'stoneDark', 'mortar'], 'castle-masonry', 0.75, 2.085);
-    bind(['slate', 'rock'], 'mossy-rock', 0.9, 3);
-    bind(['roof', 'roofLight', 'roofDark'], 'slate-roof', 0.8, 3);
-    bind(['wood', 'woodLight'], 'aged-wood', 0.55, 2);
-    bind(['copper'], 'oxidized-copper', 0.65, 1);
+    // Broad surfaces carry the scanned courses and grain. Carved edges and
+    // thin roof seams already have geometry, so their detail remains quieter.
+    bind(['stone', 'stoneDark'], 'castle-masonry', .80, 2.085, .78, .76);
+    bind(['stoneLight'], 'castle-masonry', .13, 2.085, .28, .80);
+    bind(['mortar'], 'castle-masonry', .08, 2.085, .48, .86);
+    bind(['slate', 'rock'], 'mossy-rock', .90, 3, .84, .70);
+    bind(['roof', 'roofDark'], 'slate-roof', .74, 3, .82, .65);
+    bind(['roofLight'], 'slate-roof', .22, 3, .60, .70);
+    bind(['roofSeam'], 'slate-roof', .035, 3, .36, .86);
+    bind(['wood', 'woodLight'], 'aged-wood', .58, 2, .84, .66);
+    bind(['copper'], 'oxidized-copper', .46, 1, .88, .42);
   });
   return loading;
 }

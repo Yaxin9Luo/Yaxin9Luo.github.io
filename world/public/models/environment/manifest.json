@@ -1,0 +1,277 @@
+{
+  "version": 2,
+  "source": "world/src/gardens.js",
+  "layout": "world/src/environment-layout.js",
+  "provenance": "Original authored garden geometry. Botanical surfaces include the actual leaf and bark pigment/normal textures; the standard PBR export omits runtime wind. Non-botanical PBR loader textures use the offline factory base material.",
+  "assets": [
+    {
+      "id": "courtyard",
+      "file": "courtyard.glb",
+      "bytes": 86582380,
+      "triangles": 636442,
+      "meshes": 27,
+      "colliders": 41,
+      "materials": [
+        "Garden foundation stone",
+        "Carved garden coping",
+        "Garden slate inlay",
+        "Garden pale paving",
+        "Garden honed paving",
+        "Garden aged brass",
+        "Garden warm limestone",
+        "Cultivated garden earth",
+        "Ridged silver bark and tapered twigs",
+        "Detailed silver foliage with authored vein relief",
+        "Detailed cherry foliage with authored vein relief",
+        "Detailed lilac foliage with authored vein relief",
+        "Garden oiled walnut",
+        "Garden oak edges",
+        "Fountain still blue water"
+      ],
+      "bounds": {
+        "min": [
+          -18,
+          -0.3199999928474426,
+          -21
+        ],
+        "max": [
+          18,
+          7.462939262390137,
+          21
+        ]
+      },
+      "placement": {
+        "x": 0,
+        "y": 6,
+        "z": 31
+      },
+      "units": "metres",
+      "front": "+Z"
+    },
+    {
+      "id": "reading",
+      "file": "reading.glb",
+      "bytes": 30383832,
+      "triangles": 232252,
+      "meshes": 30,
+      "colliders": 7,
+      "materials": [
+        "Garden foundation stone",
+        "Carved garden coping",
+        "Garden slate inlay",
+        "Garden pale paving",
+        "Garden honed paving",
+        "Garden aged brass",
+        "Garden warm limestone",
+        "Cultivated garden earth",
+        "Ridged silver bark and tapered twigs",
+        "Detailed silver foliage with authored vein relief",
+        "Detailed cherry foliage with authored vein relief",
+        "Detailed lilac foliage with authored vein relief",
+        "Garden oiled walnut",
+        "Garden oak edges",
+        "Garden book cloth",
+        "Garden ivory paper",
+        "Garden wine book cloth",
+        "Garden celadon tea glaze"
+      ],
+      "bounds": {
+        "min": [
+          -14.5,
+          -0.3199999928474426,
+          -9
+        ],
+        "max": [
+          14.5,
+          7.792438983917236,
+          9
+        ]
+      },
+      "placement": {
+        "x": -66,
+        "y": 7,
+        "z": 27
+      },
+      "units": "metres",
+      "front": "+Z"
+    },
+    {
+      "id": "atelier",
+      "file": "atelier.glb",
+      "bytes": 8667376,
+      "triangles": 69264,
+      "meshes": 18,
+      "colliders": 3,
+      "materials": [
+        "Garden foundation stone",
+        "Carved garden coping",
+        "Garden slate inlay",
+        "Garden pale paving",
+        "Garden honed paving",
+        "Garden aged brass",
+        "Garden warm limestone",
+        "Cultivated garden earth",
+        "Ridged silver bark and tapered twigs",
+        "Detailed silver foliage with authored vein relief",
+        "Detailed cherry foliage with authored vein relief",
+        "Garden oiled walnut",
+        "Garden oak edges",
+        "Garden book cloth",
+        "Garden ivory paper",
+        "Garden wine book cloth",
+        "Garden celadon tea glaze"
+      ],
+      "bounds": {
+        "min": [
+          -20,
+          -0.3199999928474426,
+          -11.5
+        ],
+        "max": [
+          20,
+          2.8350000381469727,
+          11.5
+        ]
+      },
+      "placement": {
+        "x": 64,
+        "y": 6,
+        "z": 55.5
+      },
+      "units": "metres",
+      "front": "+Z"
+    },
+    {
+      "id": "journey",
+      "file": "journey.glb",
+      "bytes": 15858140,
+      "triangles": 121488,
+      "meshes": 17,
+      "colliders": 4,
+      "materials": [
+        "Garden foundation stone",
+        "Carved garden coping",
+        "Garden slate inlay",
+        "Garden pale paving",
+        "Garden honed paving",
+        "Garden aged brass",
+        "Garden warm limestone",
+        "Cultivated garden earth",
+        "Ridged silver bark and tapered twigs",
+        "Detailed silver foliage with authored vein relief",
+        "Garden oak edges",
+        "Garden oiled walnut",
+        "Garden book cloth",
+        "Garden ivory paper"
+      ],
+      "bounds": {
+        "min": [
+          -12,
+          -0.3199999928474426,
+          -9
+        ],
+        "max": [
+          12,
+          6.235037803649902,
+          9
+        ]
+      },
+      "placement": {
+        "x": -45,
+        "y": 5,
+        "z": 84
+      },
+      "units": "metres",
+      "front": "+Z"
+    },
+    {
+      "id": "post",
+      "file": "post.glb",
+      "bytes": 17202868,
+      "triangles": 130964,
+      "meshes": 22,
+      "colliders": 6,
+      "materials": [
+        "Garden foundation stone",
+        "Carved garden coping",
+        "Garden slate inlay",
+        "Garden pale paving",
+        "Garden honed paving",
+        "Garden aged brass",
+        "Garden warm limestone",
+        "Cultivated garden earth",
+        "Ridged silver bark and tapered twigs",
+        "Detailed silver foliage with authored vein relief",
+        "Detailed cherry foliage with authored vein relief",
+        "Garden oiled walnut",
+        "Garden oak edges",
+        "Garden celadon tea glaze",
+        "Garden ivory paper",
+        "Garden wine book cloth",
+        "Garden book cloth"
+      ],
+      "bounds": {
+        "min": [
+          -11.5,
+          -0.3199999928474426,
+          -8.5
+        ],
+        "max": [
+          11.5,
+          6.4023213386535645,
+          8.5
+        ]
+      },
+      "placement": {
+        "x": 83.5,
+        "y": 8,
+        "z": -50
+      },
+      "units": "metres",
+      "front": "+Z"
+    },
+    {
+      "id": "astral",
+      "file": "astral.glb",
+      "bytes": 8241644,
+      "triangles": 63452,
+      "meshes": 17,
+      "colliders": 4,
+      "materials": [
+        "Garden foundation stone",
+        "Carved garden coping",
+        "Garden slate inlay",
+        "Garden pale paving",
+        "Garden honed paving",
+        "Garden aged brass",
+        "Garden warm limestone",
+        "Cultivated garden earth",
+        "Ridged silver bark and tapered twigs",
+        "Detailed silver foliage with authored vein relief",
+        "Garden oak edges",
+        "Garden oiled walnut",
+        "Garden book cloth",
+        "Garden ivory paper"
+      ],
+      "bounds": {
+        "min": [
+          -11,
+          -0.3199999928474426,
+          -7
+        ],
+        "max": [
+          11,
+          3.1064250469207764,
+          7
+        ]
+      },
+      "placement": {
+        "x": -84,
+        "y": 7,
+        "z": -59
+      },
+      "units": "metres",
+      "front": "+Z"
+    }
+  ]
+}

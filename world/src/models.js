@@ -15,20 +15,21 @@ function material(name, color, options = {}) {
 }
 
 const M = {
-  stone: material('limestone', '#a7c3d1'),
-  stoneLight: material('carved-limestone', '#ccd8d9'),
-  stoneDark: material('weathered-stone', '#728988'),
-  mortar: material('deep-mortar', '#53574f'),
-  slate: material('foundation', '#8a9388'),
-  rock: material('broken-rock', '#a0a397'),
-  roof: material('blue-grey-slate', '#7b8b8a', { metalness: 0.03, roughness: 0.78 }),
-  roofLight: material('slate-edges', '#8d9b97', { metalness: 0.02, roughness: 0.8 }),
-  roofDark: material('deep-roof', '#536269'),
-  copper: material('oxidized-copper', '#c4d0ba', { metalness: 0.86, roughness: 0.6 }),
+  stone: material('limestone', '#c5cfcb', { roughness: .98 }),
+  stoneLight: material('carved-limestone', '#c6cabc', { roughness: .94 }),
+  stoneDark: material('weathered-stone', '#8c9b95', { roughness: .98 }),
+  mortar: material('deep-mortar', '#64695e', { roughness: 1 }),
+  slate: material('foundation', '#a6b0a2', { roughness: .96 }),
+  rock: material('broken-rock', '#abb0a1', { roughness: .97 }),
+  roof: material('blue-grey-slate', '#6d838c', { metalness: 0, roughness: .9 }),
+  roofLight: material('slate-edges', '#8c9a9c', { metalness: 0, roughness: .9 }),
+  roofSeam: material('slate-courses', '#526b7a', { metalness: 0, roughness: .94 }),
+  roofDark: material('deep-roof', '#506671', { roughness: .94 }),
+  copper: material('oxidized-copper', '#bfd0b6', { metalness: .76, roughness: .8 }),
   brass: material('antique-brass', '#b98a48', { metalness: 0.68, roughness: 0.4 }),
   gold: material('polished-brass', '#e3b76f', { metalness: 0.55, roughness: 0.35 }),
-  wood: material('walnut', '#a69787'),
-  woodLight: material('oak', '#c7b097'),
+  wood: material('walnut', '#c0ac95', { roughness: .94 }),
+  woodLight: material('oak', '#dbc3a1', { roughness: .94 }),
   recess: material('window-recess', '#182728'),
   glass: material('amber-windows', '#d5a76b', { emissive: '#ffa34b', emissiveIntensity: 0.6, roughness: 0.9 }),
   glassDim: material('quiet-amber-windows', '#706447', { emissive: '#b17b3f', emissiveIntensity: 0.2, roughness: 0.92 }),
@@ -267,7 +268,7 @@ function pitchedRoof(b, x, y, z, width, depth, rise, mat = M.roof) {
     b.box(x, y, z + side * depth / 2, width + 0.18, 0.22, 0.27, M.roofDark);
     const courses = Math.ceil(Math.hypot(rise, depth / 2) / 0.55);
     for (let i = 1; i < courses; i++) {
-      b.box(x, y + rise * i / courses, z + side * depth * (1 - i / courses) / 2, width, 0.026, 0.035, M.roofLight);
+      b.box(x, y + rise * i / courses, z + side * depth * (1 - i / courses) / 2, width, 0.026, 0.035, M.roofSeam);
     }
   }
   for (let xx = x - width / 2; xx <= x + width / 2 + 0.01; xx += width / 8) {
@@ -280,7 +281,7 @@ function spire(b, x, baseY, z, radius, height, ornament = true) {
   b.cylinder(x, baseY + height / 2, z, 0.08, radius, height, M.roof, 12);
   for (let tier = 1; tier < Math.ceil(height / 0.7); tier++) {
     const t = tier / Math.ceil(height / 0.7);
-    b.cylinder(x, baseY + height * t, z, radius * (1 - t) + 0.017, radius * (1 - t) + 0.052, 0.042, M.roofLight, 16);
+    b.cylinder(x, baseY + height * t, z, radius * (1 - t) + 0.017, radius * (1 - t) + 0.052, 0.042, M.roofSeam, 16);
   }
   for (let i = 0; i < 8; i++) {
     const angle = i / 8 * TAU;
@@ -421,7 +422,7 @@ function longitudinalRoof(b,x,y,z,width,depth,rise) {
   for(const side of [-1,1]) {
     b.box(x+side*width/2,y,z,.3,.23,depth+.2,M.roofDark);
     const count=Math.ceil(Math.hypot(rise,width/2)/.6);
-    for(let i=1;i<count;i++) b.box(x+side*width*(1-i/count)/2,y+rise*i/count,z,.04,.035,depth,M.roofLight);
+    for(let i=1;i<count;i++) b.box(x+side*width*(1-i/count)/2,y+rise*i/count,z,.04,.035,depth,M.roofSeam);
     for(let zz=z-depth/2;zz<=z+depth/2+.01;zz+=depth/9)
       b.beam([x+side*width/2,y+.04,zz],[x,y+rise+.04,zz],.035,M.roofDark);
   }
@@ -433,7 +434,7 @@ function pyramidRoof(b,x,y,z,width,height) {
   b.cylinder(x,y+height/2,z,.05,radius,height,M.roof,4,Math.PI/4);
   for(let i=1;i<Math.ceil(height/.65);i++) {
     const t=i/Math.ceil(height/.65),r=radius*(1-t);
-    b.cylinder(x,y+height*t,z,r+.03,r+.08,.045,M.roofLight,4,Math.PI/4);
+    b.cylinder(x,y+height*t,z,r+.03,r+.08,.045,M.roofSeam,4,Math.PI/4);
   }
   for(const sx of [-1,1])for(const sz of [-1,1]) b.beam([x+sx*width/2,y+.08,z+sz*width/2],[x,y+height,z],.065,M.copper);
   b.beam([x,y+height,z],[x,y+height+1.2,z],.045,M.brass);

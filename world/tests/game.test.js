@@ -5,6 +5,8 @@ import { Game } from '../src/game.js';
 import { terrainHeight } from '../src/world.js';
 import { locations, ringPositions, crystalPositions, spellDefinitions, worldBounds, bridges } from '../src/locations.js';
 import { SAVE_KEY, freshProgress } from '../src/logic.js';
+import { EnvironmentClock } from '../src/environment-time.js';
+import { createExhibitionStage } from '../src/exhibits.js';
 
 // Exercise the actual simulation methods without constructing a WebGL renderer.
 // These tests do not establish browser, GPU, rendering, or audible-output quality.
@@ -72,6 +74,139 @@ function simulation(t) {
   });
   return { game, messages, progressEvents, saved };
 }
+
+function exhibitionSimulation(t, started = true) {
+  const { game } = simulation(t);
+  Object.assign(game, { started, paused: false, cameraElevation: .35, cameraDistance: 17, cameraView: 'custom', zoom: 1.3, zoomTarget: 1.4, tour: { index: 2 }, _cameraGoal: new THREE.Vector3(), _lookGoal: new THREE.Vector3(), _lookAt: new THREE.Vector3(0, 5, 0) });
+  game.exhibitionStage = { projectId: 'autodesign', mediaIndex: 0, group: new THREE.Group(), camera: { position: new THREE.Vector3(62, 20, 82), mobilePosition: new THREE.Vector3(62, 23, 96), target: new THREE.Vector3(62, 14, 55) }, setProject(id) { this.projectId = id; this.mediaIndex = 0; }, setMedia(index) { this.mediaIndex = index; } };
+  return game;
+}
+
+function exhibitionViewport(t, width, height, headerHeight, toolbarHeight, toolbarBottom) {
+  const game=exhibitionSimulation(t), layout={width,height,headerHeight,toolbarHeight,toolbarBottom};
+  game.exhibitionStage=createExhibitionStage(game.scene,()=>6);
+  t.after(()=>game.exhibitionStage.dispose());
+  // CSS pixels, deliberately offset from the window origin. DPR and framebuffer
+  // dimensions must not change the space left by these visible DOM rectangles.
+  const rect=(left,top,width,height)=>({left,top,width,height,right:left+width,bottom:top+height});
+  const header={getBoundingClientRect:()=>rect(31,19,layout.width,layout.headerHeight)};
+  const toolbar={getBoundingClientRect:()=>rect(43,19+layout.height-layout.toolbarBottom-layout.toolbarHeight,layout.width-24,layout.toolbarHeight)};
+  game.canvas={getBoundingClientRect:()=>rect(31,19,layout.width,layout.height),closest:()=>({querySelector:selector=>selector==='.topbar'?header:selector==='.exhibition-toolbar'?toolbar:null})};
+  game.camera.aspect=width/height;game.camera.updateProjectionMatrix();
+  return {game,layout,header,toolbar};
+}
+
+function assertExhibitionInView(game,layout,header={},toolbar={}) {
+  const safe={left:12,right:layout.width-12,top:(header.hidden?0:layout.headerHeight)+12,bottom:layout.height-(toolbar.hidden?0:layout.toolbarHeight+layout.toolbarBottom)-12};
+  for(const [part,bounds]of game.exhibitionStage.camera.framingBounds.entries())for(const x of [bounds.min.x,bounds.max.x])for(const y of [bounds.min.y,bounds.max.y])for(const z of [bounds.min.z,bounds.max.z]){
+    const p=new THREE.Vector3(x,y,z).project(game.camera),px=(p.x+1)*layout.width/2,py=(1-p.y)*layout.height/2;
+    assert.ok(p.z>-1&&p.z<1,`part ${part} is inside the camera depth range`);
+    assert.ok(px>=safe.left-1e-5&&px<=safe.right+1e-5,`part ${part}: x=${px} must be in [${safe.left}, ${safe.right}]`);
+    assert.ok(py>=safe.top-1e-5&&py<=safe.bottom+1e-5,`part ${part}: y=${py} must be in [${safe.top}, ${safe.bottom}]`);
+  }
+}
+
+for(const [width,height,headerHeight,toolbarHeight,toolbarBottom]of [[1024,576,68,108,16],[756,771,110,158,12],[390,844,110,158,12],[844,390,68,108,16]]){
+  test(`the real exhibition title, screen and whole workbench fit below the header and above controls at ${width}×${height}`,t=>{
+    const {game,layout}=exhibitionViewport(t,width,height,headerHeight,toolbarHeight,toolbarBottom);
+    game.enterExhibit('autodesign');game._updateCamera(1,true);
+    assert.equal(game.camera.isPerspectiveCamera,true);
+    const stage=game.exhibitionStage.camera,position=width/height<.8?stage.mobilePosition:stage.position;
+    assert.ok(game.camera.getWorldDirection(new THREE.Vector3()).distanceTo(stage.target.clone().sub(position).normalize())<1e-8,'the authored viewing direction remains unchanged');
+    assertExhibitionInView(game,layout);
+  });
+}
+
+test('exhibition framing responds smoothly to real overlay changes and restores the original camera after project switches',t=>{
+  const {game,layout,header,toolbar}=exhibitionViewport(t,756,771,68,108,12),originalCamera=game.camera.position.clone(),originalProjection=game.camera.projectionMatrix.clone();
+  game.enterExhibit('autodesign');game._updateCamera(1,true);
+  const before=game.camera.position.clone();
+  layout.headerHeight=110;layout.toolbarHeight=190;
+  game._updateCamera(1/60);
+  assert.ok(game.camera.position.distanceTo(before)>0,'content wrapping changes the goal even without a canvas resize');
+  assert.ok(game.camera.position.distanceTo(game._cameraGoal)>0,'the camera retains smooth travel');
+  for(let i=0;i<300;i++)game._updateCamera(1/30);
+  assertExhibitionInView(game,layout);
+  const coveredDistance=game.camera.position.distanceTo(game._lookAt);
+  header.hidden=true;toolbar.hidden=true;game._updateCamera(1,true);
+  assert.ok(game.camera.position.distanceTo(game._lookAt)<coveredDistance,'hidden overlays do not reserve canvas space');
+  assertExhibitionInView(game,layout,header,toolbar);
+  header.hidden=false;toolbar.hidden=false;
+  game.enterExhibit('dvin');game.setExhibitMedia(0);game._updateCamera(1,true);
+  assertExhibitionInView(game,layout);
+  game.leaveExhibit();
+  assert.deepEqual(game.camera.position,originalCamera);
+  assert.deepEqual(game.camera.projectionMatrix,originalProjection,'framing must not leave a projection offset on the flight camera');
+});
+
+test('an exhibition restores its original flight pose, camera, tour and cleared controls after reading several projects', t => {
+  const game = exhibitionSimulation(t), position = game.position.clone(), camera = game.camera.position.clone(), yaw = game.cameraYaw;
+  game._keys.add('KeyW'); game.velocity.set(10, 0, 0);
+  assert.equal(game.enterExhibit('autodesign', { mediaIndex: 2 }), true);
+  assert.equal(game._isPaused(), true);
+  assert.equal(game.paused, false, 'stage rendering remains live while flight is frozen');
+  assert.equal(game.exhibition.mediaIndex, 2);
+  assert.equal(game.wizard.visible, false);
+  game._updateCamera(.5);
+  assert.notDeepEqual(game.camera.position.toArray(), camera.toArray());
+  game.setPaused(true);
+  game.enterExhibit('gamma-mod');
+  assert.equal(game.paused, false, 'returning from long-form reading resumes the stage');
+  assert.equal(game.leaveExhibit(), true);
+  assert.deepEqual(game.position.toArray(), position.toArray());
+  assert.deepEqual(game.camera.position.toArray(), camera.toArray());
+  assert.equal(game.cameraYaw, yaw);
+  assert.equal(game.cameraView, 'custom');
+  assert.equal(game.camera.fov, 43);
+  assert.deepEqual(game.tour, { index: 2 });
+  assert.equal(game.started, true);
+  assert.equal(game._keys.size, 0);
+  assert.equal(game.velocity.length(), 0);
+  assert.equal(game.wizard.visible, true);
+});
+
+test('a direct exhibition from the landing page returns to the landing state and handles absent media safely', t => {
+  const game = exhibitionSimulation(t, false);
+  assert.equal(game.enterExhibit('invalid-project'), false);
+  assert.equal(game.started, false);
+  game.enterExhibit('llmsurgeon', { mediaIndex: 999 });
+  assert.equal(game.exhibition.mediaIndex, 0);
+  assert.equal(game.setExhibitMedia(NaN), false);
+  game.setExhibitMedia(5); assert.equal(game.exhibition.mediaIndex, 0);
+  game.leaveExhibit(); assert.equal(game.started, false);
+  assert.equal(game.leaveExhibit(), false);
+});
+
+test('ordinary portfolio visits do not activate combat and the real clock control selects a valid next light', t => {
+  const game = exhibitionSimulation(t);
+  game.options.gameplay = false;
+  assert.equal(game.cast(), false); assert.equal(game.activateShield(), false);
+  assert.equal(game.mana, 100); assert.equal(game._combat, false);
+  game.environmentClock = new EnvironmentClock('night'); game.environment = { label: 'night' };
+  const modes = []; game.callbacks.onTimeChange = mode => modes.push(mode);
+  game.cycleTime(); assert.equal(game.environmentClock.mode, 'dawn'); assert.deepEqual(modes, ['dawn']);
+  game.setOption('timeOfDay', 'noonish'); assert.equal(game.environmentClock.mode, 'dawn');
+  const opened = []; game.callbacks.onExhibition = id => opened.push(id);
+  game.nearestExhibition = 'autodesign'; game.nearest = 'projects';
+  game.interact(); assert.deepEqual(opened, ['autodesign']);
+});
+
+test('physical media arrows enter at the requested image and preserve in-stage navigation', t => {
+  const game = exhibitionSimulation(t), opened = [];
+  game.callbacks.onExhibition = (id, options) => opened.push({ id, ...options });
+  game.exhibitionStage.mediaIndex = 2;
+  game._stageAction({ action: 'nextMedia' });
+  assert.deepEqual(opened.pop(), { id: 'autodesign', mediaIndex: 3 });
+  game.exhibitionStage.mediaIndex = 0;
+  game._stageAction({ action: 'previousMedia' });
+  assert.deepEqual(opened.pop(), { id: 'autodesign', mediaIndex: 0 });
+  game.enterExhibit('autodesign', { mediaIndex: 2 });
+  game._stageAction({ action: 'nextMedia' });
+  assert.equal(game.exhibition.mediaIndex, 3);
+  assert.equal(opened.length, 0, 'an existing stage changes its image without another route transition');
+  game._stageAction({ action: 'previousMedia' });
+  assert.equal(game.exhibition.mediaIndex, 2);
+});
 
 test('casting consumes magic only for an allowed, unpaused shot', (t) => {
   const { game } = simulation(t);

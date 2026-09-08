@@ -1,0 +1,134 @@
+{
+  "base": "http://127.0.0.1:4194/",
+  "http_count": 133,
+  "models_verified": [
+    {
+      "path": "models/characters/wizard.glb",
+      "bytes": 7963620,
+      "triangles": 210652,
+      "sha256": "8446fbace8aafdbb8e302681cbcacdb6a3e1945334ad6110885c657b8020e70d"
+    },
+    {
+      "path": "models/characters/wraith.glb",
+      "bytes": 1223028,
+      "triangles": 28692,
+      "sha256": "5b30f134f64b723259128e2c419fd769b94a70ec67903967fe653f0bdd5010ee"
+    },
+    {
+      "path": "models/architecture/castle.glb",
+      "bytes": 40698440,
+      "triangles": 423667,
+      "sha256": "a2ded473d3d60c4c3dcc9d06ce161cd5e1666a818daf3de6f0a4de891876d545"
+    },
+    {
+      "path": "models/architecture/library.glb",
+      "bytes": 3007420,
+      "triangles": 31062,
+      "sha256": "a9e2f034e671e6a06d2fa947537cdbefb8283234ca3fcee52bfbc042871c35ac"
+    },
+    {
+      "path": "models/architecture/observatory.glb",
+      "bytes": 2078444,
+      "triangles": 21434,
+      "sha256": "e6072f56a763044ba45c76018e98b14ab66a1bb0dbe54fc0543d633a605b4a70"
+    },
+    {
+      "path": "models/architecture/workshop.glb",
+      "bytes": 1322428,
+      "triangles": 13494,
+      "sha256": "f8b844ca865bdeddcf4996880614184f16dea9c42e8f8fd7094ea5fb65a4e15f"
+    },
+    {
+      "path": "models/architecture/owlery.glb",
+      "bytes": 3051776,
+      "triangles": 31530,
+      "sha256": "c66550ab9ef4e669674d441627b68c1371e612830388105efd9d004bb6995b06"
+    },
+    {
+      "path": "models/architecture/ruins.glb",
+      "bytes": 962632,
+      "triangles": 9900,
+      "sha256": "4901646732e9aeb7c9e5249ee4168f83ba5b95efc848f4aeb30cd90da8bfd477"
+    },
+    {
+      "path": "models/environment/courtyard.glb",
+      "bytes": 86582380,
+      "triangles": 636442,
+      "sha256": "a6a2031428dd17712569fd13d17ad3d7bc331a9266694797186041b24aeaba42"
+    },
+    {
+      "path": "models/environment/reading.glb",
+      "bytes": 30383832,
+      "triangles": 232252,
+      "sha256": "f843eeaeab0ebaa2ad1d1c24c6e9723610613f96f72b6949176c1990976717c9"
+    },
+    {
+      "path": "models/environment/atelier.glb",
+      "bytes": 8667376,
+      "triangles": 69264,
+      "sha256": "4a365094ca32d187fec05b484e53957c3ae74f384d5c027bf2c0248ec0d5e940"
+    },
+    {
+      "path": "models/environment/journey.glb",
+      "bytes": 15858140,
+      "triangles": 121488,
+      "sha256": "50db9feb2f7f4d9f99dd70f40d517ee2fa54c886bfb1b81022124936c71eb7f1"
+    },
+    {
+      "path": "models/environment/post.glb",
+      "bytes": 17202868,
+      "triangles": 130964,
+      "sha256": "6bc0c0d3bed934e0108967c122dc24ba09820e6725d45800fcf581130492dd00"
+    },
+    {
+      "path": "models/environment/astral.glb",
+      "bytes": 8241644,
+      "triangles": 63452,
+      "sha256": "1e1507da5f310ab9aad152a020c2c68a2c11eb5f508d738a79dec633e709b1b0"
+    },
+    {
+      "path": "models/environment/grove-pine.glb",
+      "bytes": 5142292,
+      "triangles": 78280,
+      "sha256": "dba6855ce24772338d6b75ea1da73618111d66676d69f3759e940d3ac264834a"
+    },
+    {
+      "path": "models/environment/grove-silver.glb",
+      "bytes": 4252344,
+      "triangles": 74016,
+      "sha256": "e2c69861a127a3fc67be7c8246e84a6de68cf77a8d984117a56d082bad0a8cd3"
+    },
+    {
+      "path": "models/environment/grove-cherry.glb",
+      "bytes": 4756972,
+      "triangles": 76010,
+      "sha256": "555a6927cb4564315d3ad5183020698adbe6f6c2c77c829e39b17b6def02302f"
+    },
+    {
+      "path": "models/environment/garden-shrub.glb",
+      "bytes": 581096,
+      "triangles": 9456,
+      "sha256": "cee65b6a32b7cae67e33335e3132348bdd2180f53dde7814759c8dc15ea4e130"
+    },
+    {
+      "path": "models/environment/garden-flower.glb",
+      "bytes": 223284,
+      "triangles": 3288,
+      "sha256": "f1064ec99697f6142315011ca825fe8dd2d997b383e027dc52a1c23804d759fc"
+    }
+  ],
+  "additional_manifest_hashes": [
+    "art/academy/cloud-panorama.webp",
+    "audio/academy/day-theme.mp3",
+    "audio/academy/night-theme.mp3",
+    "media/exhibitions/autodesign-poster-autodesign.webp",
+    "media/exhibitions/autodesign-slides-autodesign-formal-academic.webp",
+    "media/exhibitions/autodesign-webpage-autodesign.webp",
+    "media/exhibitions/autodesign-poster-underwater-sam-claude.webp",
+    "media/exhibitions/autodesign-qualitative-trajectory.webp"
+  ],
+  "failures": [],
+  "full_test_count": 127,
+  "full_test_failures": 0,
+  "build": "npm run build:site passed; 43 traditional redirects"
+}

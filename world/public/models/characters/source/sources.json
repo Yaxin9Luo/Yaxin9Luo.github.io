@@ -1,12 +1,24 @@
 {
   "sources": [
     {
+      "asset": "Human Base Meshes v1.4.1 \u2014 Body Male - Realistic",
+      "author": "Blender Studio and community contributors",
+      "license": "CC0-1.0",
+      "status": "active garment topology input",
+      "licenseEvidence": "https://www.blender.org/download/demo-files/",
+      "officialDownload": "https://download.blender.org/demo/asset-bundles/human-base-meshes/human-base-meshes-bundle-v1.4.1.zip",
+      "download": "https://ftp.nluug.nl/pub/graphics/blender/demo/asset-bundles/human-base-meshes/human-base-meshes-bundle-v1.4.1.zip",
+      "object": "GEO-body_male_realistic",
+      "changes": "Retained body and two eye objects with modifiers removed. Coat and trouser regions are selected from body topology, cut, inflated, weighted and remapped into a forward seated adult riding pose. The source body head and eye geometry are not exported; the full-face mask, head cowl and felt hat are original generated geometry."
+    },
+    {
       "asset": "Realistic Head Animation",
       "author": "Dan Ulrich / Blender Studio",
       "license": "CC0-1.0",
       "licenseEvidence": "https://www.blender.org/download/demo-files/",
       "download": "https://ftp.nluug.nl/pub/graphics/blender/demo/asset-bundles/human-base-meshes/human-base-meshes-bundle-v1.4.1.zip",
-      "changes": "Extracted head, sclera and iris only; applied bundled Multires scan detail in Blender. Runtime build refits and trims neck, adds skin colors and ocular materials."
+      "changes": "Retained earlier head and ocular subset with Multires detail; no geometry from this subset is loaded by the current build.",
+      "status": "archived; unused by the current masked build"
     },
     {
       "asset": "short_messy",
@@ -14,10 +26,17 @@
       "license": "CC0-1.0",
       "licenseEvidence": "https://static.makehumancommunity.org/assets/assetpacks/hair01.html",
       "download": "http://files2.makehumancommunity.org/asset_packs/hair01/hair01_cc0.zip",
-      "changes": "Refitted original hair card topology and albedo to the researcher; tinted dark chestnut; no source object-space normal map used."
+      "changes": "Retained original CC0 source files from the previous hair-card revision; unused by the current build.",
+      "status": "archived; unused by the current masked build"
     }
   ],
   "files": [
+    {
+      "file": "blender-studio-anatomy-cc0.blend",
+      "bytes": 639977,
+      "sha256": "5b29f69f9b3ceb54696021aba0a47278b5e871a2747e336903064e097499c143",
+      "status": "active"
+    },
     {
       "file": "blender-studio-head-cc0.blend",
       "bytes": 712626,
@@ -38,5 +57,15 @@
       "bytes": 530185,
       "sha256": "ddf92030eeefe80fdc12703ef44624ba4dd690f458042def549f2853b0daa0dc"
     }
-  ]
+  ],
+  "generated": {
+    "script": "scripts/art/build-characters.py",
+    "rigSources": [
+      "wizard-academy-rig.blend",
+      "wraith-academy-rig.blend"
+    ],
+    "originalWork": "Character design, full-face silver masks, felt hat, head cowl, targeted garment fold sculptures, rolled linings/cuffs/hems, gloves, boots, cloth panels, broom, crown, props, weights, rigs, shoulder motion and looping actions.",
+    "materials": "Original procedural 256px weave albedo encodes the linear source palette into sRGB pixel values. The 512px tangent-space textile normal/roughness images stay Non-Color. Authored PBR material values and cloth sheen are retained. Current GLBs do not load the archived Cortu hair images or external cloth/leather texture packs.",
+    "gltfSheenMapping": "The builder normalizes KHR_materials_sheen.sheenColorFactor to source Principled Sheen Tint multiplied by Sheen Weight, correcting Blender 5.1's omitted weight. Editable source rigs retain their authored shader values. This normalization preserves all non-sheen material fields and all binary mesh, skin, image and animation chunks."
+  }
 }

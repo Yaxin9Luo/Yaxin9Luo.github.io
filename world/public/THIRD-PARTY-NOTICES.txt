@@ -1,9 +1,10 @@
 Third-party notices for the interactive portfolio
 
-The architecture, character clothing, guardian and broom geometry were authored
-for this project. The researcher's anatomical head and hair adapt the external
-CC0 assets credited below. The moon imagery is provided by NASA. These sources
-are distinct from the project's generated sky and botanical artwork.
+The architecture, masks, hats, guardian and broom were authored for this project.
+The rider's coat and trousers adapt the CC0 anatomical body mesh credited below;
+their linings, cloth panels and accessories are original. No external head or hair
+is used by the current masked rider. The moon imagery is provided by NASA. These
+sources are distinct from the project's generated sky and botanical artwork.
 
 Material maps and HDR environments
 =================================
@@ -13,20 +14,29 @@ textures/manifest.json and docs/world-asset-sources.md in the repository.
 License evidence: https://polyhaven.com/license
                   https://docs.ambientcg.com/license/
 
-Character source geometry and hair
-=================================
+Character source geometry
+=========================
+Blender Studio Human Base Meshes v1.4.1 — Body Male - Realistic
+Author: Blender Studio and community contributors
+License: CC0 1.0 Universal
+Official source and license evidence: https://www.blender.org/download/demo-files/
+The body garment regions are adapted into the rider's coat and trousers.
+The current model exports neither the source head nor the source eyes.
+
+Archived character references, unused by the current rider
+--------------------------------------------------------
 Blender Studio Human Base Meshes v1.4.1 — Realistic Head (Animation)
 Author: Dan Ulrich / Blender Studio
 License: CC0 1.0 Universal
 Official source and license evidence: https://www.blender.org/download/demo-files/
-The retained source is an adapted head-and-eyes subset of the original bundle.
+The earlier adapted head-and-eyes subset is retained as source history.
 
 Short Messy Hair / short_messy
 Author: Cortu Johnstone
 License: CC0 1.0 Universal; also stated in the original material header.
 Official source and license evidence:
 https://static.makehumancommunity.org/assets/assetpacks/hair01.html
-The original hair cards and albedo are refitted and tinted for the researcher.
+The original hair cards and albedo are retained as source history.
 
 Exact source downloads, retained-file hashes and adaptations are recorded in
 models/characters/source/sources.json and models/characters/source/LICENSE.txt.
@@ -104,3 +114,19 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+
+Academy score (2026-09-08)
+==========================
+Town Theme and A New Town by The Cynic Project / cynicmusic.
+Released under CC0 1.0 by the author on OpenGameArt.
+https://opengameart.org/content/town-theme-rpg
+https://opengameart.org/content/a-new-town-rpg-theme
+License: https://creativecommons.org/publicdomain/zero/1.0/
+Exact downloads, author, checksums and source dates: audio/academy/sources.json
+
+Academy cloud sky (2026-09-08)
+=============================
+Generated specifically for this project with the built-in ImageGen tool.
+Used as a cloud-density texture, with separate real-time celestial objects.
+Generation record and checksum: art/academy/manifest.json

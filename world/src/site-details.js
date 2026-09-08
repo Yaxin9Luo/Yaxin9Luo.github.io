@@ -38,19 +38,19 @@ export function createGardenLamp(){
   add(group,new THREE.CylinderGeometry(.32,.43,.2,10),bronze,0,.1);
   add(group,new THREE.CylinderGeometry(.075,.14,1.9,10),bronze,0,1.05);
   add(group,new THREE.CylinderGeometry(.35,.25,.15,8),bronze,0,2.03);
-  const glass=new THREE.MeshStandardMaterial({color:'#ffd88c',emissive:'#ffb947',emissiveIntensity:1.15,roughness:.4});
+  const glass=new THREE.MeshStandardMaterial({color:'#ebd2a0',emissive:'#ffbc62',emissiveIntensity:.8,roughness:.4});glass.name='Garden lantern glass';
   add(group,new THREE.CylinderGeometry(.24,.21,.59,8),glass,0,2.38);
   for(let i=0;i<6;i++){const a=i*Math.PI/3;add(group,new THREE.CylinderGeometry(.019,.019,.62,5),bronze,Math.cos(a)*.26,2.38,Math.sin(a)*.26);}
   add(group,new THREE.ConeGeometry(.39,.32,8),bronze,0,2.83);
   add(group,new THREE.SphereGeometry(.055,8,6),bronze,0,3.02);
-  const glow=add(group,new THREE.PlaneGeometry(2.4,2.4),new THREE.ShaderMaterial({transparent:true,depthWrite:false,side:THREE.DoubleSide,blending:THREE.AdditiveBlending,uniforms:{},vertexShader:'varying vec2 v;void main(){v=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',fragmentShader:'varying vec2 v;void main(){float d=length(v-.5)*2.;float a=pow(max(0.,1.-d),3.)*.11;gl_FragColor=vec4(1.,.54,.17,a);}'}),0,2.4);
+  const glow=add(group,new THREE.PlaneGeometry(1.7,1.7),new THREE.ShaderMaterial({transparent:true,depthWrite:false,side:THREE.DoubleSide,blending:THREE.AdditiveBlending,uniforms:{nightFactor:{value:1}},vertexShader:'varying vec2 v;void main(){v=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',fragmentShader:'uniform float nightFactor;varying vec2 v;void main(){float d=length(v-.5)*2.;float a=pow(max(0.,1.-d),3.)*.055*nightFactor;gl_FragColor=vec4(1.,.64,.31,a);}'}),0,2.4);
   glow.castShadow=false;glow.userData.faceCamera=true;
   return batch(group);
 }
 
 export function createLampGroundGlow(sites,heightAt){
   const positions=[],uv=[],indices=[],steps=10;
-  for(const [x,,z,radius=4.2] of sites){
+  for(const [x,,z,radius=5.2] of sites){
     const start=positions.length/3;
     for(let row=0;row<=steps;row++)for(let col=0;col<=steps;col++){
       const u=col/steps,v=row/steps,px=x+(u-.5)*radius*2,pz=z+(v-.5)*radius*2;
@@ -59,9 +59,9 @@ export function createLampGroundGlow(sites,heightAt){
     }
   }
   const geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));geometry.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2));geometry.setIndex(indices);
-  const material=new THREE.ShaderMaterial({transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,
+  const material=new THREE.ShaderMaterial({transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,uniforms:{nightFactor:{value:1}},
     vertexShader:'varying vec2 v;void main(){v=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
-    fragmentShader:'varying vec2 v;void main(){float r=length(v-.5)*2.;float light=pow(max(0.,1.-r),2.2)*.23;gl_FragColor=vec4(1.,.49,.14,light);}',
+    fragmentShader:'uniform float nightFactor;varying vec2 v;void main(){float r=length(v-.5)*2.;float light=pow(max(0.,1.-r),2.6)*.23*nightFactor;gl_FragColor=vec4(1.,.61,.29,light);}',
   });
   const mesh=new THREE.Mesh(geometry,material);mesh.name='Warm light on garden paths';mesh.renderOrder=1;return mesh;
 }

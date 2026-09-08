@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { locations, islands, worldBounds } from './locations.js';
+import { sampleEnvironment, TIME_PHASES } from './environment-time.js';
 
 const assets = {};
 let loading;
@@ -10,7 +11,7 @@ export const moonDirection = new THREE.Vector3(-.16, .18, -.84).normalize();
 export function loadAtmosphereAssets() {
   if (typeof document === 'undefined') return Promise.resolve(assets);
   if (!loading) loading = Promise.allSettled([
-    ['sky', '/art/night-garden/moonlit-sky.webp'],
+    ['sky', '/art/academy/cloud-panorama.webp'],
     ['moon', '/art/night-garden/moon-lroc-2k.jpg'],
     ['blossoms', '/art/night-garden/blossom-atlas.webp'],
   ].map(async ([key, path]) => {
@@ -83,6 +84,8 @@ export function createSkyLantern() {
     group.getWorldQuaternion(aura.quaternion);aura.quaternion.invert().multiply(c.quaternion);aura.updateMatrixWorld();
   };group.add(aura);
   group.userData.flame=flame;
+  group.userData.paper=paper;
+  group.userData.aura=aura;
   return group;
 }
 
@@ -90,40 +93,51 @@ export function createAtmosphere(scene, { heightAt=()=>6, lanternCount=26, firef
   const root=new THREE.Group();root.name='Moonlit garden atmosphere';scene.add(root);
   const rand=randomSource(918472),dir=new THREE.Vector3().copy(direction).normalize();
   scene.background = new THREE.Color('#0c2446');
+  const initial = sampleEnvironment(TIME_PHASES.night);
   const sky=new THREE.Mesh(new THREE.SphereGeometry(930,48,24),new THREE.ShaderMaterial({
     side:THREE.BackSide,depthWrite:false,depthTest:false,toneMapped:false,
-    uniforms:{skyMap:{value:assets.sky||null},hasMap:{value:assets.sky?1:0}},
+    uniforms:{skyMap:{value:assets.sky||null},hasMap:{value:assets.sky?1:0},
+      zenith:{value:initial.zenith.clone()},horizon:{value:initial.horizon.clone()},cloudTint:{value:initial.cloud.clone()},
+      sunDirection:{value:initial.sunDirection.clone()},night:{value:1},skyTime:{value:0}},
     vertexShader:'varying vec3 skyDirection;void main(){skyDirection=position;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
     fragmentShader:`varying vec3 skyDirection;uniform sampler2D skyMap;uniform float hasMap;
-      void main(){vec3 d=normalize(skyDirection);float h=max(0.,d.y);vec2 uv=vec2(atan(d.z,d.x)/6.2831853+.5,.26+asin(clamp(d.y,-1.,1.))/1.5707963*.74);
-      vec3 fallback=mix(vec3(.038,.13,.25),vec3(.008,.025,.09),sqrt(h));
-      vec3 skySample=texture2D(skyMap,uv).rgb;
-      // The panorama supplies clouds; native fixed-size star points carry crisp stars.
-      // Limit isolated bright texels so enlargement cannot create blurred star blobs.
-      vec2 starStep=vec2(.0017,.0034);
-      vec3 localSky=min(textureLod(skyMap,uv+vec2(starStep.x,0.),1.).rgb,textureLod(skyMap,uv-vec2(starStep.x,0.),1.).rgb);
-      localSky=min(localSky,min(textureLod(skyMap,uv+vec2(0.,starStep.y),1.).rgb,textureLod(skyMap,uv-vec2(0.,starStep.y),1.).rgb));
-      vec3 photographed=min(skySample,localSky);
-      vec3 c=mix(fallback,photographed*.68,hasMap);
-      c=mix(vec3(.004,.011,.029),c,smoothstep(-.12,.025,d.y));
-      gl_FragColor=vec4(c,1.);
-      #include <colorspace_fragment>
+      uniform vec3 zenith,horizon,cloudTint,sunDirection;uniform float night,skyTime;
+      void main(){
+        vec3 d=normalize(skyDirection);float h=max(0.,d.y);
+        vec2 uv=vec2(fract(atan(d.z,d.x)/6.2831853+.5+skyTime*.00035),clamp(.06+asin(clamp(d.y,0.,1.))/1.5707963*.9,.01,.99));
+        vec3 source=texture2D(skyMap,uv).rgb;
+        // The starless texture contributes cloud structure only. All lighting
+        // comes from the shared environment palette, including cloud shadows.
+        float cloud=smoothstep(.16,.8,source.r)*hasMap;
+        float seam=abs(fract(uv.x)-.5)*2.;cloud*=1.-smoothstep(.97,1.,seam);
+        vec3 c=mix(horizon,zenith,pow(clamp(h,0.,1.),.46));
+        float sunlight=pow(max(0.,dot(d,sunDirection)),8.)*(1.-night)*.18;
+        c=mix(c,cloudTint*(.78+.28*source.r),cloud*.83);
+        c+=vec3(.58,.28,.10)*sunlight;
+        c=mix(horizon*.37,c,smoothstep(-.16,.025,d.y));
+        gl_FragColor=vec4(c,1.);
+        #include <colorspace_fragment>
       }`,
-  }));sky.name='Blue moonlit cloud panorama';sky.renderOrder=-1000;sky.frustumCulled=false;root.add(sky);
+  }));sky.name='Authored day and night cloud sky';sky.renderOrder=-1000;sky.frustumCulled=false;root.add(sky);
 
   const moon=new THREE.Mesh(new THREE.SphereGeometry(20,48,32),new THREE.ShaderMaterial({
-    uniforms:{moonMap:{value:assets.moon||null},hasMap:{value:assets.moon?1:0}},toneMapped:false,
+    uniforms:{moonMap:{value:assets.moon||null},hasMap:{value:assets.moon?1:0},opacity:{value:1}},toneMapped:false,transparent:true,depthWrite:false,
     vertexShader:'varying vec2 vUv;varying vec3 n;void main(){vUv=uv;n=normalize(normalMatrix*normal);gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
-    fragmentShader:`varying vec2 vUv;varying vec3 n;uniform sampler2D moonMap;uniform float hasMap;
+    fragmentShader:`varying vec2 vUv;varying vec3 n;uniform sampler2D moonMap;uniform float hasMap,opacity;
       void main(){vec3 a=texture2D(moonMap,vUv).rgb;float detail=mix(.75,dot(a,vec3(.2126,.7152,.0722)),hasMap);
       detail=clamp((detail-.18)*1.65+.12,0.,1.);
       float limb=.74+.26*pow(max(0.,n.z),.35);vec3 c=vec3(.70,.85,1.)*(.10+detail*.85)*limb;
-      gl_FragColor=vec4(c,1.);
+      gl_FragColor=vec4(c,opacity);
       #include <colorspace_fragment>
       }`,
   }));moon.position.copy(dir).multiplyScalar(760);moon.rotation.y=-1.3;moon.name='LROC detailed full moon';root.add(moon);
   const moonHalo=new THREE.Mesh(new THREE.PlaneGeometry(155,155),haloMaterial('#8bc9ff',.19,3));
   moonHalo.position.copy(moon.position).multiplyScalar(.994);moonHalo.lookAt(0,0,0);moonHalo.name='Soft lunar corona';root.add(moonHalo);
+
+  const sun = new THREE.Mesh(new THREE.SphereGeometry(8,24,16),new THREE.MeshBasicMaterial({color:'#fff1d0',toneMapped:false,fog:false}));
+  sun.name='Moving sun';root.add(sun);
+  const sunHalo = new THREE.Mesh(new THREE.PlaneGeometry(145,145),haloMaterial('#ffdab5',.25,2.8));
+  sunHalo.name='Soft sunlight';root.add(sunHalo);
 
   const starPositions=[],starColors=[];
   for(let i=0;i<1800;i++){
@@ -133,6 +147,11 @@ export function createAtmosphere(scene, { heightAt=()=>6, lanternCount=26, firef
   }
   const starGeometry=new THREE.BufferGeometry();starGeometry.setAttribute('position',new THREE.Float32BufferAttribute(starPositions,3));starGeometry.setAttribute('color',new THREE.Float32BufferAttribute(starColors,3));
   const stars=new THREE.Points(starGeometry,new THREE.PointsMaterial({size:1.1,vertexColors:true,transparent:true,opacity:.82,depthWrite:false,toneMapped:false,sizeAttenuation:false,fog:false}));stars.name='Sparse silver stars';root.add(stars);
+  stars.material.onBeforeCompile=shader=>{shader.fragmentShader=shader.fragmentShader.replace('#include <map_particle_fragment>',`#include <map_particle_fragment>
+    vec2 starDisc=gl_PointCoord*2.-1.;float starRadius=dot(starDisc,starDisc);
+    if(starRadius>1.)discard;
+    diffuseColor.a*=1.-smoothstep(.15,1.,starRadius);`);};
+  stars.material.customProgramCacheKey=()=> 'soft-circular-stars-v1';
 
   const lanterns=[];
   for(let i=0;i<lanternCount;i++){
@@ -157,12 +176,29 @@ export function createAtmosphere(scene, { heightAt=()=>6, lanternCount=26, firef
 
   return {
     root, moonDirection:dir, lanternCount, manualLanternCapacity:released.length,
+    setEnvironment(environment){
+      const u=sky.material.uniforms;
+      for(const key of ['zenith','horizon'])u[key].value.copy(environment[key]);
+      u.cloudTint.value.copy(environment.cloud);u.night.value=environment.night;u.sunDirection.value.copy(environment.sunDirection);
+      dir.copy(environment.moonDirection);
+      moon.position.copy(dir).multiplyScalar(760);moon.visible=environment.night>.02&&dir.y>-.05;moon.material.uniforms.opacity.value=environment.night;
+      moonHalo.position.copy(moon.position).multiplyScalar(.994);moonHalo.lookAt(0,0,0);moonHalo.visible=moon.visible;moonHalo.material.uniforms.opacity.value=.19*environment.night;
+      sun.position.copy(environment.sunDirection).multiplyScalar(780);sun.visible=environment.night<.95&&environment.sunDirection.y>0;
+      sunHalo.position.copy(sun.position).multiplyScalar(.994);sunHalo.lookAt(0,0,0);sunHalo.visible=sun.visible;sunHalo.material.uniforms.opacity.value=.25*(1.-environment.night);
+      stars.material.opacity=.86*environment.night;stars.visible=environment.night>.02;
+      fireflies.material.opacity=.76*environment.night;fireflies.visible=environment.night>.08;
+      for(const item of [...lanterns,...released]){
+        item.object.userData.paper.emissiveIntensity=.08+.92*environment.night;
+        item.object.userData.aura.material.uniforms.opacity.value=.2*environment.night;
+      }
+    },
     releaseLantern(position){
       if(!position||![position.x,position.y,position.z].every(Number.isFinite))return false;
       const item=released[releaseIndex++%released.length];item.base.set(position.x+1.5,position.y+.7,position.z-.5);item.object.position.copy(item.base);item.object.visible=true;item.age=0;item.object.scale.setScalar(.72);return true;
     },
     update(t,dt=0,reduced=false){
       const time=reduced?0:t;
+      sky.material.uniforms.skyTime.value=time;
       for(const item of lanterns){const p=item.base;item.object.position.set(p.x+Math.sin(time*.065+item.phase)*2.3,p.y+Math.sin(time*.11+item.phase)*1.5,p.z+Math.cos(time*.07+item.phase)*1.6);item.object.rotation.set(Math.sin(time*.16+item.phase)*.045,item.phase,Math.cos(time*.13+item.phase)*.055);}
       for(const item of released){if(!item.object.visible)continue;if(!reduced)item.age+=Math.min(Math.max(dt,0),.1);
         const a=item.age;item.object.position.set(item.base.x+Math.sin(a*.18+item.phase)*a*.07,item.base.y+a*.9,item.base.z-a*.19);item.object.rotation.z=Math.sin(time*.2+item.phase)*.045;

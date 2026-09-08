@@ -295,3 +295,64 @@
 @media (prefers-reduced-motion: reduce) {
   .journal-page *, .journal-page *::before, .journal-page *::after { transition: none !important; }
 }
+
+/* Each object leads to its own research record. */
+.journal-page .paper-title-button{display:inline;padding:0;border:0;background:none;text-align:left;font:inherit;color:inherit;letter-spacing:inherit;line-height:inherit}
+.paper-title-button:hover{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:5px}
+.folio-project{border-radius:4px;box-shadow:0 7px 18px #453b2510}
+.folio-project-featured{display:grid;grid-template-columns:1.18fr 1fr;align-items:stretch}
+.journal-page .folio-image{display:block;position:relative;padding:0;text-align:left;min-width:0;overflow:hidden;border:0;background:#faf7ef}
+.folio-project-featured .folio-image{display:flex;align-items:center;border-right:1px solid #d8d0bd}
+.folio-image img,.folio-project-featured .folio-image img{width:100%;height:auto;max-height:300px;padding:18px;object-fit:contain;transition:transform .25s}
+.folio-image:hover img{transform:scale(1.025)}
+.folio-image-label{position:absolute;bottom:11px;left:15px;color:#465b58;background:#f4eddef0;border:1px solid #d1c7b2;padding:3px 6px;font-size:9px;letter-spacing:.06em}
+.folio-body{padding:24px}.folio-body>p.project-role{font-size:11px;color:#836c3d;margin:9px 0 0}
+.folio-open-actions{display:flex;align-items:center;flex-wrap:wrap;gap:11px 18px;margin:20px 0 10px}
+.folio-open-actions .journal-button{min-height:44px;padding:9px 13px;font-size:11px}
+.folio-type-cover{height:136px;background:#304a53;color:#ece6d6;display:flex;align-items:center;justify-content:center;gap:25px;font:29px Georgia,serif;letter-spacing:3px}
+.folio-type-cover i{font-style:normal;color:#c1a77a}
+.entity-page{padding-top:26px}.entity-breadcrumb{display:flex;justify-content:space-between;gap:18px;align-items:center;padding-bottom:25px;border-bottom:1px solid var(--journal-line)}
+.entity-breadcrumb .journal-text-button{border:0;font-size:11px;min-height:44px}
+.entity-breadcrumb .journal-text-button:first-child .journal-icon{order:-1;transform:rotate(180deg)}
+.entity-heading{padding:29px 0 20px}.entity-heading .paper-venue{margin-bottom:17px}
+.journal-page .entity-heading h2{font-size:38px;line-height:1.13;letter-spacing:-.025em;max-width:850px;outline:none}
+.entity-heading h2:focus-visible{outline:2px solid #93783d;outline-offset:6px}
+.entity-original{font-size:12px;line-height:1.65;color:var(--journal-muted)!important;margin-top:15px!important}
+.entity-facts{display:flex;flex-wrap:wrap;gap:8px 15px;color:#6c725d;font-size:11px;margin-top:23px}
+.entity-facts>span+span{padding-left:15px;border-left:1px solid #b4b69c}
+.entity-summary{font-size:15px;line-height:1.9;margin:4px 0 18px!important;color:var(--journal-muted)!important;max-width:760px}
+.entity-page>.paper-links{padding-bottom:23px;border-bottom:1px solid var(--journal-line)}
+.entity-page .paper-link{font-size:12px;min-height:36px;align-items:center}
+.paper-detail-figure{margin-top:27px!important;border:1px solid #d6cdb9;background:#fffdf7;padding:15px}
+.paper-detail-figure img{display:block;width:100%;max-height:560px;object-fit:contain}
+.paper-detail-figure figcaption{font-size:11px;padding:13px 4px 0;color:#6f786a}
+.entity-authors{border-top:1px solid var(--journal-line);padding-top:25px;margin-top:30px}
+.entity-authors h3{font-size:25px}.entity-authors p{font-size:12px;line-height:1.9;margin-top:14px;max-width:730px;color:var(--journal-muted)}
+.entity-authors small{display:block;margin-top:11px;font-size:11px;color:#88734a}
+.project-question{font-size:19px;line-height:1.7;max-width:750px;color:#466055!important;margin:5px 0 24px!important}
+.project-detail-actions{display:flex;align-items:center;gap:18px 28px;flex-wrap:wrap;padding-bottom:26px}
+.project-detail-actions .paper-links{margin:0;gap:10px 16px}
+.project-media{margin-top:4px;border:1px solid #c9c7b0;background:#f7f3e8;border-radius:4px;overflow:hidden}
+.project-media-top{display:flex;justify-content:space-between;gap:15px;padding:13px 17px;color:#787354;background:#e5e0cf;border-bottom:1px solid #d0c9b7;font-size:10px;letter-spacing:.13em}
+.journal-page .media-image-button{display:block;position:relative;width:100%;border:0;padding:16px;min-height:140px;background:#fffef8}
+.media-image-button img{display:block;max-height:500px;width:100%;height:auto;object-fit:contain;transition:opacity .2s}
+.media-enlarge-label{position:absolute;right:13px;bottom:13px;border:1px solid #c6bea8;border-radius:3px;background:#fffaf0ee;padding:6px 10px;font-size:10px;color:#4c5d54}
+.project-media figcaption{padding:18px 22px 17px;border-top:1px solid #dad3c2}
+.project-media figcaption>strong{display:block;font-weight:600;font-size:14px}.project-media figcaption>p{font-size:12px;color:#657160;line-height:1.8;margin-top:6px}
+.project-media figcaption .journal-text-link{font-size:11px;margin-top:8px;min-height:32px}
+.media-controls{display:flex;align-items:center;justify-content:space-between;padding:7px 13px;background:#eae5d6;border-top:1px solid #d3cbb7;gap:12px}
+.media-controls>button{width:44px;height:44px;border:1px solid #c6bfa7;font-size:23px;border-radius:3px;background:#f6f0df;color:#364f48}
+.media-controls button:disabled{opacity:.3;cursor:default}.media-dots{display:flex;justify-content:center;gap:3px;flex-wrap:wrap}
+.media-dots button{min-width:38px;min-height:44px;font-size:11px;background:none;border:0;border-bottom:2px solid transparent;color:#7d806d}
+.media-dots button[aria-pressed=true]{border-bottom-color:#6c714c;color:#263e39;font-weight:600}
+.project-explanation{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:35px}
+.project-explanation h3{font-size:26px}.project-explanation>div>p:last-child{font-size:13px;line-height:1.9;margin-top:14px;color:var(--journal-muted)}
+.project-text-edition{display:flex;align-items:flex-start;gap:18px;padding:26px;border:1px solid #c8c3ad;background:#e5e0cf}.project-text-edition>p{font-size:13px}
+.copy-email{display:flex!important;margin-top:15px!important;font-size:11px!important;min-height:44px!important}
+.media-failed::after{content:'Image unavailable. Use the source link below.';display:block;padding:25px;font-size:13px;color:#655b40}
+html[lang=zh-CN] .media-failed::after{content:'图像暂时无法载入，请使用下方的来源链接。'}
+.media-failed img{display:none}
+.journal-page[lang=zh-CN] .entity-heading h2{font-family:var(--sans);font-size:29px;line-height:1.55;letter-spacing:0}
+.journal-page[lang=zh-CN] .project-question{font-size:17px}.journal-page[lang=zh-CN] .project-explanation h3{font-size:23px}
+@media(max-width:1080px){.folio-project-featured{display:flex}.folio-project-featured .folio-image{border-right:0;border-bottom:1px solid #d8d0bd}.folio-project-featured .folio-image img{max-height:340px}.entity-page{padding-left:35px;padding-right:35px}.journal-page .entity-heading h2{font-size:34px}}
+@media(max-width:650px){.entity-page{padding:15px 21px 24px}.entity-breadcrumb{gap:6px;padding-bottom:12px}.entity-breadcrumb .journal-text-button{font-size:11px}.entity-heading{padding:24px 0 15px}.journal-page .entity-heading h2{font-size:30px;line-height:1.19}.entity-facts{font-size:10px;gap:8px 10px;margin-top:18px}.entity-facts>span+span{padding-left:10px}.entity-summary{font-size:14px}.entity-original{font-size:12px}.project-question{font-size:16px}.project-detail-actions{gap:12px;padding-bottom:20px}.project-detail-actions>.journal-button{width:100%}.project-detail-actions .paper-links{gap:10px 19px}.project-media-top{font-size:9px;padding:12px}.journal-page .media-image-button{padding:7px}.media-enlarge-label{right:10px;bottom:10px;padding:5px 8px}.project-media figcaption{padding:17px 15px}.project-media figcaption>p{font-size:12px}.media-controls{padding:4px 7px;gap:5px}.media-dots{gap:0}.media-dots button{min-width:32px}.media-controls>button{width:44px;flex-shrink:0}.project-explanation{grid-template-columns:1fr;gap:26px;margin-top:28px}.project-explanation>div>p:last-child{font-size:14px}.entity-authors p{font-size:12px}.paper-detail-figure{padding:8px}.journal-page[lang=zh-CN] .entity-heading h2{font-size:24px;line-height:1.5}.folio-open-actions{width:100%;gap:13px}.folio-open-actions .journal-button{font-size:12px}.folio-image-label{font-size:8px}.folio-image img,.folio-project-featured .folio-image img{padding:13px}.folio-body{padding:23px}.folio-project-featured h3{font-size:34px}}
