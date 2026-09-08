@@ -20,8 +20,8 @@ test('celestial transparencies draw behind mountain mattes while retaining terra
   const {sampleEnvironment,TIME_PHASES}=await import('../src/environment-time.js');
   const scene=new THREE.Scene(),atmosphere=createAtmosphere(scene,{lanternCount:0,fireflyCount:0});
   const mountains=createMineralHighlands(scene),firstMountain=Math.min(...mountains.group.children.map(object=>object.renderOrder));
-  for(const name of ['LROC detailed full moon','Soft lunar corona','Soft sunlight','Sparse silver stars']){
-    const object=atmosphere.root.getObjectByName(name);assert.ok(object.renderOrder<firstMountain,`${name} must not paint over a solid mountain`);assert.equal(object.material.depthTest,true);assert.equal(object.material.depthWrite,false);
+  for(const name of ['LROC detailed full moon','Moving sun','Soft lunar corona','Soft sunlight','Sparse silver stars']){
+    const object=atmosphere.root.getObjectByName(name);assert.ok(object.renderOrder<firstMountain,`${name} must not paint over a solid mountain`);assert.equal(object.material.transparent,true,'celestial objects must share the transparent ordering pipeline');assert.equal(object.material.depthTest,true);assert.equal(object.material.depthWrite,false);
   }
   const dusk=sampleEnvironment(TIME_PHASES.dusk);atmosphere.setEnvironment(dusk);
   const sky=atmosphere.root.getObjectByName('Authored day and night cloud sky');

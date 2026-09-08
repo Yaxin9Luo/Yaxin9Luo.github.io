@@ -149,8 +149,8 @@ export function createAtmosphere(scene, { heightAt=()=>6, lanternCount=26, firef
   const moonHalo=new THREE.Mesh(new THREE.PlaneGeometry(155,155),haloMaterial('#8bc9ff',.19,3));
   moonHalo.position.copy(moon.position).multiplyScalar(.994);moonHalo.lookAt(0,0,0);moonHalo.name='Soft lunar corona';moonHalo.renderOrder=-110;root.add(moonHalo);
 
-  const sun = new THREE.Mesh(new THREE.SphereGeometry(8,24,16),new THREE.MeshBasicMaterial({color:'#fff1d0',toneMapped:false,fog:false}));
-  sun.name='Moving sun';root.add(sun);
+  const sun = new THREE.Mesh(new THREE.SphereGeometry(8,24,16),new THREE.MeshBasicMaterial({color:'#fff1d0',toneMapped:false,fog:false,transparent:true,depthWrite:false}));
+  sun.name='Moving sun';sun.renderOrder=-100;root.add(sun);
   const sunHalo = new THREE.Mesh(new THREE.PlaneGeometry(145,145),haloMaterial('#ffdab5',.25,2.8));
   sunHalo.name='Soft sunlight';sunHalo.renderOrder=-110;root.add(sunHalo);
 
