@@ -1,0 +1,74 @@
+[
+  {
+    "view": "highlands-night",
+    "file": "highlands-night.png",
+    "source": "experience-v5-highlands-night-high-lod-native-frame-20260908T184145592Z-2.png",
+    "kind": "actual Three.js frame, not concept art",
+    "width": 2560,
+    "height": 1440,
+    "codeCommit": "c78c2c1"
+  },
+  {
+    "view": "high-flight-night",
+    "file": "high-flight-night.png",
+    "source": "experience-v5-high-flight-night-high-lod-native-frame-20260908T182452008Z-2.png",
+    "kind": "actual Three.js frame, not concept art",
+    "width": 2560,
+    "height": 1440,
+    "codeCommit": "a90555d"
+  },
+  {
+    "view": "west-edge-day",
+    "file": "west-edge-day.png",
+    "source": "experience-v5-west-edge-day-high-lod-native-frame-20260908T184400336Z-3.png",
+    "kind": "actual Three.js frame, not concept art",
+    "width": 2560,
+    "height": 1440,
+    "codeCommit": "c78c2c1"
+  },
+  {
+    "view": "east-edge-dawn",
+    "file": "east-edge-dawn.png",
+    "source": "experience-v5-east-edge-dawn-high-lod-native-frame-20260908T182550222Z-4.png",
+    "kind": "actual Three.js frame, not concept art",
+    "width": 2560,
+    "height": 1440,
+    "codeCommit": "a90555d"
+  },
+  {
+    "view": "lilac-day",
+    "file": "lilac-day.png",
+    "source": "experience-v5-lilac-day-high-lod-native-frame-20260908T184123640Z-1.png",
+    "kind": "actual Three.js frame, not concept art",
+    "width": 2560,
+    "height": 1440,
+    "codeCommit": "c78c2c1"
+  },
+  {
+    "view": "lilac-dusk",
+    "file": "lilac-dusk.png",
+    "source": "experience-v5-lilac-dusk-high-lod-native-frame-20260908T182119503Z-1.png",
+    "kind": "actual Three.js frame, not concept art",
+    "width": 2560,
+    "height": 1440,
+    "codeCommit": "39b115d"
+  },
+  {
+    "view": "cherry-night",
+    "file": "cherry-night.png",
+    "source": "experience-v5-cherry-night-high-lod-native-frame-20260908T182733011Z-6.png",
+    "kind": "actual Three.js frame, not concept art",
+    "width": 2560,
+    "height": 1440,
+    "codeCommit": "a90555d"
+  },
+  {
+    "view": "shore-night",
+    "file": "shore-night.png",
+    "source": "experience-v5-shore-night-high-lod-native-frame-20260908T182809287Z-7.png",
+    "kind": "actual Three.js frame, not concept art",
+    "width": 2560,
+    "height": 1440,
+    "codeCommit": "a90555d"
+  }
+]

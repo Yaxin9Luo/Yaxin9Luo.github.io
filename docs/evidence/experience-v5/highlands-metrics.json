@@ -1,0 +1,106 @@
+{
+  "createdAt": "2026-09-08T18:45:10.097Z",
+  "finishedAt": "2026-09-08T18:45:34.060Z",
+  "run": 1,
+  "kind": "measure",
+  "build": "experience-v5",
+  "view": "highlands",
+  "timeOfDay": "night",
+  "quality": "high",
+  "foliage": "lod",
+  "sampling": "native",
+  "reducedMotion": false,
+  "sound": false,
+  "canvas": {
+    "width": 2560,
+    "height": 1440,
+    "backingWidth": 2560,
+    "backingHeight": 1440,
+    "cssWidth": 1024,
+    "cssHeight": 576,
+    "dpr": 2.5,
+    "nativeDpr": 2.5,
+    "msaaSamples": 4
+  },
+  "camera": {
+    "eye": [
+      130,
+      94,
+      184
+    ],
+    "target": [
+      -2,
+      44,
+      -40
+    ],
+    "fov": 43
+  },
+  "rider": {
+    "position": [
+      18,
+      18,
+      74
+    ],
+    "mode": "flying",
+    "speed": 0
+  },
+  "completed": true,
+  "invalid": false,
+  "reason": "completed",
+  "expectedDurationMs": 20000,
+  "elapsedDurationMs": 20061.40000000596,
+  "warmup": {
+    "requiredMs": 3500,
+    "elapsedMs": 3570.5999999940395,
+    "completed": true
+  },
+  "workload": "fixed-view",
+  "motionSamples": [],
+  "captureErrors": [],
+  "framesMs": {
+    "count": 182,
+    "mean": 108.73901098901099,
+    "p50": 101.40000000596046,
+    "p95": 201.40000000596046,
+    "p99": 264.30000001192093,
+    "fps": 9.19633157322958
+  },
+  "renderSubmitCpuMs": {
+    "count": 183,
+    "mean": 75.55628415339632,
+    "p50": 95.59999999403954,
+    "p95": 124,
+    "p99": 146.7000000178814,
+    "fps": 13.235166488200692
+  },
+  "gpuMs": {
+    "count": 183,
+    "mean": 155.66791203278692,
+    "p50": 132.406083,
+    "p95": 263.028083,
+    "p99": 322.605416,
+    "fps": 6.423931476574177
+  },
+  "gpuTimerAvailable": true,
+  "gpuQueries": {
+    "issued": 183,
+    "collected": 183,
+    "pending": 0,
+    "pendingAtStop": 4,
+    "abandoned": 0,
+    "disjointEvents": 0,
+    "tailTimedOut": false
+  },
+  "meanDrawCalls": 2673.5409836065573,
+  "meanSubmittedTriangles": 56410646.972677596,
+  "last": {
+    "calls": 2914,
+    "triangles": 66379626,
+    "geometries": 974,
+    "textures": 222,
+    "near": 0,
+    "mid": 25,
+    "far": 9
+  },
+  "note": "Composer totals include shadows, reflection and postprocessing. CPU submission is not GPU time. Geometry/texture values are counts, not memory bytes."
+}

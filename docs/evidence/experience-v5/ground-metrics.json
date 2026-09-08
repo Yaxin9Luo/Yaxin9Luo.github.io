@@ -1,0 +1,667 @@
+{
+  "createdAt": "2026-09-08T18:28:38.213Z",
+  "finishedAt": "2026-09-08T18:29:02.495Z",
+  "run": 1,
+  "kind": "record",
+  "build": "experience-v5",
+  "view": "ground",
+  "timeOfDay": "night",
+  "quality": "high",
+  "foliage": "lod",
+  "sampling": "native",
+  "reducedMotion": false,
+  "sound": false,
+  "canvas": {
+    "width": 2560,
+    "height": 1440,
+    "backingWidth": 2560,
+    "backingHeight": 1440,
+    "cssWidth": 1024,
+    "cssHeight": 576,
+    "dpr": 2.5,
+    "nativeDpr": 2.5,
+    "msaaSamples": 4
+  },
+  "camera": {
+    "eye": [
+      -70,
+      9.752354508189141,
+      33.82029997586889
+    ],
+    "target": null,
+    "fov": 43
+  },
+  "rider": {
+    "position": [
+      -70,
+      8.471000000432134,
+      26
+    ],
+    "mode": "grounded",
+    "speed": 0
+  },
+  "completed": true,
+  "invalid": false,
+  "reason": "completed",
+  "expectedDurationMs": 24000,
+  "elapsedDurationMs": 24061.29999998212,
+  "warmup": {
+    "requiredMs": 0,
+    "elapsedMs": 0,
+    "completed": true
+  },
+  "workload": "scripted-ground",
+  "motionSamples": [
+    {
+      "seconds": 0.07869999998807907,
+      "stage": 0,
+      "position": [
+        -66,
+        9,
+        65
+      ],
+      "mode": "landing",
+      "speed": 0,
+      "transition": 0,
+      "illumination": false
+    },
+    {
+      "seconds": 0.607,
+      "stage": 0,
+      "position": [
+        -66,
+        7.600000000000001,
+        65
+      ],
+      "mode": "landing",
+      "speed": 0,
+      "transition": 0,
+      "illumination": false
+    },
+    {
+      "seconds": 1.180199999988079,
+      "stage": 0,
+      "position": [
+        -66,
+        6.954753676293339,
+        65
+      ],
+      "mode": "dismounting",
+      "speed": 0,
+      "transition": 0.04166666666666667,
+      "illumination": false
+    },
+    {
+      "seconds": 1.8170999999940396,
+      "stage": 0,
+      "position": [
+        -66,
+        6.954753676293339,
+        65
+      ],
+      "mode": "dismounting",
+      "speed": 0,
+      "transition": 0.20833333333333337,
+      "illumination": false
+    },
+    {
+      "seconds": 2.3250999999940394,
+      "stage": 0,
+      "position": [
+        -66,
+        6.954753676293339,
+        65
+      ],
+      "mode": "dismounting",
+      "speed": 0,
+      "transition": 0.3750000000000001,
+      "illumination": false
+    },
+    {
+      "seconds": 2.9380999999940394,
+      "stage": 1,
+      "position": [
+        -66,
+        6.954753676293339,
+        65
+      ],
+      "mode": "dismounting",
+      "speed": 0,
+      "transition": 0.5833333333333334,
+      "illumination": false
+    },
+    {
+      "seconds": 3.5195999999940395,
+      "stage": 1,
+      "position": [
+        -66,
+        6.954753676293339,
+        65
+      ],
+      "mode": "dismounting",
+      "speed": 0,
+      "transition": 0.7916666666666665,
+      "illumination": false
+    },
+    {
+      "seconds": 4.038399999976158,
+      "stage": 1,
+      "position": [
+        -66,
+        6.954753676293339,
+        65
+      ],
+      "mode": "grounded",
+      "speed": 0,
+      "transition": 1,
+      "illumination": false
+    },
+    {
+      "seconds": 4.541899999976158,
+      "stage": 1,
+      "position": [
+        -66,
+        7.02663467864853,
+        64.59999999999994
+      ],
+      "mode": "grounded",
+      "speed": 1.6000000000002501,
+      "transition": 1,
+      "illumination": false
+    },
+    {
+      "seconds": 5.083399999976158,
+      "stage": 2,
+      "position": [
+        -66,
+        7.058613788431958,
+        64.19999999999987
+      ],
+      "mode": "grounded",
+      "speed": 1.6000000000002501,
+      "transition": 1,
+      "illumination": false
+    },
+    {
+      "seconds": 5.670899999976158,
+      "stage": 2,
+      "position": [
+        -66,
+        7.135305156508219,
+        63.249999999999886
+      ],
+      "mode": "grounded",
+      "speed": 3.7999999999999545,
+      "transition": 1,
+      "illumination": false
+    },
+    {
+      "seconds": 6.248699999988079,
+      "stage": 2,
+      "position": [
+        -66,
+        7.0959189503042355,
+        62.2999999999999
+      ],
+      "mode": "grounded",
+      "speed": 3.7999999999999545,
+      "transition": 1,
+      "illumination": false
+    },
+    {
+      "seconds": 6.7975,
+      "stage": 2,
+      "position": [
+        -66,
+        6.7624680356464895,
+        61.34999999999991
+      ],
+      "mode": "grounded",
+      "speed": 3.7999999999999545,
+      "transition": 1,
+      "illumination": false
+    },
+    {
+      "seconds": 7.3411999999880795,
+      "stage": 2,
+      "position": [
+        -66,
+        6.566135355347928,
+        60.39999999999992
+      ],
+      "mode": "grounded",
+      "speed": 3.7999999999999545,
+      "transition": 1,
+      "illumination": false
+    },
+    {
+      "seconds": 7.8680999999940395,
+      "stage": 2,
+      "position": [
+        -66,
+        6.639588386518649,
+        59.44999999999993
+      ],
+      "mode": "grounded",
+      "speed": 3.7999999999999545,
+      "transition": 1,
+      "illumination": false
+    },
+    {
+      "seconds": 8.383399999976158,
+      "stage": 3,
+      "position": [
+        -65.75999999999996,
+        6.663529891415394,
+        59.069999999999936
+      ],
+      "mode": "grounded",
+      "speed": 1.6000000000002501,
+      "transition": 1,
+      "illumination": false
+    },
+    {
+      "seconds": 8.918699999988078,
+      "stage": 3,
+      "position": [
+        -65.3599999999999,
+        6.67079136964607,
+        59.069999999999936
+      ],
+      "mode": "grounded",
+      "speed": 1.6000000000002501,
+      "transition": 1,
+      "illumination": false
+    },
+    {
+      "seconds": 9.421799999982118,
+      "stage": 3,
+      "position": [
+        -64.95999999999984,
+        6.71147375998437,
+        59.069999999999936
+      ],
+      "mode": "grounded",
+      "speed": 1.6000000000002501,
+      "transition": 1,
+      "illumination": false
+    },
+    {
+      "seconds": 9.950899999976158,
+      "stage": 3,
+      "position": [
+        -64.55999999999977,
+        6.764365652201929,
+        59.069999999999936
+      ],
+      "mode": "grounded",
+      "speed": 1.6000000000002501,
+      "transition": 1,
+      "illumination": false
+    },
+    {
+      "seconds": 10.548,
+      "stage": 4,
+      "position": [
+        -64.47999999999976,
+        6.776478801846278,
+        59.069999999999936
+      ],
+      "mode": "grounded",
+      "speed": 0,
+      "transition": 1,
+      "illumination": true
+    },
+    {
+      "seconds": 11.172199999988079,
+      "stage": 4,
+      "position": [
+        -64.47999999999976,
+        6.776478801846278,
+        59.069999999999936
+      ],
+      "mode": "grounded",
+      "speed": 0,
+      "transition": 1,
+      "illumination": true
+    },
+    {
+      "seconds": 11.68159999999404,
+      "stage": 4,
+      "position": [
+        -64.47999999999976,
+        6.776478801846278,
+        59.069999999999936
+      ],
+      "mode": "grounded",
+      "speed": 0,
+      "transition": 1,
+      "illumination": true
+    },
+    {
+      "seconds": 12.218699999988079,
+      "stage": 5,
+      "position": [
+        -64.47999999999976,
+        6.776478801846278,
+        59.069999999999936
+      ],
+      "mode": "mounting",
+      "speed": 0,
+      "transition": 0.08333333333333334,
+      "illumination": true
+    },
+    {
+      "seconds": 12.811599999994039,
+      "stage": 5,
+      "position": [
+        -64.47999999999976,
+        6.776478801846278,
+        59.069999999999936
+      ],
+      "mode": "mounting",
+      "speed": 0,
+      "transition": 0.3333333333333334,
+      "illumination": true
+    },
+    {
+      "seconds": 13.321699999988079,
+      "stage": 5,
+      "position": [
+        -64.47999999999976,
+        6.992222404191295,
+        59.069999999999936
+      ],
+      "mode": "mounting",
+      "speed": 0,
+      "transition": 0.5416666666666667,
+      "illumination": true
+    },
+    {
+      "seconds": 13.835899999976158,
+      "stage": 5,
+      "position": [
+        -64.47999999999976,
+        7.9217840624145675,
+        59.069999999999936
+      ],
+      "mode": "mounting",
+      "speed": 0,
+      "transition": 0.7499999999999999,
+      "illumination": true
+    },
+    {
+      "seconds": 14.362599999994039,
+      "stage": 6,
+      "position": [
+        -64.47999999999976,
+        8.64847079068308,
+        59.069999999999936
+      ],
+      "mode": "mounting",
+      "speed": 0,
+      "transition": 0.958333333333333,
+      "illumination": true
+    },
+    {
+      "seconds": 14.87869999998808,
+      "stage": 6,
+      "position": [
+        -62.67672339875416,
+        10.096016852489084,
+        59.069999999999936
+      ],
+      "mode": "flying",
+      "speed": 0,
+      "transition": 0,
+      "illumination": true
+    },
+    {
+      "seconds": 15.41969999998808,
+      "stage": 6,
+      "position": [
+        -58.30783090127861,
+        13.35670212588305,
+        59.069999999999936
+      ],
+      "mode": "flying",
+      "speed": 0,
+      "transition": 0,
+      "illumination": true
+    },
+    {
+      "seconds": 15.98929999998212,
+      "stage": 6,
+      "position": [
+        -53.04113255199253,
+        17.144884910321043,
+        59.069999999999936
+      ],
+      "mode": "flying",
+      "speed": 0,
+      "transition": 0,
+      "illumination": true
+    },
+    {
+      "seconds": 16.524599999994038,
+      "stage": 6,
+      "position": [
+        -47.46025804378507,
+        21.084198262004957,
+        59.069999999999936
+      ],
+      "mode": "flying",
+      "speed": 0,
+      "transition": 0,
+      "illumination": true
+    },
+    {
+      "seconds": 17.117599999994038,
+      "stage": 7,
+      "position": [
+        -70,
+        13,
+        26
+      ],
+      "mode": "flying",
+      "speed": 0,
+      "transition": 0,
+      "illumination": true
+    },
+    {
+      "seconds": 17.661199999988078,
+      "stage": 7,
+      "position": [
+        -70,
+        13,
+        26
+      ],
+      "mode": "flying",
+      "speed": 0,
+      "transition": 0,
+      "illumination": true
+    },
+    {
+      "seconds": 18.194699999988078,
+      "stage": 7,
+      "position": [
+        -70,
+        13,
+        26
+      ],
+      "mode": "flying",
+      "speed": 0,
+      "transition": 0,
+      "illumination": true
+    },
+    {
+      "seconds": 18.7515,
+      "stage": 7,
+      "position": [
+        -70,
+        13,
+        26
+      ],
+      "mode": "flying",
+      "speed": 0,
+      "transition": 0,
+      "illumination": true
+    },
+    {
+      "seconds": 19.31169999998808,
+      "stage": 7,
+      "position": [
+        -70,
+        13,
+        26
+      ],
+      "mode": "flying",
+      "speed": 0,
+      "transition": 0,
+      "illumination": true
+    },
+    {
+      "seconds": 19.850899999976157,
+      "stage": 7,
+      "position": [
+        -70,
+        13,
+        26
+      ],
+      "mode": "flying",
+      "speed": 0,
+      "transition": 0,
+      "illumination": true
+    },
+    {
+      "seconds": 20.389299999982118,
+      "stage": 8,
+      "position": [
+        -70,
+        11.250000000000002,
+        26
+      ],
+      "mode": "landing",
+      "speed": 0,
+      "transition": 0,
+      "illumination": true
+    },
+    {
+      "seconds": 20.94979999998212,
+      "stage": 8,
+      "position": [
+        -70,
+        8.800000000000004,
+        26
+      ],
+      "mode": "landing",
+      "speed": 0,
+      "transition": 0,
+      "illumination": true
+    },
+    {
+      "seconds": 21.516,
+      "stage": 8,
+      "position": [
+        -70,
+        8.471000000432134,
+        26
+      ],
+      "mode": "dismounting",
+      "speed": 0,
+      "transition": 0.25000000000000006,
+      "illumination": true
+    },
+    {
+      "seconds": 22.06719999998808,
+      "stage": 9,
+      "position": [
+        -70,
+        8.471000000432134,
+        26
+      ],
+      "mode": "dismounting",
+      "speed": 0,
+      "transition": 0.5416666666666667,
+      "illumination": false
+    },
+    {
+      "seconds": 22.61319999998808,
+      "stage": 9,
+      "position": [
+        -70,
+        8.471000000432134,
+        26
+      ],
+      "mode": "dismounting",
+      "speed": 0,
+      "transition": 0.8333333333333331,
+      "illumination": false
+    },
+    {
+      "seconds": 23.167,
+      "stage": 9,
+      "position": [
+        -70,
+        8.471000000432134,
+        26
+      ],
+      "mode": "grounded",
+      "speed": 0,
+      "transition": 1,
+      "illumination": false
+    },
+    {
+      "seconds": 23.73179999998212,
+      "stage": 9,
+      "position": [
+        -70,
+        8.471000000432134,
+        26
+      ],
+      "mode": "grounded",
+      "speed": 0,
+      "transition": 1,
+      "illumination": false
+    }
+  ],
+  "captureErrors": [],
+  "framesMs": {
+    "count": 0,
+    "mean": null,
+    "p50": null,
+    "p95": null,
+    "p99": null,
+    "fps": null
+  },
+  "renderSubmitCpuMs": {
+    "count": 0,
+    "mean": null,
+    "p50": null,
+    "p95": null,
+    "p99": null,
+    "fps": null
+  },
+  "gpuMs": {
+    "count": 0,
+    "mean": null,
+    "p50": null,
+    "p95": null,
+    "p99": null,
+    "fps": null
+  },
+  "gpuTimerAvailable": true,
+  "gpuQueries": {
+    "issued": 0,
+    "collected": 0,
+    "pending": 0,
+    "pendingAtStop": 0,
+    "abandoned": 0,
+    "disjointEvents": 0,
+    "tailTimedOut": false
+  },
+  "meanDrawCalls": null,
+  "meanSubmittedTriangles": null,
+  "last": null,
+  "note": "Composer totals include shadows, reflection and postprocessing. CPU submission is not GPU time. Geometry/texture values are counts, not memory bytes."
+}

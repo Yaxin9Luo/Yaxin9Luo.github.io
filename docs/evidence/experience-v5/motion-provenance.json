@@ -1,0 +1,24 @@
+[
+  {
+    "view": "ground",
+    "codeCommit": "a90555d",
+    "video": "ground-sequence.webm",
+    "metrics": "ground-metrics.json",
+    "kind": "actual canvas video, not generated",
+    "sampledFrames": "ground-motion-contact.png",
+    "completed": true,
+    "invalid": false,
+    "finishedAt": "2026-09-08T18:29:02.495Z"
+  },
+  {
+    "view": "flight",
+    "codeCommit": "c78c2c1",
+    "video": "flight-sequence.webm",
+    "metrics": "flight-metrics.json",
+    "kind": "actual canvas video, not generated",
+    "sampledFrames": "flight-motion-contact.png",
+    "completed": true,
+    "invalid": false,
+    "finishedAt": "2026-09-08T18:46:29.603Z"
+  }
+]
