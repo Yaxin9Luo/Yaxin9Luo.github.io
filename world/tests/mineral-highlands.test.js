@@ -10,14 +10,14 @@ test('mountain sectors cover all directions with overlap, world-space radius and
   }
   for(const sector of MATTE_SECTORS){
     const geometry=curvedMountainSector(sector),p=geometry.attributes.position;
-    for(let i=0;i<p.count;i++){assert.ok(Math.abs(Math.hypot(p.getX(i),p.getZ(i))-sector.radius)<.001);assert.ok(p.getY(i)===-105||p.getY(i)===sector.height-105);}
+    for(let i=0;i<p.count;i++){assert.ok(Math.abs(Math.hypot(p.getX(i),p.getZ(i))-sector.radius)<.001);assert.ok(p.getY(i)===-70||p.getY(i)===sector.height-70);}
     assert.ok(geometry.boundingSphere.radius<3600);geometry.dispose();
   }
 });
 test('optional art begins hidden, loaded art binds immediately; shared textures remain owned by loader',()=>{
   const root=new THREE.Group(),texture=new THREE.Texture();let textureDisposed=false;texture.addEventListener('dispose',()=>textureDisposed=true);
   const result=createMineralHighlands(root,{rockMap:texture,mountainMaps:{main:texture}});
-  assert.equal(result.group.children.filter(object=>object.name==='Near connected mineral ridge').length,2);
+  assert.equal(result.group.children.length,4);
   assert.equal(result.matteMaterials.length,4);
   for(const material of result.matteMaterials){
     assert.equal(material.uniforms.ready.value,material.userData.mountainArt==='main'?1:0);
@@ -25,11 +25,11 @@ test('optional art begins hidden, loaded art binds immediately; shared textures 
     material.dispose();
   }
   assert.equal(textureDisposed,false);
-  result.group.traverse(object=>object.geometry?.dispose());result.materials.forEach(material=>material.dispose());result.mistMaterial.dispose();texture.dispose();
+  result.group.traverse(object=>object.geometry?.dispose());result.materials.forEach(material=>material.dispose());texture.dispose();
 });
 test('black sky is rejected before grading and fog in both main and reflection draws',()=>{
   assert.ok(mountainMatteFragment.indexOf('if(key<.0008)discard')<mountainMatteFragment.indexOf('vec3 grade='));
-  assert.ok(mountainMatteFragment.includes('silhouette*edge'));
+  assert.ok(mountainMatteFragment.includes('silhouette*edge*baseFade'));
 });
 test('late optional delivery skips disposed backdrops and aborted consumers, and can retry',async()=>{
   const {resourceLoader}=await import('../src/resource-loader.js');
