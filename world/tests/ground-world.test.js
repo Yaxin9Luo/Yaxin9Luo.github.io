@@ -38,7 +38,7 @@ test('the lilac overlook and path edges remain continuously traversable in both 
   assert.ok(Math.abs(state.position.z-82.5)<1e-6);
 });
 
-const takeoff=(x,z,feetY,scene=world)=>queryGroundSupport({x,z,feetY,radius:1,height:5.14,allowSteps:true,maxRise:GROUND_MOTION.stepUp,maxDrop:GROUND_MOTION.stepDown},scene);
+const takeoff=(x,z,feetY,scene=world)=>queryGroundSupport({x,z,feetY,radius:1,height:GROUND_MOTION.height+1.9,allowSteps:true,maxRise:GROUND_MOTION.stepUp,maxDrop:GROUND_MOTION.stepDown},scene);
 test('takeoff accepts open grove paths using the standing footprint datum and still rejects water, edges and roofs',()=>{
   for(const z of [65,64.667,64.3,63.2,60,57,53,49.6]){
     const standing=queryGroundSupport({x:-66,z,feetY:world.heightAt(-66,z),allowSteps:true},world);

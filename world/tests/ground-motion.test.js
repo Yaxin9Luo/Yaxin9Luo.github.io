@@ -22,6 +22,14 @@ test('platform steps are walkable while narrow roofs and overhead obstructions a
  const ceiling=box('hall/ceiling',0,0,3,3,1.8,2.2);
  assert.equal(queryGroundSupport({x:0,z:0,feetY:0},{...flat,colliders:[ceiling]}).reason,'blocked');
 });
+test('standing headroom protects the raised hat throughout the new walk and run poses',()=>{
+ // The baked gait reaches 3.2586m above its sole plane; the old 3.24m
+ // capsule incorrectly admitted this beam through the animated crown.
+ const low=box('hall/hat-height-beam',0,0,3,3,3.25,3.5);
+ assert.equal(queryGroundSupport({x:0,z:0,feetY:0},{...flat,colliders:[low]}).reason,'blocked');
+ const clear=box('hall/clear-beam',0,0,3,3,3.29,3.5);
+ assert.equal(queryGroundSupport({x:0,z:0,feetY:0},{...flat,colliders:[clear]}).valid,true);
+});
 test('motion clips against a wall, stops before water and advances gait by actual distance',()=>{
  const wall=box('wall',0,-1,8,.2,0,5);
  const start={position:{x:0,y:0,z:0},velocity:{x:0,z:0},heading:0};
