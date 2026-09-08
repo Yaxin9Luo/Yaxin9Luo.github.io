@@ -5,20 +5,21 @@ import {MATTE_SECTORS,curvedMountainSector,createMineralHighlands,mountainMatteF
 
 test('mountain sectors cover all directions with overlap, world-space radius and submerged feet',()=>{
   for(let degree=0;degree<360;degree++){
-    const covered=MATTE_SECTORS.filter(({angle})=>Math.abs(Math.atan2(Math.sin(degree*Math.PI/180-angle),Math.cos(degree*Math.PI/180-angle)))<55*Math.PI/180);
+    const covered=MATTE_SECTORS.filter(({angle,span})=>Math.abs(Math.atan2(Math.sin(degree*Math.PI/180-angle),Math.cos(degree*Math.PI/180-angle)))<span/2);
     assert.ok(covered.length>0,`Uncovered direction ${degree}`);
   }
   for(const sector of MATTE_SECTORS){
+    assert.ok(Math.abs(sector.radius*sector.span/sector.height-2)<1e-8,'native painting aspect must not squash into a horizontal band');
     const geometry=curvedMountainSector(sector),p=geometry.attributes.position;
-    for(let i=0;i<p.count;i++){assert.ok(Math.abs(Math.hypot(p.getX(i),p.getZ(i))-sector.radius)<.001);assert.ok(p.getY(i)===-70||p.getY(i)===sector.height-70);}
+    for(let i=0;i<p.count;i++){assert.ok(Math.abs(Math.hypot(p.getX(i),p.getZ(i))-sector.radius)<.001);assert.ok(p.getY(i)===-70||Math.abs(p.getY(i)-(sector.height-70))<.001);}
     assert.ok(geometry.boundingSphere.radius<3600);geometry.dispose();
   }
 });
 test('optional art begins hidden, loaded art binds immediately; shared textures remain owned by loader',()=>{
   const root=new THREE.Group(),texture=new THREE.Texture();let textureDisposed=false;texture.addEventListener('dispose',()=>textureDisposed=true);
   const result=createMineralHighlands(root,{rockMap:texture,mountainMaps:{main:texture}});
-  assert.equal(result.group.children.length,4);
-  assert.equal(result.matteMaterials.length,4);
+  assert.equal(result.group.children.length,8);
+  assert.equal(result.matteMaterials.length,8);
   for(const material of result.matteMaterials){
     assert.equal(material.uniforms.ready.value,material.userData.mountainArt==='main'?1:0);
     assert.equal(material.depthWrite,false);assert.ok(material.uniforms.hazeColor&&material.uniforms.lightDirection&&material.uniforms.nightFactor);

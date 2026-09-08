@@ -9,7 +9,8 @@ import {ReviewMetrics,evidenceFilename} from './review-metrics.js';
 const $=id=>document.getElementById(id),canvas=document.querySelector('canvas');
 const warmupMs=3500,files=[],controlIds=['measure','record','audition','view','light','quality','foliage','sampling','reduced-motion','reset','frame','sound','json'];
 let game,metrics,session=null,run=0,lastReport=null,pose=null,saveFrame=null,audition=-1,stage=-1,disposed=false;
-const poses={cherry:{eye:[-45,17,85],target:[-73,9,66]},lilac:{eye:[69,17,97],target:[48,10,77]},highlands:{eye:[130,94,184],target:[-2,44,-40]},court:{eye:[30,27,79],target:[0,10,28]},overview:{eye:[130,162,180],target:[-2,12,-4]},bridge:{eye:[-27,26,-23],target:[-65,5,-53]},shore:{eye:[93,4,115],target:[45,2,73]},
+// Diagnostic eyes stay inside playable bounds x ±170, z ±158, ceiling 130.
+const poses={'west-edge':{eye:[-150,95,70],target:[0,14,-40]},'east-edge':{eye:[150,95,70],target:[0,14,-40]},'high-flight':{eye:[0,125,110],target:[0,24,-60]},cherry:{eye:[-45,17,85],target:[-73,9,66]},lilac:{eye:[69,17,97],target:[48,10,77]},highlands:{eye:[130,94,184],target:[-2,44,-40]},court:{eye:[30,27,79],target:[0,10,28]},overview:{eye:[130,162,180],target:[-2,12,-4]},bridge:{eye:[-27,26,-23],target:[-65,5,-53]},shore:{eye:[93,4,115],target:[45,2,73]},
   'castle-footing':{eye:[39,16,-8],target:[27,9,-24]},'contact-bridge':{eye:[59,15,-23],target:[52,3,-42]},'shore-detail':{eye:[111,6,16],target:[99,-2,2]}};
 const status=text=>{$('status').textContent=text;};
 async function download(blob,name){
@@ -27,6 +28,9 @@ function resetScene(config=conditions()){
   lastReport=null;$('json').disabled=true;
   clearInput();game.leaveExhibit();game.returnHome();game.start();
   game.setOption('reducedMotion',config.reducedMotion);game.setOption('timeOfDay',config.timeOfDay);game.setOption('quality',config.quality);
+  // Review captures must match their selected label on the very next frame.
+  // Gameplay retains its normal 2.4-second clock transition.
+  game.environmentClock.setMode(config.timeOfDay,true);game._updateEnvironment(0);
   game.world.vegetation?.lodController?.setEnabled(config.foliage==='lod');
   game._teleport(18,18,74);game.heading=.35;game.cameraYaw=.35;game.setCameraView('follow');game.setOption('gameplay',false);
   pose=poses[config.view]||null;

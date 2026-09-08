@@ -14,3 +14,18 @@ test('the sky keeps its angular horizon at the active main or reflected camera',
   const geometries=new Set(),materials=new Set();scene.traverse(object=>{if(object.geometry)geometries.add(object.geometry);if(object.material)(Array.isArray(object.material)?object.material:[object.material]).forEach(material=>materials.add(material));});
   geometries.forEach(geometry=>geometry.dispose());materials.forEach(material=>material.dispose());
 });
+
+test('celestial transparencies draw behind mountain mattes while retaining terrain depth tests',async()=>{
+  const {createMineralHighlands}=await import('../src/mineral-highlands.js');
+  const {sampleEnvironment,TIME_PHASES}=await import('../src/environment-time.js');
+  const scene=new THREE.Scene(),atmosphere=createAtmosphere(scene,{lanternCount:0,fireflyCount:0});
+  const mountains=createMineralHighlands(scene),firstMountain=Math.min(...mountains.group.children.map(object=>object.renderOrder));
+  for(const name of ['LROC detailed full moon','Soft lunar corona','Soft sunlight','Sparse silver stars']){
+    const object=atmosphere.root.getObjectByName(name);assert.ok(object.renderOrder<firstMountain,`${name} must not paint over a solid mountain`);assert.equal(object.material.depthTest,true);assert.equal(object.material.depthWrite,false);
+  }
+  const dusk=sampleEnvironment(TIME_PHASES.dusk);atmosphere.setEnvironment(dusk);
+  const sky=atmosphere.root.getObjectByName('Authored day and night cloud sky');
+  assert.ok(sky.material.uniforms.waterTint.value.equals(dusk.water),'low sky air follows the live water palette');
+  const geometries=new Set(),materials=new Set();scene.traverse(object=>{if(object.geometry)geometries.add(object.geometry);if(object.material)(Array.isArray(object.material)?object.material:[object.material]).forEach(material=>materials.add(material));});
+  geometries.forEach(geometry=>geometry.dispose());materials.forEach(material=>material.dispose());
+});

@@ -1,19 +1,19 @@
 import * as THREE from 'three';
 
-// One source image spans only 110 degrees. A world-fixed ring preserves parallax
-// and pixel density; the overlap receives a feather only over another sector.
+// Preserve the 2:1 painting aspect instead of stretching it around the horizon.
+// Neighbouring 52-degree sectors overlap by 7 degrees; their art is world-fixed.
 export const MATTE_SECTORS = [
-  {angle:-.55,radius:1620,height:470,layer:1,art:'main'},
-  {angle:Math.PI/2-.55,radius:1910,height:450,layer:2,art:'right'},
-  {angle:Math.PI-.55,radius:1860,height:430,layer:2,art:'main'},
-  {angle:Math.PI*1.5-.55,radius:1680,height:440,layer:1,art:'right'},
-];
-export function curvedMountainSector({angle,radius,height},segments=96){
-  const positions=[],uv=[],indices=[],span=THREE.MathUtils.degToRad(110);
+  [1750,'main',false,1], [1910,'right',false,2],
+  [1630,'main',true,1], [1860,'right',true,2],
+  [1790,'main',false,1], [1880,'right',true,2],
+  [1600,'main',true,1], [1830,'right',false,2],
+].map(([radius,art,flip,layer],i)=>({angle:-.55+i*Math.PI/4,radius,art,flip,layer,span:THREE.MathUtils.degToRad(52),height:radius*THREE.MathUtils.degToRad(52)/2}));
+export function curvedMountainSector({angle,radius,height,span,flip=false},segments=64){
+  const positions=[],uv=[],indices=[];
   for(let y=0;y<2;y++)for(let i=0;i<=segments;i++){
     const u=i/segments,a=angle+(u-.5)*span;
     // Feet remain below lake even in the reflection camera; no horizontal cut line.
-    positions.push(Math.sin(a)*radius,-70+y*height,-Math.cos(a)*radius);uv.push(u,y);
+    positions.push(Math.sin(a)*radius,-70+y*height,-Math.cos(a)*radius);uv.push(flip?1-u:u,y);
     if(y===0&&i<segments){const j=i+segments+1;indices.push(i,j,i+1,i+1,j,j+1);}
   }
   const geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));geometry.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2));geometry.setIndex(indices);geometry.computeVertexNormals();geometry.computeBoundingSphere();return geometry;
@@ -49,7 +49,11 @@ export const mountainMatteFragment=`
     // plane. No opaque, straight contact edge survives in its reflection.
     float baseFade=smoothstep(-10.+bank,65.+bank,worldPoint.y);
     float baseMist=(1.-smoothstep(0.,90.,worldPoint.y))*.24;
-    colour=mix(colour,hazeColor,air+baseMist);
+    // Keep the mountain-foot air in the lake's blue-grey family during dusk;
+    // the warm sky remains above it rather than forming an orange waterline.
+    vec3 lowAir=vec3(hazeColor.b*.72,hazeColor.g*.88,hazeColor.b);
+    colour=mix(colour,hazeColor,air);
+    colour=mix(colour,lowAir,baseMist);
     gl_FragColor=vec4(colour,silhouette*edge*baseFade);
     #include <colorspace_fragment>
   }

@@ -101,11 +101,11 @@ export function createAtmosphere(scene, { heightAt=()=>6, lanternCount=26, firef
   const sky=new THREE.Mesh(new THREE.SphereGeometry(930,48,24),new THREE.ShaderMaterial({
     side:THREE.BackSide,depthWrite:false,depthTest:false,toneMapped:false,
     uniforms:{skyMap:{value:assets.sky||null},hasMap:{value:assets.sky?1:0},
-      zenith:{value:initial.zenith.clone()},horizon:{value:initial.horizon.clone()},cloudTint:{value:initial.cloud.clone()},
+      waterTint:{value:initial.water.clone()},zenith:{value:initial.zenith.clone()},horizon:{value:initial.horizon.clone()},cloudTint:{value:initial.cloud.clone()},
       sunDirection:{value:initial.sunDirection.clone()},night:{value:1},skyTime:{value:0}},
     vertexShader:'varying vec3 skyDirection;void main(){skyDirection=position;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
     fragmentShader:`varying vec3 skyDirection;uniform sampler2D skyMap;uniform float hasMap;
-      uniform vec3 zenith,horizon,cloudTint,sunDirection;uniform float night,skyTime;
+      uniform vec3 waterTint,zenith,horizon,cloudTint,sunDirection;uniform float night,skyTime;
       void main(){
         vec3 d=normalize(skyDirection);float h=max(0.,d.y);
         vec2 uv=vec2(fract(atan(d.z,d.x)/6.2831853+.5+skyTime*.00035),clamp(.06+asin(clamp(d.y,0.,1.))/1.5707963*.9,.01,.99));
@@ -118,7 +118,11 @@ export function createAtmosphere(scene, { heightAt=()=>6, lanternCount=26, firef
         float sunlight=pow(max(0.,dot(d,sunDirection)),8.)*(1.-night)*.18;
         c=mix(c,cloudTint*(.78+.28*source.r),cloud*.83);
         c+=vec3(.58,.28,.10)*sunlight;
-        c=mix(horizon*.37,c,smoothstep(-.20,-.03,d.y));
+        // Low air meets the lake in blue-grey even at sunset. Preserve the
+        // warm horizon higher up, without an exposed orange stripe at water.
+        vec3 lowAir=mix(waterTint,zenith,.4);
+        c=mix(lowAir,c,smoothstep(-.02,.11,d.y));
+        c=mix(lowAir*.65,c,smoothstep(-.20,-.03,d.y));
         gl_FragColor=vec4(c,1.);
         #include <colorspace_fragment>
       }`,
@@ -140,15 +144,15 @@ export function createAtmosphere(scene, { heightAt=()=>6, lanternCount=26, firef
       gl_FragColor=vec4(c,opacity);
       #include <colorspace_fragment>
       }`,
-  }));moon.position.copy(dir).multiplyScalar(760);moon.rotation.y=-1.3;moon.name='LROC detailed full moon';root.add(moon);
+  }));moon.position.copy(dir).multiplyScalar(760);moon.rotation.y=-1.3;moon.name='LROC detailed full moon';moon.renderOrder=-100;root.add(moon);
   moonBindings.add(moon.material.uniforms);moon.material.addEventListener('dispose',()=>moonBindings.delete(moon.material.uniforms));
   const moonHalo=new THREE.Mesh(new THREE.PlaneGeometry(155,155),haloMaterial('#8bc9ff',.19,3));
-  moonHalo.position.copy(moon.position).multiplyScalar(.994);moonHalo.lookAt(0,0,0);moonHalo.name='Soft lunar corona';root.add(moonHalo);
+  moonHalo.position.copy(moon.position).multiplyScalar(.994);moonHalo.lookAt(0,0,0);moonHalo.name='Soft lunar corona';moonHalo.renderOrder=-110;root.add(moonHalo);
 
   const sun = new THREE.Mesh(new THREE.SphereGeometry(8,24,16),new THREE.MeshBasicMaterial({color:'#fff1d0',toneMapped:false,fog:false}));
   sun.name='Moving sun';root.add(sun);
   const sunHalo = new THREE.Mesh(new THREE.PlaneGeometry(145,145),haloMaterial('#ffdab5',.25,2.8));
-  sunHalo.name='Soft sunlight';root.add(sunHalo);
+  sunHalo.name='Soft sunlight';sunHalo.renderOrder=-110;root.add(sunHalo);
 
   const starPositions=[],starColors=[];
   for(let i=0;i<1800;i++){
@@ -157,7 +161,7 @@ export function createAtmosphere(scene, { heightAt=()=>6, lanternCount=26, firef
     const c=new THREE.Color().setHSL(.56+rand()*.12,.15,.64+rand()*.3);starColors.push(c.r,c.g,c.b);
   }
   const starGeometry=new THREE.BufferGeometry();starGeometry.setAttribute('position',new THREE.Float32BufferAttribute(starPositions,3));starGeometry.setAttribute('color',new THREE.Float32BufferAttribute(starColors,3));
-  const stars=new THREE.Points(starGeometry,new THREE.PointsMaterial({size:1.1,vertexColors:true,transparent:true,opacity:.82,depthWrite:false,toneMapped:false,sizeAttenuation:false,fog:false}));stars.name='Sparse silver stars';root.add(stars);
+  const stars=new THREE.Points(starGeometry,new THREE.PointsMaterial({size:1.1,vertexColors:true,transparent:true,opacity:.82,depthWrite:false,toneMapped:false,sizeAttenuation:false,fog:false}));stars.name='Sparse silver stars';stars.renderOrder=-120;root.add(stars);
   stars.material.onBeforeCompile=shader=>{shader.fragmentShader=shader.fragmentShader.replace('#include <map_particle_fragment>',`#include <map_particle_fragment>
     vec2 starDisc=gl_PointCoord*2.-1.;float starRadius=dot(starDisc,starDisc);
     if(starRadius>1.)discard;
@@ -190,6 +194,7 @@ export function createAtmosphere(scene, { heightAt=()=>6, lanternCount=26, firef
     setEnvironment(environment){
       const u=sky.material.uniforms;
       for(const key of ['zenith','horizon'])u[key].value.copy(environment[key]);
+      u.waterTint.value.copy(environment.water);
       u.cloudTint.value.copy(environment.cloud);u.night.value=environment.night;u.sunDirection.value.copy(environment.sunDirection);
       dir.copy(environment.moonDirection);
       moon.position.copy(dir).multiplyScalar(760);moon.visible=environment.night>.02&&dir.y>-.05;moon.material.uniforms.opacity.value=environment.night;

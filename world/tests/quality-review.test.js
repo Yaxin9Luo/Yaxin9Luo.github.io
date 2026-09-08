@@ -24,14 +24,14 @@ async function fixture({musicPromise=null,lod=true,save=null,capture=null,startE
   const document={getElementById:id=>elements.get(id),querySelector:()=>canvas,createElement:tag=>new Element(tag),documentElement:{dataset:{build:'test-build'}},body:{dataset:{}},hidden:false,addEventListener:(name,handler)=>{listeners[name]=handler;}};
   class Game {
     constructor(){
-      this.options={sound:false,quality:'high'};this.world={vegetation:{lod:{nearCount:3,midCount:4,farCount:5},...(lod?{lodController:{setEnabled:value=>lodChanges.push(value)}}:{})},updateVegetation(){}};
+      this.options={sound:false,quality:'high'};this.environmentClock={setMode:(mode,immediate)=>{this.clockMode=mode;this.clockImmediate=immediate;}};this.world={vegetation:{lod:{nearCount:3,midCount:4,farCount:5},...(lod?{lodController:{setEnabled:value=>lodChanges.push(value)}}:{})},updateVegetation(){}};
       let pixelRatio=nativeDpr;
       this.renderer={shadowMap:{},getPixelRatio:()=>pixelRatio,setPixelRatio:value=>{pixelRatio=value;},setSize(width,height){canvas.width=Math.floor(width*pixelRatio);canvas.height=Math.floor(height*pixelRatio);},getContext:()=>({getExtension:()=>null}),info:{render:{calls:50,triangles:1000},memory:{geometries:2,textures:2}}};
       this.camera={position:{values:[1,2,3],toArray(){return [...this.values];},fromArray(values){this.values=[...values];}},fov:43,lookAt:vector=>{this.camera.target=[...vector.values];},updateProjectionMatrix(){},updateMatrixWorld(){}};
       this.rendering={render(){},resize(width,height,dpr){this.lastSize={width,height,dpr};}};this.exhibitionStage={loadedSource:'image.webp',materialErrors:[]};
       this.audio={_musicPromise:musicPromise,unlock(){},play(){},setEnvironment(){},context:{createMediaStreamDestination(){const tracks=[track('audio')];return {stream:{getAudioTracks:()=>tracks}};}},master:{connected:new Set(),connect(output){this.connected.add(output);},disconnect(output){assert.equal(this.connected.delete(output),true);}}};
     }
-    setTouch(){}setControl(){}leaveExhibit(){}returnHome(){}start(){}setOption(key,value){this.options[key]=value;if(key==='quality')this._resize();}_teleport(){}setCameraView(){}enterExhibit(){}_updateCamera(){}cast(){}travel(){}dispose(){}
+    _updateEnvironment(){}setTouch(){}setControl(){}leaveExhibit(){}returnHome(){}start(){}setOption(key,value){this.options[key]=value;if(key==='quality')this._resize();}_teleport(){}setCameraView(){}enterExhibit(){}_updateCamera(){}cast(){}travel(){}dispose(){}
     _resize(){this._width=canvas.clientWidth;this._height=canvas.clientHeight;this._dpr=Math.min(nativeDpr,this.options.quality==='low'?1.25:2.5);this.renderer.setPixelRatio(this._dpr);this.renderer.setSize(this._width,this._height,false);this.rendering.resize(this._width,this._height,this._dpr);}
   }
   class Recorder {
@@ -154,4 +154,15 @@ test('static comparison defaults off, applies reducedMotion explicitly and retai
   checkbox.checked=false;checkbox.onchange();assert.equal(game.options.reducedMotion,true);assert.equal(checkbox.disabled,true);
   const finishing=qa.stop('page-hidden');assert.equal(checkbox.disabled,true);const report=await finishing;assert.equal(report.reducedMotion,true);assert.equal(report.invalid,true);assert.equal(checkbox.disabled,false);
   checkbox.onchange();assert.equal(game.options.reducedMotion,false);
+});
+
+ test('fixed review lighting settles immediately and boundary views expose real bounded cameras',async()=>{
+  const qa=await fixture(),game=qa.state().game;
+  qa.elements.get('light').value='dusk';qa.elements.get('light').onchange();
+  assert.equal(game.clockMode,'dusk');assert.equal(game.clockImmediate,true);
+  for(const view of ['west-edge','east-edge','high-flight']){
+    qa.elements.get('view').value=view;qa.elements.get('view').onchange();game._updateCamera();
+    const [x,y,z]=game.camera.position.toArray();assert.ok(Math.abs(x)<170&&Math.abs(z)<158&&y<=130);
+    if(view==='high-flight')assert.equal(y,125);
+  }
 });
