@@ -1,0 +1,61 @@
+{
+  "meshopt": "1.2.0",
+  "gltfTransform": "4.5.0",
+  "normalBits": 14,
+  "positionBits": 16,
+  "assets": [
+    {
+      "id": "wizard-core",
+      "sourceBytes": 23500360,
+      "bytes": 7528620,
+      "ratio": 0.3203619008389659,
+      "nodes": 82,
+      "clips": [
+        "boost",
+        "boost_end",
+        "boost_start",
+        "cast",
+        "cruise",
+        "dismount",
+        "ground_cast",
+        "ground_idle",
+        "idle",
+        "mount",
+        "run",
+        "turn_left",
+        "turn_right",
+        "walk"
+      ],
+      "meshSimplification": false,
+      "textureResize": [
+        1024,
+        1024
+      ]
+    },
+    {
+      "id": "/models/characters/wizard.glb",
+      "sourceBytes": 23500360,
+      "bytes": 16199548,
+      "ratio": 0.6893319081069397,
+      "nodes": 82,
+      "clips": [
+        "boost",
+        "boost_end",
+        "boost_start",
+        "cast",
+        "cruise",
+        "dismount",
+        "ground_cast",
+        "ground_idle",
+        "idle",
+        "mount",
+        "run",
+        "turn_left",
+        "turn_right",
+        "walk"
+      ],
+      "meshSimplification": false,
+      "textureResize": null
+    }
+  ]
+}

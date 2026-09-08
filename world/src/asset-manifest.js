@@ -1,10 +1,10 @@
-// Generated from actual bytes by scripts/prepare-runtime-assets.mjs; art updated by scripts/update-art-manifest.mjs.
+// Generated from actual bytes by scripts/prepare-runtime-assets.mjs.
 export const assetManifest = {
   "wizard-core": {
     "id": "wizard-core",
-    "url": "/runtime/wizard-core.894eeb05ada69e1f.glb",
-    "bytes": 7515560,
-    "sha256": "894eeb05ada69e1fcec49b3e3125221af7b3fd200c8d552b5f560938c85b6be0",
+    "url": "/runtime/wizard-core.23d640bb257eb4cc.glb",
+    "bytes": 7528620,
+    "sha256": "23d640bb257eb4cc6d20301849d856f2dcfd29699350df84d1116930f688f481",
     "phase": 1,
     "region": "shared",
     "variant": "core",
@@ -13,9 +13,9 @@ export const assetManifest = {
   },
   "/models/characters/wizard.glb": {
     "id": "/models/characters/wizard.glb",
-    "url": "/runtime/models-characters-wizard-glb.b89a9b250d21e87d.glb",
-    "bytes": 16186484,
-    "sha256": "b89a9b250d21e87d7ab946c9e51c3f6f4abd50b199fec54cc012b2b37c7313f9",
+    "url": "/runtime/models-characters-wizard-glb.b2a9643ca4ff99ee.glb",
+    "bytes": 16199548,
+    "sha256": "b2a9643ca4ff99ee95c67ab00c128a76139be1522bf812f051549afa666f286e",
     "phase": 2,
     "region": "shared",
     "variant": "full",

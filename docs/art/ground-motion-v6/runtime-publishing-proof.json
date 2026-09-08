@@ -1,0 +1,31 @@
+{
+  "changed": [
+    "wizard-core",
+    "/models/characters/wizard.glb"
+  ],
+  "otherAssetsPreserved": 57,
+  "assets": [
+    {
+      "id": "wizard-core",
+      "url": "/runtime/wizard-core.23d640bb257eb4cc.glb",
+      "bytes": 7528620,
+      "sha256": "23d640bb257eb4cc6d20301849d856f2dcfd29699350df84d1116930f688f481",
+      "phase": 1,
+      "region": "shared",
+      "variant": "core",
+      "dependencies": [],
+      "source": "/models/characters/wizard.glb"
+    },
+    {
+      "id": "/models/characters/wizard.glb",
+      "url": "/runtime/models-characters-wizard-glb.b2a9643ca4ff99ee.glb",
+      "bytes": 16199548,
+      "sha256": "b2a9643ca4ff99ee95c67ab00c128a76139be1522bf812f051549afa666f286e",
+      "phase": 2,
+      "region": "shared",
+      "variant": "full",
+      "dependencies": [],
+      "source": "/models/characters/wizard.glb"
+    }
+  ]
+}
