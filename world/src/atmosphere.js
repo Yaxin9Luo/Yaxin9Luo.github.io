@@ -101,11 +101,11 @@ export function createAtmosphere(scene, { heightAt=()=>6, lanternCount=26, firef
   const sky=new THREE.Mesh(new THREE.SphereGeometry(930,48,24),new THREE.ShaderMaterial({
     side:THREE.BackSide,depthWrite:false,depthTest:false,toneMapped:false,
     uniforms:{skyMap:{value:assets.sky||null},hasMap:{value:assets.sky?1:0},
-      waterTint:{value:initial.water.clone()},zenith:{value:initial.zenith.clone()},horizon:{value:initial.horizon.clone()},cloudTint:{value:initial.cloud.clone()},
+      fogTint:{value:initial.fog.clone()},zenith:{value:initial.zenith.clone()},horizon:{value:initial.horizon.clone()},cloudTint:{value:initial.cloud.clone()},
       sunDirection:{value:initial.sunDirection.clone()},night:{value:1},skyTime:{value:0}},
     vertexShader:'varying vec3 skyDirection;void main(){skyDirection=position;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
     fragmentShader:`varying vec3 skyDirection;uniform sampler2D skyMap;uniform float hasMap;
-      uniform vec3 waterTint,zenith,horizon,cloudTint,sunDirection;uniform float night,skyTime;
+      uniform vec3 fogTint,zenith,horizon,cloudTint,sunDirection;uniform float night,skyTime;
       void main(){
         vec3 d=normalize(skyDirection);float h=max(0.,d.y);
         vec2 uv=vec2(fract(atan(d.z,d.x)/6.2831853+.5+skyTime*.00035),clamp(.06+asin(clamp(d.y,0.,1.))/1.5707963*.9,.01,.99));
@@ -118,11 +118,10 @@ export function createAtmosphere(scene, { heightAt=()=>6, lanternCount=26, firef
         float sunlight=pow(max(0.,dot(d,sunDirection)),8.)*(1.-night)*.18;
         c=mix(c,cloudTint*(.78+.28*source.r),cloud*.83);
         c+=vec3(.58,.28,.10)*sunlight;
-        // Low air meets the lake in blue-grey even at sunset. Preserve the
-        // warm horizon higher up, without an exposed orange stripe at water.
-        vec3 lowAir=mix(waterTint,zenith,.4);
-        c=mix(lowAir,c,smoothstep(-.02,.11,d.y));
-        c=mix(lowAir*.65,c,smoothstep(-.20,-.03,d.y));
+        // The far-clipped lake is fully fogged. Give the sky below and just
+        // above that horizon the identical linear fog colour, so the clip
+        // boundary cannot become a ruler-straight pale-water/blue-sky seam.
+        c=mix(fogTint,c,smoothstep(.01,.11,d.y));
         gl_FragColor=vec4(c,1.);
         #include <colorspace_fragment>
       }`,
@@ -194,7 +193,7 @@ export function createAtmosphere(scene, { heightAt=()=>6, lanternCount=26, firef
     setEnvironment(environment){
       const u=sky.material.uniforms;
       for(const key of ['zenith','horizon'])u[key].value.copy(environment[key]);
-      u.waterTint.value.copy(environment.water);
+      u.fogTint.value.copy(environment.fog);
       u.cloudTint.value.copy(environment.cloud);u.night.value=environment.night;u.sunDirection.value.copy(environment.sunDirection);
       dir.copy(environment.moonDirection);
       moon.position.copy(dir).multiplyScalar(760);moon.visible=environment.night>.02&&dir.y>-.05;moon.material.uniforms.opacity.value=environment.night;

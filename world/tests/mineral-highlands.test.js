@@ -11,7 +11,15 @@ test('mountain sectors cover all directions with overlap, world-space radius and
   for(const sector of MATTE_SECTORS){
     assert.ok(Math.abs(sector.radius*sector.span/sector.height-2)<1e-8,'native painting aspect must not squash into a horizontal band');
     const geometry=curvedMountainSector(sector),p=geometry.attributes.position;
-    for(let i=0;i<p.count;i++){assert.ok(Math.abs(Math.hypot(p.getX(i),p.getZ(i))-sector.radius)<.001);assert.ok(p.getY(i)===-105||Math.abs(p.getY(i)-(sector.height-105))<.001);}
+    const uv=geometry.attributes.uv,coast=[];
+    for(let i=0;i<p.count;i++){
+      const r=Math.hypot(p.getX(i),p.getZ(i)),v=uv.getY(i);
+      assert.ok(r<=sector.radius+.001&&r>=sector.radius-150.001);
+      assert.ok(Math.abs(p.getY(i)-(-105+v*sector.height))<.001);
+      if(v>=.42)assert.ok(Math.abs(r-sector.radius)<.001,'skyline and upper painting must keep their native aspect');
+      if(v===.125)coast.push(r);
+    }
+    assert.ok(Math.max(...coast)-Math.min(...coast)>25,'caped shoreline must have real depth variation');
     assert.ok(geometry.boundingSphere.radius<3600);geometry.dispose();
   }
 });

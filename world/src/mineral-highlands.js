@@ -8,13 +8,17 @@ export const MATTE_SECTORS = [
   [1790,'main',false,1], [1880,'right',true,2],
   [1600,'main',true,1], [1830,'right',false,2],
 ].map(([radius,art,flip,layer],i)=>({angle:-.55+i*Math.PI/4,radius,art,flip,layer,span:THREE.MathUtils.degToRad(52),height:radius*THREE.MathUtils.degToRad(52)/2}));
-export function curvedMountainSector({angle,radius,height,span,flip=false},segments=64){
-  const positions=[],uv=[],indices=[];
-  for(let y=0;y<2;y++)for(let i=0;i<=segments;i++){
-    const u=i/segments,a=angle+(u-.5)*span;
-    // Feet remain below lake even in the reflection camera; no horizontal cut line.
-    positions.push(Math.sin(a)*radius,-105+y*height,-Math.cos(a)*radius);uv.push(flip?1-u:u,y);
-    if(y===0&&i<segments){const j=i+segments+1;indices.push(i,j,i+1,i+1,j,j+1);}
+export function curvedMountainSector({angle,radius,height,span,flip=false,art},segments=64){
+  const positions=[],uv=[],indices=[],rows=8;
+  for(let row=0;row<=rows;row++)for(let i=0;i<=segments;i++){
+    const u=i/segments,v=row/rows,a=angle+(u-.5)*span,artU=flip?1-u:u;
+    const cape=Math.max(art==='main'?Math.exp(-Math.pow((artU-.24)/.14,2)):0,Math.exp(-Math.pow((artU-.83)/.13,2)));
+    // A shallow curved toe projects the capes toward the lake. The upper
+    // painting and skyline retain their original radius and exact 2:1 aspect.
+    const toe=(1-THREE.MathUtils.smoothstep(v,.12,.42))*Math.sin(Math.PI*u)**2;
+    const r=radius-150*cape*toe;
+    positions.push(Math.sin(a)*r,-105+v*height,-Math.cos(a)*r);uv.push(artU,v);
+    if(row<rows&&i<segments){const n=row*(segments+1)+i,j=n+segments+1;indices.push(n,j,n+1,n+1,j,j+1);}
   }
   const geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));geometry.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2));geometry.setIndex(indices);geometry.computeVertexNormals();geometry.computeBoundingSphere();return geometry;
 }

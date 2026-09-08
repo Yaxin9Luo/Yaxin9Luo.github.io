@@ -25,7 +25,8 @@ test('celestial transparencies draw behind mountain mattes while retaining terra
   }
   const dusk=sampleEnvironment(TIME_PHASES.dusk);atmosphere.setEnvironment(dusk);
   const sky=atmosphere.root.getObjectByName('Authored day and night cloud sky');
-  assert.ok(sky.material.uniforms.waterTint.value.equals(dusk.water),'low sky air follows the live water palette');
+  assert.ok(sky.material.uniforms.fogTint.value.equals(dusk.fog),'sky horizon must match the fogged lake asymptote');
+  const day=sampleEnvironment(TIME_PHASES.day);atmosphere.setEnvironment(day);assert.ok(sky.material.uniforms.fogTint.value.equals(day.fog));
   const geometries=new Set(),materials=new Set();scene.traverse(object=>{if(object.geometry)geometries.add(object.geometry);if(object.material)(Array.isArray(object.material)?object.material:[object.material]).forEach(material=>materials.add(material));});
   geometries.forEach(geometry=>geometry.dispose());materials.forEach(material=>material.dispose());
 });
