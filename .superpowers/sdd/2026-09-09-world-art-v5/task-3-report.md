@@ -22,3 +22,18 @@
 The new planting uses shared instanced geometry instead of per-plant draw calls. Tall-tree placement, cached crown geometry and tree LOD policy are preserved. The low layer clears authored gardens, landmarks, bridges, paths and blossom overlooks. No new collision solids were added for decorative foliage. Road shoulders are indexed as actual support rather than being unsupported visible decoration.
 
 Parent task owns browser shader compilation, near day/night visual acceptance and integrated build/performance evidence. This report does not claim visual acceptance from Node tests. Crown-form variants were intentionally not added: shared geometry stays exact, and this pass concentrates on layered planting, material separation and shading.
+
+## Foreground polish after actual dusk review
+
+Inspected `work/production-v3/captures/experience-v4-lilac-dusk-high-lod-native-frame-20260908T180332706Z-2.png`. The planting is visibly more continuous, but terrain retained broad tinted folds and the paving multiplied the dusk palette toward brown.
+
+- Ground now ignores the legacy baked vertex colour attribute (geometry is retained), removes the broad sine/cosine rock overlay, and uses a 2.5 m physical tile instead of approximately 15 m. Normal scale is 0.30 instead of 0.70.
+- Added a restrained nonperiodic three-octave soil blend: meadow remains dominant, forest humus contributes at most 18% on flatter ground, moss grows subtly with noise and more strongly with slope. Albedo, tangent-space normal and roughness use identical blend weights and a shared UV basis. Each extra channel points to its existing decoded source texture and updates when phase-two loading finishes; disposal releases its binding.
+- Roads, court paving and blossom walks use neutral pale ivory-grey pigments to preserve the measured beige/grey source under dusk. Two existing park point lights increase from base 28 to 65; no additional lights were introduced.
+- Corrected the low-plant comment: roots clear the path while decorative frond tips may overhang the margin. No unsupported claim of full footprint clearance remains.
+- Updated stale tests to assert visible but restrained botanical relief and eight actual road centres with their paired shoulders. Existing full rendered-road/support tests remain unchanged. The material test checks loaded layer channels, matching normal/roughness blending, physical repeat and absence of the old periodic overlay.
+- Focused material/cache smoke: 9/9 passed. Full integrated suite result recorded below when complete. Browser compilation and visual acceptance remain with the parent task.
+
+The first integrated run passed 316/317. Extending the terrain test to shoulders exposed a real 1.38 mm buried shoulder triangle at a terrain crease. Shoulder geometry now has three cross-strip subdivisions and 35 mm outer clearance; visible vertices and their surface-support triangles still agree. Terrain plus production-world movement/raycast tests then passed 7/7. A final integrated rerun follows this geometry fix.
+
+Final integrated `npm test`: **317/317 passed**, 0 failures, approximately 34 seconds. Output: `/tmp/world-v5-foreground-polish-tests-final.log`. Final `git diff --check` passed. No browser visual acceptance or build is claimed by this worker.

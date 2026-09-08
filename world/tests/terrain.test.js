@@ -14,7 +14,10 @@ test('road triangle interiors stay above the rendered hillside and use bridges o
   const world=createWorld(new THREE.Scene());
   const point=new THREE.Vector3(),vertex=new THREE.Vector3();
   const roads=world.root.children.filter(o=>o.name.startsWith('road-'));
-  assert.equal(roads.length,8);
+  const centres=roads.filter(o=>!o.name.includes('planted-shoulder')),shoulders=roads.filter(o=>o.name.includes('planted-shoulder'));
+  assert.equal(centres.length,8);
+  for(const road of centres){assert.ok(shoulders.some(o=>o.name===`${road.name}-planted-shoulder--1`));assert.ok(shoulders.some(o=>o.name===`${road.name}-planted-shoulder-1`));}
+  assert.equal(shoulders.length,centres.length*2);
   for(const road of roads){
     const p=road.geometry.attributes.position,index=road.geometry.index;
     for(let k=0;k<index.count;k+=3){

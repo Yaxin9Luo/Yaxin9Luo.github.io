@@ -17,7 +17,7 @@ test('registered exact parts build independent groups with shared geometry and o
   assert.equal(a.leavesMesh.geometry.userData.sharedAsset,true);assert.equal(a.leavesMesh.material.userData.sharedAsset,true);
   assert.deepEqual(a.userData.botanicalDetail,source.botanicalDetail);assert.equal(a.userData.detailLevel,'near');
   assert.equal(a.leavesMesh.material.transparent,false);assert.equal(a.leavesMesh.material.vertexColors,true);assert.equal(a.leavesMesh.material.side,THREE.DoubleSide);
-  assert.ok(a.leavesMesh.material.map&&a.leavesMesh.material.normalMap);assert.ok(a.leavesMesh.material.normalScale.x>.4);
+  assert.ok(a.leavesMesh.material.map&&a.leavesMesh.material.normalMap);assert.ok(a.leavesMesh.material.normalScale.x>=.1&&a.leavesMesh.material.normalScale.x<=.3,'petal relief stays visible without overpowering the curved geometry');
   for(const material of[a.leavesMesh.material,a.leavesMesh.customDepthMaterial,a.leavesMesh.customDistanceMaterial]){
     const shader={uniforms:{},vertexShader:'#include <begin_vertex>',fragmentShader:''};material.onBeforeCompile(shader);assert.equal(shader.uniforms.environmentWindTime,environmentWind.time);
   }

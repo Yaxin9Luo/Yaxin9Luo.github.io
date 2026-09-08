@@ -12,7 +12,7 @@ export function createBlossomGroves(root,heightAt,{nearPath=()=>false,trees=true
   const definitions=[],support=createSurfaceSupport(heightAt),lampSites=[],colliders=[];
   const brass=new THREE.MeshStandardMaterial({color:'#a18c61',metalness:.65,roughness:.42});
   const wood=new THREE.MeshStandardMaterial({color:'#554a45',roughness:.88});
-  const stone=surface('courtyard-paving',{color:'#ddceb4',albedoStrength:1,normalScale:new THREE.Vector2(.45,.45),roughness:.90,roughnessFloor:.60});
+  const stone=surface('courtyard-paving',{color:'#e4e5dc',albedoStrength:1,normalScale:new THREE.Vector2(.45,.45),roughness:.90,roughnessFloor:.60});
   const add=(geometry,material,name)=>{const mesh=new THREE.Mesh(geometry,material);mesh.name=name;mesh.castShadow=mesh.receiveShadow=true;group.add(mesh);return mesh;};
   const box=(x,y,z,w,h,d,material,name)=>{const mesh=add(new THREE.BoxGeometry(w,h,d),material,name);mesh.position.set(x,y,z);return mesh;};
   for(const park of blossomParks){
@@ -52,7 +52,7 @@ export function createBlossomGroves(root,heightAt,{nearPath=()=>false,trees=true
   group.add(createLampGroundGlow(lampSites,heightAt));
   const foliage=createFoliageLOD(group,definitions);
   const lights=[];
-  for(const park of blossomParks){const [x,z]=park.overlook,light=new THREE.PointLight('#f6c387',0,14,2);light.position.set(x,heightAt(x,z)+2.8,z);light.castShadow=false;group.add(light);lights.push({light,baseIntensity:28});}
+  for(const park of blossomParks){const [x,z]=park.overlook,light=new THREE.PointLight('#f6c387',0,14,2);light.position.set(x,heightAt(x,z)+2.8,z);light.castShadow=false;group.add(light);lights.push({light,baseIntensity:65});}
   group.userData.parkIds=blossomParks.map(p=>p.id);
   return {group,foliage,colliders,lighting:{lights},heightAt:support.heightAt,update:(camera,viewport)=>foliage.update(camera,viewport)};
 }

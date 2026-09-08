@@ -16,7 +16,7 @@ import {createMineralHighlands} from './mineral-highlands.js';
 
 const TAU=Math.PI*2;
 const maps = {};
-const materialBindings=new Map(),rockBindings=new Set();
+const materialBindings=new Map(),rockBindings=new Set(),terrainBindings=new Set();
 const mountainMaps={},mountainBindings=new Set();
 export async function loadMountainArt(options={}){
   const results=await Promise.allSettled(['main','right'].map(async key=>{
@@ -39,6 +39,7 @@ export async function loadLandscapeSurfaces(options={}) {
       (maps[name] ||= {})[kind] = texture;
       for(const material of materialBindings.get(name)||[]){material[{color:'map',normal:'normalMap',roughness:'roughnessMap'}[kind]]=texture;material.needsUpdate=true;}
       if(name==='mossy-rock'&&kind==='color')for(const uniform of rockBindings)uniform.value=texture;
+      for(const binding of terrainBindings)if(binding.name===name&&binding.kind===kind)binding.uniform.value=texture;
     }));
   const results=await Promise.allSettled(jobs);
   return results.every(result=>result.status==='fulfilled');
@@ -90,23 +91,42 @@ export function planarUV(geometry, scale=.2) {
   geometry.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2));return geometry;
 }
 export function groundMaterial() {
-  const m=surface('meadow',{vertexColors:true,color:'#cedbc2',normalScale:new THREE.Vector2(.70,.70),roughness:1});
-  m.userData.albedoStrength=.82;
-  const compileSurface=m.onBeforeCompile;
+  // Geometry retains its baked colours for exports, but ground no longer uses
+  // their broad periodic paint. Detail and transitions live at material scale.
+  const m=surface('meadow',{vertexColors:false,color:'#dce2cf',albedoStrength:1,normalScale:new THREE.Vector2(.30,.30),roughness:1});
+  m.userData.metresPerRepeat=2.5;
+  const bindings=[];
+  m.addEventListener('dispose',()=>{for(const binding of bindings)terrainBindings.delete(binding);});
   m.onBeforeCompile=shader=>{
-    compileSurface(shader);
-    shader.uniforms.rockMap={value:maps['mossy-rock']?.color||neutralRock};rockBindings.add(shader.uniforms.rockMap);
-    m.addEventListener('dispose',()=>rockBindings.delete(shader.uniforms.rockMap),{once:true});
+    for(const [uniformName,name,kind]of[['rockMap','mossy-rock','color'],['humusMap','forest-ground','color'],['mossNormal','mossy-rock','normal'],['humusNormal','forest-ground','normal'],['mossRoughness','mossy-rock','roughness'],['humusRoughness','forest-ground','roughness']]){
+      const uniform={value:maps[name]?.[kind]||maps.meadow?.[kind]||neutralRock},binding={name,kind,uniform};
+      shader.uniforms[uniformName]=uniform;terrainBindings.add(binding);bindings.push(binding);
+    }
     shader.vertexShader='varying vec3 terrainNormal; varying vec3 terrainPosition;\n'+shader.vertexShader;
     shader.vertexShader=shader.vertexShader.replace('#include <begin_vertex>','#include <begin_vertex>\nterrainNormal=normal; terrainPosition=position;');
-    shader.fragmentShader='uniform sampler2D rockMap; varying vec3 terrainNormal; varying vec3 terrainPosition;\n'+shader.fragmentShader;
+    shader.fragmentShader=`uniform sampler2D rockMap,humusMap,mossNormal,humusNormal,mossRoughness,humusRoughness;
+      varying vec3 terrainNormal; varying vec3 terrainPosition;
+      float soilHash(vec2 p){vec3 q=fract(vec3(p.xyx)*.1031);q+=dot(q,q.yzx+33.33);return fract((q.x+q.y)*q.z);}
+      float soilNoise(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(soilHash(i),soilHash(i+vec2(1,0)),f.x),mix(soilHash(i+vec2(0,1)),soilHash(i+vec2(1,1)),f.x),f.y);}
+      float soilFbm(vec2 p){return soilNoise(p)*.57+soilNoise(p*2.03+17.1)*.29+soilNoise(p*4.13-8.7)*.14;}
+    `+shader.fragmentShader;
     shader.fragmentShader=shader.fragmentShader.replace('#include <map_fragment>',`#include <map_fragment>
-      float rockSlope=1.-smoothstep(.5,.93,normalize(terrainNormal).y);
-      float rockPatch=smoothstep(.59,.9,sin(terrainPosition.x*.051)*cos(terrainPosition.z*.067)*.5+.5)*.32;
-      vec3 cliffTexture=texture2D(rockMap,terrainPosition.xz/3.).rgb;
-      diffuseColor.rgb=mix(diffuseColor.rgb,cliffTexture*authoredBase,max(rockSlope,rockPatch));`);
+      float slope=1.-smoothstep(.55,.94,normalize(terrainNormal).y);
+      float planting=soilFbm(terrainPosition.xz*.16+vec2(18,-4));
+      float humusWeight=smoothstep(.40,.75,planting)*.18*(1.-slope);
+      float mossWeight=clamp(slope*.60+smoothstep(.46,.76,soilFbm(terrainPosition.xz*.23-11.))*.15,0.,.68);
+      vec2 soilUv=terrainPosition.xz/2.5;
+      vec3 soilBase=mix(diffuseColor.rgb,texture2D(humusMap,soilUv).rgb*diffuse,humusWeight);
+      diffuseColor.rgb=mix(soilBase,texture2D(rockMap,soilUv).rgb*diffuse,mossWeight);`);
+    const normalSample='mix(mix(texture2D(normalMap,vNormalMapUv).xyz,texture2D(humusNormal,soilUv).xyz,humusWeight),texture2D(mossNormal,soilUv).xyz,mossWeight) * 2.0 - 1.0';
+    shader.fragmentShader=shader.fragmentShader.replace('#include <normal_fragment_maps>',THREE.ShaderChunk.normal_fragment_maps.replaceAll('texture2D( normalMap, vNormalMapUv ).xyz * 2.0 - 1.0',normalSample));
+    shader.fragmentShader=shader.fragmentShader.replace('#include <roughnessmap_fragment>',`float roughnessFactor=roughness;
+      #ifdef USE_ROUGHNESSMAP
+        float soilRoughness=mix(mix(texture2D(roughnessMap,vRoughnessMapUv).g,texture2D(humusRoughness,soilUv).g,humusWeight),texture2D(mossRoughness,soilUv).g,mossWeight);
+        roughnessFactor=mix(.82,1.,soilRoughness);
+      #endif`);
   };
-  m.customProgramCacheKey=()=> 'terrain-pbr-v5'; return m;
+  m.customProgramCacheKey=()=> 'terrain-three-layer-pbr-v6'; return m;
 }
 
 export function createLake(root, scene) {
@@ -170,7 +190,7 @@ export function createVegetation(root,heightAt,nearPath=()=>false,{lod=false,tre
   const kinds=['pine','silver','cherry'],groups=kinds.map(()=>[]),placed=[];
   const clear=(x,z)=>insideAuthoredGarden(x,z,3)||locations.some(l=>Math.hypot(x-l.x,z-l.z)<l.radius+4)||nearPath(x,z)||Math.hypot(x-court.x,z-court.z)<13;
   const gardenWalks=blossomParks.map(park=>({park,points:new THREE.CatmullRomCurve3(park.path.map(([x,z])=>new THREE.Vector3(x,0,z))).getPoints(180)}));
-  // Low plants may fill tree setbacks, but their full footprint clears real paving.
+  // Low plants fill tree setbacks; their roots clear paving, with soft frond overhang at margins.
   const lowClear=(x,z)=>insideAuthoredGarden(x,z,.7)||locations.some(l=>Math.hypot(x-l.x,z-l.z)<l.radius+1.4)||nearPath(x,z)||Math.hypot(x-court.x,z-court.z)<13||gardenWalks.some(({park,points})=>Math.hypot(x-park.overlook[0],z-park.overlook[1])<3.5||points.some(p=>Math.hypot(x-p.x,z-p.z)<2.2));
   // A broad approach corridor frames the castle and stays clear of tall crowns.
   const treeClear=(x,z)=>clear(x,z)||Math.pow((x-court.x-6)/32,2)+Math.pow((z-court.z-14)/42,2)<1||nearPath(x+5,z)||nearPath(x-5,z)||nearPath(x,z+5)||nearPath(x,z-5);

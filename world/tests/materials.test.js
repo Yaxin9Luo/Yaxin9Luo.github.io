@@ -86,16 +86,23 @@ test('roughness varies through the source image while keeping broad dielectric h
 test('landscape retains measured meadow and rock textures without overriding deliberately plain garden trim', () => {
   const ground = groundMaterial(), rock = surface('mossy-rock'), plain = surface('castle-masonry', { map: null, normalMap: null, roughnessMap: null });
   assert.ok(ground.map && ground.normalMap && ground.roughnessMap);
-  assert.ok(ground.normalScale.x >= .6);
+  assert.ok(ground.normalScale.x>=.2&&ground.normalScale.x<=.35,'ground relief must not read as inflated folds');
+  assert.equal(ground.vertexColors,false,'legacy broad vertex paint must not multiply the meadow');
+  assert.equal(ground.userData.metresPerRepeat,2.5);
   assert.ok(ground.userData.albedoStrength >= .7);
   assert.ok(rock.map && rock.normalMap && rock.roughnessMap);
   assert.ok(rock.normalScale.x >= .7);
   assert.equal(plain.map, null); assert.equal(plain.normalMap, null); assert.equal(plain.roughnessMap, null);
   const shader = shaderFor(ground);
   assert.equal(shader.uniforms.rockMap.value, rock.map);
-  assert.match(shader.fragmentShader, /terrainPosition\.xz\/3\./, 'the rock scan is a three-metre tile');
-  assert.equal((shader.fragmentShader.match(/vec3 authoredBase=/g) || []).length, 1);
-  assert.match(shader.fragmentShader, /mix\(authoredBase,diffuseColor.rgb,0\.820\)/);
+  assert.match(shader.fragmentShader,/terrainPosition\.xz\/2\.5/,'three soil layers use a shared physical UV basis');
+  const humus=surface('forest-ground');
+  for(const [uniform,texture]of[['humusMap',humus.map],['mossNormal',rock.normalMap],['humusNormal',humus.normalMap],['mossRoughness',rock.roughnessMap],['humusRoughness',humus.roughnessMap]])assert.equal(shader.uniforms[uniform].value,texture,`${uniform} uses the loaded source map`);
+  assert.match(shader.fragmentShader,/soilFbm/);
+  assert.doesNotMatch(shader.fragmentShader,/sin\(terrainPosition|rockPatch/,'no broad periodic colour overlay');
+  assert.match(shader.fragmentShader,/mapN = mix\(mix\(/,'normal relief follows the same soil layer weights');
+  assert.match(shader.fragmentShader,/roughnessFactor=mix\(\.82,1\.,soilRoughness\)/,'soil remains matte with per-layer roughness');
+  assert.doesNotMatch(shader.fragmentShader,/mix\(authoredBase/,'measured albedo retains its actual material contrast');
 });
 
 test('actual reading props use distinct stone, timber, metal, cloth and soil surfaces at physical scales', () => {
