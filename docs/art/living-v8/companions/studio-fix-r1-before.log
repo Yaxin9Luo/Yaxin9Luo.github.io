@@ -1,0 +1,139 @@
+✖ recording constructor failure releases the stream and permits a fresh attempt (5.930958ms)
+✖ recording start failure releases the stream and permits a fresh attempt (1.392375ms)
+✖ normal stop saves actual metadata and stale events cannot unlock a later recording (1.69125ms)
+✖ asynchronous recorder error releases controls, stream and timer before retry (1.561458ms)
+✖ persisted pagehide suspends resources; pageshow resumes one frame loop without hidden elapsed time (30.495541ms)
+✖ persisted navigation cancels recording immediately and delayed callbacks leave a resumed capture alone (1.323041ms)
+✖ permanent pagehide disposes once, releases downloads and never resumes (1.64925ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 0
+ℹ fail 7
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 132.179167
+
+✖ failing tests:
+
+test at tests/companion-studio.test.js:86:46
+✖ recording constructor failure releases the stream and permits a fresh attempt (5.930958ms)
+  AssertionError [ERR_ASSERTION]: failed capture track stopped
+
+  0 !== 1
+
+      at TestContext.<anonymous> (file:///Users/yaxinluo/Documents/Codex/2026-09-07/https-yaxin9luo-github-io-https-yaxin9luo/outputs/academy-living-v8/world/tests/companion-studio.test.js:93:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/companion-studio.test.js:86:46
+✖ recording start failure releases the stream and permits a fresh attempt (1.392375ms)
+  AssertionError [ERR_ASSERTION]: failed capture track stopped
+
+  0 !== 1
+
+      at TestContext.<anonymous> (file:///Users/yaxinluo/Documents/Codex/2026-09-07/https-yaxin9luo-github-io-https-yaxin9luo/outputs/academy-living-v8/world/tests/companion-studio.test.js:93:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/companion-studio.test.js:101:1
+✖ normal stop saves actual metadata and stale events cannot unlock a later recording (1.69125ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+  true !== false
+
+      at TestContext.<anonymous> (file:///Users/yaxinluo/Documents/Codex/2026-09-07/https-yaxin9luo-github-io-https-yaxin9luo/outputs/academy-living-v8/world/tests/companion-studio.test.js:111:57)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: true,
+    expected: false,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/companion-studio.test.js:115:1
+✖ asynchronous recorder error releases controls, stream and timer before retry (1.561458ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+
+  + 'undefined'
+  - 'function'
+
+      at TestContext.<anonymous> (file:///Users/yaxinluo/Documents/Codex/2026-09-07/https-yaxin9luo-github-io-https-yaxin9luo/outputs/academy-living-v8/world/tests/companion-studio.test.js:118:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/companion-studio.test.js:125:1
+✖ persisted pagehide suspends resources; pageshow resumes one frame loop without hidden elapsed time (30.495541ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+  1 !== 0
+
+      at TestContext.<anonymous> (file:///Users/yaxinluo/Documents/Codex/2026-09-07/https-yaxin9luo-github-io-https-yaxin9luo/outputs/academy-living-v8/world/tests/companion-studio.test.js:129:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/companion-studio.test.js:140:1
+✖ persisted navigation cancels recording immediately and delayed callbacks leave a resumed capture alone (1.323041ms)
+  AssertionError [ERR_ASSERTION]: kind disabled state
+
+  true !== false
+
+      at assertRestored (file:///Users/yaxinluo/Documents/Codex/2026-09-07/https-yaxin9luo-github-io-https-yaxin9luo/outputs/academy-living-v8/world/tests/companion-studio.test.js:81:46)
+      at TestContext.<anonymous> (file:///Users/yaxinluo/Documents/Codex/2026-09-07/https-yaxin9luo-github-io-https-yaxin9luo/outputs/academy-living-v8/world/tests/companion-studio.test.js:143:43)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: true,
+    expected: false,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/companion-studio.test.js:149:1
+✖ permanent pagehide disposes once, releases downloads and never resumes (1.64925ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+  2 !== 1
+
+      at TestContext.<anonymous> (file:///Users/yaxinluo/Documents/Codex/2026-09-07/https-yaxin9luo-github-io-https-yaxin9luo/outputs/academy-living-v8/world/tests/companion-studio.test.js:154:43)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 2,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

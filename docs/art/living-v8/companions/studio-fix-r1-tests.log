@@ -1,0 +1,15 @@
+✔ recording constructor failure releases the stream and permits a fresh attempt (5.630959ms)
+✔ recording start failure releases the stream and permits a fresh attempt (1.292834ms)
+✔ normal stop saves actual metadata and stale events cannot unlock a later recording (1.614208ms)
+✔ asynchronous recorder error releases controls, stream and timer before retry (1.307167ms)
+✔ persisted pagehide suspends resources; pageshow resumes one frame loop without hidden elapsed time (13.036083ms)
+✔ persisted navigation cancels recording immediately and delayed callbacks leave a resumed capture alone (0.995458ms)
+✔ permanent pagehide disposes once, releases downloads and never resumes (1.460167ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 7
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 110.874042

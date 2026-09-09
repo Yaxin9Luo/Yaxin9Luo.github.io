@@ -16,7 +16,7 @@ const fill=new THREE.DirectionalLight('#c3d9ef',1.2);fill.position.set(4,3.4,2.5
 const rim=new THREE.DirectionalLight('#ffffff',1.4);rim.position.set(1,5,-4);scene.add(rim);
 const floor=new THREE.Mesh(new THREE.PlaneGeometry(200,200),new THREE.MeshStandardMaterial({color:'#757f86',roughness:.98}));floor.rotation.x=-Math.PI/2;floor.receiveShadow=true;scene.add(floor);
 const grid=new THREE.GridHelper(12,24,'#5b6467','#70797b');grid.position.y=.002;grid.material.transparent=true;grid.material.opacity=.34;scene.add(grid);
-let actor=null,view=query.get('view')||'threequarter',light=query.get('light')||'neutral',paused=query.get('paused')==='1',last=performance.now(),recording=null,rafId=0,disposed=false;
+let actor=null,view=query.get('view')||'threequarter',light=query.get('light')||'neutral',paused=query.get('paused')==='1',last=performance.now(),recording=null,rafId=0,disposed=false,suspended=false;
 const downloadURLs=new Map();
 const assetControls=['kind','action','pause','time','language','reduced','fur-visible','fur-receive-shadow','save-frame','record-clip'].map(el);
 el('kind').value=query.get('kind')==='sadaharu'?'sadaharu':'elizabeth';el('language').value=query.get('lang')==='en'?'en':'zh';
@@ -73,37 +73,56 @@ async function saveFrame(){
   const destination=await saveBlob(name,blob);await saveBlob(name.replace(/\.png$/,'.json'),new Blob([JSON.stringify(metadata,null,2)],{type:'application/json'}));
   status(`${destination==='server'?'Saved':'Downloaded'} ${name}`);return name;
 }
+function releaseRecording(session){
+  if(session.released)return false;
+  session.released=true;clearTimeout(session.timer);session.timer=null;
+  if(session.recorder){
+    session.recorder.ondataavailable=session.recorder.onstop=session.recorder.onerror=null;
+    try{if(session.recorder.state!=='inactive')session.recorder.stop();}catch{/* Stopping tracks still releases a failed recorder. */}
+  }
+  session.stream.getTracks().forEach(track=>track.stop());
+  if(recording===session){
+    recording=null;
+    for(const [node,disabled] of session.locked)node.disabled=disabled;
+    controls.enabled=session.controlsEnabled;el('record-clip').textContent=session.buttonLabel;
+  }
+  return true;
+}
+function stopRecording(session=recording){
+  if(!session||session.released)return;
+  try{if(session.recorder.state==='recording')session.recorder.stop();}
+  catch(error){releaseRecording(session);status(error.message,true);}
+}
 async function recordClip(){
-  if(recording){if(recording.recorder.state==='recording')recording.recorder.stop();return;}
+  if(recording){stopRecording();return;}
   if(typeof MediaRecorder!=='function'||!canvas.captureStream)throw new Error('Clip recording is unavailable in this browser.');
   const mime=['video/webm;codecs=vp9','video/webm;codecs=vp8','video/webm'].find(type=>MediaRecorder.isTypeSupported(type));
   if(!mime)throw new Error('This browser cannot record a WebM clip.');
   const duration=actor.action==='sign'?3.55:(actor.duration||3);actor.setAction(actor.action);actor.seek(0);setPaused(false);
   last=performance.now();renderer.render(scene,camera);
   const requestedFrameRate=30,videoBitsPerSecond=Math.max(12000000,Math.ceil(canvas.width*canvas.height*requestedFrameRate*.2));
-  const stream=canvas.captureStream(requestedFrameRate),parts=[],name=captureName('webm'),recorder=new MediaRecorder(stream,{mimeType:mime,videoBitsPerSecond});
+  const parts=[],name=captureName('webm');
   const locked=new Map([...document.querySelectorAll('select,input,button')].filter(node=>node.id!=='record-clip').map(node=>[node,node.disabled]));
-  for(const node of locked.keys())node.disabled=true;
-  const controlsEnabled=controls.enabled;controls.enabled=false;
-  const session={recorder,stream,timer:null,startedAt:0,metadata:null};recording=session;
-  el('record-clip').textContent='Stop recording';
-  recorder.ondataavailable=event=>{if(event.data.size)parts.push(event.data);};
-  recorder.onstop=async()=>{
-    clearTimeout(session.timer);
-    const elapsed=(performance.now()-session.startedAt)/1000,end=evidence();
-    stream.getTracks().forEach(track=>track.stop());
-    if(recording===session)recording=null;
-    for(const [node,disabled] of locked)node.disabled=disabled;
-    controls.enabled=controlsEnabled;el('record-clip').textContent='Record clip';
-    if(disposed)return;
-    try{
-      const destination=await saveBlob(name,new Blob(parts,{type:mime}));
-      await saveBlob(name.replace(/\.webm$/,'.json'),new Blob([JSON.stringify({...session.metadata,requestedDurationSeconds:duration,actualDurationSeconds:elapsed,end,requestedFrameRate,encoding:{mimeType:recorder.mimeType,requestedVideoBitsPerSecond:videoBitsPerSecond,recorderVideoBitsPerSecond:recorder.videoBitsPerSecond}},null,2)],{type:'application/json'}));
-      status(`${destination==='server'?'Saved':'Downloaded'} ${name}`);
-    }catch(error){status(error.message,true);}
-  };
-  recorder.start();session.startedAt=performance.now();session.metadata=evidence();
-  session.timer=setTimeout(()=>{if(recorder.state==='recording')recorder.stop();},(duration+.2)*1000);
+  const session={stream:canvas.captureStream(requestedFrameRate),recorder:null,locked,controlsEnabled:controls.enabled,buttonLabel:el('record-clip').textContent,timer:null,startedAt:0,metadata:null,released:false};
+  recording=session;
+  try{
+    const recorder=new MediaRecorder(session.stream,{mimeType:mime,videoBitsPerSecond});session.recorder=recorder;
+    for(const node of locked.keys())node.disabled=true;
+    controls.enabled=false;el('record-clip').textContent='Stop recording';
+    recorder.ondataavailable=event=>{if(!session.released&&event.data.size)parts.push(event.data);};
+    recorder.onerror=event=>{if(releaseRecording(session))status(event.error?.message||'Clip recording failed.',true);};
+    recorder.onstop=async()=>{
+      if(!releaseRecording(session)||disposed||suspended)return;
+      try{
+        const elapsed=(performance.now()-session.startedAt)/1000,end=evidence();
+        const destination=await saveBlob(name,new Blob(parts,{type:mime}));
+        await saveBlob(name.replace(/\.webm$/,'.json'),new Blob([JSON.stringify({...session.metadata,requestedDurationSeconds:duration,actualDurationSeconds:elapsed,end,requestedFrameRate,encoding:{mimeType:recorder.mimeType,requestedVideoBitsPerSecond:videoBitsPerSecond,recorderVideoBitsPerSecond:recorder.videoBitsPerSecond}},null,2)],{type:'application/json'}));
+        status(`${destination==='server'?'Saved':'Downloaded'} ${name}`);
+      }catch(error){status(error.message,true);}
+    };
+    recorder.start();session.startedAt=performance.now();session.metadata=evidence();
+    session.timer=setTimeout(()=>stopRecording(session),(duration+.2)*1000);
+  }catch(error){releaseRecording(session);throw error;}
   return name;
 }
 const safely=fn=>async()=>{try{await fn();}catch(error){status(error.message,true);}};
@@ -115,7 +134,7 @@ el('fur-visible').onchange=event=>{const fur=actor?.model.getObjectByName('FineD
 el('fur-receive-shadow').onchange=event=>{const fur=actor?.model.getObjectByName('FineDirectionalFurCards');if(fur)fur.receiveShadow=event.target.checked;};
 el('save-frame').onclick=safely(saveFrame);el('record-clip').onclick=safely(recordClip);
 document.querySelectorAll('[data-view]').forEach(button=>button.onclick=()=>setView(button.dataset.view));
-const resizeObserver=new ResizeObserver(()=>{renderer.setPixelRatio(devicePixelRatio||1);renderer.setSize(canvas.clientWidth,canvas.clientHeight,false);setView(view);});resizeObserver.observe(canvas);
+const resizeObserver=new ResizeObserver(()=>{if(disposed||suspended)return;renderer.setPixelRatio(devicePixelRatio||1);renderer.setSize(canvas.clientWidth,canvas.clientHeight,false);setView(view);});resizeObserver.observe(canvas);
 setLight(light);setPaused(paused);setView(view);
 try{
   await loadCompanionAssets({deadline:performance.now()+30000});setKind(el('kind').value);
@@ -124,6 +143,7 @@ try{
 }catch(error){status(`Companion load failed: ${error.message}`,true);document.body.dataset.ready='failed';document.querySelector('aside').setAttribute('aria-busy','false');for(const button of document.querySelectorAll('button'))button.disabled=true;}
 window.__companionStudio={get actor(){return actor;},scene,camera,renderer,controls,setKind,setAction,setView,setLight,setPaused,saveFrame,recordClip,evidence,diagnostics:companionAssetDiagnostics};
 function frame(now){
+  if(disposed||suspended)return;
   rafId=requestAnimationFrame(frame);const dt=Math.max(0,(now-last)/1000);last=now;if(document.hidden)return;
   if(actor){
     actor.update(dt,{paused,reducedMotion:el('reduced').checked,speed:actor.asset.walk?actor.asset.walk.stride/actor.asset.walk.duration:0});
@@ -133,12 +153,21 @@ function frame(now){
   controls.update();renderer.render(scene,camera);
 }
 rafId=requestAnimationFrame(frame);
-document.addEventListener('visibilitychange',()=>{last=performance.now();if(document.hidden&&recording?.recorder.state==='recording')recording.recorder.stop();});
-window.addEventListener('pagehide',()=>{
-  disposed=true;cancelAnimationFrame(rafId);resizeObserver.disconnect();
-  if(recording){clearTimeout(recording.timer);if(recording.recorder.state==='recording')recording.recorder.stop();recording.stream.getTracks().forEach(track=>track.stop());}
+document.addEventListener('visibilitychange',()=>{last=performance.now();if(document.hidden)stopRecording();});
+window.addEventListener('pagehide',event=>{
+  if(disposed)return;
+  suspended=true;cancelAnimationFrame(rafId);rafId=0;resizeObserver.disconnect();
+  // Navigation cancels a partial capture immediately; queued recorder events must
+  // neither download it after returning nor unlock a newer recording session.
+  if(recording){releaseRecording(recording);status('Recording cancelled when leaving the studio.');}
+  if(event.persisted)return;
+  disposed=true;
   for(const [url,timer] of downloadURLs){clearTimeout(timer);URL.revokeObjectURL(url);}downloadURLs.clear();
   actor?.dispose();controls.dispose();floor.geometry.dispose();floor.material.dispose();grid.geometry.dispose();
   for(const material of Array.isArray(grid.material)?grid.material:[grid.material])material.dispose();
   key.shadow.map?.dispose();key.shadow.mapPass?.dispose();renderer.dispose();
+});
+window.addEventListener('pageshow',event=>{
+  if(!event.persisted||disposed||!suspended)return;
+  suspended=false;last=performance.now();resizeObserver.observe(canvas);rafId=requestAnimationFrame(frame);
 });

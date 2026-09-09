@@ -1,6 +1,6 @@
 # Task 1 — companion assets, runtime and isolated studio
 
-**Status: implementation, automated verification and final native art gates PASS; independent Task 1 code review remains a separate root-owned gate.** Root/independent static and scoped motion art reviews pass through Sadaharu r12. Root's final r12 native night sit confirms the belly flap is gone, and native sniff playback confirms a smooth nape/attached collar. No world integration or push; the complete site remains local. The owned implementation commit is ready for independent code review. All Blender work ran in background CLI; this worker used no browser tools.
+**Status: implementation and final native art gates PASS; two Important studio lifecycle findings from independent code review are fixed and pass focused regression tests. Root's real Back/Forward validation and scoped code re-review remain pending.** Root/independent static and scoped motion art reviews pass through Sadaharu r12. Root's final r12 native night sit confirms the belly flap is gone, and native sniff playback confirms a smooth nape/attached collar. No world integration or push; the complete site remains local. The original owned implementation is commit `815d6de5dc9698b7bae599e6d5a1d97cfeb6ea20`; the follow-up fix is documented below. All Blender work ran in background CLI; this worker used no browser tools.
 
 ## Delivered files and exact assets
 
@@ -56,7 +56,7 @@ Sadaharu trunk: Root/Pelvis/Spine/Chest/Neck/Head/Jaw, EarL/R and Tail01–Tail0
 
 ## Studio and final verification
 
-The isolated studio has front/profile/back/threequarter/face, day/neutral/night/bright/dark, action/time/pause, language and reduced-motion controls; native DPR has no cap. It advances by actual elapsed time and excludes hidden/loading time. Asset-dependent controls start disabled in HTML and unlock only after true decode; accessible loading/error status remains. PNG/WebM/JSON save through the capture service with browser-download fallback when the POST service is absent. Each recorder owns its timer/stream, locks controls, and reports actual start/end clip/time/duration separately from requested 30 FPS. Bitrate is at least 12 Mbps or native pixels×30×.2. Metadata reports actual layer presence, size and DPR. Pagehide releases RAF/observer/timers, geometry/materials/shadow maps, controls, renderer and actor resources.
+The isolated studio has front/profile/back/threequarter/face, day/neutral/night/bright/dark, action/time/pause, language and reduced-motion controls; native DPR has no cap. It advances by actual elapsed time and excludes hidden/loading time. Asset-dependent controls start disabled in HTML and unlock only after true decode; accessible loading/error status remains. PNG/WebM/JSON save through the capture service with browser-download fallback when the POST service is absent. Each recorder owns its timer/stream, locks controls, and reports actual start/end clip/time/duration separately from requested 30 FPS. Bitrate is at least 12 Mbps or native pixels×30×.2. Metadata reports actual layer presence, size and DPR. Persisted pagehide now suspends RAF/observer and cancels partial recording while retaining render/actor resources; pageshow resumes with a fresh timestamp. Permanent pagehide releases RAF/observer/timers, geometry/materials/shadow maps, controls, renderer and actor resources once.
 
 Fresh final automated verification:
 
@@ -66,4 +66,34 @@ Fresh final automated verification:
 - Final decoded 121-phase per-foot / 31-phase whole-body sweep: all six clips positive. Minimum walk sole +.017462725 m; sit body +.017227636 m; stand body +.017004860 m. Elizabeth 121-phase all-foot-vertex minimum +.008000002 m.
 - Actual actor idle→sit→stand→idle crossfade body minima: +.017999201 / +.017992031 / +.017999289 m. Regression tests previously failed on real old assets and now pass; no mirrored implementation-only tests were added.
 
-Task 1 independent code review is still a root-owned gate after the owned implementation commit. Whole-world route grounding, movement synchronization, collision, interaction and map integration belong to Task 5 and are not claimed here. No push or deployment was performed.
+Whole-world route grounding, movement synchronization, collision, interaction and map integration belong to Task 5 and are not claimed here. No push or deployment was performed.
+
+## Independent code-review fix round 1
+
+Review input: `.superpowers/sdd/living-v8-plan/task-1-code-review.md`; FIX_BASE `815d6de5dc9698b7bae599e6d5a1d97cfeb6ea20`. Both Important findings were reproduced before editing production code. This round changes only `world/src/companion-studio.js`, new `world/tests/companion-studio.test.js`, this report and three focused test/build logs. Assets, actor runtime, manifest, authoring sources and all unrelated WIP are unchanged.
+
+The recorder now acquires a session before constructing MediaRecorder. One idempotent `releaseRecording` path handles constructor/start exceptions, asynchronous recorder errors, normal stop and navigation cancellation: detach old event handlers, clear its timer, stop any active recorder and capture tracks, clear only its own retained session, and restore the exact previous disabled states, OrbitControls enabled state and recording button label. A failed recorder reports an error and allows an immediate fresh attempt. Old stop callbacks/timers cannot release a newer session or save the same recording twice. Normal completion still saves actual duration/start/end metadata and the existing native-resolution bitrate.
+
+Persisted pagehide now suspends the frame loop and ResizeObserver while retaining the actor, controls, geometry/materials and renderer. A partial clip is cancelled immediately and does not download on return. Persisted pageshow resumes observation and a single RAF loop, preserves actor/action/pause state and resets the frame timestamp so cached time is excluded. Permanent teardown is idempotent, disposes the existing owned resources and revokes retained download URLs; a later pageshow cannot revive disposed resources.
+
+The tests evaluate the complete actual studio source with imports supplied as dependencies. They keep real Three scene/camera/geometry/materials and execute actual UI handlers, recording functions and page lifecycle listeners. Only DOM, MediaRecorder/device capture, GPU renderer/controls, asset loading/actor and clock/task scheduling are test boundaries. No production support abstraction or copied lifecycle implementation was added.
+
+Commands run from `world/` (logs are under `docs/art/living-v8/companions/`; trailing whitespace on the test runner's blank error-output lines was trimmed for Git):
+
+```text
+node --test tests/companion-studio.test.js > ../docs/art/living-v8/companions/studio-fix-r1-before.log 2>&1
+exit 1; tests 7, pass 0, fail 7 (before production changes)
+
+node --test tests/companion-studio.test.js > ../docs/art/living-v8/companions/studio-fix-r1-tests.log 2>&1
+exit 0; tests 7, pass 7, fail 0; duration_ms 110.874042
+
+npm run build > ../docs/art/living-v8/companions/studio-fix-r1-build.log 2>&1
+exit 0; vite v8.2.2; 103 modules transformed; built in 1.78s
+dist/assets/companions-8AXlhefq.js 17.39 kB, gzip 7.43 kB
+```
+
+`git diff --check` from the worktree root exits 0 with no output. The 393-test suite above belongs to the original delivery; it was deliberately not repeated for this isolated studio change. No actor code/assets changed, so actor tests were not repeated. Focused tests cover both throwing constructor/start, retry with pre-disabled controls and OrbitControls already disabled, normal-stop metadata, stale callbacks/timers, asynchronous error, repeated persisted hide/show, pause preservation, hidden-time exclusion, active-capture cancellation and permanent teardown/download cleanup.
+
+Self-review: session cleanup is synchronous and guarded before any save awaits, so UI ownership and stream release do not depend on successful saving. A released session cannot mutate a later recording. Persisted navigation never calls GPU/actor disposal, and resumed timing starts from pageshow. The tests demonstrate actual application event paths with deterministic boundaries; they do not establish browser BFCache eligibility or real device encoder behavior. Root owns real compiled-browser Back/Forward and scoped re-review, which are pending at this handoff.
+
+Compiled preview is kept running at `http://127.0.0.1:50020/companion-studio.html` from `world/dist/` using Python ThreadingHTTPServer (no Vite websocket). Read-only HTTP checks returned 200 for the HTML, all seven referenced JS chunks and both unchanged current GLBs. These are availability checks; root will record the browser result independently.
