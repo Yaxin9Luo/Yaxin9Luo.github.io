@@ -25,7 +25,22 @@ test('terrain and cliff shader paths share measured region data without dark bak
   const compile=material=>{const shader={uniforms:{},vertexShader:THREE.ShaderLib.standard.vertexShader,fragmentShader:THREE.ShaderLib.standard.fragmentShader};material.onBeforeCompile(shader);return shader;};
   const ground=groundMaterial(),blend=groundMaterial({transition:true}),cliff=cliffMaterial(),g=compile(ground),b=compile(blend),c=compile(cliff);
   assert.equal(g.uniforms.plantingMap.value,c.uniforms.plantingMap.value);assert.equal(b.uniforms.plantingMap.value,g.uniforms.plantingMap.value);
-  assert.equal(g.uniforms.plantingMap.value.magFilter,THREE.LinearFilter);assert.match(b.vertexShader,/rootInterior=soilInterior/);assert.match(b.fragmentShader,/rootInterior\*\.66/);
+  assert.equal(g.uniforms.plantingMap.value.magFilter,THREE.LinearFilter);assert.match(b.vertexShader,/rootInterior=soilInterior/);
+  const soilWeight=shader=>{
+    const expression=shader.fragmentShader.match(/float humusWeight=([^;]+);/)?.[1];
+    assert.ok(expression,'the generated material exposes its actual soil blend weight');
+    // This scalar GLSL expression is also valid JavaScript; evaluate the generated formula, not a copy.
+    return new Function('community','fineEdge','rootInterior','slope','clamp',`return (${expression});`);
+  };
+  const terrainWeight=soilWeight(g),transitionWeight=soilWeight(b),clamp=(value,min,max)=>Math.min(max,Math.max(min,value));
+  for(const humus of[0,.3,.7,1])for(const fineEdge of[0,.5,1])for(const slope of[0,.5,1]){
+    const community={g:humus},edge=transitionWeight(community,fineEdge,0,slope,clamp);
+    assert.equal(edge,terrainWeight(community,fineEdge,0,slope,clamp),'ribbon margins match the underlying terrain');
+    const middle=transitionWeight(community,fineEdge,.5,slope,clamp),interior=transitionWeight(community,fineEdge,1,slope,clamp);
+    for(const weight of[edge,middle,interior])assert.ok(Number.isFinite(weight)&&weight>=0&&weight<=1,'soil contribution remains a finite blend weight');
+    assert.ok(edge<=middle&&middle<=interior,'soil contribution grows toward the ribbon interior');
+    if(humus===0)assert.ok(interior>edge,'rootInterior adds soil where the underlying terrain has none');
+  }
   assert.match(THREE.ShaderChunk.color_pars_fragment,/varying vec4 vColor/,'pinned Three exposes vertex color as RGBA');
   assert.match(c.fragmentShader,/dot\(vColor\.rgb,vec3\(/,'RGB luminance must not pass a vec4 into the GPU dot product');
   assert.match(c.fragmentShader,/texture2D\(roughnessMap/);assert.match(c.fragmentShader,/cliffPosition.y/);assert.match(c.fragmentShader,/rockVertexLight/);assert.doesNotMatch(c.fragmentShader,/#include <color_fragment>/);
