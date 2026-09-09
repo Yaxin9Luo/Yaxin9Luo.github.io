@@ -35,6 +35,8 @@ Ground materials should follow actual regions/slope/moisture rather than a globa
 
 Native review extension: the same material pass owns a focused shared cliff material in `landscape.js` and only its import/three material call sites in `world.js`. Existing dark baked colors multiplied by the moss map obscure the authored geology. Give the dry upper faces a readable mineral tone and the lower wet faces a localized cooler treatment while retaining real PBR detail, vertex variation and existing geometry. Do not rebake or alter Task 1 terrain merely to adjust its runtime material.
 
+Also permit `environment-composition.js`'s `groundPatch` material call and per-vertex blend attribute to soften the observed hard ochre patch margins. Preserve patch positions, footprints, support and other composition geometry. Legacy standalone review GLBs may remain historical when no active website consumer uses them; retain their internal integrity checks and verify current botanical runtime derivatives against current source instead.
+
 Run meaningful placement/corridor, finite geometry and wind/shadow tests appropriate to changes. Commit implementation and report full evidence. Root reviews day/night blossom walks, courtyard and overview; refine visual issues before acceptance.
 
 ## Task 3: Water, middle-distance depth and integrated atmosphere
