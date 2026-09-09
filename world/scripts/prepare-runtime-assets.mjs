@@ -68,7 +68,7 @@ for(const id of ['/art/academy/cloud-panorama.webp','/art/night-garden/moon-lroc
 }
 }
 await fs.writeFile(path.join(root,'src/asset-manifest.js'),`// Generated from actual bytes by scripts/prepare-runtime-assets.mjs.\nexport const assetManifest = ${JSON.stringify(manifest,null,2)};\n`);
-const reportPath=path.join(root,terrainOnly?'../docs/art/landscape-v7/terrain-transmission-report.json':wizardOnly?'../docs/art/ground-motion-v6/transmission-report.json':'../docs/art/experience-v4/transmission-report.json');
+const reportPath=path.join(root,terrainOnly?'../docs/art/living-v8/herbarium/terrain-transmission-report.json':wizardOnly?'../docs/art/ground-motion-v6/transmission-report.json':'../docs/art/experience-v4/transmission-report.json');
 await fs.mkdir(path.dirname(reportPath),{recursive:true});
 await fs.writeFile(reportPath,JSON.stringify({meshopt:'1.2.0',gltfTransform:'4.5.0',normalBits:14,positionBits:16,assets:report},null,2)+'\n');
 console.log(JSON.stringify({assets:Object.keys(manifest).length,coreBytes:manifest['wizard-core'].bytes+manifest['navigation-terrain'].bytes}));

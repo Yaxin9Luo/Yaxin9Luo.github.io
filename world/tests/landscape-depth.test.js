@@ -131,9 +131,9 @@ test('local fog preserves per-pass depth, live night uniforms, pine wind and ori
 });
 
 test('full and progressive assembly attach one depth group at highlands and keep the shared update live',async()=>{
-  const fullScene=new THREE.Scene(),full=createWorld(fullScene),count=(root,name)=>{let n=0;root.traverse(o=>{if(o.name===name)n++;});return n;};
+  const fullScene=new THREE.Scene(),full=createWorld(fullScene,{herbarium:false}),count=(root,name)=>{let n=0;root.traverse(o=>{if(o.name===name)n++;});return n;};
   assert.equal(count(fullScene,'Reflective lake'),1);assert.equal(count(fullScene,'Authored middle-distance coast'),1);full.update(13,.016,false);assert.ok(full.environmentLighting.nightMaterials.some(e=>e.material.uniforms.localEye));dispose(fullScene);
-  const scene=new THREE.Scene(),world=createNavigationWorld(scene,islandGeometry()),lake=world.lake;assert.equal(count(scene,'Authored middle-distance coast'),0);
+  const scene=new THREE.Scene(),world=createNavigationWorld(scene,islandGeometry(),{herbarium:false}),lake=world.lake;assert.equal(count(scene,'Authored middle-distance coast'),0);
   let highlands=false;await world.enhance({prepareRegion:async()=>false,onRegion:({region})=>{if(region==='highlands'){highlands=true;assert.equal(count(scene,'Authored middle-distance coast'),1);world.update(19,.016,false);const mist=world.root.getObjectByName('West headland water mist');assert.equal(mist.material.uniforms.windTime.value,19);assert.ok(world.environmentLighting.nightMaterials.some(e=>e.material===mist.material));}}});
   assert.ok(highlands);assert.equal(world.lake,lake);assert.equal(count(scene,'Reflective lake'),1);assert.equal(count(scene,'Authored middle-distance coast'),1);world.update(31,.016,true);assert.equal(world.root.getObjectByName('West headland water mist').material.uniforms.windTime.value,0);dispose(scene);
 });

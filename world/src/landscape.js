@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { Water } from 'three/addons/objects/Water.js';
 import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
+import {herbariumAt,herbariumLawnAt,herbariumSoilAt} from './herbarium-layout.js';
 import { locations, court, bridges } from './locations.js';
 import {loadPBRTexture,loadImageTexture} from './asset-cache.js';
 import {loadAtmosphereAssets} from './atmosphere.js';
@@ -101,7 +102,7 @@ function plantingMaterialMap(){
   const size=256,data=new Uint8Array(size*size*4);
   for(let z=0;z<size;z++)for(let x=0;x<size;x++){
     const wx=(x+.5)/size*288-144,wz=(z+.5)/size*288-144,p=plantingCommunityAt(wx,wz,landformAt(wx,wz)),at=(z*size+x)*4;
-    data[at]=Math.round(p.moisture*255);data[at+1]=Math.round(p.humus*255);data[at+2]=Math.round(p.rock*255);data[at+3]=Math.round(p.opening*255);
+    data[at]=Math.round(p.moisture*255);data[at+1]=Math.round(Math.max(p.humus,herbariumSoilAt(wx,wz)*.78)*255);data[at+2]=Math.round(p.rock*255);data[at+3]=Math.round(Math.max(p.opening,herbariumLawnAt(wx,wz))*255);
   }
   communityTexture=new THREE.DataTexture(data,size,size);communityTexture.minFilter=communityTexture.magFilter=THREE.LinearFilter;communityTexture.colorSpace=THREE.NoColorSpace;communityTexture.needsUpdate=true;communityTexture.userData.sharedAsset=true;return communityTexture;
 }
@@ -126,10 +127,22 @@ export function groundMaterial({transition=false}={}) {
       float soilHash(vec2 p){vec3 q=fract(vec3(p.xyx)*.1031);q+=dot(q,q.yzx+33.33);return fract((q.x+q.y)*q.z);}
       float soilNoise(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(soilHash(i),soilHash(i+vec2(1,0)),f.x),mix(soilHash(i+vec2(0,1)),soilHash(i+vec2(1,1)),f.x),f.y);}
       float soilFbm(vec2 p){return soilNoise(p)*.57+soilNoise(p*2.03+17.1)*.29+soilNoise(p*4.13-8.7)*.14;}
+      // Three continuously weighted, translated source tiles. No UV rotation:
+      // every PBR channel retains the same tangent frame and full texel detail.
+      vec2 soilOffset(vec2 cell){return vec2(soilHash(cell),soilHash(cell+71.7))*23.17;}
+      vec4 continuousSoil(sampler2D channel,vec2 uv){
+        vec2 skew=vec2(uv.x-uv.y*.577350269,uv.y*1.154700538)*.32;
+        vec2 cell=floor(skew),f=fract(skew),a,b,c;vec3 weight;
+        if(f.x+f.y<1.){a=cell;b=cell+vec2(1,0);c=cell+vec2(0,1);weight=vec3(1.-f.x-f.y,f.x,f.y);}
+        else{a=cell+vec2(1);b=cell+vec2(0,1);c=cell+vec2(1,0);weight=vec3(f.x+f.y-1.,1.-f.x,1.-f.y);}
+        weight=pow(max(weight,vec3(0.)),vec3(4.));weight/=dot(weight,vec3(1.));
+        vec2 dx=dFdx(uv),dy=dFdy(uv);
+        return textureGrad(channel,uv+soilOffset(a),dx,dy)*weight.x+textureGrad(channel,uv+soilOffset(b),dx,dy)*weight.y+textureGrad(channel,uv+soilOffset(c),dx,dy)*weight.z;
+      }
     `+shader.fragmentShader;
     shader.fragmentShader=shader.fragmentShader.replace('#include <map_fragment>',`
       #ifdef USE_MAP
-        diffuseColor*=texture2D(map,terrainPosition.xz/2.5);
+        diffuseColor*=continuousSoil(map,terrainPosition.xz/2.5);
       #endif
       // Region pigment retains measured texel luminance and physical relief.
       vec4 community=texture2D(plantingMap,(terrainPosition.xz+vec2(144.))/288.);
@@ -143,19 +156,19 @@ export function groundMaterial({transition=false}={}) {
       float humusWeight=clamp(community.g*(.84+fineEdge*.16)${transition?'+rootInterior*.66':''},0.,.86)*(1.-slope*.65);
       float mossWeight=clamp(slope*.76+community.b*(.32+fineEdge*.21),0.,.86);
       vec2 soilUv=terrainPosition.xz/2.5;
-      vec3 humusColor=texture2D(humusMap,soilUv).rgb;
+      vec3 humusColor=continuousSoil(humusMap,soilUv).rgb;
       humusColor=mix(humusColor,vec3(dot(humusColor,meadowLuminanceWeights))*vec3(.92,.96,.84),.62)*.79;
       vec3 soilBase=mix(diffuseColor.rgb,humusColor*diffuse,humusWeight);
-      diffuseColor.rgb=mix(soilBase,mix(texture2D(rockMap,soilUv).rgb,vec3(dot(texture2D(rockMap,soilUv).rgb,meadowLuminanceWeights))*vec3(1.12,1.12,1.04),.60)*diffuse,mossWeight);`);
-    const normalSample='mix(mix(texture2D(normalMap,soilUv).xyz,texture2D(humusNormal,soilUv).xyz,humusWeight),texture2D(mossNormal,soilUv).xyz,mossWeight) * 2.0 - 1.0';
+      diffuseColor.rgb=mix(soilBase,mix(continuousSoil(rockMap,soilUv).rgb,vec3(dot(continuousSoil(rockMap,soilUv).rgb,meadowLuminanceWeights))*vec3(1.12,1.12,1.04),.60)*diffuse,mossWeight);`);
+    const normalSample='mix(mix(continuousSoil(normalMap,soilUv).xyz,continuousSoil(humusNormal,soilUv).xyz,humusWeight),continuousSoil(mossNormal,soilUv).xyz,mossWeight) * 2.0 - 1.0';
     shader.fragmentShader=shader.fragmentShader.replace('#include <normal_fragment_maps>',THREE.ShaderChunk.normal_fragment_maps.replaceAll('texture2D( normalMap, vNormalMapUv ).xyz * 2.0 - 1.0',normalSample));
     shader.fragmentShader=shader.fragmentShader.replace('#include <roughnessmap_fragment>',`float roughnessFactor=roughness;
       #ifdef USE_ROUGHNESSMAP
-        float soilRoughness=mix(mix(texture2D(roughnessMap,soilUv).g,texture2D(humusRoughness,soilUv).g,humusWeight),texture2D(mossRoughness,soilUv).g,mossWeight);
+        float soilRoughness=mix(mix(continuousSoil(roughnessMap,soilUv).g,continuousSoil(humusRoughness,soilUv).g,humusWeight),continuousSoil(mossRoughness,soilUv).g,mossWeight);
         roughnessFactor=mix(.82,1.,soilRoughness);
       #endif`);
   };
-  m.customProgramCacheKey=()=> `terrain-community-pbr-v7-${transition}`; return m;
+  m.customProgramCacheKey=()=> `terrain-translated-community-pbr-v8-${transition}`; return m;
 }
 
 export function cliffMaterial(){
@@ -263,14 +276,15 @@ export function createVegetation(root,heightAt,nearPath=()=>false,{lod=false,tre
   let state=48623;const rand=()=>{state=(Math.imul(state,1664525)+1013904223)|0;return(state>>>0)/4294967296;};
   const bridgeSpans=Object.values(bridges).map(([a,b])=>{const length=Math.hypot(b[0]-a[0],b[1]-a[1]);return {x:a[0],z:a[1],length,dx:(b[0]-a[0])/length,dz:(b[1]-a[1])/length};});
   const bridgeClear=p=>!bridgeSpans.some(b=>{const along=(p.x-b.x)*b.dx+(p.z-b.z)*b.dz,across=(p.x-b.x)*b.dz-(p.z-b.z)*b.dx;return along>-3&&along<b.length+3&&Math.abs(across)<4.5;});
+  const placementClear=p=>bridgeClear(p)&&!herbariumAt(p.x,p.z,.7);
   const dummy=new THREE.Object3D();
   const batch=(geo,mat,placements,name,shadow=true)=>{
     // Filter at assembly, after all seeded sampling. A bridge exclusion must
     // not consume different random values or move plants elsewhere in the map.
-    placements=placements.filter(bridgeClear);
+    placements=placements.filter(placementClear);
     if(!placements.length)return;
     const mesh=new THREE.InstancedMesh(geo,mat,placements.length);mesh.name=name;
-    placements.forEach((p,i)=>{dummy.position.set(p.x,p.y,p.z);dummy.rotation.set(p.rx||0,p.r||0,p.rz||0);dummy.scale.set(p.sx||p.s||1,p.sy||p.s||1,p.sz||p.s||1);dummy.updateMatrix();mesh.setMatrixAt(i,dummy.matrix);});
+    placements.forEach((p,i)=>{dummy.position.set(p.x,p.y,p.z);dummy.rotation.set(p.rx||0,p.r||0,p.rz||0);dummy.scale.set(p.sx||p.s||1,(p.sy||p.s||1)*(name==='Grouped silver green ground cover'?1-herbariumLawnAt(p.x,p.z)*.70:1),p.sz||p.s||1);dummy.updateMatrix();mesh.setMatrixAt(i,dummy.matrix);});
     mesh.castShadow=shadow;mesh.receiveShadow=true;attachWindShadows(mesh);mesh.computeBoundingSphere();root.add(mesh);return mesh;
   };
   const kinds=['pine','silver','cherry'],groups=kinds.map(()=>[]),placed=[];
@@ -288,7 +302,7 @@ export function createVegetation(root,heightAt,nearPath=()=>false,{lod=false,tre
     const k=kinds.indexOf(kind),foreground=x>25&&z>court.z-8;
     const p={x,y:h-.12,z,s:(.78+rand()*.33)*(foreground?.76:1),r:rand()*6.28};groups[k].push(p);placed.push(p);
   }
-  const lodController=lod&&trees?createFoliageLOD(root,kinds.map((kind,k)=>({kind,seed:168+k*331,placements:groups[k].filter(bridgeClear)}))):null;
+  const lodController=lod&&trees?createFoliageLOD(root,kinds.map((kind,k)=>({kind,seed:168+k*331,placements:groups[k].filter(placementClear)}))):null;
   if(!lod&&trees)for(let k=0;k<kinds.length;k++){
     if(!groups[k].length)continue;
     const specimen=createGroveTree(kinds[k],168+k*331);
@@ -330,7 +344,10 @@ export function createVegetation(root,heightAt,nearPath=()=>false,{lod=false,tre
     litter.push({x,y:h+.018,z,s:.34+rand()*.52,r:rand()*TAU,kind:tree.kind});
   }
 
-  addScannedRocks(root,[...rocks.map((p,i)=>({...p,kind:'moss',piece:i%7,sy:(p.sy||1)*.7})),...pebbles.map((p,i)=>({...p,kind:'moss',piece:i%7}))],'Scanned mossy grove stones');
+  // Mown arrival keeps its grass blades; taller low plants are removed only
+  // after all seeded sampling is complete.
+  for(const placements of [flowers,ferns,litter])for(let i=placements.length-1;i>=0;i--)if(herbariumLawnAt(placements[i].x,placements[i].z)>.55)placements.splice(i,1);
+  addScannedRocks(root,[...rocks.map((p,i)=>({...p,kind:'moss',piece:i%7,sy:(p.sy||1)*.7})),...pebbles.map((p,i)=>({...p,kind:'moss',piece:i%7}))].filter(placementClear),'Scanned mossy grove stones');
   const vertices=[],colors=[],indices=[],uv=[],c=new THREE.Color();
   for(let b=0;b<32;b++){
     const a=rand()*6.28,bx=(rand()-.5)*.4,bz=(rand()-.5)*.4,h=.18+rand()*.35,w=.014+rand()*.022,at=vertices.length/3;
@@ -384,7 +401,7 @@ export function createVegetation(root,heightAt,nearPath=()=>false,{lod=false,tre
   };
   const petalMaterial=flowerMaterial('#ffffff');
   const flowerMesh=batch(mergeGeometries(petals),petalMaterial,flowers,'Sculpted lavender meadow flowers',false);
-  if(flowerMesh){const color=new THREE.Color();let instance=0;flowers.forEach(p=>{if(!bridgeClear(p))return;color.set(p.kind==='cherry'?'#e5bbc9':p.kind==='lilac'?'#bdb8df':'#e5e0bf').multiplyScalar(.92+noise(p.x*.65,p.z*.65)*.12);flowerMesh.setColorAt(instance++,color);});flowerMesh.instanceColor.needsUpdate=true;}
+  if(flowerMesh){const color=new THREE.Color();let instance=0;flowers.forEach(p=>{if(!placementClear(p))return;color.set(p.kind==='cherry'?'#e5bbc9':p.kind==='lilac'?'#bdb8df':'#e5e0bf').multiplyScalar(.92+noise(p.x*.65,p.z*.65)*.12);flowerMesh.setColorAt(instance++,color);});flowerMesh.instanceColor.needsUpdate=true;}
   batch(mergeGeometries(stems),flowerMaterial('#608259'),flowers,'Meadow flower stems',false);
   batch(mergeGeometries(centres),flowerMaterial('#ddbf69'),flowers,'Golden meadow flower centres',false);
   [...petals,...stems,...centres].forEach(g=>g.dispose());
@@ -395,8 +412,8 @@ export function createVegetation(root,heightAt,nearPath=()=>false,{lod=false,tre
   }
   const litterGeometry=new THREE.BufferGeometry();litterGeometry.setAttribute('position',new THREE.Float32BufferAttribute(litterPositions,3));litterGeometry.setIndex(litterIndices);litterGeometry.computeVertexNormals();
   const litterMesh=batch(litterGeometry,new THREE.MeshStandardMaterial({color:'#ffffff',roughness:1,side:THREE.DoubleSide}),litter,'Grounded leaves and blossom litter',false);
-  if(litterMesh){const color=new THREE.Color();let index=0;for(const p of litter){if(!bridgeClear(p))continue;color.set(p.kind==='cherry'?'#b69291':p.kind==='lilac'?'#aaa2b1':'#8e9371');litterMesh.setColorAt(index++,color);}litterMesh.instanceColor.needsUpdate=true;}
-  return {treeCount:placed.filter(bridgeClear).length,treeLimit:64,flowerTreeCount:groups[2].filter(bridgeClear).length,understoryCount:understory.filter(bridgeClear).length,grassCount:grass.filter(bridgeClear).length,flowerCount:flowers.filter(bridgeClear).length,fernCount:ferns.filter(bridgeClear).length,litterCount:litter.filter(bridgeClear).length,groveCount:landscapeGroves.length,lod:lodController?.stats??null,lodController,update:(camera,viewport)=>lodController?.update(camera,viewport)};
+  if(litterMesh){const color=new THREE.Color();let index=0;for(const p of litter){if(!placementClear(p))continue;color.set(p.kind==='cherry'?'#b69291':p.kind==='lilac'?'#aaa2b1':'#8e9371');litterMesh.setColorAt(index++,color);}litterMesh.instanceColor.needsUpdate=true;}
+  return {treeCount:placed.filter(placementClear).length,treeLimit:64,flowerTreeCount:groups[2].filter(placementClear).length,understoryCount:understory.filter(placementClear).length,grassCount:grass.filter(placementClear).length,flowerCount:flowers.filter(placementClear).length,fernCount:ferns.filter(placementClear).length,litterCount:litter.filter(placementClear).length,groveCount:landscapeGroves.length,lod:lodController?.stats??null,lodController,update:(camera,viewport)=>lodController?.update(camera,viewport)};
 }
 
 export function createBackdrop(root,scene){

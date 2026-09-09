@@ -86,7 +86,7 @@ test('all gate foundations meet their graded ground',()=>{
 });
 
 test('road triangle interiors stay above the rendered hillside and use bridges over water',()=>{
-  const world=createWorld(new THREE.Scene());
+  const world=createWorld(new THREE.Scene(),{herbarium:false});
   const point=new THREE.Vector3(),vertex=new THREE.Vector3();
   const roads=world.root.children.filter(o=>o.name.startsWith('road-'));
   const centres=roads.filter(o=>!o.name.includes('planted-shoulder')),shoulders=roads.filter(o=>o.name.includes('planted-shoulder'));

@@ -7,7 +7,7 @@ import {bridges} from '../src/locations.js';
 import {findSafeLanding,stepGroundMotion,queryGroundSupport,GROUND_MOTION} from '../src/ground-motion.js';
 
 // Production world assembly: no substitute terrain or collision proxies.
-const rendered=createWorld(new THREE.Scene());
+const rendered=createWorld(new THREE.Scene(),{herbarium:false});
 const world={heightAt:rendered.heightAt,colliders:[...createBuildingColliders(),...createBridgeColliders(bridges),...rendered.environmentColliders]};
 
 test('the recorded cherry-grove landing can walk and run continuously across both path edges',()=>{

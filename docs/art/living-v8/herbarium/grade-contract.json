@@ -1,0 +1,95 @@
+{
+  "reason": "Approved conservatory floor, south approach and narrow transition shoulders supersede the old empty workshop circular lawn pad. Original workshop physical footprint, gardens, portal and bridge grades remain protected.",
+  "finishedConservatoryFloor": 6.7,
+  "oldWorkshopFootprint": {
+    "min": [
+      55.5,
+      6,
+      30.3
+    ],
+    "max": [
+      72.5,
+      6,
+      44.45
+    ]
+  },
+  "navigationTerrain": {
+    "id": "navigation-terrain",
+    "url": "/runtime/navigation-terrain.ab3455f5da85c655.glb",
+    "bytes": 7407424,
+    "sha256": "ab3455f5da85c65504342d4ad86648c8d72fc8fc41151f7b3d76cf530ee4f68b",
+    "phase": 1,
+    "region": "navigation",
+    "variant": "full",
+    "dependencies": [],
+    "source": "world/src/world.js"
+  },
+  "changedOldLawnSamples": [
+    {
+      "x": 55.0904545570495,
+      "z": 28.090454557049505,
+      "oldExpectedTerrainHeight": 6,
+      "newExpectedTerrainHeight": 6.58
+    },
+    {
+      "x": 56.999815063953015,
+      "z": 26.523482884987928,
+      "oldExpectedTerrainHeight": 6,
+      "newExpectedTerrainHeight": 6.62
+    },
+    {
+      "x": 59.17818875219986,
+      "z": 25.359117890357787,
+      "oldExpectedTerrainHeight": 6,
+      "newExpectedTerrainHeight": 6.62
+    },
+    {
+      "x": 61.54186194259678,
+      "z": 24.642105466919297,
+      "oldExpectedTerrainHeight": 6,
+      "newExpectedTerrainHeight": 6.62
+    },
+    {
+      "x": 64,
+      "z": 24.4,
+      "oldExpectedTerrainHeight": 6,
+      "newExpectedTerrainHeight": 6.21824
+    },
+    {
+      "x": 52.70864266493143,
+      "z": 29.455356235593804,
+      "oldExpectedTerrainHeight": 6,
+      "newExpectedTerrainHeight": 6.135129395013449
+    },
+    {
+      "x": 54.39748991148669,
+      "z": 27.397489911486687,
+      "oldExpectedTerrainHeight": 6,
+      "newExpectedTerrainHeight": 6.598920950181334
+    },
+    {
+      "x": 56.455356235593804,
+      "z": 25.708642664931435,
+      "oldExpectedTerrainHeight": 6,
+      "newExpectedTerrainHeight": 6.62
+    },
+    {
+      "x": 58.803158988482075,
+      "z": 24.45371594849673,
+      "oldExpectedTerrainHeight": 6,
+      "newExpectedTerrainHeight": 6.62
+    },
+    {
+      "x": 61.35067342702097,
+      "z": 23.680935892124133,
+      "oldExpectedTerrainHeight": 6,
+      "newExpectedTerrainHeight": 6.62
+    },
+    {
+      "x": 64,
+      "z": 23.42,
+      "oldExpectedTerrainHeight": 6,
+      "newExpectedTerrainHeight": 6.21824
+    }
+  ]
+}

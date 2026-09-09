@@ -7,6 +7,7 @@ import {loadLandscapeSurfaces,loadMountainArt,loadNightEnvironment} from './land
 import {loadArchitectureAssets} from './architecture.js';
 import {loadAtmosphereAssets} from './atmosphere.js';
 import {loadEnvironmentSignage} from './environment-signage.js';
+import {loadHerbariumAssets} from './herbarium-assets.js';
 import {loadBotanicalAssets} from './botanical-cache.js';
 import {loadScannedRockAssets,hydrateScannedRocks} from './rock-scans.js';
 import { EnvironmentClock, TIME_MODES, TIME_PERIODS, TIME_PHASES } from './environment-time.js';
@@ -47,6 +48,7 @@ export class Game {
     const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:false,powerPreference:'high-performance'});
     let game;
     try{
+      context.onRenderer?.(renderer);
       const [,gltf]=await Promise.all([
         loadWizardAsset({...context,variant:'core'}),
         loadGLTF({id:'navigation-terrain',url:'/runtime/navigation-terrain.glb',phase:1},context),
@@ -61,7 +63,9 @@ export class Game {
         terrain[name]=mesh.userData.worldGeometry;
       }
       await new Promise(resolve=>setTimeout(resolve,0));signal?.throwIfAborted();
+      onProgress({phase:'assembly-begin',activeResource:'core scene and renderer'});
       game=new Game(canvas,callbacks,options,{renderer,terrain,progressive:true});
+      onProgress({phase:'rendering-setup',activeResource:'waiting for core GPU frame'});
       await new Promise((resolve,reject)=>{
         const cancel=()=>{game.dispose();reject(signal.reason);};signal?.addEventListener('abort',cancel,{once:true});
         game._firstFrame=()=>{signal?.removeEventListener('abort',cancel);if(performance.now()>=deadline){game.dispose();const error=new Error('Core render deadline exceeded');error.type='timeout';reject(error);}else resolve();};
@@ -193,11 +197,16 @@ export class Game {
   }
 
   async _beginEnhancements(context){
-    if(this._disposed)return;
+    if(this._disposed||this._enhancementStarted)return;
+    this._enhancementStarted=true;
     this._enhancementController=new AbortController();const signal=this._enhancementController.signal;
     const options={signal,deadline:performance.now()+90000,attemptId:context.attemptId};
-    this._enhancementContext=context;let degraded=false;
-    const observe=promise=>promise.then(value=>{if(value===false)degraded=true;return value;},error=>{degraded=true;return null;});
+    this._enhancementContext=context;let degraded=false;const errors=[];
+    context.onProgress?.({phase:'enhancements-begin'});
+    const observe=promise=>promise.then(value=>{if(value===false)degraded=true;return value;},error=>{degraded=true;errors.push(error.message);context.onProgress?.({phase:'enhancement-failed',activeResource:error.message});return null;});
+    const herbariumReady=loadHerbariumAssets({...options,deadline:performance.now()+180000});
+    // Start early; the constructor is gated below and never mutates after return.
+    herbariumReady.catch(()=>{});
     const tasks=[
       observe(loadLandscapeSurfaces(options)),observe(loadMountainArt(options)),observe(loadArchitectureAssets(options)),
       observe(loadAtmosphereAssets(options)),observe(loadEnvironmentSignage(options)),
@@ -208,13 +217,15 @@ export class Game {
         const ready=await loadScannedRockAssets({...options,deadline:performance.now()+90000});if(!signal.aborted)hydrateScannedRocks(this.world.root);return ready;
       })()),
     ];
-    if(this.environment.night>.05)tasks.push(observe(this._loadNightEnvironment(options)));
+    if(this.environment.night>.05||context.preloadNightEnvironment)tasks.push(observe(this._loadNightEnvironment(options)));
     if(this.options.gameplay)tasks.push(observe(this._loadEncounters(options)));
     this.world.priority=id=>{
       if(this._requestedRegion===id)return -10000;
       const location=locations.find(item=>item.id===id);return location?Math.hypot(location.x-this.position.x,location.z-this.position.z):10000;
     };
     tasks.push(observe(this.world.enhance({signal,prepareRegion:async region=>{
+      context.onProgress?.({phase:'prepare',region});
+      if(region==='herbarium'){await herbariumReady;signal.throwIfAborted();return true;}
       const families=region==='gardens'?[{kind:'silver',seed:154},{kind:'cherry',seed:154}]:region==='vegetation'?[{kind:'pine',seed:168},{kind:'silver',seed:499}]:[{kind:'cherry',seed:881},{kind:'lilac',seed:910}];
       try{
         await loadBotanicalAssets({...options,deadline:performance.now()+90000,families,levels:region==='gardens'?['near']:['near','mid','far']});
@@ -228,7 +239,9 @@ export class Game {
     await Promise.all(tasks);
     if(signal.aborted||this._disposed)return;
     this._refreshWorldBindings();
-    context.onProgress?.({phase:'enhancements',enhancements:degraded?'degraded':'ready'});
+    const enhancements=degraded?'degraded':'ready';
+    context.onProgress?.({phase:'enhancements',enhancements,errors});
+    this._fullFrame=()=>context.onProgress?.({phase:'full-frame',enhancements,errors});
   }
 
   _refreshWorldBindings(){
@@ -1069,6 +1082,7 @@ export class Game {
     this.renderer.info.reset();
     this.rendering.render(dt);
     this._frameCount++;
+    if(this._fullFrame){const ready=this._fullFrame;this._fullFrame=null;ready();}
     if(this._firstFrame){const ready=this._firstFrame;this._firstFrame=null;ready();}
     if (this._time - this._lastSnapshot >= .1) this._emitFrame();
   }
@@ -1711,6 +1725,8 @@ export class Game {
     this.illumination?.dispose();
     this.exhibitionStage?.dispose();
     this.rendering?.dispose();
+    // Registered herbarium owners must leave before generic scene teardown.
+    this.world?.dispose?.();
     const geometries = new Set();
     const materials = new Set();
     const textures = new Set();

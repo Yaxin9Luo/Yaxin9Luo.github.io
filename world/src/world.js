@@ -1,4 +1,6 @@
 import * as THREE from 'three';
+import {createHerbariumDistrict} from './herbarium-district.js';
+import {gradeHerbariumTerrain} from './herbarium-layout.js';
 import {createSurfaceSupport} from './surface-support.js';
 import {createPortal} from './effects.js';
 import {createAtmosphere} from './atmosphere.js';
@@ -41,7 +43,7 @@ export function terrainHeight(x,z){
   for(const l of locations){const d=Math.hypot(x-l.x,z-l.z);if(d<l.radius+8)h=THREE.MathUtils.lerp(l.y,h,THREE.MathUtils.smoothstep(d,l.radius,l.radius+8));}
   const foundationDistance=Math.max(Math.abs(x)-29,Math.abs(z+38)-23);
   if(foundationDistance<7)h=THREE.MathUtils.lerp(9,h,THREE.MathUtils.smoothstep(foundationDistance,0,7));
-  h=gradeGardenTerrain(x,z,h);
+  h=gradeHerbariumTerrain(x,z,gradeGardenTerrain(x,z,h));
   // Grade each gate's approach with a soft shoulder instead of suspending its
   // stone plinth over the unmodified hillside.
   for(const l of locations){const d=Math.max(Math.abs(x-l.x)/4.6,Math.abs(z-l.z-l.radius-3)/3);if(d<3)h=THREE.MathUtils.lerp(l.y,h,THREE.MathUtils.smoothstep(d,1,3));}
@@ -209,7 +211,15 @@ export function createTerrainSpecimen(){
   ground.receiveShadow=true;cliffs.receiveShadow=true;group.add(ground,cliffs);return group;
 }
 
-function* assembleWorld(scene, navigation=null){
+// Exact index of the original every-third road samples. The narrow phase keeps
+// Math.hypot and the original strict radius, including boundary behavior.
+export function createRoadSampleIndex(paths,radius=3.7){
+  const cells=new Map(),key=(x,z)=>`${x},${z}`;
+  for(const path of paths)for(let i=0;i<path.length;i+=3){const p=path[i],id=key(Math.floor(p.x/radius),Math.floor(p.z/radius)),bucket=cells.get(id)||[];bucket.push(p);cells.set(id,bucket);}
+  return (x,z)=>{const cx=Math.floor(x/radius),cz=Math.floor(z/radius);for(let dx=-1;dx<=1;dx++)for(let dz=-1;dz<=1;dz++)for(const p of cells.get(key(cx+dx,cz+dz))||[])if(Math.hypot(p.x-x,p.z-z)<radius)return true;return false;};
+}
+
+function* assembleWorld(scene,navigation=null,{herbarium=true}={}){
   seed=131;
   const root=navigation?.root||new THREE.Group();if(!navigation)scene.add(root);
   const stone=surface('castle-masonry',{color:'#bcc6bd'}),brass=mat('#b59455',{metalness:.65,roughness:.4});
@@ -263,13 +273,23 @@ function* assembleWorld(scene, navigation=null){
     yield {region:`road-${l.id}`};
     }
   }
-  const nearPath=(x,z)=>paths.some(p=>p.some((v,i)=>i%3===0&&Math.hypot(v.x-x,v.z-z)<3.7));
+  const nearPath=createRoadSampleIndex(paths);
   function bridge(ax,az,bx,bz){
     const group=createViaduct(Math.hypot(bx-ax,bz-az));group.position.set((ax+bx)/2,6.82,(az+bz)/2);group.rotation.y=Math.atan2(bx-ax,bz-az);root.add(group);occluders.push(group);
   }
   for(const [[ax,az],[bx,bz]] of Object.values(bridges)){bridge(ax,az,bx,bz);yield {region:"bridge"};}
+  let herbariumDistrict=null;
+  if(herbarium){
+    yield {prepare:'herbarium'};
+    herbariumDistrict=createHerbariumDistrict(root,{heightAt:renderedTerrainHeight,nearPath});
+    for(const geometry of herbariumDistrict.supportSurfaces){roadSupport.addGeometry(geometry);geometry.dispose();}
+    herbariumDistrict.supportSurfaces.length=0;occluders.push(herbariumDistrict.group);
+    if(navigation){navigation.herbarium=herbariumDistrict;navigation.environmentColliders.push(...herbariumDistrict.colliders);}
+    yield {region:'herbarium'};
+  }
   const gardenTrees=yield {prepare:"gardens"};
   const gardens=createAuthoredGardens(root,renderedTerrainHeight,nearPath,{trees:gardenTrees!==false});occluders.push(gardens.group);
+  herbariumDistrict?.plantCourtyard(gardens.group);
   if(navigation){navigation.gardens=gardens;navigation.clockTargets=gardens.clockTargets;navigation.environmentColliders.push(...gardens.colliders);mergeEnvironmentLighting(navigation.environmentLighting,gardens.lighting);}
   yield {region:"gardens"};
   const composition=createEnvironmentComposition(root,renderedTerrainHeight,nearPath,{shoreline:terrain.shore,shoreField,groundGeometry:terrain.ground});occluders.push(composition.group);
@@ -290,7 +310,7 @@ function* assembleWorld(scene, navigation=null){
   const blossomTrees=yield {prepare:"blossom-walks"};
   const blossomGroves=createBlossomGroves(root,groundHeight,{nearPath,trees:blossomTrees!==false});occluders.push(blossomGroves.group);
   if(navigation){navigation.heightAt=blossomGroves.heightAt;navigation.environmentColliders.push(...blossomGroves.colliders);mergeEnvironmentLighting(navigation.environmentLighting,blossomGroves.lighting);}
-  else gardens.colliders.push(...blossomGroves.colliders);
+  else gardens.colliders.push(...blossomGroves.colliders,...(herbariumDistrict?.colliders||[]));
   yield {region:"blossom-walks"};
   root.userData.vegetation=vegetation;
   createBackdrop(root,scene);
@@ -326,7 +346,7 @@ function* assembleWorld(scene, navigation=null){
     if(m.uniforms?.nightFactor&&!environmentLighting.nightMaterials.some(e=>e.material===m))environmentLighting.nightMaterials.push({material:m,uniform:'nightFactor',baseValue:1});
   }});
   environmentLighting.nightObjects=[{object:sparks,baseOpacity:.7},...lanterns.map(l=>({object:l.mesh,baseOpacity:1}))];
-  return {root,heightAt:blossomGroves.heightAt,blossomGroves,portals,ringMeshes,crystals,wisps:navigation?.wisps||wisps,exhibits,occluders,atmosphere,lake,gardens,composition,vegetation,updateVegetation:(camera,viewport)=>{vegetation.update(camera,viewport);blossomGroves.update(camera,viewport);},clockTargets:gardens.clockTargets,environmentLighting,environmentColliders:navigation?.environmentColliders||gardens.colliders,releaseLantern:position=>atmosphere.releaseLantern(position),
+  return {root,herbarium:herbariumDistrict,dispose(){this.herbarium?.dispose();},heightAt:blossomGroves.heightAt,blossomGroves,portals,ringMeshes,crystals,wisps:navigation?.wisps||wisps,exhibits,occluders,atmosphere,lake,gardens,composition,vegetation,updateVegetation:(camera,viewport)=>{vegetation.update(camera,viewport);blossomGroves.update(camera,viewport);},clockTargets:gardens.clockTargets,environmentLighting,environmentColliders:navigation?.environmentColliders||gardens.colliders,releaseLantern:position=>atmosphere.releaseLantern(position),
     update(time,dt,reducedMotion=false,camera=null,viewport=null){
       vegetation.update(camera,viewport);
       lake.update(time,reducedMotion);
@@ -344,7 +364,7 @@ function* assembleWorld(scene, navigation=null){
   };
 }
 
-export function createWorld(scene){const iterator=assembleWorld(scene);let item;do{item=iterator.next();}while(!item.done);registerWorldLighting(item.value);return item.value;}
+export function createWorld(scene,options={}){const iterator=assembleWorld(scene,null,options);let item;do{item=iterator.next();}while(!item.done);registerWorldLighting(item.value);return item.value;}
 
 export function mergeEnvironmentLighting(target,source){
   for(const key of ['lights','emissiveMaterials','nightMaterials','nightObjects'])for(const item of source[key]||[]){
@@ -372,7 +392,8 @@ export function registerWorldLighting(world,root=world.root){
 }
 
 /** Small playable scene; all high-detail districts are installed after its first frame. */
-export function createNavigationWorld(scene,terrain){
+export function createNavigationWorld(scene,terrain,options={}){
+  let enhancement=null,disposed=false;
   const root=new THREE.Group();root.name='Academy world';scene.add(root);
   const ground=new THREE.Mesh(terrain.ground,groundMaterial()),cliffs=new THREE.Mesh(terrain.cliffs,cliffMaterial());
   ground.name='island-ground';cliffs.name='shoreline-cliffs';ground.receiveShadow=cliffs.receiveShadow=true;root.add(ground,cliffs);
@@ -384,17 +405,23 @@ export function createNavigationWorld(scene,terrain){
     heightAt:renderedTerrainHeight,priority:()=>0,complete:false,
     update(time,dt,reduced){lake.update(time,reduced);atmosphere.update(time,dt,reduced);for(const portal of portals)portal.group.userData.update(time,reduced);world.gardens?.update(time,reduced);},
     setRingState(){},releaseLantern:position=>atmosphere.releaseLantern(position),
-    async enhance({signal,onRegion=()=>{},prepareRegion=async()=>true}={}){
-      const iterator=assembleWorld(scene,world);let prepared;
+    dispose(){disposed=true;world.herbarium?.dispose();},
+    enhance({signal,onRegion=()=>{},prepareRegion=async()=>true}={}){
+      if(disposed)return Promise.reject(new Error('World disposed'));
+      if(world.complete)return Promise.resolve();
+      if(enhancement)return enhancement;
+      enhancement=(async()=>{
+      const iterator=assembleWorld(scene,world,options);let prepared;
       while(true){
         // Yield to input, rendering and cancellation between authored districts.
-        await new Promise(resolve=>setTimeout(resolve,12));signal?.throwIfAborted();
+        await new Promise(resolve=>setTimeout(resolve,12));signal?.throwIfAborted();if(disposed)throw new Error('World disposed');
         const begin=performance.now(),item=iterator.next(prepared);prepared=undefined;
-        if(item.value?.prepare){prepared=await prepareRegion(item.value.prepare);continue;}
+        if(item.value?.prepare){prepared=await prepareRegion(item.value.prepare);if(item.value.prepare==='herbarium'&&prepared===false)throw new Error('Herbarium source assets unavailable');continue;}
         registerWorldLighting(world);
-        if(item.done){Object.assign(world,item.value,{complete:true});onRegion({region:'complete',assemblyMs:performance.now()-begin});return;}
+        if(item.done){Object.assign(world,item.value,{complete:true,dispose:world.dispose});onRegion({region:'complete',assemblyMs:performance.now()-begin});return;}
         onRegion({...item.value,assemblyMs:performance.now()-begin});
       }
+      })();return enhancement;
     },
   };
   registerWorldLighting(world);return world;

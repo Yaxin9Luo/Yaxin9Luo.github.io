@@ -7,7 +7,7 @@ import {ReviewMetrics,evidenceFilename} from '../src/review-metrics.js';
 const source=(await readFile(new URL('../src/quality-review.js',import.meta.url),'utf8')).replace(/^import .+;\n/gm,'').replaceAll('import.meta.env.DEV','true');
 const deferred=()=>{let resolve;const promise=new Promise(done=>{resolve=done;});return {promise,resolve};};
 
-async function fixture({musicPromise=null,lod=true,save=null,capture=null,startError=false,nativeDpr=1.25}={}){
+async function fixture({musicPromise=null,lod=true,save=null,capture=null,startError=false,nativeDpr=1.25,query="",deferFull=false,degraded=false}={}){
   let now=0;const elements=new Map(),recorders=[],streams=[],downloads=[],listeners={},lodChanges=[],errors=[];
   class Element {
     constructor(tag='div'){this.tagName=tag;this.children=[];this.disabled=true;this.value='';this.dataset={};}
@@ -16,15 +16,16 @@ async function fixture({musicPromise=null,lod=true,save=null,capture=null,startE
     insertBefore(child,before){this.children.splice(this.children.indexOf(before),0,child);child.parentElement=this;}
     click(){if(this.tagName==='a')downloads.push(this);}
   }
-  for(const id of ['view','light','quality','reset','measure','record','frame','sound','audition','json','status','metrics','media']){const element=new Element();element.id=id;}
+  for(const id of ['view','light','quality','reset','measure','record','frame','sound','audition','json','status','metrics','media','loading','latest-load','load-times']){const element=new Element();element.id=id;}
   elements.get('view').value='court';elements.get('light').value='night';elements.get('quality').value='high';
   const controls=new Element();controls.append(elements.get('reset'));
   const track=kind=>({kind,stopped:false,stop(){this.stopped=true;}});
   const canvas={width:1024,height:576,clientWidth:1024,clientHeight:576,captureStream(){const tracks=[track('video')],stream={getTracks:()=>tracks,addTrack:next=>tracks.push(next)};streams.push(stream);return stream;},toBlob(callback){if(capture)capture(callback);else callback(new Blob(['png'],{type:'image/png'}));}};
   const document={getElementById:id=>elements.get(id),querySelector:()=>canvas,createElement:tag=>new Element(tag),documentElement:{dataset:{build:'test-build'}},body:{dataset:{}},hidden:false,addEventListener:(name,handler)=>{listeners[name]=handler;}};
   class Game {
+    static async createAsync(canvas,callbacks,options,context){const game=new Game();game.progress=context.onProgress;context.onProgress({phase:"first-frame"});return game;}
     constructor(){
-      this.options={sound:false,quality:'high'};this.environmentClock={setMode:(mode,immediate)=>{this.clockMode=mode;this.clockImmediate=immediate;}};this.world={vegetation:{lod:{nearCount:3,midCount:4,farCount:5},...(lod?{lodController:{setEnabled:value=>lodChanges.push(value)}}:{})},updateVegetation(){}};
+      this.options={sound:false,quality:'high'};this.environmentClock={setMode:(mode,immediate)=>{this.clockMode=mode;this.clockImmediate=immediate;}};this.world={complete:true,heightAt:()=>7,vegetation:{lod:{nearCount:3,midCount:4,farCount:5},...(lod?{lodController:{setEnabled:value=>lodChanges.push(value)}}:{})},updateVegetation(){}};
       let pixelRatio=nativeDpr;
       this.renderer={shadowMap:{},getPixelRatio:()=>pixelRatio,setPixelRatio:value=>{pixelRatio=value;},setSize(width,height){canvas.width=Math.floor(width*pixelRatio);canvas.height=Math.floor(height*pixelRatio);},getContext:()=>({getExtension:()=>null}),info:{render:{calls:50,triangles:1000},memory:{geometries:2,textures:2}}};
       this.camera={position:{values:[1,2,3],toArray(){return [...this.values];},fromArray(values){this.values=[...values];}},fov:43,lookAt:vector=>{this.camera.target=[...vector.values];},updateProjectionMatrix(){},updateMatrixWorld(){}};
@@ -41,10 +42,11 @@ async function fixture({musicPromise=null,lod=true,save=null,capture=null,startE
     async finish(data='video'){if(data)this.ondataavailable({data:new Blob([data])});this.state='inactive';await this.onstop();}
   }
   const context={document,window:{MediaRecorder:Recorder,addEventListener:(name,handler)=>{listeners[name]=handler;}},devicePixelRatio:nativeDpr,MediaRecorder:Recorder,Game,THREE:{Vector3:class{constructor(...values){this.values=values;}}},ReviewMetrics,evidenceFilename,
+    location:{search:query},URLSearchParams,AbortController,resourceLoader:{subscribe:()=>()=>{},diagnostics:()=>[]},
     loadBotanicalAssets:async()=>{},loadLandscapeAssets:async()=>{},loadArchitectureAssets:async()=>{},loadCharacterAssets:async()=>{},performance:{now:()=>now},Blob,AbortSignal,setTimeout,
     URL:{createObjectURL:()=>`blob:${downloads.length}`,revokeObjectURL(){}},fetch:save||(async()=>({ok:true})),console:{error:error=>errors.push(error)}};
   const api=await vm.runInNewContext(`(async()=>{${source}\nreturn {begin,record,stop,updateSequence,reset,state:()=>({session,lastReport,metrics,game})};})()`,context,{filename:'quality-review.js'});
-  assert.equal(errors.length,0);assert.equal(document.body.dataset.ready,'true');
+  assert.equal(errors.length,0,errors[0]?.stack);if(!deferFull){api.state().game.progress({phase:'enhancements',enhancements:degraded?'degraded':'ready'});api.state().game.progress({phase:'full-frame',enhancements:degraded?'degraded':'ready'});}assert.equal(document.body.dataset.ready,deferFull?'core':degraded?'degraded':'true');
   return {...api,elements,recorders,streams,downloads,listeners,document,canvas,lodChanges,at(value){now=value;},flush:()=>new Promise(resolve=>setImmediate(resolve))};
 }
 
@@ -165,4 +167,49 @@ test('static comparison defaults off, applies reducedMotion explicitly and retai
     const [x,y,z]=game.camera.position.toArray();assert.ok(Math.abs(x)<170&&Math.abs(z)<158&&y<=130);
     if(view==='high-flight')assert.equal(y,125);
   }
+});
+
+ test('query controls apply before captures and full-frame gate excludes core or failed enhancements',async()=>{
+  const qa=await fixture({query:'?view=conservatory&light=day',deferFull:true});
+  assert.equal(qa.elements.get('view').value,'conservatory');assert.equal(qa.elements.get('light').value,'day');
+  assert.equal(qa.elements.get('measure').disabled,true);assert.equal(qa.begin('measure'),null);
+  qa.state().game.progress({phase:'enhancements',enhancements:'ready'});assert.equal(qa.elements.get('measure').disabled,true);
+  qa.state().game.progress({phase:'full-frame',enhancements:'ready'});assert.equal(qa.elements.get('measure').disabled,false);
+  const failed=await fixture({degraded:true});assert.equal(failed.elements.get('measure').disabled,true);assert.match(failed.elements.get('status').textContent,/degraded/i);
+  const invalid=await fixture({query:'?view=bad&light=bad'});assert.equal(invalid.elements.get('view').value,'court');assert.equal(invalid.elements.get('light').value,'night');
+});
+
+test('actual renderer error events keep a later full-frame from claiming successful readiness',async()=>{
+  const qa=await fixture({deferFull:true});qa.state().game.progress({phase:'render-error',activeResource:'fragment shader compile failure'});qa.state().game.progress({phase:'full-frame',enhancements:'ready'});
+  assert.equal(qa.document.body.dataset.ready,'degraded');assert.equal(qa.elements.get('measure').disabled,true);assert.equal(qa.begin('measure'),null);
+});
+
+test('herbarium review cameras clear the reset rider and workshop and expose an interior aisle',async()=>{
+  const qa=await fixture(),views=qa.elements.get('view'),game=qa.state().game;
+  views.value='arrival';views.onchange();game._updateCamera();const arrival=game.camera.position.toArray();
+  assert.ok(Math.hypot(arrival[0]-18,arrival[1]-18,arrival[2]-74)>10,'arrival cannot sit inside the reset rider');
+  views.value='conservatory';views.onchange();game._updateCamera();const entry=game.camera.position.toArray();
+  assert.ok(entry[0]<55.5,'entry camera views from the open west side of the workshop footprint');
+  assert.ok(views.children.some(option=>option.value==='conservatory-interior'));
+  views.value='conservatory-interior';views.onchange();game._updateCamera();const interior=game.camera.position.toArray();
+  assert.ok(interior[0]>53.9&&interior[0]<56.1&&interior[1]>8&&interior[1]<10.3&&interior[2]>17.5&&interior[2]<26.5,'interior eye is inside the clear central aisle');
+  views.value='arcade-passage';views.onchange();game._updateCamera();assert.equal(game.camera.position.toArray()[1],8.7,'arcade eye follows actual support plus 1.7 m');
+});
+
+test('shader failure invalidates an active measurement and keeps capture controls locked',async()=>{
+  const qa=await fixture();qa.begin('measure');qa.at(3500);qa.updateSequence();qa.at(5100);
+  qa.state().game.progress({phase:'render-error',activeResource:'bad fragment program'});await qa.flush();
+  const report=qa.state().lastReport;assert.ok(report,'failed active run must finalize');assert.equal(report.invalid,true);assert.equal(report.completed,false);assert.match(report.reason,/render-error.*bad fragment program/);
+  assert.equal(qa.document.body.dataset.ready,'degraded');assert.equal(qa.elements.get('measure').disabled,true);assert.equal(qa.elements.get('frame').disabled,true);assert.equal(qa.begin('measure'),null);
+  assert.equal(qa.elements.get('json').disabled,false,'invalid diagnostics remain exportable');
+});
+
+test('shader failure stops recording once and releases tracks, audio tap and recorder listeners',async()=>{
+  const qa=await fixture();await qa.record('audition');const recorder=qa.recorders[0],game=qa.state().game;
+  game.progress({phase:'render-error',activeResource:'bad glazing program'});await qa.flush();
+  assert.equal(recorder.stopCount,1);assert.equal(qa.state().session.phase,'finalizing');
+  const stopping=qa.state().session.stopPromise;await recorder.finish('partial-invalid-video');const report=await stopping;
+  assert.equal(report.invalid,true);assert.equal(report.completed,false);assert.match(report.reason,/render-error/);assert.equal(qa.streams[0].getTracks().every(t=>t.stopped),true);assert.equal(game.audio.master.connected.size,0);
+  assert.equal(recorder.ondataavailable,null);assert.equal(recorder.onerror,null);assert.equal(recorder.onstop,null);assert.equal(qa.elements.get('record').disabled,true);
+  assert.match(qa.downloads[0].download,/-audition-inv-/);
 });
