@@ -1,0 +1,21 @@
+{
+  "candidate": "r2",
+  "mode": "Actual procedural runtime; CC0 botanical probe not yet adopted",
+  "date": "2026-09-09T18:37:36.415Z",
+  "files": [
+    {
+      "path": "world/src/herbarium-assets.js",
+      "sha256": "d25c8231858e3a6470af553f3b489f77d0f0f9402e22010b155d14b89f1ec046"
+    },
+    {
+      "path": "world/src/herbarium-studio.js",
+      "sha256": "785232e462a5a4ad0c9766ff755426b46e7256ae32b7798905851ffcaeb12f78"
+    },
+    {
+      "path": "world/herbarium-studio.html",
+      "sha256": "67a41d22c23c29a356b944d47063f9acb1dde6e2e55a8c76be04769ff4e62507"
+    }
+  ],
+  "exportStatus": "R1 exploratory GLB/Blend not this visual candidate; final exact exports wait for art acceptance.",
+  "checks": "node --test world/tests/herbarium-assets.test.js: 8/8 pass before snapshot"
+}

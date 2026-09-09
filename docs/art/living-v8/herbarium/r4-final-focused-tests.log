@@ -1,0 +1,18 @@
+✔ authored mesh families are finite and remain inside audited placement envelopes (5572.576458ms)
+✔ full rectangular arcade and conservatory openings clear player and delivered companion walk sweeps (1598.049334ms)
+✔ real finished floor triangles support translated and rotated placement (1148.073375ms)
+✔ asset clones keep transform independence and reference-count geometry while preserving shared PBR textures (939.373625ms)
+✔ parameter validation prevents impossible or non-finite construction (0.296625ms)
+✔ plant crowns originate on real continuous soil or container soil, including wet-garden borders (1880.156292ms)
+✔ batched part ranges still select actual original triangles and support contacts (1128.487875ms)
+✔ water-garden east arrival has full rectangular access and real ground support (463.25175ms)
+✔ photographed source GLBs preserve actual geometry, 4K alpha pixels and complete potted-node transforms (1163.588416ms)
+✔ support and solid bounds include unflushed parent placement transforms (181.538292ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 10
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 14318.176791

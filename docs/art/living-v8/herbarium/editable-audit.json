@@ -1,0 +1,725 @@
+{
+  "arcade": {
+    "editableSha256": "b43ec094c89cadcf97788720354cf8c312f98209d32edf99d3e858ef21ee613c",
+    "sourceSha256": "4fceba32fe849ec2dfa6e91be05cd9cd74cf63763d796d151fd4d4c405b96641",
+    "runtimeGLBSha256": "7f63cd5bdaec58682c3f67c33f81c8773d63dedd0dff5260401d04d028416967",
+    "meshes": 6,
+    "triangles": 34390,
+    "actualRuntimeBounds": {
+      "min": [
+        -6.0,
+        -0.25999999046325684,
+        -1.7000000476837158
+      ],
+      "max": [
+        6.0,
+        5.399499893188477,
+        1.7000000476837158
+      ]
+    },
+    "packedImages": [
+      {
+        "name": "Image_0",
+        "size": [
+          2048,
+          2048
+        ],
+        "packedBytes": 16828,
+        "encodedImageSha256": "db2b4aae9766c9d72ffcb3415f19ffab426bbbf454c299e8798df39d13794960"
+      },
+      {
+        "name": "Image_1",
+        "size": [
+          2048,
+          2048
+        ],
+        "packedBytes": 1876704,
+        "encodedImageSha256": "df81bee6cc77a19798f3fd30eeaed5f4e6764c319d0f979746ebbc448c759e73"
+      },
+      {
+        "name": "Image_2",
+        "size": [
+          2048,
+          2048
+        ],
+        "packedBytes": 6640490,
+        "encodedImageSha256": "daa822b747ea81620011164f69394d604935da7933d8ee3a673a23336e90b5ce"
+      },
+      {
+        "name": "Image_3",
+        "size": [
+          2048,
+          2048
+        ],
+        "packedBytes": 16828,
+        "encodedImageSha256": "db2b4aae9766c9d72ffcb3415f19ffab426bbbf454c299e8798df39d13794960"
+      },
+      {
+        "name": "Image_4",
+        "size": [
+          2048,
+          2048
+        ],
+        "packedBytes": 6640490,
+        "encodedImageSha256": "daa822b747ea81620011164f69394d604935da7933d8ee3a673a23336e90b5ce"
+      },
+      {
+        "name": "Image_5",
+        "size": [
+          2048,
+          2048
+        ],
+        "packedBytes": 16828,
+        "encodedImageSha256": "db2b4aae9766c9d72ffcb3415f19ffab426bbbf454c299e8798df39d13794960"
+      },
+      {
+        "name": "Image_6",
+        "size": [
+          2048,
+          2048
+        ],
+        "packedBytes": 6640490,
+        "encodedImageSha256": "daa822b747ea81620011164f69394d604935da7933d8ee3a673a23336e90b5ce"
+      },
+      {
+        "name": "Image_7",
+        "size": [
+          512,
+          1024
+        ],
+        "packedBytes": 298872,
+        "encodedImageSha256": "0eacb10df4cd2650020848325e62ccf3a85002b794af05a9759416fe10a79890"
+      },
+      {
+        "name": "Image_8",
+        "size": [
+          512,
+          1024
+        ],
+        "packedBytes": 186334,
+        "encodedImageSha256": "d5c5f33319cd54960bc3b334be91d1e96cdd2177ee65354205ad249dc01f3fff"
+      }
+    ]
+  },
+  "conservatory": {
+    "editableSha256": "5105a73d5ecf73c579ba2ddeb7aa5e2eb8556c2d91d03ebb227fa64267c9ac8d",
+    "sourceSha256": "4fceba32fe849ec2dfa6e91be05cd9cd74cf63763d796d151fd4d4c405b96641",
+    "runtimeGLBSha256": "8e4ce81d2b2927bbb83bc13a4e9a8f78759826e7f776eee558755fcf829c4a36",
+    "meshes": 13,
+    "triangles": 2598090,
+    "actualRuntimeBounds": {
+      "min": [
+        -7.699999809265137,
+        -0.25999999046325684,
+        -4.25
+      ],
+      "max": [
+        7.699999809265137,
+        7.489999771118164,
+        4.28000020980835
+      ]
+    },
+    "packedImages": [
+      {
+        "name": "Image_0",
+        "size": [
+          2048,
+          2048
+        ],
+        "packedBytes": 16828,
+        "encodedImageSha256": "db2b4aae9766c9d72ffcb3415f19ffab426bbbf454c299e8798df39d13794960"
+      },
+      {
+        "name": "Image_1",
+        "size": [
+          2048,
+          2048
+        ],
+        "packedBytes": 1876704,
+        "encodedImageSha256": "df81bee6cc77a19798f3fd30eeaed5f4e6764c319d0f979746ebbc448c759e73"
+      },
+      {
+        "name": "Image_10",
+        "size": [
+          4096,
+          4096
+        ],
+        "packedBytes": 2054723,
+        "encodedImageSha256": "e6eaded920e5335dc1fd9f6ee1a2093b80f171f7523bc8e8e54efe86b4c9fed1"
+      },
+      {
+        "name": "Image_11",
+        "size": [
+          4096,
+          4096
+        ],
+        "packedBytes": 2606682,
+        "encodedImageSha256": "1dbc12c3110f5da85b0fc8748aabf120ec124450f83f931caee81cfbdc9b48ec"
+      },
+      {
+        "name": "Image_12",
+        "size": [
+          4096,
+          4096
+        ],
+        "packedBytes": 3260725,
+        "encodedImageSha256": "fca6bb32eef9cbd82ee71deaea39638bfa2423344325675e70e81e1a8892c59f"
+      },
+      {
+        "name": "Image_13",
+        "size": [
+          4096,
+          4096
+        ],
+        "packedBytes": 1457895,
+        "encodedImageSha256": "bfed0b772e77b64ff4e7b7c42e213c8b9026c1195cb4a69ec392174b336567b7"
+      },
+      {
+        "name": "Image_14",
+        "size": [
+          4096,
+          4096
+        ],
+        "packedBytes": 7261946,
+        "encodedImageSha256": "28a9b98313c68cc49cc899425f2c4025ca32f9bf93763e09c99a90791a438252"
+      },
+      {
+        "name": "Image_15",
+        "size": [
+          4096,
+          4096
+        ],
+        "packedBytes": 3208330,
+        "encodedImageSha256": "6f79fe82757741cb79449e563c47be8b91031d82a756b0fad5efd304b795d781"
+      },
+      {
+        "name": "Image_16",
+        "size": [
+          4096,
+          4096
+        ],
+        "packedBytes": 2569142,
+        "encodedImageSha256": "0ccfb4d98966c0e69769e9ddd5be872e34bb1d2f8aece3aff6d42fd3e61f8f1c"
+      },
+      {
+        "name": "Image_17",
+        "size": [
+          4096,
+          4096
+        ],
+        "packedBytes": 5349202,
+        "encodedImageSha256": "1a312acedc26174676c0d504aa98eeef4410551665fff94abbec78d9d04cf35c"
+      },
+      {
+        "name": "Image_18",
+        "size": [
+          4096,
+          4096
+        ],
+        "packedBytes": 5058951,
+        "encodedImageSha256": "14125a030e3fab96f52343215a65167ea46bcabae4bdef3444ba8ae22cb05e41"
+      },
+      {
+        "name": "Image_19",
+        "size": [
+          4096,
+          4096
+        ],
+        "packedBytes": 3265708,
+        "encodedImageSha256": "f5907a0acc35a7f09c0cadf752ee3911f00aa41a887919354090d319ea551e4a"
+      },
+      {
+        "name": "Image_2",
+        "size": [
+          2048,
+          2048
+        ],
+        "packedBytes": 6640490,
+        "encodedImageSha256": "daa822b747ea81620011164f69394d604935da7933d8ee3a673a23336e90b5ce"
+      },
+      {
+        "name": "Image_20",
+        "size": [
+          4096,
+          4096
+        ],
+        "packedBytes": 5132590,
+        "encodedImageSha256": "b293829295fa0a32b5fb72b7cc35541efe9c2289e179d3b87a7df76d6f4bb5db"
+      },
+      {
+        "name": "Image_21",
+        "size": [
+          4096,
+          4096
+        ],
+        "packedBytes": 4040117,
+        "encodedImageSha256": "e4d3514491cf37b782b88bed11e842ae2c6c72a4d637627e7230864b41ffe5df"
+      },
+      {
+        "name": "Image_22",
+        "size": [
+          1024,
+          1024
+        ],
+        "packedBytes": 54380,
+        "encodedImageSha256": "1de0d5846b37eff5c025f285b4f2857782f34ac1f5968cd3abe117a523b32bf2"
+      },
+      {
+        "name": "Image_23",
+        "size": [
+          1024,
+          1024
+        ],
+        "packedBytes": 748192,
+        "encodedImageSha256": "50ad359288cc5dc0daddbd8c6cc359241a330f3d0ec4634ff62e395ba01e8469"
+      },
+      {
+        "name": "Image_24",
+        "size": [
+          1024,
+          1024
+        ],
+        "packedBytes": 1163294,
+        "encodedImageSha256": "1a5505a9746f84eeac30a65b93bdb6e8327752da7e46c5ed78ca16c73e83b817"
+      },
+      {
+        "name": "Image_3",
+        "size": [
+          2048,
+          2048
+        ],
+        "packedBytes": 16828,
+        "encodedImageSha256": "db2b4aae9766c9d72ffcb3415f19ffab426bbbf454c299e8798df39d13794960"
+      },
+      {
+        "name": "Image_4",
+        "size": [
+          2048,
+          2048
+        ],
+        "packedBytes": 6640490,
+        "encodedImageSha256": "daa822b747ea81620011164f69394d604935da7933d8ee3a673a23336e90b5ce"
+      },
+      {
+        "name": "Image_5",
+        "size": [
+          2048,
+          2048
+        ],
+        "packedBytes": 16828,
+        "encodedImageSha256": "db2b4aae9766c9d72ffcb3415f19ffab426bbbf454c299e8798df39d13794960"
+      },
+      {
+        "name": "Image_6",
+        "size": [
+          2048,
+          2048
+        ],
+        "packedBytes": 6640490,
+        "encodedImageSha256": "daa822b747ea81620011164f69394d604935da7933d8ee3a673a23336e90b5ce"
+      },
+      {
+        "name": "Image_7",
+        "size": [
+          1024,
+          1024
+        ],
+        "packedBytes": 1187362,
+        "encodedImageSha256": "a573a5991ff9525f6849df7f0b8f15847f7ae1ab9f5e101eefbb2d63ad597ea4"
+      },
+      {
+        "name": "Image_8",
+        "size": [
+          1024,
+          1024
+        ],
+        "packedBytes": 248194,
+        "encodedImageSha256": "55dd759136e6342f6eb06f758829c67fb2644202577b9f1720bb638add0a0abe"
+      },
+      {
+        "name": "Image_9",
+        "size": [
+          1024,
+          1024
+        ],
+        "packedBytes": 579664,
+        "encodedImageSha256": "43e56a6efb0b4b34eeba1d6b7245b5bb971da1847b67def76fdeb505b24bcc54"
+      }
+    ]
+  },
+  "water-garden": {
+    "editableSha256": "a2a23ae02a843e16717e27dcf8c9b80e2c03f573fbfe1a5ffbae6260fd329ce1",
+    "sourceSha256": "4fceba32fe849ec2dfa6e91be05cd9cd74cf63763d796d151fd4d4c405b96641",
+    "runtimeGLBSha256": "1bcec3bbb7bd64f427cc801b495d477e5bd3ff152b42154a63f53cd0c3fa6b96",
+    "meshes": 18,
+    "triangles": 833808,
+    "actualRuntimeBounds": {
+      "min": [
+        -7.253931522369385,
+        -0.3400000035762787,
+        -4.170000076293945
+      ],
+      "max": [
+        7.949999809265137,
+        1.100000023841858,
+        4.170000076293945
+      ]
+    },
+    "packedImages": [
+      {
+        "name": "Image_0",
+        "size": [
+          2048,
+          2048
+        ],
+        "packedBytes": 16828,
+        "encodedImageSha256": "db2b4aae9766c9d72ffcb3415f19ffab426bbbf454c299e8798df39d13794960"
+      },
+      {
+        "name": "Image_1",
+        "size": [
+          2048,
+          2048
+        ],
+        "packedBytes": 1876704,
+        "encodedImageSha256": "df81bee6cc77a19798f3fd30eeaed5f4e6764c319d0f979746ebbc448c759e73"
+      },
+      {
+        "name": "Image_10",
+        "size": [
+          1024,
+          1024
+        ],
+        "packedBytes": 1163294,
+        "encodedImageSha256": "1a5505a9746f84eeac30a65b93bdb6e8327752da7e46c5ed78ca16c73e83b817"
+      },
+      {
+        "name": "Image_11",
+        "size": [
+          1024,
+          1024
+        ],
+        "packedBytes": 1187362,
+        "encodedImageSha256": "a573a5991ff9525f6849df7f0b8f15847f7ae1ab9f5e101eefbb2d63ad597ea4"
+      },
+      {
+        "name": "Image_12",
+        "size": [
+          1024,
+          1024
+        ],
+        "packedBytes": 248194,
+        "encodedImageSha256": "55dd759136e6342f6eb06f758829c67fb2644202577b9f1720bb638add0a0abe"
+      },
+      {
+        "name": "Image_13",
+        "size": [
+          1024,
+          1024
+        ],
+        "packedBytes": 579664,
+        "encodedImageSha256": "43e56a6efb0b4b34eeba1d6b7245b5bb971da1847b67def76fdeb505b24bcc54"
+      },
+      {
+        "name": "Image_14",
+        "size": [
+          1024,
+          1024
+        ],
+        "packedBytes": 270394,
+        "encodedImageSha256": "a1fcf839545d7fad68fa766ec2ce9b4a16a421e92c56a442677d8a3422314ac1"
+      },
+      {
+        "name": "Image_15",
+        "size": [
+          1024,
+          1024
+        ],
+        "packedBytes": 31160,
+        "encodedImageSha256": "e1d4338bbd66aa3107fe2047b77497d5ea90ae1b07bb0b0dd9eb9d3440cbde1a"
+      },
+      {
+        "name": "Image_16",
+        "size": [
+          1024,
+          1024
+        ],
+        "packedBytes": 692846,
+        "encodedImageSha256": "3c8a2463ee4a88af7324979bfc258a64f0e22d9cea180cfeb62ba3d27a443ab2"
+      },
+      {
+        "name": "Image_17",
+        "size": [
+          1024,
+          1024
+        ],
+        "packedBytes": 1515062,
+        "encodedImageSha256": "05a8ac99d36fcabcfac9f7c9949f7ae8a8be46cfd3c1c92fadb0872ab03d9108"
+      },
+      {
+        "name": "Image_18",
+        "size": [
+          1024,
+          1024
+        ],
+        "packedBytes": 1568852,
+        "encodedImageSha256": "db1971efb687fa38f491d086d6b7b1715ae3bc316c623e5721f221a05f3d8303"
+      },
+      {
+        "name": "Image_19",
+        "size": [
+          4096,
+          4096
+        ],
+        "packedBytes": 2569142,
+        "encodedImageSha256": "0ccfb4d98966c0e69769e9ddd5be872e34bb1d2f8aece3aff6d42fd3e61f8f1c"
+      },
+      {
+        "name": "Image_2",
+        "size": [
+          2048,
+          2048
+        ],
+        "packedBytes": 6640490,
+        "encodedImageSha256": "daa822b747ea81620011164f69394d604935da7933d8ee3a673a23336e90b5ce"
+      },
+      {
+        "name": "Image_20",
+        "size": [
+          4096,
+          4096
+        ],
+        "packedBytes": 5349202,
+        "encodedImageSha256": "1a312acedc26174676c0d504aa98eeef4410551665fff94abbec78d9d04cf35c"
+      },
+      {
+        "name": "Image_21",
+        "size": [
+          4096,
+          4096
+        ],
+        "packedBytes": 5058951,
+        "encodedImageSha256": "14125a030e3fab96f52343215a65167ea46bcabae4bdef3444ba8ae22cb05e41"
+      },
+      {
+        "name": "Image_22",
+        "size": [
+          4096,
+          4096
+        ],
+        "packedBytes": 3265708,
+        "encodedImageSha256": "f5907a0acc35a7f09c0cadf752ee3911f00aa41a887919354090d319ea551e4a"
+      },
+      {
+        "name": "Image_23",
+        "size": [
+          4096,
+          4096
+        ],
+        "packedBytes": 5132590,
+        "encodedImageSha256": "b293829295fa0a32b5fb72b7cc35541efe9c2289e179d3b87a7df76d6f4bb5db"
+      },
+      {
+        "name": "Image_24",
+        "size": [
+          4096,
+          4096
+        ],
+        "packedBytes": 4040117,
+        "encodedImageSha256": "e4d3514491cf37b782b88bed11e842ae2c6c72a4d637627e7230864b41ffe5df"
+      },
+      {
+        "name": "Image_3",
+        "size": [
+          512,
+          512
+        ],
+        "packedBytes": 55498,
+        "encodedImageSha256": "d437f95f056e738546593d565a8457d9c598a88314fe44fdda89644dd115097e"
+      },
+      {
+        "name": "Image_4",
+        "size": [
+          2048,
+          2048
+        ],
+        "packedBytes": 16828,
+        "encodedImageSha256": "db2b4aae9766c9d72ffcb3415f19ffab426bbbf454c299e8798df39d13794960"
+      },
+      {
+        "name": "Image_5",
+        "size": [
+          2048,
+          2048
+        ],
+        "packedBytes": 6640490,
+        "encodedImageSha256": "daa822b747ea81620011164f69394d604935da7933d8ee3a673a23336e90b5ce"
+      },
+      {
+        "name": "Image_6",
+        "size": [
+          2048,
+          2048
+        ],
+        "packedBytes": 16828,
+        "encodedImageSha256": "db2b4aae9766c9d72ffcb3415f19ffab426bbbf454c299e8798df39d13794960"
+      },
+      {
+        "name": "Image_7",
+        "size": [
+          2048,
+          2048
+        ],
+        "packedBytes": 6640490,
+        "encodedImageSha256": "daa822b747ea81620011164f69394d604935da7933d8ee3a673a23336e90b5ce"
+      },
+      {
+        "name": "Image_8",
+        "size": [
+          1024,
+          1024
+        ],
+        "packedBytes": 54380,
+        "encodedImageSha256": "1de0d5846b37eff5c025f285b4f2857782f34ac1f5968cd3abe117a523b32bf2"
+      },
+      {
+        "name": "Image_9",
+        "size": [
+          1024,
+          1024
+        ],
+        "packedBytes": 748192,
+        "encodedImageSha256": "50ad359288cc5dc0daddbd8c6cc359241a330f3d0ec4634ff62e395ba01e8469"
+      }
+    ]
+  },
+  "flower-border": {
+    "editableSha256": "2d48efb17f544a245684ece03a59f0407a826a422a2a2f6649aa6ab32ee52680",
+    "sourceSha256": "4fceba32fe849ec2dfa6e91be05cd9cd74cf63763d796d151fd4d4c405b96641",
+    "runtimeGLBSha256": "14d323c0f90c09b91d9185a65d161c3059b33fa54611663588a7afa527fa85bf",
+    "meshes": 5,
+    "triangles": 388036,
+    "actualRuntimeBounds": {
+      "min": [
+        -6.0,
+        -0.10094360262155533,
+        -0.9437811374664307
+      ],
+      "max": [
+        6.0,
+        0.8621935248374939,
+        0.9115283489227295
+      ]
+    },
+    "packedImages": [
+      {
+        "name": "Image_0",
+        "size": [
+          2048,
+          2048
+        ],
+        "packedBytes": 16828,
+        "encodedImageSha256": "db2b4aae9766c9d72ffcb3415f19ffab426bbbf454c299e8798df39d13794960"
+      },
+      {
+        "name": "Image_1",
+        "size": [
+          2048,
+          2048
+        ],
+        "packedBytes": 1876704,
+        "encodedImageSha256": "df81bee6cc77a19798f3fd30eeaed5f4e6764c319d0f979746ebbc448c759e73"
+      },
+      {
+        "name": "Image_10",
+        "size": [
+          4096,
+          4096
+        ],
+        "packedBytes": 5132590,
+        "encodedImageSha256": "b293829295fa0a32b5fb72b7cc35541efe9c2289e179d3b87a7df76d6f4bb5db"
+      },
+      {
+        "name": "Image_11",
+        "size": [
+          4096,
+          4096
+        ],
+        "packedBytes": 4040117,
+        "encodedImageSha256": "e4d3514491cf37b782b88bed11e842ae2c6c72a4d637627e7230864b41ffe5df"
+      },
+      {
+        "name": "Image_2",
+        "size": [
+          2048,
+          2048
+        ],
+        "packedBytes": 6640490,
+        "encodedImageSha256": "daa822b747ea81620011164f69394d604935da7933d8ee3a673a23336e90b5ce"
+      },
+      {
+        "name": "Image_3",
+        "size": [
+          1024,
+          1024
+        ],
+        "packedBytes": 692846,
+        "encodedImageSha256": "3c8a2463ee4a88af7324979bfc258a64f0e22d9cea180cfeb62ba3d27a443ab2"
+      },
+      {
+        "name": "Image_4",
+        "size": [
+          1024,
+          1024
+        ],
+        "packedBytes": 1515062,
+        "encodedImageSha256": "05a8ac99d36fcabcfac9f7c9949f7ae8a8be46cfd3c1c92fadb0872ab03d9108"
+      },
+      {
+        "name": "Image_5",
+        "size": [
+          1024,
+          1024
+        ],
+        "packedBytes": 1568852,
+        "encodedImageSha256": "db1971efb687fa38f491d086d6b7b1715ae3bc316c623e5721f221a05f3d8303"
+      },
+      {
+        "name": "Image_6",
+        "size": [
+          4096,
+          4096
+        ],
+        "packedBytes": 2569142,
+        "encodedImageSha256": "0ccfb4d98966c0e69769e9ddd5be872e34bb1d2f8aece3aff6d42fd3e61f8f1c"
+      },
+      {
+        "name": "Image_7",
+        "size": [
+          4096,
+          4096
+        ],
+        "packedBytes": 5349202,
+        "encodedImageSha256": "1a312acedc26174676c0d504aa98eeef4410551665fff94abbec78d9d04cf35c"
+      },
+      {
+        "name": "Image_8",
+        "size": [
+          4096,
+          4096
+        ],
+        "packedBytes": 5058951,
+        "encodedImageSha256": "14125a030e3fab96f52343215a65167ea46bcabae4bdef3444ba8ae22cb05e41"
+      },
+      {
+        "name": "Image_9",
+        "size": [
+          4096,
+          4096
+        ],
+        "packedBytes": 3265708,
+        "encodedImageSha256": "f5907a0acc35a7f09c0cadf752ee3911f00aa41a887919354090d319ea551e4a"
+      }
+    ]
+  }
+}

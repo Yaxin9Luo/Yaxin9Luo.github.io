@@ -1,0 +1,70 @@
+BlenderMCP: cannot start server in background mode (blender -b) - commands would never execute
+BlenderMCP: run Blender with a GUI, or use a virtual display: xvfb-run -a blender
+BlenderMCP addon registered
+BlenderMCP server stopped
+BlenderMCP addon unregistered
+19:44:16 | INFO: Data are loaded, start creating Blender stuff
+19:44:16 | INFO: Blender create Mesh node 0
+19:44:16 | INFO: Blender create Mesh node 1
+19:44:16 | INFO: Blender create Mesh node 2
+19:44:16 | INFO: Blender create Mesh node 3
+19:44:16 | INFO: Blender create Mesh node 4
+19:44:16 | INFO: Blender create Mesh node 5
+19:44:16 | INFO: glTF import finished in 0.13s
+Info: No new files have been packed
+Info: Saved as "arcade.blend"
+EDITABLE_SAVED arcade 6
+19:44:16 | INFO: Data are loaded, start creating Blender stuff
+19:44:16 | INFO: Blender create Mesh node 0
+19:44:16 | INFO: Blender create Mesh node 1
+19:44:16 | INFO: Blender create Mesh node 2
+19:44:16 | INFO: Blender create Mesh node 3
+19:44:16 | INFO: Blender create Mesh node 4
+19:44:16 | INFO: Blender create Mesh node 5
+19:44:16 | INFO: Blender create Mesh node 6
+19:44:16 | INFO: Blender create Mesh node 7
+19:44:16 | INFO: Blender create Mesh node 8
+19:44:19 | INFO: Blender create Mesh node 9
+19:44:20 | INFO: Blender create Mesh node 10
+19:44:20 | INFO: Blender create Mesh node 11
+19:44:21 | INFO: Blender create Mesh node 12
+19:44:21 | INFO: glTF import finished in 4.51s
+Info: No new files have been packed
+Info: Saved as "conservatory.blend"
+EDITABLE_SAVED conservatory 13
+19:44:22 | INFO: Data are loaded, start creating Blender stuff
+19:44:22 | INFO: Blender create Mesh node 0
+19:44:22 | INFO: Blender create Mesh node 1
+19:44:22 | INFO: Blender create Mesh node 2
+19:44:22 | INFO: Blender create Mesh node 3
+19:44:22 | INFO: Blender create Mesh node 4
+19:44:22 | INFO: Blender create Mesh node 5
+19:44:22 | INFO: Blender create Mesh node 6
+19:44:22 | INFO: Blender create Mesh node 7
+19:44:22 | INFO: Blender create Mesh node 8
+19:44:23 | INFO: Blender create Mesh node 9
+19:44:23 | INFO: Blender create Mesh node 10
+19:44:23 | INFO: Blender create Mesh node 11
+19:44:23 | INFO: Blender create Mesh node 12
+19:44:23 | INFO: Blender create Mesh node 13
+19:44:23 | INFO: Blender create Mesh node 14
+19:44:23 | INFO: Blender create Mesh node 15
+19:44:23 | INFO: Blender create Mesh node 16
+19:44:23 | INFO: Blender create Mesh node 17
+19:44:24 | INFO: glTF import finished in 1.47s
+Info: No new files have been packed
+Info: Saved as "water-garden.blend"
+EDITABLE_SAVED water-garden 18
+19:44:25 | INFO: Data are loaded, start creating Blender stuff
+19:44:25 | INFO: Blender create Mesh node 0
+19:44:25 | INFO: Blender create Mesh node 1
+19:44:25 | INFO: Blender create Mesh node 2
+19:44:25 | INFO: Blender create Mesh node 3
+19:44:25 | INFO: Blender create Mesh node 4
+19:44:25 | INFO: glTF import finished in 0.75s
+Info: No new files have been packed
+Info: Saved as "flower-border.blend"
+EDITABLE_SAVED flower-border 5
+Blender 5.1.2 (hash ec6e62d40fa9 built 2026-05-19 01:30:33)
+
+Blender quit

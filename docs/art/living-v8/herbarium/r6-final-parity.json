@@ -1,0 +1,18 @@
+{
+  "visualSourceSHA256": "3656c37b1e0d845ac4189edd6663d059dca69873afcca19799c2b2befa727e2b",
+  "finalSourceSHA256": "4fceba32fe849ec2dfa6e91be05cd9cd74cf63763d796d151fd4d4c405b96641",
+  "positionsIndicesUVColorsIdentical": true,
+  "changedNormalsOnlyIncidentOnZeroAreaTriangles": true,
+  "changes": [
+    {
+      "batch": "lilyPink",
+      "changedEndpointNormals": 264,
+      "incidentZeroAreaTriangles": 264
+    },
+    {
+      "batch": "lilyIvory",
+      "changedEndpointNormals": 132,
+      "incidentZeroAreaTriangles": 132
+    }
+  ]
+}

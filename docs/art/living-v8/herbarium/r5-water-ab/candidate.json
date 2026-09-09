@@ -1,0 +1,12 @@
+{
+  "candidate": "r5-water-ab",
+  "frozenUTC": "2026-09-09T19:22:22.412792+00:00",
+  "status": "Pond-only optics A/B: surface blend versus R4 screen refraction. Same refined lily geometry and unchanged pad elevations. Main water default is still R4 until mode selection; studio records explicit optical mode.",
+  "files": {
+    "world/src/herbarium-assets.js": "e02cc3c856a891563112b3d7d9af3f13be34ec8a01b1a6b3068f2a1f965c9111",
+    "world/src/herbarium-studio.js": "20d49c326a0066ee2f43d6a9aa0c7d0c69984b49d05e04bcf135591ca3738fac",
+    "world/herbarium-studio.html": "b350d9fc6a1034517c978b711c750d269ddfd90062e0d2f80d4b62cac73c0fc0",
+    "docs/art/living-v8/herbarium/r5-water-tests.log": "e78d927f64949f32d6872c73c31fea9fdddb79216a06f8cc03fd92beb1532f08",
+    "docs/art/living-v8/herbarium/r5-lily-contact-test.log": "efd1cc997e5e0105ad73d91d3015be142bad58bd9c9a7923be879323b605b95f"
+  }
+}

@@ -1,0 +1,274 @@
+[
+  {
+    "path": "docs/art/living-v8/herbarium/art-evidence/herbarium-conservatory-threequarter-day-1788981192202.png",
+    "sourcePath": "work/production-v3/captures/herbarium-conservatory-threequarter-day-1788981192202.png",
+    "sha256": "8f2d1e5e8946f6cb432ec98f6aac8b64141e6e79e8821edcd60aef07102955d6",
+    "bytes": 1309612,
+    "candidate": "r4-composition",
+    "key": "C4-M"
+  },
+  {
+    "path": "docs/art/living-v8/herbarium/art-evidence/herbarium-conservatory-threequarter-day-1788981192202.json",
+    "sourcePath": "work/production-v3/captures/herbarium-conservatory-threequarter-day-1788981192202.json",
+    "sha256": "d4d408519b65c46d57a9d93a72a15b918d995970ea3ac821c289706ca259e099",
+    "bytes": 813,
+    "candidate": "r4-composition",
+    "key": "C4-M"
+  },
+  {
+    "path": "docs/art/living-v8/herbarium/art-evidence/herbarium-conservatory-close-day-1788981192842.png",
+    "sourcePath": "work/production-v3/captures/herbarium-conservatory-close-day-1788981192842.png",
+    "sha256": "e62ebd99f7f0b489b79a0c178c8feaf33747ef3d32965358480c65cab3879c5f",
+    "bytes": 4328104,
+    "candidate": "r4-composition",
+    "key": "C4-C"
+  },
+  {
+    "path": "docs/art/living-v8/herbarium/art-evidence/herbarium-conservatory-close-day-1788981192842.json",
+    "sourcePath": "work/production-v3/captures/herbarium-conservatory-close-day-1788981192842.json",
+    "sha256": "496c82472070a2a3bad09a3715c8a5e8f0c7a5a1a0e2b04f92b1c7999b7b6c23",
+    "bytes": 814,
+    "candidate": "r4-composition",
+    "key": "C4-C"
+  },
+  {
+    "path": "docs/art/living-v8/herbarium/art-evidence/herbarium-conservatory-interior-day-1788981193444.png",
+    "sourcePath": "work/production-v3/captures/herbarium-conservatory-interior-day-1788981193444.png",
+    "sha256": "abf3311c5f4f970a9fe2609d3cd939928633eaedbeb10765312af3d3946dda8c",
+    "bytes": 3464593,
+    "candidate": "r4-composition",
+    "key": "C4-I"
+  },
+  {
+    "path": "docs/art/living-v8/herbarium/art-evidence/herbarium-conservatory-interior-day-1788981193444.json",
+    "sourcePath": "work/production-v3/captures/herbarium-conservatory-interior-day-1788981193444.json",
+    "sha256": "ee83e2c6465cf337fa728ae08f2d09349307fb84c7262956ef8fe9928874d9f3",
+    "bytes": 836,
+    "candidate": "r4-composition",
+    "key": "C4-I"
+  },
+  {
+    "path": "docs/art/living-v8/herbarium/art-evidence/herbarium-conservatory-profile-day-1788981194092.png",
+    "sourcePath": "work/production-v3/captures/herbarium-conservatory-profile-day-1788981194092.png",
+    "sha256": "7b3b33bc2257480dee0d6406484f59bdec6b5db82b8534be2c7593176388af46",
+    "bytes": 1226968,
+    "candidate": "r4-composition",
+    "key": "C4-P"
+  },
+  {
+    "path": "docs/art/living-v8/herbarium/art-evidence/herbarium-conservatory-profile-day-1788981194092.json",
+    "sourcePath": "work/production-v3/captures/herbarium-conservatory-profile-day-1788981194092.json",
+    "sha256": "990a21a7ce67b6c51dcd7b3ee7d08539833d89ac39624d9accbb63777e7eab80",
+    "bytes": 828,
+    "candidate": "r4-composition",
+    "key": "C4-P"
+  },
+  {
+    "path": "docs/art/living-v8/herbarium/art-evidence/herbarium-conservatory-threequarter-night-1788981194841.png",
+    "sourcePath": "work/production-v3/captures/herbarium-conservatory-threequarter-night-1788981194841.png",
+    "sha256": "4f0875aab8a0d927b54df28520a7760a1a6dd719ac87480ebda8bdbdcdc383be",
+    "bytes": 1253365,
+    "candidate": "r4-composition",
+    "key": "C4-N"
+  },
+  {
+    "path": "docs/art/living-v8/herbarium/art-evidence/herbarium-conservatory-threequarter-night-1788981194841.json",
+    "sourcePath": "work/production-v3/captures/herbarium-conservatory-threequarter-night-1788981194841.json",
+    "sha256": "622333d6cb1e0a31d331f8d8054f89ab0a93eaf51d8a5d836341be01ab433afc",
+    "bytes": 815,
+    "candidate": "r4-composition",
+    "key": "C4-N"
+  },
+  {
+    "path": "docs/art/living-v8/herbarium/art-evidence/herbarium-border-threequarter-day-1788981497435.png",
+    "sourcePath": "work/production-v3/captures/herbarium-border-threequarter-day-1788981497435.png",
+    "sha256": "f31b72e05fa181ea5be081f0a68bb547c628c0c92e0e3956d2b8803ca99746f3",
+    "bytes": 205686,
+    "candidate": "r4-composition",
+    "key": "B4-M"
+  },
+  {
+    "path": "docs/art/living-v8/herbarium/art-evidence/herbarium-border-threequarter-day-1788981497435.json",
+    "sourcePath": "work/production-v3/captures/herbarium-border-threequarter-day-1788981497435.json",
+    "sha256": "3f3d155e10fb57ea1ee3e60a688efb204e0acb3a09898ff84ad78b688937816c",
+    "bytes": 807,
+    "candidate": "r4-composition",
+    "key": "B4-M"
+  },
+  {
+    "path": "docs/art/living-v8/herbarium/art-evidence/herbarium-border-close-day-1788981497993.png",
+    "sourcePath": "work/production-v3/captures/herbarium-border-close-day-1788981497993.png",
+    "sha256": "5044bc39fa8cf72af56c8042d6d04be26c8516a3befa598fcf7e1c587df1d35c",
+    "bytes": 2144706,
+    "candidate": "r4-composition",
+    "key": "B4-C"
+  },
+  {
+    "path": "docs/art/living-v8/herbarium/art-evidence/herbarium-border-close-day-1788981497993.json",
+    "sourcePath": "work/production-v3/captures/herbarium-border-close-day-1788981497993.json",
+    "sha256": "6164346daa165c011f7075fcb2e046adb9fedacbdac77da759f53834eb731426",
+    "bytes": 769,
+    "candidate": "r4-composition",
+    "key": "B4-C"
+  },
+  {
+    "path": "docs/art/living-v8/herbarium/art-evidence/herbarium-border-profile-day-1788981498558.png",
+    "sourcePath": "work/production-v3/captures/herbarium-border-profile-day-1788981498558.png",
+    "sha256": "c163202ffe6d573ff134b32adc724b725d89ad2034fdc5450e8af3685be19a37",
+    "bytes": 202323,
+    "candidate": "r4-composition",
+    "key": "B4-P"
+  },
+  {
+    "path": "docs/art/living-v8/herbarium/art-evidence/herbarium-border-profile-day-1788981498558.json",
+    "sourcePath": "work/production-v3/captures/herbarium-border-profile-day-1788981498558.json",
+    "sha256": "65570c353d1a2152385dc81238f38cd5da4a44c00dfe8aa1da859b636f0adb98",
+    "bytes": 805,
+    "candidate": "r4-composition",
+    "key": "B4-P"
+  },
+  {
+    "path": "docs/art/living-v8/herbarium/art-evidence/herbarium-border-threequarter-night-1788981499150.png",
+    "sourcePath": "work/production-v3/captures/herbarium-border-threequarter-night-1788981499150.png",
+    "sha256": "d1505748890e1364ead8c3e5c3aee39278597203592a55bf27d5cec7bbdb578e",
+    "bytes": 225507,
+    "candidate": "r4-composition",
+    "key": "B4-N"
+  },
+  {
+    "path": "docs/art/living-v8/herbarium/art-evidence/herbarium-border-threequarter-night-1788981499150.json",
+    "sourcePath": "work/production-v3/captures/herbarium-border-threequarter-night-1788981499150.json",
+    "sha256": "2a5b4e5d2acfebe6fd4d5e422ce0403d450075211c57acd12e0249990459eebb",
+    "bytes": 809,
+    "candidate": "r4-composition",
+    "key": "B4-N"
+  },
+  {
+    "path": "docs/art/living-v8/herbarium/art-evidence/herbarium-arcade-threequarter-day-1788981545728.png",
+    "sourcePath": "work/production-v3/captures/herbarium-arcade-threequarter-day-1788981545728.png",
+    "sha256": "a8918034a63069e260546e196e823d2e3a8ea15aa428234afb10705df6918fa4",
+    "bytes": 513943,
+    "candidate": "r4-composition",
+    "key": "A4-M"
+  },
+  {
+    "path": "docs/art/living-v8/herbarium/art-evidence/herbarium-arcade-threequarter-day-1788981545728.json",
+    "sourcePath": "work/production-v3/captures/herbarium-arcade-threequarter-day-1788981545728.json",
+    "sha256": "064c5a1280523af4a6e9bb17d9bd67bee26c0e806e635c20d717ab6e1bff798f",
+    "bytes": 789,
+    "candidate": "r4-composition",
+    "key": "A4-M"
+  },
+  {
+    "path": "docs/art/living-v8/herbarium/art-evidence/herbarium-arcade-close-day-1788981546302.png",
+    "sourcePath": "work/production-v3/captures/herbarium-arcade-close-day-1788981546302.png",
+    "sha256": "d416915548e85f53d84fc021b9fedc93e6a0930263bc5cae99e6d1cf6b4a6c38",
+    "bytes": 2259743,
+    "candidate": "r4-composition",
+    "key": "A4-C"
+  },
+  {
+    "path": "docs/art/living-v8/herbarium/art-evidence/herbarium-arcade-close-day-1788981546302.json",
+    "sourcePath": "work/production-v3/captures/herbarium-arcade-close-day-1788981546302.json",
+    "sha256": "eb93e036bfc921928aaeacc64c8bb6f3bca2e1631bff44fbeb7395a58b598034",
+    "bytes": 849,
+    "candidate": "r4-composition",
+    "key": "A4-C"
+  },
+  {
+    "path": "docs/art/living-v8/herbarium/art-evidence/herbarium-arcade-profile-day-1788981546870.png",
+    "sourcePath": "work/production-v3/captures/herbarium-arcade-profile-day-1788981546870.png",
+    "sha256": "35051091ca70e56e0feffb16cba01baef4310f29c93119d8db316b66b6a34574",
+    "bytes": 422011,
+    "candidate": "r4-composition",
+    "key": "A4-P"
+  },
+  {
+    "path": "docs/art/living-v8/herbarium/art-evidence/herbarium-arcade-profile-day-1788981546870.json",
+    "sourcePath": "work/production-v3/captures/herbarium-arcade-profile-day-1788981546870.json",
+    "sha256": "340bcb09f1aa32ad367422708b7301354d6cb682da78d033a6bef75fa88f00b9",
+    "bytes": 789,
+    "candidate": "r4-composition",
+    "key": "A4-P"
+  },
+  {
+    "path": "docs/art/living-v8/herbarium/art-evidence/herbarium-water-overview-day-1788982260709.png",
+    "sourcePath": "work/production-v3/captures/herbarium-water-overview-day-1788982260709.png",
+    "sha256": "452d512c3676e47b25110fb8adb48c3335e9ada77739fd886da6ed25aaacfcb0",
+    "bytes": 679134,
+    "candidate": "r6-water-final",
+    "key": "W6-O"
+  },
+  {
+    "path": "docs/art/living-v8/herbarium/art-evidence/herbarium-water-overview-day-1788982260709.json",
+    "sourcePath": "work/production-v3/captures/herbarium-water-overview-day-1788982260709.json",
+    "sha256": "93d8d302fa3d28a075a8e858eb9caf888904275710280a12734735cace41d7cb",
+    "bytes": 843,
+    "candidate": "r6-water-final",
+    "key": "W6-O"
+  },
+  {
+    "path": "docs/art/living-v8/herbarium/art-evidence/herbarium-water-close-day-1788982261276.png",
+    "sourcePath": "work/production-v3/captures/herbarium-water-close-day-1788982261276.png",
+    "sha256": "ea1d00ec0fe5aa3b62c74a3fdb3d6aa196fc83ad92a131b3d7abef3119a9105f",
+    "bytes": 1639599,
+    "candidate": "r6-water-final",
+    "key": "W6-C"
+  },
+  {
+    "path": "docs/art/living-v8/herbarium/art-evidence/herbarium-water-close-day-1788982261276.json",
+    "sourcePath": "work/production-v3/captures/herbarium-water-close-day-1788982261276.json",
+    "sha256": "6aa2f871d05e29e2cdb294862b61dd062a75f6ac17ed359d49b4e8b7548973ab",
+    "bytes": 880,
+    "candidate": "r6-water-final",
+    "key": "W6-C"
+  },
+  {
+    "path": "docs/art/living-v8/herbarium/art-evidence/herbarium-water-interior-day-1788982261826.png",
+    "sourcePath": "work/production-v3/captures/herbarium-water-interior-day-1788982261826.png",
+    "sha256": "535ca0df6fc17558ec66e51d0538290dca237ce5f3736f339a904e2717c8b3ac",
+    "bytes": 2538105,
+    "candidate": "r6-water-final",
+    "key": "W6-L"
+  },
+  {
+    "path": "docs/art/living-v8/herbarium/art-evidence/herbarium-water-interior-day-1788982261826.json",
+    "sourcePath": "work/production-v3/captures/herbarium-water-interior-day-1788982261826.json",
+    "sha256": "c8a7d6cec81a5118867ff0b77b598a2fcda978b50b56eac3f888767ef483c7a0",
+    "bytes": 859,
+    "candidate": "r6-water-final",
+    "key": "W6-L"
+  },
+  {
+    "path": "docs/art/living-v8/herbarium/art-evidence/herbarium-water-threequarter-night-1788982262408.png",
+    "sourcePath": "work/production-v3/captures/herbarium-water-threequarter-night-1788982262408.png",
+    "sha256": "cc72e445aea1aa5c0d9bb414194da40f6fca4508a114c8a24bf1b5efc5b24680",
+    "bytes": 453514,
+    "candidate": "r6-water-final",
+    "key": "W6-N"
+  },
+  {
+    "path": "docs/art/living-v8/herbarium/art-evidence/herbarium-water-threequarter-night-1788982262408.json",
+    "sourcePath": "work/production-v3/captures/herbarium-water-threequarter-night-1788982262408.json",
+    "sha256": "981b24ad34a9c0cc68e2aeaa21e24407bd5ca1562d056308e1585b420702802a",
+    "bytes": 881,
+    "candidate": "r6-water-final",
+    "key": "W6-N"
+  },
+  {
+    "path": "docs/art/living-v8/herbarium/art-evidence/herbarium-water-close-day-1788982678452.png",
+    "sourcePath": "work/production-v3/captures/herbarium-water-close-day-1788982678452.png",
+    "sha256": "ea1d00ec0fe5aa3b62c74a3fdb3d6aa196fc83ad92a131b3d7abef3119a9105f",
+    "bytes": 1639599,
+    "candidate": "r6-final-nonvisual",
+    "key": "FINAL-SMOKE"
+  },
+  {
+    "path": "docs/art/living-v8/herbarium/art-evidence/herbarium-water-close-day-1788982678452.json",
+    "sourcePath": "work/production-v3/captures/herbarium-water-close-day-1788982678452.json",
+    "sha256": "ea95eb7280463f225f58488409ced1aac83018b8d50d15b774fbcdcfd34ec0d5",
+    "bytes": 884,
+    "candidate": "r6-final-nonvisual",
+    "key": "FINAL-SMOKE"
+  }
+]

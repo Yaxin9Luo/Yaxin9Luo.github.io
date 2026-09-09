@@ -1,0 +1,12 @@
+{
+  "candidate": "r3-probes",
+  "frozenUTC": "2026-09-09T18:57:16.836025+00:00",
+  "status": "Four CC0 source studies plus targeted R2 optics/vine refinements; no source plants yet adopted in main gardens.",
+  "files": {
+    "world/src/herbarium-assets.js": "f79aa44a2e296dba127cb5df8fabcd3eaad6af9e958ecd79da16297161dd3202",
+    "world/src/herbarium-studio.js": "4a45da93eb1b1850dad86cf58ed5f2e3221b0b0a031e6180ce51fdb1439bce6f",
+    "world/herbarium-studio.html": "e3e44420bb72a557051b485b8acdc14a056c30c7990f955c90a01fac948984cf",
+    "docs/art/living-v8/herbarium/prepare-botanical.mjs": "898b54a767cc1c2bb426382568ee86fce7a09b33433d0a5d30f9c900a1ebc42d",
+    "world/public/models/herbarium/botanical/sources.json": "2e0134f358ac9593387f7d9bf04d8ceb271b133bed56ad6cd3700bc125607e02"
+  }
+}

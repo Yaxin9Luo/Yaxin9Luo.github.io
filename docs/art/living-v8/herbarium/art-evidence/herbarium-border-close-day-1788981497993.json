@@ -1,0 +1,48 @@
+{
+  "kind": "border",
+  "view": "close",
+  "light": "day",
+  "candidate": "r4-composition",
+  "assetVersion": 8,
+  "botanicalSource": null,
+  "bounds": {
+    "min": [
+      -6,
+      -0.10094360262155533,
+      -0.9437811374664307
+    ],
+    "max": [
+      6,
+      0.8621935248374939,
+      0.9115283489227295
+    ]
+  },
+  "mannequinVisible": false,
+  "scaleHeight": 3.28,
+  "wireframe": false,
+  "camera": [
+    4,
+    2.42,
+    4
+  ],
+  "target": [
+    1,
+    0.42,
+    0
+  ],
+  "nativeViewport": {
+    "cssWidth": 738,
+    "cssHeight": 576,
+    "pixelWidth": 1845,
+    "pixelHeight": 1440,
+    "devicePixelRatio": 2.5,
+    "renderPixelRatio": 2.5
+  },
+  "render": {
+    "frame": 32617,
+    "calls": 11,
+    "triangles": 776074,
+    "points": 0,
+    "lines": 0
+  }
+}

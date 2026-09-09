@@ -1,0 +1,16 @@
+00:05.572  blend            | Read blend: "/Users/yaxinluo/Documents/Codex/2026-09-07/https-yaxin9luo-github-io-https-yaxin9luo/outputs/academy-living-v8/work/living-v8/exports/herbarium/arcade.blend"
+00:12.924  blend            | Read blend: "/Users/yaxinluo/Documents/Codex/2026-09-07/https-yaxin9luo-github-io-https-yaxin9luo/outputs/academy-living-v8/work/living-v8/exports/herbarium/conservatory.blend"
+00:29.229  blend            | Read blend: "/Users/yaxinluo/Documents/Codex/2026-09-07/https-yaxin9luo-github-io-https-yaxin9luo/outputs/academy-living-v8/work/living-v8/exports/herbarium/water-garden.blend"
+00:37.263  blend            | Read blend: "/Users/yaxinluo/Documents/Codex/2026-09-07/https-yaxin9luo-github-io-https-yaxin9luo/outputs/academy-living-v8/work/living-v8/exports/herbarium/flower-border.blend"
+BlenderMCP: cannot start server in background mode (blender -b) - commands would never execute
+BlenderMCP: run Blender with a GUI, or use a virtual display: xvfb-run -a blender
+BlenderMCP addon registered
+EDITABLE_AUDIT_PASS arcade 34390 triangles 9 packed images
+EDITABLE_AUDIT_PASS conservatory 2598090 triangles 25 packed images
+EDITABLE_AUDIT_PASS water-garden 833808 triangles 25 packed images
+EDITABLE_AUDIT_PASS flower-border 388036 triangles 12 packed images
+BlenderMCP server stopped
+BlenderMCP addon unregistered
+Blender 5.1.2 (hash ec6e62d40fa9 built 2026-05-19 01:30:33)
+
+Blender quit

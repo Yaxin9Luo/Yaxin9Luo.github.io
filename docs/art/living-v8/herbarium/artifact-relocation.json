@@ -1,0 +1,91 @@
+{
+  "reason": "Root-approved full exact exports outside public/Git; no geometry or pixel changes",
+  "files": [
+    {
+      "path": "work/living-v8/exports/herbarium/arcade.parts.json",
+      "sha256": "67d7c5739ff83bb19c6ad281936e3754035040dcbaebf0a07ee4efb9a48684bc",
+      "bytes": 307778
+    },
+    {
+      "path": "work/living-v8/exports/herbarium/conservatory.blend",
+      "sha256": "58bee072b681ea378588e881b66ccf947aee86eb3b8140c726662610c377da74",
+      "bytes": 147877828
+    },
+    {
+      "path": "work/living-v8/exports/herbarium/conservatory.packing.json",
+      "sha256": "e281ee9cb5caaea6e5baac0517dbb800dfed95995e66b3683175380c9ca4f6c1",
+      "bytes": 21307
+    },
+    {
+      "path": "work/living-v8/exports/herbarium/flower-border.glb",
+      "sha256": "14d323c0f90c09b91d9185a65d161c3059b33fa54611663588a7afa527fa85bf",
+      "bytes": 46619052
+    },
+    {
+      "path": "work/living-v8/exports/herbarium/rebuild-editable.py",
+      "sha256": "4871203fe6048f3ba40550a2d90380f6f7f21925a318e6a2d3c4fc7ffe48b085",
+      "bytes": 1794
+    },
+    {
+      "path": "work/living-v8/exports/herbarium/water-garden.packing.json",
+      "sha256": "fb87e974a97dd52101595415bd766bf3b9b40091746861cd0f2724b1a118edda",
+      "bytes": 26451
+    },
+    {
+      "path": "work/living-v8/exports/herbarium/conservatory.glb",
+      "sha256": "8e4ce81d2b2927bbb83bc13a4e9a8f78759826e7f776eee558755fcf829c4a36",
+      "bytes": 118878104
+    },
+    {
+      "path": "work/living-v8/exports/herbarium/conservatory.parts.json",
+      "sha256": "29091c34abd0d2e0acfd295d2f9204c11b8e6b60b2ef8f0ce6c6f48c88468573",
+      "bytes": 771205
+    },
+    {
+      "path": "work/living-v8/exports/herbarium/flower-border.blend",
+      "sha256": "89b8e58bb9c15dedd5fbcf8d5af05573767aa20d674002cc76d1fb2e2af9676d",
+      "bytes": 50828597
+    },
+    {
+      "path": "work/living-v8/exports/herbarium/arcade.blend",
+      "sha256": "4decca87c9165483b4e6b534cd490735f7e30c965eb5d46ffc7aaecb06714601",
+      "bytes": 23879461
+    },
+    {
+      "path": "work/living-v8/exports/herbarium/water-garden.blend",
+      "sha256": "70035093d23eeb10518cb2460a2d6f3e8873c444fe3d1faf5c4a7c66903612ae",
+      "bytes": 83381287
+    },
+    {
+      "path": "work/living-v8/exports/herbarium/water-garden.glb",
+      "sha256": "1bcec3bbb7bd64f427cc801b495d477e5bd3ff152b42154a63f53cd0c3fa6b96",
+      "bytes": 72341316
+    },
+    {
+      "path": "work/living-v8/exports/herbarium/arcade.glb",
+      "sha256": "7f63cd5bdaec58682c3f67c33f81c8773d63dedd0dff5260401d04d028416967",
+      "bytes": 23848924
+    },
+    {
+      "path": "work/living-v8/exports/herbarium/flower-border.parts.json",
+      "sha256": "a03f04238bae02763b6d8fad6f52f7922f4196b9fa4628a022796c083239a044",
+      "bytes": 98523
+    },
+    {
+      "path": "work/living-v8/exports/herbarium/water-garden.parts.json",
+      "sha256": "609db0b1437cbc5e55efac712b842a72569bbfab07148103bddb5f6a5e6338af",
+      "bytes": 500993
+    },
+    {
+      "path": "work/living-v8/exports/herbarium/flower-border.packing.json",
+      "sha256": "35bdca4febcb1cefbcce7a4ae22519ac1f800775425b1e53f0e5a7b5b1854c3b",
+      "bytes": 9311
+    },
+    {
+      "path": "work/living-v8/exports/herbarium/arcade.packing.json",
+      "sha256": "97045b20036f913c5cb00d76e8e4863f9e8dcb36fb8f2487c419b3bed292bfc8",
+      "bytes": 8724
+    }
+  ],
+  "scope": "Historical byte-preserving relocation before the final recipe rerun; final current artifact identity is export-metrics.json."
+}

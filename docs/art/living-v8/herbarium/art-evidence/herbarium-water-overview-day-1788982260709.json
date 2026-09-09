@@ -1,0 +1,49 @@
+{
+  "kind": "water",
+  "view": "overview",
+  "light": "day",
+  "candidate": "r6-water-final",
+  "waterOptics": "surface",
+  "assetVersion": 8,
+  "botanicalSource": null,
+  "bounds": {
+    "min": [
+      -7.253931522369385,
+      -0.3400000035762787,
+      -4.170000076293945
+    ],
+    "max": [
+      7.949999809265137,
+      1.100000023841858,
+      4.170000076293945
+    ]
+  },
+  "mannequinVisible": false,
+  "scaleHeight": 3.28,
+  "wireframe": false,
+  "camera": [
+    13,
+    20,
+    14.999999999999998
+  ],
+  "target": [
+    0,
+    0.15,
+    0
+  ],
+  "nativeViewport": {
+    "cssWidth": 738,
+    "cssHeight": 576,
+    "pixelWidth": 1845,
+    "pixelHeight": 1440,
+    "devicePixelRatio": 2.5,
+    "renderPixelRatio": 2.5
+  },
+  "render": {
+    "frame": 3098,
+    "calls": 34,
+    "triangles": 1455450,
+    "points": 0,
+    "lines": 0
+  }
+}

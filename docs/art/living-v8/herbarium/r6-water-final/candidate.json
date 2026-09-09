@@ -1,0 +1,11 @@
+{
+  "candidate": "r6-water-final",
+  "frozenUTC": "2026-09-09T19:28:32.834016+00:00",
+  "status": "Surface blend selected as main/default and studio default; broad spiral motif removed, fine local branching relief retained, deterministic varied lamina yaw. Other accepted assets and shoreline unchanged.",
+  "files": {
+    "world/src/herbarium-assets.js": "3656c37b1e0d845ac4189edd6663d059dca69873afcca19799c2b2befa727e2b",
+    "world/src/herbarium-studio.js": "20d49c326a0066ee2f43d6a9aa0c7d0c69984b49d05e04bcf135591ca3738fac",
+    "world/herbarium-studio.html": "b350d9fc6a1034517c978b711c750d269ddfd90062e0d2f80d4b62cac73c0fc0",
+    "docs/art/living-v8/herbarium/r6-water-tests.log": "4c59b3af03f1bcb6eeb0d232b061227a48d0c999c82b0d9f416213c2cdfbd2ff"
+  }
+}

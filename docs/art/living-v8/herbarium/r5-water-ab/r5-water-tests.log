@@ -1,0 +1,11 @@
+✔ authored mesh families are finite and remain inside audited placement envelopes (6427.174708ms)
+✔ plant crowns originate on real continuous soil or container soil, including wet-garden borders (3418.182291ms)
+✔ water-garden east arrival has full rectangular access and real ground support (1316.901875ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 11409.383833

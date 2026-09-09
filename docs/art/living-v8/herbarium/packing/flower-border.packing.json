@@ -1,0 +1,299 @@
+{
+  "method": "Meshopt entropy coding, filter NONE; no quantization, reordering, simplification or resizing. Original source bytes or lossless WebP exact=true reused only after exact decoded RGBA SHA match, including transparent pixels.",
+  "rawBytes": 119740292,
+  "packedBytes": 46619052,
+  "geometry": [
+    {
+      "name": "",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": {
+              "type": 5126,
+              "normalized": false,
+              "count": 4128,
+              "sha256": "25bc4f0ec024f9f1525c095efeef29b120d5ef43b36e82f957f94259fdf67c57"
+            },
+            "NORMAL": {
+              "type": 5126,
+              "normalized": false,
+              "count": 4128,
+              "sha256": "f72de2d5587c9e2629ef0eaf5f9667548f8746e549a71fa173c38adcdc1b35fa"
+            },
+            "TEXCOORD_0": {
+              "type": 5126,
+              "normalized": false,
+              "count": 4128,
+              "sha256": "ac47e96bfa50acf0797251765dceb65adb4fc46d853698d7fbc0d0e2ff033c29"
+            },
+            "COLOR_0": {
+              "type": 5126,
+              "normalized": false,
+              "count": 4128,
+              "sha256": "79890fbb7f0866c07cbcc9449b4f44b19fe64dd5e09900b6b1e2e5433b590914"
+            }
+          },
+          "triangles": {
+            "count": 1892,
+            "cyclicWindingSHA256": "b6a0bde1a4259e6b9c534479168638a7a1782a075458654ddb9cf30b30cca2ee"
+          }
+        }
+      ]
+    },
+    {
+      "name": "",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": {
+              "type": 5126,
+              "normalized": false,
+              "count": 528,
+              "sha256": "db1755acc8d9a5573b9a162c0505c9b96f68e16aa408dced3264fa45b3778ab1"
+            },
+            "TEXCOORD_0": {
+              "type": 5126,
+              "normalized": false,
+              "count": 528,
+              "sha256": "8929388ae1162d49ff1a757c6391edc5ab5e34f3546f91be8e81b1be2449f7b0"
+            },
+            "NORMAL": {
+              "type": 5126,
+              "normalized": false,
+              "count": 528,
+              "sha256": "8294727c7b0d191886691408cce32b11d07c3079712882d6f06e09f7bf3a79ca"
+            },
+            "COLOR_0": {
+              "type": 5126,
+              "normalized": false,
+              "count": 528,
+              "sha256": "d548f9ce5be348ff11b76ed49533538feb3a3a3d0f417ca3c5d1e33e03449119"
+            }
+          },
+          "triangles": {
+            "count": 348,
+            "cyclicWindingSHA256": "a5a0c5b89ddb2c30edf704725703b4235a25ac8d79fea07d94b7d654494ba26b"
+          }
+        }
+      ]
+    },
+    {
+      "name": "",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": {
+              "type": 5126,
+              "normalized": false,
+              "count": 34776,
+              "sha256": "962d2d59458afbb8adf684def185a39990dc3997abab6d4584b0b441e37a4ab0"
+            },
+            "NORMAL": {
+              "type": 5126,
+              "normalized": false,
+              "count": 34776,
+              "sha256": "a47ef060e077a720770f0098b28a6eaf9ed0e046b4710592d543d931ec828193"
+            },
+            "TEXCOORD_0": {
+              "type": 5126,
+              "normalized": false,
+              "count": 34776,
+              "sha256": "4d84f4df090702539699dc15e8bae8d4b8a897697c912bedc6549efc34889eb1"
+            },
+            "COLOR_0": {
+              "type": 5126,
+              "normalized": false,
+              "count": 34776,
+              "sha256": "46264736194a700daffe4d95bd956412b1dadbd8386999b3ab89fb163320ab13"
+            }
+          },
+          "triangles": {
+            "count": 49968,
+            "cyclicWindingSHA256": "5088f1f05e886e869dd2a7a92f1d5ff9523ce86f1c103bef518ef29928a5d58a"
+          }
+        }
+      ]
+    },
+    {
+      "name": "",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": {
+              "type": 5126,
+              "normalized": false,
+              "count": 327402,
+              "sha256": "dddd1f2c961dbcb1d16abbf01bbe71fc73445a2a42eb1eee99e94b82e484b1d2"
+            },
+            "NORMAL": {
+              "type": 5126,
+              "normalized": false,
+              "count": 327402,
+              "sha256": "7565c7135990dc9e180692a6ce3c1058118240253e59a34fd6e793dc34f66e17"
+            },
+            "TEXCOORD_0": {
+              "type": 5126,
+              "normalized": false,
+              "count": 327402,
+              "sha256": "7e67b368013a4d81be992bf303d2d42f0a522bb568c2416f70b8eba728a08a9e"
+            },
+            "TEXCOORD_1": {
+              "type": 5126,
+              "normalized": false,
+              "count": 327402,
+              "sha256": "2badb3683fcb298d89c9919ac9dd0ceec8119f352d6d899f5f8457815e0ff79a"
+            },
+            "COLOR_0": {
+              "type": 5121,
+              "normalized": true,
+              "count": 327402,
+              "sha256": "857138f6e9cad480c3eeb461fd0b0991a0e6a36a50f7f3ced3f48fa35a193036"
+            },
+            "COLOR_1": {
+              "type": 5123,
+              "normalized": true,
+              "count": 327402,
+              "sha256": "babbc9fa4fb9af58fb942a27e59144536d9e1e29d97ef85828406ab33e9db7ae"
+            }
+          },
+          "triangles": {
+            "count": 332748,
+            "cyclicWindingSHA256": "c6160401485694a2493c80dedfe0eb970d41d3a6f324b54a51918c87a13cbfd5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": {
+              "type": 5126,
+              "normalized": false,
+              "count": 3022,
+              "sha256": "4f7f33ed8ace9a03f6c0abb33748e3d5b28cb299aced60b2d2cf4bc853556f62"
+            },
+            "NORMAL": {
+              "type": 5126,
+              "normalized": false,
+              "count": 3022,
+              "sha256": "37b27d8dbc99220275659506a961de91a4eb0dd19779bd72e66cf81e38774000"
+            },
+            "TEXCOORD_0": {
+              "type": 5126,
+              "normalized": false,
+              "count": 3022,
+              "sha256": "b4a9f3f4388ce0c2b7eef8bf5d2c937263a4084e4444d78b982fb7eaa2e9e4d2"
+            },
+            "COLOR_0": {
+              "type": 5126,
+              "normalized": false,
+              "count": 3022,
+              "sha256": "002231d8ba72b7c9dd4e423fb8025c65b15756359680115687b1fbb123b89ba8"
+            }
+          },
+          "triangles": {
+            "count": 3080,
+            "cyclicWindingSHA256": "6d700d58aea768d90b4febde320e2fe04932c488f7e00a578b64247c562857c5"
+          }
+        }
+      ]
+    }
+  ],
+  "textures": [
+    {
+      "sha256": "303066aeb5d0d708f3ef7f86f98cdbe9344d33a77985de9fba015e7a2d8fa151",
+      "width": 2048,
+      "height": 2048
+    },
+    {
+      "sha256": "2037cfe9331ec8fa5b1fb42902008b41d3c974a2a7c0ee8218bf9db5632c467b",
+      "width": 2048,
+      "height": 2048
+    },
+    {
+      "sha256": "b79b2e6ec8f587328314adc06643914d97c55981f22c0e2ea89f7077575a8f77",
+      "width": 2048,
+      "height": 2048
+    },
+    {
+      "sha256": "d6ac8df1a677604acdfe7288e686f58109313f4d0312a027a160efa96cc3844b",
+      "width": 1024,
+      "height": 1024
+    },
+    {
+      "sha256": "6e164c283bebf270cf87be220ecdd3e1c014f92e4462b6c22ade6f3e98a863b8",
+      "width": 1024,
+      "height": 1024
+    },
+    {
+      "sha256": "54f4465e0fe59638e8ea6eaac3e7f53eba763863b6c4bab73f9b34326b367a06",
+      "width": 1024,
+      "height": 1024
+    },
+    {
+      "sha256": "a908b6af0fbd8c7f723cc4c979c845223a419a8aa659e38095a6d55e00ab57d0",
+      "width": 4096,
+      "height": 4096
+    },
+    {
+      "sha256": "4ff206cfda6a1c4c0b00842003d3b6999259f53f333ed49254bbea324177fcb3",
+      "width": 4096,
+      "height": 4096
+    },
+    {
+      "sha256": "385456315f095d6ef2d1ae38f0db50c0a05d6f27c2ca89fc5f8eadcf2c997ec4",
+      "width": 4096,
+      "height": 4096
+    },
+    {
+      "sha256": "4d5967520fefe618a974301faf4aa65fef87661563c408061ca495aba40160a5",
+      "width": 4096,
+      "height": 4096
+    },
+    {
+      "sha256": "c8c9f446d533be517559213cf9faf595acb43fd64e1187c31376d518c784620d",
+      "width": 4096,
+      "height": 4096
+    },
+    {
+      "sha256": "2cddea75d7a975f63f4d4ab19e7182548a146345f5fd24e3bf9d564c0bf68d04",
+      "width": 4096,
+      "height": 4096
+    }
+  ],
+  "originalImageBytesReused": [
+    {
+      "name": "",
+      "sha256": "a908b6af0fbd8c7f723cc4c979c845223a419a8aa659e38095a6d55e00ab57d0",
+      "mimeType": "image/jpeg"
+    },
+    {
+      "name": "",
+      "sha256": "4ff206cfda6a1c4c0b00842003d3b6999259f53f333ed49254bbea324177fcb3",
+      "mimeType": "image/png"
+    },
+    {
+      "name": "",
+      "sha256": "385456315f095d6ef2d1ae38f0db50c0a05d6f27c2ca89fc5f8eadcf2c997ec4",
+      "mimeType": "image/jpeg"
+    },
+    {
+      "name": "",
+      "sha256": "4d5967520fefe618a974301faf4aa65fef87661563c408061ca495aba40160a5",
+      "mimeType": "image/jpeg"
+    },
+    {
+      "name": "",
+      "sha256": "c8c9f446d533be517559213cf9faf595acb43fd64e1187c31376d518c784620d",
+      "mimeType": "image/png"
+    },
+    {
+      "name": "",
+      "sha256": "2cddea75d7a975f63f4d4ab19e7182548a146345f5fd24e3bf9d564c0bf68d04",
+      "mimeType": "image/jpeg"
+    }
+  ],
+  "runtimeAttributeBytesVerified": true
+}

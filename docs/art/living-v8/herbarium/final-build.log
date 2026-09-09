@@ -1,0 +1,48 @@
+
+> the-living-grimoire@1.0.0 build
+> vite build
+
+vite v8.2.2 building client environment for production...
+transforming...
+✓ 108 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                                   1.90 kB │ gzip:   0.89 kB
+dist/herbarium-studio.html                        4.50 kB │ gzip:   1.91 kB
+dist/companion-studio.html                        4.50 kB │ gzip:   1.90 kB
+dist/quality-review.html                          4.84 kB │ gzip:   2.17 kB
+dist/asset-studio.html                            6.00 kB │ gzip:   2.45 kB
+dist/exhibit-studio.html                          6.09 kB │ gzip:   2.61 kB
+dist/assets/main-DbAJ3_-f.css                   104.61 kB │ gzip:  22.09 kB
+dist/assets/game-BGDZQZ86.js                      0.05 kB │ gzip:   0.07 kB
+dist/assets/gltf-resource-Nln1I1a9.js             0.09 kB │ gzip:   0.10 kB
+dist/assets/modulepreload-polyfill-P2Xu9kJm.js    0.67 kB │ gzip:   0.38 kB
+dist/assets/HDRLoader-fgDhg0VU.js                 3.29 kB │ gzip:   1.58 kB
+dist/assets/navigation-DBGMnMBG.js                4.03 kB │ gzip:   2.21 kB
+dist/assets/preload-helper-Ch8IRrsm.js            4.34 kB │ gzip:   2.40 kB
+dist/assets/exhibit-DiyeVNO4.js                   7.35 kB │ gzip:   3.53 kB
+dist/assets/architecture-hNjDHpoa.js             12.83 kB │ gzip:   4.48 kB
+dist/assets/review-JdjQzB2i.js                   16.15 kB │ gzip:   6.75 kB
+dist/assets/companions-CrKAGh2V.js               17.40 kB │ gzip:   7.45 kB
+dist/assets/studio-w2oyhDRV.js                   19.56 kB │ gzip:   8.47 kB
+dist/assets/OrbitControls-DCvSEgM1.js            19.65 kB │ gzip:   4.37 kB
+dist/assets/exhibits-BBHEOdxt.js                 23.00 kB │ gzip:   9.66 kB
+dist/assets/resource-loader-CQkl9OCW.js          24.01 kB │ gzip:   6.64 kB
+dist/assets/exhibition-state-BiM4uiiG.js         38.66 kB │ gzip:  15.89 kB
+dist/assets/herbarium-BLXZgXCy.js                50.07 kB │ gzip:  19.67 kB
+dist/assets/gltf-resource-eufRWG2y.js            70.87 kB │ gzip:  20.67 kB
+dist/assets/main-DI_duDhQ.js                     97.37 kB │ gzip:  31.89 kB
+dist/assets/game-DfaADtPy.js                    118.78 kB │ gzip:  36.87 kB
+dist/assets/BufferGeometryUtils-DTOdKZ4L.js     289.16 kB │ gzip:  78.57 kB
+dist/assets/world-DzKZ1tEe.js                   328.38 kB │ gzip: 135.35 kB
+dist/assets/three.module-BDbqlviQ.js            343.85 kB │ gzip:  83.42 kB
+
+✓ built in 4.39s
+[33m[PLUGIN_TIMINGS] [0mPlugin hooks ran for 3.8s of this 4.4s build (87%).
+The slowest hooks, timed inside each callback (the wait before a callback starts is excluded, the time it awaits is included):
+  - vite:prepare-out-dir renderStart (78%, 3.4s, 1 call)
+Additional hook time came from the hooks below and from hooks under 1s.
+1 hook is listed without a time. Its calls overlapped, so the time inside one call includes work from other calls. To find its cost, profile the build with `node --cpu-prof`:
+  - vite:build-html transform (6 calls)
+See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+

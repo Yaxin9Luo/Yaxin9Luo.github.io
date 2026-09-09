@@ -1,0 +1,64 @@
+{
+  "visualCandidate": "r6-water-final",
+  "visualSourceSHA256": "3656c37b1e0d845ac4189edd6663d059dca69873afcca19799c2b2befa727e2b",
+  "finalSourceSHA256": "4fceba32fe849ec2dfa6e91be05cd9cd74cf63763d796d151fd4d4c405b96641",
+  "nonvisualChanges": [
+    "Independent preload consumers",
+    "Rejected shrub removed from public",
+    "Zero-area petal endpoint normal repair",
+    "Visible studio startup retry",
+    "Full export artifacts relocated outside public/Git"
+  ],
+  "files": [
+    {
+      "path": "world/src/herbarium-assets.js",
+      "sha256": "4fceba32fe849ec2dfa6e91be05cd9cd74cf63763d796d151fd4d4c405b96641",
+      "bytes": 53016
+    },
+    {
+      "path": "world/src/herbarium-studio.js",
+      "sha256": "48c57b1436a000f2f3f30d751852896b81c3c45737151a25489a668cef9d5b96",
+      "bytes": 14079
+    },
+    {
+      "path": "world/herbarium-studio.html",
+      "sha256": "90025e420bdbb0fefc1bc3b6c3e34cab4d5e3be2135b293539b8d71529eef745",
+      "bytes": 3892
+    },
+    {
+      "path": "world/scripts/export-herbarium-assets.mjs",
+      "sha256": "cbc0a0a103a5863a880c779512dcdfa65aab12bbeb74cbae0c7cd865a14502b8",
+      "bytes": 11344
+    },
+    {
+      "path": "world/tests/herbarium-assets.test.js",
+      "sha256": "9a389126ee383dc3b4fc72ec78d8ad07db5d4377f11bdfd853051306fd38ee23",
+      "bytes": 21964
+    },
+    {
+      "path": "world/vite.config.js",
+      "sha256": "9c27cfab843509b99aa050c3276581089f483fe722f99608fcee207802ed4586",
+      "bytes": 662
+    },
+    {
+      "path": "docs/art/living-v8/herbarium/lossless-pack.mjs",
+      "sha256": "0c93499e76fe21de5637d771709cd847bfb56f89eb8a92f9a313e4e23e70ff1c",
+      "bytes": 4558
+    },
+    {
+      "path": "docs/art/living-v8/herbarium/prepare-botanical.mjs",
+      "sha256": "e1650d2d8885a9c8b20ec25b450036793117494b08a4665b5a5b94a07d60c974",
+      "bytes": 2866
+    },
+    {
+      "path": "docs/art/living-v8/herbarium/audit-editable.py",
+      "sha256": "f3768b878509038f2fec0b95dbf7d1fcc3f3762fdaeb98fbaab8c99c0b777c42",
+      "bytes": 3532
+    },
+    {
+      "path": "docs/art/living-v8/herbarium/verify-r6-parity.mjs",
+      "sha256": "a50aaef4782f56b31180a59f58ab0bc414efc31f38845a499a81a69530a93da2",
+      "bytes": 3769
+    }
+  ]
+}

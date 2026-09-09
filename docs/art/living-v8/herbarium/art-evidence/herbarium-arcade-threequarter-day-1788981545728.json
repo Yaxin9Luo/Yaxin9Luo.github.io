@@ -1,0 +1,48 @@
+{
+  "kind": "arcade",
+  "view": "threequarter",
+  "light": "day",
+  "candidate": "r4-composition",
+  "assetVersion": 8,
+  "botanicalSource": null,
+  "bounds": {
+    "min": [
+      -6,
+      -0.25999999046325684,
+      -1.7000000476837158
+    ],
+    "max": [
+      6,
+      5.399499893188477,
+      1.7000000476837158
+    ]
+  },
+  "mannequinVisible": false,
+  "scaleHeight": 3.28,
+  "wireframe": false,
+  "camera": [
+    19,
+    10.000000000000002,
+    21
+  ],
+  "target": [
+    0,
+    2.2,
+    0
+  ],
+  "nativeViewport": {
+    "cssWidth": 738,
+    "cssHeight": 576,
+    "pixelWidth": 1845,
+    "pixelHeight": 1440,
+    "devicePixelRatio": 2.5,
+    "renderPixelRatio": 2.5
+  },
+  "render": {
+    "frame": 38336,
+    "calls": 13,
+    "triangles": 68782,
+    "points": 0,
+    "lines": 0
+  }
+}

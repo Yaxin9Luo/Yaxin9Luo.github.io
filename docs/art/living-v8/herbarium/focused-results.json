@@ -1,0 +1,25 @@
+{
+  "command": "npm test (world); complete herbarium test file included in full suite",
+  "fullSuite": {
+    "tests": 413,
+    "pass": 413,
+    "fail": 0,
+    "skipped": 0,
+    "durationMs": 84245.157
+  },
+  "herbariumPasses": [
+    "\u2714 authored mesh families are finite and remain inside audited placement envelopes (14672.621083ms)",
+    "\u2714 full rectangular arcade and conservatory openings clear player and delivered companion walk sweeps (3996.264667ms)",
+    "\u2714 real finished floor triangles support translated and rotated placement (2259.915416ms)",
+    "\u2714 asset clones keep transform independence and reference-count geometry while preserving shared PBR textures (2351.234208ms)",
+    "\u2714 parameter validation prevents impossible or non-finite construction (0.450167ms)",
+    "\u2714 plant crowns originate on real continuous soil or container soil, including wet-garden borders (6172.120333ms)",
+    "\u2714 batched part ranges still select actual original triangles and support contacts (1991.053333ms)",
+    "\u2714 water-garden east arrival has full rectangular access and real ground support (2058.034875ms)",
+    "\u2714 photographed source GLBs preserve actual geometry, 4K alpha pixels and complete potted-node transforms (1436.885917ms)",
+    "\u2714 support and solid bounds include unflushed parent placement transforms (204.504ms)",
+    "\u2714 waterlily geometry forms thin curved surface leaves at the actual water datum (1335.966833ms)",
+    "\u2714 independent preload consumers preserve cancellation, deadline and retry semantics with real resources (1559.530167ms)",
+    "\u2714 final packed GLBs decode with the runtime loader and preserve geometry, real pixels, support and source identity (19889.296208ms)"
+  ]
+}

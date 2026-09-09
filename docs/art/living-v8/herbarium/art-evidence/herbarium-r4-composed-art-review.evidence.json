@@ -1,0 +1,1133 @@
+{
+  "review": "herbarium-r4-composed-art-review",
+  "reviewedAtUTC": "2026-09-09T19:21:19.363693+00:00",
+  "scope": "Four-family isolated composed asset art gate; final integration remains separate.",
+  "familyDisposition": {
+    "conservatory": "PASS",
+    "arcade": "PASS",
+    "border": "PASS",
+    "water": "REFINE"
+  },
+  "issueDisposition": {
+    "CONS-01": "CLOSED",
+    "CONS-02": "CLOSED",
+    "CONS-03": "CLOSED",
+    "CONS-04": "CLOSED",
+    "CONS-05": "CLOSED",
+    "ARC-01": "CLOSED",
+    "ARC-02": "CLOSED",
+    "ARC-03": "CLOSED",
+    "WAT-01": "PARTIAL / REFINE",
+    "WAT-02": "PARTIAL / REFINE",
+    "WAT-03": "CLOSED",
+    "WAT-04": "CLOSED",
+    "BOR-01": "CLOSED",
+    "BOR-02": "CLOSED",
+    "BOR-03": "CLOSED"
+  },
+  "candidate": {
+    "path": "docs/art/living-v8/herbarium/r4-composition/candidate.json",
+    "sha256": "dae7b3d31263615b7a948ffe2f97d41d90e1710a39b08dd4ab1a0a291a394749",
+    "assetSourceSha256": "e61d5d5d41644c9e03e3205ef9125e3dd8c354599377f357233c569e11b9d9d1",
+    "archiveFiles": [
+      {
+        "originalPath": "world/src/herbarium-assets.js",
+        "archivePath": "docs/art/living-v8/herbarium/r4-composition/herbarium-assets.js",
+        "sha256": "e61d5d5d41644c9e03e3205ef9125e3dd8c354599377f357233c569e11b9d9d1",
+        "matchesCandidate": true
+      },
+      {
+        "originalPath": "world/src/herbarium-studio.js",
+        "archivePath": "docs/art/living-v8/herbarium/r4-composition/herbarium-studio.js",
+        "sha256": "cc23aef285e714ec7d58058757020d7e004634a7e699bcec3a771a357fb5de0c",
+        "matchesCandidate": true
+      },
+      {
+        "originalPath": "world/herbarium-studio.html",
+        "archivePath": "docs/art/living-v8/herbarium/r4-composition/herbarium-studio.html",
+        "sha256": "e3e44420bb72a557051b485b8acdc14a056c30c7990f955c90a01fac948984cf",
+        "matchesCandidate": true
+      },
+      {
+        "originalPath": "world/public/models/herbarium/botanical/sources.json",
+        "archivePath": "docs/art/living-v8/herbarium/r4-composition/sources.json",
+        "sha256": "2e0134f358ac9593387f7d9bf04d8ceb271b133bed56ad6cd3700bc125607e02",
+        "matchesCandidate": true
+      },
+      {
+        "originalPath": "docs/art/living-v8/herbarium/r4-final-focused-tests.log",
+        "archivePath": "docs/art/living-v8/herbarium/r4-composition/r4-final-focused-tests.log",
+        "sha256": "9cf8c2e2ec416b4dfb7b0c9affc0d7c24834f3ed5e354373585922b1bfd9353e",
+        "matchesCandidate": true
+      }
+    ]
+  },
+  "frames": [
+    {
+      "key": "C4-M",
+      "path": "work/production-v3/captures/herbarium-conservatory-threequarter-day-1788981192202.png",
+      "sha256": "8f2d1e5e8946f6cb432ec98f6aac8b64141e6e79e8821edcd60aef07102955d6",
+      "width": 1845,
+      "height": 1440,
+      "actuallyViewed": true,
+      "viewMethod": "tools.view_image at original detail",
+      "sidecarPath": "work/production-v3/captures/herbarium-conservatory-threequarter-day-1788981192202.json",
+      "sidecarSha256": "d4d408519b65c46d57a9d93a72a15b918d995970ea3ac821c289706ca259e099",
+      "metadata": {
+        "kind": "conservatory",
+        "view": "threequarter",
+        "light": "day",
+        "candidate": "r4-composition",
+        "assetVersion": 8,
+        "botanicalSource": null,
+        "bounds": {
+          "min": [
+            -7.699999809265137,
+            -0.25999999046325684,
+            -4.25
+          ],
+          "max": [
+            7.699999809265137,
+            7.489999771118164,
+            4.28000020980835
+          ]
+        },
+        "mannequinVisible": false,
+        "scaleHeight": 3.28,
+        "wireframe": false,
+        "camera": [
+          19,
+          12.000000000000002,
+          21
+        ],
+        "target": [
+          0,
+          2.65,
+          0
+        ],
+        "nativeViewport": {
+          "cssWidth": 738,
+          "cssHeight": 576,
+          "pixelWidth": 1845,
+          "pixelHeight": 1440,
+          "devicePixelRatio": 2.5,
+          "renderPixelRatio": 2.5
+        },
+        "render": {
+          "frame": 2980,
+          "calls": 40,
+          "triangles": 7793078,
+          "points": 0,
+          "lines": 0
+        }
+      }
+    },
+    {
+      "key": "C4-C",
+      "path": "work/production-v3/captures/herbarium-conservatory-close-day-1788981192842.png",
+      "sha256": "e62ebd99f7f0b489b79a0c178c8feaf33747ef3d32965358480c65cab3879c5f",
+      "width": 1845,
+      "height": 1440,
+      "actuallyViewed": true,
+      "viewMethod": "tools.view_image at original detail",
+      "sidecarPath": "work/production-v3/captures/herbarium-conservatory-close-day-1788981192842.json",
+      "sidecarSha256": "496c82472070a2a3bad09a3715c8a5e8f0c7a5a1a0e2b04f92b1c7999b7b6c23",
+      "metadata": {
+        "kind": "conservatory",
+        "view": "close",
+        "light": "day",
+        "candidate": "r4-composition",
+        "assetVersion": 8,
+        "botanicalSource": null,
+        "bounds": {
+          "min": [
+            -7.699999809265137,
+            -0.25999999046325684,
+            -4.25
+          ],
+          "max": [
+            7.699999809265137,
+            7.489999771118164,
+            4.28000020980835
+          ]
+        },
+        "mannequinVisible": false,
+        "scaleHeight": 3.28,
+        "wireframe": false,
+        "camera": [
+          1.2,
+          5.5,
+          9.05
+        ],
+        "target": [
+          -1.5999999999999999,
+          3.5,
+          4.05
+        ],
+        "nativeViewport": {
+          "cssWidth": 738,
+          "cssHeight": 576,
+          "pixelWidth": 1845,
+          "pixelHeight": 1440,
+          "devicePixelRatio": 2.5,
+          "renderPixelRatio": 2.5
+        },
+        "render": {
+          "frame": 3018,
+          "calls": 40,
+          "triangles": 7793078,
+          "points": 0,
+          "lines": 0
+        }
+      }
+    },
+    {
+      "key": "C4-I",
+      "path": "work/production-v3/captures/herbarium-conservatory-interior-day-1788981193444.png",
+      "sha256": "abf3311c5f4f970a9fe2609d3cd939928633eaedbeb10765312af3d3946dda8c",
+      "width": 1845,
+      "height": 1440,
+      "actuallyViewed": true,
+      "viewMethod": "tools.view_image at original detail",
+      "sidecarPath": "work/production-v3/captures/herbarium-conservatory-interior-day-1788981193444.json",
+      "sidecarSha256": "ee83e2c6465cf337fa728ae08f2d09349307fb84c7262956ef8fe9928874d9f3",
+      "metadata": {
+        "kind": "conservatory",
+        "view": "interior",
+        "light": "day",
+        "candidate": "r4-composition",
+        "assetVersion": 8,
+        "botanicalSource": null,
+        "bounds": {
+          "min": [
+            -7.699999809265137,
+            -0.25999999046325684,
+            -4.25
+          ],
+          "max": [
+            7.699999809265137,
+            7.489999771118164,
+            4.28000020980835
+          ]
+        },
+        "mannequinVisible": false,
+        "scaleHeight": 3.28,
+        "wireframe": false,
+        "camera": [
+          -8.881784197001252e-16,
+          2.7799999999999994,
+          3.63
+        ],
+        "target": [
+          5.4,
+          1.55,
+          -1.3
+        ],
+        "nativeViewport": {
+          "cssWidth": 738,
+          "cssHeight": 576,
+          "pixelWidth": 1845,
+          "pixelHeight": 1440,
+          "devicePixelRatio": 2.5,
+          "renderPixelRatio": 2.5
+        },
+        "render": {
+          "frame": 3052,
+          "calls": 40,
+          "triangles": 7793078,
+          "points": 0,
+          "lines": 0
+        }
+      }
+    },
+    {
+      "key": "C4-P",
+      "path": "work/production-v3/captures/herbarium-conservatory-profile-day-1788981194092.png",
+      "sha256": "7b3b33bc2257480dee0d6406484f59bdec6b5db82b8534be2c7593176388af46",
+      "width": 1845,
+      "height": 1440,
+      "actuallyViewed": true,
+      "viewMethod": "tools.view_image at original detail",
+      "sidecarPath": "work/production-v3/captures/herbarium-conservatory-profile-day-1788981194092.json",
+      "sidecarSha256": "990a21a7ce67b6c51dcd7b3ee7d08539833d89ac39624d9accbb63777e7eab80",
+      "metadata": {
+        "kind": "conservatory",
+        "view": "profile",
+        "light": "day",
+        "candidate": "r4-composition",
+        "assetVersion": 8,
+        "botanicalSource": null,
+        "bounds": {
+          "min": [
+            -7.699999809265137,
+            -0.25999999046325684,
+            -4.25
+          ],
+          "max": [
+            7.699999809265137,
+            7.489999771118164,
+            4.28000020980835
+          ]
+        },
+        "mannequinVisible": false,
+        "scaleHeight": 3.28,
+        "wireframe": false,
+        "camera": [
+          25,
+          5.9999999999999964,
+          1.5308084989341915e-15
+        ],
+        "target": [
+          0,
+          2.65,
+          0
+        ],
+        "nativeViewport": {
+          "cssWidth": 738,
+          "cssHeight": 576,
+          "pixelWidth": 1845,
+          "pixelHeight": 1440,
+          "devicePixelRatio": 2.5,
+          "renderPixelRatio": 2.5
+        },
+        "render": {
+          "frame": 3092,
+          "calls": 40,
+          "triangles": 7793078,
+          "points": 0,
+          "lines": 0
+        }
+      }
+    },
+    {
+      "key": "C4-N",
+      "path": "work/production-v3/captures/herbarium-conservatory-threequarter-night-1788981194841.png",
+      "sha256": "4f0875aab8a0d927b54df28520a7760a1a6dd719ac87480ebda8bdbdcdc383be",
+      "width": 1845,
+      "height": 1440,
+      "actuallyViewed": true,
+      "viewMethod": "tools.view_image at original detail",
+      "sidecarPath": "work/production-v3/captures/herbarium-conservatory-threequarter-night-1788981194841.json",
+      "sidecarSha256": "622333d6cb1e0a31d331f8d8054f89ab0a93eaf51d8a5d836341be01ab433afc",
+      "metadata": {
+        "kind": "conservatory",
+        "view": "threequarter",
+        "light": "night",
+        "candidate": "r4-composition",
+        "assetVersion": 8,
+        "botanicalSource": null,
+        "bounds": {
+          "min": [
+            -7.699999809265137,
+            -0.25999999046325684,
+            -4.25
+          ],
+          "max": [
+            7.699999809265137,
+            7.489999771118164,
+            4.28000020980835
+          ]
+        },
+        "mannequinVisible": false,
+        "scaleHeight": 3.28,
+        "wireframe": false,
+        "camera": [
+          19,
+          12.000000000000002,
+          21
+        ],
+        "target": [
+          0,
+          2.65,
+          0
+        ],
+        "nativeViewport": {
+          "cssWidth": 738,
+          "cssHeight": 576,
+          "pixelWidth": 1845,
+          "pixelHeight": 1440,
+          "devicePixelRatio": 2.5,
+          "renderPixelRatio": 2.5
+        },
+        "render": {
+          "frame": 3141,
+          "calls": 40,
+          "triangles": 7793078,
+          "points": 0,
+          "lines": 0
+        }
+      }
+    },
+    {
+      "key": "W4-M",
+      "path": "work/production-v3/captures/herbarium-water-threequarter-day-1788981325565.png",
+      "sha256": "ed32115821ffc190ccafa00ad7b27b815c28c189bd8d57da00fe815ae8ed3f5d",
+      "width": 1845,
+      "height": 1440,
+      "actuallyViewed": true,
+      "viewMethod": "tools.view_image at original detail",
+      "sidecarPath": "work/production-v3/captures/herbarium-water-threequarter-day-1788981325565.json",
+      "sidecarSha256": "e293f2a457f42cfef2e1e49b3f4550f881ed0cc657c4a66904b09b713ce57c6a",
+      "metadata": {
+        "kind": "water",
+        "view": "threequarter",
+        "light": "day",
+        "candidate": "r4-composition",
+        "assetVersion": 8,
+        "botanicalSource": null,
+        "bounds": {
+          "min": [
+            -7.253931522369385,
+            -0.3400000035762787,
+            -4.170000076293945
+          ],
+          "max": [
+            7.949999809265137,
+            1.100000023841858,
+            4.170000076293945
+          ]
+        },
+        "mannequinVisible": false,
+        "scaleHeight": 3.28,
+        "wireframe": false,
+        "camera": [
+          19.000000000000007,
+          10.000000000000002,
+          21.000000000000007
+        ],
+        "target": [
+          0,
+          0.15,
+          0
+        ],
+        "nativeViewport": {
+          "cssWidth": 738,
+          "cssHeight": 576,
+          "pixelWidth": 1845,
+          "pixelHeight": 1440,
+          "devicePixelRatio": 2.5,
+          "renderPixelRatio": 2.5
+        },
+        "render": {
+          "frame": 15145,
+          "calls": 55,
+          "triangles": 1623822,
+          "points": 0,
+          "lines": 0
+        }
+      }
+    },
+    {
+      "key": "W4-O",
+      "path": "work/production-v3/captures/herbarium-water-overview-day-1788981326118.png",
+      "sha256": "e3eba10e77deab0808f9d64d38fb764d3bfeed9ba68ccffff63967ca72bccc6f",
+      "width": 1845,
+      "height": 1440,
+      "actuallyViewed": true,
+      "viewMethod": "tools.view_image at original detail",
+      "sidecarPath": "work/production-v3/captures/herbarium-water-overview-day-1788981326118.json",
+      "sidecarSha256": "4797f9d56e1a80332fe7ef791d5ce1e0edcc3d21b283963893aad4e1c79acb8b",
+      "metadata": {
+        "kind": "water",
+        "view": "overview",
+        "light": "day",
+        "candidate": "r4-composition",
+        "assetVersion": 8,
+        "botanicalSource": null,
+        "bounds": {
+          "min": [
+            -7.253931522369385,
+            -0.3400000035762787,
+            -4.170000076293945
+          ],
+          "max": [
+            7.949999809265137,
+            1.100000023841858,
+            4.170000076293945
+          ]
+        },
+        "mannequinVisible": false,
+        "scaleHeight": 3.28,
+        "wireframe": false,
+        "camera": [
+          13,
+          20,
+          14.999999999999998
+        ],
+        "target": [
+          0,
+          0.15,
+          0
+        ],
+        "nativeViewport": {
+          "cssWidth": 738,
+          "cssHeight": 576,
+          "pixelWidth": 1845,
+          "pixelHeight": 1440,
+          "devicePixelRatio": 2.5,
+          "renderPixelRatio": 2.5
+        },
+        "render": {
+          "frame": 15204,
+          "calls": 55,
+          "triangles": 1623822,
+          "points": 0,
+          "lines": 0
+        }
+      }
+    },
+    {
+      "key": "W4-C",
+      "path": "work/production-v3/captures/herbarium-water-close-day-1788981326690.png",
+      "sha256": "187047287411792480c807dc72e63d3b134145c5573ac518ee977abcf8b88d02",
+      "width": 1845,
+      "height": 1440,
+      "actuallyViewed": true,
+      "viewMethod": "tools.view_image at original detail",
+      "sidecarPath": "work/production-v3/captures/herbarium-water-close-day-1788981326690.json",
+      "sidecarSha256": "af5acba19a4ee5deaa280fcb61990a2ccb149ec5581b65a8e45e37d0cc5d439a",
+      "metadata": {
+        "kind": "water",
+        "view": "close",
+        "light": "day",
+        "candidate": "r4-composition",
+        "assetVersion": 8,
+        "botanicalSource": null,
+        "bounds": {
+          "min": [
+            -7.253931522369385,
+            -0.3400000035762787,
+            -4.170000076293945
+          ],
+          "max": [
+            7.949999809265137,
+            1.100000023841858,
+            4.170000076293945
+          ]
+        },
+        "mannequinVisible": false,
+        "scaleHeight": 3.28,
+        "wireframe": false,
+        "camera": [
+          -0.20000000000000107,
+          2.22,
+          3.5
+        ],
+        "target": [
+          -3.200000000000001,
+          0.22000000000000006,
+          -0.5
+        ],
+        "nativeViewport": {
+          "cssWidth": 738,
+          "cssHeight": 576,
+          "pixelWidth": 1845,
+          "pixelHeight": 1440,
+          "devicePixelRatio": 2.5,
+          "renderPixelRatio": 2.5
+        },
+        "render": {
+          "frame": 15252,
+          "calls": 55,
+          "triangles": 1623822,
+          "points": 0,
+          "lines": 0
+        }
+      }
+    },
+    {
+      "key": "W4-L",
+      "path": "work/production-v3/captures/herbarium-water-interior-day-1788981327277.png",
+      "sha256": "4f22db6896ba925bfc75a011421e4d11a583b4f3a15eb22127076f55bae702fd",
+      "width": 1845,
+      "height": 1440,
+      "actuallyViewed": true,
+      "viewMethod": "tools.view_image at original detail",
+      "sidecarPath": "work/production-v3/captures/herbarium-water-interior-day-1788981327277.json",
+      "sidecarSha256": "30d3a2acc9a65f68aac8014ead33771fe1ae59a8ebbef1aa82d5b9e36f72d2cc",
+      "metadata": {
+        "kind": "water",
+        "view": "interior",
+        "light": "day",
+        "candidate": "r4-composition",
+        "assetVersion": 8,
+        "botanicalSource": null,
+        "bounds": {
+          "min": [
+            -7.253931522369385,
+            -0.3400000035762787,
+            -4.170000076293945
+          ],
+          "max": [
+            7.949999809265137,
+            1.100000023841858,
+            4.170000076293945
+          ]
+        },
+        "mannequinVisible": false,
+        "scaleHeight": 3.28,
+        "wireframe": false,
+        "camera": [
+          5,
+          1.7999999999999998,
+          3.2000000000000015
+        ],
+        "target": [
+          -2,
+          0.25,
+          0
+        ],
+        "nativeViewport": {
+          "cssWidth": 738,
+          "cssHeight": 576,
+          "pixelWidth": 1845,
+          "pixelHeight": 1440,
+          "devicePixelRatio": 2.5,
+          "renderPixelRatio": 2.5
+        },
+        "render": {
+          "frame": 15295,
+          "calls": 55,
+          "triangles": 1623822,
+          "points": 0,
+          "lines": 0
+        }
+      }
+    },
+    {
+      "key": "W4-N",
+      "path": "work/production-v3/captures/herbarium-water-threequarter-night-1788981327869.png",
+      "sha256": "97c68eda9343c23f9da7546c1d13ef09cd93c99b9c35a12951084cce86c32e0c",
+      "width": 1845,
+      "height": 1440,
+      "actuallyViewed": true,
+      "viewMethod": "tools.view_image at original detail",
+      "sidecarPath": "work/production-v3/captures/herbarium-water-threequarter-night-1788981327869.json",
+      "sidecarSha256": "ce28045169a53f56928c8f9b59bdd0b393e932dcbcb6fcb89a9685f051536852",
+      "metadata": {
+        "kind": "water",
+        "view": "threequarter",
+        "light": "night",
+        "candidate": "r4-composition",
+        "assetVersion": 8,
+        "botanicalSource": null,
+        "bounds": {
+          "min": [
+            -7.253931522369385,
+            -0.3400000035762787,
+            -4.170000076293945
+          ],
+          "max": [
+            7.949999809265137,
+            1.100000023841858,
+            4.170000076293945
+          ]
+        },
+        "mannequinVisible": false,
+        "scaleHeight": 3.28,
+        "wireframe": false,
+        "camera": [
+          19.000000000000007,
+          10.000000000000002,
+          21.000000000000007
+        ],
+        "target": [
+          0,
+          0.15,
+          0
+        ],
+        "nativeViewport": {
+          "cssWidth": 738,
+          "cssHeight": 576,
+          "pixelWidth": 1845,
+          "pixelHeight": 1440,
+          "devicePixelRatio": 2.5,
+          "renderPixelRatio": 2.5
+        },
+        "render": {
+          "frame": 15345,
+          "calls": 55,
+          "triangles": 1623822,
+          "points": 0,
+          "lines": 0
+        }
+      }
+    },
+    {
+      "key": "B4-M",
+      "path": "work/production-v3/captures/herbarium-border-threequarter-day-1788981497435.png",
+      "sha256": "f31b72e05fa181ea5be081f0a68bb547c628c0c92e0e3956d2b8803ca99746f3",
+      "width": 1845,
+      "height": 1440,
+      "actuallyViewed": true,
+      "viewMethod": "tools.view_image at original detail",
+      "sidecarPath": "work/production-v3/captures/herbarium-border-threequarter-day-1788981497435.json",
+      "sidecarSha256": "3f3d155e10fb57ea1ee3e60a688efb204e0acb3a09898ff84ad78b688937816c",
+      "metadata": {
+        "kind": "border",
+        "view": "threequarter",
+        "light": "day",
+        "candidate": "r4-composition",
+        "assetVersion": 8,
+        "botanicalSource": null,
+        "bounds": {
+          "min": [
+            -6,
+            -0.10094360262155533,
+            -0.9437811374664307
+          ],
+          "max": [
+            6,
+            0.8621935248374939,
+            0.9115283489227295
+          ]
+        },
+        "mannequinVisible": false,
+        "scaleHeight": 3.28,
+        "wireframe": false,
+        "camera": [
+          19,
+          10.000000000000002,
+          20.999999999999996
+        ],
+        "target": [
+          0,
+          0.4,
+          0
+        ],
+        "nativeViewport": {
+          "cssWidth": 738,
+          "cssHeight": 576,
+          "pixelWidth": 1845,
+          "pixelHeight": 1440,
+          "devicePixelRatio": 2.5,
+          "renderPixelRatio": 2.5
+        },
+        "render": {
+          "frame": 32551,
+          "calls": 11,
+          "triangles": 776074,
+          "points": 0,
+          "lines": 0
+        }
+      }
+    },
+    {
+      "key": "B4-C",
+      "path": "work/production-v3/captures/herbarium-border-close-day-1788981497993.png",
+      "sha256": "5044bc39fa8cf72af56c8042d6d04be26c8516a3befa598fcf7e1c587df1d35c",
+      "width": 1845,
+      "height": 1440,
+      "actuallyViewed": true,
+      "viewMethod": "tools.view_image at original detail",
+      "sidecarPath": "work/production-v3/captures/herbarium-border-close-day-1788981497993.json",
+      "sidecarSha256": "6164346daa165c011f7075fcb2e046adb9fedacbdac77da759f53834eb731426",
+      "metadata": {
+        "kind": "border",
+        "view": "close",
+        "light": "day",
+        "candidate": "r4-composition",
+        "assetVersion": 8,
+        "botanicalSource": null,
+        "bounds": {
+          "min": [
+            -6,
+            -0.10094360262155533,
+            -0.9437811374664307
+          ],
+          "max": [
+            6,
+            0.8621935248374939,
+            0.9115283489227295
+          ]
+        },
+        "mannequinVisible": false,
+        "scaleHeight": 3.28,
+        "wireframe": false,
+        "camera": [
+          4,
+          2.42,
+          4
+        ],
+        "target": [
+          1,
+          0.42,
+          0
+        ],
+        "nativeViewport": {
+          "cssWidth": 738,
+          "cssHeight": 576,
+          "pixelWidth": 1845,
+          "pixelHeight": 1440,
+          "devicePixelRatio": 2.5,
+          "renderPixelRatio": 2.5
+        },
+        "render": {
+          "frame": 32617,
+          "calls": 11,
+          "triangles": 776074,
+          "points": 0,
+          "lines": 0
+        }
+      }
+    },
+    {
+      "key": "B4-P",
+      "path": "work/production-v3/captures/herbarium-border-profile-day-1788981498558.png",
+      "sha256": "c163202ffe6d573ff134b32adc724b725d89ad2034fdc5450e8af3685be19a37",
+      "width": 1845,
+      "height": 1440,
+      "actuallyViewed": true,
+      "viewMethod": "tools.view_image at original detail",
+      "sidecarPath": "work/production-v3/captures/herbarium-border-profile-day-1788981498558.json",
+      "sidecarSha256": "65570c353d1a2152385dc81238f38cd5da4a44c00dfe8aa1da859b636f0adb98",
+      "metadata": {
+        "kind": "border",
+        "view": "profile",
+        "light": "day",
+        "candidate": "r4-composition",
+        "assetVersion": 8,
+        "botanicalSource": null,
+        "bounds": {
+          "min": [
+            -6,
+            -0.10094360262155533,
+            -0.9437811374664307
+          ],
+          "max": [
+            6,
+            0.8621935248374939,
+            0.9115283489227295
+          ]
+        },
+        "mannequinVisible": false,
+        "scaleHeight": 3.28,
+        "wireframe": false,
+        "camera": [
+          23,
+          4.999999999999999,
+          1.4083438190194562e-15
+        ],
+        "target": [
+          0,
+          0.4,
+          0
+        ],
+        "nativeViewport": {
+          "cssWidth": 738,
+          "cssHeight": 576,
+          "pixelWidth": 1845,
+          "pixelHeight": 1440,
+          "devicePixelRatio": 2.5,
+          "renderPixelRatio": 2.5
+        },
+        "render": {
+          "frame": 32686,
+          "calls": 11,
+          "triangles": 776074,
+          "points": 0,
+          "lines": 0
+        }
+      }
+    },
+    {
+      "key": "B4-N",
+      "path": "work/production-v3/captures/herbarium-border-threequarter-night-1788981499150.png",
+      "sha256": "d1505748890e1364ead8c3e5c3aee39278597203592a55bf27d5cec7bbdb578e",
+      "width": 1845,
+      "height": 1440,
+      "actuallyViewed": true,
+      "viewMethod": "tools.view_image at original detail",
+      "sidecarPath": "work/production-v3/captures/herbarium-border-threequarter-night-1788981499150.json",
+      "sidecarSha256": "2a5b4e5d2acfebe6fd4d5e422ce0403d450075211c57acd12e0249990459eebb",
+      "metadata": {
+        "kind": "border",
+        "view": "threequarter",
+        "light": "night",
+        "candidate": "r4-composition",
+        "assetVersion": 8,
+        "botanicalSource": null,
+        "bounds": {
+          "min": [
+            -6,
+            -0.10094360262155533,
+            -0.9437811374664307
+          ],
+          "max": [
+            6,
+            0.8621935248374939,
+            0.9115283489227295
+          ]
+        },
+        "mannequinVisible": false,
+        "scaleHeight": 3.28,
+        "wireframe": false,
+        "camera": [
+          19,
+          10.000000000000002,
+          20.999999999999996
+        ],
+        "target": [
+          0,
+          0.4,
+          0
+        ],
+        "nativeViewport": {
+          "cssWidth": 738,
+          "cssHeight": 576,
+          "pixelWidth": 1845,
+          "pixelHeight": 1440,
+          "devicePixelRatio": 2.5,
+          "renderPixelRatio": 2.5
+        },
+        "render": {
+          "frame": 32758,
+          "calls": 11,
+          "triangles": 776074,
+          "points": 0,
+          "lines": 0
+        }
+      }
+    },
+    {
+      "key": "A4-M",
+      "path": "work/production-v3/captures/herbarium-arcade-threequarter-day-1788981545728.png",
+      "sha256": "a8918034a63069e260546e196e823d2e3a8ea15aa428234afb10705df6918fa4",
+      "width": 1845,
+      "height": 1440,
+      "actuallyViewed": true,
+      "viewMethod": "tools.view_image at original detail",
+      "sidecarPath": "work/production-v3/captures/herbarium-arcade-threequarter-day-1788981545728.json",
+      "sidecarSha256": "064c5a1280523af4a6e9bb17d9bd67bee26c0e806e635c20d717ab6e1bff798f",
+      "metadata": {
+        "kind": "arcade",
+        "view": "threequarter",
+        "light": "day",
+        "candidate": "r4-composition",
+        "assetVersion": 8,
+        "botanicalSource": null,
+        "bounds": {
+          "min": [
+            -6,
+            -0.25999999046325684,
+            -1.7000000476837158
+          ],
+          "max": [
+            6,
+            5.399499893188477,
+            1.7000000476837158
+          ]
+        },
+        "mannequinVisible": false,
+        "scaleHeight": 3.28,
+        "wireframe": false,
+        "camera": [
+          19,
+          10.000000000000002,
+          21
+        ],
+        "target": [
+          0,
+          2.2,
+          0
+        ],
+        "nativeViewport": {
+          "cssWidth": 738,
+          "cssHeight": 576,
+          "pixelWidth": 1845,
+          "pixelHeight": 1440,
+          "devicePixelRatio": 2.5,
+          "renderPixelRatio": 2.5
+        },
+        "render": {
+          "frame": 38336,
+          "calls": 13,
+          "triangles": 68782,
+          "points": 0,
+          "lines": 0
+        }
+      }
+    },
+    {
+      "key": "A4-C",
+      "path": "work/production-v3/captures/herbarium-arcade-close-day-1788981546302.png",
+      "sha256": "d416915548e85f53d84fc021b9fedc93e6a0930263bc5cae99e6d1cf6b4a6c38",
+      "width": 1845,
+      "height": 1440,
+      "actuallyViewed": true,
+      "viewMethod": "tools.view_image at original detail",
+      "sidecarPath": "work/production-v3/captures/herbarium-arcade-close-day-1788981546302.json",
+      "sidecarSha256": "eb93e036bfc921928aaeacc64c8bb6f3bca2e1631bff44fbeb7395a58b598034",
+      "metadata": {
+        "kind": "arcade",
+        "view": "close",
+        "light": "day",
+        "candidate": "r4-composition",
+        "assetVersion": 8,
+        "botanicalSource": null,
+        "bounds": {
+          "min": [
+            -6,
+            -0.25999999046325684,
+            -1.7000000476837158
+          ],
+          "max": [
+            6,
+            5.399499893188477,
+            1.7000000476837158
+          ]
+        },
+        "mannequinVisible": false,
+        "scaleHeight": 3.28,
+        "wireframe": false,
+        "camera": [
+          0.12000000000000055,
+          5.700000000000001,
+          5.42
+        ],
+        "target": [
+          -2.8799999999999994,
+          3.700000000000001,
+          1.4200000000000002
+        ],
+        "nativeViewport": {
+          "cssWidth": 738,
+          "cssHeight": 576,
+          "pixelWidth": 1845,
+          "pixelHeight": 1440,
+          "devicePixelRatio": 2.5,
+          "renderPixelRatio": 2.5
+        },
+        "render": {
+          "frame": 38406,
+          "calls": 13,
+          "triangles": 68782,
+          "points": 0,
+          "lines": 0
+        }
+      }
+    },
+    {
+      "key": "A4-P",
+      "path": "work/production-v3/captures/herbarium-arcade-profile-day-1788981546870.png",
+      "sha256": "35051091ca70e56e0feffb16cba01baef4310f29c93119d8db316b66b6a34574",
+      "width": 1845,
+      "height": 1440,
+      "actuallyViewed": true,
+      "viewMethod": "tools.view_image at original detail",
+      "sidecarPath": "work/production-v3/captures/herbarium-arcade-profile-day-1788981546870.json",
+      "sidecarSha256": "340bcb09f1aa32ad367422708b7301354d6cb682da78d033a6bef75fa88f00b9",
+      "metadata": {
+        "kind": "arcade",
+        "view": "profile",
+        "light": "day",
+        "candidate": "r4-composition",
+        "assetVersion": 8,
+        "botanicalSource": null,
+        "bounds": {
+          "min": [
+            -6,
+            -0.25999999046325684,
+            -1.7000000476837158
+          ],
+          "max": [
+            6,
+            5.399499893188477,
+            1.7000000476837158
+          ]
+        },
+        "mannequinVisible": false,
+        "scaleHeight": 3.28,
+        "wireframe": false,
+        "camera": [
+          23,
+          4.6,
+          1.4083438190194562e-15
+        ],
+        "target": [
+          0,
+          2.2,
+          0
+        ],
+        "nativeViewport": {
+          "cssWidth": 738,
+          "cssHeight": 576,
+          "pixelWidth": 1845,
+          "pixelHeight": 1440,
+          "devicePixelRatio": 2.5,
+          "renderPixelRatio": 2.5
+        },
+        "render": {
+          "frame": 38475,
+          "calls": 13,
+          "triangles": 68782,
+          "points": 0,
+          "lines": 0
+        }
+      }
+    }
+  ],
+  "briefReferences": [
+    {
+      "path": "docs/art/living-v8/island-target.png",
+      "sha256": "9885937adc4213825b7b8e404d0f6576069746b65b09c489b9b5cc3d0439624e",
+      "usage": "Brief/target read and actual target images viewed earlier in this review sequence; not an actual-model acceptance frame."
+    },
+    {
+      "path": "docs/art/living-v8/conservatory-target.png",
+      "sha256": "c366697d226cfc121fa5b93917e817b089a9c29f8d01b9ac4b492893d9410478",
+      "usage": "Brief/target read and actual target images viewed earlier in this review sequence; not an actual-model acceptance frame."
+    },
+    {
+      "path": "docs/art/living-v8/water-garden-target.png",
+      "sha256": "f45a9c24aa20afd6da753bc0e499a92681a354ebbdb35046966e9ab19a456f8a",
+      "usage": "Brief/target read and actual target images viewed earlier in this review sequence; not an actual-model acceptance frame."
+    },
+    {
+      "path": "docs/art/living-v8/design.md",
+      "sha256": "5eca94fbd93c2e0a53148aa8571041663e35f2edff0603eef32ddd8537161c8f",
+      "usage": "Brief/target read and actual target images viewed earlier in this review sequence; not an actual-model acceptance frame."
+    },
+    {
+      "path": "work/living-v8/research/garden-asset-art-card.md",
+      "sha256": "25d31028c2f490d82ed24aeccd5d0745cdf6e15d02ea022b0a74255a43d0faef",
+      "usage": "Reread during R4 review."
+    }
+  ],
+  "frameToSourceLink": "Root supplied frozen R4 capture-batch attribution. Sidecars have assetVersion 8 but do not embed the implementation source hash.",
+  "waterReadOnlySourceEvidence": [
+    {
+      "path": "docs/art/living-v8/herbarium/r4-composition/herbarium-assets.js",
+      "line": 29,
+      "observation": "MeshPhysicalMaterial transmission .965, IOR 1.333, thickness .48; refraction/transmission is active."
+    },
+    {
+      "path": "docs/art/living-v8/herbarium/r4-composition/herbarium-assets.js",
+      "line": 64,
+      "observation": "Water-family leaf/lime/sage/submerged buckets have castShadow=false; submerged also receiveShadow=false. Pink/ivory/yellow flower materials retain the ordinary shadow flags."
+    },
+    {
+      "path": "docs/art/living-v8/herbarium/r4-composition/herbarium-assets.js",
+      "line": 187,
+      "observation": "Lily center padY .184 + (seed modulo 7) * .001; edge waviness varies around it."
+    },
+    {
+      "path": "docs/art/living-v8/herbarium/r4-composition/herbarium-assets.js",
+      "line": 220,
+      "observation": "Water surface Y .18, basin floor Y -.30."
+    }
+  ],
+  "waterDiagnosis": {
+    "observed": "Offset dark pad copies contain radial vein detail; displaced flower imagery remains, especially low-angle. Submerged stems are visibly softer than R3.",
+    "inference": "Pad duplicate imagery has an optical contribution; disabled pad/vein shadow casting and visible vein detail make pure cast-shadow attribution insufficient. Flower casts may additionally contribute.",
+    "notEstablished": "The exact render-pass contribution and corrective parameter were not isolated in this still-image review."
+  },
+  "limitations": [
+    "No production edits, browser use, subagents or git mutation.",
+    "No live animation, wind, collision or player passage test.",
+    "No exact pad-contact measurement or all-view geometric clearance certification.",
+    "Night material stills available for conservatory/water/border; no R4 arcade night frame supplied.",
+    "Cut soil/base edges require real terrain blending and scene-scale review during Task3.",
+    "Hashing the archived focused-test log verifies identity only; no independent test rerun is claimed."
+  ]
+}

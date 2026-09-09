@@ -1,0 +1,30 @@
+✖ independent preload consumers preserve cancellation, deadline and retry semantics with real resources (1840.416541ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2088.668666
+
+✖ failing tests:
+
+test at world/tests/herbarium-assets.test.js:127:1
+✖ independent preload consumers preserve cancellation, deadline and retry semantics with real resources (1840.416541ms)
+  AssertionError [ERR_ASSERTION]: one consumer cancelling must not cancel another consumer
+  + actual - expected
+  
+  + 'rejected'
+  - 'fulfilled'
+  
+      at TestContext.<anonymous> (file:///Users/yaxinluo/Documents/Codex/2026-09-07/https-yaxin9luo-github-io-https-yaxin9luo/outputs/academy-living-v8/world/tests/herbarium-assets.test.js:136:54)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'rejected',
+    expected: 'fulfilled',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

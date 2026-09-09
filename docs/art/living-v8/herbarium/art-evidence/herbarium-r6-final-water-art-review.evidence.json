@@ -1,0 +1,299 @@
+{
+  "review": "herbarium-r6-final-water-art-review",
+  "reviewedAtUTC": "2026-09-09T19:35:36.162285+00:00",
+  "scope": "Final WAT-02 lily texture/orientation gate and visible-regression check only.",
+  "verdict": "PASS",
+  "issueDisposition": {
+    "WAT-02": "CLOSED",
+    "WAT-01": "Prior closure retained; no visible optics regression",
+    "WAT-03": "Prior closure retained",
+    "WAT-04": "Prior closure retained"
+  },
+  "candidate": {
+    "path": "docs/art/living-v8/herbarium/r6-water-final/candidate.json",
+    "sha256": "7eb9f5f8cf6aabc877642253ddc35df501e5571d794f655d37e1e5bc2c82649f",
+    "assetSourceSha256": "3656c37b1e0d845ac4189edd6663d059dca69873afcca19799c2b2befa727e2b",
+    "archiveFiles": [
+      {
+        "originalPath": "world/src/herbarium-assets.js",
+        "archivePath": "docs/art/living-v8/herbarium/r6-water-final/herbarium-assets.js",
+        "sha256": "3656c37b1e0d845ac4189edd6663d059dca69873afcca19799c2b2befa727e2b",
+        "matchesCandidate": true
+      },
+      {
+        "originalPath": "world/src/herbarium-studio.js",
+        "archivePath": "docs/art/living-v8/herbarium/r6-water-final/herbarium-studio.js",
+        "sha256": "20d49c326a0066ee2f43d6a9aa0c7d0c69984b49d05e04bcf135591ca3738fac",
+        "matchesCandidate": true
+      },
+      {
+        "originalPath": "world/herbarium-studio.html",
+        "archivePath": "docs/art/living-v8/herbarium/r6-water-final/herbarium-studio.html",
+        "sha256": "b350d9fc6a1034517c978b711c750d269ddfd90062e0d2f80d4b62cac73c0fc0",
+        "matchesCandidate": true
+      },
+      {
+        "originalPath": "docs/art/living-v8/herbarium/r6-water-tests.log",
+        "archivePath": "docs/art/living-v8/herbarium/r6-water-final/r6-water-tests.log",
+        "sha256": "4c59b3af03f1bcb6eeb0d232b061227a48d0c999c82b0d9f416213c2cdfbd2ff",
+        "matchesCandidate": true
+      }
+    ]
+  },
+  "frames": [
+    {
+      "key": "W6-O",
+      "path": "work/production-v3/captures/herbarium-water-overview-day-1788982260709.png",
+      "sha256": "452d512c3676e47b25110fb8adb48c3335e9ada77739fd886da6ed25aaacfcb0",
+      "width": 1845,
+      "height": 1440,
+      "actuallyViewed": true,
+      "viewMethod": "tools.view_image at original detail",
+      "sidecarPath": "work/production-v3/captures/herbarium-water-overview-day-1788982260709.json",
+      "sidecarSha256": "93d8d302fa3d28a075a8e858eb9caf888904275710280a12734735cace41d7cb",
+      "metadata": {
+        "kind": "water",
+        "view": "overview",
+        "light": "day",
+        "candidate": "r6-water-final",
+        "waterOptics": "surface",
+        "assetVersion": 8,
+        "botanicalSource": null,
+        "bounds": {
+          "min": [
+            -7.253931522369385,
+            -0.3400000035762787,
+            -4.170000076293945
+          ],
+          "max": [
+            7.949999809265137,
+            1.100000023841858,
+            4.170000076293945
+          ]
+        },
+        "mannequinVisible": false,
+        "scaleHeight": 3.28,
+        "wireframe": false,
+        "camera": [
+          13,
+          20,
+          14.999999999999998
+        ],
+        "target": [
+          0,
+          0.15,
+          0
+        ],
+        "nativeViewport": {
+          "cssWidth": 738,
+          "cssHeight": 576,
+          "pixelWidth": 1845,
+          "pixelHeight": 1440,
+          "devicePixelRatio": 2.5,
+          "renderPixelRatio": 2.5
+        },
+        "render": {
+          "frame": 3098,
+          "calls": 34,
+          "triangles": 1455450,
+          "points": 0,
+          "lines": 0
+        }
+      }
+    },
+    {
+      "key": "W6-C",
+      "path": "work/production-v3/captures/herbarium-water-close-day-1788982261276.png",
+      "sha256": "ea1d00ec0fe5aa3b62c74a3fdb3d6aa196fc83ad92a131b3d7abef3119a9105f",
+      "width": 1845,
+      "height": 1440,
+      "actuallyViewed": true,
+      "viewMethod": "tools.view_image at original detail",
+      "sidecarPath": "work/production-v3/captures/herbarium-water-close-day-1788982261276.json",
+      "sidecarSha256": "6aa2f871d05e29e2cdb294862b61dd062a75f6ac17ed359d49b4e8b7548973ab",
+      "metadata": {
+        "kind": "water",
+        "view": "close",
+        "light": "day",
+        "candidate": "r6-water-final",
+        "waterOptics": "surface",
+        "assetVersion": 8,
+        "botanicalSource": null,
+        "bounds": {
+          "min": [
+            -7.253931522369385,
+            -0.3400000035762787,
+            -4.170000076293945
+          ],
+          "max": [
+            7.949999809265137,
+            1.100000023841858,
+            4.170000076293945
+          ]
+        },
+        "mannequinVisible": false,
+        "scaleHeight": 3.28,
+        "wireframe": false,
+        "camera": [
+          -0.20000000000000107,
+          2.22,
+          3.5
+        ],
+        "target": [
+          -3.200000000000001,
+          0.22000000000000006,
+          -0.5
+        ],
+        "nativeViewport": {
+          "cssWidth": 738,
+          "cssHeight": 576,
+          "pixelWidth": 1845,
+          "pixelHeight": 1440,
+          "devicePixelRatio": 2.5,
+          "renderPixelRatio": 2.5
+        },
+        "render": {
+          "frame": 3167,
+          "calls": 34,
+          "triangles": 1455450,
+          "points": 0,
+          "lines": 0
+        }
+      }
+    },
+    {
+      "key": "W6-L",
+      "path": "work/production-v3/captures/herbarium-water-interior-day-1788982261826.png",
+      "sha256": "535ca0df6fc17558ec66e51d0538290dca237ce5f3736f339a904e2717c8b3ac",
+      "width": 1845,
+      "height": 1440,
+      "actuallyViewed": true,
+      "viewMethod": "tools.view_image at original detail",
+      "sidecarPath": "work/production-v3/captures/herbarium-water-interior-day-1788982261826.json",
+      "sidecarSha256": "c8a7d6cec81a5118867ff0b77b598a2fcda978b50b56eac3f888767ef483c7a0",
+      "metadata": {
+        "kind": "water",
+        "view": "interior",
+        "light": "day",
+        "candidate": "r6-water-final",
+        "waterOptics": "surface",
+        "assetVersion": 8,
+        "botanicalSource": null,
+        "bounds": {
+          "min": [
+            -7.253931522369385,
+            -0.3400000035762787,
+            -4.170000076293945
+          ],
+          "max": [
+            7.949999809265137,
+            1.100000023841858,
+            4.170000076293945
+          ]
+        },
+        "mannequinVisible": false,
+        "scaleHeight": 3.28,
+        "wireframe": false,
+        "camera": [
+          5,
+          1.7999999999999998,
+          3.2000000000000015
+        ],
+        "target": [
+          -2,
+          0.25,
+          0
+        ],
+        "nativeViewport": {
+          "cssWidth": 738,
+          "cssHeight": 576,
+          "pixelWidth": 1845,
+          "pixelHeight": 1440,
+          "devicePixelRatio": 2.5,
+          "renderPixelRatio": 2.5
+        },
+        "render": {
+          "frame": 3233,
+          "calls": 34,
+          "triangles": 1455450,
+          "points": 0,
+          "lines": 0
+        }
+      }
+    },
+    {
+      "key": "W6-N",
+      "path": "work/production-v3/captures/herbarium-water-threequarter-night-1788982262408.png",
+      "sha256": "cc72e445aea1aa5c0d9bb414194da40f6fca4508a114c8a24bf1b5efc5b24680",
+      "width": 1845,
+      "height": 1440,
+      "actuallyViewed": true,
+      "viewMethod": "tools.view_image at original detail",
+      "sidecarPath": "work/production-v3/captures/herbarium-water-threequarter-night-1788982262408.json",
+      "sidecarSha256": "981b24ad34a9c0cc68e2aeaa21e24407bd5ca1562d056308e1585b420702802a",
+      "metadata": {
+        "kind": "water",
+        "view": "threequarter",
+        "light": "night",
+        "candidate": "r6-water-final",
+        "waterOptics": "surface",
+        "assetVersion": 8,
+        "botanicalSource": null,
+        "bounds": {
+          "min": [
+            -7.253931522369385,
+            -0.3400000035762787,
+            -4.170000076293945
+          ],
+          "max": [
+            7.949999809265137,
+            1.100000023841858,
+            4.170000076293945
+          ]
+        },
+        "mannequinVisible": false,
+        "scaleHeight": 3.28,
+        "wireframe": false,
+        "camera": [
+          19.000000000000007,
+          10.000000000000002,
+          21.000000000000007
+        ],
+        "target": [
+          0,
+          0.15,
+          0
+        ],
+        "nativeViewport": {
+          "cssWidth": 738,
+          "cssHeight": 576,
+          "pixelWidth": 1845,
+          "pixelHeight": 1440,
+          "devicePixelRatio": 2.5,
+          "renderPixelRatio": 2.5
+        },
+        "render": {
+          "frame": 3304,
+          "calls": 34,
+          "triangles": 1455450,
+          "points": 0,
+          "lines": 0
+        }
+      }
+    }
+  ],
+  "observations": {
+    "W6-O": "No repeated spiral symbol; notch directions vary and separate colonies preserve open water.",
+    "W6-C": "Broad spiral removed; leaf shading/fine detail remains subdued; coherent pads and revised flower petals/stamens retained.",
+    "W6-L": "Varied pad orientations visible; no offset dark duplicate pads/ghost flowers; stems stay secondary.",
+    "W6-N": "No conspicuous leaf pattern or bright material regression in the supplied night still."
+  },
+  "frameToSourceLink": "Sidecars explicitly identify r6-water-final and surface optics. Root supplies the frozen-source batch attribution; sidecars do not embed implementation hashes.",
+  "limitations": [
+    "Review binds the frozen R6 source and four supplied native frames, not subsequent loader/source cleanup.",
+    "Other families were not reopened or recaptured in this scoped review.",
+    "No production edits, browser use, exports, live animation, collision or exact contact measurements.",
+    "Whole-island placement, grade blending and walking-route acceptance remain Task3/root responsibilities.",
+    "Archived test-log hash verifies identity only; this is not an independent test rerun."
+  ]
+}

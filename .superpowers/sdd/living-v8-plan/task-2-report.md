@@ -1,0 +1,67 @@
+# Task 2 — original herbarium architecture and planted edge
+
+Status: implementation, native art gates, final packaging and all verification complete. Ready for the owned commit and controller review. No Game/world placement, terrain, grass mask or actor implementation is changed.
+
+## Delivered scope
+
+The kit provides an open pointed arcade (12 × 3.4 × 5.4 m), curved verdigris conservatory (16 × 9 × 7.5 m), low asymmetric reading water garden (16 × 9 × 1.2 m), and configurable continuous flower border (default 12 × 2.2 × 1.2 m). Long axis X, front +Z, finished walking floor local y=0; foundations extend below the floor. Actual generated geometry, doors and rooted plants remain within the audited envelopes. Full rectangular 2.2 m wide × 3.6 m high clear passages are checked against triangles, not arch-apex constants. This clears player height3.28, Elizabeth walk width1.98444/top3.02751 and Sadaharu width1.68807/top3.00065. Wider outdoor sign-action clearance remains Task5.
+
+Arcade bearings/capitals, pointed voussoirs, coping and external rooted vines are connected. The conservatory has curved clear glazing and rib hierarchy, supported plinth, gutters/downpipes, open doors, joint ferrules, workbenches and varied planted collections. Pool lining/capstones, calm surface, smooth notched laminae, curved blossoms, rounded sitting shores and benches retain an open center. Borders have continuous loam and low edging, overlapping medium fern foliage, low pink periwinkle groups and sparse taller accents. Exact static material batches preserve every accepted source triangle, attribute and part index range.
+
+## Authorship and actual art evidence
+
+Architecture, garden composition, ivy, lilies and their fine procedural maps are original authored work in `world/src/herbarium-assets.js`. Target PNGs are aesthetic goals only, never textures or evidence of the actual models. Existing full-resolution physical texture channels are retained with appropriate UV scale. Limestone and restrained painted-iron albedo are documented full-resolution luminance derivatives; their original normal/roughness/metalness maps remain intact.
+
+The accepted full-detail CC0 sources are Poly Haven fern_02 (Rob Tuytel / Rico Cilliers), periwinkle_plant (Amal Kumar), and potted_plant_01 (Rico Cilliers). Source b/a fern variants and periwinkle04 are composed deliberately. The complete potted tree preserves four authored node transforms; low planted collections reuse its detailed pot/pebble geometry. Every plant crown has physical soil/substrate provenance. Original 4096×4096 RGB and matching source alpha are packed without resizing; source positions, normals, UVs and original variant meshes remain intact. Official download metadata/MD5/SHA records and originals are under `work/living-v8/research/plant-sources`. Public `botanical/sources.json` and README preserve runtime derivatives, authors and URLs. Rejected shrub is retained in research as `shrub_01/shrub_01-rejected-study.glb`, absent from public/runtime.
+
+Root and independent artist passed conservatory/arcade/border on frozen R4, then final water on frozen R6. All CONS01–05, ARC01–03, WAT01–04 and BOR01–03 are closed. R6 actual native frames are 1845×1440 at DPR2.5. Water surface A/B showed that screen-space transmission produced offset duplicate plant imagery; the accepted reflective surface blend removes it. Final leaves use faint fine branching detail and varied deterministic yaw. The R6 visual source SHA is `3656c37b1e0d845ac4189edd6663d059dca69873afcca19799c2b2befa727e2b`.
+
+`docs/art/living-v8/herbarium/art-evidence/` contains SHA-verified copies of 16 accepted R4/R6 native frames and sidecars, independent reports, and the final changed-source smoke frame `herbarium-water-close-day-1788982678452.png`. Root actually viewed the latter and passed it. Intermediate candidate source/material identities remain in r2, r3-probes, r4-composition, r5-water-ab and r6-water-final archives; version8 alone does not identify a candidate.
+
+Final runtime source SHA is `4fceba32fe849ec2dfa6e91be05cd9cd74cf63763d796d151fd4d4c405b96641`. Post-art changes remove redundant preload promise caching, remove rejected shrub public references and repair 396 zero normals at collapsed petal endpoints. `r6-final-parity.json` verifies all positions, triangle indices, UVs and vertex colors identical to frozen R6; the changed normals occur exclusively on zero-area triangles. Studio cleanup also exposes a visible startup retry action and uses supported PCFShadowMap with the same4096 shadow map/native DPR.
+
+## Files and packaging boundary
+
+Owned implementation: `world/src/herbarium-assets.js`, `world/src/herbarium-studio.js`, `world/herbarium-studio.html`, `world/scripts/export-herbarium-assets.mjs`, `world/tests/herbarium-assets.test.js`; the only Vite change is the herbarium-studio input. Owned documentation/evidence is `docs/art/living-v8/herbarium/` and this report. Root's art-card edits and unrelated rejected character files remain untouched/unstaged.
+
+Public contains only the three consumed botanical GLBs and small README/source/delivery manifests. Full exact assembled `.glb`, editable packed `.blend`, part ranges and lossless verification records are preserved in ignored `work/living-v8/exports/herbarium/`. Root explicitly required this path boundary to prevent redundant public copies and >100MB GitHub blobs. Recipes, exact artifact hashes and verification manifests are tracked; full original deliverables are available over loopback at `http://127.0.0.1:4234/work/living-v8/exports/herbarium/`. No decimation, texture resizing or lossy replacement is used to meet this boundary.
+
+The original exporter uses real sharp-decoded RGBA in its Node pixel canvas. Browser PBR ImageBitmap flipY orientation is reproduced explicitly. It compares each actual constructor attribute byte against the initial GLB, then verifies decoded attributes, ordered triangle winding and RGBA pixels again after entropy packing. Meshopt uses filter NONE with no quantize/reorder/simplify transform; exact WebP is selected only after full decoded RGBA hash equivalence, including hidden RGB. Blender imports the same image bytes and uncompressed-geometry input, preserves editable meshes/materials, packs all images, embeds source plus PARTS_AND_SUPPORT metadata, and saves with lossless archive compression. Raw temporary GLBs are removed after successful save. No placeholder/fake image export is used.
+
+## Exact final artifact manifest
+
+| Asset | Triangles / batches | GLB bytes | GLB SHA256 | Editable bytes |
+|---|---:|---:|---|---:|
+| arcade | 34,390 / 6 | 23,848,924 | `7f63cd5bdaec58682c3f67c33f81c8773d63dedd0dff5260401d04d028416967` | 23,879,395 |
+| conservatory | 2,598,090 / 13 | 118,878,104 | `8e4ce81d2b2927bbb83bc13a4e9a8f78759826e7f776eee558755fcf829c4a36` | 147,877,909 |
+| water-garden | 833,808 / 18 | 72,341,316 | `1bcec3bbb7bd64f427cc801b495d477e5bd3ff152b42154a63f53cd0c3fa6b96` | 83,381,203 |
+| flower-border | 388,036 / 5 | 46,619,052 | `14d323c0f90c09b91d9185a65d161c3059b33fa54611663588a7afa527fa85bf` | 50,828,604 |
+
+Full editable hashes, all PBR identities and actual bounds are in tracked `docs/art/living-v8/herbarium/export-metrics.json`; per-attribute/pixel identities are in tracked `packing/*.packing.json`. The actual saved Blender audit is `editable-audit.json`.
+
+## Task3 producer contract and cost
+
+See `docs/art/living-v8/herbarium/producer-contract.md`. Import and await `loadHerbariumAssets({signal,deadline,onProgress})`, with an absolute performance.now deadline, during progressive loading. Then use `createArcade({bays:4})`, `createConservatory()`, `createWaterGarden()` and `createGardenBorder({length:12,seed:81})`. Geometry is complete synchronously on return; no hidden asynchronous geometry hydration occurs. Planted constructors fail clearly if source preparation was omitted. Retry reuses completed resources; cancellation/deadline/progress are independent per consumer through the existing resource coordinator.
+
+Runtime downloads the accepted shared source GLBs (76,738,092 bytes total before transport compression) plus13 existing PBR channels. Constructors do not download the assembled exports or editable scenes. Default triangles/batches are arcade34,390/6, conservatory2,598,090/13, water833,808/18 and border388,036/5. Construct once and use `cloneHerbariumAsset` for repeated designs. Each clone has independent transforms/metadata and retains shared geometry ownership; `disposeHerbariumAsset` removes each instance and frees geometry on the last registered clone. Raw Group.clone is not an independently disposable kit clone. Shared source geometries/materials/textures remain page-owned caches and are not destroyed by per-instance cleanup.
+
+`getHerbariumColliders` returns world AABBs for named solids, including water obstruction; the full greenhouse envelope is not an obstacle. `getHerbariumSupportGeometries` returns caller-owned transformed copies of real rendered floors/shores; add them to surface support, then dispose the copies. Both flush parent/world matrices. Task3 owns grade transitions, terrain/grass masking, collision adaptation, actual traversal and whole-island composition. No global DPR, shadow, texture or mesh reduction was applied.
+
+## Verification
+
+- `node world/scripts/export-herbarium-assets.mjs` — exit0 at the final ignored output path, four GLBs and four editable scenes saved; every actual runtime accessor byte and post-packing decoded geometry/pixel identity verified. `final-export.log` and `editable-export.log` preserve output.
+- `npm test` from `world` — **413 passed, 0 failed, 0 skipped**, duration84245.157ms. This includes all13 herbarium tests: actual finite envelopes; full rectangular actor access; transformed support; clone/disposal; validation; root/substrate contact; part/frame/downpipe provenance; water arrival; full source geometry/4K alpha/original node transforms; unflushed parent transforms; lily contact; independent preload cancellation/deadline/retry; and actual packed export decoding/support/pixels/identity. Exact output: `final-tests.log`.
+- `npm run build` from `world` — exit0, built in4.39s. `final-build.log`. The herbarium output contains only the three actual runtime botanical GLBs and small provenance; no full assembled GLB or Blender file is copied to dist.
+- `/Applications/Blender.app/Contents/MacOS/Blender --background --python-exit-code 1 --python docs/art/living-v8/herbarium/audit-editable.py` — exit0; four `EDITABLE_AUDIT_PASS` results. Actual saved meshes/triangles/bounds/current-source identity and every packed original GLB image byte verified (9/25/25/12 images). Evidence: `editable-audit.log`, `editable-audit.json`.
+- `node docs/art/living-v8/herbarium/verify-r6-parity.mjs` — exit0; 396 changed zero normals, all exclusively incident on zero-area triangles; all positions/indices/UV/colors identical. `r6-final-parity.log/json`.
+- Independent preload regression was first observed failing (`preload-regression-before.log`), then passed with real PBR/source pixels and independent cancellation (`preload-regression-after.log`, 4439.613958ms). The focused actual packed-export probe passed1/1 with no skips (`final-packed-tests.log`,15415.680833ms), then passed again within the full413 suite.
+- Loopback HTTP HEAD checks returned200 for studio/module, all three public botanical GLBs, representative PBR and all eight full artifact URLs. `http-availability.log`. These are availability checks; root/independent native frames supply rendering evidence.
+- JavaScript syntax checks and `git diff --cached --check -- world` passed. Raw saved stdout/draft-patch evidence retains its original blank-line whitespace.
+
+All checks use actual geometry and image pixels. The exported-artifact gate explicitly skips with a reproduction instruction in a fresh checkout without the intentionally untracked full exports. **It ran with no skips for this local delivery.**
+
+## Limits and self-review
+
+This is the isolated producer delivery. Whole-world visual composition, frame time, traversal, terrain blending and final integration remain later gates; isolated stills do not certify them. The high-detail source packages and complete static geometry have meaningful download/memory costs, explicitly listed above. Floors/soil cut edges require the intended terrain blend. Shared materials allow coordinated hydration, so per-instance material customization requires a caller-owned material clone. Blender audit covers real saved bounds, mesh/triangle counts, source identity and packed original image bytes; it is distinct from root's native runtime art review.
+
+Self-review focused on full-width access, final envelopes, geometry-backed support/colliders and plant rooting; original source alpha and node transforms; exact batching provenance; independent cache cancellation/retry; ordinary failure/navigation cleanup; and source/runtime/export identity. No known open asset-art finding remains. Independent committed-range code review is the next controller-owned gate after this initial owned commit.

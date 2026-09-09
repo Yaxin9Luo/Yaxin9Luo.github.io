@@ -1,0 +1,12 @@
+{
+  "candidate": "r4-composition",
+  "frozenUTC": "2026-09-09T19:11:58.527800+00:00",
+  "status": "Accepted source botany composed; narrow iron-paint finish; preserved closed architecture/glass/vine/shore; local underwater stem/shadow contrast attenuation. Root ART pending.",
+  "files": {
+    "world/src/herbarium-assets.js": "e61d5d5d41644c9e03e3205ef9125e3dd8c354599377f357233c569e11b9d9d1",
+    "world/src/herbarium-studio.js": "cc23aef285e714ec7d58058757020d7e004634a7e699bcec3a771a357fb5de0c",
+    "world/herbarium-studio.html": "e3e44420bb72a557051b485b8acdc14a056c30c7990f955c90a01fac948984cf",
+    "world/public/models/herbarium/botanical/sources.json": "2e0134f358ac9593387f7d9bf04d8ceb271b133bed56ad6cd3700bc125607e02",
+    "docs/art/living-v8/herbarium/r4-final-focused-tests.log": "9cf8c2e2ec416b4dfb7b0c9affc0d7c24834f3ed5e354373585922b1bfd9353e"
+  }
+}

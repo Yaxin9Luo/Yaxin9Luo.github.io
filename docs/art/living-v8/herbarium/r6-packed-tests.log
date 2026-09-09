@@ -1,0 +1,28 @@
+✖ final packed GLBs decode with the runtime loader and preserve geometry, real pixels, support and source identity (3742.367375ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4023.676875
+
+✖ failing tests:
+
+test at world/tests/herbarium-assets.test.js:143:1
+✖ final packed GLBs decode with the runtime loader and preserve geometry, real pixels, support and source identity (3742.367375ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  5121 !== 5126
+  
+      at TestContext.<anonymous> (file:///Users/yaxinluo/Documents/Codex/2026-09-07/https-yaxin9luo-github-io-https-yaxin9luo/outputs/academy-living-v8/world/tests/herbarium-assets.test.js:150:413)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 5121,
+    expected: 5126,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

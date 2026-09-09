@@ -1,0 +1,48 @@
+{
+  "kind": "conservatory",
+  "view": "interior",
+  "light": "day",
+  "candidate": "r4-composition",
+  "assetVersion": 8,
+  "botanicalSource": null,
+  "bounds": {
+    "min": [
+      -7.699999809265137,
+      -0.25999999046325684,
+      -4.25
+    ],
+    "max": [
+      7.699999809265137,
+      7.489999771118164,
+      4.28000020980835
+    ]
+  },
+  "mannequinVisible": false,
+  "scaleHeight": 3.28,
+  "wireframe": false,
+  "camera": [
+    -8.881784197001252e-16,
+    2.7799999999999994,
+    3.63
+  ],
+  "target": [
+    5.4,
+    1.55,
+    -1.3
+  ],
+  "nativeViewport": {
+    "cssWidth": 738,
+    "cssHeight": 576,
+    "pixelWidth": 1845,
+    "pixelHeight": 1440,
+    "devicePixelRatio": 2.5,
+    "renderPixelRatio": 2.5
+  },
+  "render": {
+    "frame": 3052,
+    "calls": 40,
+    "triangles": 7793078,
+    "points": 0,
+    "lines": 0
+  }
+}

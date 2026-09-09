@@ -1,0 +1,685 @@
+{
+  "method": "Meshopt entropy coding, filter NONE; no quantization, reordering, simplification or resizing. Original source bytes or lossless WebP exact=true reused only after exact decoded RGBA SHA match, including transparent pixels.",
+  "rawBytes": 363376896,
+  "packedBytes": 118878104,
+  "geometry": [
+    {
+      "name": "",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": {
+              "type": 5126,
+              "normalized": false,
+              "count": 96,
+              "sha256": "13988294e7fe60ccfcbe1f7c0abd482f872efacc4f9af9172f414be7150db399"
+            },
+            "NORMAL": {
+              "type": 5126,
+              "normalized": false,
+              "count": 96,
+              "sha256": "d7061c2f6f8797737a148d1abf7303db5a15ca8b2f3aa784e7adac779e889331"
+            },
+            "TEXCOORD_0": {
+              "type": 5126,
+              "normalized": false,
+              "count": 96,
+              "sha256": "e9203f015323d40d3b24e83babaa29f2a2a14b34d7fa9b6406a96bafd949124a"
+            },
+            "COLOR_0": {
+              "type": 5126,
+              "normalized": false,
+              "count": 96,
+              "sha256": "0bcab23409198515660832fb22e56db71475917441f6ba540ab84287bd8bed48"
+            }
+          },
+          "triangles": {
+            "count": 44,
+            "cyclicWindingSHA256": "e45ebc6d929af60ce1e5f740577d72e6d70d947d6b3994bdeba2c91c5543c0fe"
+          }
+        }
+      ]
+    },
+    {
+      "name": "",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": {
+              "type": 5126,
+              "normalized": false,
+              "count": 21120,
+              "sha256": "5660675a9fa30e8c892dd0204eeadb80299a337d1496641704023e7f0631ad7d"
+            },
+            "NORMAL": {
+              "type": 5126,
+              "normalized": false,
+              "count": 21120,
+              "sha256": "05dedc581c89fb2d0c0032e61992c9569b7f4b81277ceec6b115e8c5087715f6"
+            },
+            "TEXCOORD_0": {
+              "type": 5126,
+              "normalized": false,
+              "count": 21120,
+              "sha256": "4320218037066c46c27a49dd8ae42e34cfe9bceea4fec8bc82f0962ddb38a07a"
+            },
+            "COLOR_0": {
+              "type": 5126,
+              "normalized": false,
+              "count": 21120,
+              "sha256": "01ca9c50774aebc13639ff939b8aa71a8d9c2d6cd4657464d6e79afb604e7094"
+            }
+          },
+          "triangles": {
+            "count": 9680,
+            "cyclicWindingSHA256": "dd51512486755592d390d210d86e5fc29927296b7c1d0938f9a86329366dee19"
+          }
+        }
+      ]
+    },
+    {
+      "name": "",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": {
+              "type": 5126,
+              "normalized": false,
+              "count": 4,
+              "sha256": "76d05ed35e4a9322b7d887a4fbc79a57b8fc0e26ad42c019d541f3c2fe4b2306"
+            },
+            "NORMAL": {
+              "type": 5126,
+              "normalized": false,
+              "count": 4,
+              "sha256": "132d57fa87f2e37b4ba78b662a7aeb99820ae8f3c440d1a3a8e3e085c775c282"
+            },
+            "TEXCOORD_0": {
+              "type": 5126,
+              "normalized": false,
+              "count": 4,
+              "sha256": "fa38c91a324fae08e35189bbe814095d996debfe29b72360149e1402f13ae96b"
+            },
+            "COLOR_0": {
+              "type": 5126,
+              "normalized": false,
+              "count": 4,
+              "sha256": "6ea78411bee8a810b9a18819c5a4ac7c827e71678cc4d1db9a0ab8c8d8a9b2e2"
+            }
+          },
+          "triangles": {
+            "count": 2,
+            "cyclicWindingSHA256": "a55571c9db30026e44ac0bdd7674d9c597d8254732feb18418f3aaf8a5b4f418"
+          }
+        }
+      ]
+    },
+    {
+      "name": "",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": {
+              "type": 5126,
+              "normalized": false,
+              "count": 6528,
+              "sha256": "1e28eeefa3889932abe3626bd1b77dd7818bd98797f0193945719c867ad3b825"
+            },
+            "NORMAL": {
+              "type": 5126,
+              "normalized": false,
+              "count": 6528,
+              "sha256": "2379430c633ccd02420e052fa1608f032fe3ad12b91a5d1b28954b51b7198f66"
+            },
+            "TEXCOORD_0": {
+              "type": 5126,
+              "normalized": false,
+              "count": 6528,
+              "sha256": "e1c44a674f11379dcb59068b5cd027623a15c90938e941bef0b06c5347bd0d17"
+            },
+            "COLOR_0": {
+              "type": 5126,
+              "normalized": false,
+              "count": 6528,
+              "sha256": "74960fa2b7ffe488bb07ff6f19668c1594bfe3f70609527e490b08f3624ee73b"
+            }
+          },
+          "triangles": {
+            "count": 2992,
+            "cyclicWindingSHA256": "376c3cab3968e7a085effd72e2ee4f8a7967a9d80d7ed1aad163b5d06d586724"
+          }
+        }
+      ]
+    },
+    {
+      "name": "",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": {
+              "type": 5126,
+              "normalized": false,
+              "count": 6728,
+              "sha256": "3a48c354b4569b13b7c56a8c3b9a4c01ab98f2274f4f30332a6c034c36a2a7b9"
+            },
+            "NORMAL": {
+              "type": 5126,
+              "normalized": false,
+              "count": 6728,
+              "sha256": "ccf99cc22e1922926a0f4e3c5b740ee87dfe47345f0a3c9a80a557adc7f33685"
+            },
+            "TEXCOORD_0": {
+              "type": 5126,
+              "normalized": false,
+              "count": 6728,
+              "sha256": "d6f318c83b889b76bcd244515e76aa99f1d18b363e7f77241649755b7112ec3d"
+            },
+            "COLOR_0": {
+              "type": 5126,
+              "normalized": false,
+              "count": 6728,
+              "sha256": "5a4b640c120d3aa1839a3c7db3a8886f1a7becfb7e3a8d21ddf15d388cc3a8a1"
+            }
+          },
+          "triangles": {
+            "count": 8448,
+            "cyclicWindingSHA256": "b81505a9ab9be940b6aec22a75c4fc7c6232c5fb1e753ffdc127438359e45d1e"
+          }
+        }
+      ]
+    },
+    {
+      "name": "",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": {
+              "type": 5126,
+              "normalized": false,
+              "count": 66649,
+              "sha256": "94072c679dc411dd4be1a7e31d065d67e920116d34e6aaae77f271c4c9eae6f1"
+            },
+            "NORMAL": {
+              "type": 5126,
+              "normalized": false,
+              "count": 66649,
+              "sha256": "61ff099cd7bb60bf7cca615d3668c0ee4417d975230b504322e87786d8ca34a0"
+            },
+            "TEXCOORD_0": {
+              "type": 5126,
+              "normalized": false,
+              "count": 66649,
+              "sha256": "4ea1dda4e0779b59ba1d5bfb0d1159bc8df2dd95e89e438b41db4a174aba8527"
+            },
+            "COLOR_0": {
+              "type": 5126,
+              "normalized": false,
+              "count": 66649,
+              "sha256": "3044d621c20b4e3fdc4ecebda79e817e5d8fbae55b48ca5d3fb24dce31eda70d"
+            }
+          },
+          "triangles": {
+            "count": 81608,
+            "cyclicWindingSHA256": "28f2392fa22060f11a2c277dc4190d14a824e53f2c7ead24853c1dad6f4e0e02"
+          }
+        }
+      ]
+    },
+    {
+      "name": "",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": {
+              "type": 5126,
+              "normalized": false,
+              "count": 51592,
+              "sha256": "ce5d6cca7a8c167ad7a8a6e58029d9d7e0be36142278a16227716ed9ff3a180c"
+            },
+            "NORMAL": {
+              "type": 5126,
+              "normalized": false,
+              "count": 51592,
+              "sha256": "6888cbf59be037bdfc372da8c24c02586a75fcc4ab432720bcbe785caca58ba5"
+            },
+            "TEXCOORD_0": {
+              "type": 5126,
+              "normalized": false,
+              "count": 51592,
+              "sha256": "b68c5d1f817f8fcdfe03c8bf7120861b93d73be337a86602b07de2439b896205"
+            },
+            "COLOR_0": {
+              "type": 5126,
+              "normalized": false,
+              "count": 51592,
+              "sha256": "2e521b8da978b400d857a6eb6fec0517e715bb94d28d2eff295657772ef2da9c"
+            }
+          },
+          "triangles": {
+            "count": 59136,
+            "cyclicWindingSHA256": "95057fea1172bc5bacbdd087c0aa3ce426e319509c4505c94e72e77c2250d853"
+          }
+        }
+      ]
+    },
+    {
+      "name": "",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": {
+              "type": 5126,
+              "normalized": false,
+              "count": 2392,
+              "sha256": "8204cd29f421b1e21837be1382d79ec345651dfca5e0a72bab5c894641aa4634"
+            },
+            "TEXCOORD_0": {
+              "type": 5126,
+              "normalized": false,
+              "count": 2392,
+              "sha256": "5ecbfb88fc648a7d21c202fca0899d485de365d83f49ce7ef0be629465cb3d08"
+            },
+            "NORMAL": {
+              "type": 5126,
+              "normalized": false,
+              "count": 2392,
+              "sha256": "2fee5c711482258fc60225169868099f0a5efe841faa4d0a37d36ea26e68d1fd"
+            },
+            "COLOR_0": {
+              "type": 5126,
+              "normalized": false,
+              "count": 2392,
+              "sha256": "b884f2868364c3b6c02ebc6954d6283009acebc864aa6755889ec7199b91f687"
+            }
+          },
+          "triangles": {
+            "count": 1196,
+            "cyclicWindingSHA256": "236a7e74b254b235bf3d3f1d6011ff7cd2b9b2570f7d1967899a13517109e112"
+          }
+        }
+      ]
+    },
+    {
+      "name": "",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": {
+              "type": 5126,
+              "normalized": false,
+              "count": 1060710,
+              "sha256": "c99dc40973660859bdbfd0eb3ff06c9186c53b80d69a3348b392ccc40c9ddad9"
+            },
+            "NORMAL": {
+              "type": 5126,
+              "normalized": false,
+              "count": 1060710,
+              "sha256": "edce6f36fd952beb5778d1ef7aa16260cc29b18f45e589ed12bfeb60fd02e240"
+            },
+            "TEXCOORD_0": {
+              "type": 5126,
+              "normalized": false,
+              "count": 1060710,
+              "sha256": "d448b8db035f6a66692f83b592a70d9b9af08cf1d4f88c98c6df3b88173d2632"
+            },
+            "COLOR_0": {
+              "type": 5126,
+              "normalized": false,
+              "count": 1060710,
+              "sha256": "70856899ce66dba9169b793f2d918b0354bc07982adf78f31a5313e1320379c1"
+            }
+          },
+          "triangles": {
+            "count": 1662316,
+            "cyclicWindingSHA256": "e2b4d51a2fdc2c9359ff6f482326c5bbb0fb381fd851263a357abe5813f073f5"
+          }
+        }
+      ]
+    },
+    {
+      "name": "",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": {
+              "type": 5126,
+              "normalized": false,
+              "count": 419076,
+              "sha256": "283cc356b39b5ce35447ec9ada14a7e54eecb31c2330088ced854e6d9f70d557"
+            },
+            "NORMAL": {
+              "type": 5126,
+              "normalized": false,
+              "count": 419076,
+              "sha256": "671e8911e5240b89a8fca59de9d6d122c129eeebf56afad133dfe841b1da67b5"
+            },
+            "TEXCOORD_0": {
+              "type": 5126,
+              "normalized": false,
+              "count": 419076,
+              "sha256": "5f02097c73a7a31900131eded5821585dd31045444e56a2013160de41a06c1e6"
+            },
+            "COLOR_0": {
+              "type": 5126,
+              "normalized": false,
+              "count": 419076,
+              "sha256": "66014fd8614df2f8f1767ecef91f0bea238b91c58f903cd15a49826796cf33bb"
+            }
+          },
+          "triangles": {
+            "count": 641400,
+            "cyclicWindingSHA256": "1f66c75ed35526212a02408221f882139ff0bc0f33524c9622bc5e772327806e"
+          }
+        }
+      ]
+    },
+    {
+      "name": "",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": {
+              "type": 5126,
+              "normalized": false,
+              "count": 13796,
+              "sha256": "e7c6e44ff390e3bac9aa382e85a8e2805bc0cfe3f585d2970c7d73336a5b722c"
+            },
+            "NORMAL": {
+              "type": 5126,
+              "normalized": false,
+              "count": 13796,
+              "sha256": "bd3da09b165ce6a3e5ec01a687bad75d0eb2d26abeb46eadce96c6a105da4c99"
+            },
+            "TEXCOORD_0": {
+              "type": 5126,
+              "normalized": false,
+              "count": 13796,
+              "sha256": "b790f5a4bd0b5f4a35a3ec7e88e13f66d0b73b532018a164b5d93250ea3f70bc"
+            },
+            "COLOR_0": {
+              "type": 5126,
+              "normalized": false,
+              "count": 13796,
+              "sha256": "b5508dbf5bb903898dd926063df7657cd1599261e5938123690f273582cb0fea"
+            }
+          },
+          "triangles": {
+            "count": 19824,
+            "cyclicWindingSHA256": "11a0c0761a89822e092740e9bb316d59175658fc86e7ca0d1dffcaa944a43d01"
+          }
+        }
+      ]
+    },
+    {
+      "name": "",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": {
+              "type": 5126,
+              "normalized": false,
+              "count": 109134,
+              "sha256": "8c57923a608b5368238a384caf25f0a71bd67221fcba7be1ae6e1144901e58e4"
+            },
+            "NORMAL": {
+              "type": 5126,
+              "normalized": false,
+              "count": 109134,
+              "sha256": "3c3a54efb9b22fcba9e0f0ea2bfe5d4172d33ec424df9c93a060d53acfc815c5"
+            },
+            "TEXCOORD_0": {
+              "type": 5126,
+              "normalized": false,
+              "count": 109134,
+              "sha256": "101436b9eb354792f1bb7deeba16ab6e7df6cc2344cc1220f69a74795a415aaf"
+            },
+            "TEXCOORD_1": {
+              "type": 5126,
+              "normalized": false,
+              "count": 109134,
+              "sha256": "2cc5ed1fb6af51ea984156a4847f9635b70f0f549787c198324aaadc06601887"
+            },
+            "COLOR_0": {
+              "type": 5121,
+              "normalized": true,
+              "count": 109134,
+              "sha256": "bea06131ace2ca11c3278d10043292ac07c065333c66fd47fe26cb1bd83a85dc"
+            },
+            "COLOR_1": {
+              "type": 5123,
+              "normalized": true,
+              "count": 109134,
+              "sha256": "51fb425d569f5988e82d0957176a45ee4d976fbaf559ffbedf9baa1cb37f2049"
+            }
+          },
+          "triangles": {
+            "count": 110916,
+            "cyclicWindingSHA256": "e80732a7257750d876485bab422de399c5db1b26a7e30eac53466b0e0423ff7f"
+          }
+        }
+      ]
+    },
+    {
+      "name": "",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": {
+              "type": 5126,
+              "normalized": false,
+              "count": 1152,
+              "sha256": "28c6cf2b9603d1a569529a38483e5aa15050bcff17bb54ea28c101183ef49199"
+            },
+            "NORMAL": {
+              "type": 5126,
+              "normalized": false,
+              "count": 1152,
+              "sha256": "b92938ca6afdc76412fe49563291061848392e1541da5a03409b17efaa965e11"
+            },
+            "TEXCOORD_0": {
+              "type": 5126,
+              "normalized": false,
+              "count": 1152,
+              "sha256": "835b7bb1dd8005a21648b640a2d76dd8d4ad26cc8c9c68244955f3841023d17e"
+            },
+            "COLOR_0": {
+              "type": 5126,
+              "normalized": false,
+              "count": 1152,
+              "sha256": "3fca86455b6ed11c96db52f6107d258bb45ff45c014441ad1d24a764ceb712ed"
+            }
+          },
+          "triangles": {
+            "count": 528,
+            "cyclicWindingSHA256": "40f53de731dd1df2e371fb2d1e25ba8be1f2f9e8645b90f132452654b0af1133"
+          }
+        }
+      ]
+    }
+  ],
+  "textures": [
+    {
+      "sha256": "303066aeb5d0d708f3ef7f86f98cdbe9344d33a77985de9fba015e7a2d8fa151",
+      "width": 2048,
+      "height": 2048
+    },
+    {
+      "sha256": "2037cfe9331ec8fa5b1fb42902008b41d3c974a2a7c0ee8218bf9db5632c467b",
+      "width": 2048,
+      "height": 2048
+    },
+    {
+      "sha256": "b79b2e6ec8f587328314adc06643914d97c55981f22c0e2ea89f7077575a8f77",
+      "width": 2048,
+      "height": 2048
+    },
+    {
+      "sha256": "303066aeb5d0d708f3ef7f86f98cdbe9344d33a77985de9fba015e7a2d8fa151",
+      "width": 2048,
+      "height": 2048
+    },
+    {
+      "sha256": "b79b2e6ec8f587328314adc06643914d97c55981f22c0e2ea89f7077575a8f77",
+      "width": 2048,
+      "height": 2048
+    },
+    {
+      "sha256": "303066aeb5d0d708f3ef7f86f98cdbe9344d33a77985de9fba015e7a2d8fa151",
+      "width": 2048,
+      "height": 2048
+    },
+    {
+      "sha256": "b79b2e6ec8f587328314adc06643914d97c55981f22c0e2ea89f7077575a8f77",
+      "width": 2048,
+      "height": 2048
+    },
+    {
+      "sha256": "f30c42c813fdb6ac85e7881056a9159c58d506fa7879074996d9e980ffef1715",
+      "width": 1024,
+      "height": 1024
+    },
+    {
+      "sha256": "de017a730bcca0728b0bd4f11ada6c6274b1a2db69c1b70e7bdb4e2227dbec27",
+      "width": 1024,
+      "height": 1024
+    },
+    {
+      "sha256": "f305cd953f7fd9751df8c11262f47eab8c9d9f34737a786bdd332064ae996a9b",
+      "width": 1024,
+      "height": 1024
+    },
+    {
+      "sha256": "ecf6b2e1c88ba8cb75f5a8f94fa9aa843385d154faa6feefa119c049db2c2f5b",
+      "width": 4096,
+      "height": 4096
+    },
+    {
+      "sha256": "e484eb1928d71792eea9a8fed430703e091012e28088e75e53926ad0f796e65f",
+      "width": 4096,
+      "height": 4096
+    },
+    {
+      "sha256": "e7fd5bd233042251253d11399d20d6cd8b735d69731f7548e4f344b11ac93825",
+      "width": 4096,
+      "height": 4096
+    },
+    {
+      "sha256": "c97ce66443f5281b64773df210a4cb2a244447997a732d1f417dbf3b204262b5",
+      "width": 4096,
+      "height": 4096
+    },
+    {
+      "sha256": "6a1d804925b0ea97174f8eaea98b16078cf813515f53264b71c5b04fc1e7741f",
+      "width": 4096,
+      "height": 4096
+    },
+    {
+      "sha256": "68104891ba38ccd4bb9d7ae5abc07819a4735eab394ccab49aff729d3375cfc9",
+      "width": 4096,
+      "height": 4096
+    },
+    {
+      "sha256": "a908b6af0fbd8c7f723cc4c979c845223a419a8aa659e38095a6d55e00ab57d0",
+      "width": 4096,
+      "height": 4096
+    },
+    {
+      "sha256": "4ff206cfda6a1c4c0b00842003d3b6999259f53f333ed49254bbea324177fcb3",
+      "width": 4096,
+      "height": 4096
+    },
+    {
+      "sha256": "385456315f095d6ef2d1ae38f0db50c0a05d6f27c2ca89fc5f8eadcf2c997ec4",
+      "width": 4096,
+      "height": 4096
+    },
+    {
+      "sha256": "4d5967520fefe618a974301faf4aa65fef87661563c408061ca495aba40160a5",
+      "width": 4096,
+      "height": 4096
+    },
+    {
+      "sha256": "c8c9f446d533be517559213cf9faf595acb43fd64e1187c31376d518c784620d",
+      "width": 4096,
+      "height": 4096
+    },
+    {
+      "sha256": "2cddea75d7a975f63f4d4ab19e7182548a146345f5fd24e3bf9d564c0bf68d04",
+      "width": 4096,
+      "height": 4096
+    },
+    {
+      "sha256": "7bddea1d7a5d2fbf9945e93b4305df49d1a623fab3949d648b06a3f27ff877f7",
+      "width": 1024,
+      "height": 1024
+    },
+    {
+      "sha256": "5b7f88a8da9838a4a62c9ddd7e617e40952b502e5253dd9f08b6b080ea942d33",
+      "width": 1024,
+      "height": 1024
+    },
+    {
+      "sha256": "7035af7dc83219d1cc1e8380e3eee7e6486994150637c852e6349d079c49bc60",
+      "width": 1024,
+      "height": 1024
+    }
+  ],
+  "originalImageBytesReused": [
+    {
+      "name": "",
+      "sha256": "ecf6b2e1c88ba8cb75f5a8f94fa9aa843385d154faa6feefa119c049db2c2f5b",
+      "mimeType": "image/jpeg"
+    },
+    {
+      "name": "",
+      "sha256": "e484eb1928d71792eea9a8fed430703e091012e28088e75e53926ad0f796e65f",
+      "mimeType": "image/jpeg"
+    },
+    {
+      "name": "",
+      "sha256": "e7fd5bd233042251253d11399d20d6cd8b735d69731f7548e4f344b11ac93825",
+      "mimeType": "image/jpeg"
+    },
+    {
+      "name": "",
+      "sha256": "c97ce66443f5281b64773df210a4cb2a244447997a732d1f417dbf3b204262b5",
+      "mimeType": "image/jpeg"
+    },
+    {
+      "name": "",
+      "sha256": "68104891ba38ccd4bb9d7ae5abc07819a4735eab394ccab49aff729d3375cfc9",
+      "mimeType": "image/jpeg"
+    },
+    {
+      "name": "",
+      "sha256": "a908b6af0fbd8c7f723cc4c979c845223a419a8aa659e38095a6d55e00ab57d0",
+      "mimeType": "image/jpeg"
+    },
+    {
+      "name": "",
+      "sha256": "4ff206cfda6a1c4c0b00842003d3b6999259f53f333ed49254bbea324177fcb3",
+      "mimeType": "image/png"
+    },
+    {
+      "name": "",
+      "sha256": "385456315f095d6ef2d1ae38f0db50c0a05d6f27c2ca89fc5f8eadcf2c997ec4",
+      "mimeType": "image/jpeg"
+    },
+    {
+      "name": "",
+      "sha256": "4d5967520fefe618a974301faf4aa65fef87661563c408061ca495aba40160a5",
+      "mimeType": "image/jpeg"
+    },
+    {
+      "name": "",
+      "sha256": "c8c9f446d533be517559213cf9faf595acb43fd64e1187c31376d518c784620d",
+      "mimeType": "image/png"
+    },
+    {
+      "name": "",
+      "sha256": "2cddea75d7a975f63f4d4ab19e7182548a146345f5fd24e3bf9d564c0bf68d04",
+      "mimeType": "image/jpeg"
+    }
+  ],
+  "runtimeAttributeBytesVerified": true
+}
