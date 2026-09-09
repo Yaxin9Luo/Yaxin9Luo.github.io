@@ -33,6 +33,8 @@ Replace visually uniform ground scatter with readable ecological groups: open me
 
 Ground materials should follow actual regions/slope/moisture rather than a global green recolor or evenly distributed random noise. Retain PBR detail and consistent texture scale; balance warm soil, sage/fern grass, mineral rock and restrained blossom accents. Keep wind and shadow deformation aligned and reduced-motion correct. Do not lower global mesh/DPR quality or change foliage LOD behavior to hide poor assets.
 
+Native review extension: the same material pass owns a focused shared cliff material in `landscape.js` and only its import/three material call sites in `world.js`. Existing dark baked colors multiplied by the moss map obscure the authored geology. Give the dry upper faces a readable mineral tone and the lower wet faces a localized cooler treatment while retaining real PBR detail, vertex variation and existing geometry. Do not rebake or alter Task 1 terrain merely to adjust its runtime material.
+
 Run meaningful placement/corridor, finite geometry and wind/shadow tests appropriate to changes. Commit implementation and report full evidence. Root reviews day/night blossom walks, courtyard and overview; refine visual issues before acceptance.
 
 ## Task 3: Water, middle-distance depth and integrated atmosphere
@@ -42,6 +44,8 @@ Ownership: `world/src/landscape.js` lake/backdrop sections, `world/src/atmospher
 Join the refined island to its distant painted surroundings with a small set of deliberately placed three-dimensional middle-distance rock groups or islets. Their silhouettes, PBR materials and palette must fit the main terrain and mineral mountains, avoiding obvious cones, duplicated mountain cards or a repetitive ring. Keep flying routes and long views open. Add selective low, soft water/valley mist that conveys depth without washing out the foreground; do not increase blanket fog.
 
 Tune the existing lake so broad calm reflections are legible, with restrained varied wind ripples and stronger local shore character where appropriate. Use the authored new coves/terraces as an integrated shore/water composition. Preserve correct reflection cameras, surface height, environment palette, material disposal and reduced-motion. Keep night luminous with readable silhouettes and warm points of light. Check new geometry both in the main view and its water reflection. Additional small life/motion details should support composition and scale rather than scatter everywhere.
+
+Integration allowance: `environment-time.js` palette values and corresponding tests may be adjusted if native review requires it; preserve the clock, automatic defaults and sun/moon transition logic. `Game._updateEnvironment` applies lake sun/color uniforms every frame, so local water treatment must cooperate with that existing source of truth. A global exposure increase is not a substitute for spatially readable materials and lighting.
 
 Run focused environment/geometry/reflection/disposal tests as applicable and build the world. Commit implementation and report evidence. Root conducts the integrated view and interaction checks; address the visual review and final code review findings.
 
