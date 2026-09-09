@@ -1,0 +1,340 @@
+{
+  "stage": "ART_AND_NATIVE_BROWSER_PASS",
+  "model": "world/public/models/companions/elizabeth.02e4aa775c59.glb",
+  "sha256": "02e4aa775c594be6a008fbdb0430b2e69c0160216da808d981b353cd9b4adb44",
+  "source": "world/public/models/companions/elizabeth.blend",
+  "actions": {
+    "idle": 3.0,
+    "walk": 1.2,
+    "sign_raise": 0.55,
+    "sign_hold": 2.5,
+    "sign_lower": 0.5
+  },
+  "stride_m": 0.64,
+  "reference_walk_speed_mps": 0.5333333333333333,
+  "stance_fraction": 0.6,
+  "anchors": [
+    "Root",
+    "Body",
+    "ArmL",
+    "ArmR",
+    "FlipperL",
+    "FlipperR",
+    "GripR",
+    "FootL",
+    "FootR",
+    "SoleL",
+    "SoleR",
+    "SignSocket"
+  ],
+  "sign": {
+    "original_text": {
+      "zh": "\u8def\u8fc7\u4e5f\u6b22\u8fce\u3002",
+      "en": "Just passing by? Welcome."
+    },
+    "face_node": "SignFace",
+    "board_node": "SignBoard",
+    "staff_node": "SignStaff",
+    "socket_node": "SignSocket",
+    "grip_bone": "GripR",
+    "grip_offset_blender": [
+      0,
+      -0.024,
+      0
+    ]
+  },
+  "renders": [
+    {
+      "image": "docs/art/living-v8/companions/elizabeth-motion-r2/idle-front-f000.png",
+      "clip": "idle",
+      "time": 0,
+      "model_sha256": "ff423ce8d6ad6149081c46fab4ccf252c0f71a221ee7a5c2f96fff420bb1629f",
+      "camera": [
+        0,
+        -8,
+        1.6
+      ],
+      "target": [
+        0,
+        0,
+        1.6
+      ],
+      "scale": 4.1
+    },
+    {
+      "image": "docs/art/living-v8/companions/elizabeth-motion-r2/sign-raise-front-f000.png",
+      "clip": "sign_raise",
+      "time": 0,
+      "model_sha256": "ff423ce8d6ad6149081c46fab4ccf252c0f71a221ee7a5c2f96fff420bb1629f",
+      "camera": [
+        0,
+        -8,
+        1.75
+      ],
+      "target": [
+        0.55,
+        0,
+        1.75
+      ],
+      "scale": 4.3
+    },
+    {
+      "image": "docs/art/living-v8/companions/elizabeth-motion-r2/sign-raise-front-f001.png",
+      "clip": "sign_raise",
+      "time": 0.1375,
+      "model_sha256": "ff423ce8d6ad6149081c46fab4ccf252c0f71a221ee7a5c2f96fff420bb1629f",
+      "camera": [
+        0,
+        -8,
+        1.75
+      ],
+      "target": [
+        0.55,
+        0,
+        1.75
+      ],
+      "scale": 4.3
+    },
+    {
+      "image": "docs/art/living-v8/companions/elizabeth-motion-r2/sign-raise-front-f002.png",
+      "clip": "sign_raise",
+      "time": 0.275,
+      "model_sha256": "ff423ce8d6ad6149081c46fab4ccf252c0f71a221ee7a5c2f96fff420bb1629f",
+      "camera": [
+        0,
+        -8,
+        1.75
+      ],
+      "target": [
+        0.55,
+        0,
+        1.75
+      ],
+      "scale": 4.3
+    },
+    {
+      "image": "docs/art/living-v8/companions/elizabeth-motion-r2/sign-raise-front-f003.png",
+      "clip": "sign_raise",
+      "time": 0.4125,
+      "model_sha256": "ff423ce8d6ad6149081c46fab4ccf252c0f71a221ee7a5c2f96fff420bb1629f",
+      "camera": [
+        0,
+        -8,
+        1.75
+      ],
+      "target": [
+        0.55,
+        0,
+        1.75
+      ],
+      "scale": 4.3
+    },
+    {
+      "image": "docs/art/living-v8/companions/elizabeth-motion-r2/sign-raise-front-f004.png",
+      "clip": "sign_raise",
+      "time": 0.55,
+      "model_sha256": "ff423ce8d6ad6149081c46fab4ccf252c0f71a221ee7a5c2f96fff420bb1629f",
+      "camera": [
+        0,
+        -8,
+        1.75
+      ],
+      "target": [
+        0.55,
+        0,
+        1.75
+      ],
+      "scale": 4.3
+    },
+    {
+      "image": "docs/art/living-v8/companions/elizabeth-motion-r2/sign-hold-threequarter-f000.png",
+      "clip": "sign_hold",
+      "time": 0,
+      "model_sha256": "ff423ce8d6ad6149081c46fab4ccf252c0f71a221ee7a5c2f96fff420bb1629f",
+      "camera": [
+        4.8,
+        -6.8,
+        3.3
+      ],
+      "target": [
+        0.3,
+        0,
+        1.6
+      ],
+      "scale": 4.3
+    },
+    {
+      "image": "docs/art/living-v8/companions/elizabeth-motion-r2/sign-grip-close-f000.png",
+      "clip": "sign_hold",
+      "time": 0,
+      "model_sha256": "ff423ce8d6ad6149081c46fab4ccf252c0f71a221ee7a5c2f96fff420bb1629f",
+      "camera": [
+        3.5,
+        -6,
+        2.6
+      ],
+      "target": [
+        1.1,
+        -0.02,
+        1.95
+      ],
+      "scale": 1.5
+    },
+    {
+      "image": "docs/art/living-v8/companions/elizabeth-motion-r2/walk-profile-f000.png",
+      "clip": "walk",
+      "time": 0.0,
+      "model_sha256": "ff423ce8d6ad6149081c46fab4ccf252c0f71a221ee7a5c2f96fff420bb1629f",
+      "camera": [
+        -8,
+        0,
+        2.15
+      ],
+      "target": [
+        0,
+        0,
+        1.4
+      ],
+      "scale": 3.7
+    },
+    {
+      "image": "docs/art/living-v8/companions/elizabeth-motion-r2/walk-profile-f001.png",
+      "clip": "walk",
+      "time": 0.15,
+      "model_sha256": "ff423ce8d6ad6149081c46fab4ccf252c0f71a221ee7a5c2f96fff420bb1629f",
+      "camera": [
+        -8,
+        0,
+        2.15
+      ],
+      "target": [
+        0,
+        0,
+        1.4
+      ],
+      "scale": 3.7
+    },
+    {
+      "image": "docs/art/living-v8/companions/elizabeth-motion-r2/walk-profile-f002.png",
+      "clip": "walk",
+      "time": 0.3,
+      "model_sha256": "ff423ce8d6ad6149081c46fab4ccf252c0f71a221ee7a5c2f96fff420bb1629f",
+      "camera": [
+        -8,
+        0,
+        2.15
+      ],
+      "target": [
+        0,
+        0,
+        1.4
+      ],
+      "scale": 3.7
+    },
+    {
+      "image": "docs/art/living-v8/companions/elizabeth-motion-r2/walk-profile-f003.png",
+      "clip": "walk",
+      "time": 0.44999999999999996,
+      "model_sha256": "ff423ce8d6ad6149081c46fab4ccf252c0f71a221ee7a5c2f96fff420bb1629f",
+      "camera": [
+        -8,
+        0,
+        2.15
+      ],
+      "target": [
+        0,
+        0,
+        1.4
+      ],
+      "scale": 3.7
+    },
+    {
+      "image": "docs/art/living-v8/companions/elizabeth-motion-r2/walk-profile-f004.png",
+      "clip": "walk",
+      "time": 0.6,
+      "model_sha256": "ff423ce8d6ad6149081c46fab4ccf252c0f71a221ee7a5c2f96fff420bb1629f",
+      "camera": [
+        -8,
+        0,
+        2.15
+      ],
+      "target": [
+        0,
+        0,
+        1.4
+      ],
+      "scale": 3.7
+    },
+    {
+      "image": "docs/art/living-v8/companions/elizabeth-motion-r2/walk-profile-f005.png",
+      "clip": "walk",
+      "time": 0.75,
+      "model_sha256": "ff423ce8d6ad6149081c46fab4ccf252c0f71a221ee7a5c2f96fff420bb1629f",
+      "camera": [
+        -8,
+        0,
+        2.15
+      ],
+      "target": [
+        0,
+        0,
+        1.4
+      ],
+      "scale": 3.7
+    },
+    {
+      "image": "docs/art/living-v8/companions/elizabeth-motion-r2/walk-profile-f006.png",
+      "clip": "walk",
+      "time": 0.8999999999999999,
+      "model_sha256": "ff423ce8d6ad6149081c46fab4ccf252c0f71a221ee7a5c2f96fff420bb1629f",
+      "camera": [
+        -8,
+        0,
+        2.15
+      ],
+      "target": [
+        0,
+        0,
+        1.4
+      ],
+      "scale": 3.7
+    },
+    {
+      "image": "docs/art/living-v8/companions/elizabeth-motion-r2/walk-profile-f007.png",
+      "clip": "walk",
+      "time": 1.05,
+      "model_sha256": "ff423ce8d6ad6149081c46fab4ccf252c0f71a221ee7a5c2f96fff420bb1629f",
+      "camera": [
+        -8,
+        0,
+        2.15
+      ],
+      "target": [
+        0,
+        0,
+        1.4
+      ],
+      "scale": 3.7
+    },
+    {
+      "image": "docs/art/living-v8/companions/elizabeth-motion-r2/walk-threequarter-swing-f000.png",
+      "clip": "walk",
+      "time": 0.9,
+      "model_sha256": "ff423ce8d6ad6149081c46fab4ccf252c0f71a221ee7a5c2f96fff420bb1629f",
+      "camera": [
+        -4.8,
+        -6.8,
+        3.3
+      ],
+      "target": [
+        0,
+        0,
+        1.5
+      ],
+      "scale": 4.1
+    }
+  ],
+  "uv_only_successor_of": "ff423ce8d6ad6149081c46fab4ccf252c0f71a221ee7a5c2f96fff420bb1629f",
+  "uv_note": "Full-face sign UVs replace Blender cube atlas coordinates; geometry, rig, clips and reviewed poses unchanged. Runtime sign rendering remains to be inspected.",
+  "code_review": "Pending independent Task 1 review by root"
+}

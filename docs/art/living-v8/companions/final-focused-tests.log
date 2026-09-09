@@ -1,0 +1,21 @@
+✔ static review evidence identifies the exact real decoded GLB (171.599708ms)
+✔ all real export geometry, indices and transforms are finite (15.159583ms)
+✔ shell and flippers are one connected surface; attached webbed feet are supported (139.5995ms)
+✔ TV face retains three lashes per eye, dot pupils and a two-part broad bill (0.337125ms)
+✔ runtime files preserve identity, finite skin data and exact authored action times (53.798083ms)
+✔ clones have independent skeletons, mixers and disposable localized sign resources (11.679959ms)
+✔ pause, walk speed, reduced motion and sign sequence have observable runtime behavior (1.298792ms)
+✔ loop seams and sign transitions preserve bone pose and physical socket contact (2.70025ms)
+✔ decoded and skinned walk sweep keeps each webbed sole above ground (740.34975ms)
+✔ bounded planted-foot support is stable on repeat updates and clears when removed (1.180042ms)
+✔ Sadaharu keeps connected anatomy and fine normals without the rejected card layer (113.572334ms)
+✔ Sadaharu has independent quadruped motion, supported paws and a grounded seated body (1426.163875ms)
+ℹ Decoded live transition body minima: {"sit":0.01799920083084728,"stand":0.017992031012761592,"idle":0.01799928880599532}
+ℹ tests 12
+ℹ suites 0
+ℹ pass 12
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2868.922667

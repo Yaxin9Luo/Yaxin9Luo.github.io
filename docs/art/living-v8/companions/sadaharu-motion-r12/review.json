@@ -1,0 +1,153 @@
+{
+  "stage": "MOTION_ART_REVIEW_PENDING",
+  "model": "world/public/models/companions/sadaharu.f55e04dc95af.glb",
+  "sha256": "f55e04dc95af8b1ff29450b0b63953db30f2130a9af3681e7fcf8724cc7209a0",
+  "source": "docs/art/living-v8/companions/sadaharu-motion-r12/sadaharu-motion.blend",
+  "actions": {
+    "idle": 3.0,
+    "walk": 1.4,
+    "sit": 1.25,
+    "stand": 1.1,
+    "sniff": 2.4,
+    "greet": 2.6
+  },
+  "stride_m": 0.76,
+  "reference_walk_speed_mps": 0.5428571428571429,
+  "stance_fraction": 0.72,
+  "sole_clearance_m": 0.018,
+  "phases": {
+    "FrontL": 0,
+    "HindR": 0.75,
+    "FrontR": 0.5,
+    "HindL": 0.25
+  },
+  "bones": [
+    "Root",
+    "Pelvis",
+    "Spine",
+    "Chest",
+    "Neck",
+    "Head",
+    "Jaw",
+    "EarL",
+    "EarR",
+    "Tail01",
+    "Tail02",
+    "Tail03",
+    "Tail04",
+    "Tail05",
+    "FrontUpperL",
+    "FrontLowerL",
+    "FrontFootL",
+    "FrontPawL",
+    "FrontSoleL",
+    "HindUpperL",
+    "HindLowerL",
+    "HindFootL",
+    "HindPawL",
+    "HindSoleL",
+    "FrontUpperR",
+    "FrontLowerR",
+    "FrontFootR",
+    "FrontPawR",
+    "FrontSoleR",
+    "HindUpperR",
+    "HindLowerR",
+    "HindFootR",
+    "HindPawR",
+    "HindSoleR"
+  ],
+  "renders": [
+    {
+      "image": "docs/art/living-v8/companions/sadaharu-motion-r12/sniff-threequarter.png",
+      "sha256": "48aca8e7afb679f1b939387a1407feca321ef8aced5cff7ed0fb7c6d58b6631f",
+      "model_sha256": "f55e04dc95af8b1ff29450b0b63953db30f2130a9af3681e7fcf8724cc7209a0",
+      "clip": "sniff",
+      "time": 1.2,
+      "camera": [
+        4.8,
+        -6.8,
+        3.6
+      ],
+      "target": [
+        0,
+        0.25,
+        1.45
+      ],
+      "scale": 4.5
+    },
+    {
+      "image": "docs/art/living-v8/companions/sadaharu-motion-r12/sniff-profile.png",
+      "sha256": "1dc6264c4fd1100a1beb8d22b568aa7db5f3b877af998125297f524e8dac3208",
+      "model_sha256": "f55e04dc95af8b1ff29450b0b63953db30f2130a9af3681e7fcf8724cc7209a0",
+      "clip": "sniff",
+      "time": 1.2,
+      "camera": [
+        -8,
+        0.3,
+        2.25
+      ],
+      "target": [
+        0,
+        0.3,
+        1.4
+      ],
+      "scale": 4.5
+    },
+    {
+      "image": "docs/art/living-v8/companions/sadaharu-motion-r12/sit-threequarter.png",
+      "sha256": "086b9a693d139b587154dc6f20638cf52767e2c3fdb68fa2085a7e82842fea95",
+      "model_sha256": "f55e04dc95af8b1ff29450b0b63953db30f2130a9af3681e7fcf8724cc7209a0",
+      "clip": "sit",
+      "time": 1.25,
+      "camera": [
+        4.8,
+        -6.8,
+        3.6
+      ],
+      "target": [
+        0,
+        0.25,
+        1.45
+      ],
+      "scale": 4.5
+    },
+    {
+      "image": "docs/art/living-v8/companions/sadaharu-motion-r12/sit-runtime-threequarter.png",
+      "sha256": "712fda4f1f6f73b1ded0e167e6ca59852e54554be729ef2f2aee7be171cfde16",
+      "model_sha256": "f55e04dc95af8b1ff29450b0b63953db30f2130a9af3681e7fcf8724cc7209a0",
+      "clip": "sit",
+      "time": 1.25,
+      "camera": [
+        4.8,
+        -6.55,
+        3.4
+      ],
+      "target": [
+        0,
+        0.25,
+        1.6
+      ],
+      "scale": 5.6069440841674805
+    },
+    {
+      "image": "docs/art/living-v8/companions/sadaharu-motion-r12/walk-profile-f006.png",
+      "sha256": "8f8178c91a30d4653fee63487a0fee175567c51907990503e4963946f3f6e81a",
+      "model_sha256": "f55e04dc95af8b1ff29450b0b63953db30f2130a9af3681e7fcf8724cc7209a0",
+      "clip": "walk",
+      "time": 1.05,
+      "camera": [
+        -8,
+        0.3,
+        2.25
+      ],
+      "target": [
+        0,
+        0.3,
+        1.4
+      ],
+      "scale": 4.5
+    }
+  ],
+  "source_sha256": "f36916cae442c65de649f04499f94f62db4ca445cfed6a964917f4677eb1159f"
+}

@@ -1,0 +1,69 @@
+# Task 1 — companion assets, runtime and isolated studio
+
+**Status: implementation, automated verification and final native art gates PASS; independent Task 1 code review remains a separate root-owned gate.** Root/independent static and scoped motion art reviews pass through Sadaharu r12. Root's final r12 native night sit confirms the belly flap is gone, and native sniff playback confirms a smooth nape/attached collar. No world integration or push; the complete site remains local. The owned implementation commit is ready for independent code review. All Blender work ran in background CLI; this worker used no browser tools.
+
+## Delivered files and exact assets
+
+Owned production files: `world/scripts/build-companion-assets.py`; two GLBs and two editable sources in `world/public/models/companions/`; `world/src/companion-{manifest,assets,studio}.js`; `world/companion-studio.html`; `world/tests/companion-assets.test.js`; only the companion input addition in `world/vite.config.js`. Provenance, accepted references and final evidence are in `docs/art/living-v8/companions/`. Other agents' edits are preserved.
+
+| Actor | Current GLB SHA-256 | Bytes | Meshes / materials / bones / triangles |
+|---|---|---:|---|
+| Elizabeth | `02e4aa775c594be6a008fbdb0430b2e69c0160216da808d981b353cd9b4adb44` | 2,814,792 | 21 / 7 / 12 / 97,458 |
+| Sadaharu | `f55e04dc95af8b1ff29450b0b63953db30f2130a9af3681e7fcf8724cc7209a0` | 6,218,004 | 21 / 7 / 34 / 87,668 |
+
+Public GLBs are `elizabeth.02e4aa775c59.glb` and `sadaharu.f55e04dc95af.glb`. Editable `elizabeth.blend` is 1,625,772 bytes, SHA `0e71ab77fccf93962aed4615158767e68c1e8a37891a3b4887c1557a0490c7ca`; `sadaharu.blend` is 10,227,011 bytes, SHA `f36916cae442c65de649f04499f94f62db4ca445cfed6a964917f4677eb1159f`. They retain real meshes, rigs, clips and review studio. The hidden optional fur layer remains editable in the dog source; runtime omits it.
+
+`delivery-metrics.json` records exact decoded idle bounds and 21-sample-per-clip animated envelopes. Idle size x/y/z: Elizabeth `[1.97403,2.99150,2.22208]` m; Sadaharu `[1.61728,2.99010,3.32534]` m. Sampled envelope sizes are `[3.45836,3.30704,2.41408]` and `[1.85948,3.10533,3.67732]` m. These sampled animated envelopes are not analytic bounds between frames. Axis convention is GLB +Y up/+Z forward; Blender +Z up/-Y forward.
+
+## Art gates and actual evidence
+
+Elizabeth's accepted immutable static r4 source and neutral views are in `elizabeth-static-r4/`. Its actual static GLB (SHA `adb37551d64b6b890196e3715d3f2c5a3995fdea90218f9b76f71b9d3dc194cf`) remains an archived test fixture. Reviews: `work/living-v8/elizabeth-static-r4-root-review.md` and `work/living-v8/research/elizabeth-static-r4-art-review.md`. The continuous shell/flippers, returned smooth hem, eye spacing, six lashes, dot pupils, broad two-part bill and genuine webbed toes survive skinning.
+
+Elizabeth motion r2 passed root/independent sampled review (`work/living-v8/research/elizabeth-motion-r2-art-review.md`), retaining concealed foot roots, flat swing feet, lowered carry and restrained fin-tip grip. The final 02e4 successor changes only sign-face UV coverage. Root verified native 1835×1440/DPR2.5 walk, full raise/hold/lower→idle, Chinese/English text, night sign, pause and reduced motion. Final high-bitrate sign video `companion-elizabeth-02e4aa77-sign_raise-front-1788973591489.webm`: 112 frames / 3.707322 s / 15,854,400 bps, SHA `eb43c1e570624c9d220aeb1a6e44dc6311bd7cda4241e967cf993e11b0bfa42e`. Root records: `work/living-v8/elizabeth-browser-r2-review.md`, `work/living-v8/runtime-motion/recording-evidence.json`.
+
+Sadaharu immutable static r6 source and eight views are in `sadaharu-static-r6/`; root and independent artist passed continuous anatomy, connected nose, broad head/short muzzle, round eyes/brows, pink ears, collar, large paws and compact curled tail. Runtime material was selected using root's actual native A/B images: baseline cards `...static-face-1788972906636.png`, no receiving shadows `...1788973088135.png`, cards hidden `...1788973111595.png` under `work/production-v3/captures/`. Only hiding the optional cards removed grey/white fragment shading while preserving the silhouette. Body geometry and authored 2048² fine normal map remain. This was a visual-quality choice; no global shadow or texture downgrade.
+
+Dog r10 contains the complete 27-image gait/action set and closes the prior haunch, crouch, shoulder and ankle issues. Independent full review: `work/living-v8/research/sadaharu-motion-r10-full-art-review.md` plus its 28-image manifest. Root native r10 walk/sit/stand/greet, clean material, pause and reduced behavior: `work/living-v8/sadaharu-browser-r10-review.md`. Full review then identified only sniff nape/collar folding and a small native-night inner-leg flap. R11 feathers the upper-neck weights; r12 corrects only the low inner hind-leg field. Root and independent sampled checks close both; `sadaharu-motion-r12/` includes real sniff profile/threequarter, matched 1835×1440 seated view, seated/walk regression views, immutable source, exact hashes and numerical evidence. Root r12 native night image `companion-sadaharu-f55e04dc-sit-threequarter-1788976556885.png` confirms the flap is absent and the inner leg is continuous. Final fresh-tab console errors/warnings are empty. Root also recorded and sampled the final r12 native clips: sniff 78 frames/2.573982 s, walk 45/1.570458 s, sit 43/1.410557 s, stand 39/1.271244 s, greet 84/2.770718 s, all 1835×1440/DPR2.5. Exact files/hashes and decode results: `work/living-v8/runtime-motion/sadaharu-r12-recording-evidence.json`. These are current-hash recordings, distinct from the preserved r10 predecessors.
+
+`r12/payload-comparison.json` (full path under `companions/sadaharu-motion-r12/`) distinguishes predecessor evidence from new captures: positions, normals, UVs, indices, rest rig/inverse binds, all six clips' complete times/values and embedded texture bytes are identical to r10. Only Coat/Collar skin indices and weights differ. Nine-phase maximum actual world-vertex displacement: sniff .32760 m, sit/stand .27728 m, walk .13363 m, greet .00268 m, idle .00287 m; changes are in the reviewed neck and inner-leg regions. Earlier recordings retain their original hash and are never relabeled as final-asset frames.
+
+## Sources, preservation and self-review
+
+Actual official TV and licensed local reference images were opened; URLs, hashes and authority are recorded in `work/living-v8/research/character-sources.json` and README. Official images are provenance only, never runtime textures. The Gintama designs are not ours; mesh depth, back anatomy, concealed attachments, rigs and original motions are authored interpretations. Original bilingual sign text is “路过也欢迎。” / “Just passing by? Welcome.” The generic fine-fur texture and inferred dog target were root-provided original art references, with prompts/hashes retained outside public assets.
+
+The geometry sweeps exposed real failures that images alone hid: Elizabeth r1 pitched toes reached -.0546426 m; dog r1/r2 had seated body penetration; dog r8/r9 had an inner-hind-ankle patch receiving excessive Pelvis weight. The latter was initially called rump penetration, then corrected by decoded vertex/raycast evidence (rest height .345 m, 60.4% Pelvis). These regressions led to flat web feet, body-to-root blending, fixed continuous influence fields and localized ankle/neck/inner-leg transitions. Final numerical tests and art review are recorded independently; neither is substituted for the other.
+
+Twenty historical GLBs are retained locally in `archive/models/`; `archive/model-locations.json` maps original review paths to preserved bytes/hashes. The production directory has exactly two current GLBs and two editable sources. Rejected image/source/GLB history remains local and is not part of the product commit; accepted test/authoring references and final evidence are committed. No historical evidence is deleted. The authoring script assigns a UTC suffix when a review folder already exists, and the supplemental capture script refuses to replace registered images.
+
+One early Elizabeth r4 low-threequarter image was recaptured before immutability was requested. `camera-recapture.json` records old SHA `31df26463da2d9cf660e37d7879fb7ccbf42369b6b1cbdf104f9ce4b487155d7` and corrected-copy SHA `5e56a9980d2a3be3eaf3f1f7b737570b9f8589266e6861ab32d6634e34f3d424`; geometry is unchanged. Later evidence is versioned.
+
+## Runtime contract and ownership
+
+`loadCompanionAssets({signal,deadline})` truly decodes both manifest GLBs through the existing GLTFLoader/resource coordinator. Deadline is absolute `performance.now()` milliseconds. Cached original scenes, geometry, materials, embedded textures and clips are shared for page lifetime. `createCompanionActor(kind,{lang:'zh'})` clones bones/skeletons with SkeletonUtils and independently owns mixer/actions, skeleton bone textures, group and sign canvas/CanvasTexture/material. `dispose()` stops/uncaches the mixer, disposes instance resources and detaches the group while preserving shared originals. Creation before loading throws; load/abort/deadline errors propagate.
+
+World transform belongs to `actor.group`; clips are in place. The actor exposes `setAction`, `seek`, `setSign`, `setLanguage`, `update`, `dispose`, current action/clip/time/duration and `footStates`. Original text is “路过也欢迎。” / “Just passing by? Welcome.” Sign changes reuse the owned texture. Pause freezes time/pose; walk playback scales by speed divided by authored reference speed. Reduced motion holds sign, seated endpoint or idle as appropriate.
+
+| Actor | Clips (seconds) | Stride / reference speed / stance | Sole phase offsets |
+|---|---|---|---|
+| Elizabeth | idle 3, walk 1.2, sign_raise .55, sign_hold 2.5, sign_lower .5; public sign sequences raise/hold/lower→idle | .64 m / .533333 m/s / .60 | SoleL 0, SoleR .5 |
+| Sadaharu | idle 3, walk 1.4, sit 1.25, stand 1.1, sniff 2.4, greet 2.6 | .76 m / .542857 m/s / .72 | FrontL 0, FrontR .5, HindL .25, HindR .75 |
+
+Elizabeth bones: Root, Body, ArmL/R, FlipperL/R, GripR, FootL/R, SoleL/R and SignSocket. Upper foot roots blend to Body; soles parent to Foot. Sole rest positions are Blender `(±.4,-.55,.008)` m. SignSocket is GripR.tail plus Blender `(0,-.024,0)` m; shaft radius .023 m; board 1.55×.94 m. SignFace/SignBoard/SignStaff are actual skinned meshes, with runtime owned text canvas.
+
+Sadaharu trunk: Root/Pelvis/Spine/Chest/Neck/Head/Jaw, EarL/R and Tail01–Tail05. Each Front/Hind L/R chain has Upper, Lower, Foot, Paw and Sole bones. Sole nodes `FrontSoleL/R`, `HindSoleL/R` parent to Paw; optional support targets corresponding Foot. Standing sole rest positions are Blender `(±.4,-.40,.018)` front and `(±.4,1.03,.018)` hind. Blender +Z up/-Y forward converts to GLB +Y up/+Z forward.
+
+`actor.update(dt,{paused,reducedMotion,speed,getSupportHeight})` accepts optional `getSupportHeight({kind,name,position,planted,phase,correction})`, returning world floor Y or undefined. Only planted anchors are queried after mixer evaluation. Foot correction targets floor plus actor clearance (.008/.018 m), clamps to ±.08 m, and restores uncorrected local transforms before the next mixer so repeated zero-time updates do not accumulate. `footStates` records uncorrected anchor position, phase, planted flag and applied correction. Task 5 selects safe route grades/body placement; this is a bounded support correction, not generalized IK.
+
+## Studio and final verification
+
+The isolated studio has front/profile/back/threequarter/face, day/neutral/night/bright/dark, action/time/pause, language and reduced-motion controls; native DPR has no cap. It advances by actual elapsed time and excludes hidden/loading time. Asset-dependent controls start disabled in HTML and unlock only after true decode; accessible loading/error status remains. PNG/WebM/JSON save through the capture service with browser-download fallback when the POST service is absent. Each recorder owns its timer/stream, locks controls, and reports actual start/end clip/time/duration separately from requested 30 FPS. Bitrate is at least 12 Mbps or native pixels×30×.2. Metadata reports actual layer presence, size and DPR. Pagehide releases RAF/observer/timers, geometry/materials/shadow maps, controls, renderer and actor resources.
+
+Fresh final automated verification:
+
+- `node --test tests/companion-assets.test.js`: **12/12 PASS** on exact Elizabeth 02e4 / Sadaharu f55e04 (`runtime-tests-dog-r12.log`). Actual GLTFLoader/image decode, finite geometry/skin/tracks, SHA and action identity, independent skeleton/mixer/sign resources and disposal, loop/sign continuity and physical grip contact, pause/speed/reduced motion, skinned sole/body sweeps, stable bounded support and fine-normal material are covered. Node's canvas shim proves resource ownership only, not GPU text pixels.
+- Full `npm test`: **393/393 PASS**, exit 0, 77.3 s (`final-tests.log`).
+- `npm run build`: **PASS**, exit 0 (`final-build.log`); companion studio emitted and only current companion production assets copied. `git diff --check` and authoring Python parse pass.
+- Final decoded 121-phase per-foot / 31-phase whole-body sweep: all six clips positive. Minimum walk sole +.017462725 m; sit body +.017227636 m; stand body +.017004860 m. Elizabeth 121-phase all-foot-vertex minimum +.008000002 m.
+- Actual actor idle→sit→stand→idle crossfade body minima: +.017999201 / +.017992031 / +.017999289 m. Regression tests previously failed on real old assets and now pass; no mirrored implementation-only tests were added.
+
+Task 1 independent code review is still a root-owned gate after the owned implementation commit. Whole-world route grounding, movement synchronization, collision, interaction and map integration belong to Task 5 and are not claimed here. No push or deployment was performed.

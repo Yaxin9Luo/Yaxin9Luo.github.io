@@ -1,0 +1,340 @@
+{
+  "schema": 1,
+  "stage": "STATIC_ART_REVIEW_PENDING",
+  "model": "world/public/models/companions/elizabeth-static.adb37551d64b.glb",
+  "sha256": "adb37551d64b6b890196e3715d3f2c5a3995fdea90218f9b76f71b9d3dc194cf",
+  "source": "world/public/models/companions/elizabeth.blend",
+  "original_authored_geometry": true,
+  "tv_reference": "work/living-v8/research/references/elizabeth-tv.gif",
+  "not_official_design_ownership": true,
+  "coordinates": {
+    "blender_up": "+Z",
+    "blender_forward": "-Y",
+    "gltf_up": "+Y",
+    "gltf_forward": "+Z"
+  },
+  "authored_height_m": 3,
+  "body_width_height_ratio": 0.498,
+  "eyes": {
+    "diameter_m": 0.272,
+    "centres_x_m": [
+      -0.3,
+      0.3
+    ],
+    "centre_z_m": 2.515,
+    "pupil_diameter_m": 0.0234,
+    "upper_lashes_per_eye": 3
+  },
+  "mesh_objects": {
+    "BeakLower": {
+      "vertices": 2400,
+      "triangles": 4796
+    },
+    "BeakSeam": {
+      "vertices": 192,
+      "triangles": 380
+    },
+    "BeakUpper": {
+      "vertices": 2400,
+      "triangles": 4796
+    },
+    "ContinuousShell": {
+      "vertices": 12415,
+      "triangles": 24826
+    },
+    "EyeOutlineL": {
+      "vertices": 970,
+      "triangles": 1936
+    },
+    "EyeOutlineR": {
+      "vertices": 970,
+      "triangles": 1936
+    },
+    "EyeWhiteL": {
+      "vertices": 320,
+      "triangles": 636
+    },
+    "EyeWhiteR": {
+      "vertices": 320,
+      "triangles": 636
+    },
+    "PupilL": {
+      "vertices": 320,
+      "triangles": 636
+    },
+    "PupilR": {
+      "vertices": 320,
+      "triangles": 636
+    },
+    "UpperLashL1": {
+      "vertices": 90,
+      "triangles": 176
+    },
+    "UpperLashL2": {
+      "vertices": 90,
+      "triangles": 176
+    },
+    "UpperLashL3": {
+      "vertices": 90,
+      "triangles": 176
+    },
+    "UpperLashR1": {
+      "vertices": 90,
+      "triangles": 176
+    },
+    "UpperLashR2": {
+      "vertices": 90,
+      "triangles": 176
+    },
+    "UpperLashR3": {
+      "vertices": 90,
+      "triangles": 176
+    },
+    "WebFootL": {
+      "vertices": 13682,
+      "triangles": 27360
+    },
+    "WebFootR": {
+      "vertices": 13682,
+      "triangles": 27360
+    }
+  },
+  "renders": {
+    "front": {
+      "path": "docs/art/living-v8/companions/elizabeth-static-r4/front.png",
+      "asset_sha256": "adb37551d64b6b890196e3715d3f2c5a3995fdea90218f9b76f71b9d3dc194cf",
+      "clip": "static",
+      "time": 0,
+      "camera_position": [
+        0,
+        -8,
+        1.52
+      ],
+      "camera_target": [
+        0,
+        0,
+        1.52
+      ],
+      "orthographic_scale": 3.7,
+      "silhouette": false
+    },
+    "profile-left": {
+      "path": "docs/art/living-v8/companions/elizabeth-static-r4/profile-left.png",
+      "asset_sha256": "adb37551d64b6b890196e3715d3f2c5a3995fdea90218f9b76f71b9d3dc194cf",
+      "clip": "static",
+      "time": 0,
+      "camera_position": [
+        -8,
+        0,
+        1.52
+      ],
+      "camera_target": [
+        0,
+        0,
+        1.52
+      ],
+      "orthographic_scale": 3.7,
+      "silhouette": false
+    },
+    "profile-right": {
+      "path": "docs/art/living-v8/companions/elizabeth-static-r4/profile-right.png",
+      "asset_sha256": "adb37551d64b6b890196e3715d3f2c5a3995fdea90218f9b76f71b9d3dc194cf",
+      "clip": "static",
+      "time": 0,
+      "camera_position": [
+        8,
+        0,
+        1.52
+      ],
+      "camera_target": [
+        0,
+        0,
+        1.52
+      ],
+      "orthographic_scale": 3.7,
+      "silhouette": false
+    },
+    "back": {
+      "path": "docs/art/living-v8/companions/elizabeth-static-r4/back.png",
+      "asset_sha256": "adb37551d64b6b890196e3715d3f2c5a3995fdea90218f9b76f71b9d3dc194cf",
+      "clip": "static",
+      "time": 0,
+      "camera_position": [
+        0,
+        8,
+        1.52
+      ],
+      "camera_target": [
+        0,
+        0,
+        1.52
+      ],
+      "orthographic_scale": 3.7,
+      "silhouette": false
+    },
+    "threequarter": {
+      "path": "docs/art/living-v8/companions/elizabeth-static-r4/threequarter.png",
+      "asset_sha256": "adb37551d64b6b890196e3715d3f2c5a3995fdea90218f9b76f71b9d3dc194cf",
+      "clip": "static",
+      "time": 0,
+      "camera_position": [
+        4.8,
+        -6.8,
+        3.3
+      ],
+      "camera_target": [
+        0,
+        0,
+        1.48
+      ],
+      "orthographic_scale": 3.7,
+      "silhouette": false
+    },
+    "face": {
+      "path": "docs/art/living-v8/companions/elizabeth-static-r4/face.png",
+      "asset_sha256": "adb37551d64b6b890196e3715d3f2c5a3995fdea90218f9b76f71b9d3dc194cf",
+      "clip": "static",
+      "time": 0,
+      "camera_position": [
+        0,
+        -8,
+        2.48
+      ],
+      "camera_target": [
+        0,
+        -0.35,
+        2.48
+      ],
+      "orthographic_scale": 1.44,
+      "silhouette": false
+    },
+    "feet": {
+      "path": "docs/art/living-v8/companions/elizabeth-static-r4/feet.png",
+      "asset_sha256": "adb37551d64b6b890196e3715d3f2c5a3995fdea90218f9b76f71b9d3dc194cf",
+      "clip": "static",
+      "time": 0,
+      "camera_position": [
+        2,
+        -4,
+        1.6
+      ],
+      "camera_target": [
+        0,
+        -0.36,
+        0.15
+      ],
+      "orthographic_scale": 1.7,
+      "silhouette": false
+    },
+    "low-threequarter": {
+      "path": "docs/art/living-v8/companions/elizabeth-static-r4/low-threequarter.png",
+      "asset_sha256": "adb37551d64b6b890196e3715d3f2c5a3995fdea90218f9b76f71b9d3dc194cf",
+      "clip": "static",
+      "time": 0,
+      "camera_position": [
+        2.4000000953674316,
+        -4.0,
+        0.10000000149011612
+      ],
+      "camera_target": [
+        0,
+        -0.1,
+        0.38
+      ],
+      "orthographic_scale": null,
+      "silhouette": false,
+      "projection": "PERSP",
+      "lens_mm": 58
+    },
+    "front-bright": {
+      "path": "docs/art/living-v8/companions/elizabeth-static-r4/front-bright.png",
+      "asset_sha256": "adb37551d64b6b890196e3715d3f2c5a3995fdea90218f9b76f71b9d3dc194cf",
+      "clip": "static",
+      "time": 0,
+      "camera_position": [
+        0,
+        -8,
+        1.52
+      ],
+      "camera_target": [
+        0,
+        0,
+        1.52
+      ],
+      "orthographic_scale": 3.7,
+      "silhouette": false
+    },
+    "front-dark": {
+      "path": "docs/art/living-v8/companions/elizabeth-static-r4/front-dark.png",
+      "asset_sha256": "adb37551d64b6b890196e3715d3f2c5a3995fdea90218f9b76f71b9d3dc194cf",
+      "clip": "static",
+      "time": 0,
+      "camera_position": [
+        0,
+        -8,
+        1.52
+      ],
+      "camera_target": [
+        0,
+        0,
+        1.52
+      ],
+      "orthographic_scale": 3.7,
+      "silhouette": false
+    },
+    "silhouette-front": {
+      "path": "docs/art/living-v8/companions/elizabeth-static-r4/silhouette-front.png",
+      "asset_sha256": "adb37551d64b6b890196e3715d3f2c5a3995fdea90218f9b76f71b9d3dc194cf",
+      "clip": "static",
+      "time": 0,
+      "camera_position": [
+        0,
+        -8,
+        1.52
+      ],
+      "camera_target": [
+        0,
+        0,
+        1.52
+      ],
+      "orthographic_scale": 3.7,
+      "silhouette": true
+    },
+    "silhouette-profile-right": {
+      "path": "docs/art/living-v8/companions/elizabeth-static-r4/silhouette-profile-right.png",
+      "asset_sha256": "adb37551d64b6b890196e3715d3f2c5a3995fdea90218f9b76f71b9d3dc194cf",
+      "clip": "static",
+      "time": 0,
+      "camera_position": [
+        8,
+        0,
+        1.52
+      ],
+      "camera_target": [
+        0,
+        0,
+        1.52
+      ],
+      "orthographic_scale": 3.7,
+      "silhouette": true
+    },
+    "silhouette-back": {
+      "path": "docs/art/living-v8/companions/elizabeth-static-r4/silhouette-back.png",
+      "asset_sha256": "adb37551d64b6b890196e3715d3f2c5a3995fdea90218f9b76f71b9d3dc194cf",
+      "clip": "static",
+      "time": 0,
+      "camera_position": [
+        0,
+        8,
+        1.52
+      ],
+      "camera_target": [
+        0,
+        0,
+        1.52
+      ],
+      "orthographic_scale": 3.7,
+      "silhouette": true
+    }
+  }
+}

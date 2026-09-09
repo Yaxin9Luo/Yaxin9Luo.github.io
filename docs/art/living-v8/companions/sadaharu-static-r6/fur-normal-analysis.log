@@ -1,0 +1,11 @@
+00:02.014  blend            | Read blend: "/Users/yaxinluo/Documents/Codex/2026-09-07/https-yaxin9luo-github-io-https-yaxin9luo/outputs/academy-living-v8/docs/art/living-v8/companions/sadaharu-static-r6/sadaharu-static.blend"
+BlenderMCP: cannot start server in background mode (blender -b) - commands would never execute
+BlenderMCP: run Blender with a GUI, or use a virtual display: xvfb-run -a blender
+BlenderMCP addon registered
+COAT_NORMAL_ALIGNMENT -0.999996857251972 0.9999997913837433 0.3978150698682625 opposed 10536 faces 35288
+FUR_FLAGS False False
+BlenderMCP server stopped
+BlenderMCP addon unregistered
+Blender 5.1.2 (hash ec6e62d40fa9 built 2026-05-19 01:30:33)
+
+Blender quit

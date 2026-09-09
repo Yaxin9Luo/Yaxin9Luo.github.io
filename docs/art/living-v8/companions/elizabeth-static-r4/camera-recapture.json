@@ -1,0 +1,19 @@
+{
+  "model_sha256": "adb37551d64b6b890196e3715d3f2c5a3995fdea90218f9b76f71b9d3dc194cf",
+  "reviewed_original_image_sha256": "31df26463da2d9cf660e37d7879fb7ccbf42369b6b1cbdf104f9ce4b487155d7",
+  "corrected_image": "low-threequarter-corrected.png",
+  "corrected_image_sha256": "5e56a9980d2a3be3eaf3f1f7b737570b9f8589266e6861ab32d6634e34f3d424",
+  "note": "Same accepted static model. Camera recaptured after independent review. The unversioned low-threequarter.png was replaced before immutable evidence naming was requested; this corrected copy now has a distinct immutable filename.",
+  "camera_position": [
+    2.4,
+    -4,
+    0.1
+  ],
+  "camera_target": [
+    0,
+    -0.1,
+    0.38
+  ],
+  "projection": "PERSP",
+  "lens_mm": 58
+}

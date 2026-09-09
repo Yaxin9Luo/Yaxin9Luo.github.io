@@ -1,0 +1,141 @@
+{
+  "stage": "STATIC_ART_REVIEW_PENDING",
+  "model": "world/public/models/companions/sadaharu-static.1d6a7b1b3438.glb",
+  "sha256": "1d6a7b1b343875ffcee3470e84ac7beae09ce64c38454ad03ea8eee231b2b66b",
+  "source": "world/public/models/companions/sadaharu.blend",
+  "inference": "Standing canine anatomy and back/side volume are authored inferences; TV front face and collar/ears/brows have priority.",
+  "renders": [
+    {
+      "image": "docs/art/living-v8/companions/sadaharu-static-r6/front.png",
+      "model_sha256": "1d6a7b1b343875ffcee3470e84ac7beae09ce64c38454ad03ea8eee231b2b66b",
+      "camera": [
+        0,
+        -8,
+        1.55
+      ],
+      "target": [
+        0,
+        0.3,
+        1.55
+      ],
+      "scale": 3.8,
+      "image_sha256": "416bfe04db3f125394511a1d7c9a1029c8bca649ff8c5aa29f66c395ac37998f"
+    },
+    {
+      "image": "docs/art/living-v8/companions/sadaharu-static-r6/profile-left.png",
+      "model_sha256": "1d6a7b1b343875ffcee3470e84ac7beae09ce64c38454ad03ea8eee231b2b66b",
+      "camera": [
+        -8,
+        0.3,
+        1.55
+      ],
+      "target": [
+        0,
+        0.3,
+        1.55
+      ],
+      "scale": 4.5,
+      "image_sha256": "4f22b3a5061f9153ab15e9b57cac81bc21cad452ec4394290c41341ecc1b2b04"
+    },
+    {
+      "image": "docs/art/living-v8/companions/sadaharu-static-r6/profile-right.png",
+      "model_sha256": "1d6a7b1b343875ffcee3470e84ac7beae09ce64c38454ad03ea8eee231b2b66b",
+      "camera": [
+        8,
+        0.3,
+        1.55
+      ],
+      "target": [
+        0,
+        0.3,
+        1.55
+      ],
+      "scale": 4.5,
+      "image_sha256": "7ad9f71ac1bcf721a0699eacd4ae6f5003e7bdfb4948222645924ef2bcf187c5"
+    },
+    {
+      "image": "docs/art/living-v8/companions/sadaharu-static-r6/back.png",
+      "model_sha256": "1d6a7b1b343875ffcee3470e84ac7beae09ce64c38454ad03ea8eee231b2b66b",
+      "camera": [
+        0,
+        8,
+        1.55
+      ],
+      "target": [
+        0,
+        0.3,
+        1.55
+      ],
+      "scale": 3.8,
+      "image_sha256": "4cbc4928da861837cf5558b4492dc3bc87136212985d40cf508262a10abd26ee"
+    },
+    {
+      "image": "docs/art/living-v8/companions/sadaharu-static-r6/threequarter.png",
+      "model_sha256": "1d6a7b1b343875ffcee3470e84ac7beae09ce64c38454ad03ea8eee231b2b66b",
+      "camera": [
+        4.8,
+        -6.8,
+        3.6
+      ],
+      "target": [
+        0,
+        0.25,
+        1.45
+      ],
+      "scale": 4.25,
+      "image_sha256": "a8eff71ef92194499dacbbd6d10ff9b6acd1d7ed728c03c522563a09648914f7"
+    },
+    {
+      "image": "docs/art/living-v8/companions/sadaharu-static-r6/face.png",
+      "model_sha256": "1d6a7b1b343875ffcee3470e84ac7beae09ce64c38454ad03ea8eee231b2b66b",
+      "camera": [
+        0,
+        -8,
+        2.38
+      ],
+      "target": [
+        0,
+        -0.6,
+        2.38
+      ],
+      "scale": 1.85,
+      "image_sha256": "f96e5690d34c83b623d9184f19cd6516e5b8ee6ea118c6608e49e735b596d2de"
+    },
+    {
+      "image": "docs/art/living-v8/companions/sadaharu-static-r6/tail.png",
+      "model_sha256": "1d6a7b1b343875ffcee3470e84ac7beae09ce64c38454ad03ea8eee231b2b66b",
+      "camera": [
+        4,
+        5,
+        3.25
+      ],
+      "target": [
+        0,
+        1.25,
+        1.7
+      ],
+      "scale": 2.6,
+      "image_sha256": "6c06a0ff6763eb32d3d1fafa58d99e94fb7df62283a9da209629232960b324cd"
+    },
+    {
+      "image": "docs/art/living-v8/companions/sadaharu-static-r6/feet.png",
+      "model_sha256": "1d6a7b1b343875ffcee3470e84ac7beae09ce64c38454ad03ea8eee231b2b66b",
+      "camera": [
+        3,
+        -4,
+        1.5
+      ],
+      "target": [
+        0,
+        0.2,
+        0.3
+      ],
+      "scale": 2.8,
+      "image_sha256": "767b1c2de6ecbd6b67d3718aef8eb6c697ad689a88e9470df25b8aca2fa03eed"
+    }
+  ],
+  "source_snapshot": "docs/art/living-v8/companions/sadaharu-static-r6/sadaharu-static.blend",
+  "source_sha256": "b8ecf2dc73a055974c518c7f524cc87ace2958f8a19ef693ed3e9ce3c544b3e4",
+  "coat": "Connected r2 anatomical base; baked fine directional tangent normals plus very short gently bent native-alpha hair cards; no raised opaque chips. Constant white albedo avoids repeated clump patches.",
+  "texture_source": "docs/art/living-v8/white-fur-tuft-source.json"
+}

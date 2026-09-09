@@ -1,0 +1,125 @@
+{
+  "note": "Historical accepted and rejected binaries retained as evidence; only current runtime GLBs and editable sources stay public. Existing review model paths describe the original capture locations.",
+  "models": [
+    {
+      "original": "world/public/models/companions/elizabeth-static.adb37551d64b.glb",
+      "archived": "docs/art/living-v8/companions/archive/models/elizabeth-static.adb37551d64b.glb",
+      "sha256": "adb37551d64b6b890196e3715d3f2c5a3995fdea90218f9b76f71b9d3dc194cf",
+      "bytes": 1739488
+    },
+    {
+      "original": "world/public/models/companions/elizabeth.ae94f5a5e83f.glb",
+      "archived": "docs/art/living-v8/companions/archive/models/elizabeth.ae94f5a5e83f.glb",
+      "sha256": "ae94f5a5e83f173c2d4e878fad6dab020f77922aeb0dd58a07f2fe2eafee68c8",
+      "bytes": 2808664
+    },
+    {
+      "original": "world/public/models/companions/elizabeth.ff423ce8d6ad.glb",
+      "archived": "docs/art/living-v8/companions/archive/models/elizabeth.ff423ce8d6ad.glb",
+      "sha256": "ff423ce8d6ad6149081c46fab4ccf252c0f71a221ee7a5c2f96fff420bb1629f",
+      "bytes": 2814792
+    },
+    {
+      "original": "world/public/models/companions/sadaharu-static.1311d3c260e7.glb",
+      "archived": "docs/art/living-v8/companions/archive/models/sadaharu-static.1311d3c260e7.glb",
+      "sha256": "1311d3c260e717766caccd974b0d05cc58d714b4fcdd1122021343659ac1dd52",
+      "bytes": 2429528
+    },
+    {
+      "original": "world/public/models/companions/sadaharu-static.1d6a7b1b3438.glb",
+      "archived": "docs/art/living-v8/companions/archive/models/sadaharu-static.1d6a7b1b3438.glb",
+      "sha256": "1d6a7b1b343875ffcee3470e84ac7beae09ce64c38454ad03ea8eee231b2b66b",
+      "bytes": 8443380
+    },
+    {
+      "original": "world/public/models/companions/sadaharu-static.70596b9de9ba.glb",
+      "archived": "docs/art/living-v8/companions/archive/models/sadaharu-static.70596b9de9ba.glb",
+      "sha256": "70596b9de9ba1f2f5d7a50d5e91400a144c917599d0e52ac12396fd7dd8fb2ac",
+      "bytes": 9681212
+    },
+    {
+      "original": "world/public/models/companions/sadaharu-static.7773c1c7db95.glb",
+      "archived": "docs/art/living-v8/companions/archive/models/sadaharu-static.7773c1c7db95.glb",
+      "sha256": "7773c1c7db955a02394ac3de69d75c93da72a428de708b2b482de1d67976a876",
+      "bytes": 1628928
+    },
+    {
+      "original": "world/public/models/companions/sadaharu-static.7d780f80bb7e.glb",
+      "archived": "docs/art/living-v8/companions/archive/models/sadaharu-static.7d780f80bb7e.glb",
+      "sha256": "7d780f80bb7ef93345a9eda43dec411b83a316bb2ce3eb94a1faa6268daaf89b",
+      "bytes": 8717820
+    },
+    {
+      "original": "world/public/models/companions/sadaharu-static.97fbe4aeeca2.glb",
+      "archived": "docs/art/living-v8/companions/archive/models/sadaharu-static.97fbe4aeeca2.glb",
+      "sha256": "97fbe4aeeca2a1c216494f952639f6ae85e23b246de9edbdb5e486abc3344a78",
+      "bytes": 8444124
+    },
+    {
+      "original": "world/public/models/companions/sadaharu.08be617c349f.glb",
+      "archived": "docs/art/living-v8/companions/archive/models/sadaharu.08be617c349f.glb",
+      "sha256": "08be617c349fc12bfd572187aa0cb2b6b94dd37c4343f2378e1e0684d6b72ca6",
+      "bytes": 6339604
+    },
+    {
+      "original": "world/public/models/companions/sadaharu.416dc44ff717.glb",
+      "archived": "docs/art/living-v8/companions/archive/models/sadaharu.416dc44ff717.glb",
+      "sha256": "416dc44ff7178be110335b1f87162d43c5b6bb0b601fa7b76f6c2389b341524b",
+      "bytes": 6218000
+    },
+    {
+      "original": "world/public/models/companions/sadaharu.6819db2e3713.glb",
+      "archived": "docs/art/living-v8/companions/archive/models/sadaharu.6819db2e3713.glb",
+      "sha256": "6819db2e3713eec5fc271906577e028e33cf5f175db3277bff812c5d26dd6ad8",
+      "bytes": 6216296
+    },
+    {
+      "original": "world/public/models/companions/sadaharu.96ae7a8475d4.glb",
+      "archived": "docs/art/living-v8/companions/archive/models/sadaharu.96ae7a8475d4.glb",
+      "sha256": "96ae7a8475d40a6f30e23c010e93c57e18f246e01fa343977b3ff629c63a62c7",
+      "bytes": 6218000
+    },
+    {
+      "original": "world/public/models/companions/sadaharu.9cf7b08d7421.glb",
+      "archived": "docs/art/living-v8/companions/archive/models/sadaharu.9cf7b08d7421.glb",
+      "sha256": "9cf7b08d742109668b7d1cd63b565f53ec55d2f2566a092b77420beedfa65044",
+      "bytes": 6339612
+    },
+    {
+      "original": "world/public/models/companions/sadaharu.ae9a85fd5cfd.glb",
+      "archived": "docs/art/living-v8/companions/archive/models/sadaharu.ae9a85fd5cfd.glb",
+      "sha256": "ae9a85fd5cfdcb9c261ef08da196732a49121f92fdfcf9091719c616b9d86771",
+      "bytes": 11198520
+    },
+    {
+      "original": "world/public/models/companions/sadaharu.e5a022372203.glb",
+      "archived": "docs/art/living-v8/companions/archive/models/sadaharu.e5a022372203.glb",
+      "sha256": "e5a0223722038d8a3c36b4fb3d624f489145e5bac10ea81ea1d9f9f87db4c5f9",
+      "bytes": 6218272
+    },
+    {
+      "original": "world/public/models/companions/sadaharu.e6d6b5c8ae68.glb",
+      "archived": "docs/art/living-v8/companions/archive/models/sadaharu.e6d6b5c8ae68.glb",
+      "sha256": "e6d6b5c8ae687771c084d738a16e3790592ea5b80ae1fbbda9de1ff7dacd0777",
+      "bytes": 6218000
+    },
+    {
+      "original": "world/public/models/companions/sadaharu.fca3a2d18f3b.glb",
+      "archived": "docs/art/living-v8/companions/archive/models/sadaharu.fca3a2d18f3b.glb",
+      "sha256": "fca3a2d18f3b64caefeace2b1f8d7fa0e90ab9e6759b21dce68b6bbbfd43f8aa",
+      "bytes": 6234220
+    },
+    {
+      "original": "world/public/models/companions/sadaharu.22b0edd185c0.glb",
+      "archived": "docs/art/living-v8/companions/archive/models/sadaharu.22b0edd185c0.glb",
+      "sha256": "22b0edd185c067bd08fbd91e12ea3d5c9418b632fc2f53e364ef837e9af1f533",
+      "bytes": 6218004
+    },
+    {
+      "original": "world/public/models/companions/sadaharu.99e1aff898e7.glb",
+      "archived": "docs/art/living-v8/companions/archive/models/sadaharu.99e1aff898e7.glb",
+      "sha256": "99e1aff898e79b428a6e1ac3767378220a3d8313967e6417086cdbc023d4eec1",
+      "bytes": 6218004
+    }
+  ]
+}

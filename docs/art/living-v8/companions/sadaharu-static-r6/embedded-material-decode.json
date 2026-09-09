@@ -1,0 +1,195 @@
+{
+  "sha256": "1d6a7b1b343875ffcee3470e84ac7beae09ce64c38454ad03ea8eee231b2b66b",
+  "bytes": 8443380,
+  "materials": [
+    {
+      "doubleSided": true,
+      "extensions": {
+        "KHR_materials_specular": {
+          "specularFactor": 0.4399999976158142
+        }
+      },
+      "name": "Sadaharu subtle toe folds",
+      "pbrMetallicRoughness": {
+        "baseColorFactor": [
+          0.5199999809265137,
+          0.5099999904632568,
+          0.49000000953674316,
+          1
+        ],
+        "metallicFactor": 0
+      }
+    },
+    {
+      "doubleSided": true,
+      "extensions": {
+        "KHR_materials_specular": {
+          "specularFactor": 0.4399999976158142
+        }
+      },
+      "name": "Sadaharu burgundy collar",
+      "pbrMetallicRoughness": {
+        "baseColorFactor": [
+          0.11999999731779099,
+          0.006000000052154064,
+          0.014999999664723873,
+          1
+        ],
+        "metallicFactor": 0,
+        "roughnessFactor": 0.800000011920929
+      }
+    },
+    {
+      "doubleSided": true,
+      "extensions": {
+        "KHR_materials_specular": {
+          "specularFactor": 0.4399999976158142
+        }
+      },
+      "name": "Sadaharu curled grey brown brows",
+      "pbrMetallicRoughness": {
+        "baseColorFactor": [
+          0.23999999463558197,
+          0.20000000298023224,
+          0.17000000178813934,
+          1
+        ],
+        "metallicFactor": 0,
+        "roughnessFactor": 0.800000011920929
+      }
+    },
+    {
+      "doubleSided": true,
+      "extensions": {
+        "KHR_materials_specular": {
+          "specularFactor": 0.4399999976158142
+        }
+      },
+      "name": "Sadaharu eye catchlight",
+      "pbrMetallicRoughness": {
+        "baseColorFactor": [
+          0.9800000190734863,
+          0.9800000190734863,
+          0.9700000286102295,
+          1
+        ],
+        "metallicFactor": 0,
+        "roughnessFactor": 0.800000011920929
+      }
+    },
+    {
+      "doubleSided": true,
+      "extensions": {
+        "KHR_materials_specular": {
+          "specularFactor": 0.4399999976158142
+        }
+      },
+      "name": "Sadaharu charcoal eyes and nose",
+      "pbrMetallicRoughness": {
+        "baseColorFactor": [
+          0.017999999225139618,
+          0.01600000075995922,
+          0.02199999988079071,
+          1
+        ],
+        "metallicFactor": 0,
+        "roughnessFactor": 0.47999998927116394
+      }
+    },
+    {
+      "alphaCutoff": 0.2199999988079071,
+      "alphaMode": "MASK",
+      "doubleSided": true,
+      "extensions": {
+        "KHR_materials_specular": {
+          "specularFactor": 0.20000000298023224
+        }
+      },
+      "name": "Sadaharu fine directional white fur",
+      "pbrMetallicRoughness": {
+        "baseColorFactor": [
+          0.9300000071525574,
+          0.925000011920929,
+          0.9049999713897705,
+          1
+        ],
+        "baseColorTexture": {
+          "index": 0
+        },
+        "metallicFactor": 0,
+        "roughnessFactor": 0.9599999785423279
+      }
+    },
+    {
+      "doubleSided": true,
+      "extensions": {
+        "KHR_materials_specular": {
+          "specularFactor": 0.4399999976158142
+        }
+      },
+      "name": "Sadaharu soft pink ears",
+      "pbrMetallicRoughness": {
+        "baseColorFactor": [
+          0.6399999856948853,
+          0.28999999165534973,
+          0.25,
+          1
+        ],
+        "metallicFactor": 0,
+        "roughnessFactor": 0.800000011920929
+      }
+    },
+    {
+      "doubleSided": true,
+      "extensions": {
+        "KHR_materials_specular": {
+          "specularFactor": 0.4399999976158142
+        }
+      },
+      "name": "Sadaharu warm white coat",
+      "normalTexture": {
+        "index": 1,
+        "scale": 4
+      },
+      "pbrMetallicRoughness": {
+        "baseColorFactor": [
+          0.9300000071525574,
+          0.925000011920929,
+          0.9049999713897705,
+          1
+        ],
+        "metallicFactor": 0,
+        "roughnessFactor": 0.800000011920929
+      }
+    }
+  ],
+  "images": [
+    {
+      "name": "white-fur-tuft",
+      "mimeType": "image/png",
+      "bytes": 568810,
+      "width": 1491,
+      "height": 1055,
+      "alpha": {
+        "min": 0,
+        "max": 253,
+        "sum": 145251222,
+        "squaresSum": 34275993676,
+        "mean": 92.3399620471645,
+        "stdev": 115.16716697019363,
+        "minX": 0,
+        "minY": 32,
+        "maxX": 1007,
+        "maxY": 373
+      }
+    },
+    {
+      "name": "Sadaharu authored fine coat tangent normal",
+      "mimeType": "image/png",
+      "bytes": 2856729,
+      "width": 2048,
+      "height": 2048,
+      "alpha": null
+    }
+  ]
+}

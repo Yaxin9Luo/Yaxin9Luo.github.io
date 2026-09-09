@@ -1,0 +1,12 @@
+✔ static review evidence identifies the exact real decoded GLB (12.995083ms)
+✔ all real export geometry, indices and transforms are finite (17.338625ms)
+✔ shell and flippers are one connected surface; attached webbed feet are supported (134.341458ms)
+✔ TV face retains three lashes per eye, dot pupils and a two-part broad bill (0.405542ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 259.923042
