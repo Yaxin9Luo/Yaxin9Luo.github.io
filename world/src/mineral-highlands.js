@@ -54,10 +54,15 @@ export const mountainMatteFragment=`
     float leftCape=exp(-pow((artUV.x-.24)/.14,2.))*mainArt;
     float rightCape=exp(-pow((artUV.x-.83)/.13,2.));
     float cape=max(leftCape,rightCape);
-    float shoreStart=mix(-3.,-65.,cape)+bank;
-    float shoreEnd=mix(90.,12.,cape)+bank;
+    float shoreStart=mix(-12.,-65.,cape)+bank;
+    float shoreEnd=mix(42.,8.,cape)+bank;
     float baseFade=smoothstep(shoreStart,shoreEnd,worldPoint.y);
-    float baseMist=(1.-smoothstep(0.,mix(110.,28.,cape),worldPoint.y))*.19*(1.-cape*.65);
+    // The opaque lake clips at y=-15. Every cape must already have zero alpha
+    // there, otherwise its richly painted foot ends in a hard horizontal cut.
+    float contactWidth=max(12.,mix(38.,20.,cape)+bank*.25);
+    float contactFade=smoothstep(-15.,-15.+contactWidth,worldPoint.y);
+    baseFade*=contactFade;
+    float baseMist=(1.-smoothstep(0.,mix(110.,28.,cape),worldPoint.y))*.07*(1.-cape*.65);
     // Keep the mountain-foot air in the lake's blue-grey family during dusk;
     // the warm sky remains above it rather than forming an orange waterline.
     vec3 lowAir=vec3(hazeColor.b*.72,hazeColor.g*.88,hazeColor.b);
@@ -65,8 +70,8 @@ export const mountainMatteFragment=`
     colour=mix(colour,lowAir,baseMist);
     // Only the mirrored mountain layer loses contrast, leaving the lake's own
     // moving highlights and the direct-view forest/rock detail untouched.
-    colour=mix(colour,lowAir,reflectionMix*.30);
-    gl_FragColor=vec4(colour,silhouette*edge*baseFade);
+    colour=mix(colour,lowAir*.66,reflectionMix*.48);
+    gl_FragColor=vec4(colour,silhouette*edge*baseFade*mix(1.,.38,reflectionMix));
     #include <colorspace_fragment>
   }
 `;

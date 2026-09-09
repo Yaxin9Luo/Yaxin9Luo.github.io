@@ -14,6 +14,7 @@ import {loadScannedRockAssets,addScannedRocks} from './rock-scans.js';
 import {loadEnvironmentSignage} from './environment-signage.js';
 import {resourceLoader} from './resource-loader.js';
 import {createMineralHighlands} from './mineral-highlands.js';
+import {createLandscapeDepth,applyLandscapeDepthFog} from './landscape-depth.js';
 
 const TAU=Math.PI*2;
 const maps = {};
@@ -186,24 +187,56 @@ export function createLake(root, scene) {
   const size=512,data=new Uint8Array(size*size*4);
   for(let y=0;y<size;y++)for(let x=0;x<size;x++){
     const i=(y*size+x)*4,u=x*128/size,v=y*128/size;
-    // Fine wind-aligned ripples break the broad reflection into moving facets.
-    const ripple=Math.sin((x*28+y*9)*TAU/size)*.055+Math.sin((x*53-y*13)*TAU/size)*.022;
+    // Unequal long wind folds retain broad reflections between finer ripples.
+    const ripple=Math.sin((x*11+y*4)*TAU/size)*.034+Math.sin((x*29-y*7)*TAU/size)*.013;
     const sx=(noise(u*.15+.2,v*.25)-noise(u*.15-.2,v*.25))*.46+ripple;
     const sy=(noise(u*.15,v*.25+.2)-noise(u*.15,v*.25-.2))*.46+ripple*.32;
     const n=new THREE.Vector3(sx,sy,1).normalize();
     data[i]=(n.x*.5+.5)*255;data[i+1]=(n.y*.5+.5)*255;data[i+2]=(n.z*.5+.5)*255;data[i+3]=255;
   }
   const normals=new THREE.DataTexture(data,size,size);normals.wrapS=normals.wrapT=THREE.RepeatWrapping;normals.magFilter=THREE.LinearFilter;normals.minFilter=THREE.LinearMipmapLinearFilter;normals.generateMipmaps=true;normals.anisotropy=4;normals.needsUpdate=true;
-  const water=new Water(new THREE.PlaneGeometry(10000,10000),{textureWidth:2048,textureHeight:2048,waterNormals:normals,sunDirection:new THREE.Vector3(-.16,.18,-.84).normalize(),sunColor:'#a8d9ff',waterColor:'#123955',distortionScale:1.15,fog:true});
+  const water=new Water(new THREE.PlaneGeometry(10000,10000),{textureWidth:2048,textureHeight:2048,waterNormals:normals,sunDirection:new THREE.Vector3(-.16,.18,-.84).normalize(),sunColor:'#a8d9ff',waterColor:'#123955',distortionScale:.85,fog:true});
   const reflection=water.material.uniforms.mirrorSampler.value;reflection.generateMipmaps=true;reflection.minFilter=THREE.LinearMipmapLinearFilter;
   water.name='Reflective lake';water.rotation.x=-Math.PI/2;water.position.y=-15;
-  water.material.uniforms.size.value=2.5;
-  water.material.fragmentShader=water.material.fragmentShader.replace('vec3( 1.5, 1.0, 1.5 )','vec3( 0.9, 1.0, 0.9 )').replace('100.0, 2.0, 0.5','45.0, 0.9, 0.35');
+  water.material.uniforms.size.value=1.85;
+  // This field describes the two authored coves, not walkable support or a
+  // synthetic island-wide foam ring. Land naturally occludes its inland parts.
+  const shoreSize=256,shoreData=new Uint8Array(shoreSize*shoreSize*4);
+  for(let z=0;z<shoreSize;z++)for(let x=0;x<shoreSize;x++){
+    const wx=(x+.5)/shoreSize*440-220,wz=(z+.5)/shoreSize*440-220,region=landformAt(wx,wz),at=(z*shoreSize+x)*4;
+    const breakup=.72+noise(wx*.09,wz*.09)*.28;
+    shoreData[at]=Math.round(region.cove*breakup*255);shoreData[at+1]=Math.round(region.terrace*255);shoreData[at+2]=0;shoreData[at+3]=255;
+  }
+  const shoreMap=new THREE.DataTexture(shoreData,shoreSize,shoreSize);shoreMap.minFilter=shoreMap.magFilter=THREE.LinearFilter;shoreMap.needsUpdate=true;
+  Object.assign(water.material.uniforms,{shoreMap:{value:shoreMap},nightFactor:{value:0},shoreDay:{value:new THREE.Color('#4b9c91')},shoreNight:{value:new THREE.Color('#285c68')}});
+  water.material.fragmentShader=`uniform sampler2D shoreMap; uniform float nightFactor; uniform vec3 shoreDay,shoreNight;
+    float coveHash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+    float coveNoise(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(coveHash(i),coveHash(i+vec2(1,0)),f.x),mix(coveHash(i+vec2(0,1)),coveHash(i+vec2(1,1)),f.x),f.y);}
+  `+water.material.fragmentShader;
+  water.material.fragmentShader=water.material.fragmentShader
+    .replace('vec4 noise = getNoise( worldPosition.xz * size );',`vec2 shoreUv=(worldPosition.xz+vec2(220.))/440.;
+      float inShore=step(0.,shoreUv.x)*step(shoreUv.x,1.)*step(0.,shoreUv.y)*step(shoreUv.y,1.);
+      vec2 shore=texture2D(shoreMap,clamp(shoreUv,vec2(0.),vec2(1.))).rg*inShore;
+      vec4 noise = getNoise( worldPosition.xz * size );
+      noise.xy*=.90+shore.g*.24;`)
+    .replace('vec3( 1.5, 1.0, 1.5 )','vec3( .9, 1.0, .9 )')
+    .replace('100.0, 2.0, 0.5','65.0, 0.55, 0.26')
+    .replace('float reflectance = rf0 + ( 1.0 - rf0 ) * pow( ( 1.0 - theta ), 5.0 );','float reflectance = (rf0 + (1.0-rf0)*pow(1.0-theta,5.0))*(1.-shore.r*.22);')
+    .replace('vec3 scatter = max( 0.0, dot( surfaceNormal, eyeDirection ) ) * waterColor;',`vec3 localWater=mix(waterColor,mix(shoreDay,shoreNight,nightFactor),shore.r*.58);
+      vec3 scatter=max(.18,dot(surfaceNormal,eyeDirection))*localWater;
+      // Unequal, low-amplitude shallow-water patches have no fixed stripe axis.
+      vec2 coveFlow=worldPosition.xz*.23+vec2(time*.011,time*.007);
+      float coveDetail=coveNoise(coveFlow)*.62+coveNoise(coveFlow*2.17-9.)*.27+coveNoise(coveFlow*4.3+13.)*.11;
+      scatter+=mix(vec3(.012,.032,.027),vec3(.007,.018,.021),nightFactor)*(coveDetail-.5)*shore.r;`);
+  applyLandscapeDepthFog(water.material,{horizon:true});
   root.add(water);
   // Reflection is refreshed at a controlled cadence; the live surface still moves every frame.
   const reflect=water.onBeforeRender;let frame=0;
   water.onBeforeRender=function(...args){if(args[1].overrideMaterial)return;if(frame++%5===0)reflect.apply(this,args);};
-  if(environment){scene.environment=environment;scene.environmentIntensity=.14;}
+  // Game disposes scene materials, but uniform-only textures/targets need an owner.
+  let disposed=false;
+  water.material.addEventListener('dispose',()=>{if(disposed)return;disposed=true;normals.dispose();shoreMap.dispose();reflection.renderTarget.dispose();});
+  if(environment&&scene){scene.environment=environment;scene.environmentIntensity=.14;}
   return {update(time,reduced){water.material.uniforms.time.value=reduced?0:time*.18;wind.value=reduced?0:time;updateGroveWind(time,reduced);},water};
 }
 
@@ -370,5 +403,6 @@ export function createBackdrop(root,scene){
   const result=createMineralHighlands(root,{rockMap:maps['mossy-rock']?.color||neutralRock,wind,mountainMaps});
   for(const material of result.materials){rockBindings.add(material.uniforms.rockMap);material.addEventListener('dispose',()=>rockBindings.delete(material.uniforms.rockMap));}
   for(const material of result.matteMaterials){mountainBindings.add(material);material.addEventListener('dispose',()=>mountainBindings.delete(material));}
+  result.depth=createLandscapeDepth(result.group,{rockMaterial:cliffMaterial,wind,fogColor:scene?.fog?.color});
   return result;
 }
