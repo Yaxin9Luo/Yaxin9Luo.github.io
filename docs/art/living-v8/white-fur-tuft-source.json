@@ -1,0 +1,16 @@
+{
+  "file": "docs/art/living-v8/white-fur-tuft.png",
+  "bytes": 1805988,
+  "sha256": "72650e7b7d6d33056b357caa7b80ee88c0f39c61189bb608707e1ca93db0bcf1",
+  "mode": "RGBA",
+  "size": [
+    1491,
+    1055
+  ],
+  "alphaRange": [
+    0,
+    253
+  ],
+  "alpha0Count": 750682,
+  "alpha255Count": 0
+}

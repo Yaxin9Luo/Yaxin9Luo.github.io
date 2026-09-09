@@ -1,0 +1,179 @@
+{
+  "schema": 1,
+  "created_at": "2026-09-09T15:47:38.912996+00:00",
+  "purpose": "Inspected character reference images for original mesh modeling and internal asset review. Keep all reference files outside public/site distribution.",
+  "primary_style": "TV anime base designs. Elizabeth standing silhouette has priority.",
+  "references": [
+    {
+      "id": "elizabeth_tv",
+      "source_url": "https://www.bn-pictures.co.jp/gintama/character/img/chara_12.gif",
+      "source_page": "https://www.bn-pictures.co.jp/gintama/character/03.php",
+      "authority": "BN Pictures official TV anime character art",
+      "local_path": "/Users/yaxinluo/Documents/Codex/2026-09-07/https-yaxin9luo-github-io-https-yaxin9luo/outputs/academy-living-v8/work/living-v8/research/references/elizabeth-tv.gif",
+      "sha256": "a34f308c7d24d1332a3733955146f18d500fd4123050d754611a322fa6bcbe56",
+      "bytes": 16653,
+      "actually_viewed": true,
+      "use": "PRIMARY: base standing silhouette, face, lashes, beak, flipper arms, hem, webbed feet.",
+      "product_asset": false,
+      "redistribution_license": "No permissive redistribution license verified; research reference only."
+    },
+    {
+      "id": "sadaharu_tv",
+      "source_url": "https://www.bn-pictures.co.jp/gintama/character/img/chara_04.gif",
+      "source_page": "https://www.bn-pictures.co.jp/gintama/character/",
+      "authority": "BN Pictures official TV anime character art",
+      "local_path": "/Users/yaxinluo/Documents/Codex/2026-09-07/https-yaxin9luo-github-io-https-yaxin9luo/outputs/academy-living-v8/work/living-v8/research/references/sadaharu-tv.gif",
+      "sha256": "452c7b8b6dbf8b52772eba3eb8a3f71ee5d4f562d8285f5b81416962a097a0c3",
+      "bytes": 22437,
+      "actually_viewed": true,
+      "use": "PRIMARY: seated front and three-quarter, face, curled brows, collar, ears, paws, tail.",
+      "product_asset": false,
+      "redistribution_license": "No permissive redistribution license verified; research reference only."
+    },
+    {
+      "id": "elizabeth_manga",
+      "source_url": "https://sp.shonenjump.com/j/rensai/img/gintama_character10.jpg",
+      "source_page": "https://sp.shonenjump.com/j/rensai/gintama/",
+      "authority": "Shueisha Shonen Jump official manga character art",
+      "local_path": "/Users/yaxinluo/Documents/Codex/2026-09-07/https-yaxin9luo-github-io-https-yaxin9luo/outputs/academy-living-v8/work/living-v8/research/references/elizabeth-manga.jpg",
+      "sha256": "60fae5849b040b3f0d90bb66876dc4adf06653468781d170b968421d0f6869d1",
+      "bytes": 10724,
+      "actually_viewed": true,
+      "use": "SECONDARY: frontal face/beak, flipper gesture and white shell. Cropped artwork, no scale evidence.",
+      "product_asset": false,
+      "redistribution_license": "No permissive redistribution license verified; research reference only."
+    },
+    {
+      "id": "sadaharu_manga",
+      "source_url": "https://sp.shonenjump.com/j/rensai/img/gintama_character4.jpg",
+      "source_page": "https://sp.shonenjump.com/j/rensai/gintama/",
+      "authority": "Shueisha Shonen Jump official manga character art",
+      "local_path": "/Users/yaxinluo/Documents/Codex/2026-09-07/https-yaxin9luo-github-io-https-yaxin9luo/outputs/academy-living-v8/work/living-v8/research/references/sadaharu-manga.jpg",
+      "sha256": "a45e9d18a83b991229b592e600d595044340e03e5eab9b1b0ac312113681b481",
+      "bytes": 9692,
+      "actually_viewed": true,
+      "use": "SECONDARY: cheerful expression, pink mouth/tongue, curled brows and broad muzzle. Cropped artwork.",
+      "product_asset": false,
+      "redistribution_license": "No permissive redistribution license verified; research reference only."
+    },
+    {
+      "id": "elizabeth_figure_front",
+      "source_url": "https://en.megahobby.jp/cdn/shop/files/1_4ba792e4-5cc0-4e46-9501-c19d4499cb83_300x300_crop_top.jpg?v=1770545237",
+      "source_page": "https://en.megahobby.jp/collections/gintama/products/lookup-gintama-elizabeth",
+      "authority": "MegaHouse licensed Lookup figure",
+      "local_path": "/Users/yaxinluo/Documents/Codex/2026-09-07/https-yaxin9luo-github-io-https-yaxin9luo/outputs/academy-living-v8/work/living-v8/research/references/elizabeth-figure-0.jpg",
+      "sha256": "47e8d0ba8959d06ef11d1d78f22cbbed25e04dbda017b11e616de2a3a9f77399",
+      "bytes": 10052,
+      "actually_viewed": true,
+      "use": "SECONDARY VOLUME ONLY: seated chibi front, facial attachment, feet. Do not copy squat silhouette or lap folds.",
+      "product_asset": false,
+      "redistribution_license": "No permissive redistribution license verified; research reference only."
+    },
+    {
+      "id": "elizabeth_figure_threequarter",
+      "source_url": "https://en.megahobby.jp/cdn/shop/files/2_00033d01-9ee8-4573-a298-3473b02abd8e_300x300_crop_top.jpg?v=1770545238",
+      "source_page": "https://en.megahobby.jp/collections/gintama/products/lookup-gintama-elizabeth",
+      "authority": "MegaHouse licensed Lookup figure",
+      "local_path": "/Users/yaxinluo/Documents/Codex/2026-09-07/https-yaxin9luo-github-io-https-yaxin9luo/outputs/academy-living-v8/work/living-v8/research/references/elizabeth-figure-1.jpg",
+      "sha256": "37dd4900a51ab667215cb2f6ce5dc51c4d5767878e7aa93a86da03ad65cdd633",
+      "bytes": 9833,
+      "actually_viewed": true,
+      "use": "SECONDARY VOLUME ONLY: three-quarter face and body continuity; seated chibi proportions differ from TV.",
+      "product_asset": false,
+      "redistribution_license": "No permissive redistribution license verified; research reference only."
+    },
+    {
+      "id": "elizabeth_figure_profile",
+      "source_url": "https://en.megahobby.jp/cdn/shop/files/3_6196aebc-fb41-47bd-89f7-8307961eee2c_300x300_crop_top.jpg?v=1770545238",
+      "source_page": "https://en.megahobby.jp/collections/gintama/products/lookup-gintama-elizabeth",
+      "authority": "MegaHouse licensed Lookup figure",
+      "local_path": "/Users/yaxinluo/Documents/Codex/2026-09-07/https-yaxin9luo-github-io-https-yaxin9luo/outputs/academy-living-v8/work/living-v8/research/references/elizabeth-figure-2.jpg",
+      "sha256": "558cc2491f42b333ba7da0e92c16e8113fcd85306e3f98e9959f0f4566ca05dd",
+      "bytes": 6648,
+      "actually_viewed": true,
+      "use": "SECONDARY VOLUME ONLY: side body shell, beak projection and shallow eye relief; no official standing back view.",
+      "product_asset": false,
+      "redistribution_license": "No permissive redistribution license verified; research reference only."
+    },
+    {
+      "id": "sadaharu_figure_front",
+      "source_url": "https://www.bandaispirits.co.jp/prize_images/files/%E5%85%B1%E6%9C%89%E3%83%95%E3%82%A9%E3%83%AB%E3%83%80/item/2024.08/2726701.jpg",
+      "source_page": "https://www.bandaispirits.co.jp/products/search/detail.php?grp_id=10000&prd_id=2726701",
+      "authority": "Bandai Spirits licensed SOFVIMATES figure",
+      "local_path": "/Users/yaxinluo/Documents/Codex/2026-09-07/https-yaxin9luo-github-io-https-yaxin9luo/outputs/academy-living-v8/work/living-v8/research/references/sadaharu-figure_1.jpg",
+      "sha256": "4eb85ad73fec744ab336f5b94f192aa3a586e8928388980c433c3aa523023709",
+      "bytes": 81456,
+      "actually_viewed": true,
+      "use": "SECONDARY VOLUME ONLY: seated chibi figure. Rear view confirms upwards curled tail and continuous collar; do not copy enlarged toy head or painted large iris.",
+      "product_asset": false,
+      "redistribution_license": "No permissive redistribution license verified; research reference only."
+    },
+    {
+      "id": "sadaharu_figure_threequarter_left",
+      "source_url": "https://www.bandaispirits.co.jp/prize_images/files/%E5%85%B1%E6%9C%89%E3%83%95%E3%82%A9%E3%83%AB%E3%83%80/item/2024.08/2726701_2.jpg",
+      "source_page": "https://www.bandaispirits.co.jp/products/search/detail.php?grp_id=10000&prd_id=2726701",
+      "authority": "Bandai Spirits licensed SOFVIMATES figure",
+      "local_path": "/Users/yaxinluo/Documents/Codex/2026-09-07/https-yaxin9luo-github-io-https-yaxin9luo/outputs/academy-living-v8/work/living-v8/research/references/sadaharu-figure_2.jpg",
+      "sha256": "de6f76b6a91f2e3032ecc6da9399e319ab2f15e1cbd1fdfb8a78cd8ab319d750",
+      "bytes": 67026,
+      "actually_viewed": true,
+      "use": "SECONDARY VOLUME ONLY: seated chibi figure. Rear view confirms upwards curled tail and continuous collar; do not copy enlarged toy head or painted large iris.",
+      "product_asset": false,
+      "redistribution_license": "No permissive redistribution license verified; research reference only."
+    },
+    {
+      "id": "sadaharu_figure_back",
+      "source_url": "https://www.bandaispirits.co.jp/prize_images/files/%E5%85%B1%E6%9C%89%E3%83%95%E3%82%A9%E3%83%AB%E3%83%80/item/2024.08/2726701_3.jpg",
+      "source_page": "https://www.bandaispirits.co.jp/products/search/detail.php?grp_id=10000&prd_id=2726701",
+      "authority": "Bandai Spirits licensed SOFVIMATES figure",
+      "local_path": "/Users/yaxinluo/Documents/Codex/2026-09-07/https-yaxin9luo-github-io-https-yaxin9luo/outputs/academy-living-v8/work/living-v8/research/references/sadaharu-figure_3.jpg",
+      "sha256": "e3e5aa7ce467b51cfe03aac9f52a01706c4d5837fe26e2fb746ede13f5eef692",
+      "bytes": 64227,
+      "actually_viewed": true,
+      "use": "SECONDARY VOLUME ONLY: seated chibi figure. Rear view confirms upwards curled tail and continuous collar; do not copy enlarged toy head or painted large iris.",
+      "product_asset": false,
+      "redistribution_license": "No permissive redistribution license verified; research reference only."
+    },
+    {
+      "id": "sadaharu_figure_threequarter_right",
+      "source_url": "https://www.bandaispirits.co.jp/prize_images/files/%E5%85%B1%E6%9C%89%E3%83%95%E3%82%A9%E3%83%AB%E3%83%80/item/2024.08/2726701_4.jpg",
+      "source_page": "https://www.bandaispirits.co.jp/products/search/detail.php?grp_id=10000&prd_id=2726701",
+      "authority": "Bandai Spirits licensed SOFVIMATES figure",
+      "local_path": "/Users/yaxinluo/Documents/Codex/2026-09-07/https-yaxin9luo-github-io-https-yaxin9luo/outputs/academy-living-v8/work/living-v8/research/references/sadaharu-figure_4.jpg",
+      "sha256": "512ffd2db6ae8a19bb1661acacf51681a428825416a740177478d6b29d5cbddf",
+      "bytes": 73593,
+      "actually_viewed": true,
+      "use": "SECONDARY VOLUME ONLY: seated chibi figure. Rear view confirms upwards curled tail and continuous collar; do not copy enlarged toy head or painted large iris.",
+      "product_asset": false,
+      "redistribution_license": "No permissive redistribution license verified; research reference only."
+    }
+  ],
+  "excluded": [
+    {
+      "url": "https://www.anime-gintama.com/movie2026/img/character/ch12.webp",
+      "actually_viewed": true,
+      "reason": "Elizabeth in geisha disguise. Do not use for base costume, standing proportions, lip color or base lash count. Source page may support placard communication only."
+    },
+    {
+      "url": "https://www.bn-pictures.co.jp/gintama/character/img/chara_12.png",
+      "actually_viewed": true,
+      "reason": "Nameplate, not character artwork."
+    },
+    {
+      "url": "https://www.bn-pictures.co.jp/gintama/character/img/chara_04.png",
+      "actually_viewed": false,
+      "reason": "Nameplate link; actual character artwork is GIF."
+    }
+  ],
+  "rights": {
+    "policy": "https://www.bn-pictures.co.jp/contact/copyright.html",
+    "source_images": "Inspection/reference only; do not bundle source images into public assets, generated texture sheets, billboards or site galleries.",
+    "authored_meshes": "Our topology, rig, materials and animation can be authored from scratch; this does not transfer the underlying Gintama character-design rights or imply rights-holder approval.",
+    "audio": "No permissively reusable original-series recording identified. Author fresh foley and identify it honestly. No copied dialogue, OST, sampled clips or claimed-original sound effects."
+  },
+  "technical_sources": [
+    "https://threejs.org/docs/pages/GLTFLoader.html",
+    "https://threejs.org/docs/pages/AnimationMixer.html",
+    "https://threejs.org/docs/pages/module-SkeletonUtils.html"
+  ]
+}

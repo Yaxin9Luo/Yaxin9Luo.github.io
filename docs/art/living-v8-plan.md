@@ -43,6 +43,7 @@ assert.notEqual(a.group.getObjectByName('SignSocket'),b.group.getObjectByName('S
 ## Task 2: Original garden architecture and planted-edge kit
 
 **Files:** create world/src/herbarium-assets.js, world/herbarium-studio.html, world/src/herbarium-studio.js, world/scripts/export-herbarium-assets.mjs plus editable Blender/export assets under world/public/models/herbarium/, tests/herbarium-assets.test.js. Add only herbarium-studio build input to vite.config.js. No world placement yet.
+**Consumes:** work/living-v8/research/garden-fit-audit.md is the final placement envelope contract; the three target PNGs under docs/art/living-v8/ are visual goals. Long local axis X, front +Z, finished floor origin. Keep the main asset and opened doors/plants inside the audited envelopes (separate south porch explicitly permitted). Existing player height is 3.28 world units; use delivered companion bounds for clearance checks.
 **Produces:**
 ```js
 createArcade({bays:4}); createConservatory(); createWaterGarden();
@@ -56,13 +57,13 @@ createGardenBorder({length:12,seed:81});
 
 ## Task 3: Connected main-island gardens and ground treatment
 
-**Files:** new world/src/herbarium-layout.js and herbarium-district.js; narrow world.js/world surface-support integration, environment-layout.js/landscape.js planting/ground sections; necessary terrain bake/manifest/new hashed derivative in existing scripts; focused terrain/runtime/herbarium placement tests. Do not alter Task1 actors, lake/v7 fog or distant source artwork.
+**Files:** new world/src/herbarium-layout.js and herbarium-district.js; narrow world.js/world surface-support integration, environment-layout.js/landscape.js planting/ground sections; necessary terrain bake/manifest/new hashed derivative in existing scripts; quality-review.js/quality-review.html for explicit garden review poses; focused terrain/runtime/herbarium placement tests. Do not alter Task1 actors, lake/v7 fog or distant source artwork.
 **Interfaces:**
 ```js
 herbariumSites; gradeHerbariumTerrain(x,z,height); herbariumAt(x,z);
 createHerbariumDistrict(root,{heightAt}); // {group,colliders,supportSurfaces,update,dispose}
 ```
-- [ ] Verify shortened candidate sites from research against FULL placed geometry, existing gardens/landmarks/portal approach/road curves and mature tree crowns. Adjust within the existing island as needed. Foundation grading must be continuous, preserve previous authored grades and be present in active runtime GLB. Do not float pavilions on raw1–2m slope.
+- [ ] Start from final garden-fit-audit.md reservations: arcades (±20,7.2,2), 12x3.4x5.4; conservatory (55,6.7,22),16x9x7.5 plus audited south porch; water garden (-44,7.1,47),16x9 low envelope. These are finished-floor values, not terrain tops. Follow audited approach corridors preserving lamps. Verify delivered asset bounds against FULL placed geometry, existing gardens/landmarks/portal approach/road curves and mature tree crowns. Adjust within the existing island as needed. Foundation grading must be continuous, preserve previous authored grades and be present in active runtime GLB. Do not float pavilions on raw1–2m slope.
 - [ ] Connect courts through grouped flower borders, low planted edges and a clear mown arrival lawn; soften/reduce only canopy-exclusion sectors that prevent composition, without hiding portfolio signs or castle facade. Preserve route width and all interaction approaches.
 - [ ] Remove obvious meadow tiling using consistent coordinate transforms for color/normal/roughness and continuous authored district masks. No global blur/low-res texture swap. Verify actual shader compilation and near/overview PBR response, not only string tests.
 - [ ] Integrate district once in full/progressive world assembly; register lighting/colliders/support and lifecycle. Bake only changed terrain descriptor; preserve unrelated derivatives. Test actual face interiors against ground, roads/bridge/portal grades, pool avoidance, finite terrain, full/cold assembly idempotence.
@@ -72,7 +73,7 @@ for(const site of herbariumSites) for(const p of sampleFloor(site)) {
 }
 // Also evaluate actual decoded runtime triangles, not just source height function.
 ```
-- [ ] Root native matched overview/arrival/castle forecourt/conservatory/water garden/day/night review; refine composition, then focused checks/build/self-review/commit.
+- [ ] Add explicit observable review-page camera selectors for arrival, castle forecourt, conservatory and water garden, preserving all existing views; label new evidence with living-v8 build identity. Root native matched overview/arrival/castle forecourt/conservatory/water garden/day/night review; refine composition, then focused checks/build/self-review/commit.
 
 ## Task 4: Authored daylight, moonlight and living sky
 
@@ -85,7 +86,7 @@ for(const site of herbariumSites) for(const p of sampleFloor(site)) {
 
 ## Task 5: Companion roaming, signs, interactions and original foley
 
-**Files:** new companion-system.js / companion-foley.js if useful, original audio manifest, narrow Game start/enhancement/update/interact/raycast/frame/dispose hooks and UI nearby prompt/i18n; tests/companions.test.js and focused UI/loading/audio tests. Reuse completed Task1 actors; do not remodel silently.
+**Files:** new companion-system.js / companion-foley.js if useful, original audio manifest, narrow Game start/enhancement/update/interact/raycast/frame/dispose hooks and UI nearby prompt/i18n; additive companion interaction controls/poses in quality-review.js/quality-review.html; tests/companions.test.js and focused UI/loading/audio tests. Reuse completed Task1 actors; do not remodel silently.
 **Produces:**
 ```js
 const companions=createCompanionSystem({root,heightAt,colliders,onMessage,onSound});
@@ -96,7 +97,7 @@ companions.interact(id); companions.setLanguage(lang); companions.dispose();
 - [ ] Install once after real actor assets load, with cancellation and shared-cache/per-instance ownership. Initial companions near courtyard, away from portal/exhibit faces. Roam through valid grounded waypoints; test full swept segments/feet against ground and obstacles, limit slope/shore access. Smooth heading and actual traveled speed drive pose; stops do not slide.
 - [ ] Elizabeth pauses, faces visitor, raises original bilingual board, holds readable text and lowers. Sadaharu greets/sniffs/sits/wags then resumes. Optional short nearby duo gag with long cooldown; behavior does not require enabled combat or collected items. Reduced-motion interaction presents stable readable board/pose.
 - [ ] Wire click/touch/E and nearby-name/action prompt. Preserve priority for portfolio/exhibit access; no friendly combat damage and no forced page opening. Interaction effects small/local (wood tap, brief dust/handdrawn accent), no screen shake. Original foley obeys existing explicit audio unlock/mute/suspend/volume, distance attenuation and bounded voices. Preserve separate source provenance, not copied anime audio.
-- [ ] Meaningful seeded roaming, frame-rate independence, obstacle/shore no-crossing, rapid repeat interactions, bilingual signs, pause/reduced, cold/cancel load, raycast/UI priority and shared resource disposal tests. Actual audio enabled/muted browser check, actual walk/pet/sign interaction recording. Commit after review.
+- [ ] Add observable companion-focused camera and interaction controls to the review page, exercising the same Game interaction path as the normal UI. Record actor/world state through visible diagnostic text, not hidden browser evaluation. Meaningful seeded roaming, frame-rate independence, obstacle/shore no-crossing, rapid repeat interactions, bilingual signs, pause/reduced, cold/cancel load, raycast/UI priority and shared resource disposal tests. Actual audio enabled/muted browser check, actual walk/pet/sign interaction recording. Commit after review.
 
 ## Final integrated gate (root + independent reviewer)
 

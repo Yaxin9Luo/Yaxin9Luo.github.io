@@ -1,0 +1,5 @@
+# Day bird form reference
+
+Primary reference checked2026-09-10: [RSPB Swallow](https://www.rspb.org.uk/birds-and-wildlife/swallow) and [RSPB identification guide](https://web-cdn.rspb.org.uk/birds-and-wildlife/identifying-birds/swift-swallow-or-martin-a-handy-id-guide). The sources describe a blue-black head/back, cream underside, red throat and long forked streamers, with darting and gliding flight around open water. The game bird can interpret these features in slate, ivory and restrained warm throat pigment; the enlarged world scale in atmosphere-design.md is an artistic choice, not biological size.
+
+Model a connected chest/head, pointed bill, tapered wing surfaces with convincing root and tip transitions, and a real forked tail. Keep the cream underside visible in banking/downstroke and avoid a featureless V-shaped line silhouette. The source photographs are references only; no image or bird call from those pages is included as a public product asset. Direct image retrieval was incomplete, so this note records verified text morphology only, not a claim to have inspected every linked photo.
