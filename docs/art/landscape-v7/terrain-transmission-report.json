@@ -6,8 +6,8 @@
   "assets": [
     {
       "id": "navigation-terrain",
-      "bytes": 7712236,
-      "offlineGeometryMs": 2246.606167,
+      "bytes": 7410200,
+      "offlineGeometryMs": 2721.284917,
       "gridSpacing": 0.5,
       "meshSimplification": false
     }

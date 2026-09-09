@@ -28,7 +28,7 @@ test('compressed navigation terrain retains metre bounds and all triangles after
     if(name==='ground'){
       const support=createSurfaceSupport(()=>-22);support.addGeometry(actual);
       for(const [x,z]of [[96,36],[0,94]])assert.equal(support.heightAt(x,z),-22,'loaded coves have real open water');
-      for(const [x,z]of [[91,32],[-10,93]])assert.ok(support.heightAt(x,z)<0&&support.heightAt(x,z)>-13,'loaded low banks retain their relief');
+      for(const [x,z]of [[91,32],[-22,94]])assert.ok(support.heightAt(x,z)<0&&support.heightAt(x,z)>-13,'loaded low banks retain their relief');
       for(const [x,z,y]of [[0,-75,10.900687258195479],[-29,-61,9],[29,-15,9],[-54,-39,7],[-70,-57,7],[48,-37,7],[65,-51,7],[0,-1,9]])assert.ok(Math.abs(support.heightAt(x,z)-y)<.015,'runtime geometry preserves shoulders, foundations and approaches');
     }
   }

@@ -65,6 +65,8 @@ export function renderedTerrainHeight(x,z){
 }
 
 function shoreCrossing(a,b){
+  if(a.field===0)return {...a,shore:true};
+  if(b.field===0)return {...b,shore:true};
   let inside=a.field>=0?a:b,outside=a.field>=0?b:a;
   for(let i=0;i<25;i++){
     const x=(inside.x+outside.x)/2,z=(inside.z+outside.z)/2,field=shoreField(x,z);
@@ -74,11 +76,13 @@ function shoreCrossing(a,b){
 }
 function clipShoreTriangle(points,crossing=shoreCrossing){
   const polygon=[];
+  const append=point=>{const last=polygon.at(-1);if(!last||last.x!==point.x||last.z!==point.z)polygon.push(point);};
   for(let i=0;i<3;i++){
     const current=points[i],previous=points[(i+2)%3];
-    if((current.field>=0)!==(previous.field>=0))polygon.push(crossing(previous,current));
-    if(current.field>=0)polygon.push(current);
+    if((current.field>=0)!==(previous.field>=0))append(crossing(previous,current));
+    if(current.field>=0)append(current);
   }
+  if(polygon.length>1&&polygon[0].x===polygon.at(-1).x&&polygon[0].z===polygon.at(-1).z)polygon.pop();
   return polygon;
 }
 
@@ -119,9 +123,11 @@ export function islandGeometry(){
   const noise=(x,z)=>{const n=Math.sin(x*12.9898+z*78.233)*43758.5453;return n-Math.floor(n);};
   for(let row=0;row<=rows;row++)for(let col=0;col<=cols;col++){
     const x=minX+col*step,z=minZ+row*step;
-    samples.push({x,z,key:row*(cols+1)+col,field:shoreField(x,z)});
+    const field=shoreField(x,z);samples.push({x,z,key:row*(cols+1)+col,field,shore:field===0});
   }
   function crossing(a,b){
+    if(a.field===0)return a;
+    if(b.field===0)return b;
     const key=a.key<b.key?`${a.key}:${b.key}`:`${b.key}:${a.key}`;
     if(cuts.has(key))return cuts.get(key);
     // Keep the land-side endpoint: terrainHeight has a deliberate ocean step.
@@ -258,7 +264,7 @@ function* assembleWorld(scene, navigation=null){
   const gardens=createAuthoredGardens(root,renderedTerrainHeight,nearPath,{trees:gardenTrees!==false});occluders.push(gardens.group);
   if(navigation){navigation.gardens=gardens;navigation.clockTargets=gardens.clockTargets;navigation.environmentColliders.push(...gardens.colliders);mergeEnvironmentLighting(navigation.environmentLighting,gardens.lighting);}
   yield {region:"gardens"};
-  const composition=createEnvironmentComposition(root,renderedTerrainHeight,nearPath,{shoreline:terrain.shore,shoreField});occluders.push(composition.group);
+  const composition=createEnvironmentComposition(root,renderedTerrainHeight,nearPath,{shoreline:terrain.shore,shoreField,groundGeometry:terrain.ground});occluders.push(composition.group);
   yield {region:"shore-details"};
 
   // Hand-worked lamps along the paths. Instance each material across the grounds.

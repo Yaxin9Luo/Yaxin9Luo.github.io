@@ -8,9 +8,16 @@ test('castle shoulders descend to two open coves while authored route levels sta
   assert.ok(terrainHeight(0,-75)>10,'rear castle shoulder rises above the outer meadow');
   assert.ok(terrainHeight(-39,-38)>8&&terrainHeight(39,-42)>8,'both castle flanks continue the precinct');
   for(const [x,z]of [[96,36],[0,94]])assert.equal(terrainHeight(x,z),-22,'the east and south coves open to the lake');
-  for(const [x,z]of [[91,32],[-10,93]])assert.ok(terrainHeight(x,z)<0&&terrainHeight(x,z)>-13,'low banks slope toward the cove');
+  for(const [x,z]of [[91,32],[-22,94]])assert.ok(terrainHeight(x,z)<0&&terrainHeight(x,z)>-13,'low banks slope toward the cove');
   for(const [x,z,y]of [[0,17,6],[-24,38,6.174077339537973],[-66,65,5.5963098418824675],[48,80,7.385671904391492],[45,54,6]])assert.ok(Math.abs(terrainHeight(x,z)-y)<1e-8,'authored roads, grove walks and exhibits retain their grade');
   for(const ends of Object.values(bridges))for(const [x,z]of ends)assert.equal(terrainHeight(x,z),7);
+});
+
+test('coves have unequal inlets separated by a connected headland and broad rock benches',()=>{
+  assert.equal(terrainHeight(-10,90),-22,'south inlet reaches its irregular inner bay');
+  assert.ok(terrainHeight(6,94)>0,'a projecting rock headland interrupts the low banks between unequal south recesses');
+  assert.ok(Math.abs(terrainHeight(-10,80)-terrainHeight(-10,78))<.8,'a broad middle bench interrupts the bank slope');
+  assert.ok(terrainHeight(-10,75)-terrainHeight(-10,80)>2,'the next rock riser creates real vertical relief');
 });
 
 test('clipped shore triangle interiors expose the same support height as their rendered vertices',()=>{
@@ -26,14 +33,17 @@ test('clipped shore triangle interiors expose the same support height as their r
 
 test('sculpted terrain stays finite and shares every open ground edge with the cliff top',()=>{
   const {ground,cliffs,shore}=islandGeometry(),edges=new Map(),p=ground.attributes.position,index=ground.index;
+  const parents=Uint32Array.from({length:p.count},(_,i)=>i),root=i=>{while(parents[i]!==i){parents[i]=parents[parents[i]];i=parents[i];}return i;};
   for(const geometry of [ground,cliffs]){
     for(const attribute of Object.values(geometry.attributes))assert.ok(attribute.array.every(Number.isFinite));
     geometry.computeBoundingBox();assert.ok(geometry.boundingBox.min.y>=-24.01&&geometry.boundingBox.max.y<24);
   }
   for(let i=0;i<index.count;i+=3)for(let j=0;j<3;j++){
     const a=index.getX(i+j),b=index.getX(i+(j+1)%3),key=a<b?`${a}/${b}`:`${b}/${a}`;
+    parents[root(b)]=root(a);
     const edge=edges.get(key)||{count:0,a,b};edge.count++;edges.set(key,edge);
   }
+  assert.equal(new Set(Array.from(parents,(_,i)=>root(i))).size,3,'only the main island and the two bridged satellite islands remain');
   const top=new Set(),cp=cliffs.attributes.position,ci=cliffs.index,key=j=>`${p.getX(j)},${p.getY(j)},${p.getZ(j)}`;
   for(let i=0;i<ci.count;i+=192)for(const j of [ci.getX(i),ci.getX(i+2)])top.add(`${cp.getX(j)},${cp.getY(j)},${cp.getZ(j)}`);
   let boundary=0;for(const edge of edges.values()){
