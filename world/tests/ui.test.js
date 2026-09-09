@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {Interface,readPrefs} from '../src/ui.js';
 import {ReadingMemory} from '../src/exhibition-state.js';
 import {freshProgress} from '../src/logic.js';
+import {EnvironmentClock} from '../src/environment-time.js';
 
 // A small DOM boundary lets these tests exercise the real reader methods and generated HTML.
 // Rendering, focus visibility and browser history events are verified in browser QA.
@@ -166,21 +167,60 @@ test('changing language in a pending exhibition keeps the requested destination'
   }finally{restore();}
 });
 
-test('legacy time preferences migrate without changing fixed modes and new presets survive reload',()=>{
+function preferenceStorage(t){
   const originalStorage=Object.getOwnPropertyDescriptor(globalThis,'localStorage'),originalMedia=globalThis.matchMedia;
+  const saved=new Map();
   globalThis.matchMedia=()=>({matches:false});
-  Object.defineProperty(globalThis,'localStorage',{configurable:true,writable:true,value:null});
-  try{
-    for(const timeOfDay of ['auto','dawn','day','noon','dusk','night','midnight']){
-      globalThis.localStorage={getItem:()=>JSON.stringify({timeOfDay,gameplay:false})};
-      assert.equal(readPrefs().timeOfDay,timeOfDay);assert.equal(readPrefs().gameplay,false);
-    }
-    globalThis.localStorage={getItem:()=>'{broken'};assert.equal(readPrefs().timeOfDay,'auto');
-    globalThis.localStorage={getItem:()=>JSON.stringify({timeOfDay:'unknown'})};assert.equal(readPrefs().timeOfDay,'auto');
-  }finally{
+  Object.defineProperty(globalThis,'localStorage',{configurable:true,writable:true,value:{getItem:key=>saved.get(key)??null,setItem:(key,value)=>saved.set(key,String(value))}});
+  t.after(()=>{
     if(originalStorage===undefined)delete globalThis.localStorage;else Object.defineProperty(globalThis,'localStorage',originalStorage);
     if(originalMedia===undefined)delete globalThis.matchMedia;else globalThis.matchMedia=originalMedia;
+  });
+}
+
+test('a new visit enables optional play and starts a moving day/night clock',t=>{
+  preferenceStorage(t);
+  const {ui,element,restore}=reader();try{
+    ui.options=readPrefs();ui.syncOptions();
+    assert.equal(element('[data-action="gameplay"]').getAttribute('aria-pressed'),'true');
+    assert.equal(element('.experience').classList.contains('gameplay-enabled'),true);
+    const clock=new EnvironmentClock(ui.options.timeOfDay,{phase:.5});
+    clock.update(10,{reducedMotion:ui.options.reducedMotion});
+    assert.equal(clock.getSnapshot().clockText,'13:00');
+    assert.equal(clock.getSnapshot().clockState,'auto');
+  }finally{restore();}
+});
+
+test('legacy fixed-time and disabled-play settings adopt the new defaults while keeping other preferences',t=>{
+  preferenceStorage(t);
+  const other={lang:'zh',quality:'high',reducedMotion:true,sound:true,musicVolume:.3,effectsVolume:.8};
+  for(const timeOfDay of ['auto','dawn','day','noon','dusk','night','midnight']){
+    localStorage.setItem('yaxin.grimoire.preferences',JSON.stringify({...other,timeOfDay,gameplay:false}));
+    const prefs=readPrefs();assert.equal(prefs.gameplay,true);assert.equal(prefs.timeOfDay,'auto');
+    for(const [key,value] of Object.entries(other))assert.equal(prefs[key],value);
   }
+});
+
+test('manual opt-outs after migration survive saving and reloading',t=>{
+  preferenceStorage(t);
+  const {ui,element,restore}=reader();try{
+    ui.options=readPrefs();ui.persist=Interface.prototype.persist;
+    ui.action('gameplay');assert.equal(element('[data-action="gameplay"]').getAttribute('aria-pressed'),'false');
+    for(const mode of ['auto','dawn','day','noon','dusk','night','midnight']){
+      ui.applyTimeMode(mode);
+      const prefs=readPrefs();assert.equal(prefs.gameplay,false);assert.equal(prefs.timeOfDay,mode);
+    }
+  }finally{restore();}
+});
+
+test('missing or unusable saved preferences keep play and automatic time available',t=>{
+  preferenceStorage(t);
+  for(const value of ['{broken','null','[]',JSON.stringify({timeOfDay:'unknown',gameplay:'false'})]){
+    localStorage.setItem('yaxin.grimoire.preferences',value);
+    assert.equal(readPrefs().timeOfDay,'auto');assert.equal(readPrefs().gameplay,true);
+  }
+  localStorage.getItem=()=>{throw new Error('Storage unavailable');};
+  assert.equal(readPrefs().timeOfDay,'auto');assert.equal(readPrefs().gameplay,true);
 });
 
 test('one HUD contains prompt, clock, exploration, combat and touch controls when optional play is off',()=>{

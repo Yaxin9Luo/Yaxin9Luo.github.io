@@ -85,11 +85,15 @@ const copy={
   noGame:['Read portfolio instead','查看个人资料'],chapter:['CHAPTER','篇章'],allOpen:['ALL CHAPTERS OPEN','所有篇章均已开放'],
 };
 
+const EXPLORATION_DEFAULTS_VERSION=1;
+
 export function readPrefs(){
   let p={};try{p=JSON.parse(localStorage.getItem('yaxin.grimoire.preferences')||'{}');}catch{}
   if(!p||typeof p!=='object')p={};
   const volume=(v,fallback)=>typeof v==='number'?Math.max(0,Math.min(1,v)):fallback;
-  return {lang:['en','zh'].includes(p.lang)?p.lang:'en',quality:['high','balanced','low'].includes(p.quality)?p.quality:'high',reducedMotion:typeof p.reducedMotion==='boolean'?p.reducedMotion:matchMedia('(prefers-reduced-motion: reduce)').matches,sound:p.sound===true,timeOfDay:normalizeTimeMode(p.timeOfDay),musicVolume:volume(p.musicVolume,.5),effectsVolume:volume(p.effectsVolume,.65),gameplay:p.gameplay===true};
+  // Adopt the new exploration defaults for old visits; subsequent manual choices stay saved.
+  const current=p.explorationDefaultsVersion===EXPLORATION_DEFAULTS_VERSION;
+  return {explorationDefaultsVersion:EXPLORATION_DEFAULTS_VERSION,lang:['en','zh'].includes(p.lang)?p.lang:'en',quality:['high','balanced','low'].includes(p.quality)?p.quality:'high',reducedMotion:typeof p.reducedMotion==='boolean'?p.reducedMotion:matchMedia('(prefers-reduced-motion: reduce)').matches,sound:p.sound===true,timeOfDay:current?normalizeTimeMode(p.timeOfDay):'auto',musicVolume:volume(p.musicVolume,.5),effectsVolume:volume(p.effectsVolume,.65),gameplay:!current||p.gameplay!==false};
 }
 
 export class Interface {

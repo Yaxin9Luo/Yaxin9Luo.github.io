@@ -78,7 +78,7 @@ export class Game {
     if (!canvas || typeof canvas.getContext !== 'function') throw new Error('The world needs a canvas.');
     this.canvas = canvas;
     this.callbacks = callbacks;
-    this.options = { quality: Object.hasOwn(QUALITY, options.quality) ? options.quality : 'high', reducedMotion: Boolean(options.reducedMotion), sound: Boolean(options.sound), gameplay: options.gameplay === true, lang: options.lang === 'zh' ? 'zh' : 'en', timeOfDay: TIME_MODES.includes(options.timeOfDay) ? options.timeOfDay : 'auto', musicVolume: options.musicVolume ?? .5, effectsVolume: options.effectsVolume ?? .65 };
+    this.options = { quality: Object.hasOwn(QUALITY, options.quality) ? options.quality : 'high', reducedMotion: Boolean(options.reducedMotion), sound: Boolean(options.sound), gameplay: options.gameplay !== false, lang: options.lang === 'zh' ? 'zh' : 'en', timeOfDay: TIME_MODES.includes(options.timeOfDay) ? options.timeOfDay : 'auto', musicVolume: options.musicVolume ?? .5, effectsVolume: options.effectsVolume ?? .65 };
     this.environmentClock = new EnvironmentClock(this.options.timeOfDay);
     this.exhibition = null;
     this.started = false;
