@@ -162,7 +162,7 @@ function masonryRuns(root,runs,heightAt){
   for(const [index,run] of runs.entries()){
     const [ax,az,bx,bz,top]=run,length=Math.hypot(bx-ax,bz-az),dx=(bx-ax)/length,dz=(bz-az)/length,rotation=Math.atan2(dx,dz),count=Math.ceil(length/1.26);
     for(let i=0;i<count;i++){
-      const t=(i+.5)/count,x=THREE.MathUtils.lerp(ax,bx,t),z=THREE.MathUtils.lerp(az,bz,t),ground=heightAt(x,z),bottom=Math.min(ground-.12,top-.7),height=top-bottom;
+      const t=(i+.5)/count,x=THREE.MathUtils.lerp(ax,bx,t),z=THREE.MathUtils.lerp(az,bz,t),ground=Math.min(...[-.6,0,.6].flatMap(u=>[-.7,.7].map(v=>heightAt(x+dx*u+dz*v,z+dz*u-dx*v)))),bottom=Math.min(ground-.12,top-.7),height=top-bottom;
       const rows=Math.max(2,Math.ceil(height/.46));
       for(let row=0;row<rows;row++){
         const h=height/rows-.022,y=bottom+(row+.5)*height/rows,joint=(row%2?.17:-.17),variation=.025*Math.sin(i*1.7+index+row),width=.76+(rows-row)*.075;
@@ -172,6 +172,22 @@ function masonryRuns(root,runs,heightAt){
     }
   }
   parts.forEach((list,i)=>{if(list.length)addMesh(root,mergeGeometries(list),materials[i],i?'Weathered limestone foundation caps':'Jointed mossy masonry footings');list.forEach(g=>g.dispose());});
+}
+
+function foundationAprons(root,heightAt){
+  const runs=[{id:'west',a:[-29.1,-60],b:[-29.1,-17],out:[-1,0],width:9.2},{id:'east',a:[29.1,-17],b:[29.1,-60],out:[1,0],width:10.4},{id:'rear',a:[-28,-61.1],b:[28,-61.1],out:[0,-1],width:10.8}];
+  for(const [r,run]of runs.entries()){
+    const positions=[],colors=[],indices=[],segments=Math.ceil(Math.hypot(run.b[0]-run.a[0],run.b[1]-run.a[1])/.5),bands=18;
+    for(let i=0;i<=segments;i++)for(let j=0;j<=bands;j++){
+      const t=i/segments,u=j/bands,taper=.25+.75*Math.sin(t*Math.PI)**.35,width=run.width*taper*(1+.12*Math.sin(t*17+r)+.065*Math.sin(t*37-r));
+      const x=THREE.MathUtils.lerp(run.a[0],run.b[0],t)+run.out[0]*width*u,z=THREE.MathUtils.lerp(run.a[1],run.b[1],t)+run.out[1]*width*u;
+      positions.push(x,heightAt(x,z)+.026,z);
+      const color=new THREE.Color('#b5b5a1').lerp(new THREE.Color('#9fab8e'),THREE.MathUtils.smoothstep(u,.25,1));colors.push(color.r,color.g,color.b);
+      if(i<segments&&j<bands){const q=i*(bands+1)+j;if(r<2)indices.push(q,q+1,q+bands+1,q+1,q+bands+2,q+bands+1);else indices.push(q,q+bands+1,q+1,q+1,q+bands+1,q+bands+2);}
+    }
+    const geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));geometry.setAttribute('color',new THREE.Float32BufferAttribute(colors,3));geometry.setIndex(indices);geometry.computeVertexNormals();planarUV(geometry,.4);
+    const mesh=addMesh(root,geometry,surface('mossy-rock',{vertexColors:true,color:'#d0cebc',albedoStrength:.88,roughness:1}),`${run.id} foundation rock apron`);mesh.castShadow=false;
+  }
 }
 
 function groundPatch(root,patch,heightAt,free){
@@ -192,6 +208,7 @@ export function createEnvironmentComposition(root,heightAt,nearPath=()=>false,{s
   const free=(x,z)=>heightAt(x,z)>.35&&!insideAuthoredGarden(x,z,.16)&&!nearPath(x,z);
   const rocks=[],shrubs=[],flowers={heather:[],ochre:[],sage:[]},placements=[];
   const runs=[[-29.9,-51,-29.9,-25,9.56],[29.9,-51,29.9,-26,9.56],[-26,-14.4,-13,-14.4,9.52],[14,-14.4,26,-14.4,9.52]];
+  foundationAprons(group,heightAt);
   masonryRuns(group,runs,heightAt);
   for(const [index,patch]of regionPatches.entries()){
     groundPatch(group,patch,heightAt,free);

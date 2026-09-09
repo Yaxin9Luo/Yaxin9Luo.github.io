@@ -59,3 +59,20 @@ test('authored banks use low botanical placements outside garden boundaries and 
   assert.ok(box.max.y>1.2);assert.ok(box.max.y<3,'footing sample remains human-scale');
   assert.ok(sample.children.some(m=>m.name==='Jointed mossy masonry footings'));
 });
+
+test('broad castle foundation aprons follow the visible terrain and open toward the approach',()=>{
+  const composition=createEnvironmentComposition(new THREE.Group(),renderedTerrainHeight),aprons=composition.group.children.filter(m=>m.name.includes('foundation rock apron'));
+  assert.equal(aprons.length,3,'side and rear foundations join broad continuous rock banks');
+  for(const apron of aprons){
+    const p=apron.geometry.attributes.position,index=apron.geometry.index;
+    assert.ok(index.count>500,'aprons follow local ground instead of using one floating slab');
+    for(let i=0;i<index.count;i+=3){
+      const [a,b,c]=[0,1,2].map(j=>new THREE.Vector3().fromBufferAttribute(p,index.getX(i+j)));
+      assert.ok(b.sub(a).cross(c.sub(a)).y>0,'foundation banks face upward');
+    }
+    for(let i=0;i<p.count;i++){
+      assert.ok(Math.abs(p.getY(i)-renderedTerrainHeight(p.getX(i),p.getZ(i))-.026)<.002,'stone apron stays grounded');
+      assert.ok(p.getZ(i)<-12,'castle portal and front approach remain open');
+    }
+  }
+});

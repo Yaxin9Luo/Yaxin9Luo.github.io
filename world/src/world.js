@@ -12,6 +12,7 @@ import {createAuthoredGardens} from './gardens.js';
 import {createEnvironmentComposition} from './environment-composition.js';
 import {environmentWind} from './environment-wind.js';
 import {createBlossomGroves} from './blossom-groves.js';
+import {academyPathCurves,landformAt,landformShoreField,sculptLandformHeight} from './landform-layout.js';
 
 let seed=131;
 function random(){seed=(Math.imul(seed,1664525)+1013904223)|0;return (seed>>>0)/4294967296;}
@@ -20,15 +21,18 @@ const TERRAIN_STEP=.5;
 function edgeShape(a){return .94+.10*Math.sin(a*3+.7)+.055*Math.cos(a*7)+.045*coherentNoise(Math.sin(a)*8,Math.cos(a)*8);}
 const channels=Object.values(bridges).map(([a,b])=>{const length=Math.hypot(b[0]-a[0],b[1]-a[1]);return{x:(a[0]+b[0])/2,z:(a[1]+b[1])/2,dx:(b[0]-a[0])/length,dz:(b[1]-a[1])/length,width:length/2-4.8};});
 function channelField(x,z){return Math.min(...channels.map(c=>{const cross=(x-c.x)*c.dz-(z-c.z)*c.dx,along=(x-c.x)*c.dx+(z-c.z)*c.dz-Math.sin(cross*.07)*3-Math.sin(cross*.19)*.7;return Math.max(Math.abs(along)/(c.width*(1+Math.sin(cross*.1)*.15))-1,Math.abs(cross)/100-1);}));}
-function shoreField(x,z){return Math.min(channelField(x,z),Math.max(...islands.map(i=>{const u=(x-i.x)/i.rx,v=(z-i.z)/i.rz;return 1-Math.hypot(u,v)/edgeShape(Math.atan2(v,u));})));}
+function shoreField(x,z){return landformShoreField(x,z,Math.min(channelField(x,z),Math.max(...islands.map(i=>{const u=(x-i.x)/i.rx,v=(z-i.z)/i.rz;return 1-Math.hypot(u,v)/edgeShape(Math.atan2(v,u));}))));}
 export function terrainHeight(x,z){
-  if(channelField(x,z)<0)return -22;
+  if(shoreField(x,z)<0)return -22;
   let h=-22;
   for(const i of islands){
     const u=(x-i.x)/i.rx,v=(z-i.z)/i.rz,a=Math.atan2(v,u),r=Math.hypot(u,v)/edgeShape(a);
     if(r<1) h=Math.max(h,i.y+(fbm(x*.065+5,z*.065)-.48)*7-Math.max(0,r-.83)*14);
   }
+  h=sculptLandformHeight(x,z,h);
   for(const l of locations){const d=Math.hypot(x-l.x,z-l.z);if(d<l.radius+8)h=THREE.MathUtils.lerp(l.y,h,THREE.MathUtils.smoothstep(d,l.radius,l.radius+8));}
+  const foundationDistance=Math.max(Math.abs(x)-29,Math.abs(z+38)-23);
+  if(foundationDistance<7)h=THREE.MathUtils.lerp(9,h,THREE.MathUtils.smoothstep(foundationDistance,0,7));
   h=gradeGardenTerrain(x,z,h);
   // Grade each gate's approach with a soft shoulder instead of suspending its
   // stone plinth over the unmodified hillside.
@@ -44,9 +48,38 @@ export function terrainHeight(x,z){
 export function renderedTerrainHeight(x,z){
   const x0=Math.floor(x/TERRAIN_STEP)*TERRAIN_STEP,z0=Math.floor(z/TERRAIN_STEP)*TERRAIN_STEP;
   const u=(x-x0)/TERRAIN_STEP,v=(z-z0)/TERRAIN_STEP;
+  const corners=[[x0,z0],[x0,z0+TERRAIN_STEP],[x0+TERRAIN_STEP,z0],[x0+TERRAIN_STEP,z0+TERRAIN_STEP]].map(([x,z])=>({x,z,field:shoreField(x,z)}));
+  if(corners.some(p=>p.field<0)){
+    const polygon=clipShoreTriangle((u+v<=1?[0,1,2]:[2,1,3]).map(i=>corners[i]));
+    for(let i=1;i<polygon.length-1;i++){
+      const [a,b,c]=[polygon[0],polygon[i],polygon[i+1]],bx=b.x-a.x,bz=b.z-a.z,cx=c.x-a.x,cz=c.z-a.z,det=bx*cz-cx*bz;
+      if(Math.abs(det)<1e-12)continue;
+      const dx=x-a.x,dz=z-a.z,u=(dx*cz-dz*cx)/det,v=(bx*dz-bz*dx)/det;
+      if(u>=-1e-4&&v>=-1e-4&&u+v<=1.0001){const y=terrainHeight(a.x,a.z);return y+(terrainHeight(b.x,b.z)-y)*u+(terrainHeight(c.x,c.z)-y)*v;}
+    }
+    return -22;
+  }
   const b=terrainHeight(x0,z0+TERRAIN_STEP),c=terrainHeight(x0+TERRAIN_STEP,z0);
   if(u+v<=1){const a=terrainHeight(x0,z0);return a+(c-a)*u+(b-a)*v;}
   const d=terrainHeight(x0+TERRAIN_STEP,z0+TERRAIN_STEP);return d+(b-d)*(1-u)+(c-d)*(1-v);
+}
+
+function shoreCrossing(a,b){
+  let inside=a.field>=0?a:b,outside=a.field>=0?b:a;
+  for(let i=0;i<25;i++){
+    const x=(inside.x+outside.x)/2,z=(inside.z+outside.z)/2,field=shoreField(x,z);
+    if(field>=0)inside={x,z,field};else outside={x,z,field};
+  }
+  return {...inside,shore:true};
+}
+function clipShoreTriangle(points,crossing=shoreCrossing){
+  const polygon=[];
+  for(let i=0;i<3;i++){
+    const current=points[i],previous=points[(i+2)%3];
+    if((current.field>=0)!==(previous.field>=0))polygon.push(crossing(previous,current));
+    if(current.field>=0)polygon.push(current);
+  }
+  return polygon;
 }
 
 // Pick one projection for the whole face. Only UV-axis seams split vertices;
@@ -76,10 +109,11 @@ export function cliffPlanarUV(geometry,scale=.22){
 // by the cliff shells, so neither overlapping ground nor open shoreline seams remain.
 export function islandGeometry(){
   const step=TERRAIN_STEP,positions=[],colors=[],indices=[],shore=[],vertices=new Map(),cuts=new Map();
-  const minX=Math.floor(Math.min(...islands.map(i=>i.x-i.rx*1.08))/step)*step;
-  const maxX=Math.ceil(Math.max(...islands.map(i=>i.x+i.rx*1.08))/step)*step;
-  const minZ=Math.floor(Math.min(...islands.map(i=>i.z-i.rz*1.08))/step)*step;
-  const maxZ=Math.ceil(Math.max(...islands.map(i=>i.z+i.rz*1.08))/step)*step;
+  // edgeShape is bounded by 1.14; keep one dry grid cell beyond that bound.
+  const minX=Math.floor(Math.min(...islands.map(i=>i.x-i.rx*1.15))/step)*step;
+  const maxX=Math.ceil(Math.max(...islands.map(i=>i.x+i.rx*1.15))/step)*step;
+  const minZ=Math.floor(Math.min(...islands.map(i=>i.z-i.rz*1.15))/step)*step;
+  const maxZ=Math.ceil(Math.max(...islands.map(i=>i.z+i.rz*1.15))/step)*step;
   const cols=Math.round((maxX-minX)/step),rows=Math.round((maxZ-minZ)/step),samples=[];
   const grassColor=new THREE.Color(),darkGrass=new THREE.Color('#a1b29b'),rimColor=new THREE.Color('#929b89');
   const noise=(x,z)=>{const n=Math.sin(x*12.9898+z*78.233)*43758.5453;return n-Math.floor(n);};
@@ -90,30 +124,22 @@ export function islandGeometry(){
   function crossing(a,b){
     const key=a.key<b.key?`${a.key}:${b.key}`:`${b.key}:${a.key}`;
     if(cuts.has(key))return cuts.get(key);
-    let inside=a.field>=0?a:b,outside=a.field>=0?b:a;
-    for(let i=0;i<25;i++){
-      const x=(inside.x+outside.x)/2,z=(inside.z+outside.z)/2,field=shoreField(x,z);
-      if(field>=0)inside={x,z,field};else outside={x,z,field};
-    }
     // Keep the land-side endpoint: terrainHeight has a deliberate ocean step.
-    const point={...inside,key,shore:true};cuts.set(key,point);return point;
+    const point={...shoreCrossing(a,b),key};cuts.set(key,point);return point;
   }
   function vertex(point){
     if(vertices.has(point.key))return vertices.get(point.key);
-    const index=positions.length/3,h=terrainHeight(point.x,point.z);
+    const index=positions.length/3,h=terrainHeight(point.x,point.z),landform=landformAt(point.x,point.z);
     positions.push(point.x,h,point.z);
     grassColor.set('#c6d0b6').lerp(darkGrass,.4+.24*Math.sin(point.x*.051)*Math.sin(point.z*.061)+noise(point.x,point.z)*.035);
     if(point.field<.04)grassColor.lerp(rimColor,.7*(1-point.field/.04));
+    grassColor.lerp(new THREE.Color('#a3ab96'),landform.shoulder*.28);
+    grassColor.lerp(new THREE.Color('#899788'),landform.moisture*.5);
     colors.push(grassColor.r,grassColor.g,grassColor.b);vertices.set(point.key,index);
     return index;
   }
   function triangle(points){
-    const polygon=[];
-    for(let i=0;i<3;i++){
-      const current=points[i],previous=points[(i+2)%3];
-      if((current.field>=0)!==(previous.field>=0))polygon.push(crossing(previous,current));
-      if(current.field>=0)polygon.push(current);
-    }
+    const polygon=clipShoreTriangle(points,crossing);
     if(polygon.length<3)return;
     const first=vertex(polygon[0]);
     for(let i=1;i<polygon.length-1;i++)indices.push(first,vertex(polygon[i]),vertex(polygon[i+1]));
@@ -140,13 +166,15 @@ export function islandGeometry(){
     const strata=[0,.065,.15,.29,.40,.56,.70,.84,1],ledges=[0,-.7,-1.5,-1.4,-.45,-.3,.65,1.35,2.6];
     const level=band/4,low=Math.min(7,Math.floor(level)),fraction=level-low;
     const length=Math.hypot(dx,dz)||1,t=THREE.MathUtils.lerp(strata[low],strata[low+1],fraction);
-    const shelf=coherentNoise(point.x*.035+9,point.z*.035)*1.8,ledge=THREE.MathUtils.lerp(ledges[low],ledges[low+1],fraction);
+    const landform=landformAt(point.x,point.z),shelf=coherentNoise(point.x*.035+9,point.z*.035)*1.8,ledge=THREE.MathUtils.lerp(ledges[low],ledges[low+1],fraction);
     const fault=(coherentNoise(point.x*.19+level*.71,point.z*.19-level*.44)-.5)*Math.sin(t*Math.PI);
-    const inset=ledge*(.7+shelf)+fault*2.8;
+    const inset=ledge*(.7+shelf)*(1+landform.shoulder*.36-landform.cove*.3)+fault*(2.8-landform.terrace);
     const verticalFault=(coherentNoise(point.x*.11+level*1.3,point.z*.13+level*.83)-.5)*3.2*Math.sin(t*Math.PI);
     const p=[point.x+dx/length*inset,THREE.MathUtils.lerp(terrainHeight(point.x,point.z),-24,t)+verticalFault,point.z+dz/length*inset];
     const index=cliffPositions.length/3;cliffPositions.push(...p);
     cliffColor.setHSL(.54,.08,.43+coherentNoise(point.x*.12,point.z*.12+level*.8)*.055);
+    cliffColor.lerp(new THREE.Color('#a8aa91'),(1-THREE.MathUtils.smoothstep(t,.12,.64))*(.2+landform.shoulder*.3));
+    cliffColor.lerp(new THREE.Color('#627b77'),THREE.MathUtils.smoothstep(-p[1],6,17)*(.2+landform.moisture*.26));
     cliffColors.push(cliffColor.r,cliffColor.g,cliffColor.b);
     cliffVertices.set(key,index);return index;
   }
@@ -196,11 +224,7 @@ function* assembleWorld(scene, navigation=null){
   const paths=[],roadSupport=createSurfaceSupport(renderedTerrainHeight),groundHeight=roadSupport.heightAt;
   if(navigation)navigation.heightAt=groundHeight;
   for(const l of locations){
-    const gate=new THREE.Vector3(l.x,0,l.z+l.radius+3),ends=bridges[l.id];
-    const p=ends?new THREE.Vector3(ends[0][0],0,ends[0][1]):gate;
-    const middle=l.id==='about'?new THREE.Vector3(0,0,17):l.id==='research'?new THREE.Vector3(-24,0,38):new THREE.Vector3(p.x*.45+10,0,court.z+p.z*.12);
-    const curves=[new THREE.CatmullRomCurve3([new THREE.Vector3(1,0,court.z),middle,p])];
-    if(ends)curves.push(new THREE.LineCurve3(new THREE.Vector3(ends[1][0],0,ends[1][1]),gate));
+    const curves=academyPathCurves(l);
     for(const curve of curves){
     const points=curve.getPoints(Math.ceil(curve.getLength()/.18));paths.push(points);
     const pos=[],idx=[];

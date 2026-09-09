@@ -1,0 +1,15 @@
+{
+  "meshopt": "1.2.0",
+  "gltfTransform": "4.5.0",
+  "normalBits": 14,
+  "positionBits": 16,
+  "assets": [
+    {
+      "id": "navigation-terrain",
+      "bytes": 7712236,
+      "offlineGeometryMs": 2246.606167,
+      "gridSpacing": 0.5,
+      "meshSimplification": false
+    }
+  ]
+}

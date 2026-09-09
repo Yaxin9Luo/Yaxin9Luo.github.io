@@ -7,6 +7,7 @@ import {MeshoptDecoder} from 'three/addons/libs/meshopt_decoder.module.js';
 import {assetManifest} from '../src/asset-manifest.js';
 import {mutableGeometry} from '../src/gltf-resource.js';
 import {islandGeometry} from '../src/world.js';
+import {createSurfaceSupport} from '../src/surface-support.js';
 
 test('content-addressed manifest matches deployed bytes',async()=>{
   for(const asset of Object.values(assetManifest)){
@@ -24,5 +25,11 @@ test('compressed navigation terrain retains metre bounds and all triangles after
     assert.ok(actual.boundingBox.min.distanceTo(source[name].boundingBox.min)<.012,`${name}: min bounds changed`);
     assert.ok(actual.boundingBox.max.distanceTo(source[name].boundingBox.max)<.012,`${name}: max bounds changed`);
     assert.ok(actual.boundingBox.max.x>100,'normalized integer geometry collapsed to unit space');
+    if(name==='ground'){
+      const support=createSurfaceSupport(()=>-22);support.addGeometry(actual);
+      for(const [x,z]of [[96,36],[0,94]])assert.equal(support.heightAt(x,z),-22,'loaded coves have real open water');
+      for(const [x,z]of [[91,32],[-10,93]])assert.ok(support.heightAt(x,z)<0&&support.heightAt(x,z)>-13,'loaded low banks retain their relief');
+      for(const [x,z,y]of [[0,-75,10.900687258195479],[-29,-61,9],[29,-15,9],[-54,-39,7],[-70,-57,7],[48,-37,7],[65,-51,7],[0,-1,9]])assert.ok(Math.abs(support.heightAt(x,z)-y)<.015,'runtime geometry preserves shoulders, foundations and approaches');
+    }
   }
 });
