@@ -1,0 +1,56 @@
+{
+  "reviewBase": "68a801043e6d98d057e678541d668b1e20c88b19",
+  "manifestByteIdentical": true,
+  "runtimeSourceUnchanged": true,
+  "fullExportsRebuilt": false,
+  "files": [
+    {
+      "path": "work/living-v8/exports/herbarium/arcade.glb",
+      "bytes": 23848924,
+      "sha256": "7f63cd5bdaec58682c3f67c33f81c8773d63dedd0dff5260401d04d028416967",
+      "matchesAcceptedDelivery": true
+    },
+    {
+      "path": "work/living-v8/exports/herbarium/arcade.blend",
+      "bytes": 23879395,
+      "sha256": "b43ec094c89cadcf97788720354cf8c312f98209d32edf99d3e858ef21ee613c",
+      "matchesAcceptedDelivery": true
+    },
+    {
+      "path": "work/living-v8/exports/herbarium/conservatory.glb",
+      "bytes": 118878104,
+      "sha256": "8e4ce81d2b2927bbb83bc13a4e9a8f78759826e7f776eee558755fcf829c4a36",
+      "matchesAcceptedDelivery": true
+    },
+    {
+      "path": "work/living-v8/exports/herbarium/conservatory.blend",
+      "bytes": 147877909,
+      "sha256": "5105a73d5ecf73c579ba2ddeb7aa5e2eb8556c2d91d03ebb227fa64267c9ac8d",
+      "matchesAcceptedDelivery": true
+    },
+    {
+      "path": "work/living-v8/exports/herbarium/water-garden.glb",
+      "bytes": 72341316,
+      "sha256": "1bcec3bbb7bd64f427cc801b495d477e5bd3ff152b42154a63f53cd0c3fa6b96",
+      "matchesAcceptedDelivery": true
+    },
+    {
+      "path": "work/living-v8/exports/herbarium/water-garden.blend",
+      "bytes": 83381203,
+      "sha256": "a2a23ae02a843e16717e27dcf8c9b80e2c03f573fbfe1a5ffbae6260fd329ce1",
+      "matchesAcceptedDelivery": true
+    },
+    {
+      "path": "work/living-v8/exports/herbarium/flower-border.glb",
+      "bytes": 46619052,
+      "sha256": "14d323c0f90c09b91d9185a65d161c3059b33fa54611663588a7afa527fa85bf",
+      "matchesAcceptedDelivery": true
+    },
+    {
+      "path": "work/living-v8/exports/herbarium/flower-border.blend",
+      "bytes": 50828604,
+      "sha256": "2d48efb17f544a245684ece03a59f0407a826a422a2a2f6649aa6ab32ee52680",
+      "matchesAcceptedDelivery": true
+    }
+  ]
+}

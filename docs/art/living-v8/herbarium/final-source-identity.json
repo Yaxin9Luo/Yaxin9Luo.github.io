@@ -27,13 +27,13 @@
     },
     {
       "path": "world/scripts/export-herbarium-assets.mjs",
-      "sha256": "cbc0a0a103a5863a880c779512dcdfa65aab12bbeb74cbae0c7cd865a14502b8",
-      "bytes": 11344
+      "sha256": "f9cf88da7e28f3d4c7d0be78e9d4abff1604934bd3a53e07ac01cdd832385423",
+      "bytes": 10904
     },
     {
       "path": "world/tests/herbarium-assets.test.js",
-      "sha256": "9a389126ee383dc3b4fc72ec78d8ad07db5d4377f11bdfd853051306fd38ee23",
-      "bytes": 21964
+      "sha256": "bfe54881d0580d8ee1b839190f6215f854f0364b79ce59edf44f0d6087b28dae",
+      "bytes": 25076
     },
     {
       "path": "world/vite.config.js",
@@ -59,6 +59,24 @@
       "path": "docs/art/living-v8/herbarium/verify-r6-parity.mjs",
       "sha256": "a50aaef4782f56b31180a59f58ab0bc414efc31f38845a499a81a69530a93da2",
       "bytes": 3769
+    },
+    {
+      "path": "docs/art/living-v8/herbarium/editable-runner.mjs",
+      "sha256": "7bde21799706213dfd3a2fe319e1f9def0105dce97db4e445aef353914d0375e",
+      "bytes": 1719
+    },
+    {
+      "path": "world/public/models/herbarium/README.md",
+      "sha256": "7d5282d77a0f4b96f32f8589018acd93e04435d78225cab9fc8500a87ba11168",
+      "bytes": 4431
     }
-  ]
+  ],
+  "reviewFix": {
+    "base": "68a801043e6d98d057e678541d668b1e20c88b19",
+    "issues": [
+      "I1/P2",
+      "M1/P3"
+    ],
+    "scope": "Checked Blender completion before editable certification/publication/cleanup; isolated factory startup; documented audit Python exit status. Runtime art and delivered artifact bytes unchanged."
+  }
 }

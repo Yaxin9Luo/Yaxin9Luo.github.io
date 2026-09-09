@@ -159,3 +159,19 @@ test('final packed GLBs decode with the runtime loader and preserve geometry, re
     assert.equal(hash(await readFile(new URL(`${kind}.blend`,output))),asset.editableSha256);disposeGLTF(gltf);
   }}finally{globalThis.self=previous.self;globalThis.createImageBitmap=previous.createImageBitmap;}
 });
+
+test('Blender Python failures and incomplete saves reject without certifying stale files or deleting inputs',async t=>{
+  const {mkdtemp,readFile,writeFile,rm,access}=await import('node:fs/promises'),{tmpdir}=await import('node:os'),{join}=await import('node:path'),{pathToFileURL}=await import('node:url'),{createHash}=await import('node:crypto'),{runEditableBlender,completeEditableExport}=await import('../../docs/art/living-v8/herbarium/editable-runner.mjs');
+  try{await access('/Applications/Blender.app/Contents/MacOS/Blender');}catch{t.skip('Blender is required for this actual subprocess failure regression.');return;}
+  const directory=await mkdtemp(join(tmpdir(),'herbarium-blender-contract-')),scriptPath=join(directory,'save.py'),logPath=join(directory,'blender.log'),outputPath=join(directory,'specimen.blend'),manifestPath=join(directory,'manifest.json'),inputPath=join(directory,'specimen.authoring-tmp.glb'),out=pathToFileURL(directory+'/');
+  const saveScript=`import bpy\nbpy.ops.wm.read_factory_settings(use_empty=True)\nbpy.ops.mesh.primitive_cube_add()\nbpy.ops.wm.save_as_mainfile(filepath=${JSON.stringify(outputPath)},check_existing=False)\nprint('EDITABLE_SAVED specimen 1')\n`;
+  const run=()=>completeEditableExport({scriptPath,logPath,out,manifest:{generation:'new',assets:{specimen:{}}},manifestPaths:[manifestPath]});
+  try{
+    await writeFile(scriptPath,saveScript);await runEditableBlender({scriptPath,logPath,expectedSaves:['specimen']});
+    const original=await readFile(outputPath),sha=createHash('sha256').update(original).digest('hex'),oldManifest='{"generation":"previous"}\n';assert.ok(original.length>1000);await writeFile(manifestPath,oldManifest);await writeFile(inputPath,'new import input retained on failure');
+    await writeFile(scriptPath,"raise RuntimeError('Intentional herbarium import/save regression')\n");
+    await assert.rejects(run(),/Editable Blender export failed \(1\)/);assert.match(await readFile(logPath,'utf8'),/Intentional herbarium import\/save regression/);assert.equal(createHash('sha256').update(await readFile(outputPath)).digest('hex'),sha);assert.equal(await readFile(manifestPath,'utf8'),oldManifest,'failed Python must not certify stale .blend bytes in a new manifest');assert.equal(await readFile(inputPath,'utf8'),'new import input retained on failure');
+    await writeFile(scriptPath,"print('No save was performed')\n");await assert.rejects(run(),/missing completed save: specimen/);assert.equal(createHash('sha256').update(await readFile(outputPath)).digest('hex'),sha);assert.equal(await readFile(manifestPath,'utf8'),oldManifest);await access(inputPath);
+    await writeFile(scriptPath,saveScript);await run();const published=JSON.parse(await readFile(manifestPath,'utf8'));assert.equal(published.generation,'new');assert.equal(published.assets.specimen.editableSha256,createHash('sha256').update(await readFile(outputPath)).digest('hex'));await assert.rejects(access(inputPath),{code:'ENOENT'});assert.doesNotMatch(await readFile(logPath,'utf8'),/BlenderMCP/);
+  }finally{await rm(directory,{recursive:true,force:true});}
+});

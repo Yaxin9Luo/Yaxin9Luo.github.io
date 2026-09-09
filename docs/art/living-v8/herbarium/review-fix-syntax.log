@@ -1,0 +1,3 @@
+PASS: generated Blender import/save Python parses after path interpolation.
+PASS: all 8 accepted GLB/Blend bytes and public manifest match committed delivery.
+PASS: runtime asset source remains 4fceba32fe849ec2dfa6e91be05cd9cd74cf63763d796d151fd4d4c405b96641.

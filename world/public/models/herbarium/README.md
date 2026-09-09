@@ -12,10 +12,12 @@ Rebuild all final GLBs and editable scenes from the worktree root:
 
 ```sh
 node world/scripts/export-herbarium-assets.mjs
-/Applications/Blender.app/Contents/MacOS/Blender --background --python docs/art/living-v8/herbarium/audit-editable.py
+/Applications/Blender.app/Contents/MacOS/Blender --factory-startup --background --python-exit-code 1 --python docs/art/living-v8/herbarium/audit-editable.py
 ```
 
 The local full exports are intentionally ignored by Git to avoid redundant deployment copies and large GitHub blobs. A fresh checkout can reproduce them with these commands; the ordinary test suite explicitly skips only the optional local export gate until they exist. The first command requires the existing Node dependencies and Blender at the path above. It generates temporary uncompressed-geometry Blender inputs, imports and packs them, saves compressed editable scenes, then removes the temporary GLBs. `rebuild-editable.py` is the generated import stage of that command and is not a standalone rebuild after the temporary inputs are removed.
+
+The save stage starts Blender with factory settings and propagates Python failures as exit1. It requires a completed save for every family before certifying editable hashes, deleting import inputs or publishing manifests. A failed save remains a failed rebuild even when older `.blend` files are present.
 
 ## Botanical credits
 
