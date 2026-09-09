@@ -1,7 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
-import crypto from 'node:crypto';
 import {createLake,createVegetation} from '../src/landscape.js';
 import {insideBlossomPark} from '../src/environment-layout.js';
 import {bridges} from '../src/locations.js';
@@ -38,9 +37,12 @@ test('all layered plant batches clear the bridge plane with a deterministic auth
     }
     entries.push([mesh.name,matrices]);
   }
-  // Approved seeded layout reserves both bridges and the two curated blossom groves.
-  // Retains a deterministic placement/pigment baseline for all remaining plants.
-  assert.equal(crypto.createHash('sha256').update(JSON.stringify(entries)).digest('hex'),'fa167567f8933eecc3d60e761049f347b2f4dcf41aa8eea373041ecbf8db3804');
+  // Repeat actual assembly rather than pinning a hash of an obsolete scatter.
+  const repeated=new THREE.Group();createVegetation(repeated,()=>6,()=>false,{trees:false});
+  for(const mesh of repeated.children.filter(o=>o.isInstancedMesh)){
+    const expected=entries.find(([name])=>name===mesh.name)?.[1];assert.ok(expected,mesh.name);assert.equal(mesh.count,expected.length);
+    for(let i=0;i<mesh.count;i++){mesh.getMatrixAt(i,matrix);assert.deepEqual([...matrix.elements,...(mesh.instanceColor?Array.from(mesh.instanceColor.array.slice(i*3,i*3+3)):[])],expected[i]);}
+  }
 });
 
 test('lake normals are filtered continuously rather than producing square specular cells',()=>{

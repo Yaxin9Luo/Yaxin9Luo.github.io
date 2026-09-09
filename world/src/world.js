@@ -3,7 +3,7 @@ import {createSurfaceSupport} from './surface-support.js';
 import {createPortal} from './effects.js';
 import {createAtmosphere} from './atmosphere.js';
 import {locations,ringPositions,crystalPositions,wispPositions,islands,bridges,court,exhibitSites} from './locations.js';
-import {noise as coherentNoise,fbm,surface,planarUV,groundMaterial,createLake,createVegetation,createBackdrop} from './landscape.js';
+import {noise as coherentNoise,fbm,surface,planarUV,groundMaterial,cliffMaterial,createLake,createVegetation,createBackdrop} from './landscape.js';
 import {createCastle,createObservatory,createLibrary,createWorkshop,createOwlery,createRuins} from './models.js';
 import {createWisp} from './characters.js';
 import {createViaduct,createGardenLamp,createResearchBook,createLampGroundGlow} from './site-details.js';
@@ -205,7 +205,7 @@ export function islandGeometry(){
 
 export function createTerrainSpecimen(){
   const group=new THREE.Group(),terrain=islandGeometry();group.name='Cliff terrain';
-  const ground=new THREE.Mesh(terrain.ground,groundMaterial());const cliffs=new THREE.Mesh(terrain.cliffs,surface('mossy-rock',{vertexColors:true,color:'#b8b6ab'}));
+  const ground=new THREE.Mesh(terrain.ground,groundMaterial());const cliffs=new THREE.Mesh(terrain.cliffs,cliffMaterial());
   ground.receiveShadow=true;cliffs.receiveShadow=true;group.add(ground,cliffs);return group;
 }
 
@@ -219,7 +219,7 @@ function* assembleWorld(scene, navigation=null){
   const glowMat=new THREE.MeshBasicMaterial({color:'#ffd997',toneMapped:false});
   const terrain=navigation?.terrain||islandGeometry();
   const ground=navigation?.ground||mesh(terrain.ground,groundMaterial());ground.name='island-ground';
-  const cliffs=navigation?.cliffs||mesh(terrain.cliffs,surface('mossy-rock',{vertexColors:true,color:'#b8b6ab'}));cliffs.name='shoreline-cliffs';
+  const cliffs=navigation?.cliffs||mesh(terrain.cliffs,cliffMaterial());cliffs.name='shoreline-cliffs';
   const occluders=navigation?.occluders||[ground,cliffs];
   for(let i=0;i<islands.length*(23*97+96*3*6);i++)random();
   const lake=navigation?.lake||createLake(root,scene);
@@ -365,7 +365,7 @@ export function registerWorldLighting(world,root=world.root){
 /** Small playable scene; all high-detail districts are installed after its first frame. */
 export function createNavigationWorld(scene,terrain){
   const root=new THREE.Group();root.name='Academy world';scene.add(root);
-  const ground=new THREE.Mesh(terrain.ground,groundMaterial()),cliffs=new THREE.Mesh(terrain.cliffs,surface('mossy-rock',{vertexColors:true,color:'#b8b6ab'}));
+  const ground=new THREE.Mesh(terrain.ground,groundMaterial()),cliffs=new THREE.Mesh(terrain.cliffs,cliffMaterial());
   ground.name='island-ground';cliffs.name='shoreline-cliffs';ground.receiveShadow=cliffs.receiveShadow=true;root.add(ground,cliffs);
   const lake=createLake(root,scene),atmosphere=createAtmosphere(scene,{heightAt:terrainHeight});
   const portals=[],animated=[];

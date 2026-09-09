@@ -5,8 +5,9 @@ import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
 import { locations, court, bridges } from './locations.js';
 import {loadPBRTexture,loadImageTexture} from './asset-cache.js';
 import {loadAtmosphereAssets} from './atmosphere.js';
-import {insideAuthoredGarden,landscapeGroves,groveAt,insideBlossomPark,blossomParks} from './environment-layout.js';
+import {insideAuthoredGarden,landscapeGroves,insideBlossomPark,blossomParks,plantingCommunityAt} from './environment-layout.js';
 import {createGroveTree,createGroveShrub,updateGroveWind} from './grove-foliage.js';
+import {landformAt} from './landform-layout.js';
 import {createFoliageLOD} from './foliage-lod.js';
 import {applyEnvironmentWind,attachWindShadows} from './environment-wind.js';
 import {loadScannedRockAssets,addScannedRocks} from './rock-scans.js';
@@ -93,50 +94,92 @@ export function planarUV(geometry, scale=.2) {
   }
   geometry.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2));return geometry;
 }
-export function groundMaterial() {
+let communityTexture;
+function plantingMaterialMap(){
+  if(communityTexture)return communityTexture;
+  const size=256,data=new Uint8Array(size*size*4);
+  for(let z=0;z<size;z++)for(let x=0;x<size;x++){
+    const wx=(x+.5)/size*288-144,wz=(z+.5)/size*288-144,p=plantingCommunityAt(wx,wz,landformAt(wx,wz)),at=(z*size+x)*4;
+    data[at]=Math.round(p.moisture*255);data[at+1]=Math.round(p.humus*255);data[at+2]=Math.round(p.rock*255);data[at+3]=Math.round(p.opening*255);
+  }
+  communityTexture=new THREE.DataTexture(data,size,size);communityTexture.minFilter=communityTexture.magFilter=THREE.LinearFilter;communityTexture.colorSpace=THREE.NoColorSpace;communityTexture.needsUpdate=true;communityTexture.userData.sharedAsset=true;return communityTexture;
+}
+export function groundMaterial({transition=false}={}) {
   // Geometry retains its baked colours for exports, but ground no longer uses
   // their broad periodic paint. Detail and transitions live at material scale.
   const m=surface('meadow',{vertexColors:false,color:'#dce2cf',albedoStrength:1,normalScale:new THREE.Vector2(.30,.30),roughness:1});
   m.userData.metresPerRepeat=2.5;
+  m.userData.plantingCommunity=true;
   const bindings=[];
   m.addEventListener('dispose',()=>{for(const binding of bindings)terrainBindings.delete(binding);});
   m.onBeforeCompile=shader=>{
+    shader.uniforms.plantingMap={value:plantingMaterialMap()};
     for(const [uniformName,name,kind]of[['rockMap','mossy-rock','color'],['humusMap','forest-ground','color'],['mossNormal','mossy-rock','normal'],['humusNormal','forest-ground','normal'],['mossRoughness','mossy-rock','roughness'],['humusRoughness','forest-ground','roughness']]){
       const uniform={value:maps[name]?.[kind]||maps.meadow?.[kind]||neutralTerrainChannel[kind]},binding={name,kind,uniform};
       shader.uniforms[uniformName]=uniform;terrainBindings.add(binding);bindings.push(binding);
     }
-    shader.vertexShader='varying vec3 terrainNormal; varying vec3 terrainPosition;\n'+shader.vertexShader;
-    shader.vertexShader=shader.vertexShader.replace('#include <begin_vertex>','#include <begin_vertex>\nterrainNormal=normal; terrainPosition=position;');
-    shader.fragmentShader=`uniform sampler2D rockMap,humusMap,mossNormal,humusNormal,mossRoughness,humusRoughness;
+    shader.vertexShader=`${transition?'attribute float soilInterior; varying float rootInterior;\n':''}varying vec3 terrainNormal; varying vec3 terrainPosition;\n`+shader.vertexShader;
+    shader.vertexShader=shader.vertexShader.replace('#include <begin_vertex>',`#include <begin_vertex>\nterrainNormal=normal; terrainPosition=position;${transition?'rootInterior=soilInterior;':''}`);
+    shader.fragmentShader=`${transition?'varying float rootInterior;':''}uniform sampler2D plantingMap,rockMap,humusMap,mossNormal,humusNormal,mossRoughness,humusRoughness;
       varying vec3 terrainNormal; varying vec3 terrainPosition;
       float soilHash(vec2 p){vec3 q=fract(vec3(p.xyx)*.1031);q+=dot(q,q.yzx+33.33);return fract((q.x+q.y)*q.z);}
       float soilNoise(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(soilHash(i),soilHash(i+vec2(1,0)),f.x),mix(soilHash(i+vec2(0,1)),soilHash(i+vec2(1,1)),f.x),f.y);}
       float soilFbm(vec2 p){return soilNoise(p)*.57+soilNoise(p*2.03+17.1)*.29+soilNoise(p*4.13-8.7)*.14;}
     `+shader.fragmentShader;
-    shader.fragmentShader=shader.fragmentShader.replace('#include <map_fragment>',`#include <map_fragment>
-      // Shift the dry photographic grass pigment toward fern green while
-      // retaining each texel's luminance, shade structure and fine contrast.
+    shader.fragmentShader=shader.fragmentShader.replace('#include <map_fragment>',`
+      #ifdef USE_MAP
+        diffuseColor*=texture2D(map,terrainPosition.xz/2.5);
+      #endif
+      // Region pigment retains measured texel luminance and physical relief.
+      vec4 community=texture2D(plantingMap,(terrainPosition.xz+vec2(144.))/288.);
       vec3 meadowLuminanceWeights=vec3(.2126,.7152,.0722);
       float meadowLuminance=dot(diffuseColor.rgb,meadowLuminanceWeights);
-      vec3 meadowPigment=vec3(.65,1.16,.83);
+      vec3 meadowPigment=mix(vec3(.69,1.17,.83),vec3(.59,1.19,.86),community.r);
       meadowPigment/=dot(meadowPigment,meadowLuminanceWeights);
-      diffuseColor.rgb=mix(diffuseColor.rgb,meadowLuminance*meadowPigment,.72);
+      diffuseColor.rgb=mix(diffuseColor.rgb,meadowLuminance*meadowPigment,.78);
       float slope=1.-smoothstep(.55,.94,normalize(terrainNormal).y);
-      float planting=soilFbm(terrainPosition.xz*.16+vec2(18,-4));
-      float humusWeight=smoothstep(.40,.75,planting)*.18*(1.-slope);
-      float mossWeight=clamp(slope*.60+smoothstep(.46,.76,soilFbm(terrainPosition.xz*.23-11.))*.15,0.,.68);
+      float fineEdge=soilFbm(terrainPosition.xz*.43+vec2(18,-4));
+      float humusWeight=clamp(community.g*(.84+fineEdge*.16)${transition?'+rootInterior*.66':''},0.,.86)*(1.-slope*.65);
+      float mossWeight=clamp(slope*.76+community.b*(.32+fineEdge*.21),0.,.86);
       vec2 soilUv=terrainPosition.xz/2.5;
-      vec3 soilBase=mix(diffuseColor.rgb,texture2D(humusMap,soilUv).rgb*diffuse,humusWeight);
-      diffuseColor.rgb=mix(soilBase,texture2D(rockMap,soilUv).rgb*diffuse,mossWeight);`);
-    const normalSample='mix(mix(texture2D(normalMap,vNormalMapUv).xyz,texture2D(humusNormal,soilUv).xyz,humusWeight),texture2D(mossNormal,soilUv).xyz,mossWeight) * 2.0 - 1.0';
+      vec3 humusColor=texture2D(humusMap,soilUv).rgb;
+      humusColor=mix(humusColor,vec3(dot(humusColor,meadowLuminanceWeights))*vec3(.92,.96,.84),.62)*.79;
+      vec3 soilBase=mix(diffuseColor.rgb,humusColor*diffuse,humusWeight);
+      diffuseColor.rgb=mix(soilBase,mix(texture2D(rockMap,soilUv).rgb,vec3(dot(texture2D(rockMap,soilUv).rgb,meadowLuminanceWeights))*vec3(1.12,1.12,1.04),.60)*diffuse,mossWeight);`);
+    const normalSample='mix(mix(texture2D(normalMap,soilUv).xyz,texture2D(humusNormal,soilUv).xyz,humusWeight),texture2D(mossNormal,soilUv).xyz,mossWeight) * 2.0 - 1.0';
     shader.fragmentShader=shader.fragmentShader.replace('#include <normal_fragment_maps>',THREE.ShaderChunk.normal_fragment_maps.replaceAll('texture2D( normalMap, vNormalMapUv ).xyz * 2.0 - 1.0',normalSample));
     shader.fragmentShader=shader.fragmentShader.replace('#include <roughnessmap_fragment>',`float roughnessFactor=roughness;
       #ifdef USE_ROUGHNESSMAP
-        float soilRoughness=mix(mix(texture2D(roughnessMap,vRoughnessMapUv).g,texture2D(humusRoughness,soilUv).g,humusWeight),texture2D(mossRoughness,soilUv).g,mossWeight);
+        float soilRoughness=mix(mix(texture2D(roughnessMap,soilUv).g,texture2D(humusRoughness,soilUv).g,humusWeight),texture2D(mossRoughness,soilUv).g,mossWeight);
         roughnessFactor=mix(.82,1.,soilRoughness);
       #endif`);
   };
-  m.customProgramCacheKey=()=> 'terrain-three-layer-pbr-v7'; return m;
+  m.customProgramCacheKey=()=> `terrain-community-pbr-v7-${transition}`; return m;
+}
+
+export function cliffMaterial(){
+  const m=surface('mossy-rock',{vertexColors:true,color:'#ffffff',albedoStrength:1,normalScale:new THREE.Vector2(.82,.82),roughness:1,roughnessFloor:.80});
+  const compile=m.onBeforeCompile;
+  m.onBeforeCompile=shader=>{
+    compile(shader);shader.uniforms.plantingMap={value:plantingMaterialMap()};
+    shader.vertexShader='varying vec3 cliffPosition;\n'+shader.vertexShader;
+    shader.vertexShader=shader.vertexShader.replace('#include <begin_vertex>','#include <begin_vertex>\ncliffPosition=position;');
+    shader.fragmentShader='uniform sampler2D plantingMap; varying vec3 cliffPosition;\n'+shader.fragmentShader;
+    shader.fragmentShader=shader.fragmentShader.replace('#include <color_fragment>',`
+      float mineralLuminance=dot(diffuseColor.rgb,vec3(.2126,.7152,.0722));
+      vec3 mineralFace=vec3(.62,.66,.64)*(.16+mineralLuminance*.78);
+      vec3 sourceMineralChroma=clamp(diffuseColor.rgb/max(mineralLuminance,.02),vec3(.68),vec3(1.30));
+      mineralFace*=mix(vec3(1.),sourceMineralChroma,.22);
+      float moisture=texture2D(plantingMap,(cliffPosition.xz+vec2(144.))/288.).r;
+      float wetToe=(1.-smoothstep(-13.,-3.5,cliffPosition.y))*(.42+moisture*.32);
+      diffuseColor.rgb=mix(mineralFace,mineralFace*vec3(.62,.76,.79),wetToe);
+      #ifdef USE_COLOR
+        // Preserve baked regional variation without multiplying two dark albedos.
+        float rockVertexLight=dot(vColor.rgb,vec3(.2126,.7152,.0722));
+        diffuseColor.rgb*=clamp(.86+rockVertexLight*.52,.90,1.09);
+      #endif`);
+  };
+  m.customProgramCacheKey=()=> 'cliff-mineral-wet-toe-v7';return m;
 }
 
 export function createLake(root, scene) {
@@ -229,31 +272,35 @@ export function createVegetation(root,heightAt,nearPath=()=>false,{lod=false,tre
   batch(shrubSource.leavesMesh.geometry,shrubSource.leavesMesh.material,understory,'Leafy grove understory');
   batch(shrubSource.branchesMesh.geometry,shrubSource.branchesMesh.material,understory,'Fine understory stems');
   // Reusable eroded outcrops: actual surface deformation and scanned mossy rock.
-  const rocks=[],pebbles=[],grass=[],flowers=[];
+  const rocks=[],pebbles=[],grass=[],flowers=[],litter=[];
   for(let j=0;j<540;j++){
     const{x,z}=sampleIsland(),h=heightAt(x,z);if(h<.4||clear(x,z))continue;
     if(j%12===0)rocks.push({x,y:h-.35,z,sx:1.1+rand()*1.7,sy:.55+rand()*1.1,sz:1+rand()*1.5,r:rand()*6.28});
     else if(j%8===0)pebbles.push({x,y:h,z,s:.17+rand()*.25,r:rand()*6.28});
-    for(let g=0;g<3;g++){
-      const gx=x+(rand()-.5)*3,gz=z+(rand()-.5)*3;if(heightAt(gx,gz)<.2||clear(gx,gz)||!groveAt(gx,gz,1))continue;grass.push({x:gx,y:heightAt(gx,gz)+.025,z:gz,s:.4+rand()*.55,r:rand()*6.28});
-    }
-    if(j%3===0&&noise(x*.12+5,z*.12)>.32)flowers.push({x,y:h,z,s:.64+rand()*.54,r:rand()*6.28});
   }
   const ferns=[];
-  for(let j=0;j<62000;j++){
+  for(let j=0;j<74000;j++){
     const x=(rand()-.5)*255,z=(rand()-.5)*250+12,h=heightAt(x,z);
     if(h<.6||lowClear(x,z))continue;
-    const patch=noise(x*.055+18,z*.055-4),edge=nearPath(x+2,z)||nearPath(x-2,z)||nearPath(x,z+2)||nearPath(x,z-2);
-    if(patch<.35&&!edge)continue;
-    grass.push({x,y:h-.025,z,s:.78+rand()*.76,r:rand()*TAU});
-    if(j%7===0&&(patch>.52||edge))flowers.push({x,y:h-.01,z,s:.66+rand()*.68,r:rand()*TAU});
-    if(j%3===0&&(patch>.44||edge))ferns.push({x,y:h-.02,z,s:.65+rand()*.68,r:rand()*TAU});
-    if(j%71===0)pebbles.push({x,y:h-.07,z,s:.16+rand()*.33,r:rand()*TAU});
+    const region=plantingCommunityAt(x,z,landformAt(x,z));
+    if(rand()<region.grass)grass.push({x,y:h-.025,z,s:(.64+rand()*.79)*(1-region.opening*.35),r:rand()*TAU});
+    if(rand()<region.flowers*.42)flowers.push({x,y:h-.01,z,sx:(.54+rand()*.48)*(.72+region.flowers*.28),sy:.54+rand()*.61,sz:(.58+rand()*.43)*(.72+region.flowers*.28),r:rand()*TAU,kind:region.kind});
+    if(rand()<region.ferns*.38)ferns.push({x,y:h-.02,z,s:.69+rand()*.64,r:rand()*TAU});
+    if(rand()<region.rock*.018)pebbles.push({x,y:h-.07,z,s:.16+rand()*.33,r:rand()*TAU});
   }
+  // Small, irregular ground-contact leaves link each root to its soil pocket.
+  // Sample every individual leaf at the actual rendered height, never a flat mat.
+  const rootSites=[...placed,...blossomParks.flatMap(park=>park.trees.map(([x,z,s])=>({x,z,s,kind:park.kind})))];
+  for(const tree of rootSites)for(let n=0;n<72;n++){
+    const a=rand()*TAU,r=(.35+Math.pow(rand(),.65)*2.0)*(tree.s||1),x=tree.x+Math.cos(a)*r,z=tree.z+Math.sin(a)*r,h=heightAt(x,z);
+    if(h<.6||lowClear(x,z))continue;
+    litter.push({x,y:h+.018,z,s:.34+rand()*.52,r:rand()*TAU,kind:tree.kind});
+  }
+
   addScannedRocks(root,[...rocks.map((p,i)=>({...p,kind:'moss',piece:i%7,sy:(p.sy||1)*.7})),...pebbles.map((p,i)=>({...p,kind:'moss',piece:i%7}))],'Scanned mossy grove stones');
   const vertices=[],colors=[],indices=[],uv=[],c=new THREE.Color();
-  for(let b=0;b<18;b++){
-    const a=rand()*6.28,bx=(rand()-.5)*.4,bz=(rand()-.5)*.4,h=.28+rand()*.45,w=.025+rand()*.032,at=vertices.length/3;
+  for(let b=0;b<32;b++){
+    const a=rand()*6.28,bx=(rand()-.5)*.4,bz=(rand()-.5)*.4,h=.18+rand()*.35,w=.014+rand()*.022,at=vertices.length/3;
     for(let row=0;row<7;row++){
       const t=row/6,lean=t*t*.32;
       for(const side of [-1,1]){
@@ -264,7 +311,7 @@ export function createVegetation(root,heightAt,nearPath=()=>false,{lod=false,tre
     }
   }
   const gg=new THREE.BufferGeometry();gg.setAttribute('position',new THREE.Float32BufferAttribute(vertices,3));gg.setAttribute('color',new THREE.Float32BufferAttribute(colors,3));gg.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2));gg.setIndex(indices);gg.computeVertexNormals();
-  const gm=leafMaterial(null,'#acc2ab');gm.vertexColors=true;gm.alphaTest=0;batch(gg,gm,grass,'Grouped silver green ground cover',false);
+  const gm=leafMaterial(null,'#d3dac1');gm.vertexColors=true;gm.alphaTest=0;batch(gg,gm,grass,'Grouped silver green ground cover',false);
   // Seven arching fronds with paired curved leaflets: one instanced geometry,
   // continuous shaded understory without adding a draw call for each plant.
   const fp=[],fc=[],fi=[],fernDark=new THREE.Color('#315941'),fernLight=new THREE.Color('#829b59');
@@ -284,7 +331,7 @@ export function createVegetation(root,heightAt,nearPath=()=>false,{lod=false,tre
   // Curved petals and stems remain three-dimensional when seen from above.
   const petals=[],stems=[],centres=[];
   for(let n=0;n<5;n++){
-    const x=(rand()-.5)*.7,z=(rand()-.5)*.7,h=.36+rand()*.35;
+    const x=(rand()-.5)*.7,z=(rand()-.5)*.7,h=.22+rand()*.26;
     const stem=new THREE.CylinderGeometry(.009,.014,h,8,3);stem.translate(x,h/2,z);stems.push(stem);
     const centre=new THREE.SphereGeometry(.034,12,8);centre.scale(1,.5,1);centre.translate(x,h+.014,z);centres.push(centre);
     for(let k=0;k<6;k++){
@@ -302,13 +349,21 @@ export function createVegetation(root,heightAt,nearPath=()=>false,{lod=false,tre
     const material=new THREE.MeshStandardMaterial({color,roughness:.88,side:THREE.DoubleSide});
     applyEnvironmentWind(material,{amplitude:.035,minHeight:0,maxHeight:.8});return material;
   };
-  const petalMaterial=flowerMaterial('#cbb5e3');
+  const petalMaterial=flowerMaterial('#ffffff');
   const flowerMesh=batch(mergeGeometries(petals),petalMaterial,flowers,'Sculpted lavender meadow flowers',false);
-  if(flowerMesh){const color=new THREE.Color();let instance=0;flowers.forEach((p,i)=>{if(!bridgeClear(p))return;color.set(['#f1dbf5','#bfc8ff','#fff0d2'][i%3]);flowerMesh.setColorAt(instance++,color);});flowerMesh.instanceColor.needsUpdate=true;}
+  if(flowerMesh){const color=new THREE.Color();let instance=0;flowers.forEach(p=>{if(!bridgeClear(p))return;color.set(p.kind==='cherry'?'#e5bbc9':p.kind==='lilac'?'#bdb8df':'#e5e0bf').multiplyScalar(.92+noise(p.x*.65,p.z*.65)*.12);flowerMesh.setColorAt(instance++,color);});flowerMesh.instanceColor.needsUpdate=true;}
   batch(mergeGeometries(stems),flowerMaterial('#608259'),flowers,'Meadow flower stems',false);
   batch(mergeGeometries(centres),flowerMaterial('#ddbf69'),flowers,'Golden meadow flower centres',false);
   [...petals,...stems,...centres].forEach(g=>g.dispose());
-  return {treeCount:placed.filter(bridgeClear).length,treeLimit:64,flowerTreeCount:groups[2].filter(bridgeClear).length,understoryCount:understory.filter(bridgeClear).length,grassCount:grass.filter(bridgeClear).length,flowerCount:flowers.filter(bridgeClear).length,groveCount:landscapeGroves.length,lod:lodController?.stats??null,lodController,update:(camera,viewport)=>lodController?.update(camera,viewport)};
+  const litterPositions=[],litterIndices=[];
+  for(let row=0;row<=6;row++)for(let side=0;side<=2;side++){
+    const t=row/6,w=Math.sin(t*Math.PI)*.055,lateral=(side-1)*w;litterPositions.push(lateral,.016*Math.sin(t*Math.PI)+(side===1?.009:0),t*.20);
+    if(row<6&&side<2){const at=row*3+side;litterIndices.push(at,at+3,at+1,at+1,at+3,at+4);}
+  }
+  const litterGeometry=new THREE.BufferGeometry();litterGeometry.setAttribute('position',new THREE.Float32BufferAttribute(litterPositions,3));litterGeometry.setIndex(litterIndices);litterGeometry.computeVertexNormals();
+  const litterMesh=batch(litterGeometry,new THREE.MeshStandardMaterial({color:'#ffffff',roughness:1,side:THREE.DoubleSide}),litter,'Grounded leaves and blossom litter',false);
+  if(litterMesh){const color=new THREE.Color();let index=0;for(const p of litter){if(!bridgeClear(p))continue;color.set(p.kind==='cherry'?'#b69291':p.kind==='lilac'?'#aaa2b1':'#8e9371');litterMesh.setColorAt(index++,color);}litterMesh.instanceColor.needsUpdate=true;}
+  return {treeCount:placed.filter(bridgeClear).length,treeLimit:64,flowerTreeCount:groups[2].filter(bridgeClear).length,understoryCount:understory.filter(bridgeClear).length,grassCount:grass.filter(bridgeClear).length,flowerCount:flowers.filter(bridgeClear).length,fernCount:ferns.filter(bridgeClear).length,litterCount:litter.filter(bridgeClear).length,groveCount:landscapeGroves.length,lod:lodController?.stats??null,lodController,update:(camera,viewport)=>lodController?.update(camera,viewport)};
 }
 
 export function createBackdrop(root,scene){

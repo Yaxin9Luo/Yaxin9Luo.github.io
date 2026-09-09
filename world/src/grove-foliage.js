@@ -16,8 +16,8 @@ const roundedPetal=petalShape.getPoints(6).slice(0,-1);
 const plantColors={
   silver:['#516f5c','#6e8870','#859a7d','#a7b298'],
   pine:['#365f50','#4b7358','#6c895f','#879c70'],
-  cherry:['#59765e','#78916f','#b47d99','#ce99b2'],
-  lilac:['#59765e','#78916f','#a69abe','#c5b6d0'],
+  cherry:['#4e6e4f','#778b62','#e9afbf','#ffe3e5'],
+  lilac:['#4e6e4f','#778b62','#b9aed7','#e4daf0'],
 };
 const plantMaps=new Map();
 function botanicalMaps(bark=false,pine=false){
@@ -43,7 +43,7 @@ function botanicalMaps(bark=false,pine=false){
   const texture=(data,srgb)=>{const map=new THREE.DataTexture(data,width,height);map.colorSpace=srgb?THREE.SRGBColorSpace:THREE.NoColorSpace;map.wrapS=map.wrapT=bark?THREE.RepeatWrapping:THREE.ClampToEdgeWrapping;map.generateMipmaps=true;map.minFilter=THREE.LinearMipmapLinearFilter;map.magFilter=THREE.LinearFilter;map.anisotropy=8;map.needsUpdate=true;map.name=`Authored ${key} ${srgb?'pigment':'relief'}`;return map;};
   const result={map:texture(color,true),normalMap:texture(normal,false)};plantMaps.set(key,result);return result;
 }
-function plantMaterial(name,bark=false,pine=false){
+function plantMaterial(name,bark=false,pine=false,flower=false){
   const m=new THREE.MeshStandardMaterial({name,color:'#ffffff',vertexColors:true,...botanicalMaps(bark,pine),normalScale:new THREE.Vector2(bark?.55:.18,bark?.55:.18),roughness:bark?.94:.78,metalness:0,side:bark?THREE.FrontSide:THREE.DoubleSide});
   if(!bark){
     applyEnvironmentWind(m);
@@ -60,10 +60,11 @@ function plantMaterial(name,bark=false,pine=false){
         reflectedLight.indirectDiffuse*=1.-crownInterior*.22;
         #if NUM_DIR_LIGHTS > 0
           float transmitted=max(0.,dot(-normal,directionalLights[0].direction));
-          reflectedLight.directDiffuse+=directionalLights[0].color*diffuseColor.rgb*transmitted*.055;
+          float petalSurface=${flower?'smoothstep(.92,1.18,vColor.r/max(vColor.g,.001))':'0.'};
+          reflectedLight.directDiffuse+=directionalLights[0].color*diffuseColor.rgb*transmitted*(.055+petalSurface*.085);
         #endif`);
     };
-    m.customProgramCacheKey=()=>`${windKey}-botanical-diffuse-v5`;
+    m.customProgramCacheKey=()=>`${windKey}-botanical-diffuse-v7-${flower}`;
   }
   return m;
 }
@@ -91,20 +92,24 @@ class PlantBuilder {
     this.leafCount++;
   }
   bloom(center,radius,detailed=false){
-    const angle=this.rand()*Math.PI*2,tilt=.18+this.rand()*.82,radial=Math.sqrt(1-tilt*tilt),normal=new THREE.Vector3(Math.cos(angle)*radial,tilt,Math.sin(angle)*radial),side=new THREE.Vector3().crossVectors(normal,axisZ).normalize(),tangent=new THREE.Vector3().crossVectors(side,normal).normalize();
+    const angle=this.rand()*Math.PI*2,tilt=.12+this.rand()*.85,radial=Math.sqrt(1-tilt*tilt),normal=this.bloomNormal?this.bloomNormal.clone().add(new THREE.Vector3(Math.cos(angle)*.24,(tilt-.5)*.30,Math.sin(angle)*.24)).normalize():new THREE.Vector3(Math.cos(angle)*radial,tilt,Math.sin(angle)*radial),side=new THREE.Vector3().crossVectors(normal,axisZ).normalize(),tangent=new THREE.Vector3().crossVectors(side,normal).normalize();
     for(let petal=0;petal<5;petal++){
       const a=angle+petal*Math.PI*2/5,forward=side.clone().multiplyScalar(Math.cos(a)).addScaledVector(tangent,Math.sin(a)),across=new THREE.Vector3().crossVectors(normal,forward).normalize(),p=(x,y,z)=>center.clone().addScaledVector(forward,z*radius).addScaledVector(across,x*radius).addScaledVector(normal,y*radius);
-      const tint=this.palette[2].clone().lerp(this.palette[3],this.rand());
+      // One branch owns a pigment family; adjacent petals differ only subtly.
+      const tint=(this.bloomTint||this.palette[2].clone().lerp(this.palette[3],.60)).clone().multiplyScalar(.96+this.rand()*.04);
       if(detailed){
         const middle=p(0,.08,.5),surface=(v,f)=>{const x=v.x*f,z=.5+(v.y-.5)*f;return p(x,.025+z*z*.19+Math.pow(Math.abs(x),1.4)*.12,z);},inner=roundedPetal.map(v=>surface(v,.5)),outer=roundedPetal.map(v=>surface(v,1)),iv=roundedPetal.map(v=>[.5+v.x*.5,.5+(v.y-.5)*.5]),ov=roundedPetal.map(v=>[.5+v.x,v.y]),edge=tint.clone().lerp(new THREE.Color('#eed2d4'),.13);
         for(let i=0;i<outer.length;i++){const j=(i+1)%outer.length;this.triangle(middle,inner[i],inner[j],[tint,tint,tint],[[.5,.5],iv[i],iv[j]]);this.triangle(inner[i],outer[i],outer[j],[tint,edge,edge],[iv[i],ov[i],ov[j]]);this.triangle(inner[i],outer[j],inner[j],[tint,edge,tint],[iv[i],ov[j],iv[j]]);}
       }else{
-        const outline=[[0,0,.03],[-.38,.04,.38],[-.47,.13,.76],[-.26,.20,1],[0,.18,.95],[.26,.20,1],[.47,.13,.76],[.38,.04,.38]],ring=outline.map(v=>p(...v)),middle=p(0,.09,.52);
-        if(this.detailName==='near')for(let i=0;i<8;i++){const j=(i+1)%8;this.triangle(middle,ring[i],ring[j],[tint,tint,tint],[[.5,.5],[outline[i][0]+.5,outline[i][2]],[outline[j][0]+.5,outline[j][2]]]);}
-        else for(let i=1;i<7;i++)this.triangle(ring[0],ring[i],ring[i+1],[tint,tint,tint],[[.5,.03],[outline[i][0]+.5,outline[i][2]],[outline[i+1][0]+.5,outline[i+1][2]]]);
+        // A cupped, continuously rounded petal replaces the old eight-corner chip.
+        // All tiers retain the same flowers and boundary extrema.
+        const contour=petalShape.getPoints(this.detailName==='near'?6:this.detailName==='mid'?3:2).slice(0,-1);
+        const surface=v=>p(v.x*.79,.024+v.y*v.y*.29+Math.pow(Math.abs(v.x),1.4)*.14,v.y),ring=contour.map(surface),middle=p(0,.094,.48);
+        const edge=tint.clone().lerp(this.palette[3],.16),throat=tint.clone().lerp(this.palette[2],.20);
+        for(let i=0;i<ring.length;i++){const j=(i+1)%ring.length;this.triangle(middle,ring[i],ring[j],[throat,edge,edge],[[.5,.48],[contour[i].x+.5,contour[i].y],[contour[j].x+.5,contour[j].y]]);}
       }
     }
-    const gold=new THREE.Color('#d9b974'),tip=center.clone().addScaledVector(normal,radius*.20);
+    const gold=new THREE.Color('#e6c887'),tip=center.clone().addScaledVector(normal,radius*.20);
     if(detailed){
       const core=new THREE.SphereGeometry(radius*.15,12,6);core.translate(...center.clone().addScaledVector(normal,radius*.11).toArray());
       const p=core.attributes.position,uv=core.attributes.uv,index=core.index;
@@ -112,7 +117,7 @@ class PlantBuilder {
       for(let i=0;i<8;i++){const a=i*Math.PI/4,radial=side.clone().multiplyScalar(Math.cos(a)).addScaledVector(tangent,Math.sin(a)),base=center.clone().addScaledVector(radial,radius*.13),tip=base.clone().addScaledVector(normal,radius*(.22+(i%2)*.05)).addScaledVector(radial,radius*.07),w=radius*.012;
         for(const axis of[side,tangent]){const first=base.clone().addScaledVector(axis,w),second=base.clone().addScaledVector(axis,-w),end=tip.clone().addScaledVector(axis,w),other=tip.clone().addScaledVector(axis,-w);this.triangle(first,second,end,[gold,gold,gold],[[0,0],[1,0],[0,1]]);this.triangle(second,other,end,[gold,gold,gold],[[1,0],[1,1],[0,1]]);}
       }
-    }else for(let i=0;i<6;i++){const a=i*Math.PI/3,b=(i+1)*Math.PI/3,first=center.clone().addScaledVector(side,Math.cos(a)*radius*.17).addScaledVector(tangent,Math.sin(a)*radius*.17),second=center.clone().addScaledVector(side,Math.cos(b)*radius*.17).addScaledVector(tangent,Math.sin(b)*radius*.17);this.triangle(tip,first,second,[gold,gold,gold],[[.5,.5],[0,0],[1,0]]);}
+    }else for(let i=0;i<10;i++){const a=i*Math.PI/5,b=(i+1)*Math.PI/5,first=center.clone().addScaledVector(side,Math.cos(a)*radius*.21).addScaledVector(tangent,Math.sin(a)*radius*.21),second=center.clone().addScaledVector(side,Math.cos(b)*radius*.21).addScaledVector(tangent,Math.sin(b)*radius*.21);this.triangle(tip,first,second,[gold,gold,gold],[[.5,.5],[0,0],[1,0]]);}
     this.flowerCount++;
   }
   branch(points,radius,tip,segments=6){
@@ -138,16 +143,16 @@ class PlantBuilder {
       const t=flower?.10+i*.24:.07+i*.136;
       for(const sign of[-1,1]){
         const base=twig.getPoint(t),out=forward.clone().multiplyScalar(.30+(i/7)*.3).addScaledVector(side,sign*(.78-this.rand()*.15)).addScaledVector(up,.10+(this.rand()-.5)*.4).normalize();
-        this.leaf(base,out,(.27+this.rand()*.09)*leafScale,(.11+this.rand()*.035)*leafScale,null,(this.rand()-.5)*.85);
+        this.leaf(base,out,(.27+this.rand()*.09)*leafScale*(flower?.73:1),(.11+this.rand()*.035)*leafScale*(flower?.60:1),null,(this.rand()-.5)*.85);
         if(flower){
           const flowerBase=base.clone().addScaledVector(out,.17*leafScale);
-          this.bloom(flowerBase,(.13+this.rand()*.025)*leafScale);
-          if(i%2===0)this.bloom(flowerBase.clone().addScaledVector(up,.075).addScaledVector(side,sign*.11),.105*leafScale);
+          this.bloom(flowerBase,(.094+this.rand()*.022)*leafScale);
+          this.bloom(flowerBase.clone().addScaledVector(up,.095).addScaledVector(side,sign*.115),.078*leafScale);
         }
       }
     }
-    this.leaf(end.clone().addScaledVector(forward,-.07),forward,.31*leafScale,.12*leafScale);
-    if(flower)for(let i=0;i<5;i++){const a=i*Math.PI*2/5;this.bloom(end.clone().addScaledVector(side,Math.cos(a)*.16*leafScale).addScaledVector(up,.07+Math.sin(a)*.12),.12*leafScale);}
+    this.leaf(end.clone().addScaledVector(forward,-.07),forward,.31*leafScale*(flower?.73:1),.12*leafScale*(flower?.60:1));
+    if(flower)for(let i=0;i<5;i++){const a=i*Math.PI*2/5;this.bloom(end.clone().addScaledVector(side,Math.cos(a)*.16*leafScale).addScaledVector(up,.07+Math.sin(a)*.12),.091*leafScale);}
   }
   coniferSpray(start,direction,length,scale=1){
     const forward=direction.clone().normalize(),side=new THREE.Vector3().crossVectors(forward,up).normalize(),end=start.clone().addScaledVector(forward,length),twig=this.branch([start,start.clone().lerp(end,.55).addScaledVector(up,.04),end],.015*scale,.003,4);
@@ -162,7 +167,7 @@ class PlantBuilder {
     foliage.setAttribute('position',new THREE.Float32BufferAttribute(this.positions,3));foliage.setAttribute('color',new THREE.Float32BufferAttribute(this.colors,3));foliage.setAttribute('uv',new THREE.Float32BufferAttribute(this.uv,2));
     const smooth=mergeVertices(foliage,1e-5);smooth.computeVertexNormals();foliage.dispose();foliage=smooth;
     this.wood.forEach(g=>g.dispose());const group=new THREE.Group();group.name=name;
-    const branchMesh=new THREE.Mesh(wood,plantMaterial('Ridged silver bark and tapered twigs',true)),leafMesh=new THREE.Mesh(foliage,plantMaterial(`Detailed ${this.kind} foliage with authored vein relief`,false,this.kind==='pine'));
+    const branchMesh=new THREE.Mesh(wood,plantMaterial('Ridged silver bark and tapered twigs',true)),leafMesh=new THREE.Mesh(foliage,plantMaterial(`Detailed ${this.kind} foliage with authored vein relief`,false,this.kind==='pine',this.kind==='cherry'||this.kind==='lilac'));
     branchMesh.name='Curved trunk, branches and fine leaf-bearing twigs';leafMesh.name='Overlapping botanical leaf sprays';attachWindShadows(leafMesh);
     for(const mesh of[branchMesh,leafMesh]){mesh.castShadow=true;mesh.receiveShadow=true;group.add(mesh);}
     group.branchesMesh=branchMesh;group.leavesMesh=leafMesh;group.userData.botanicalDetail={leaves:this.leafCount,branches:this.twigCount,flowers:this.flowerCount};group.userData.detailLevel=this.detailName;return group;
@@ -190,29 +195,39 @@ function createBroadleafTree(kind,seed,detail){
 }
 
 function createFloweringTree(b,kind,seed){
-  const rand=b.rand,lean=kind==='cherry'?1:-1;
-  const stem=b.branch([new THREE.Vector3(0,-.04,0),new THREE.Vector3(.20*lean,1.4,-.12),new THREE.Vector3(-.28*lean,2.9,.12),new THREE.Vector3(.26*lean,4.7,.06),new THREE.Vector3(.65*lean,6.7,-.19)],.43,.037,36);
-  // Wide, irregular boughs give the blossoms a mature silhouette and a readable trunk.
-  for(let i=0;i<14;i++){
-    const t=i/13,a=i*2.399+seed*.17,start=atHeight(stem,2.1+t*3.1),radius=3.35-Math.pow(t,2)*1.40+(rand()-.5)*.55;
-    const end=new THREE.Vector3(Math.cos(a)*radius,4.3+t*2.2+(rand()-.5)*.5,Math.sin(a)*radius);
-    const bough=b.branch([start,start.clone().lerp(end,.38).addScaledVector(up,-.36),end.clone().addScaledVector(up,-.22),end],.16-t*.073,.025,14);
+  const rand=b.rand,leanAngle=rand()*Math.PI*2,lean=new THREE.Vector3(Math.cos(leanAngle),0,Math.sin(leanAngle)),height=6.55+rand()*.38;
+  const stem=b.branch([new THREE.Vector3(0,-.04,0),lean.clone().multiplyScalar(.10).setY(1.4),lean.clone().multiplyScalar(.31).setY(2.9),lean.clone().multiplyScalar(.51).setY(4.7),lean.clone().multiplyScalar(.82).setY(height)],.43,.026,36);
+  // Unequal ascending scaffold limbs carry connected outer branch groups. A
+  // few low, wide arms balance a taller leader; no repeated downward bowls.
+  const lobes=[[2.25,4.55,3.15],[2.65,5.12,3.45],[3.05,5.5,2.9],[3.25,4.9,3.3],[3.65,6.18,2.6],[3.92,5.65,3.05],[4.2,6.7,2.1],[4.6,6.28,2.65],[4.9,7.06,1.75],[5.3,6.86,2.0],[5.65,7.25,1.3]];
+  for(const [i,lobe]of lobes.entries()){
+    const [rootHeight,crownHeight,width]=lobe,a=i*2.399+seed*.17+(rand()-.5)*.42,start=atHeight(stem,rootHeight),radius=width*(.89+rand()*.20);
+    const end=new THREE.Vector3(Math.cos(a)*radius,crownHeight+(rand()-.5)*.55,Math.sin(a)*radius).addScaledVector(lean,.22);
+    const rise=start.clone().lerp(end,.36).addScaledVector(up,.46),outer=start.clone().lerp(end,.77).addScaledVector(up,.12);
+    const bough=b.branch([start,rise,outer,end],.132-i*.006,.012,14);
+    // A lobe has a stable light family, with warmer pale tips facing the sky.
+    b.bloomNormal=new THREE.Vector3(Math.cos(a)*.62,1,Math.sin(a)*.62).normalize();
+    const lit=.52+.30*(end.y-4.5)/3+.10*Math.cos(a-.8);
+    b.bloomTint=b.palette[2].clone().lerp(b.palette[3],THREE.MathUtils.clamp(lit,.24,.83));
     for(let fan=0;fan<5;fan++){
-      const angle=a+(fan-2)*.44,origin=bough.getPoint(.33+(fan%3)*.18),tip=end.clone().add(new THREE.Vector3(Math.cos(angle)*(.50+rand()*.35),.23+(fan%2)*.27,Math.sin(angle)*(.50+rand()*.35)));
-      const twig=b.branch([origin,origin.clone().lerp(tip,.52).addScaledVector(up,.16),tip],.043,.009,8);
+      const angle=a+(fan-2)*.43+(rand()-.5)*.25,origin=bough.getPoint(.40+fan*.115),spread=.55+rand()*.52;
+      const tip=end.clone().add(new THREE.Vector3(Math.cos(angle)*spread,(fan===2?.47:.05)+rand()*.57,Math.sin(angle)*spread));
+      const twig=b.branch([origin,origin.clone().lerp(tip,.50).addScaledVector(up,.22),tip],.031,.006,8);
       for(let shoot=0;shoot<5;shoot++){
-        const root=twig.getPoint(.10+shoot*.20),az=angle+(shoot%2?-1:1)*(.6+rand()*.6);
-        b.spray(root,new THREE.Vector3(Math.cos(az),.28+rand()*.48,Math.sin(az)),.75+rand()*.37,.94+rand()*.27);
+        const root=twig.getPoint(.08+shoot*.205),az=angle+(shoot%2?-1:1)*(.62+rand()*.65),lift=.12+rand()*.95;
+        b.spray(root,new THREE.Vector3(Math.cos(az),lift,Math.sin(az)),.61+rand()*.46,.94+rand()*.29);
       }
     }
   }
-  for(let i=0;i<9;i++){const a=i*2.39,start=atHeight(stem,5.75+i*.095);b.spray(start,new THREE.Vector3(Math.cos(a)*.9,.9,Math.sin(a)*.9),.9,1.1);}
-  return b.finish(`Mature ${kind} tree — arched boughs and five-petal blossom clusters`);
+  b.bloomNormal=up.clone();
+  b.bloomTint=b.palette[2].clone().lerp(b.palette[3],.87);
+  for(let i=0;i<9;i++){const a=i*2.39,start=atHeight(stem,height-.70+i*.074);b.spray(start,new THREE.Vector3(Math.cos(a)*.75,.95,Math.sin(a)*.75),.82,1.06);}
+  return b.finish(`Mature ${kind} tree — asymmetric rising limbs and rounded blossom groups`);
 }
 const cachedPlantSurfaces=new Map();
 function createCachedGroveTree(kind,detail,parts){
   if(!cachedPlantSurfaces.has(kind)){
-    const materials=[plantMaterial('Ridged silver bark and tapered twigs',true),plantMaterial(`Detailed ${kind} foliage with authored vein relief`,false,kind==='pine')];
+    const materials=[plantMaterial('Ridged silver bark and tapered twigs',true),plantMaterial(`Detailed ${kind} foliage with authored vein relief`,false,kind==='pine',kind==='cherry'||kind==='lilac')];
     for(const material of materials){material.userData.sharedAsset=true;for(const value of Object.values(material))if(value?.isTexture)value.userData.sharedAsset=true;}
     cachedPlantSurfaces.set(kind,materials);
   }

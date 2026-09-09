@@ -98,7 +98,7 @@ export async function prepareBotanicalAssets({families=BOTANICAL_FAMILIES}={}){
   }
   const report={sourceSHA256,meshopt:'1.2.0',gltfTransform:'4.5.0',positionBits:16,normalBits:14,uvBits:16,colorBits:16,meshSimplification:false,triangleTopologyPreserved:true,materialReplacement:false,textureReplacement:false,assets,totalBytes:assets.reduce((sum,asset)=>sum+asset.bytes,0)};
   await fs.writeFile(path.join(root,'src/botanical-manifest.js'),`// Generated from actual bytes by scripts/prepare-botanical-assets.mjs.\nexport const botanicalFamilies = ${JSON.stringify(families,null,2)};\nexport const botanicalManifest = ${JSON.stringify(manifest,null,2)};\n`);
-  await fs.writeFile(path.join(root,'../docs/art/experience-v4/botanical-transmission-report.json'),JSON.stringify(report,null,2)+'\n');
+  await fs.writeFile(path.join(root,'../docs/art/landscape-v7/botanical-transmission-report.json'),JSON.stringify(report,null,2)+'\n');
   console.log(JSON.stringify({assets:assets.length,totalBytes:report.totalBytes}));return report;
 }
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url))await prepareBotanicalAssets();

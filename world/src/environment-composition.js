@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
 import {beveledBlock,assignArchitecturalUVs} from './architecture.js';
-import {surface,planarUV} from './landscape.js';
+import {surface,groundMaterial,planarUV} from './landscape.js';
 import {addScannedRocks,scannedRockReady,scannedRockSource} from './rock-scans.js';
 import {createGroveShrub,createGardenFlower} from './grove-foliage.js';
 import {attachWindShadows} from './environment-wind.js';
@@ -207,16 +207,16 @@ function foundationAprons(root,groundGeometry){
 }
 
 function groundPatch(root,patch,heightAt,free){
-  const positions=[],colors=[],indices=[],segments=64,bands=7,palette=palettes[patch.palette],phase=patch.x*.17+patch.z*.09;
+  const positions=[],colors=[],interior=[],indices=[],segments=64,bands=7,palette=palettes[patch.palette],phase=patch.x*.17+patch.z*.09;
   for(let row=0;row<bands;row++)for(let i=0;i<=segments;i++){
     const a=i/segments*TAU,r=(.008+row/(bands-1)*.992)*(1+.085*Math.sin(a*3+phase)+.052*Math.cos(a*5-phase)),x=patch.x+Math.cos(a)*patch.rx*r,z=patch.z+Math.sin(a)*patch.rz*r;
-    positions.push(x,heightAt(x,z)+.031,z);const c=new THREE.Color(palette[0]).lerp(new THREE.Color(palette[1]),row/(bands-1)*.42);colors.push(c.r,c.g,c.b);
+    positions.push(x,heightAt(x,z)+.031,z);const c=new THREE.Color(palette[0]).lerp(new THREE.Color(palette[1]),row/(bands-1)*.42);colors.push(c.r,c.g,c.b);interior.push(1-THREE.MathUtils.smoothstep(row/(bands-1),.32,1));
     if(row<bands-1&&i<segments){const q=row*(segments+1)+i;indices.push(q,q+1,q+segments+1,q+1,q+segments+2,q+segments+1);}
   }
   const kept=[];
   for(let i=0;i<indices.length;i+=3){const face=indices.slice(i,i+3);if(face.every(v=>free(positions[v*3],positions[v*3+2])))kept.push(...face);}
-  const geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));geometry.setAttribute('color',new THREE.Float32BufferAttribute(colors,3));geometry.setIndex(kept);geometry.computeVertexNormals();planarUV(geometry,.42);
-  const mesh=addMesh(root,geometry,surface('forest-ground',{vertexColors:true,color:'#e7e6cb',albedoStrength:.77,roughness:1,roughnessFloor:.9}),`${patch.id} irregular soil and moss ribbon`);mesh.castShadow=false;
+  const geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));geometry.setAttribute('color',new THREE.Float32BufferAttribute(colors,3));geometry.setAttribute('soilInterior',new THREE.Float32BufferAttribute(interior,1));geometry.setIndex(kept);geometry.computeVertexNormals();planarUV(geometry,.42);
+  const mesh=addMesh(root,geometry,groundMaterial({transition:true}),`${patch.id} irregular soil and moss ribbon`);mesh.castShadow=false;
 }
 
 export function createEnvironmentComposition(root,heightAt,nearPath=()=>false,{shoreline=[],shoreField=null,groundGeometry=null}={}){
