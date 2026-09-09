@@ -30,10 +30,6 @@ export function terrainHeight(x,z){
     if(r<1) h=Math.max(h,i.y+(fbm(x*.065+5,z*.065)-.48)*7-Math.max(0,r-.83)*14);
   }
   h=sculptLandformHeight(x,z,h);
-  for(const l of locations){const d=Math.hypot(x-l.x,z-l.z);if(d<l.radius+8)h=THREE.MathUtils.lerp(l.y,h,THREE.MathUtils.smoothstep(d,l.radius,l.radius+8));}
-  const foundationDistance=Math.max(Math.abs(x)-29,Math.abs(z+38)-23);
-  if(foundationDistance<7)h=THREE.MathUtils.lerp(9,h,THREE.MathUtils.smoothstep(foundationDistance,0,7));
-  h=gradeGardenTerrain(x,z,h);
   // Recede the raised bank tips beside the actual deck and rails. Grade a
   // wider shoulder than the trim footprint so cliff relief also stays clear.
   for(const c of channels){
@@ -41,6 +37,11 @@ export function terrainHeight(x,z){
     const weight=(1-THREE.MathUtils.smoothstep(across,6.5,12))*(1-THREE.MathUtils.smoothstep(along,c.halfLength+4,c.halfLength+9));
     if(h>7)h=THREE.MathUtils.lerp(h,7,weight);
   }
+  // Authored fixed grades take precedence over every landform and bank blend.
+  for(const l of locations){const d=Math.hypot(x-l.x,z-l.z);if(d<l.radius+8)h=THREE.MathUtils.lerp(l.y,h,THREE.MathUtils.smoothstep(d,l.radius,l.radius+8));}
+  const foundationDistance=Math.max(Math.abs(x)-29,Math.abs(z+38)-23);
+  if(foundationDistance<7)h=THREE.MathUtils.lerp(9,h,THREE.MathUtils.smoothstep(foundationDistance,0,7));
+  h=gradeGardenTerrain(x,z,h);
   // Grade each gate's approach with a soft shoulder instead of suspending its
   // stone plinth over the unmodified hillside.
   for(const l of locations){const d=Math.max(Math.abs(x-l.x)/4.6,Math.abs(z-l.z-l.radius-3)/3);if(d<3)h=THREE.MathUtils.lerp(l.y,h,THREE.MathUtils.smoothstep(d,1,3));}

@@ -9,6 +9,7 @@ import {mutableGeometry} from '../src/gltf-resource.js';
 import {islandGeometry} from '../src/world.js';
 import {createSurfaceSupport} from '../src/surface-support.js';
 import {bridgeBankClearance} from './helpers/bridge-bank-clearance.js';
+import {authoredGradeSamples} from './helpers/authored-grades.js';
 
 test('content-addressed manifest matches deployed bytes',async()=>{
   for(const asset of Object.values(assetManifest)){
@@ -28,6 +29,7 @@ test('compressed navigation terrain retains metre bounds and all triangles after
     assert.ok(actual.boundingBox.max.x>100,'normalized integer geometry collapsed to unit space');
     if(name==='ground'){
       const support=createSurfaceSupport(()=>-22);support.addGeometry(actual);
+      for(const p of authoredGradeSamples())assert.ok(Math.abs(support.heightAt(p.x,p.z)-p.y)<.03,`${p.id} loaded grade at ${p.x},${p.z}`);
       for(const [x,z]of [[96,36],[0,94]])assert.equal(support.heightAt(x,z),-22,'loaded coves have real open water');
       for(const [x,z]of [[91,32],[-22,94]])assert.ok(support.heightAt(x,z)<0&&support.heightAt(x,z)>-13,'loaded low banks retain their relief');
       // Stay 5 cm inside the shore: mesh quantization can move the exact edge a few millimetres.

@@ -79,9 +79,9 @@ export const assetManifest = {
   },
   "navigation-terrain": {
     "id": "navigation-terrain",
-    "url": "/runtime/navigation-terrain.16ba31bb4a4970be.glb",
-    "bytes": 7410032,
-    "sha256": "16ba31bb4a4970bef92272ae075b774d1c58cf5ce30e8ccd97a1b4b4aaafc324",
+    "url": "/runtime/navigation-terrain.143c97979b93293c.glb",
+    "bytes": 7409028,
+    "sha256": "143c97979b93293c8a615d3849637cbf9053eb23617f047827f034926d9b09ce",
     "phase": 1,
     "region": "navigation",
     "variant": "full",

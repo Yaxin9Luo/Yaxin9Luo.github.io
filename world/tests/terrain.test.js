@@ -4,6 +4,7 @@ import * as THREE from 'three';
 import {createWorld,islandGeometry,terrainHeight,renderedTerrainHeight} from '../src/world.js';
 import {locations,bridges} from '../src/locations.js';
 import {bridgeBankClearance} from './helpers/bridge-bank-clearance.js';
+import {authoredGradeSamples} from './helpers/authored-grades.js';
 
 test('castle shoulders descend to two open coves while authored route levels stay fixed',()=>{
   assert.ok(terrainHeight(0,-75)>10,'rear castle shoulder rises above the outer meadow');
@@ -68,6 +69,13 @@ test('sculpted terrain stays finite and shares every open ground edge with the c
     if(edge.count===1){assert.ok(top.has(key(edge.a))&&top.has(key(edge.b)),'cliff shell closes the ground rim');boundary++;}
   }
   assert.equal(boundary,shore.length);ground.dispose();cliffs.dispose();
+});
+
+test('authored garden interiors and fixed landmark pads override nearby bank blends',()=>{
+  for(const p of authoredGradeSamples()){
+    assert.ok(Math.abs(terrainHeight(p.x,p.z)-p.y)<1e-8,`${p.id} source grade at ${p.x},${p.z}`);
+    assert.ok(Math.abs(renderedTerrainHeight(p.x,p.z)-p.y)<.025,`${p.id} rendered grade at ${p.x},${p.z}`);
+  }
 });
 
 test('all gate foundations meet their graded ground',()=>{
