@@ -1,0 +1,33 @@
+# Living Academy v8 — design specification
+
+## Authority and outcome
+
+The user requests an autonomous next version, asks root and subagents to settle the design, and is going to sleep. This authorizes the design decisions and implementation in this local worktree without another approval question. It overrides optional brainstorming approval ceremonies. Scope: make the main island substantially more beautiful and lived-in; improve sunlight/moonlight, floating paper lanterns, fireflies and daytime birds; faithfully model Gintama Elizabeth and Sadaharu with roaming and interactions. Assets must be repeatedly inspected on their own before world placement. Do not deploy incidentally.
+
+Research: work/living-v8/research/island-design.md, character-design.md, character-sources.json, atmosphere-design.md. These are source-grounded research, not completed assets. Concept: docs/art/living-v8/island-target.png and exact prompt/provenance beside it. The generated target is not game evidence; current routes and physical support override its small layout differences.
+
+## Art direction
+
+Use a connected botanical academy garden. Existing main island area is sufficient: define spaces with two short open Gothic arcades, a modest curved iron/glass conservatory, a west reading water garden and continuous planted edges. Keep clear arrival lawn and all six portfolio destinations. Do not fill every square metre, enclose paths with fences, hide the castle in trees or put new objects on more isolated rectangular pads. Tie pale aged stone, verdigris iron, quiet bronze, sage foliage and grouped ivory/pink/violet flowers to the existing castle. Improve the visibly tiled lawn through matched PBR deperiodisation and authored mown/soil/planting regions.
+
+Measured starting placements: four-bay arcades at (+/-22.4,4), footprints3.4x12; conservatory(55,18),16x9, height<=9 above floor; water garden(-44,47),16x9. Terrain varies1–2.3m across these footprints. Final fit must use actual full placed geometry, original authored grades/routes and local foundations; these coordinates can shift modestly to satisfy them. No new island unless actual fit disproves current space. Warm neutral sun, pearl-blue readable moonlight, selected warm paper lanterns and visible small animal life. Preserve v7 painted far mountains and corrected water/middle-distance fog.
+
+## Characters and provenance
+
+Elizabeth is the priority: continuous tall white shell, rounded top and long walls, B/H~.48–.53; tiny centered pupils within shallow white eyes/black outline, exactly3 upper eyelashes per eye, broad yellow two-part beak, tapered white flippers, flat three-toe webbed feet, restrained hem. No squat penguin body, big pupils, orange bill or human fingers. Use verified TV references; the film geisha disguise and chibi figurine proportions are excluded. Side/back depth is inference, explicitly documented. Keep the expression blank; humor comes from pauses, signs and gestures.
+
+Sadaharu is a large friendly white dog with broad head/short muzzle, curled brows, black eyes, pink inner ears, burgundy collar, substantial paws and a continuous curled furry tail. Connected soft forms and authored four-legged motion; no floating ball-part animal or all-four-legs-in-phase animation.
+
+Create original editable Blender meshes, rigs and motions, export actual GLB with named clips and deterministic asset manifest/hash. Research images remain outside public and are not textures. Newly authored foley and comic accents, no copied show dialogue/audio, no claim that our foley is original-series sound or that underlying character design is ours. Sign text is original and bilingual, physically rendered on a held board and readable at interaction distance. No quest gating or forced portfolio navigation.
+
+## Behaviour and access
+
+Both actors roam independently within safe authored main-island garden/court spaces, stop/look/idle/sniff and face visitors. Elizabeth raises/holds/lowers a board for interaction, with a slight comic overshoot and synchronized wooden/cloth accent. Sadaharu greets, sits, sniffs and wags in response. Nearest-character HUD and click/touch/E work with existing portfolio interactions; exhibits/reading retain priority when overlapping. Board/pet interaction is complete without audio. Local foot support, speed-scaled in-place animation and obstacle avoidance are required. Movement stops during reading/background pause/reduced-motion; direct interaction still gives readable static pose under reduced-motion. No combat targeting, accounts or mandatory tasks for friendly actors.
+
+## Atmosphere
+
+Refine/replace the existing26 lanterns+8 release pool,90 fireflies,12 old V-line birds,16 glow balls and140 motes instead of piling on duplicate layers. Author detailed paper lanterns with thin translucent shells, bamboo structure, open rim and flame; group by plausible release gardens, not uniform sky dots. Keep transparent-shell sorting and actual reflection camera behavior correct. Fireflies form small localized night groups with subdued nonuniform pulses. Day birds use complete bodies and wings with coherent glide/flap banks in side views, clear of hero skyline. Sun/moon halos are small and directional, not screen-wide veil. Preserve current clock/palette ownership, high quality settings, far painting and v7 local water fog. Use a paused/reduced-aware activity clock, continuous fades and bounded geometry/particle pools. Cleanup includes instance/morph and shader-only owned resources.
+
+## Quality gates and delivery
+
+Each character, conservatory/arcade/garden kit and fauna effect is inspected in isolated actual mesh/browser renders before assembly. Use neutral front/side/back/threequarter/close views; review silhouette, attachment, grounding and clips. Save source hashes and rejected/fixed evidence. Then match v7 native overview and low garden/arrival views day/night, inspect every new subsystem in normal progressive startup, and run actual walking/flying/teleport/portfolio/character interactions plus audio-unlock/pause/language/reduced-motion. Separate recordings from performance measurement; no M4 or60fps claim from M2. Relevant regression tests + final complete suite/build + independent full-branch review. Deliver clean local branch, combined production preview and actual before/after/asset evidence. No automatic live push.
