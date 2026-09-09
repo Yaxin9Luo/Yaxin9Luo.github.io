@@ -1,6 +1,6 @@
 # Task 2 · 花园资产施工与验收卡
 
-依据：已实际查看 [岛屿构图](../../../docs/art/living-v8/island-target.png)、[温室目标](../../../docs/art/living-v8/conservatory-target.png)、[水园目标](../../../docs/art/living-v8/water-garden-target.png)。三图规定美术意图；尺寸、位置与接入以 [garden-fit-audit.md](garden-fit-audit.md) 为准。目标是能停留、穿行、读出用途的学院花园：石拱廊形成城堡前的低横线，温室透出植物与工作台，水园以连续花境包住安静水面。
+依据：已实际查看 [岛屿构图](../island-target.png)、[温室目标](../conservatory-target.png)、[水园目标](../water-garden-target.png)。三图规定美术意图；尺寸、位置与接入以 [garden-fit-audit.md](garden-fit-audit.md) 为准。目标是能停留、穿行、读出用途的学院花园：石拱廊形成城堡前的低横线，温室透出植物与工作台，水园以连续花境包住安静水面。
 
 **统一尺度约定：**长轴 local X、正面 +Z、原点为完成面中心；尺寸包括檐口、柱脚和装饰。玩家高 **3.28**，主入口与走道保留 **≥3.6 全宽净高、≥2.2 净宽**；拱顶最高点不能代替通行净高，垂藤、灯具、门扇和盆栽也计入。净宽是本卡的设计预留，仍须用实际角色身体宽度、动画摆幅及碰撞体走通验证。
 
