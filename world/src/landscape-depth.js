@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import {createGroveTree} from './grove-foliage.js';
 import {attachWindShadows} from './environment-wind.js';
-import {addScannedRocks,scannedRockSource} from './rock-scans.js';
+import {addScannedRocks} from './rock-scans.js';
 
 const TAU=Math.PI*2;
 const smooth=(a,b,x)=>THREE.MathUtils.smoothstep(x,a,b);
@@ -167,26 +167,27 @@ function addDepthPlanting(group,ridges){
 function addDepthScans(group,ridges){
   const placements=[],sites=[[.10,.06],[.17,-.47],[.24,.47],[.32,-.12],[.38,.59],[.44,-.50],[.53,.09],[.61,.50],[.67,-.58],[.74,.19],[.84,-.37],[.91,.19]];
   for(const [i,ridge]of ridges.entries())for(const [j,[u,v]]of sites.entries()){
-    const source=scannedRockSource('moss',i+j);if(!source)continue;
     const point=ridgeSurface(ridge,u,v);if(point.y<-24)continue;
-    const size=source.geometry.boundingBox.getSize(new THREE.Vector3()),span=Math.min(DEPTH_RIDGES[i].width*.42,13+(j%4)*2.2)*(i>4?1.16:1),height=span*(.53+(j%3)*.06);
-    placements.push({x:point.x,y:Math.min(point.y-.35,Math.max(-23,point.y-height*.40)),z:point.z,sx:span/size.x,sy:height/size.y,sz:span*(.69+(j%2)*.17)/size.z,r:i*.87+j*1.91,kind:'moss',piece:i+j});
+    const span=Math.min(DEPTH_RIDGES[i].width*.42,13+(j%4)*2.2)*(i>4?1.16:1),height=span*(.53+(j%3)*.06);
+    placements.push({x:point.x,y:Math.min(point.y-.35,Math.max(-23,point.y-height*.40)),z:point.z,scanSize:[span,height,span*(.69+(j%2)*.17)],r:i*.87+j*1.91,kind:'moss',piece:i+j});
   }
-  const accents=addScannedRocks(group,placements,'Embedded full-resolution coastal scan structure'),materials=new Map();
-  // Local material copies keep the original scan detail and normal/roughness
-  // maps while joining its dark photographic pigment to the accepted mineral
-  // family. The main island's shared scan material is never mutated.
-  accents.traverse(mesh=>{if(!mesh.isInstancedMesh)return;const source=mesh.material;
-    if(!materials.has(source)){
+  return addScannedRocks(group,placements,'Embedded full-resolution coastal scan structure',{
+    resolvePlacement(intent,source){
+      const size=source.geometry.boundingBox.getSize(new THREE.Vector3());
+      return {...intent,sx:intent.scanSize[0]/size.x,sy:intent.scanSize[1]/size.y,sz:intent.scanSize[2]/size.z};
+    },
+    // Every source revision receives its own mineral treatment and maps. Share
+    // the registered ridge uniform so a late batch has today's night value
+    // immediately, including when no scan existed at the last environment tick.
+    materialFactory(source){
       const material=source.clone(),compile=source.onBeforeCompile;material.userData.sharedAsset=false;
       material.onBeforeCompile=shader=>{compile.call(material,shader);shader.fragmentShader=shader.fragmentShader.replace('#include <map_fragment>',`#include <map_fragment>
         float coastalScanLuminance=dot(diffuseColor.rgb,vec3(.2126,.7152,.0722));
         vec3 coastalScanMineral=vec3(.36,.40,.37)*(.39+coastalScanLuminance*1.42);
         diffuseColor.rgb=mix(diffuseColor.rgb,coastalScanMineral,.62);`);};
-      material.customProgramCacheKey=()=> 'coastal-full-scan-mineral-v7';applyLandscapeDepthFog(material);materials.set(source,material);
+      material.customProgramCacheKey=()=> 'coastal-full-scan-mineral-v7';material.uniforms={nightFactor:ridges[0].material.uniforms.nightFactor};return applyLandscapeDepthFog(material);
     }
-    mesh.material=materials.get(source);
-  });return accents;
+  });
 }
 
 export function createLandscapeDepth(root,{rockMaterial,wind={value:0},fogColor=new THREE.Color('#7398b8')}={}){

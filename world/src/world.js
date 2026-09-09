@@ -344,7 +344,7 @@ function* assembleWorld(scene, navigation=null){
   };
 }
 
-export function createWorld(scene){const iterator=assembleWorld(scene);let item;do{item=iterator.next();}while(!item.done);return item.value;}
+export function createWorld(scene){const iterator=assembleWorld(scene);let item;do{item=iterator.next();}while(!item.done);registerWorldLighting(item.value);return item.value;}
 
 export function mergeEnvironmentLighting(target,source){
   for(const key of ['lights','emissiveMaterials','nightMaterials','nightObjects'])for(const item of source[key]||[]){
@@ -353,7 +353,16 @@ export function mergeEnvironmentLighting(target,source){
   }
 }
 export function registerWorldLighting(world,root=world.root){
-  root.traverse(object=>{for(const material of object.material?(Array.isArray(object.material)?object.material:[object.material]):[]){
+  world.scanLightingBatches??=new WeakSet();
+  root.traverse(object=>{
+    if(object.userData.scanBatch&&!world.scanLightingBatches.has(object)){
+      world.scanLightingBatches.add(object);
+      object.addEventListener('scanhydrated',({disposedMaterials})=>{
+        for(const key of ['emissiveMaterials','nightMaterials'])world.environmentLighting[key]=world.environmentLighting[key].filter(entry=>!disposedMaterials.has(entry.material));
+        registerWorldLighting(world,object);
+      });
+    }
+    for(const material of object.material?(Array.isArray(object.material)?object.material:[object.material]):[]){
     if(material.emissive?.getHex()>0){
       material.userData.authoredEmissiveIntensity??=material.emissiveIntensity;
       if(!world.environmentLighting.emissiveMaterials.some(entry=>entry.material===material))world.environmentLighting.emissiveMaterials.push({material,baseIntensity:material.userData.authoredEmissiveIntensity});

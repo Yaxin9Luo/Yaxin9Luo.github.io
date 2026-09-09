@@ -1,5 +1,17 @@
 import fs from 'node:fs';
 import * as THREE from 'three';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+import {MeshoptDecoder} from 'three/addons/libs/meshopt_decoder.module.js';
+
+// Decode the actual compressed/quantized runtime preview too. Only image
+// materials are removed; source mesh accessors, nodes and transforms are intact.
+export async function readRuntimeScanGeometry(url){
+  const bytes=fs.readFileSync(new URL(`../../public${url}`,import.meta.url)),jsonLength=bytes.readUInt32LE(12);
+  const gltf=JSON.parse(bytes.subarray(20,20+jsonLength).toString());gltf.materials=gltf.materials?.map(()=>({}));
+  const json=Buffer.from(JSON.stringify(gltf)),paddedLength=Math.ceil(json.length/4)*4,tail=bytes.subarray(20+jsonLength),output=Buffer.alloc(20+paddedLength+tail.length,32);
+  bytes.copy(output,0,0,20);output.writeUInt32LE(output.length,8);output.writeUInt32LE(paddedLength,12);json.copy(output,20);tail.copy(output,20+paddedLength);
+  return new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).parseAsync(output.buffer.slice(output.byteOffset,output.byteOffset+output.byteLength),'');
+}
 
 // Read the real GLB vertex/index payload in Node; only browser image decoding
 // is outside this geometry test boundary.
