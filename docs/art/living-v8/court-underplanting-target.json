@@ -1,0 +1,8 @@
+{
+  "kind": "Image Gen concept paintover, not runtime evidence",
+  "file": "docs/art/living-v8/court-underplanting-target.png",
+  "sha256": "3f8e8143441b1698f56e8c19ef461628061e11484f67db9825bf479802e7d395",
+  "method": "built-in image_gen",
+  "source": "work/production-v3/captures/living-v8-court-pilot-06-castle-forecourt-day-high-full-native-frame-20260909T221240500Z-2.png",
+  "promptFile": "docs/art/living-v8/court-underplanting-target.md"
+}

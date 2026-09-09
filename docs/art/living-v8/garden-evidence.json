@@ -1,0 +1,64 @@
+{
+  "candidate": "living-v8-gardens-final-09",
+  "sourceIdentity": "58cffc18378a45d487c9f4bf0eb15b5fe34af089e8204883ea061aac5f6cdacc",
+  "manifest": "work/living-v8/task3-candidate-09.json",
+  "sourceHashCheckBeforeAndAfter": {
+    "files": 74,
+    "match": true
+  },
+  "quality": "HIGH/FULL/native DPR2.5/MSAA4",
+  "coreSeconds": 1.8,
+  "fullSeconds": 32.4,
+  "failedResources": 0,
+  "observedErrorsWarnings": [],
+  "timingBoundary": "Cached development readiness, not cold/performance benchmark.",
+  "scope": "Task3 final garden placement; atmosphere/palette and companions remain Tasks4/5.",
+  "filenameNote": "Build slug is truncated to living-v8-gardens-final- by current capture naming; sourceIdentity above and exact hashes bind these five captures to candidate09.",
+  "frames": [
+    {
+      "file": "work/production-v3/captures/living-v8-gardens-final--arrival-day-high-full-native-frame-20260909T225937530Z-1.png",
+      "sha256": "59b4a7f2b101e4fe19c694a92a9ddadeecb4ed1cc4dd575ad9f706badde8cd06",
+      "nativePixels": [
+        2560,
+        1440
+      ],
+      "rootActuallyViewed": true
+    },
+    {
+      "file": "work/production-v3/captures/living-v8-gardens-final--castle-forecourt-day-high-full-native-frame-20260909T230009180Z-2.png",
+      "sha256": "d03cb76ec49c1b245297d94b911c20b09535ee39d7151065f42a26affe3a32fb",
+      "nativePixels": [
+        2560,
+        1440
+      ],
+      "rootActuallyViewed": true
+    },
+    {
+      "file": "work/production-v3/captures/living-v8-gardens-final--castle-forecourt-night-high-full-native-frame-20260909T230407934Z-5.png",
+      "sha256": "88cfa7fe7d18929ff931dc45b4333fafb975fc7b934b301acba9561f535351ed",
+      "nativePixels": [
+        2560,
+        1440
+      ],
+      "rootActuallyViewed": true
+    },
+    {
+      "file": "work/production-v3/captures/living-v8-gardens-final--overview-day-high-full-native-frame-20260909T230047266Z-3.png",
+      "sha256": "1e13120ed03be114e18d8f54b13c2df666ae3496ed37872419835001171f1188",
+      "nativePixels": [
+        2560,
+        1440
+      ],
+      "rootActuallyViewed": true
+    },
+    {
+      "file": "work/production-v3/captures/living-v8-gardens-final--overview-night-high-full-native-frame-20260909T230133788Z-4.png",
+      "sha256": "87fb655370a5ad81fafbe7eec5d38f8c73962dca0304888e6f38e795f8299af7",
+      "nativePixels": [
+        2560,
+        1440
+      ],
+      "rootActuallyViewed": true
+    }
+  ]
+}
