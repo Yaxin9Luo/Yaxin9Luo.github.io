@@ -82,7 +82,15 @@ export function sculptLandformHeight(x,z,height){
   // Oblique, unequal shelf reaches meet projecting bedrock ribs; no single
   // contour carries the same three risers continuously around either bay.
   const along=x>50?z-35:x+10,middleShift=Math.max(-5,Math.min(6,along*.28)),upperShift=Math.max(-5,Math.min(5,-along*.22));
-  const bench=-11.2+5.5*smooth(2,4.3,stratum)+5.4*smooth(10.5,13.2,stratum+middleShift)+4*smooth(17,20,stratum+upperShift)+rib+.2*Math.sin(x*.11+z*.08);
+  let bench=-11.2+5.5*smooth(2,4.3,stratum)+5.4*smooth(10.5,13.2,stratum+middleShift)+4*smooth(17,20,stratum+upperShift)+rib+.2*Math.sin(x*.11+z*.08);
+  // One oblique wash cuts through the south bay benches. Its low rim puts
+  // the cliff ledges below the lake, interrupting the otherwise raised edge.
+  // Both flanking headlands keep the existing connected shoreline footprint.
+  if(x<30&&z>60){
+    const across=Math.abs(x+12-(87-z)*.35),wash=1-smooth(3,12,across);
+    const lowBank=-14.6+Math.max(0,distance)*.46+9*smooth(9,21,distance);
+    bench+=(Math.min(bench,lowBank)-bench)*wash;
+  }
   const target=(height+lift)*(1-terrace)+bench*terrace;
   return height+(target-height)*editableGrade(x,z);
 }

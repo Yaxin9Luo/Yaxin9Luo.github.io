@@ -19,7 +19,7 @@ function random(){seed=(Math.imul(seed,1664525)+1013904223)|0;return (seed>>>0)/
 const mat=(color,extra={})=>new THREE.MeshStandardMaterial({color,roughness:.87,...extra});
 const TERRAIN_STEP=.5;
 function edgeShape(a){return .94+.10*Math.sin(a*3+.7)+.055*Math.cos(a*7)+.045*coherentNoise(Math.sin(a)*8,Math.cos(a)*8);}
-const channels=Object.values(bridges).map(([a,b])=>{const length=Math.hypot(b[0]-a[0],b[1]-a[1]);return{x:(a[0]+b[0])/2,z:(a[1]+b[1])/2,dx:(b[0]-a[0])/length,dz:(b[1]-a[1])/length,width:length/2-4.8};});
+const channels=Object.values(bridges).map(([a,b])=>{const length=Math.hypot(b[0]-a[0],b[1]-a[1]);return{x:(a[0]+b[0])/2,z:(a[1]+b[1])/2,dx:(b[0]-a[0])/length,dz:(b[1]-a[1])/length,halfLength:length/2,width:length/2-4.8};});
 function channelField(x,z){return Math.min(...channels.map(c=>{const cross=(x-c.x)*c.dz-(z-c.z)*c.dx,along=(x-c.x)*c.dx+(z-c.z)*c.dz-Math.sin(cross*.07)*3-Math.sin(cross*.19)*.7;return Math.max(Math.abs(along)/(c.width*(1+Math.sin(cross*.1)*.15))-1,Math.abs(cross)/100-1);}));}
 function shoreField(x,z){return landformShoreField(x,z,Math.min(channelField(x,z),Math.max(...islands.map(i=>{const u=(x-i.x)/i.rx,v=(z-i.z)/i.rz;return 1-Math.hypot(u,v)/edgeShape(Math.atan2(v,u));}))));}
 export function terrainHeight(x,z){
@@ -34,6 +34,13 @@ export function terrainHeight(x,z){
   const foundationDistance=Math.max(Math.abs(x)-29,Math.abs(z+38)-23);
   if(foundationDistance<7)h=THREE.MathUtils.lerp(9,h,THREE.MathUtils.smoothstep(foundationDistance,0,7));
   h=gradeGardenTerrain(x,z,h);
+  // Recede the raised bank tips beside the actual deck and rails. Grade a
+  // wider shoulder than the trim footprint so cliff relief also stays clear.
+  for(const c of channels){
+    const along=Math.abs((x-c.x)*c.dx+(z-c.z)*c.dz),across=Math.abs((x-c.x)*c.dz-(z-c.z)*c.dx);
+    const weight=(1-THREE.MathUtils.smoothstep(across,6.5,12))*(1-THREE.MathUtils.smoothstep(along,c.halfLength+4,c.halfLength+9));
+    if(h>7)h=THREE.MathUtils.lerp(h,7,weight);
+  }
   // Grade each gate's approach with a soft shoulder instead of suspending its
   // stone plinth over the unmodified hillside.
   for(const l of locations){const d=Math.max(Math.abs(x-l.x)/4.6,Math.abs(z-l.z-l.radius-3)/3);if(d<3)h=THREE.MathUtils.lerp(l.y,h,THREE.MathUtils.smoothstep(d,1,3));}

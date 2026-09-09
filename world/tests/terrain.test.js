@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import * as THREE from 'three';
 import {createWorld,islandGeometry,terrainHeight,renderedTerrainHeight} from '../src/world.js';
 import {locations,bridges} from '../src/locations.js';
+import {bridgeBankClearance} from './helpers/bridge-bank-clearance.js';
 
 test('castle shoulders descend to two open coves while authored route levels stay fixed',()=>{
   assert.ok(terrainHeight(0,-75)>10,'rear castle shoulder rises above the outer meadow');
@@ -16,8 +17,24 @@ test('castle shoulders descend to two open coves while authored route levels sta
 test('coves have unequal inlets separated by a connected headland and broad rock benches',()=>{
   assert.equal(terrainHeight(-10,90),-22,'south inlet reaches its irregular inner bay');
   assert.ok(terrainHeight(6,94)>0,'a projecting rock headland interrupts the low banks between unequal south recesses');
-  assert.ok(Math.abs(terrainHeight(-10,80)-terrainHeight(-10,78))<.8,'a broad middle bench interrupts the bank slope');
-  assert.ok(terrainHeight(-10,75)-terrainHeight(-10,80)>2,'the next rock riser creates real vertical relief');
+  assert.ok(Math.abs(terrainHeight(-27,84)-terrainHeight(-27,82))<.8,'a broad middle bench interrupts the bank slope');
+  assert.ok(terrainHeight(-27,78)-terrainHeight(-27,84)>2,'the next rock riser creates real vertical relief');
+});
+
+test('one connected low bank interrupts the south bay shelves at lake level',()=>{
+  assert.ok(terrainHeight(-10,87)>-15&&terrainHeight(-10,87)<-14,'the descent reaches the lake without a raised rim');
+  const heights=[78,80,82,84,86,87].map(z=>terrainHeight(-10,z));
+  for(let i=1;i<heights.length;i++)assert.ok(heights[i]<heights[i-1]-.15,'the low bank crosses the middle shelf continuously');
+  assert.ok(terrainHeight(6,94)>0,'the existing connected headland stays raised');
+});
+
+test('actual ground and cliff faces clear both viaduct rail footprints above the deck',()=>{
+  const terrain=islandGeometry();
+  for(const result of bridgeBankClearance([terrain.ground,terrain.cliffs])){
+    assert.ok(result.faces>100);
+    assert.ok(result.maximum<=result.ceiling,`${result.name} bank reaches ${result.maximum} at ${JSON.stringify(result.point)}, above ${result.ceiling}`);
+  }
+  terrain.ground.dispose();terrain.cliffs.dispose();
 });
 
 test('clipped shore triangle interiors expose the same support height as their rendered vertices',()=>{
