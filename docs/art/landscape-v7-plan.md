@@ -17,7 +17,7 @@ Implement the user-approved findings in `work/qianli-reference-review/analysis.h
 
 ## Task 1: Connected landforms and grounded stonework
 
-Ownership: `world/src/world.js`, `world/src/environment-composition.js`, new `world/src/landform-layout.js` if useful, and focused terrain/support/composition tests. Read existing layout, locations, collision and surface-support contracts before changing height.
+Ownership: `world/src/world.js`, `world/src/environment-composition.js`, new `world/src/landform-layout.js` if useful, and focused terrain/support/composition tests. Read existing layout, locations, collision and surface-support contracts before changing height. Also own the necessary terrain-only runtime bake in `world/scripts/prepare-runtime-assets.mjs`, its manifest entry, new hashed terrain GLB, runtime-asset tests and a terrain transmission report in `docs/art/landscape-v7/`; preserve every other asset descriptor.
 
 Create a visibly stronger island silhouette and internal terrain: a coherent rock-backed castle precinct, sloping side/rear shoulders, lower shore terraces and two deliberate coves near bridge approaches or open island edges. Use authored regions and continuous fields, with secondary strata following the large rock forms. Avoid making the entire coast a uniform ledge or scallop pattern. Keep continuous terrain/cliff joins and reliable rendered height sampling. Preserve all authored paths, bridge decks, gardens, exhibit and landmark levels. Ground surrounding masonry, ledges and scanned stone groups coherently; existing actual-mesh rock fitting must remain valid after cliff changes. Add or refine broad foundations-to-soil/rock transitions rather than isolated floating props.
 
@@ -27,7 +27,7 @@ Run focused tests covering manifold/finite terrain, rendered-height support, bri
 
 ## Task 2: Plant communities, blossom massing and ground palette
 
-Ownership: `world/src/landscape.js` vegetation and ground-material sections only (leave lake/backdrop for Task 3), `world/src/grove-foliage.js`, `world/src/blossom-groves.js`, `world/src/environment-layout.js` planting/layout portions only, and focused vegetation tests. Consume Task 1's landform interface where appropriate; do not change terrain/support code.
+Ownership: `world/src/landscape.js` vegetation and ground-material sections only (leave lake/backdrop for Task 3), `world/src/grove-foliage.js`, `world/src/blossom-groves.js`, `world/src/environment-layout.js` planting/layout portions only, and focused vegetation tests. Consume Task 1's landform interface where appropriate; do not change terrain/support code. Also own the necessary botanical bake, `world/src/botanical-manifest.js`, newly hashed botanical derivatives and their packing report, so actual loaded trees match the revised source meshes.
 
 Replace visually uniform ground scatter with readable ecological groups: open meadow, coherent flower drifts, tree-shadow humus, moist ferns and exposed rocky shoulders. Main routes, portal entries, exhibit faces and character silhouettes need visual breathing room. Keep detailed individual blades, flowers, branches and silhouettes. Control flowering-tree color, density and orientation at branch-group scale to form lit masses, darker interiors and crown openings; improve hero-tree variation and petal shape where visible. Make both cherry and lilac walks composed scenes, and ensure other visible planting participates in the same regional logic.
 
