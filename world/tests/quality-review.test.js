@@ -2,7 +2,9 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import vm from 'node:vm';
+import * as THREE from 'three';
 import {ReviewMetrics,evidenceFilename} from '../src/review-metrics.js';
+import {LIGHTING_REVIEW_VARIANTS,sampleEnvironment,TIME_PHASES} from '../src/environment-time.js';
 
 const source=(await readFile(new URL('../src/quality-review.js',import.meta.url),'utf8')).replace(/^import .+;\n/gm,'').replaceAll('import.meta.env.DEV','true');
 const deferred=()=>{let resolve;const promise=new Promise(done=>{resolve=done;});return {promise,resolve};};
@@ -25,14 +27,14 @@ async function fixture({musicPromise=null,lod=true,save=null,capture=null,startE
   class Game {
     static async createAsync(canvas,callbacks,options,context){const game=new Game();game.progress=context.onProgress;context.onProgress({phase:"first-frame"});return game;}
     constructor(){
-      this.options={sound:false,quality:'high'};this.environmentClock={setMode:(mode,immediate)=>{this.clockMode=mode;this.clockImmediate=immediate;}};this.world={complete:true,heightAt:()=>7,vegetation:{lod:{nearCount:3,midCount:4,farCount:5},...(lod?{lodController:{setEnabled:value=>lodChanges.push(value)}}:{})},updateVegetation(){}};
+      this.options={sound:false,quality:'high'};this.environmentClock={setMode:(mode,immediate)=>{this.clockMode=mode;this.clockImmediate=immediate;},setLightingReviewVariant:id=>{this.clockVariant=id;}};this.world={complete:true,heightAt:()=>7,vegetation:{lod:{nearCount:3,midCount:4,farCount:5},...(lod?{lodController:{setEnabled:value=>lodChanges.push(value)}}:{})},updateVegetation(){}};
       let pixelRatio=nativeDpr;
       this.renderer={shadowMap:{},getPixelRatio:()=>pixelRatio,setPixelRatio:value=>{pixelRatio=value;},setSize(width,height){canvas.width=Math.floor(width*pixelRatio);canvas.height=Math.floor(height*pixelRatio);},getContext:()=>({getExtension:()=>null}),info:{render:{calls:50,triangles:1000},memory:{geometries:2,textures:2}}};
-      this.camera={position:{values:[1,2,3],toArray(){return [...this.values];},fromArray(values){this.values=[...values];}},fov:43,lookAt:vector=>{this.camera.target=[...vector.values];},updateProjectionMatrix(){},updateMatrixWorld(){}};
+      this.camera=new THREE.PerspectiveCamera(43,16/9,.1,3600);this.camera.position.set(1,2,3);const lookAt=this.camera.lookAt.bind(this.camera);this.camera.lookAt=vector=>{this.camera.target=vector.toArray();lookAt(vector);};
       this.rendering={render(){},resize(width,height,dpr){this.lastSize={width,height,dpr};}};this.exhibitionStage={loadedSource:'image.webp',materialErrors:[]};
       this.audio={_musicPromise:musicPromise,unlock(){},play(){},setEnvironment(){},context:{createMediaStreamDestination(){const tracks=[track('audio')];return {stream:{getAudioTracks:()=>tracks}};}},master:{connected:new Set(),connect(output){this.connected.add(output);},disconnect(output){assert.equal(this.connected.delete(output),true);}}};
     }
-    _updateEnvironment(){}setTouch(){}setControl(){}leaveExhibit(){}returnHome(){}start(){}setOption(key,value){this.options[key]=value;if(key==='quality')this._resize();}_teleport(){}setCameraView(){}enterExhibit(){}_updateCamera(){}cast(){}travel(){}dispose(){}
+    _updateEnvironment(){this.environment=sampleEnvironment(this.clockMode==='auto'?this.environmentClock.phase:TIME_PHASES[this.clockMode],{lightingVariant:this.clockVariant});}setTouch(){}setControl(){}leaveExhibit(){}returnHome(){}start(){}setOption(key,value){this.options[key]=value;if(key==='quality')this._resize();}_teleport(){}setCameraView(){}enterExhibit(){}_updateCamera(){}cast(){}travel(){}dispose(){}
     _resize(){this._width=canvas.clientWidth;this._height=canvas.clientHeight;this._dpr=Math.min(nativeDpr,this.options.quality==='low'?1.25:2.5);this.renderer.setPixelRatio(this._dpr);this.renderer.setSize(this._width,this._height,false);this.rendering.resize(this._width,this._height,this._dpr);}
   }
   class Recorder {
@@ -41,7 +43,7 @@ async function fixture({musicPromise=null,lod=true,save=null,capture=null,startE
     start(){if(startError)throw new Error('capture unavailable');this.state='recording';}stop(){this.state='inactive';this.stopCount++;}
     async finish(data='video'){if(data)this.ondataavailable({data:new Blob([data])});this.state='inactive';await this.onstop();}
   }
-  const context={document,window:{MediaRecorder:Recorder,addEventListener:(name,handler)=>{listeners[name]=handler;}},devicePixelRatio:nativeDpr,MediaRecorder:Recorder,Game,THREE:{Vector3:class{constructor(...values){this.values=values;}}},ReviewMetrics,evidenceFilename,
+  const context={document,window:{MediaRecorder:Recorder,addEventListener:(name,handler)=>{listeners[name]=handler;}},devicePixelRatio:nativeDpr,MediaRecorder:Recorder,Game,THREE,ReviewMetrics,evidenceFilename,LIGHTING_REVIEW_VARIANTS,
     location:{search:query},URLSearchParams,AbortController,resourceLoader:{subscribe:()=>()=>{},diagnostics:()=>[]},
     loadBotanicalAssets:async()=>{},loadLandscapeAssets:async()=>{},loadArchitectureAssets:async()=>{},loadCharacterAssets:async()=>{},performance:{now:()=>now},Blob,AbortSignal,setTimeout,
     URL:{createObjectURL:()=>`blob:${downloads.length}`,revokeObjectURL(){}},fetch:save||(async()=>({ok:true})),console:{error:error=>errors.push(error)}};
@@ -113,6 +115,65 @@ test('asynchronous still encoding retains the conditions from the rendered captu
   assert.match(qa.downloads[0].download,/test-build-court-night-high-lod-native-frame-/);
 });
 
+test('lighting study selects an explicit variant, starts with full native static controls and restores baseline',async()=>{
+  const qa=await fixture({query:'?light=day&lighting=pearl-fill'}),select=qa.elements.get('lighting-variant');assert.ok(select);assert.equal(select.value,'pearl-fill');assert.equal(qa.state().game.environment.lightingVariant,'pearl-fill');assert.equal(qa.elements.get('reduced-motion').checked,true);assert.equal(qa.elements.get('foliage').value,'full');assert.equal(qa.elements.get('sampling').value,'native');
+  select.value='baseline';select.onchange();assert.equal(qa.state().game.environment.lightingVariant,'baseline');assert.equal(qa.state().game.environment.fillIntensity,.6);qa.begin('measure');assert.equal(select.disabled,true);assert.equal(qa.state().session.metadata.lightingVariant,'baseline');await qa.stop('test-end');
+});
+
+test('activity reset is explicit, locked during recording and saved with actual population first/last state',async()=>{
+  const qa=await fixture({query:'?lighting=solar-120-cloud70&activity=12.5'}),game=qa.state().game,resets=[];
+  let activity=12.5;game.world.atmosphere={root:{getObjectByName:()=>undefined},resetActivityForReview:(time,reduced)=>{resets.push({time,reduced});activity=time;},fauna:{snapshot:()=>({activityTime:activity,counts:{birds:12,fireflies:90,ambientLanterns:26}})}};
+  qa.reset();assert.deepEqual(resets.at(-1),{time:12.5,reduced:true});assert.equal(qa.elements.get('activity-start').value,'12.5');
+  qa.elements.get('reduced-motion').checked=false;await qa.record('record');assert.equal(qa.elements.get('activity-start').disabled,true);assert.equal(qa.elements.get('release-lantern').disabled,true);
+  activity=12.6;game.rendering.render(.1);qa.at(2000);activity=14.5;game.rendering.render(.1);
+  const ending=qa.stop('completed',true);await qa.recorders[0].finish();const report=await ending;
+  assert.equal(report.activityStart,12.5);assert.equal(report.renderedFauna.first.activityTime,12.6);assert.equal(report.renderedFauna.last.activityTime,14.5);assert.equal(report.motionSamples.at(-1).fauna.counts.birds,12);assert.match(qa.downloads[0].download,/-a12p500-/);
+});
+
+test('lighting still name and paired JSON retain the rendered trial and exact light state',async()=>{
+  const pending=[],saves=[],qa=await fixture({query:'?light=day&lighting=pearl-fill',capture:callback=>pending.push(callback),save:async(url,options)=>{saves.push({url,options});return{ok:true};}});
+  // A diagnostic light mutation must appear in evidence instead of its old palette input.
+  qa.state().game.fillLight={color:{toArray:()=>[.81,.72,.63]},intensity:.61,position:{toArray:()=>[60,80,100]}};
+  qa.elements.get('frame').onclick();qa.state().game.rendering.render(1/60);qa.elements.get('lighting-variant').value='baseline';qa.reset();pending[0](new Blob(['frame'],{type:'image/png'}));await qa.flush();await qa.flush();
+  assert.match(saves[0].url,/lighting-pearl-fill-/);const metadata=JSON.parse(await saves.find(r=>r.url.endsWith('.json')).options.body.text());assert.equal(metadata.lightingVariant,'pearl-fill');assert.equal(metadata.lighting.variant,'pearl-fill');assert.ok(Math.abs(metadata.lighting.phase-TIME_PHASES.day)<1e-12);assert.equal(metadata.lighting.fill.intensity,.61);assert.deepEqual(metadata.lighting.fill.colorLinear,[.81,.72,.63]);assert.equal(metadata.reducedMotion,true);assert.equal(metadata.foliage,'full');
+});
+
+test('a lighting frame finishing PNG encoding after page exit publishes no stale files',async()=>{
+  const pending=[],qa=await fixture({query:'?light=day&lighting=pearl-fill',capture:callback=>pending.push(callback)});qa.elements.get('frame').onclick();qa.state().game.rendering.render(1/60);qa.listeners.pagehide();pending[0](new Blob(['frame'],{type:'image/png'}));await qa.flush();assert.equal(qa.downloads.length,0);
+});
+
+test('cloud comparison selects the stable solar base and saves the actual sky blend instead of a stale palette input',async()=>{
+  const saves=[],qa=await fixture({query:'?view=overview&light=day&lighting=solar-120-cloud70',save:async(url,options)=>{saves.push({url,options});return{ok:true};}});
+  const game=qa.state().game;assert.equal(game.environment.cloudBlend,.70);assert.equal(game.environment.keyHandoff,'western-azimuth-elevation');
+  game.world.atmosphere={root:{getObjectByName:()=>({material:{uniforms:{skyTime:{value:0},cloudBlend:{value:.69}}}})}};
+  qa.elements.get('frame').onclick();game.rendering.render(1/60);await qa.flush();await qa.flush();
+  assert.match(saves[0].url,/lighting-solar-120-cloud70-/);const metadata=JSON.parse(await saves.find(r=>r.url.endsWith('.json')).options.body.text());
+  assert.equal(metadata.lighting.cloudBlend,.69);assert.equal(metadata.lighting.skyTime,0);assert.equal(metadata.lighting.keyHandoff,'western-azimuth-elevation');assert.equal(metadata.foliage,'full');assert.equal(metadata.sampling,'native');
+  qa.elements.get('lighting-variant').value='solar-120-stable';qa.reset();assert.equal(game.environment.cloudBlend,.83);assert.equal(game.environment.solarAzimuthDegrees,120);
+});
+
+test('an explicit auto start phase resets identical solar sweep conditions and is recorded in the actual-frame identity',async()=>{
+  const saves=[],qa=await fixture({query:'?light=auto&lighting=solar-120&phase=0.2',save:async(url,options)=>{saves.push({url,options});return{ok:true};}});
+  assert.equal(qa.elements.get('phase-start').value,'0.2');assert.ok(Math.abs(qa.state().game.environment.phase-.2)<1e-12);
+  qa.state().game.environmentClock.phase=.31;qa.reset();assert.equal(qa.state().game.environmentClock.phase,.2);
+  qa.elements.get('frame').onclick();qa.state().game.rendering.render(1/60);await qa.flush();await qa.flush();assert.match(saves[0].url,/lighting-solar-120-p0p2000-/);
+  const metadata=JSON.parse(await saves.find(r=>r.url.endsWith('.json')).options.body.text());assert.equal(metadata.startPhase,.2);assert.equal(metadata.lighting.solarAzimuthDegrees,120);
+  qa.begin('measure');assert.equal(qa.elements.get('phase-start').disabled,true);await qa.stop('test-end');
+  qa.elements.get('light').value='day';qa.reset();assert.ok(Math.abs(qa.state().game.environment.phase-TIME_PHASES.day)<1e-12,'fixed time ignores the auto-only start field');
+});
+
+test('a solar movie saves its own paired metadata with first and last actually rendered light phases',async()=>{
+  for(const variant of ['solar-120','solar-120-stable']){
+  const saves=[],qa=await fixture({query:`?light=auto&lighting=${variant}&phase=0.2`,save:async(url,options)=>{saves.push({url,options});return{ok:true};}});
+  qa.elements.get('reduced-motion').checked=false;await qa.record('record');const game=qa.state().game;
+  game.rendering.render(1/60);qa.at(23900);game.environmentClock.phase=.299;game._updateEnvironment();game.rendering.render(1/60);
+  qa.at(24000);const stopping=qa.stop('completed',true);await qa.recorders[0].finish();await stopping;
+  const video=saves.find(r=>r.url.endsWith('.webm')),json=saves.find(r=>r.url.endsWith('.json'));assert.equal(json.url,video.url.replace('.webm','.json'));
+  const metadata=JSON.parse(await json.options.body.text());assert.ok(metadata.completed);assert.equal(metadata.startPhase,.2);assert.ok(Math.abs(metadata.renderedLighting.first.phase-.2)<1e-12);assert.ok(Math.abs(metadata.renderedLighting.last.phase-.299)<1e-12);assert.equal(metadata.renderedLighting.last.solarAzimuthDegrees,120);
+  assert.ok(video.url.includes(`lighting-${variant}-p0p2000-`));assert.equal(metadata.renderedLighting.first.variant,variant);assert.equal(metadata.renderedLighting.last.keyHandoff,variant==='solar-120-stable'?'western-azimuth-elevation':'normalized-vector');
+  }
+});
+
 test('recorder start failure releases the local stream and exports an invalid reason',async()=>{
   const qa=await fixture({startError:true});assert.equal(await qa.record('record'),null);
   assert.equal(qa.state().session,null);assert.equal(qa.state().lastReport.invalid,true);assert.match(qa.state().lastReport.reason,/recording-start-failed: capture unavailable/);
@@ -128,6 +189,48 @@ test('diagnostic views preserve original poses and apply requested close-up came
     assert.deepEqual(qa.state().game.camera.position.toArray(),eye,view);assert.deepEqual(qa.state().game.camera.target,target,view);assert.equal(qa.state().game.camera.fov,43);
   }
   for(const view of ['castle-footing','contact-bridge','shore-detail'])assert.ok(views.children.some(option=>option.value===view));
+});
+
+test('paired lantern diagnostic contains the actual paper and its water-plane image with clear terrain sightlines',async()=>{
+  const {createFaunaPopulation}=await import('../src/fauna-population.js'),{createLake}=await import('../src/landscape.js');
+  const {decodeGeometryGLB}=await import('./helpers/herbarium-source.js'),{assetManifest}=await import('../src/asset-manifest.js');
+  const {DEPTH_RIDGES,ridgeGeometry}=await import('../src/landscape-depth.js');
+  const saves=[],qa=await fixture({query:'?view=fauna-reflection-pair&light=night&lighting=solar-120-cloud70&activity=0',nativeDpr:2.5,save:async(url,options)=>{saves.push({url,options});return{ok:true};}}),game=qa.state().game;
+  const scene=new THREE.Scene(),fauna=createFaunaPopulation({heightAt:()=>7}),lake=createLake(scene,scene);scene.add(fauna.root);
+  game.world.lake=lake;game.world.atmosphere={root:new THREE.Group(),fauna,resetActivityForReview:(time,reduced)=>fauna.resetActivityForReview(time,reduced)};
+  const terrain=(await decodeGeometryGLB(await readFile(new URL(`../public${assetManifest['navigation-terrain'].url}`,import.meta.url)))).scene;
+  const coastMaterial=new THREE.MeshBasicMaterial({side:THREE.DoubleSide}),coast=DEPTH_RIDGES.map(ridge=>new THREE.Mesh(ridgeGeometry(ridge),coastMaterial));
+  scene.add(terrain,...coast);scene.updateMatrixWorld(true);const before=fauna.motion.lanterns.map(item=>({base:item.base.toArray(),position:item.position.toArray(),scale:item.scale}));
+  try{
+    qa.elements.get('view').value='fauna-reflection-pair';qa.reset();game._updateCamera();
+    const item=fauna.motion.lanterns[4],paper=fauna.root.children.filter(object=>object.name==='Continuous folded translucent paper shell')[4];
+    const normal=new THREE.Vector3(0,0,1).transformDirection(lake.water.matrixWorld),plane=new THREE.Plane().setFromNormalAndCoplanarPoint(normal,lake.water.getWorldPosition(new THREE.Vector3()));
+    const box=new THREE.Box3().setFromObject(paper),center=box.getCenter(new THREE.Vector3()),reflected=center.clone().addScaledVector(normal,-2*plane.distanceToPoint(center)),camera=game.camera;
+    const vertex=new THREE.Vector3();for(let i=0;i<paper.geometry.attributes.position.count;i++){
+      vertex.fromBufferAttribute(paper.geometry.attributes.position,i).applyMatrix4(paper.matrixWorld);
+      for(const point of [vertex,vertex.clone().addScaledVector(normal,-2*plane.distanceToPoint(vertex))]){
+        const ndc=point.clone().project(camera);assert.ok(Math.abs(ndc.x)<.8&&Math.abs(ndc.y)<.8&&ndc.z>0&&ndc.z<1,'both complete real paper silhouettes must remain inside a 10 percent native-frame margin');
+      }
+    }
+    assert.ok(Math.abs(center.clone().project(camera).x-reflected.clone().project(camera).x)<1e-6,'the paired image must be vertically corresponding');
+    const blockers=[terrain,...coast],eye=camera.position.clone(),mirrorEye=eye.clone().addScaledVector(normal,-2*plane.distanceToPoint(eye));
+    for(const point of [center,box.min,box.max]){
+      const virtual=point.clone().addScaledVector(normal,-2*plane.distanceToPoint(point));
+      const bounce=plane.intersectLine(new THREE.Line3(eye,virtual),new THREE.Vector3());assert.ok(bounce,'reflection must land on the actual water in front of the eye');
+      for(const [start,end]of [[eye,point],[eye,bounce],[bounce.clone().addScaledVector(normal,.001),point]]){
+        const direction=end.clone().sub(start),ray=new THREE.Raycaster(start,direction.clone().normalize(),.001,direction.length()-.01);assert.equal(ray.intersectObjects(blockers,true).length,0,'actual decoded terrain and coastal meshes must not block the direct or reflected sightline');
+      }
+    }
+    assert.ok(mirrorEye.y<-15);assert.equal(camera.fov,43);assert.equal(qa.canvas.width,2560);assert.equal(qa.canvas.height,1440);
+    assert.deepEqual(fauna.motion.lanterns.map(item=>({base:item.base.toArray(),position:item.position.toArray(),scale:item.scale})),before,'review framing cannot move or scale the population');
+    qa.elements.get('frame').onclick();game.rendering.render(1/60);await qa.flush();await qa.flush();
+    const metadata=JSON.parse(await saves.find(saved=>saved.url.endsWith('.json')).options.body.text()),pair=metadata.camera.reflectionPair;
+    assert.equal(pair.lanternIndex,4);assert.deepEqual(pair.lanternPosition,item.position.toArray());assert.ok(new THREE.Vector3(...pair.center).distanceTo(center)<1e-8);assert.ok(new THREE.Vector3(...pair.mirroredCenter).distanceTo(reflected)<1e-8);
+    assert.ok(pair.lanternNdc[1]>.5&&pair.mirrorNdc[1]<-.5);assert.equal(metadata.lighting.cloudBlend,.7);assert.equal(metadata.foliage,'full');assert.equal(metadata.sampling,'native');
+    assert.equal(qa.elements.get('view').value,'fauna-reflection-pair');assert.ok(qa.elements.get('view').children.some(option=>option.value==='fauna-reflection'));
+    assert.ok(item.position.distanceTo(center)<2);
+    lake.water.position.y=-12;game._updateCamera();assert.ok(Math.abs(game.camera.target[1]+12)<1e-8,'framing reads the real mirror plane rather than a duplicated water-height constant');
+  }finally{fauna.dispose();const geometries=new Set(),materials=new Set();scene.traverse(object=>{if(object.geometry)geometries.add(object.geometry);for(const material of object.material?Array.isArray(object.material)?object.material:[object.material]:[])materials.add(material);});geometries.forEach(geometry=>geometry.dispose());materials.forEach(material=>material.dispose());}
 });
 
 test('QA sampling explicitly synchronizes renderer and composer and Native restores the existing policy',async()=>{

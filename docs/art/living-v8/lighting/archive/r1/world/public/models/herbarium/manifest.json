@@ -1,0 +1,374 @@
+{
+  "schema": 1,
+  "version": 8,
+  "axis": "long X, front +Z; finished walking floor y=0",
+  "authoring": {
+    "source": "world/src/herbarium-assets.js",
+    "sha256": "4fceba32fe849ec2dfa6e91be05cd9cd74cf63763d796d151fd4d4c405b96641",
+    "method": "Original architecture and garden composition authored in JavaScript, incorporating attributed CC0 PolyHaven botanical geometry; exact runtime triangles and PBR pixels exported and imported into editable Blender meshes with named part index ranges and source provenance.",
+    "referenceImages": "Aesthetic targets only, never textures or model evidence"
+  },
+  "textureSources": [
+    {
+      "path": "world/public/textures/castle-masonry/color.webp",
+      "sha256": "a65c1bdc90bcfe9b1998d93b0174940992ca1747f2196dd69508c87cc93a27d4",
+      "width": 2048,
+      "height": 2048,
+      "pixelOrientation": "Vertically flipped before upload, matching asset-cache ImageBitmap imageOrientation flipY"
+    },
+    {
+      "path": "world/public/textures/castle-masonry/normal.webp",
+      "sha256": "3735d2dbabee7dc76fa5c8e1a0d165e7aecb14628ec7e84d723536ddc932211f",
+      "width": 2048,
+      "height": 2048,
+      "pixelOrientation": "Vertically flipped before upload, matching asset-cache ImageBitmap imageOrientation flipY"
+    },
+    {
+      "path": "world/public/textures/castle-masonry/roughness.webp",
+      "sha256": "06510453b7724cd5316c09f8e32704ba2d6045372feb379d28393af164a1c74d",
+      "width": 2048,
+      "height": 2048,
+      "pixelOrientation": "Vertically flipped before upload, matching asset-cache ImageBitmap imageOrientation flipY"
+    },
+    {
+      "path": "world/public/textures/oxidized-copper/color.webp",
+      "sha256": "1b32ebda3452c7109e1d439ae73d7e04f39a5479257aae0ed73795bafe3b26df",
+      "width": 1024,
+      "height": 1024,
+      "pixelOrientation": "Vertically flipped before upload, matching asset-cache ImageBitmap imageOrientation flipY"
+    },
+    {
+      "path": "world/public/textures/oxidized-copper/normal.webp",
+      "sha256": "ea8b96d42728780e1b71f4fba921d0a7583ef45de5eb3e6213a35dcdfab190a4",
+      "width": 1024,
+      "height": 1024,
+      "pixelOrientation": "Vertically flipped before upload, matching asset-cache ImageBitmap imageOrientation flipY"
+    },
+    {
+      "path": "world/public/textures/oxidized-copper/roughness.webp",
+      "sha256": "fdf08acc9912dae9bdbab373cf8c06283aea150306a737c326aa156c3a03c73e",
+      "width": 1024,
+      "height": 1024,
+      "pixelOrientation": "Vertically flipped before upload, matching asset-cache ImageBitmap imageOrientation flipY"
+    },
+    {
+      "path": "world/public/textures/oxidized-copper/metalness.webp",
+      "sha256": "c69016b6f371f9d6781d1129a41c6a11a4307e6ba6dc1107498441f4c193f7c4",
+      "width": 1024,
+      "height": 1024,
+      "pixelOrientation": "Vertically flipped before upload, matching asset-cache ImageBitmap imageOrientation flipY"
+    },
+    {
+      "path": "world/public/textures/aged-wood/color.webp",
+      "sha256": "08e9208c0924796858dd3853989c729f0e73af8c92bc689cffb08b231f068e22",
+      "width": 1024,
+      "height": 1024,
+      "pixelOrientation": "Vertically flipped before upload, matching asset-cache ImageBitmap imageOrientation flipY"
+    },
+    {
+      "path": "world/public/textures/aged-wood/normal.webp",
+      "sha256": "7fcca29512d62d753be94a58653c090b83a301c51cb72f3c52e21ba2543a9af9",
+      "width": 1024,
+      "height": 1024,
+      "pixelOrientation": "Vertically flipped before upload, matching asset-cache ImageBitmap imageOrientation flipY"
+    },
+    {
+      "path": "world/public/textures/aged-wood/roughness.webp",
+      "sha256": "2f76569ccbe849ff4dc704b70950510ddb01b3b100d7411c4ed65d6e70eabd0c",
+      "width": 1024,
+      "height": 1024,
+      "pixelOrientation": "Vertically flipped before upload, matching asset-cache ImageBitmap imageOrientation flipY"
+    },
+    {
+      "path": "world/public/textures/mossy-rock/color.webp",
+      "sha256": "d59a092722eb97d20c7e54bc3fe3c0bc944c97fef618b7c10defa823efa6fa52",
+      "width": 1024,
+      "height": 1024,
+      "pixelOrientation": "Vertically flipped before upload, matching asset-cache ImageBitmap imageOrientation flipY"
+    },
+    {
+      "path": "world/public/textures/mossy-rock/normal.webp",
+      "sha256": "84a310f08d2054db59e16e3ee3e733a002080c7109f3f3aa1ce693a5289c60c5",
+      "width": 1024,
+      "height": 1024,
+      "pixelOrientation": "Vertically flipped before upload, matching asset-cache ImageBitmap imageOrientation flipY"
+    },
+    {
+      "path": "world/public/textures/mossy-rock/roughness.webp",
+      "sha256": "801d9198377c49145142dc90f95c2f9f550d858fd6a417bc28c6f60bcdbce68d",
+      "width": 1024,
+      "height": 1024,
+      "pixelOrientation": "Vertically flipped before upload, matching asset-cache ImageBitmap imageOrientation flipY"
+    }
+  ],
+  "botanicalSources": [
+    {
+      "id": "fern_02",
+      "source": "https://polyhaven.com/a/fern_02",
+      "license": "CC0",
+      "runtimeGLB": "world/public/models/herbarium/botanical/fern_02.glb",
+      "sha256": "0997aa669e73f1fce052366ddb563754294b97379d6e185a6f6a24bfe66dc083",
+      "bytes": 18738904,
+      "derivative": "Original unresized 4096 source RGB copied exactly with matching original alpha; MASK alphaCutoff0.5; all original source variant meshes/normals/UVs unchanged.",
+      "width": 4096,
+      "height": 4096,
+      "maskedPixelFraction": 0.8466491103172302,
+      "variants": [
+        "fern_02_b",
+        "fern_02_c",
+        "fern_02_a",
+        "fern_02_d"
+      ],
+      "rgbSHA256": "f924354b032fcde77830b0c33c4dff80b4b143f793e70126894788f199b61960",
+      "alphaSHA256": "50dd262282e9787ae8abf4475b5d2071df8a88f5242f480602a0672347bd7ff9"
+    },
+    {
+      "id": "periwinkle_plant",
+      "source": "https://polyhaven.com/a/periwinkle_plant",
+      "license": "CC0",
+      "runtimeGLB": "world/public/models/herbarium/botanical/periwinkle_plant.glb",
+      "sha256": "7dc4b4edf073647d2c3c5b46e0ead8a035b1654e4871ff3ba048663860d6588e",
+      "bytes": 22202628,
+      "derivative": "Original unresized 4096 source RGB copied exactly with matching original alpha; MASK alphaCutoff0.5; all original source variant meshes/normals/UVs unchanged.",
+      "width": 4096,
+      "height": 4096,
+      "maskedPixelFraction": 0.6158159375190735,
+      "variants": [
+        "periwinkle_plant_04_LOD0",
+        "periwinkle_plant_06_LOD0",
+        "periwinkle_plant_03_LOD0",
+        "periwinkle_plant_02_LOD0",
+        "periwinkle_plant_05_LOD0",
+        "periwinkle_plant_01_LOD0"
+      ],
+      "rgbSHA256": "e9fc57386108c8d0c0f86bc1bfb74e2e727d55c8b67ec7ae4836db2f06c96dbf",
+      "alphaSHA256": "e7d9b8956d1d47b6ffe6e39f24bf0d8f70a28cc7566caea3e9a12a9a5e869b09"
+    },
+    {
+      "id": "potted_plant_01",
+      "source": "https://polyhaven.com/a/potted_plant_01",
+      "license": "CC0",
+      "runtimeGLB": "world/public/models/herbarium/botanical/potted_plant_01.glb",
+      "sha256": "8637c846709769f0ee3178ed4eccbb594129e0f457896c287f788b6a97449901",
+      "bytes": 35796560,
+      "derivative": "Original unresized 4096 source RGB copied exactly with matching original alpha; MASK alphaCutoff0.5; all original source variant meshes/normals/UVs unchanged.",
+      "width": 4096,
+      "height": 4096,
+      "maskedPixelFraction": 0.356293261051178,
+      "variants": [
+        "potted_plant_01_stem",
+        "potted_plant_01_pebbles",
+        "potted_plant_01_pot",
+        "potted_plant_01_leaves"
+      ],
+      "rgbSHA256": "6270061eb1f948e732f716bc26793e7f16e3d7796f8027da307c1dee8dd705d0",
+      "alphaSHA256": "8f02187c4c6b7b8a1eb69f983660dcc4a0a0afd532b625160155b1dae0e920a0"
+    }
+  ],
+  "assets": {
+    "arcade": {
+      "artifactPath": "work/living-v8/exports/herbarium/arcade.glb",
+      "sha256": "7f63cd5bdaec58682c3f67c33f81c8773d63dedd0dff5260401d04d028416967",
+      "bytes": 23848924,
+      "uncompressedSha256": "40262823b5701b659ad929c2672f3689336b53eddf9b2129711cb10a76cdb827",
+      "uncompressedBytes": 41426420,
+      "editableInputSha256": "06135018cb3ae1c1bc47c7abce9a44945b5692d571711f1056e22c7e3e2d4c3d",
+      "editableInputBytes": 25108560,
+      "losslessPacking": "arcade.packing.json",
+      "dimensions": {
+        "width": 12,
+        "depth": 3.4,
+        "height": 5.4
+      },
+      "bounds": {
+        "min": [
+          -6,
+          -0.25999999046325684,
+          -1.7000000476837158
+        ],
+        "max": [
+          6,
+          5.399499893188477,
+          1.7000000476837158
+        ]
+      },
+      "triangles": 34390,
+      "batches": 6,
+      "source": "work/living-v8/exports/herbarium/arcade.blend",
+      "partMetadata": "arcade.parts.json",
+      "supportMeshes": [
+        "floor:support",
+        "mortar:support"
+      ],
+      "rootedPlants": 3,
+      "botanicalSources": [],
+      "editableSha256": "b43ec094c89cadcf97788720354cf8c312f98209d32edf99d3e858ef21ee613c",
+      "editableBytes": 23879395
+    },
+    "conservatory": {
+      "artifactPath": "work/living-v8/exports/herbarium/conservatory.glb",
+      "sha256": "8e4ce81d2b2927bbb83bc13a4e9a8f78759826e7f776eee558755fcf829c4a36",
+      "bytes": 118878104,
+      "uncompressedSha256": "692d098d57a0140b9fa2efaaa0762055eed31951b736cef991ba36e47f08b955",
+      "uncompressedBytes": 363376896,
+      "editableInputSha256": "5a37bed733616722e72ec2f7571faed1d5ecc07245608b81bf80fe7be16fa22c",
+      "editableInputBytes": 180825688,
+      "losslessPacking": "conservatory.packing.json",
+      "dimensions": {
+        "width": 16,
+        "depth": 9,
+        "height": 7.5
+      },
+      "bounds": {
+        "min": [
+          -7.699999809265137,
+          -0.25999999046325684,
+          -4.25
+        ],
+        "max": [
+          7.699999809265137,
+          7.489999771118164,
+          4.28000020980835
+        ]
+      },
+      "triangles": 2598090,
+      "batches": 13,
+      "source": "work/living-v8/exports/herbarium/conservatory.blend",
+      "partMetadata": "conservatory.parts.json",
+      "supportMeshes": [
+        "floor:support",
+        "mortar:support"
+      ],
+      "rootedPlants": 44,
+      "botanicalSources": [
+        {
+          "id": "potted_plant_01",
+          "author": "Rico Cilliers",
+          "sha256": "8637c846709769f0ee3178ed4eccbb594129e0f457896c287f788b6a97449901",
+          "license": "CC0",
+          "sourceURL": "https://polyhaven.com/a/potted_plant_01"
+        },
+        {
+          "id": "fern_02",
+          "author": "Rob Tuytel / Rico Cilliers",
+          "sha256": "0997aa669e73f1fce052366ddb563754294b97379d6e185a6f6a24bfe66dc083",
+          "license": "CC0",
+          "sourceURL": "https://polyhaven.com/a/fern_02"
+        },
+        {
+          "id": "periwinkle_plant",
+          "author": "Amal Kumar",
+          "sha256": "7dc4b4edf073647d2c3c5b46e0ead8a035b1654e4871ff3ba048663860d6588e",
+          "license": "CC0",
+          "sourceURL": "https://polyhaven.com/a/periwinkle_plant"
+        }
+      ],
+      "editableSha256": "5105a73d5ecf73c579ba2ddeb7aa5e2eb8556c2d91d03ebb227fa64267c9ac8d",
+      "editableBytes": 147877909
+    },
+    "water-garden": {
+      "artifactPath": "work/living-v8/exports/herbarium/water-garden.glb",
+      "sha256": "1bcec3bbb7bd64f427cc801b495d477e5bd3ff152b42154a63f53cd0c3fa6b96",
+      "bytes": 72341316,
+      "uncompressedSha256": "a153ca554c47d732cdf17171008ec09145bf14174763959f9f6480043a20f189",
+      "uncompressedBytes": 169965244,
+      "editableInputSha256": "3352834f50607292693881c1e818b460d5d90d3be62a53983ad75ddb32ec9d6f",
+      "editableInputBytes": 98941872,
+      "losslessPacking": "water-garden.packing.json",
+      "dimensions": {
+        "width": 16,
+        "depth": 9,
+        "height": 1.2
+      },
+      "bounds": {
+        "min": [
+          -7.253931522369385,
+          -0.3400000035762787,
+          -4.170000076293945
+        ],
+        "max": [
+          7.949999809265137,
+          1.100000023841858,
+          4.170000076293945
+        ]
+      },
+      "triangles": 833808,
+      "batches": 18,
+      "source": "work/living-v8/exports/herbarium/water-garden.blend",
+      "partMetadata": "water-garden.parts.json",
+      "supportMeshes": [
+        "floor:support"
+      ],
+      "rootedPlants": 137,
+      "botanicalSources": [
+        {
+          "id": "fern_02",
+          "author": "Rob Tuytel / Rico Cilliers",
+          "sha256": "0997aa669e73f1fce052366ddb563754294b97379d6e185a6f6a24bfe66dc083",
+          "license": "CC0",
+          "sourceURL": "https://polyhaven.com/a/fern_02"
+        },
+        {
+          "id": "periwinkle_plant",
+          "author": "Amal Kumar",
+          "sha256": "7dc4b4edf073647d2c3c5b46e0ead8a035b1654e4871ff3ba048663860d6588e",
+          "license": "CC0",
+          "sourceURL": "https://polyhaven.com/a/periwinkle_plant"
+        }
+      ],
+      "editableSha256": "a2a23ae02a843e16717e27dcf8c9b80e2c03f573fbfe1a5ffbae6260fd329ce1",
+      "editableBytes": 83381203
+    },
+    "flower-border": {
+      "artifactPath": "work/living-v8/exports/herbarium/flower-border.glb",
+      "sha256": "14d323c0f90c09b91d9185a65d161c3059b33fa54611663588a7afa527fa85bf",
+      "bytes": 46619052,
+      "uncompressedSha256": "96abc3ee1bfbfdbfcbc36191bef9723bc7be9a40c1c33e429635b1c30eccab20",
+      "uncompressedBytes": 119740292,
+      "editableInputSha256": "b95286df8fb10b7a71c4e08fbfdf18a748178f6ef9bbdf06bf991fd8a609873f",
+      "editableInputBytes": 61061280,
+      "losslessPacking": "flower-border.packing.json",
+      "dimensions": {
+        "width": 12,
+        "depth": 2.2,
+        "height": 1.2
+      },
+      "bounds": {
+        "min": [
+          -6,
+          -0.10094360262155533,
+          -0.9437811374664307
+        ],
+        "max": [
+          6,
+          0.8621935248374939,
+          0.9115283489227295
+        ]
+      },
+      "triangles": 388036,
+      "batches": 5,
+      "source": "work/living-v8/exports/herbarium/flower-border.blend",
+      "partMetadata": "flower-border.parts.json",
+      "supportMeshes": [],
+      "rootedPlants": 108,
+      "botanicalSources": [
+        {
+          "id": "fern_02",
+          "author": "Rob Tuytel / Rico Cilliers",
+          "sha256": "0997aa669e73f1fce052366ddb563754294b97379d6e185a6f6a24bfe66dc083",
+          "license": "CC0",
+          "sourceURL": "https://polyhaven.com/a/fern_02"
+        },
+        {
+          "id": "periwinkle_plant",
+          "author": "Amal Kumar",
+          "sha256": "7dc4b4edf073647d2c3c5b46e0ead8a035b1654e4871ff3ba048663860d6588e",
+          "license": "CC0",
+          "sourceURL": "https://polyhaven.com/a/periwinkle_plant"
+        }
+      ],
+      "editableSha256": "2d48efb17f544a245684ece03a59f0407a826a422a2a2f6649aa6ab32ee52680",
+      "editableBytes": 50828604
+    }
+  }
+}

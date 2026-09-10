@@ -1,0 +1,59 @@
+{
+  "candidate": "living-v8-fauna-r1",
+  "base": "88e978b409621f2912ef77a1aa05a3b4954e22f0",
+  "sourceIdentity": "eae79630364be766954bc44cfff0f1b676fee50bc7fb74fafe0eaf48fb186098",
+  "files": [
+    {
+      "path": "world/src/sky-fauna.js",
+      "sha256": "3b987621a990f1490312fa88cd99f2bcc814a3bd49898e3436dff55b831bb8c1"
+    },
+    {
+      "path": "world/src/fauna-studio.js",
+      "sha256": "c5473ed41849d7e11569ed74332d11124e3b1cc34affc5b2a53414ae28d22d53"
+    },
+    {
+      "path": "world/fauna-studio.html",
+      "sha256": "63daf572f0b05c7de3280f037b18810cd7f87b074a72cb95a331b5d15971eb5a"
+    },
+    {
+      "path": "world/asset-studio.html",
+      "sha256": "af7c1fe2bee8e53388f878caa67cddd2ae8e887fbcae0c48585994d605344d46"
+    },
+    {
+      "path": "world/vite.config.js",
+      "sha256": "a280b2217edbc5598c5840fc3740ddb4d4a638ec2970c4a12e3eff95be896e30"
+    },
+    {
+      "path": "world/scripts/export-fauna.mjs",
+      "sha256": "44c3acb3a5d0d44f2fbb85451d054d6ba575244d3a7f0984a4ebd62001a5a140"
+    },
+    {
+      "path": "world/tests/sky-fauna-assets.test.js",
+      "sha256": "7a7df153392e4f1f0a3399ed3c7fded3991617efedaeb0fd48e551eb7d302efb"
+    },
+    {
+      "path": "world/public/models/fauna/README.md",
+      "sha256": "49d4fc7a710b88d40d3bd1843063d0aead2b3ee8ecdf8c35fbeee93e9b88f06c"
+    },
+    {
+      "path": "world/public/models/fauna/manifest.json",
+      "sha256": "0b749ed5a52b1cde4c661d9bc7de4f717d95eb4f58a2984a157e39cc1a63fafb"
+    },
+    {
+      "path": "world/public/models/fauna/sky-fauna.js",
+      "sha256": "3b987621a990f1490312fa88cd99f2bcc814a3bd49898e3436dff55b831bb8c1"
+    },
+    {
+      "path": "world/public/models/fauna/swallow.glb",
+      "sha256": "e9b99dc7d8a3afed57ba00c8dd89c190558d9be5f9bb2cd6f39c621fdde164fc"
+    },
+    {
+      "path": "world/public/models/fauna/paper-lantern.glb",
+      "sha256": "e22bb1d102df0d3c321fa43de00dc868984b82501e748c60dc50cccab88ddfeb"
+    },
+    {
+      "path": "world/public/models/fauna/firefly.glb",
+      "sha256": "c19112a4e735189db4ef93572613df8cb68c0f6a9f3df5718d518c0744a1b015"
+    }
+  ]
+}

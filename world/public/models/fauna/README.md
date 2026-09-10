@@ -1,0 +1,23 @@
+# Living sky · original editable specimens
+
+These assets are original geometric interpretations authored for Living Academy v8. The canonical editable recipe is `world/src/sky-fauna.js`; a matching copy is included here. Rebuild with `node scripts/export-fauna.mjs` from `world/`. `manifest.json` binds each export to the source SHA-256.
+
+The swallow has a continuous shaped chest/head, short bill, eyes, thick cambered wings with broad roots, overlapping primary/secondary feathers and a true short tail fan with two long outer feathers. The original articulated shoulder/wrist deformation is baked to compatible upstroke/downstroke position **and normal** morphs. Its GLB includes the same geometry and a ten-second authored bank/flap/glide animation. Scale, joint motion and feather construction are artistic interpretations, not measured animal motion.
+
+The paper lantern has a full double-sided folded shell, eight slender bamboo ribs, a genuinely open lower rim, crossed brace, fuel pad and tapered flame. Its exported GLB retains the exact geometry, PBR materials and paper vertex pigments. The editable runtime recipe additionally supplies derivative-filtered paper fibres, graded warm emission and a view-space radial aura; those shader effects are not portable glTF material extensions. The firefly GLB similarly retains the full beetle, wings, antennae, legs and luminous abdomen; its additive aura stays in the runtime source. The studio renders the canonical runtime materials and geometry, not the fallback GLB material interpretation.
+
+No reference photograph or third-party texture is included in these assets. The bird morphology was informed by three licensed research photographs, kept outside public resources:
+
+- Mildeep, *Barn-Swallow.jpg*, 2024-01-31, [source](https://commons.wikimedia.org/wiki/File:Barn-Swallow.jpg), [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/).
+- Dori, *Barn swallow 7283.jpg*, 2008-06-29, [source](https://commons.wikimedia.org/wiki/File:Barn_swallow_7283.jpg), selected [CC BY-SA 3.0 US](https://creativecommons.org/licenses/by-sa/3.0/us/).
+- Prasan Shrestha, *A reflection flight of barn swallow.jpg*, 2024-01-01, [source](https://commons.wikimedia.org/wiki/File:A_reflection_flight_of_barn_swallow.jpg), [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/). This photograph is a water reflection, used only for wing/tail silhouette.
+
+Full reference records and art interpretation limits are in `docs/art/living-v8/research/birds/`. Photos remain unchanged local research evidence. No photo pixels, stock mesh or recorded bird call are used at runtime.
+
+R2 refines the wing planform and rounded overlapping flight feathers, follows the deformed paper with continuous bamboo ribs, and uses a flattened beetle head shield, protective wing covers and tapering curved appendages. Firefly form received bounded text support from the [Xerces Society Pocket ID Guide](https://xerces.org/sites/default/files/publications/24-006_01_Pocket%20ID%20Guide_FINAL_web.pdf); it is an artistic beetle interpretation rather than a species reconstruction. No guide images were used as assets.
+
+R3 replaces the two fixed circular bamboo hoops with closed tubes fitted to the same folded paper surface. Bird/firefly geometry and materials, and the paper material, are unchanged from R2. The R2 bird flap/glide/bank and firefly pulse were reviewed; live insect flight is a separate integration check.
+
+The studio fits the active pose and full subject to the actual viewport. Motion uses a fixed whole-cycle frame. Its lantern-pair depth crossing is a labeled sorting diagnostic; it is not a proposed live flight trajectory. Firefly ground modes compare 3 cm, 80 cm and no floor with identical depth testing. Aggregate renderer submissions include scene, shadow and postprocessing passes; separate counts describe the actual specimen geometry. Neither these checks nor a successful GLB export constitutes an art acceptance.
+
+R4 flight keeps every R3 base geometry attribute, morph target and material recipe. Four membrane/vein objects rotate together about their original thorax attachments at an authored 23 Hz; this is artistic choreography, not a measured species frequency. The same pivot transform drives studio meshes and live instanced wings. The insect GLB contains a ten-second 120 Hz sampled wing animation, while the abdomen pulse and view-space aura remain runtime shader behavior. Live body wandering, altitude over actual terrain and group timing are in `world/src/fauna-population-motion.js`; no additional simplified mesh is substituted.

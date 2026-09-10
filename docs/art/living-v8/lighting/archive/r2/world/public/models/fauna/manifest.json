@@ -1,0 +1,31 @@
+{
+  "version": "living-v8-fauna-r3",
+  "recipe": "world/src/sky-fauna.js",
+  "recipeSHA256": "21c642ed0f294bad762228a97b7432a2595d02dfa5c12c61413a459f902d1214",
+  "assets": [
+    {
+      "id": "swallow",
+      "file": "swallow.glb",
+      "bytes": 22368608,
+      "sha256": "ab7d4613fd1fef9f9e808d564bd0d42341be6e4365f01941fca78bc94892c264",
+      "geometry": "Exact runtime mesh topology, vertex pigments and morph positions/normals",
+      "limitations": null
+    },
+    {
+      "id": "paper-lantern",
+      "file": "paper-lantern.glb",
+      "bytes": 749876,
+      "sha256": "b51726a810f045dbd18f482b90713a111265ad4f456eca46e433e8ee69bcdea0",
+      "geometry": "Exact runtime mesh topology, vertex pigments and morph positions/normals",
+      "limitations": "GLB base PBR paper material; runtime shader adds filtered fibres and graded emission. Additive view-space aura remains in editable source."
+    },
+    {
+      "id": "firefly",
+      "file": "firefly.glb",
+      "bytes": 581016,
+      "sha256": "581102ec59f8d37202692d2ae058981cde2c8f6ac1ef6f7730c033aed6f3f9b2",
+      "geometry": "Exact runtime mesh topology, vertex pigments and morph positions/normals",
+      "limitations": "Exact PBR insect; view-space additive aura remains in editable source."
+    }
+  ]
+}

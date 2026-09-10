@@ -1068,7 +1068,7 @@ export class Game {
     }
     playing = this.started && !this._isPaused();
     if (!this.started) this._idleWisps();
-    this.world.update(this._time, dt, this.options.reducedMotion,this.camera,{width:this.canvas.width,height:this.canvas.height});
+    this.world.update(this._time, dt, this.options.reducedMotion,this.camera,{width:this.canvas.width,height:this.canvas.height},{paused:this._isPaused(),started:this.started});
     this.exhibitionStage.setFocused?.(Boolean(this.exhibition||this.nearestExhibition),{reducedMotion:this.options.reducedMotion});
     this.exhibitionStage.update(this._time,this._suspended?0:dt,this.options.reducedMotion);
     if(this.exhibitionStage.consumeShadowUpdate?.())this.renderer.shadowMap.needsUpdate=true;

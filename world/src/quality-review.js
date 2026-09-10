@@ -2,10 +2,11 @@ import * as THREE from 'three';
 import {Game} from './game.js';
 import {resourceLoader} from './resource-loader.js';
 import {ReviewMetrics,evidenceFilename} from './review-metrics.js';
+import {LIGHTING_REVIEW_VARIANTS} from './environment-time.js';
 
 const $=id=>document.getElementById(id),canvas=document.querySelector('canvas');
-const warmupMs=3500,files=[],controlIds=['measure','record','audition','view','light','quality','foliage','sampling','reduced-motion','reset','frame','sound','json'];
-let game,metrics,session=null,run=0,lastReport=null,pose=null,saveFrame=null,audition=-1,stage=-1,disposed=false,fullReady=false,renderFailed=false;
+const warmupMs=3500,files=[],controlIds=['measure','record','audition','view','light','quality','foliage','sampling','reduced-motion','lighting-variant','phase-start','activity-start','release-lantern','reset','frame','sound','json'];
+let game,metrics,session=null,run=0,lastReport=null,pose=null,saveFrame=null,audition=-1,stage=-1,disposed=false,fullReady=false,renderFailed=false,lightingStudyRequested=false;
 const lifetime=new AbortController(),loadStart=performance.now(),milestones=[],resourceFailures=new Map(),frameMilestones={};
 function milestone(label){milestones.push(`${((performance.now()-loadStart)/1000).toFixed(1)}s · ${label}`);if(milestones.length>28)milestones.shift();$('loading').textContent=milestones.join('\n');$('latest-load').textContent=label;$('load-times').textContent=Object.entries(frameMilestones).map(([name,seconds])=>`${name}: ${seconds}s`).join(' · ');$('loading').scrollTop=$('loading').scrollHeight;}
 function loadProgress(event){
@@ -25,7 +26,7 @@ function loadProgress(event){
     frameMilestones.full=((performance.now()-loadStart)/1000).toFixed(1);
     fullReady=!renderFailed&&event.enhancements==='ready'&&game?.world.complete===true&&resourceFailures.size===0;document.body.dataset.ready=fullReady?'true':'degraded';
     milestone(`Full frame rendered · ${fullReady?'ready':'degraded'} · ${resourceFailures.size} failed resources`);
-    if(game){$('foliage').value=game.world.vegetation?.lodController?'lod':'full';resetScene();setLocked(!fullReady);}
+    if(game){$('foliage').value=!lightingStudyRequested&&game.world.vegetation?.lodController?'lod':'full';resetScene();setLocked(!fullReady);}
     status(fullReady?'完整场景首帧已就绪；测量包含 3.5 秒预热。':`Full scene degraded; measurement disabled. ${event.errors?.join('; ')||[...resourceFailures.values()].join('; ')}`);
   }else{milestone(`${event.phase}${event.region?' · '+event.region:''}${event.activeResource?' · '+event.activeResource:''}${event.enhancements?' · '+event.enhancements:''}${event.assemblyMs?' · '+event.assemblyMs.toFixed(0)+'ms':''}`);}
 }
@@ -35,9 +36,23 @@ const unsubscribeResources=resourceLoader.subscribe(event=>{
   if(event.phase==='ready')resourceFailures.delete(event.id);
   if(['queued','parsing','ready','failed','retrying'].includes(event.phase))milestone(`${event.phase} · ${event.id}${event.type?' · '+event.type:''}`);
 });
-// Diagnostic eyes stay inside playable bounds x ±170, z ±158, ceiling 130.
+// Travel checks stay inside playable bounds; overview and water studies may use external camera-only views.
 const poses={arrival:{eye:[38,25,92],target:[8,9,38]},'castle-forecourt':{eye:[34,19,23],target:[0,9,0]},conservatory:{eye:[42,13,36],target:[55,9,22]},'conservatory-interior':{eye:[55,8.4,25],target:[55,8.8,18.5]},'arcade-passage':{eye:[21.44,0,10.5],eyeHeight:1.7,target:[21.44,9.4,1.2]},'water-garden':{eye:[-27,13,56],target:[-44,7.6,47]},'west-edge':{eye:[-150,95,70],target:[0,14,-40]},'east-edge':{eye:[150,95,70],target:[0,14,-40]},'high-flight':{eye:[0,125,110],target:[0,24,-60]},cherry:{eye:[-45,17,85],target:[-73,9,66]},lilac:{eye:[69,17,97],target:[48,10,77]},highlands:{eye:[130,94,184],target:[-2,44,-40]},court:{eye:[30,27,79],target:[0,10,28]},overview:{eye:[130,162,180],target:[-2,12,-4]},bridge:{eye:[-27,26,-23],target:[-65,5,-53]},shore:{eye:[93,4,115],target:[45,2,73]},
-  'castle-footing':{eye:[39,16,-8],target:[27,9,-24]},'contact-bridge':{eye:[59,15,-23],target:[52,3,-42]},'shore-detail':{eye:[111,6,16],target:[99,-2,2]}};
+  'castle-footing':{eye:[39,16,-8],target:[27,9,-24]},'contact-bridge':{eye:[59,15,-23],target:[52,3,-42]},'shore-detail':{eye:[111,6,16],target:[99,-2,2]},'fauna-birds':{eye:[0,0,0],target:[0,0,0],fauna:'bird'},'fauna-lanterns':{eye:[0,0,0],target:[0,0,0],fauna:'lantern'},'fauna-fireflies':{eye:[0,0,0],target:[0,0,0],fauna:'firefly'},'fauna-reflection':{eye:[-155,4,176],target:[-135,4,-2]},'fauna-reflection-pair':{eye:[-155,4,176],target:[-135,4,-2],reflection:true},'fauna-release':{eye:[22,20,78],target:[19.5,18.7,73.5],fauna:'release'},'full-moon':{eye:[130,94,150],target:[0,80,-40],moon:true}};
+function frameLanternReflection(fauna,water){
+  if(!fauna||!water)return null;
+  // Keep the lowest authored western lantern, then read its actual live shell.
+  // Selection is stable while the camera follows its small accepted-time sway.
+  const index=fauna.motion.lanterns.reduce((chosen,item,i)=>item.group===0&&(chosen<0||item.base.y<fauna.motion.lanterns[chosen].base.y)?i:chosen,-1);
+  const paper=fauna.root.children.filter(object=>object.name==='Continuous folded translucent paper shell')[index];if(!paper)return null;
+  paper.updateWorldMatrix(true,false);water.updateWorldMatrix(true,false);if(!paper.geometry.boundingBox)paper.geometry.computeBoundingBox();
+  const box=paper.geometry.boundingBox.clone().applyMatrix4(paper.matrixWorld),center=box.getCenter(new THREE.Vector3());
+  const normal=new THREE.Vector3(0,0,1).transformDirection(water.matrixWorld),plane=new THREE.Plane().setFromNormalAndCoplanarPoint(normal,water.getWorldPosition(new THREE.Vector3()));
+  const height=plane.distanceToPoint(center),foot=plane.projectPoint(center,new THREE.Vector3()),reflected=center.clone().addScaledVector(normal,-2*height);
+  const radius=box.getSize(new THREE.Vector3()).length()*.5,distance=(Math.abs(height)+radius+2)/(Math.tan(43*Math.PI/360)*.70);
+  const west=new THREE.Vector3(-1,0,0).addScaledVector(normal,normal.x).normalize(),eye=foot.clone().addScaledVector(west,distance).addScaledVector(normal,4);
+  return{eye:eye.toArray(),target:foot.toArray(),reflectionPair:{lanternIndex:index,lanternPosition:fauna.motion.lanterns[index].position.toArray(),center:center.toArray(),mirroredCenter:reflected.toArray(),waterPoint:foot.toArray(),planeNormal:normal.toArray(),planeConstant:plane.constant}};
+}
 const status=text=>{$('status').textContent=text;};
 async function download(blob,name){
   const url=URL.createObjectURL(blob);files.push(url);const a=document.createElement('a');a.href=url;a.download=name;a.textContent=name;$('media').append(a);a.click();
@@ -47,7 +62,18 @@ async function download(blob,name){
   }
   return null;
 }
-function conditions(){return {build:document.documentElement.dataset.build||'current',view:$('view').value,timeOfDay:$('light').value,quality:$('quality').value,foliage:$('foliage').value,sampling:$('sampling').value,reducedMotion:Boolean($('reduced-motion').checked),sound:Boolean(game.options.sound)};}
+function reviewStartPhase(){const value=$('phase-start').value;if($('light').value!=='auto'||value.trim()==='')return null;const phase=Number(value);return Number.isFinite(phase)&&phase>=0&&phase<1?phase:null;}
+function conditions(){return {build:document.documentElement.dataset.build||'current',view:$('view').value,timeOfDay:$('light').value,quality:$('quality').value,foliage:$('foliage').value,sampling:$('sampling').value,reducedMotion:Boolean($('reduced-motion').checked),lightingVariant:$('lighting-variant').value,startPhase:reviewStartPhase(),activityStart:Math.max(0,Number($('activity-start').value)||0),sound:Boolean(game.options.sound)};}
+function reviewFilename(metadata,kind,extension){const phase=Number.isFinite(metadata.startPhase)?`-p${metadata.startPhase.toFixed(4).replace('.','p')}`:'';return `lighting-${metadata.lightingVariant||'baseline'}${phase}-a${(metadata.activityStart??0).toFixed(3).replace('.','p')}-${evidenceFilename(metadata,kind,extension)}`;}
+function lightingSnapshot(){
+  const e=game.environment;if(!e)return{available:false};
+  const sky=game.world.atmosphere?.root.getObjectByName('Authored day and night cloud sky');
+  return{variant:e.lightingVariant,solarAzimuthDegrees:e.solarAzimuthDegrees,keyHandoff:e.keyHandoff,cloudBlend:sky?.material.uniforms.cloudBlend?.value??e.cloudBlend,phase:e.phase,night:e.night,skyTime:sky?.material.uniforms.skyTime.value??null,
+    fill:{colorLinear:(game.fillLight?.color??e.fill).toArray(),intensity:game.fillLight?.intensity??e.fillIntensity,position:game.fillLight?.position.toArray()??null},
+    key:{colorLinear:(game.keyLight?.color??e.key).toArray(),intensity:game.keyLight?.intensity??e.keyIntensity,direction:e.lightDirection.toArray(),sunDirection:e.sunDirection.toArray(),position:game.keyLight?.position.toArray()??null,target:game.keyLight?.target.position.toArray()??null,shadowIntensity:game.keyLight?.shadow.intensity??e.shadowIntensity},
+    ambient:{skyLinear:(game.ambientLight?.color??e.sky).toArray(),groundLinear:(game.ambientLight?.groundColor??e.ground).toArray(),intensity:game.ambientLight?.intensity??e.ambientIntensity},exposure:game.renderer.toneMappingExposure??e.exposure,
+    environmentMap:{bound:Boolean(game.scene?.environment),intensity:game.scene?.environmentIntensity??null}};
+}
 function setLocked(locked){for(const id of controlIds)$(id).disabled=locked||(id==='json'&&!lastReport)||(id==='foliage'&&!game.world.vegetation?.lodController);}
 function clearInput(){game.setTouch(0,0);for(const key of ['boost','up','down','fire'])game.setControl(key,false);}
 function resetScene(config=conditions()){
@@ -56,10 +82,14 @@ function resetScene(config=conditions()){
   game.setOption('reducedMotion',config.reducedMotion);game.setOption('timeOfDay',config.timeOfDay);game.setOption('quality',config.quality);
   // Review captures must match their selected label on the very next frame.
   // Gameplay retains its normal 2.4-second clock transition.
-  game.environmentClock.setMode(config.timeOfDay,true);game._updateEnvironment(0);
+  game.environmentClock.setLightingReviewVariant(config.lightingVariant||'baseline');game.environmentClock.setMode(config.timeOfDay,true);
+  if(config.timeOfDay==='auto'&&Number.isFinite(config.startPhase))game.environmentClock.phase=config.startPhase;
+  game._updateEnvironment(0);
+  game.world.atmosphere?.resetActivityForReview?.(config.activityStart??0,config.reducedMotion);
   game.world.vegetation?.lodController?.setEnabled(config.foliage==='lod');
   game._teleport(18,18,74);game.heading=.35;game.cameraYaw=.35;game.setCameraView('follow');game.setOption('gameplay',false);
   pose=poses[config.view]||null;
+  if(config.view==='fauna-release')game.releaseLantern();
   if(config.view==='exhibit')game.enterExhibit('autodesign');
   if(config.view==='flight'){game._teleport(18,27,74);game.setOption('gameplay',true);}
   if(config.view==='ground'){game._teleport(-66,9,65);game.heading=0;game.cameraYaw=0;game.setOption('gameplay',true);game.toggleBroom();}
@@ -67,7 +97,7 @@ function resetScene(config=conditions()){
   game.renderer.shadowMap.needsUpdate=true;stage=-1;
 }
 function reset(){if(session||disposed)return;resetScene();}
-function frameState(){return {canvas:{width:canvas.width,height:canvas.height,backingWidth:canvas.width,backingHeight:canvas.height,cssWidth:canvas.clientWidth,cssHeight:canvas.clientHeight,dpr:game.renderer.getPixelRatio(),nativeDpr:globalThis.devicePixelRatio||1,msaaSamples:game.rendering.samples},camera:{eye:game.camera.position.toArray(),target:pose?.target||null,fov:game.camera.fov},rider:{position:game.position?.toArray(),mode:game.locomotion?.mode,speed:game.locomotion?.groundSpeed}};}
+function frameState(){return {canvas:{width:canvas.width,height:canvas.height,backingWidth:canvas.width,backingHeight:canvas.height,cssWidth:canvas.clientWidth,cssHeight:canvas.clientHeight,dpr:game.renderer.getPixelRatio(),nativeDpr:globalThis.devicePixelRatio||1,msaaSamples:game.rendering.samples},camera:{eye:game.camera.position.toArray(),target:pose?.target||null,fov:game.camera.fov,reflectionPair:pose?.reflectionPair?{...pose.reflectionPair,lanternNdc:new THREE.Vector3().fromArray(pose.reflectionPair.center).project(game.camera).toArray(),mirrorNdc:new THREE.Vector3().fromArray(pose.reflectionPair.mirroredCenter).project(game.camera).toArray()}:null},rider:{position:game.position?.toArray(),mode:game.locomotion?.mode,speed:game.locomotion?.groundSpeed},lighting:lightingSnapshot(),fauna:game.world.atmosphere?.fauna?.snapshot()??null};}
 function applySampling(){
   const sampling=session?.metadata.sampling||$('sampling').value,dpr=sampling==='2x'?2:sampling==='2.5x'?2.5:null;
   if(dpr!==null){
@@ -103,7 +133,8 @@ function stop(reason='interrupted',completed=false){
     lastReport={createdAt:current.createdAt,finishedAt:new Date().toISOString(),run:current.id,kind:current.kind,...current.metadata,...current.finalState,
       completed:current.completed,invalid:!current.completed,reason:current.reason,expectedDurationMs:current.expectedDurationMs,elapsedDurationMs,
       warmup:{requiredMs:current.kind==='measure'?warmupMs:0,elapsedMs:current.warmupStartedAt===undefined?0:(current.startedAt??current.stoppedAt)-current.warmupStartedAt,completed:current.startedAt!==null},
-      workload:current.metadata.view==='ground'?'scripted-ground':current.metadata.view==='flight'?'scripted-flight':current.metadata.timeOfDay==='auto'?'daylight-cycle':'fixed-view',motionSamples:current.motionSamples,captureErrors:current.captureErrors,...result};
+      workload:current.metadata.view==='ground'?'scripted-ground':current.metadata.view==='flight'?'scripted-flight':current.metadata.timeOfDay==='auto'?'daylight-cycle':'fixed-view',renderedLighting:{first:current.firstRenderedLighting??null,last:current.lastRenderedLighting??null},renderedFauna:{first:current.firstRenderedFauna??null,last:current.lastRenderedFauna??null},motionSamples:current.motionSamples,captureErrors:current.captureErrors,...result};
+    if(current.mediaName&&!disposed){const error=await download(new Blob([JSON.stringify(lastReport,null,2)],{type:'application/json'}),current.mediaName.replace(/\.(webm|mp4)$/,'.json'));if(error)lastReport.captureErrors.push(error);}
     $('metrics').textContent=JSON.stringify(lastReport,null,2);
     if(session===current){session=null;setLocked(disposed||!fullReady);$('json').disabled=disposed||!lastReport;status(current.completed?'完成；测量记录可下载。':`已中断：${current.reason}；导出标记为 invalid。`);}
     return lastReport;
@@ -180,7 +211,8 @@ async function record(kind){
       try{
         if(recorded.length){
           const blob=new Blob(recorded,{type:recorder.mimeType}),url=URL.createObjectURL(blob);files.push(url);const video=document.createElement('video');video.controls=true;video.src=url;$('media').append(video);
-          const error=await download(blob,evidenceFilename(current.metadata,`${kind}${current.completed?'':'-invalid'}`,blob.type.includes('mp4')?'mp4':'webm'));
+          current.mediaName=reviewFilename(current.metadata,`${kind}${current.completed?'':'-invalid'}`,blob.type.includes('mp4')?'mp4':'webm');
+          const error=await download(blob,current.mediaName);
           if(error)current.captureErrors.push(error);
         }else{current.completed=false;current.reason='recording-empty';}
       }catch(error){current.completed=false;current.reason=`recording-export-failed: ${error.message}`;}finally{current.releaseRecorder();}
@@ -197,38 +229,55 @@ function addFoliageControl(){
   select.onchange=reset;
 }
 function addDiagnosticControls(){
-  for(const [value,text] of [['arrival','Arrival lawn / 到达草坪'],['castle-forecourt','Castle forecourt / 城堡前庭'],['conservatory','Conservatory / 温室'],['conservatory-interior','Conservatory interior / 温室内廊'],['arcade-passage','Arcade passage · 1.7 m eye / 拱廊步行视角'],['water-garden','Water garden / 水庭'],['castle-footing','Castle footing / 城堡落脚'],['contact-bridge','Bridge contact / 桥头接地'],['shore-detail','Shore detail / 岸线细节']]){const option=document.createElement('option');option.value=value;option.textContent=text;$('view').append(option);}
+  for(const [value,text] of [['arrival','Arrival lawn / 到达草坪'],['castle-forecourt','Castle forecourt / 城堡前庭'],['conservatory','Conservatory / 温室'],['conservatory-interior','Conservatory interior / 温室内廊'],['arcade-passage','Arcade passage · 1.7 m eye / 拱廊步行视角'],['water-garden','Water garden / 水庭'],['castle-footing','Castle footing / 城堡落脚'],['contact-bridge','Bridge contact / 桥头接地'],['shore-detail','Shore detail / 岸线细节'],['fauna-birds','Live swallow follow / 燕群跟随'],['fauna-lanterns','Live paper lanterns / 纸灯近景'],['fauna-fireflies','Live firefly habitat / 萤火栖地'],['full-moon','Complete moon / 完整月面'],['fauna-release','Released lantern follow / 放飞纸灯跟随'],['fauna-reflection','Water mirror context / 水面倒影全景'],['fauna-reflection-pair','Paired lantern reflection / 单灯与倒影']]){const option=document.createElement('option');option.value=value;option.textContent=text;$('view').append(option);}
   const label=document.createElement('label');label.append('像素采样 ');const select=document.createElement('select');select.id='sampling';
   for(const [value,text] of [['native','Native'],['2x','2x'],['2.5x','2.5x']]){const option=document.createElement('option');option.value=value;option.textContent=text;select.append(option);}
   select.value='native';select.title='2x / 2.5x 是每 CSS 像素的采样密度。为隔离采样影响，请固定“完整几何”。';select.onchange=reset;
   label.append(select);$('reset').parentElement.insertBefore(label,$('reset'));
   const motionLabel=document.createElement('label'),motion=document.createElement('input');motion.id='reduced-motion';motion.type='checkbox';motion.checked=false;motion.onchange=reset;
   motionLabel.append(motion,'静态对照 / reduced motion');$('reset').parentElement.insertBefore(motionLabel,$('reset'));
+  const lightingLabel=document.createElement('label'),lighting=document.createElement('select');lighting.id='lighting-variant';
+  for(const variant of LIGHTING_REVIEW_VARIANTS){const option=document.createElement('option');option.value=variant.id;option.textContent=variant.label;lighting.append(option);}
+  lighting.value='solar-120-cloud70';lighting.onchange=reset;lighting.title='One variable per trial. Pearl preserves fill luminance/intensity; solar rotates the real sun/key with baseline fill. Match view, time, full geometry, native pixels and static motion.';
+  lightingLabel.append('光照对照 ',lighting);$('reset').parentElement.insertBefore(lightingLabel,$('reset'));
+  const phaseLabel=document.createElement('label'),phase=document.createElement('input');phase.id='phase-start';phase.type='number';phase.min='0';phase.max='.9999';phase.step='.001';phase.value='';phase.placeholder='0–1';phase.onchange=reset;
+  phase.title='Optional exact starting phase when Auto is selected. Static captures freeze here; uncheck reduced motion to record the unchanged 240 s cycle.';
+  phaseLabel.append('Auto start phase / 自动起始时刻 ',phase);$('reset').parentElement.insertBefore(phaseLabel,$('reset'));
+  const activityLabel=document.createElement('label'),activity=document.createElement('input');activity.id='activity-start';activity.type='number';activity.min='0';activity.step='.1';activity.value='0';activity.onchange=reset;activity.title='Review-only accepted activity seconds. Reset clears only the bounded manual lantern pool. Gameplay pause/reduced motion never reset activity.';activityLabel.append('Activity start / 活动秒数 ',activity);$('reset').parentElement.insertBefore(activityLabel,$('reset'));
+  const release=document.createElement('button');release.id='release-lantern';release.textContent='Release lantern / 放飞纸灯';release.onclick=()=>{if(!session&&!disposed)game.releaseLantern();};$('reset').parentElement.insertBefore(release,$('reset'));
   const readout=document.createElement('span');readout.id='sampling-size';$('reset').parentElement.append(readout);
 }
 try{
-  milestone('living-v8 · connected herbarium candidate; full frame required');
+  milestone('living-v8 · accepted lighting and live fauna; full frame required');
   const query=new URLSearchParams(globalThis.location?.search||'');
-  const requestedView=query.get('view'),requestedLight=query.get('light');
+  const requestedView=query.get('view'),requestedLight=query.get('light'),requestedLighting=query.get('lighting');
+  lightingStudyRequested=LIGHTING_REVIEW_VARIANTS.some(v=>v.id===requestedLighting);
   if(requestedLight&&['day','night','dawn','dusk','auto'].includes(requestedLight))$('light').value=requestedLight;
   game=await Game.createAsync(canvas,{onMessage:()=>{},onFrame:s=>{if(!session&&!lastReport&&game&&$('sampling'))$('metrics').textContent=JSON.stringify({fps:s.fps,locomotion:s.locomotion,illumination:s.illumination,sampling:$('sampling').value,reducedMotion:Boolean(game.options.reducedMotion),...frameState(),drawCalls:s.drawCalls,submittedTriangles:s.triangles,lod:game.world.vegetation?.lod,audio:s.audio},null,2);}}, {quality:$('quality').value,timeOfDay:$('light').value,gameplay:false,lang:'zh'},{signal:lifetime.signal,deadline:performance.now()+180000,onProgress:loadProgress,preloadNightEnvironment:true,onRenderer:renderer=>{renderer.debug.onShaderError=(gl,program,vertex,fragment)=>{const message=[gl.getProgramInfoLog(program),gl.getShaderInfoLog(vertex),gl.getShaderInfoLog(fragment)].filter(Boolean).join(' · ');loadProgress({phase:'render-error',activeResource:message});console.error(message);};}});
   metrics=new ReviewMetrics(game.renderer);addFoliageControl();addDiagnosticControls();
+  const requestedPhase=query.get('phase');if(requestedPhase!==null&&requestedPhase.trim()!==''&&Number(requestedPhase)>=0&&Number(requestedPhase)<1)$('phase-start').value=String(Number(requestedPhase));
+  const requestedActivity=query.get('activity');if(requestedActivity!==null&&Number.isFinite(Number(requestedActivity))&&Number(requestedActivity)>=0)$('activity-start').value=String(Number(requestedActivity));
+  if(lightingStudyRequested){$('lighting-variant').value=requestedLighting;$('reduced-motion').checked=true;$('foliage').value='full';}
   if(requestedView&&[...Object.keys(poses),'flight','ground','exhibit'].includes(requestedView))$('view').value=requestedView;
   const resize=game._resize.bind(game);
   game._resize=(...args)=>{resize(...args);applySampling();};
   const cameraUpdate=game._updateCamera.bind(game);
-  game._updateCamera=(...args)=>{if(!pose)return cameraUpdate(...args);const eye=[...pose.eye];if(pose.eyeHeight)eye[1]=game.world.heightAt(eye[0],eye[2])+pose.eyeHeight;game.camera.position.fromArray(eye);game.camera.fov=43;game.camera.lookAt(new THREE.Vector3(...pose.target));game.camera.updateProjectionMatrix();game.camera.updateMatrixWorld();};
+  game._updateCamera=(...args)=>{if(!pose)return cameraUpdate(...args);const motion=game.world.atmosphere?.fauna.motion;if(pose.reflection){const framing=frameLanternReflection(game.world.atmosphere?.fauna,game.world.lake?.water);if(framing)Object.assign(pose,framing);}if(pose.fauna&&motion){const item=pose.fauna==='bird'?motion.flocks[0]?.birds[0]:pose.fauna==='lantern'?motion.lanterns[0]:pose.fauna==='release'?motion.released.find(item=>item.active):motion.insects[0];if(item){const center=(pose.fauna==='lantern'?item.base:item.position).toArray(),offset=pose.fauna==='bird'?[2,1.1,-3]:['lantern','release'].includes(pose.fauna)?[2,-.9,3.8]:[.3,.3,1.6];if(['lantern','release'].includes(pose.fauna))center[1]+=.65;pose.target=center;pose.eye=center.map((v,i)=>v+offset[i]);}}if(pose.moon&&game.environment){pose.target=game.environment.moonDirection.toArray().map((v,i)=>pose.eye[i]+v*120);}const eye=[...pose.eye];if(pose.eyeHeight)eye[1]=game.world.heightAt(eye[0],eye[2])+pose.eyeHeight;game.camera.position.fromArray(eye);game.camera.fov=43;game.camera.lookAt(new THREE.Vector3(...pose.target));game.camera.updateProjectionMatrix();game.camera.updateMatrixWorld();};
   const render=game.rendering.render.bind(game.rendering);
   game.rendering.render=dt=>{
     updateSequence();const now=performance.now(),query=metrics.before(now);render(dt);
     metrics.after(query,performance.now()-now,{near:game.world.vegetation?.lod?.nearCount,mid:game.world.vegetation?.lod?.midCount,far:game.world.vegetation?.lod?.farCount});
-    if(saveFrame){const name=evidenceFilename(conditions(),'frame','png');saveFrame=null;canvas.toBlob(blob=>{if(blob)void download(blob,name);});}
+    if(session?.phase==='running'){const lighting=lightingSnapshot();session.firstRenderedLighting??=lighting;session.lastRenderedLighting=lighting;const fauna=game.world.atmosphere?.fauna?.snapshot()??null;session.firstRenderedFauna??=fauna;session.lastRenderedFauna=fauna;const seconds=(performance.now()-session.startedAt)/1000;if(!session.motionSamples.length||seconds-session.motionSamples.at(-1).seconds>=.5)session.motionSamples.push({seconds,fauna,camera:frameState().camera});}
+    if(saveFrame){
+      const metadata={...conditions(),...frameState(),capturedAt:new Date().toISOString(),evidenceType:'actual-frame'},name=reviewFilename(metadata,'frame','png');saveFrame=null;
+      canvas.toBlob(async blob=>{if(!blob||disposed)return;const saveError=await download(blob,name);if(disposed)return;await download(new Blob([JSON.stringify({...metadata,saveError},null,2)],{type:'application/json'}),name.replace(/\.png$/,'.json'));});
+    }
   };
   $('reset').onclick=reset;$('view').onchange=reset;$('light').onchange=reset;$('quality').onchange=reset;
   $('measure').onclick=()=>begin('measure');$('record').onclick=()=>record('record');$('audition').onclick=()=>record('audition');
   $('frame').onclick=()=>{if(!session&&!disposed)saveFrame=true;};
   $('sound').onclick=()=>{if(session||disposed)return;game.setOption('sound',!game.options.sound);$('sound').textContent=game.options.sound?'关闭试听':'开启试听';};
-  $('json').onclick=()=>{if(!session&&lastReport)void download(new Blob([JSON.stringify(lastReport,null,2)],{type:'application/json'}),evidenceFilename(lastReport,'metrics','json'));};
+  $('json').onclick=()=>{if(!session&&lastReport)void download(new Blob([JSON.stringify(lastReport,null,2)],{type:'application/json'}),reviewFilename(lastReport,'metrics','json'));};
   document.addEventListener('visibilitychange',()=>{if(document.hidden&&session)void stop('page-hidden');});
   reset();setLocked(true);status('核心场景已显示；等待全部增强与完整场景首帧。');
 }catch(error){status(`载入失败：${error.message}`);console.error(error);}

@@ -1,0 +1,372 @@
+{
+  "candidate": "living-v8-lighting-r3",
+  "createdAt": "2026-09-10T01:17:28.122303+00:00",
+  "base": "88e978b409621f2912ef77a1aa05a3b4954e22f0",
+  "head": "88e978b409621f2912ef77a1aa05a3b4954e22f0",
+  "sourceIdentity": "dea976af8e7633d5fdb60ead909d96732c4e5ce628283d28385cfb545eece6cd",
+  "identityEncoding": "SHA256 of ordered path + NUL + file SHA256 lines joined with LF",
+  "scope": "Isolated solar-120-stable western azimuth/elevation key handoff versus unchanged solar-120. Visible celestial paths, complete day/night endpoints, light palettes/intensities, exposure, materials, full geometry and quality preserved. Existing key elevation floor and derived shadow formula retained. Production default remains baseline.",
+  "files": [
+    {
+      "path": "world/asset-studio.html",
+      "sha256": "af7c1fe2bee8e53388f878caa67cddd2ae8e887fbcae0c48585994d605344d46"
+    },
+    {
+      "path": "world/companion-studio.html",
+      "sha256": "b46b50ced0f9f3b9c52cd953013d995a6aafc7e841e2c91e25d91ea405266def"
+    },
+    {
+      "path": "world/exhibit-studio.html",
+      "sha256": "600322e63710a3d0a25d61f1731817053da919b1873f321543311a673289957e"
+    },
+    {
+      "path": "world/fauna-studio.html",
+      "sha256": "a7d54c954524ac212b4bf0a06e0e54f2ecbe5aab4d928dd38f4ebb9dee6d3a0f"
+    },
+    {
+      "path": "world/herbarium-studio.html",
+      "sha256": "90025e420bdbb0fefc1bc3b6c3e34cab4d5e3be2135b293539b8d71529eef745"
+    },
+    {
+      "path": "world/index.html",
+      "sha256": "bcb701e2298e10d31fe98ff2e8a9e745d6cfc5199ef505a4a7ce99df1fec3483"
+    },
+    {
+      "path": "world/package-lock.json",
+      "sha256": "5e6924e8d8daf324d50424843b23259006e885c4b11ea776f6851a4c75db9634"
+    },
+    {
+      "path": "world/package.json",
+      "sha256": "ce723be87c9b116c6007221fd6336558d18f3af0ecc83ce9f33de42103d41c43"
+    },
+    {
+      "path": "world/public/models/fauna/README.md",
+      "sha256": "f9b1d01676b8017b93141db18af4b93f0ef530b7c00a55c78af97a5f4d0e85be"
+    },
+    {
+      "path": "world/public/models/fauna/firefly.glb",
+      "sha256": "581102ec59f8d37202692d2ae058981cde2c8f6ac1ef6f7730c033aed6f3f9b2"
+    },
+    {
+      "path": "world/public/models/fauna/manifest.json",
+      "sha256": "19c3e0eda71606f1f8cddfc3aa957f97542345db58255975a236d5b1f9c8d9da"
+    },
+    {
+      "path": "world/public/models/fauna/paper-lantern.glb",
+      "sha256": "b51726a810f045dbd18f482b90713a111265ad4f456eca46e433e8ee69bcdea0"
+    },
+    {
+      "path": "world/public/models/fauna/sky-fauna.js",
+      "sha256": "21c642ed0f294bad762228a97b7432a2595d02dfa5c12c61413a459f902d1214"
+    },
+    {
+      "path": "world/public/models/fauna/swallow.glb",
+      "sha256": "ab7d4613fd1fef9f9e808d564bd0d42341be6e4365f01941fca78bc94892c264"
+    },
+    {
+      "path": "world/public/models/herbarium/botanical/fern_02.glb",
+      "sha256": "0997aa669e73f1fce052366ddb563754294b97379d6e185a6f6a24bfe66dc083"
+    },
+    {
+      "path": "world/public/models/herbarium/botanical/periwinkle_plant.glb",
+      "sha256": "7dc4b4edf073647d2c3c5b46e0ead8a035b1654e4871ff3ba048663860d6588e"
+    },
+    {
+      "path": "world/public/models/herbarium/botanical/potted_plant_01.glb",
+      "sha256": "8637c846709769f0ee3178ed4eccbb594129e0f457896c287f788b6a97449901"
+    },
+    {
+      "path": "world/public/models/herbarium/manifest.json",
+      "sha256": "5e2cfb2cfdcf5fc5b007d3e0a75d353cf9c2c5248d03c3410d82e2b5c98785bc"
+    },
+    {
+      "path": "world/public/runtime/navigation-terrain.ab3455f5da85c655.glb",
+      "sha256": "ab3455f5da85c65504342d4ad86648c8d72fc8fc41151f7b3d76cf530ee4f68b"
+    },
+    {
+      "path": "world/quality-review.html",
+      "sha256": "788b91cffcd6cbbeabb1eeda063a515b2600c2381f569e56af67eca90db1214a"
+    },
+    {
+      "path": "world/scripts/export-fauna.mjs",
+      "sha256": "44c3acb3a5d0d44f2fbb85451d054d6ba575244d3a7f0984a4ebd62001a5a140"
+    },
+    {
+      "path": "world/src/architecture.js",
+      "sha256": "8dfcd8132d3344cd269ae11921cdfdc14b7d67ed6784f11e307ee9bbc25e1e8f"
+    },
+    {
+      "path": "world/src/asset-cache.js",
+      "sha256": "6d63da3931f8b815937af50e2aab229e20303be4f3febc138bbf4d09dd6ca63f"
+    },
+    {
+      "path": "world/src/asset-manifest.js",
+      "sha256": "152fb11f7036e7bd0379e7acb08beb3ca3b5a8db2f6c9d3cf509c98b18b88a97"
+    },
+    {
+      "path": "world/src/atmosphere.js",
+      "sha256": "69af58141d4f2a6b39d8b3fd970a0835f40ea52cfc5e13cdfd096aada1aec132"
+    },
+    {
+      "path": "world/src/audio.js",
+      "sha256": "830a21aa38b0311dc07309ca6de40421a0f7916db3ba2e29b8b68f39515720d0"
+    },
+    {
+      "path": "world/src/blossom-groves.js",
+      "sha256": "0e57e303fc7a010e6da90eede7f5e3f9d5272eee104d80bf737d486f3abf0772"
+    },
+    {
+      "path": "world/src/botanical-cache.js",
+      "sha256": "8068456bd6272156de3c9a06154bf269255f7bf2b2e540bc0e3829e80024382d"
+    },
+    {
+      "path": "world/src/botanical-manifest.js",
+      "sha256": "c6fe9e2705fd0772da2526a175fb53caa1e8e54228126e9aae7c3e227aeddddb"
+    },
+    {
+      "path": "world/src/characters.js",
+      "sha256": "fccc7d44aa66b6a5978c3496d4410c4957e50e31e297672f8441d55bc3bb7a37"
+    },
+    {
+      "path": "world/src/collision.js",
+      "sha256": "02f210d3289fbdf623613adb6513721148a7c221ba9fb3e78c9b6ffe21df46ba"
+    },
+    {
+      "path": "world/src/companion-assets.js",
+      "sha256": "f4228514e91f2bdcd88d7a5854144a32375945d53c7a08f3cf12feecd5a87c20"
+    },
+    {
+      "path": "world/src/companion-manifest.js",
+      "sha256": "a65f4daedbdf84048723a742e595aedb87fb0006a4af46033d9cdf5f28615530"
+    },
+    {
+      "path": "world/src/companion-studio.js",
+      "sha256": "73344477ff091328b2319de4bc9cf6184ad97f9286b97b4291cfacd4168ac957"
+    },
+    {
+      "path": "world/src/content.js",
+      "sha256": "42a45f55cba7e98162df965ca97bd1fb4d397d96a3be9ae37f3cd03d02356463"
+    },
+    {
+      "path": "world/src/effects.js",
+      "sha256": "e6874305ca1cc7cdb84c8a8cf595ab1bb63301b895ec7962fe4e1df7b6ae66a4"
+    },
+    {
+      "path": "world/src/environment-composition.js",
+      "sha256": "b45ae96e94e6ced02e4748c5aad97b9a8150f49490a21a1368e409ac16adbf4b"
+    },
+    {
+      "path": "world/src/environment-layout.js",
+      "sha256": "fd2a6cfe532b57068e227f6052917d2d71025f4cfe9a33197ea130fbd2536120"
+    },
+    {
+      "path": "world/src/environment-signage.js",
+      "sha256": "c49917b5cf4a65a51f3d21338475bbbad52c16683f6d39c8dec5f53719dfbfba"
+    },
+    {
+      "path": "world/src/environment-time.js",
+      "sha256": "d777d09cf7f938832dfe4ef64baa1aa7452716f24a12b805c5899e66ada6fbd5"
+    },
+    {
+      "path": "world/src/environment-wind.js",
+      "sha256": "25bc614e7051aa068df5210aadf3a0d70834b3b5049c4625d7ec66faed50c3f5"
+    },
+    {
+      "path": "world/src/exhibit-materials.js",
+      "sha256": "f132d9a15481844e87bcedabfc083e3e12d232b8fc4f5bc62935dbe58e94577b"
+    },
+    {
+      "path": "world/src/exhibit-motion.js",
+      "sha256": "38f2e202702bcf011c6b2dc6e23363b9e5e6546ecddab3ab57a30000afa403d7"
+    },
+    {
+      "path": "world/src/exhibit-studio.js",
+      "sha256": "9d7a0a69b9ef84680048a775060f08159845fe488e7a4b221e351cfaa92fc92a"
+    },
+    {
+      "path": "world/src/exhibition-content.js",
+      "sha256": "c77e63ad4153de19b21125fa876cec70b041485272326ea8c31dcecb5d7312b5"
+    },
+    {
+      "path": "world/src/exhibition-state.js",
+      "sha256": "ff00223109354d8bc4fa55d42dd3b3f55b269a505bd61ea0e234fce67ca714b6"
+    },
+    {
+      "path": "world/src/exhibits.js",
+      "sha256": "be11d7579811010d53bb63e24e31e0a2b8e29bafbb52c0bba596e977fda8a87a"
+    },
+    {
+      "path": "world/src/fauna-studio-geometry.js",
+      "sha256": "0a2e75a0216c38576d1dc83bceef1d8d67f4ab7d872e32a10e1b1744176a1939"
+    },
+    {
+      "path": "world/src/fauna-studio.js",
+      "sha256": "a7c0b4153e48d9936562319f1387306699004c304f76b1b12ce5f71554442a26"
+    },
+    {
+      "path": "world/src/foliage-lod.js",
+      "sha256": "6e98f3066952bfd86968442c43e33e4f5b7878bcf304015675d0d3430ca92a0b"
+    },
+    {
+      "path": "world/src/game.js",
+      "sha256": "e99467e4f15c4c1926ed97a9af241307ad349a35f608e5994570453dea83777e"
+    },
+    {
+      "path": "world/src/gardens.js",
+      "sha256": "b87d5c732f38693235c964f260f3fac69cf1225f470caddf60283367feff6331"
+    },
+    {
+      "path": "world/src/gltf-resource.js",
+      "sha256": "f2a99a1a293ee6db7d685cd72f1adc0b90474b169ea0f6097fd74f989ef03409"
+    },
+    {
+      "path": "world/src/ground-motion.js",
+      "sha256": "6cc212504fa1dca714b45fd4b2c6336d6526c724b3a7e5feaaddfefa6920d225"
+    },
+    {
+      "path": "world/src/grove-foliage.js",
+      "sha256": "622e687d940b5681432bfacb135a61f75ad477f9a124f3b54ba03a24300eef28"
+    },
+    {
+      "path": "world/src/herbarium-assets.js",
+      "sha256": "4fceba32fe849ec2dfa6e91be05cd9cd74cf63763d796d151fd4d4c405b96641"
+    },
+    {
+      "path": "world/src/herbarium-district.js",
+      "sha256": "1b75a686f9dfb15a637a0e3ddcc078de219372d7e2e0262273361bab5c8bee31"
+    },
+    {
+      "path": "world/src/herbarium-layout.js",
+      "sha256": "3a4f228499148f96bbe4a46f73f23fead28dbb879e23072ddccad0277fa7786b"
+    },
+    {
+      "path": "world/src/herbarium-studio.js",
+      "sha256": "48c57b1436a000f2f3f30d751852896b81c3c45737151a25489a668cef9d5b96"
+    },
+    {
+      "path": "world/src/illumination.js",
+      "sha256": "60b8cc159c125487bbe75021b17c8e5115d1675ebcda80b11782585b2cbc0b2a"
+    },
+    {
+      "path": "world/src/journal.js",
+      "sha256": "ad635e716c28be975702494c0bb1c6d7813600947faa138c24d9a56c816e773c"
+    },
+    {
+      "path": "world/src/landform-layout.js",
+      "sha256": "0b67b975839e4a982f251bf46416ccf565a66557b8d9b0a7b0a342ce0709016d"
+    },
+    {
+      "path": "world/src/landscape-depth.js",
+      "sha256": "50e6714fba3b42444d4f81a7834f82b989bd3e7088452db5261e60799627b799"
+    },
+    {
+      "path": "world/src/landscape.js",
+      "sha256": "4b089a69cef988ba22f43a3272fcd12d0065a70d634ef24a21bb094b8aaa3486"
+    },
+    {
+      "path": "world/src/loading-coordinator.js",
+      "sha256": "85adf19e5e41714e860301d5ffb8b3f2cc2aa3dc6cf50442415815a5d9806692"
+    },
+    {
+      "path": "world/src/locations.js",
+      "sha256": "bee15aa1cdaeab095d683e29b67ca4ee3a683f4466f8ee6344e78808ba04c4ba"
+    },
+    {
+      "path": "world/src/logic.js",
+      "sha256": "386f1483fbe2d297f9eb507d70f79cf5c738dc8f7f58f0ab9999048f3003c2f5"
+    },
+    {
+      "path": "world/src/main.js",
+      "sha256": "5a2fea860066835524233623314fbe0578715499155ef5fc9c39c5612b25cbb0"
+    },
+    {
+      "path": "world/src/mineral-highlands.js",
+      "sha256": "36978fb5ffc92329a08ad6f8603722c43067eb675cfadd766161c3355eb6180a"
+    },
+    {
+      "path": "world/src/models.js",
+      "sha256": "d26deeea0d0836ea93e74a2fbf3a0d04879e9c6304dd28c7b2a2713c6b5d957e"
+    },
+    {
+      "path": "world/src/navigation.js",
+      "sha256": "5540a58c168b9c7a03456a6499b6c0676474f31c10dd8a0bd2b59ee5dbcf68a6"
+    },
+    {
+      "path": "world/src/quality-review.js",
+      "sha256": "ea719632c34d95a840d7699cacf0de928e32c3084389127fc5022bf1e4a9d429"
+    },
+    {
+      "path": "world/src/render-quality.js",
+      "sha256": "15c00ca4d9bdcf1f69b302e6f9a3c53cf1b8630555c8fa09dac4fc1a8aadca3c"
+    },
+    {
+      "path": "world/src/rendering.js",
+      "sha256": "f3654c5a67b6bef563fa3047383dbd930f9fc93d5dd6c78668f28af080ee0bc3"
+    },
+    {
+      "path": "world/src/resource-loader.js",
+      "sha256": "4741f631487b9bcab9b7f40b399d51c457434e180f940d291c1e2dbed5688ed6"
+    },
+    {
+      "path": "world/src/review-metrics.js",
+      "sha256": "9904642a5049406209e878816c943b7e8fed273215269128df8e9c3900e3cde8"
+    },
+    {
+      "path": "world/src/rock-scans.js",
+      "sha256": "ed5a61e358f25221cf94f9e02ad2f2f94b78a9d12643041d9065a95d21f455b3"
+    },
+    {
+      "path": "world/src/site-details.js",
+      "sha256": "9e7d5b5ff89303b7d3c6d861acee301128a96b06b1a8622ae283f38a2629e7de"
+    },
+    {
+      "path": "world/src/sky-fauna.js",
+      "sha256": "21c642ed0f294bad762228a97b7432a2595d02dfa5c12c61413a459f902d1214"
+    },
+    {
+      "path": "world/src/studio.js",
+      "sha256": "a12dc1bbbc80cb040cf9d411ff1526028ee2e12bad9c016586a8f1102d378e1d"
+    },
+    {
+      "path": "world/src/surface-support.js",
+      "sha256": "16ae7330782181a9e26aad186f39e08701e8255d11eb69c58c33ea9bc21c2263"
+    },
+    {
+      "path": "world/src/time-contract.js",
+      "sha256": "e67650eb44fc8b766e4b21c8c1650e31dc931b87da695f5dc55d49d8734006cc"
+    },
+    {
+      "path": "world/src/ui.js",
+      "sha256": "1172e0a074d97da25a8971f2473241ff97e8e85c1e1d6b484577c771395a043f"
+    },
+    {
+      "path": "world/src/world.js",
+      "sha256": "5ba600a37697800382e5be0cece5413b4a9f72e4a8af8ef8fa049b94804fcde0"
+    },
+    {
+      "path": "world/tests/fauna-studio-geometry.test.js",
+      "sha256": "9805366965166f6febe89d58bfff3524b31249067804527ac91c33cf79894f17"
+    },
+    {
+      "path": "world/tests/fauna-studio-lifecycle.test.js",
+      "sha256": "3a5b1ceb9aa7870ac2fcd94c7405fede1c40af942e7e6c038d78d054f0099dad"
+    },
+    {
+      "path": "world/tests/lighting-review.test.js",
+      "sha256": "1533b05079065445f05132fc874fae790ca8b2bcae5d659fb1b5be6762eab669"
+    },
+    {
+      "path": "world/tests/quality-review.test.js",
+      "sha256": "9d3814c7f75bb5b8dae7906163c100c1ffa05d325c772f91232f2ad7aa05a1c3"
+    },
+    {
+      "path": "world/tests/sky-fauna-assets.test.js",
+      "sha256": "d5d3d23da28bace3e3233149d4ba2980cc03b61fd3b27290e4d9dafaa290c790"
+    },
+    {
+      "path": "world/vite.config.js",
+      "sha256": "a280b2217edbc5598c5840fc3740ddb4d4a638ec2970c4a12e3eff95be896e30"
+    }
+  ],
+  "diagnosticRisk": "Fast but finite continuous key azimuth change near phase .231; 0.049753 vector change per .0001 phase (0.024 s in the original 240 s cycle), with shadow intensity zero there. Native motion gate pending."
+}

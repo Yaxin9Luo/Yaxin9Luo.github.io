@@ -12,7 +12,6 @@ import {createViaduct,createGardenLamp,createResearchBook,createLampGroundGlow} 
 import {gradeGardenTerrain,insideAuthoredGarden} from './environment-layout.js';
 import {createAuthoredGardens} from './gardens.js';
 import {createEnvironmentComposition} from './environment-composition.js';
-import {environmentWind} from './environment-wind.js';
 import {createBlossomGroves} from './blossom-groves.js';
 import {academyPathCurves,landformAt,landformShoreField,sculptLandformHeight} from './landform-layout.js';
 
@@ -226,7 +225,6 @@ function* assembleWorld(scene,navigation=null,{herbarium=true}={}){
   const animated=navigation?.animated||[],portals=navigation?.portals||[],ringMeshes=[],crystals=[],wisps=[];
   const mesh=(geo,material,parent=root)=>{const m=new THREE.Mesh(geo,material);m.castShadow=true;m.receiveShadow=true;parent.add(m);return m;};
   const box=(x,y,z,w,h,d,material,parent=root)=>{const m=mesh(new THREE.BoxGeometry(w,h,d),material,parent);m.position.set(x,y,z);return m;};
-  const glowMat=new THREE.MeshBasicMaterial({color:'#ffd997',toneMapped:false});
   const terrain=navigation?.terrain||islandGeometry();
   const ground=navigation?.ground||mesh(terrain.ground,groundMaterial());ground.name='island-ground';
   const cliffs=navigation?.cliffs||mesh(terrain.cliffs,cliffMaterial());cliffs.name='shoreline-cliffs';
@@ -315,7 +313,7 @@ function* assembleWorld(scene,navigation=null,{herbarium=true}={}){
   root.userData.vegetation=vegetation;
   createBackdrop(root,scene);
   yield {region:"highlands"};
-  const atmosphere=navigation?.atmosphere||createAtmosphere(scene,{heightAt:terrainHeight});
+  const atmosphere=navigation?.atmosphere||createAtmosphere(scene,{heightAt:blossomGroves.heightAt});
 
   ringPositions.forEach((p,i)=>{const group=new THREE.Group();group.position.fromArray(p);const next=ringPositions[(i+1)%ringPositions.length];group.lookAt(new THREE.Vector3(...next));root.add(group);
     const material=new THREE.MeshBasicMaterial({color:i===0?'#ffe3a6':'#d9b676',transparent:true,opacity:i===0?1:.4,toneMapped:false});
@@ -328,16 +326,6 @@ function* assembleWorld(scene,navigation=null,{herbarium=true}={}){
     const band=mesh(new THREE.TorusGeometry(1.2,.028,4,32),brass,group);band.rotation.x=Math.PI/2;crystals.push({id:i,group,baseY:p[1]});
   });
   if(!navigation)wispPositions.forEach((p,i)=>{const group=createWisp();group.position.fromArray(p);root.add(group);wisps.push({id:i,group,home:new THREE.Vector3(...p),hp:3,respawn:0,attack:2+i*.4});});
-  const lanternGeo=new THREE.SphereGeometry(.08,6,4),lanterns=[];
-  for(let i=0;i<16;i++){const p={x:(random()-.5)*125,y:10+random()*18,z:(random()-.5)*140,s:1};const m=mesh(lanternGeo,glowMat);m.castShadow=false;m.position.set(p.x,p.y,p.z);lanterns.push({mesh:m,base:p.y,x:p.x,z:p.z,phase:random()*6});}
-  const motes=new Float32Array(140*3);
-  for(let i=0;i<140;i++){motes[i*3]=(random()-.5)*160;motes[i*3+1]=3+random()*45;motes[i*3+2]=(random()-.5)*160;}
-  const mg=new THREE.BufferGeometry();mg.setAttribute('position',new THREE.BufferAttribute(motes,3));
-  const sparks=new THREE.Points(mg,new THREE.PointsMaterial({color:'#d9c59a',size:.12,transparent:true,opacity:.7,depthWrite:false}));root.add(sparks);
-  sparks.name='Nocturnal academy motes';
-  const birds=[];
-  const bg=new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-.8,0,.2),new THREE.Vector3(0,0,0),new THREE.Vector3(.8,0,.2)]);
-  for(let i=0;i<12;i++){const bird=new THREE.Line(bg,new THREE.LineBasicMaterial({color:'#111f24'}));root.add(bird);birds.push(bird);}
   const environmentLighting=navigation?.environmentLighting||gardens.lighting;
   mergeEnvironmentLighting(environmentLighting,blossomGroves.lighting);
   const known=new Set(environmentLighting.emissiveMaterials.map(e=>e.material));
@@ -345,20 +333,17 @@ function* assembleWorld(scene,navigation=null,{herbarium=true}={}){
     if(!known.has(m)&&m.emissiveIntensity>0&&m.emissive?.getHex()>0){known.add(m);environmentLighting.emissiveMaterials.push({material:m,baseIntensity:m.userData.authoredEmissiveIntensity??=m.emissiveIntensity});}
     if(m.uniforms?.nightFactor&&!environmentLighting.nightMaterials.some(e=>e.material===m))environmentLighting.nightMaterials.push({material:m,uniform:'nightFactor',baseValue:1});
   }});
-  environmentLighting.nightObjects=[{object:sparks,baseOpacity:.7},...lanterns.map(l=>({object:l.mesh,baseOpacity:1}))];
-  return {root,herbarium:herbariumDistrict,dispose(){this.herbarium?.dispose();},heightAt:blossomGroves.heightAt,blossomGroves,portals,ringMeshes,crystals,wisps:navigation?.wisps||wisps,exhibits,occluders,atmosphere,lake,gardens,composition,vegetation,updateVegetation:(camera,viewport)=>{vegetation.update(camera,viewport);blossomGroves.update(camera,viewport);},clockTargets:gardens.clockTargets,environmentLighting,environmentColliders:navigation?.environmentColliders||gardens.colliders,releaseLantern:position=>atmosphere.releaseLantern(position),
-    update(time,dt,reducedMotion=false,camera=null,viewport=null){
+  return {root,herbarium:herbariumDistrict,dispose(){this.herbarium?.dispose();atmosphere.releaseResources();},heightAt:blossomGroves.heightAt,blossomGroves,portals,ringMeshes,crystals,wisps:navigation?.wisps||wisps,exhibits,occluders,atmosphere,lake,gardens,composition,vegetation,updateVegetation:(camera,viewport)=>{vegetation.update(camera,viewport);blossomGroves.update(camera,viewport);},clockTargets:gardens.clockTargets,environmentLighting,environmentColliders:navigation?.environmentColliders||gardens.colliders,releaseLantern:position=>atmosphere.releaseLantern(position),
+    update(time,dt,reducedMotion=false,camera=null,viewport=null,context={}){
       vegetation.update(camera,viewport);
       lake.update(time,reducedMotion);
-      atmosphere.update(time,dt,reducedMotion);
+      atmosphere.update(time,dt,reducedMotion,context);
       gardens.update(time,reducedMotion);
       if(reducedMotion)return;
       animated.forEach(a=>{if(a.type==='portal'){a.group.userData.update(time,reducedMotion);}else a.mesh.rotation.y=time*.15;});
       exhibits.forEach((e,i)=>{e.group.userData.book.position.y=4.25+Math.sin(time*1.4+i)*.25;e.group.userData.book.rotation.y=Math.sin(time*.3+i)*.12;});
       crystals.forEach(c=>{c.group.rotation.y=time*.6;c.group.position.y=c.baseY+Math.sin(time*1.6+c.id)*.25;});
-      lanterns.forEach(l=>{const drift=Math.sin(time*.065+l.phase)*1.8;l.mesh.position.set(l.x+environmentWind.direction.x*drift,l.base+Math.sin(time*.5+l.phase)*.5,l.z+environmentWind.direction.y*drift);});
-      sparks.rotation.y=time*.006;
-      birds.forEach((b,i)=>{const a=time*.075+i*.52;b.position.set(Math.cos(a)*37,32+Math.sin(a*2+i)*3,-27+Math.sin(a)*26);b.rotation.y=-a;b.rotation.z=Math.sin(time*5+i)*.15;});
+
     },
     setRingState(index,active){ringMeshes.forEach((r,i)=>{r.group.visible=active;r.material.opacity=active?(i<index?.07:i===index?1:.22):(i===0?.8:.16);r.material.color.set(i===index?'#ffde8b':'#c9c5a0');});},
   };
@@ -397,15 +382,16 @@ export function createNavigationWorld(scene,terrain,options={}){
   const root=new THREE.Group();root.name='Academy world';scene.add(root);
   const ground=new THREE.Mesh(terrain.ground,groundMaterial()),cliffs=new THREE.Mesh(terrain.cliffs,cliffMaterial());
   ground.name='island-ground';cliffs.name='shoreline-cliffs';ground.receiveShadow=cliffs.receiveShadow=true;root.add(ground,cliffs);
-  const lake=createLake(root,scene),atmosphere=createAtmosphere(scene,{heightAt:terrainHeight});
+  let liveHeight=renderedTerrainHeight;
+  const lake=createLake(root,scene),atmosphere=createAtmosphere(scene,{heightAt:(x,z)=>liveHeight(x,z)});
   const portals=[],animated=[];
   for(const location of locations){const portal=createPortal(location.color);portal.position.set(location.x,location.y+3.1,location.z+location.radius+3);root.add(portal);portals.push({id:location.id,group:portal});animated.push({type:'portal',group:portal});}
   const world={root,terrain,ground,cliffs,lake,atmosphere,portals,animated,ringMeshes:[],crystals:[],wisps:[],exhibits:[],occluders:[ground,cliffs],clockTargets:[],environmentColliders:[],
     environmentLighting:{lights:[],emissiveMaterials:[],nightMaterials:[],nightObjects:[]},
     heightAt:renderedTerrainHeight,priority:()=>0,complete:false,
-    update(time,dt,reduced){lake.update(time,reduced);atmosphere.update(time,dt,reduced);for(const portal of portals)portal.group.userData.update(time,reduced);world.gardens?.update(time,reduced);},
+    update(time,dt,reduced,camera=null,viewport=null,context={}){lake.update(time,reduced);atmosphere.update(time,dt,reduced,context);for(const portal of portals)portal.group.userData.update(time,reduced);world.gardens?.update(time,reduced);},
     setRingState(){},releaseLantern:position=>atmosphere.releaseLantern(position),
-    dispose(){disposed=true;world.herbarium?.dispose();},
+    dispose(){disposed=true;world.herbarium?.dispose();atmosphere.releaseResources();},
     enhance({signal,onRegion=()=>{},prepareRegion=async()=>true}={}){
       if(disposed)return Promise.reject(new Error('World disposed'));
       if(world.complete)return Promise.resolve();
@@ -424,5 +410,6 @@ export function createNavigationWorld(scene,terrain,options={}){
       })();return enhancement;
     },
   };
+  liveHeight=(x,z)=>world.heightAt(x,z);
   registerWorldLighting(world);return world;
 }

@@ -1,0 +1,72 @@
+{
+  "candidate": "living-v8-fauna-r3",
+  "base": "88e978b409621f2912ef77a1aa05a3b4954e22f0",
+  "sourceIdentity": "e4bbc92414fe00382dafc03a776d96a2636a0fcd34c14d28a2b54196ba11e951",
+  "identityEncoding": "SHA256 of ordered path + NUL + file SHA256 lines joined with LF",
+  "files": [
+    {
+      "path": "world/src/sky-fauna.js",
+      "sha256": "21c642ed0f294bad762228a97b7432a2595d02dfa5c12c61413a459f902d1214"
+    },
+    {
+      "path": "world/src/fauna-studio.js",
+      "sha256": "a7c0b4153e48d9936562319f1387306699004c304f76b1b12ce5f71554442a26"
+    },
+    {
+      "path": "world/fauna-studio.html",
+      "sha256": "a7d54c954524ac212b4bf0a06e0e54f2ecbe5aab4d928dd38f4ebb9dee6d3a0f"
+    },
+    {
+      "path": "world/asset-studio.html",
+      "sha256": "af7c1fe2bee8e53388f878caa67cddd2ae8e887fbcae0c48585994d605344d46"
+    },
+    {
+      "path": "world/vite.config.js",
+      "sha256": "a280b2217edbc5598c5840fc3740ddb4d4a638ec2970c4a12e3eff95be896e30"
+    },
+    {
+      "path": "world/scripts/export-fauna.mjs",
+      "sha256": "44c3acb3a5d0d44f2fbb85451d054d6ba575244d3a7f0984a4ebd62001a5a140"
+    },
+    {
+      "path": "world/tests/sky-fauna-assets.test.js",
+      "sha256": "d5d3d23da28bace3e3233149d4ba2980cc03b61fd3b27290e4d9dafaa290c790"
+    },
+    {
+      "path": "world/public/models/fauna/README.md",
+      "sha256": "f9b1d01676b8017b93141db18af4b93f0ef530b7c00a55c78af97a5f4d0e85be"
+    },
+    {
+      "path": "world/public/models/fauna/manifest.json",
+      "sha256": "19c3e0eda71606f1f8cddfc3aa957f97542345db58255975a236d5b1f9c8d9da"
+    },
+    {
+      "path": "world/public/models/fauna/sky-fauna.js",
+      "sha256": "21c642ed0f294bad762228a97b7432a2595d02dfa5c12c61413a459f902d1214"
+    },
+    {
+      "path": "world/public/models/fauna/swallow.glb",
+      "sha256": "ab7d4613fd1fef9f9e808d564bd0d42341be6e4365f01941fca78bc94892c264"
+    },
+    {
+      "path": "world/public/models/fauna/paper-lantern.glb",
+      "sha256": "b51726a810f045dbd18f482b90713a111265ad4f456eca46e433e8ee69bcdea0"
+    },
+    {
+      "path": "world/public/models/fauna/firefly.glb",
+      "sha256": "581102ec59f8d37202692d2ae058981cde2c8f6ac1ef6f7730c033aed6f3f9b2"
+    },
+    {
+      "path": "world/src/fauna-studio-geometry.js",
+      "sha256": "0a2e75a0216c38576d1dc83bceef1d8d67f4ab7d872e32a10e1b1744176a1939"
+    },
+    {
+      "path": "world/tests/fauna-studio-geometry.test.js",
+      "sha256": "9805366965166f6febe89d58bfff3524b31249067804527ac91c33cf79894f17"
+    },
+    {
+      "path": "world/tests/fauna-studio-lifecycle.test.js",
+      "sha256": "3a5b1ceb9aa7870ac2fcd94c7405fede1c40af942e7e6c038d78d054f0099dad"
+    }
+  ]
+}

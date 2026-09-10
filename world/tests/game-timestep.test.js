@@ -5,6 +5,7 @@ import { Game } from '../src/game.js';
 import { GROUND_MOTION, queryGroundSupport } from '../src/ground-motion.js';
 import { CHARACTER_GROUND_MOTION } from '../src/characters.js';
 import { EnvironmentClock } from '../src/environment-time.js';
+import {createAtmosphere} from '../src/atmosphere.js';
 
 // Real frame dispatch, movement, ground collision, cooldowns, projectiles and
 // effect lifetimes; only browser/GPU presentation and portfolio UI are omitted.
@@ -146,4 +147,16 @@ for (const suspension of ['hidden', 'context']) test(`${suspension} frames do no
   if (suspension === 'hidden') document.hidden = true; else game._contextLost = true;
   game._tick(11000); game._tick(21000);
   assert.equal(game.position.x, 0); assert.equal(game._simulationTime, 0); assert.equal(game.cooldown, 3);
+});
+
+for(const fps of [8,30,60])test(`real Game dispatch advances atmosphere by accepted seconds at ${fps} fps and respects all pause gates`,t=>{
+  const game=fixture(t),atmosphere=createAtmosphere(game.scene,{heightAt:()=>7,lanternCount:3,fireflyCount:3,birdCount:3});
+  game.world.atmosphere=atmosphere;game.world.update=(time,dt,reduced,camera,viewport,context)=>atmosphere.update(time,dt,reduced,context);game.world.releaseLantern=p=>atmosphere.releaseLantern(p);
+  t.after(()=>atmosphere.releaseResources());assert.equal(game.releaseLantern(),true);advance(game,2,fps);
+  assert.ok(Math.abs(atmosphere.activityTime-2)<1e-8);assert.ok(Math.abs(atmosphere.fauna.motion.released[0].age-2)<1e-8);
+  game.setPaused(true);advance(game,5,fps);assert.ok(Math.abs(atmosphere.activityTime-2)<1e-8);assert.equal(game.releaseLantern(),false);
+  game.setPaused(false);game._tick(15000);assert.ok(Math.abs(atmosphere.activityTime-2)<1e-8);advance(game,1,fps);assert.ok(Math.abs(atmosphere.activityTime-3)<1e-8);
+  game.options.reducedMotion=true;advance(game,2,fps);const held=atmosphere.fauna.snapshot();advance(game,2,fps);assert.deepEqual(atmosphere.fauna.snapshot(),held);
+  game.options.reducedMotion=false;game.started=false;advance(game,2,fps);assert.ok(Math.abs(atmosphere.activityTime-3)<1e-8);assert.equal(game.releaseLantern(),false);
+  game.started=true;document.hidden=true;advance(game,2,fps);assert.ok(Math.abs(atmosphere.activityTime-3)<1e-8);document.hidden=false;game._contextLost=true;advance(game,2,fps);assert.ok(Math.abs(atmosphere.activityTime-3)<1e-8);
 });

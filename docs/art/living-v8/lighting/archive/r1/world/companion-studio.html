@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Companion atelier · Living Academy</title>
+  <style>
+    *{box-sizing:border-box}body{margin:0;background:#232c32;color:#edf0ec;font:14px/1.5 system-ui,sans-serif}main{display:grid;grid-template-columns:minmax(0,1fr) 290px;height:100dvh}canvas{width:100%;height:100%;display:block;touch-action:none}aside{padding:24px 20px;overflow:auto;border-left:1px solid #475052;background:#283239}h1{font:500 23px/1.25 Georgia,serif;margin:0 0 7px}p{color:#b7c4c4;margin:0 0 22px}label{display:block;margin:14px 0 5px}select,button,input[type=range]{width:100%;font:inherit}select,button{border:1px solid #637074;border-radius:5px;padding:9px;background:#344148;color:#f4f5ee}button{cursor:pointer;margin-top:8px}button:hover,button[aria-pressed=true]{background:#556961;border-color:#b5c8b6}button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid #edd89a;outline-offset:3px}.views{display:grid;grid-template-columns:1fr 1fr;gap:5px}.views button{font-size:12px;padding:8px 4px}.toggle{display:flex;gap:8px;align-items:center;margin:15px 0}.toggle input{margin:0}.readout{font:12px/1.7 ui-monospace,monospace;overflow-wrap:anywhere;color:#c7d1d1;margin:18px 0 0;padding-top:14px;border-top:1px solid #4b575d}#status{color:#d8e2d2;margin-top:16px;white-space:pre-wrap}#status[data-error=true]{color:#ffc4b5}#time-value{float:right;font-variant-numeric:tabular-nums}a{color:#dbcfaa}button:disabled{opacity:.5;cursor:default}@media(max-width:720px){main{grid-template-columns:1fr;grid-template-rows:minmax(380px,62dvh) auto;height:auto}aside{border-left:0;border-top:1px solid #475052}.views{grid-template-columns:repeat(5,1fr)}}
+  </style>
+</head>
+<body><main>
+  <canvas aria-label="Interactive three-dimensional companion review. Drag to orbit and scroll to zoom."></canvas>
+  <aside aria-busy="true">
+    <h1>Companion atelier</h1><p>Elizabeth &amp; Sadaharu<br>Isolated character and motion review</p>
+    <label for="kind">Character</label><select id="kind" disabled><option value="elizabeth">Elizabeth</option><option value="sadaharu">Sadaharu</option></select>
+    <label for="action">Action</label><select id="action" disabled></select>
+    <button id="pause" disabled type="button" aria-pressed="false">Pause</button>
+    <label for="time">Clip time <output id="time-value">0.00 s</output></label><input id="time" disabled type="range" min="0" max="3" step="0.01" value="0">
+    <label>View</label><div class="views"><button data-view="front">Front</button><button data-view="profile">Profile</button><button data-view="back">Back</button><button data-view="threequarter">3/4</button><button data-view="face">Face</button></div>
+    <label for="light">Lighting</label><select id="light"><option value="neutral">Neutral studio</option><option value="day">Day</option><option value="night">Night</option><option value="bright">Bright background</option><option value="dark">Dark background</option></select>
+    <label for="language">Sign language</label><select id="language" disabled><option value="zh">中文</option><option value="en">English</option></select>
+    <label class="toggle"><input id="reduced" disabled type="checkbox"> Reduced motion</label>
+    <div id="fur-diagnostics" hidden><label>Coat diagnostics</label><label class="toggle"><input id="fur-visible" disabled type="checkbox" checked> Fur visible</label><label class="toggle"><input id="fur-receive-shadow" disabled type="checkbox" checked> Fur receives shadows</label></div>
+    <button id="save-frame" disabled type="button">Save frame</button><button id="record-clip" disabled type="button">Record clip</button>
+    <div id="status" role="status" aria-live="polite">Decoding companion assets…</div>
+    <div id="readout" class="readout"></div>
+  </aside>
+</main><script type="module" src="/src/companion-studio.js"></script></body>
+</html>
