@@ -1,3 +1,4 @@
+import {fetchPublicAsset} from '../public-asset-url.js';
 import * as THREE from 'three';
 import {assetManifest} from '../asset-manifest.js';
 import {gardenGround4kMaterial} from './ground-material-4k.js';
@@ -21,7 +22,7 @@ vec4 gardenSample(sampler2D map,vec2 uv){
 
 // This owner uses the existing self-hosted CC0 material. It never borrows the
 // portfolio's cached GPU textures, so leaving the museum can release everything.
-export async function loadGardenGroundTextures({resolution='1k',signal,fetcher=fetch,decode=globalThis.createImageBitmap}={}){
+export async function loadGardenGroundTextures({resolution='1k',signal,fetcher=fetchPublicAsset,decode=globalThis.createImageBitmap}={}){
   if(resolution!=='1k'&&resolution!=='4k')throw new Error('Garden earth resolution must be 1k or 4k');
   signal?.throwIfAborted();
   if(typeof decode!=='function')throw new Error('Garden earth bitmap decoder is unavailable');

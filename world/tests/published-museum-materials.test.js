@@ -1,3 +1,6 @@
+import {loadGardenGroundTextures} from '../src/yuanmingyuan/ground-textures.js';
+import {loadPineClusterBake} from '../src/yuanmingyuan/pine-cluster-io.js';
+import {loadPineClusterR3Bake} from '../src/yuanmingyuan/pine-cluster-r3-io.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
@@ -64,3 +67,25 @@ test('court broadleaf retains the whole shrub when only its normal map is extern
  }finally{result.owner.dispose();}
  assert.equal(result.owner.disposed,true);
 });
+
+test('garden ground retains all three 4K maps after their files move off Pages',async t=>{
+ publishedTransport(t);
+ const owner=await loadGardenGroundTextures({resolution:'4k',decode:async()=>({width:4096,height:4096,close(){}})});
+ try{
+  assert.equal(owner.resolution,'4k');
+  assert.deepEqual(Object.keys(owner.files),['color','normal','roughness']);
+  for(const key of ['map','normalMap','roughnessMap'])assert.equal(owner[key].image.width,4096);
+ }finally{owner.dispose();}
+ assert.equal(owner.disposed,true);
+});
+for(const [name,load] of [['R2',loadPineClusterBake],['R3',loadPineClusterR3Bake]]){
+ test('pine '+name+' decodes the original archive with its large fields absent from Pages',async t=>{
+  publishedTransport(t);
+  const owner=await load();
+  try{
+   assert(owner.geometry.attributes.position.count>0);
+   assert(owner.geometry.index.count>0);
+   assert((name==='R2'?owner.normalBins:owner.normals).byteLength>4194304);
+  }finally{owner.dispose();}
+ });
+}

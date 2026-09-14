@@ -1,10 +1,11 @@
+import {fetchPublicAsset} from '../public-asset-url.js';
 import * as THREE from 'three';
 
 export async function pineClusterSha256(value) {
   const bytes = typeof value === 'string' ? new TextEncoder().encode(value) : value;
   return [...new Uint8Array(await crypto.subtle.digest('SHA-256', bytes))].map(n => n.toString(16).padStart(2, '0')).join('');
 }
-export async function loadPineClusterBake({ baseURL = '/assets/pine-cluster-r2/', signal, fetcher = fetch } = {}) {
+export async function loadPineClusterBake({ baseURL = '/assets/pine-cluster-r2/', signal, fetcher=fetchPublicAsset } = {}) {
   signal?.throwIfAborted();
   const read = async path => { const response = await fetcher(baseURL + path, { signal }); if (!response.ok) throw new Error('Cluster bake HTTP ' + response.status + ': ' + path); return response; };
   const manifest = await (await read('manifest.json')).json();

@@ -1,9 +1,10 @@
+import {fetchPublicAsset} from '../public-asset-url.js';
 import * as THREE from 'three';
 import { pineClusterSha256 } from './pine-cluster-io.js';
 
 /** Independently versioned R3 resources. Old R1/R2 manifests and loader stay
  * unchanged. Reading is sequential, retaining only this one cluster. */
-export async function loadPineClusterR3Bake({ baseURL = '/assets/pine-cluster-r3/', signal, fetcher = fetch } = {}) {
+export async function loadPineClusterR3Bake({ baseURL = '/assets/pine-cluster-r3/', signal, fetcher=fetchPublicAsset } = {}) {
   signal?.throwIfAborted();
   const read = async path => { const response = await fetcher(baseURL + path, { signal }); if (!response.ok) throw new Error('R3 bake HTTP ' + response.status + ': ' + path); return response; };
   const manifest = await (await read('manifest.json')).json();
