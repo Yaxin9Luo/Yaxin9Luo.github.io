@@ -32,7 +32,8 @@ const files=[
   "tests/yuanmingyuan-museum-visit-recovery.test.js",
   "tests/yuanmingyuan-museum-audio.test.js",
   "tests/yuanmingyuan-museum-timing.test.js",
-  "tests/public-asset-url.test.js"
+  "tests/public-asset-url.test.js",
+  "tests/published-museum-materials.test.js"
 ];
 const result=spawnSync(process.execPath,['--test','--test-concurrency=1','--test-timeout=180000',...files],{stdio:'inherit',cwd:new URL('../',import.meta.url),timeout:1200000});
 if(result.error)throw result.error;

@@ -1,3 +1,4 @@
+import {fetchPublicAsset} from '../public-asset-url.js';
 import * as THREE from 'three';
 import {decodeXianfashanTexturePixels} from './xianfashan-materials.js';
 
@@ -30,7 +31,7 @@ export const courtyardPavingColor=data=>mineralColor(data,[168,173,165],.5);
 
 /** Reuse the established full-resolution byte/bitmap decoder. The source
  * package and every map are specific to this optional material study. */
-export async function prepareFangwaiguanMaterialPixels({signal,fetchFile=globalThis.fetch}={}) {
+export async function prepareFangwaiguanMaterialPixels({signal,fetchFile=fetchPublicAsset}={}) {
   signal?.throwIfAborted();
   const response=await fetchFile(manifestPath,{signal});
   if(!response.ok)throw new Error(`Fangwaiguan material manifest: HTTP ${response.status}`);

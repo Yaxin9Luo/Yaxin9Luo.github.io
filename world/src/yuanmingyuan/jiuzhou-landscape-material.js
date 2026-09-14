@@ -1,8 +1,9 @@
+import {fetchPublicAsset} from '../public-asset-url.js';
 import {MeshStandardMaterial,Vector2,Vector4,Texture,SRGBColorSpace,NoColorSpace,RepeatWrapping,LinearFilter,LinearMipmapLinearFilter,ShaderChunk} from 'three';
 import {loadGardenGroundTextures} from './ground-textures.js';
 import {jiuzhouGravelManifest} from './jiuzhou-landscape-manifest.js';
 
-export async function loadJiuzhouGravelTextures({signal,fetcher=globalThis.fetch,decode=globalThis.createImageBitmap,manifest=jiuzhouGravelManifest}={}){
+export async function loadJiuzhouGravelTextures({signal,fetcher=fetchPublicAsset,decode=globalThis.createImageBitmap,manifest=jiuzhouGravelManifest}={}){
   signal?.throwIfAborted();
   if(typeof fetcher!=='function'||typeof decode!=='function')throw new Error('Jiuzhou gravel needs a real fetch and image decoder.');
   const textures=[],bitmaps=new Set(),errors=[],lifetime=new AbortController();let disposed=false;

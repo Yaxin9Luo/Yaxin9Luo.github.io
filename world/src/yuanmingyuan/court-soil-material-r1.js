@@ -1,3 +1,4 @@
+import {fetchPublicAsset} from '../public-asset-url.js';
 import * as THREE from 'three';
 import {courtSoilManifestR1} from './court-soil-manifest-r1.js';
 
@@ -9,7 +10,7 @@ export const courtSoilMaterialSettings=Object.freeze({normalScale:.5,roughness:1
  * Court top UVs are metres in (x,-z), so repeat follows the measured source tile.
  * This does not displace the validated floor or plant roots.
  */
-export async function loadCourtSoilMaterial({signal,manifest=courtSoilManifestR1,baseUrl='/textures/yuanmingyuan/court-soil-r1/',fetcher=globalThis.fetch,decode=globalThis.createImageBitmap,anisotropy=16}={}){
+export async function loadCourtSoilMaterial({signal,manifest=courtSoilManifestR1,baseUrl='/textures/yuanmingyuan/court-soil-r1/',fetcher=fetchPublicAsset,decode=globalThis.createImageBitmap,anisotropy=16}={}){
   signal?.throwIfAborted();
   if(typeof fetcher!=='function'||typeof decode!=='function')throw new Error('Court soil fetch and bitmap decoder are required');
   if(typeof baseUrl!=='string'||!baseUrl.endsWith('/')||!Number.isFinite(anisotropy)||anisotropy<1||!Number.isFinite(manifest?.tileMetres)||manifest.tileMetres<=0)throw new Error('Invalid court soil texture configuration');

@@ -13,6 +13,6 @@ for(const [relative,record] of Object.entries(manifest.files)){
  originalBytes+=bytes.length;
  await rm(output,{force:true});
 }
-const release={version:'2026.09.14.1',commit:process.env.GITHUB_SHA??process.env.SITE_REVISION??null,assetRevision:manifest.revision,builtAt:new Date().toISOString(),externalAssets:Object.keys(manifest.files).length,originalAssetBytes:originalBytes,museumStatus:'Work in progress; Western Buildings route and Jiuzhou study available'};
+const release={version:'2026.09.14.2',commit:process.env.GITHUB_SHA??process.env.SITE_REVISION??null,assetRevision:manifest.revision,builtAt:new Date().toISOString(),externalAssets:Object.keys(manifest.files).length,originalAssetBytes:originalBytes,museumStatus:'Work in progress; Western Buildings route and Jiuzhou study available'};
 await writeFile(path.join(root,'world/dist/release.json'),JSON.stringify(release,null,2)+'\n');
 console.log('Pinned original asset delivery:',JSON.stringify(release));

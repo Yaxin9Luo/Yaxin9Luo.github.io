@@ -1,3 +1,4 @@
+import {fetchPublicAsset} from '../public-asset-url.js';
 import * as THREE from 'three';
 import {courtLowBroadleafSourceManifest as manifest} from './court-low-broadleaf-manifest.js';
 import {decodeSprayGeometries,createLowBroadleaf} from './court-low-broadleaf-geometry.js';
@@ -18,7 +19,7 @@ const digest=async bytes=>[...new Uint8Array(await crypto.subtle.digest('SHA-256
  * hash-verified original bytes, retaining the reviewed UV/bitmap orientation.
  */
 export async function loadCourtLowBroadleafSource({
-  signal,baseUrl=manifest.baseUrl,fetcher=globalThis.fetch,decode=globalThis.createImageBitmap,
+  signal,baseUrl=manifest.baseUrl,fetcher=fetchPublicAsset,decode=globalThis.createImageBitmap,
 }={}){
   signal?.throwIfAborted();
   if(typeof fetcher!=='function'||typeof decode!=='function')throw new Error('Broadleaf fetch and bitmap decoder are required');

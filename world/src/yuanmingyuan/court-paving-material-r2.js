@@ -1,3 +1,4 @@
+import {fetchPublicAsset} from '../public-asset-url.js';
 import * as THREE from 'three';
 import {decodeXianfashanTexturePixels} from './xianfashan-materials.js';
 
@@ -9,7 +10,7 @@ export const courtPavingSource=Object.freeze({asset:'Marble021',provider:'ambien
 /** Loads only the three existing seam-free mineral maps, not the other Fangwai roles.
  * Uses the existing complete-resolution decoder and original encoded hashes.
  * No source pixels are rescaled, repainted or replaced by procedural grain. */
-export async function prepareCourtPavingPixels({signal,fetchFile=globalThis.fetch,decoder=decodeXianfashanTexturePixels}={}){
+export async function prepareCourtPavingPixels({signal,fetchFile=fetchPublicAsset,decoder=decodeXianfashanTexturePixels}={}){
   signal?.throwIfAborted();const result={};
   for(const channel of channels){const file=courtPavingSource.files[channel];signal?.throwIfAborted();const response=await fetchFile(file.path,{signal});if(!response.ok)throw new Error('Court paving texture HTTP '+response.status+': '+channel);const bytes=await response.arrayBuffer();if(bytes.byteLength!==file.bytes)throw new Error('Truncated court paving '+channel);result[channel]=await decoder(bytes,{...file,width:4096,height:4096},{signal});}
   signal?.throwIfAborted();return Object.freeze(result);

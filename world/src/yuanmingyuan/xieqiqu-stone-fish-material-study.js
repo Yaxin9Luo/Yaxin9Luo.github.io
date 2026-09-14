@@ -1,3 +1,4 @@
+import {fetchPublicAsset} from '../public-asset-url.js';
 import * as THREE from 'three';
 import {decodeXianfashanTexturePixels} from './xianfashan-materials.js';
 import {createXieqiquStoneFishStudy} from './xieqiqu-stone-fish.js';
@@ -25,7 +26,7 @@ export async function decodeStoneFishMaterialMap(bytes,file,{signal,...decodeOpt
 /** Loads only Marble021's three full 4K maps, sequentially. The pixels belong to
  * this preparation handle. Material owners retain their borrowed arrays even
  * if the handle subsequently releases its own references. No global cache. */
-export async function prepareXieqiquStoneFishMaterialPixels({signal,fetchFile=globalThis.fetch,decodeOptions={}}={}){
+export async function prepareXieqiquStoneFishMaterialPixels({signal,fetchFile=fetchPublicAsset,decodeOptions={}}={}){
   signal?.throwIfAborted();
   const response=await fetchFile(manifestPath,{signal});fail(response.ok,'manifest HTTP '+response.status);
   const manifestBytes=await response.arrayBuffer();fail(await sha(manifestBytes)===manifestSHA256,'manifest SHA mismatch');signal?.throwIfAborted();
