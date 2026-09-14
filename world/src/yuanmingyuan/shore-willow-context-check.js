@@ -1,3 +1,4 @@
+import '../published-three-assets.js';
 import {inspectFullWillowContext} from './shore-willow-context-diagnostic.js';
 import {xianfaShorePreparedData,readPreparedShoreSource} from './xianfa-shore-community-prepared-data.js';
 import {shoreSHA256} from './xianfa-shore-community-prepared-signature.js';

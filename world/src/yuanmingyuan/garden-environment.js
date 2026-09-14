@@ -1,3 +1,4 @@
+import {fetchPublicAsset} from '../public-asset-url.js';
 import * as THREE from 'three';
 import {HDRLoader} from 'three/addons/loaders/HDRLoader.js';
 import {EnvironmentClock} from '../environment-time.js';
@@ -57,7 +58,7 @@ export async function createGardenEnvironment({renderer,scene,signal,timeMode='a
   }
   function dispose(){if(disposed)return;disposed=true;signal?.removeEventListener('abort',dispose);group.removeFromParent();sky.geometry.dispose();sky.material.dispose();key.shadow.map?.dispose();key.shadow.mapPass?.dispose();if(scene.environment===envTarget?.texture)scene.environment=null;envTarget?.dispose();sourceTexture?.dispose();pmrem?.dispose();group.clear();}
   try{
-    signal?.throwIfAborted();const response=await fetch('/textures/environment/sky.hdr',{signal});if(!response.ok)throw new Error(`Garden light environment HTTP ${response.status}`);
+    signal?.throwIfAborted();const response=await fetchPublicAsset('/textures/environment/sky.hdr',{signal});if(!response.ok)throw new Error(`Garden light environment HTTP ${response.status}`);
     const buffer=await response.arrayBuffer();signal?.throwIfAborted();
     // Preserve the loader's orientation, linear color/filter metadata and upload revision.
     sourceTexture=new HDRLoader().createDataTexture(buffer);sourceTexture.mapping=THREE.EquirectangularReflectionMapping;

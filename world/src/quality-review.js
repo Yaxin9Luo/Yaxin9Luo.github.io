@@ -1,3 +1,4 @@
+import './published-three-assets.js';
 import * as THREE from 'three';
 import {Game} from './game.js';
 import {createGroundChromaStudy} from './ground-chroma-review.js';

@@ -1,0 +1,590 @@
+{
+  "revision": "69b950ccd0bcd5b3f78d474e35826368eb7a3d90",
+  "files": {
+    "/assets/pine-cluster-r1/base-coverage-half.bin": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/assets/pine-cluster-r1/base-coverage-half.bin",
+      "bytes": 5505024,
+      "sha256": "f4ac53cf922247b8dcb0615ce3bf93d839e769b618afb7030c82a270629ba12a"
+    },
+    "/assets/pine-cluster-r1/normal-moment-half.bin": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/assets/pine-cluster-r1/normal-moment-half.bin",
+      "bytes": 5505024,
+      "sha256": "77939d2efd7e9a5df140f2bc3f1ea3afcbf98f253fd29e3c8c753f995ca592ce"
+    },
+    "/assets/pine-cluster-r2/base-coverage-half.bin": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/assets/pine-cluster-r2/base-coverage-half.bin",
+      "bytes": 5505024,
+      "sha256": "f4ac53cf922247b8dcb0615ce3bf93d839e769b618afb7030c82a270629ba12a"
+    },
+    "/assets/pine-cluster-r2/normal-distribution-half.bin": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/assets/pine-cluster-r2/normal-distribution-half.bin",
+      "bytes": 33030144,
+      "sha256": "7c1d402370663d9bee60b6f466f429cef8078bb8a35d6f55db065e1b3d18139a"
+    },
+    "/assets/pine-cluster-r2/normal-moment-half.bin": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/assets/pine-cluster-r2/normal-moment-half.bin",
+      "bytes": 5505024,
+      "sha256": "bb37ab68927686cf05f8624f3fbbb4896a5113612a780946acbe8d9c8b29b97f"
+    },
+    "/assets/pine-cluster-r3/joint-colors-half.bin": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/assets/pine-cluster-r3/joint-colors-half.bin",
+      "bytes": 18874368,
+      "sha256": "599f4c5247cdadf142103bc00a40c00f2d97dd51a9d5268cc1db385423cd2c02"
+    },
+    "/assets/pine-cluster-r3/joint-normals-half.bin": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/assets/pine-cluster-r3/joint-normals-half.bin",
+      "bytes": 18874368,
+      "sha256": "cc6e4850ab38090653a7acd180863d696fd8147d05aa117dbc1b89ea2410d6c0"
+    },
+    "/assets/yuanmingyuan/fangwaiguan/3c5a6f5edc255045-gzip-bin-v1/fangwaiguan.glb.gzip.bin": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/assets/yuanmingyuan/fangwaiguan/3c5a6f5edc255045-gzip-bin-v1/fangwaiguan.glb.gzip.bin",
+      "bytes": 29552706,
+      "sha256": "cc6e59d42114e283df44b12e5500a54af7e99fd90df16cfffbd3741688b68b20"
+    },
+    "/assets/yuanmingyuan/fangwaiguan/929abe70e1e73b07-gzip-bin-v2/fangwaiguan.glb.gzip.bin": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/assets/yuanmingyuan/fangwaiguan/929abe70e1e73b07-gzip-bin-v2/fangwaiguan.glb.gzip.bin",
+      "bytes": 29552847,
+      "sha256": "f11293debd9312c5903a78f31e0321f3dde58ff1fbb7320e019f55157505d73e"
+    },
+    "/assets/yuanmingyuan/huanghuazhen/535a8e0078155e4f-gzip-bin-v1/huanghuazhen.glb.gzip.bin": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/assets/yuanmingyuan/huanghuazhen/535a8e0078155e4f-gzip-bin-v1/huanghuazhen.glb.gzip.bin",
+      "bytes": 51913952,
+      "sha256": "8921090fbe6f438ed51bdc0497ff6fbf443997a358af9c05066c9bb8d01d4abe"
+    },
+    "/assets/yuanmingyuan/shore-willow-context-check-r1/reference.bin": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/assets/yuanmingyuan/shore-willow-context-check-r1/reference.bin",
+      "bytes": 47839672,
+      "sha256": "d14f390a79de8fec86f4e5ddd7a168ea3db12ec35306344ff3d2c3d44870d329"
+    },
+    "/assets/yuanmingyuan/shore-willow-context-r1/poses-e5ec6d057ffd9de3.bin": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/assets/yuanmingyuan/shore-willow-context-r1/poses-e5ec6d057ffd9de3.bin",
+      "bytes": 14606256,
+      "sha256": "e5ec6d057ffd9de31612485cf67a4454360045bde37d7ac45c7ee24a96f19d2d"
+    },
+    "/assets/yuanmingyuan/xianfaqiao/025c4c9cf8743511-gzip-bin-v2/xianfaqiao.glb.part-001.gzip.bin": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/assets/yuanmingyuan/xianfaqiao/025c4c9cf8743511-gzip-bin-v2/xianfaqiao.glb.part-001.gzip.bin",
+      "bytes": 8388608,
+      "sha256": "5cd44afc23588ca8e77b31ed0ee288f5905ea17eb64610375b3d136b208137fa"
+    },
+    "/assets/yuanmingyuan/xianfaqiao/7ae1a19b3bdbb7fe-gzip-bin-v1/xianfaqiao.glb.gzip.bin": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/assets/yuanmingyuan/xianfaqiao/7ae1a19b3bdbb7fe-gzip-bin-v1/xianfaqiao.glb.gzip.bin",
+      "bytes": 9209224,
+      "sha256": "b65f6997dddd0dcbb274566d544becbd8d845f4c9ccce0202f76b41c2e8c74d7"
+    },
+    "/assets/yuanmingyuan/xianfashan/7ae1a19b3bdbb7fe-gzip-bin-v1/xianfashan.glb.gzip.bin": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/assets/yuanmingyuan/xianfashan/7ae1a19b3bdbb7fe-gzip-bin-v1/xianfashan.glb.gzip.bin",
+      "bytes": 25902411,
+      "sha256": "88c1155eb1b904de74b0b6c955a935de382ef92fdc7f713a231be0299034d4a6"
+    },
+    "/assets/yuanmingyuan/xianfashan/9091fc3b7c570b68-gzip-bin-v2/xianfashan.glb.part-001.gzip.bin": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/assets/yuanmingyuan/xianfashan/9091fc3b7c570b68-gzip-bin-v2/xianfashan.glb.part-001.gzip.bin",
+      "bytes": 67108864,
+      "sha256": "094cfa66a0089c4725385ecd81be961b1d77cd57c562becaec6cd834118c02d7"
+    },
+    "/assets/yuanmingyuan/xianfashan/9091fc3b7c570b68-gzip-bin-v2/xianfashan.glb.part-002.gzip.bin": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/assets/yuanmingyuan/xianfashan/9091fc3b7c570b68-gzip-bin-v2/xianfashan.glb.part-002.gzip.bin",
+      "bytes": 67108864,
+      "sha256": "73d4f9eadfb2eb6d558afcab47ccf9c3ae342320569d3fc4bab7cd8038c3af78"
+    },
+    "/assets/yuanmingyuan/xianfashan/9091fc3b7c570b68-gzip-bin-v2/xianfashan.glb.part-003.gzip.bin": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/assets/yuanmingyuan/xianfashan/9091fc3b7c570b68-gzip-bin-v2/xianfashan.glb.part-003.gzip.bin",
+      "bytes": 5930104,
+      "sha256": "bef4333ed8bb2b395b5e1bbdf2e657295f90f30fd8eb186c084d22c112123a5a"
+    },
+    "/assets/yuanmingyuan/yangquelong/13ee5051e3720e8d-gzip-bin-v1/yangquelong.glb.gzip.bin": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/assets/yuanmingyuan/yangquelong/13ee5051e3720e8d-gzip-bin-v1/yangquelong.glb.gzip.bin",
+      "bytes": 52120989,
+      "sha256": "de1ee768d3d1454204542603ceebdd5f88a4805419fe9df965a5c33e09b896ba"
+    },
+    "/assets/yuanmingyuan/zhengjuesi/0942a9adbec13e57-gzip-bin-v1/zhengjuesi.glb.gzip.bin": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/assets/yuanmingyuan/zhengjuesi/0942a9adbec13e57-gzip-bin-v1/zhengjuesi.glb.gzip.bin",
+      "bytes": 10260176,
+      "sha256": "ce5a4dac24fe821bc646aa69c6c9a1e0c6ffce52770cc80dc6d26f327134b433"
+    },
+    "/assets/yuanmingyuan/zhengjuesi/70947dfa34a20703-gzip-bin-v1/zhengjuesi.glb.gzip.bin": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/assets/yuanmingyuan/zhengjuesi/70947dfa34a20703-gzip-bin-v1/zhengjuesi.glb.gzip.bin",
+      "bytes": 10265070,
+      "sha256": "e750a825d25dd7d0395936882e37cc882fdd3590908697d8366f389f18a23808"
+    },
+    "/assets/yuanmingyuan/zhengjuesi/7b2cc2bee391d06d-gzip-bin-v1/zhengjuesi.glb.gzip.bin": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/assets/yuanmingyuan/zhengjuesi/7b2cc2bee391d06d-gzip-bin-v1/zhengjuesi.glb.gzip.bin",
+      "bytes": 10264653,
+      "sha256": "2e15dc2cca7af7f0448d26ed559cd04a418de634e9daf07f8e834129a9785afa"
+    },
+    "/assets/yuanmingyuan/zhengjuesi/cfe62c4d8102267f-gzip-bin-v1/zhengjuesi.glb.gzip.bin": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/assets/yuanmingyuan/zhengjuesi/cfe62c4d8102267f-gzip-bin-v1/zhengjuesi.glb.gzip.bin",
+      "bytes": 10251880,
+      "sha256": "a8c89e8e4d4a6490d550f7c5a505dddc9456a85b4cee958a6dd825ecda911e16"
+    },
+    "/assets/yuanmingyuan-distance/zhengjuesi-distance/202a091fca7d4eac-gzip-bin-v1/zhengjuesi-distance.glb.gzip.bin": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/assets/yuanmingyuan-distance/zhengjuesi-distance/202a091fca7d4eac-gzip-bin-v1/zhengjuesi-distance.glb.gzip.bin",
+      "bytes": 12102692,
+      "sha256": "4d67c9db155ae08a439e39c59cc168e98ca1656ace8663200a45b52f3cc4a4cc"
+    },
+    "/assets/yuanmingyuan-distance/zhengjuesi-distance/b66177ff3a8b68fb-gzip-bin-v1/zhengjuesi-distance.glb.gzip.bin": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/assets/yuanmingyuan-distance/zhengjuesi-distance/b66177ff3a8b68fb-gzip-bin-v1/zhengjuesi-distance.glb.gzip.bin",
+      "bytes": 12103529,
+      "sha256": "d03bd83e271fe4be76a42964aab2e8518fabe022e7afdce05fee4e8673ad1dbe"
+    },
+    "/models/architecture/castle.glb": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/models/architecture/castle.glb",
+      "bytes": 40698440,
+      "sha256": "a2ded473d3d60c4c3dcc9d06ce161cd5e1666a818daf3de6f0a4de891876d545"
+    },
+    "/models/characters/wizard.glb": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/models/characters/wizard.glb",
+      "bytes": 23500360,
+      "sha256": "4ac0b45cc7b8bec320e76fadfd0dda7156346898ec2c6ac5386b3142b83cd5ae"
+    },
+    "/models/characters/wraith.glb": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/models/characters/wraith.glb",
+      "bytes": 5761252,
+      "sha256": "2ddad8db1534982c9b82410e93fe41be9f62e7d2b5aa4d691ee8b5a1481f6fa2"
+    },
+    "/models/companions/sadaharu.f55e04dc95af.glb": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/models/companions/sadaharu.f55e04dc95af.glb",
+      "bytes": 6218004,
+      "sha256": "f55e04dc95af8b1ff29450b0b63953db30f2130a9af3681e7fcf8724cc7209a0"
+    },
+    "/models/environment/astral.glb": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/models/environment/astral.glb",
+      "bytes": 8612468,
+      "sha256": "7e4415e37c7b3f9174b589a97152754263935b3b30816f9add7947836b8831c7"
+    },
+    "/models/environment/atelier.glb": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/models/environment/atelier.glb",
+      "bytes": 9057368,
+      "sha256": "3f52b356fa2db69675fe160b3a06954b98411f73f30cf0893fc1a443ac88f008"
+    },
+    "/models/environment/courtyard.glb": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/models/environment/courtyard.glb",
+      "bytes": 48443552,
+      "sha256": "c0e5e995f9fe5507180ff5063e01c0184c534108fba828f1e3dfb131c3c12d47"
+    },
+    "/models/environment/grove-cherry.glb": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/models/environment/grove-cherry.glb",
+      "bytes": 22751904,
+      "sha256": "6aa49868d1bd46d0ccb6800d18dfd82c613a973c0d5b736a86c13f1d52e7b088"
+    },
+    "/models/environment/grove-pine.glb": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/models/environment/grove-pine.glb",
+      "bytes": 5142392,
+      "sha256": "c2ec609fa90ea17341ff7d6a9ddb5bf2c48bba23027bebf8375d69f065192d1e"
+    },
+    "/models/environment/grove-silver.glb": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/models/environment/grove-silver.glb",
+      "bytes": 4252444,
+      "sha256": "3656771a14f858401d1556ddd3ff4719bf62d0478b0790ed69254dffdf487ade"
+    },
+    "/models/environment/journey.glb": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/models/environment/journey.glb",
+      "bytes": 16143332,
+      "sha256": "e297e3c1ad9603f1d3d220aae73dd210bad4b322d7f07b1eb14ade207b3b9e1b"
+    },
+    "/models/environment/post.glb": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/models/environment/post.glb",
+      "bytes": 17455336,
+      "sha256": "49cff6304037a477d4d84c9188b4602fed50b1bc01a737bfcf3891629ff9e710"
+    },
+    "/models/environment/reading.glb": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/models/environment/reading.glb",
+      "bytes": 30823152,
+      "sha256": "f0826bd59e8808b94ea95460570d04e6294ea6e03eced81ce87bb3c3d763d39a"
+    },
+    "/models/environment/scans/rock_face_02.glb": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/models/environment/scans/rock_face_02.glb",
+      "bytes": 18219896,
+      "sha256": "105b5661c5970457aaf6c3ef7782298381ab3d59dfdbd33ee5c8dea34f11d4de"
+    },
+    "/models/environment/scans/rock_moss_set_02.glb": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/models/environment/scans/rock_moss_set_02.glb",
+      "bytes": 13597844,
+      "sha256": "b4e4be70eddcdea6ecfc6c178e0ef848f69ebaa20780db183558cdf390e3dfdb"
+    },
+    "/models/fauna/swallow.glb": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/models/fauna/swallow.glb",
+      "bytes": 22368612,
+      "sha256": "d389345458c1b665674a2ed867e8473d635e8e87cf8957ea97a244bc2024594c"
+    },
+    "/models/herbarium/botanical/fern_02.glb": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/models/herbarium/botanical/fern_02.glb",
+      "bytes": 18738904,
+      "sha256": "0997aa669e73f1fce052366ddb563754294b97379d6e185a6f6a24bfe66dc083"
+    },
+    "/models/herbarium/botanical/periwinkle_plant.glb": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/models/herbarium/botanical/periwinkle_plant.glb",
+      "bytes": 22202628,
+      "sha256": "7dc4b4edf073647d2c3c5b46e0ead8a035b1654e4871ff3ba048663860d6588e"
+    },
+    "/models/herbarium/botanical/potted_plant_01.glb": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/models/herbarium/botanical/potted_plant_01.glb",
+      "bytes": 35796560,
+      "sha256": "8637c846709769f0ee3178ed4eccbb594129e0f457896c287f788b6a97449901"
+    },
+    "/models/herbarium/didelta-spinosa/didelta-spinosa-lod0.glb": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/models/herbarium/didelta-spinosa/didelta-spinosa-lod0.glb",
+      "bytes": 13656404,
+      "sha256": "9fdf6619fb9cfd3c049a0a1e0b6fa86c98df5658bce1d913cd8c49925be005c6"
+    },
+    "/models/herbarium/didelta-spinosa/textures/didelta_spinosa_diff_8k.jpg": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/models/herbarium/didelta-spinosa/textures/didelta_spinosa_diff_8k.jpg",
+      "bytes": 14664795,
+      "sha256": "5083d942e785a013fe1ced3da1e35239520da6f5d9652af7482e02e011ea9c81"
+    },
+    "/models/herbarium/didelta-spinosa/textures/didelta_spinosa_disp_8k.png": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/models/herbarium/didelta-spinosa/textures/didelta_spinosa_disp_8k.png",
+      "bytes": 14693045,
+      "sha256": "3ee9f9ad8daaf5e9e7edbd5b11b12ac059cc33bd3bbd1688354e31695b848f3c"
+    },
+    "/models/herbarium/didelta-spinosa/textures/didelta_spinosa_nor_gl_8k.exr": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/models/herbarium/didelta-spinosa/textures/didelta_spinosa_nor_gl_8k.exr",
+      "bytes": 20504774,
+      "sha256": "67d8f96aba14560667ff6ad7058fb75b8f452a0dfd4792dff2f0961d8c632261"
+    },
+    "/models/herbarium/didelta-spinosa/textures/didelta_spinosa_nor_gl_8k.fb49f83f6955.astc-hdr.ktx2": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/models/herbarium/didelta-spinosa/textures/didelta_spinosa_nor_gl_8k.fb49f83f6955.astc-hdr.ktx2",
+      "bytes": 27297259,
+      "sha256": "fb49f83f6955641d070ff7e352926dbb19568f5b961a0817e78f202203b12564"
+    },
+    "/models/herbarium/ivy-leafset029/LeafSet029_4K-PNG_Color.png": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/models/herbarium/ivy-leafset029/LeafSet029_4K-PNG_Color.png",
+      "bytes": 9991841,
+      "sha256": "88f9e81eaf04096e5a136ab20e2b8dc5112525ee752b5f92a212c23a42a26dd2"
+    },
+    "/models/herbarium/ivy-leafset029/LeafSet029_4K-PNG_NormalGL.png": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/models/herbarium/ivy-leafset029/LeafSet029_4K-PNG_NormalGL.png",
+      "bytes": 42156015,
+      "sha256": "213b325efc88421c2e424b620fe1b3bc4e02edd4af8374ecd269f493a212772b"
+    },
+    "/models/yuanmingyuan/court-low-broadleaf-r1/source-package/shrub_04/textures/shrub_04_nor_gl_4k.jpg": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/models/yuanmingyuan/court-low-broadleaf-r1/source-package/shrub_04/textures/shrub_04_nor_gl_4k.jpg",
+      "bytes": 4500988,
+      "sha256": "ff84a4f93401dd013ed008e8cd4753c44b4c676c69aa100c5d9bcdf0049c090e"
+    },
+    "/runtime/models-characters-wizard-glb.b2a9643ca4ff99ee.glb": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/runtime/models-characters-wizard-glb.b2a9643ca4ff99ee.glb",
+      "bytes": 16199548,
+      "sha256": "b2a9643ca4ff99ee95c67ab00c128a76139be1522bf812f051549afa666f286e"
+    },
+    "/runtime/models-characters-wizard-glb.b89a9b250d21e87d.glb": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/runtime/models-characters-wizard-glb.b89a9b250d21e87d.glb",
+      "bytes": 16186484,
+      "sha256": "b89a9b250d21e87d7ab946c9e51c3f6f4abd50b199fec54cc012b2b37c7313f9"
+    },
+    "/runtime/models-environment-scans-rock_face_02-glb.f9e29a8aa1551073.glb": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/runtime/models-environment-scans-rock_face_02-glb.f9e29a8aa1551073.glb",
+      "bytes": 17776760,
+      "sha256": "f9e29a8aa155107339b05e1143072ba536f3ba8b34706182633fee95ed4af881"
+    },
+    "/runtime/models-environment-scans-rock_moss_set_02-glb.aa7f3bd1d74cd31f.glb": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/runtime/models-environment-scans-rock_moss_set_02-glb.aa7f3bd1d74cd31f.glb",
+      "bytes": 12758372,
+      "sha256": "aa7f3bd1d74cd31fa7cd086508e67704ec87c286f8a1286434a94b347215ab5f"
+    },
+    "/runtime/navigation-terrain.143c97979b93293c.glb": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/runtime/navigation-terrain.143c97979b93293c.glb",
+      "bytes": 7409028,
+      "sha256": "143c97979b93293c8a615d3849637cbf9053eb23617f047827f034926d9b09ce"
+    },
+    "/runtime/navigation-terrain.16ba31bb4a4970be.glb": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/runtime/navigation-terrain.16ba31bb4a4970be.glb",
+      "bytes": 7410032,
+      "sha256": "16ba31bb4a4970bef92272ae075b774d1c58cf5ce30e8ccd97a1b4b4aaafc324"
+    },
+    "/runtime/navigation-terrain.200dd3b9f7c3b34c.glb": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/runtime/navigation-terrain.200dd3b9f7c3b34c.glb",
+      "bytes": 7712236,
+      "sha256": "200dd3b9f7c3b34c3bbba3d7aff066341e4c1de06ca31e7ee395f84b4e89d15e"
+    },
+    "/runtime/navigation-terrain.8563e2d6a1465b8a.glb": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/runtime/navigation-terrain.8563e2d6a1465b8a.glb",
+      "bytes": 7407548,
+      "sha256": "8563e2d6a1465b8a3a1131ee70f426f7e5c54e183f39aa2e049da46ac72b647b"
+    },
+    "/runtime/navigation-terrain.98206c58f8241d18.glb": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/runtime/navigation-terrain.98206c58f8241d18.glb",
+      "bytes": 7406396,
+      "sha256": "98206c58f8241d18d3935f84ffc8070785a18faba06dd4c8e6c37c8e9299eaa4"
+    },
+    "/runtime/navigation-terrain.9ee06cb5e4fcc8c6.glb": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/runtime/navigation-terrain.9ee06cb5e4fcc8c6.glb",
+      "bytes": 7410200,
+      "sha256": "9ee06cb5e4fcc8c649bfb8d22bfd611208630d5c9cfcc0681a8a458143d95c60"
+    },
+    "/runtime/navigation-terrain.ab3455f5da85c655.glb": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/runtime/navigation-terrain.ab3455f5da85c655.glb",
+      "bytes": 7407424,
+      "sha256": "ab3455f5da85c65504342d4ad86648c8d72fc8fc41151f7b3d76cf530ee4f68b"
+    },
+    "/runtime/navigation-terrain.f3573af5a6dc64e5.glb": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/runtime/navigation-terrain.f3573af5a6dc64e5.glb",
+      "bytes": 7632436,
+      "sha256": "f3573af5a6dc64e53d4d667454615ac6875e5f2eb46515fd2de4a0b66a4c9132"
+    },
+    "/runtime/rock_face_02-preview.2a29f8f8949632f9.glb": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/runtime/rock_face_02-preview.2a29f8f8949632f9.glb",
+      "bytes": 5545172,
+      "sha256": "2a29f8f8949632f9f27bd0d660b998e0926d16429d85601882cee848c9ecb033"
+    },
+    "/runtime/textures-courtyard-paving-color-webp.ae6d2925a459875d.webp": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/runtime/textures-courtyard-paving-color-webp.ae6d2925a459875d.webp",
+      "bytes": 6168894,
+      "sha256": "ae6d2925a459875d43ec761f54fac52a0463ed8d2ce01fcaccc822176d898401"
+    },
+    "/runtime/textures-courtyard-paving-normal-webp.c1da75e9d1649a65.webp": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/runtime/textures-courtyard-paving-normal-webp.c1da75e9d1649a65.webp",
+      "bytes": 8677858,
+      "sha256": "c1da75e9d1649a655584f2d147403652ab98e351fcab35a0eb82ded348fc97d5"
+    },
+    "/runtime/textures-courtyard-paving-roughness-webp.6efd04d1f8c50083.webp": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/runtime/textures-courtyard-paving-roughness-webp.6efd04d1f8c50083.webp",
+      "bytes": 5001678,
+      "sha256": "6efd04d1f8c5008353bdc14fc3d18f28fcfc6940e42106858febca32b6f06593"
+    },
+    "/runtime/textures-environment-sky-hdr.99451201586489ef.hdr": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/runtime/textures-environment-sky-hdr.99451201586489ef.hdr",
+      "bytes": 4434394,
+      "sha256": "99451201586489ef3288c97bfac2a2ac232a5491c51a1faf0ec8ea39f3ccd533"
+    },
+    "/runtime/wizard-core.23d640bb257eb4cc.glb": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/runtime/wizard-core.23d640bb257eb4cc.glb",
+      "bytes": 7528620,
+      "sha256": "23d640bb257eb4cc6d20301849d856f2dcfd29699350df84d1116930f688f481"
+    },
+    "/runtime/wizard-core.894eeb05ada69e1f.glb": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/runtime/wizard-core.894eeb05ada69e1f.glb",
+      "bytes": 7515560,
+      "sha256": "894eeb05ada69e1fcec49b3e3125221af7b3fd200c8d552b5f560938c85b6be0"
+    },
+    "/runtime/botanical/cherry-154-near.5f958dcb9f90f8e3.glb": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/runtime/botanical/cherry-154-near.5f958dcb9f90f8e3.glb",
+      "bytes": 14568156,
+      "sha256": "5f958dcb9f90f8e3b50e1c5f4f40e6e308dfe9ef6bf074dd2489f0c04a8b35e7"
+    },
+    "/runtime/botanical/cherry-154-near.83d7edd092006faf.glb": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/runtime/botanical/cherry-154-near.83d7edd092006faf.glb",
+      "bytes": 7043416,
+      "sha256": "83d7edd092006faf8a86b652cbb6583f8ed79a8701426cb0717a8208cc41d2d6"
+    },
+    "/runtime/botanical/cherry-221-near.d1ea86c879d5f601.glb": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/runtime/botanical/cherry-221-near.d1ea86c879d5f601.glb",
+      "bytes": 14567460,
+      "sha256": "d1ea86c879d5f6011147afc74026fb9eaaa2ad92532dfecd912a49fb3c2a9bb5"
+    },
+    "/runtime/botanical/cherry-221-near.e7d41f104f5bf049.glb": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/runtime/botanical/cherry-221-near.e7d41f104f5bf049.glb",
+      "bytes": 7043968,
+      "sha256": "e7d41f104f5bf0493a3f71bc00f2750559169341917e64c596982fa7dbba3c18"
+    },
+    "/runtime/botanical/cherry-830-far.5f662ae2f6ddaabd.glb": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/runtime/botanical/cherry-830-far.5f662ae2f6ddaabd.glb",
+      "bytes": 5943940,
+      "sha256": "5f662ae2f6ddaabdcd6af7cc7e5b046a4a7b6220d1fef23d220056f09bb1b7d7"
+    },
+    "/runtime/botanical/cherry-830-far.8cd866c2afd4b120.glb": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/runtime/botanical/cherry-830-far.8cd866c2afd4b120.glb",
+      "bytes": 7037152,
+      "sha256": "8cd866c2afd4b120bdf28996e345df908c938688be75a5ea74232db6a10e2c06"
+    },
+    "/runtime/botanical/cherry-830-mid.716b7f5e24dac480.glb": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/runtime/botanical/cherry-830-mid.716b7f5e24dac480.glb",
+      "bytes": 5982968,
+      "sha256": "716b7f5e24dac48067dfb4e12db4759c09b2d03b7737f82848d7cfe7f9f16402"
+    },
+    "/runtime/botanical/cherry-830-mid.f5975ca36c2835e5.glb": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/runtime/botanical/cherry-830-mid.f5975ca36c2835e5.glb",
+      "bytes": 9037872,
+      "sha256": "f5975ca36c2835e52024540d6eb46986c38eaff4314972ed59598cda0bce27b4"
+    },
+    "/runtime/botanical/cherry-830-near.9ed3ef541997f71a.glb": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/runtime/botanical/cherry-830-near.9ed3ef541997f71a.glb",
+      "bytes": 14602868,
+      "sha256": "9ed3ef541997f71a35d10e20a7a215468faefbec95566828fd1f30cb69e09f4a"
+    },
+    "/runtime/botanical/cherry-830-near.adc3de2be7afac27.glb": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/runtime/botanical/cherry-830-near.adc3de2be7afac27.glb",
+      "bytes": 7038552,
+      "sha256": "adc3de2be7afac27530d930af87cd20f265bf987eba55f0a8a8ffd843bf72fc7"
+    },
+    "/runtime/botanical/cherry-881-far.dddbfc98d3f5d74e.glb": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/runtime/botanical/cherry-881-far.dddbfc98d3f5d74e.glb",
+      "bytes": 5946392,
+      "sha256": "dddbfc98d3f5d74ee810823d530b80bcce11e7909d61ff06407c231803d8bb9c"
+    },
+    "/runtime/botanical/cherry-881-far.ee7566f504878f58.glb": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/runtime/botanical/cherry-881-far.ee7566f504878f58.glb",
+      "bytes": 7007500,
+      "sha256": "ee7566f504878f5857144fe086f500500f3f14ca05ad402d47bc0e3380335f0f"
+    },
+    "/runtime/botanical/cherry-881-mid.3deff7a3e4fd4c04.glb": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/runtime/botanical/cherry-881-mid.3deff7a3e4fd4c04.glb",
+      "bytes": 9001216,
+      "sha256": "3deff7a3e4fd4c0465f6ae8e3f24ddf661ec9baf0bb926fe76af1072d6a7921e"
+    },
+    "/runtime/botanical/cherry-881-mid.d8c811a27899b67d.glb": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/runtime/botanical/cherry-881-mid.d8c811a27899b67d.glb",
+      "bytes": 5985504,
+      "sha256": "d8c811a27899b67da713e28d10a2d131fe31b81a2c09417a2a4ae8943633306a"
+    },
+    "/runtime/botanical/cherry-881-near.89a5d8bfcf35df88.glb": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/runtime/botanical/cherry-881-near.89a5d8bfcf35df88.glb",
+      "bytes": 7042008,
+      "sha256": "89a5d8bfcf35df88a8bb7eae10c8cf4756786ec5f5be5d2dabb69fadb0f3299c"
+    },
+    "/runtime/botanical/cherry-881-near.9f2a404f9d25abf8.glb": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/runtime/botanical/cherry-881-near.9f2a404f9d25abf8.glb",
+      "bytes": 14541304,
+      "sha256": "9f2a404f9d25abf8549b9cc10ac8ca1b9fe3e5b0e42aa3e05e050af55a09b4b6"
+    },
+    "/runtime/botanical/lilac-221-near.085061aa714ae32d.glb": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/runtime/botanical/lilac-221-near.085061aa714ae32d.glb",
+      "bytes": 14567296,
+      "sha256": "085061aa714ae32d9fc8150aac8ce265b9cf8c51bcbaed5336bda81ad50a89c0"
+    },
+    "/runtime/botanical/lilac-221-near.eb391cbd16c2313a.glb": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/runtime/botanical/lilac-221-near.eb391cbd16c2313a.glb",
+      "bytes": 7045100,
+      "sha256": "eb391cbd16c2313a24f0586130d35a3d974eac121887578283fe809bf017068b"
+    },
+    "/runtime/botanical/lilac-910-far.572b8178c804c393.glb": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/runtime/botanical/lilac-910-far.572b8178c804c393.glb",
+      "bytes": 5934620,
+      "sha256": "572b8178c804c393afc8ac253e6c2162f1a9868c90e7b6ab603b891e33c6c84a"
+    },
+    "/runtime/botanical/lilac-910-far.b4f1a8c0ec41efc8.glb": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/runtime/botanical/lilac-910-far.b4f1a8c0ec41efc8.glb",
+      "bytes": 7012296,
+      "sha256": "b4f1a8c0ec41efc887f8bfad69cc3018f1a6c04acee1e49ec004290205730cfc"
+    },
+    "/runtime/botanical/lilac-910-mid.201a7f129505d5d9.glb": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/runtime/botanical/lilac-910-mid.201a7f129505d5d9.glb",
+      "bytes": 9002788,
+      "sha256": "201a7f129505d5d9c798ff955fc681fe332a59ea73fbaa7f9cedfc61b6ef3470"
+    },
+    "/runtime/botanical/lilac-910-mid.607293ad57cf11cc.glb": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/runtime/botanical/lilac-910-mid.607293ad57cf11cc.glb",
+      "bytes": 5973616,
+      "sha256": "607293ad57cf11cc8e02d76de4d0f043ea7632b602635cffe283c262cbc39104"
+    },
+    "/runtime/botanical/lilac-910-near.96022c524c89a5e7.glb": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/runtime/botanical/lilac-910-near.96022c524c89a5e7.glb",
+      "bytes": 7030544,
+      "sha256": "96022c524c89a5e738a7d516839099830751289f0d1f8bd0499a05c8d19de8e3"
+    },
+    "/runtime/botanical/lilac-910-near.f78518e5d90a6e15.glb": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/runtime/botanical/lilac-910-near.f78518e5d90a6e15.glb",
+      "bytes": 14545200,
+      "sha256": "f78518e5d90a6e15d919709e4d22a44b2f946352fd0597aa81d96d9c1853f614"
+    },
+    "/textures/courtyard-paving/color.webp": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/textures/courtyard-paving/color.webp",
+      "bytes": 6168894,
+      "sha256": "ae6d2925a459875d43ec761f54fac52a0463ed8d2ce01fcaccc822176d898401"
+    },
+    "/textures/courtyard-paving/normal.webp": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/textures/courtyard-paving/normal.webp",
+      "bytes": 8677858,
+      "sha256": "c1da75e9d1649a655584f2d147403652ab98e351fcab35a0eb82ded348fc97d5"
+    },
+    "/textures/courtyard-paving/roughness.webp": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/textures/courtyard-paving/roughness.webp",
+      "bytes": 5001678,
+      "sha256": "6efd04d1f8c5008353bdc14fc3d18f28fcfc6940e42106858febca32b6f06593"
+    },
+    "/textures/environment/sky.hdr": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/textures/environment/sky.hdr",
+      "bytes": 4434394,
+      "sha256": "99451201586489ef3288c97bfac2a2ac232a5491c51a1faf0ec8ea39f3ccd533"
+    },
+    "/textures/yuanmingyuan/court-soil-r1/brown-mud-ao.6ce894c0db8c.png": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/textures/yuanmingyuan/court-soil-r1/brown-mud-ao.6ce894c0db8c.png",
+      "bytes": 11646999,
+      "sha256": "6ce894c0db8c52a64012bb8368cdc9c76717bdbafbf8f9bf238628dc5cd032b4"
+    },
+    "/textures/yuanmingyuan/court-soil-r1/brown-mud-color.b6201c36a350.png": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/textures/yuanmingyuan/court-soil-r1/brown-mud-color.b6201c36a350.png",
+      "bytes": 29072834,
+      "sha256": "b6201c36a3508cd3c45bf2fc3b3a4609e025760135f0f17bc34ea90e8115bf32"
+    },
+    "/textures/yuanmingyuan/court-soil-r1/brown-mud-normal.dc156d60ab47.png": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/textures/yuanmingyuan/court-soil-r1/brown-mud-normal.dc156d60ab47.png",
+      "bytes": 30192343,
+      "sha256": "dc156d60ab47638645d57fcc287fe21fad2ab103702ec5a97030c991dd7d2086"
+    },
+    "/textures/yuanmingyuan/court-soil-r1/brown-mud-roughness.1506b07e680d.png": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/textures/yuanmingyuan/court-soil-r1/brown-mud-roughness.1506b07e680d.png",
+      "bytes": 9425935,
+      "sha256": "1506b07e680d824c0a8c437f2fe13b1ea84432471e6f39f0fca751ad0431795c"
+    },
+    "/textures/yuanmingyuan/fangwaiguan-material-r4/marble-color.1f2d31717ab6.webp": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/textures/yuanmingyuan/fangwaiguan-material-r4/marble-color.1f2d31717ab6.webp",
+      "bytes": 12268426,
+      "sha256": "1f2d31717ab6d2825d5716f5ab0beba83b6f4ddc4c298980a62d180e29f7b88f"
+    },
+    "/textures/yuanmingyuan/fangwaiguan-material-r4/marble-normal.8a5b84722bbe.webp": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/textures/yuanmingyuan/fangwaiguan-material-r4/marble-normal.8a5b84722bbe.webp",
+      "bytes": 4240454,
+      "sha256": "8a5b84722bbe719c315d9ef77709c93c3d2eea49638e2b3cfea3660bb952adcb"
+    },
+    "/textures/yuanmingyuan/fangwaiguan-material-r4/paving-color.c3b748392c6c.webp": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/textures/yuanmingyuan/fangwaiguan-material-r4/paving-color.c3b748392c6c.webp",
+      "bytes": 16172484,
+      "sha256": "c3b748392c6c7ddc65adece633d845ee57fb1631293dda692bb194af57466c40"
+    },
+    "/textures/yuanmingyuan/fangwaiguan-material-r4/plaster-color.caa31b571f27.webp": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/textures/yuanmingyuan/fangwaiguan-material-r4/plaster-color.caa31b571f27.webp",
+      "bytes": 11705054,
+      "sha256": "caa31b571f2728e17e9cbefda71cbcdc83164be81bd142235e008c411eceb81a"
+    },
+    "/textures/yuanmingyuan/fangwaiguan-material-r4/plaster-normal.ca40671df20e.webp": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/textures/yuanmingyuan/fangwaiguan-material-r4/plaster-normal.ca40671df20e.webp",
+      "bytes": 21904892,
+      "sha256": "ca40671df20e7c215b7c4cd385d04b61606cde8f844b1e6898f3b64a119b776d"
+    },
+    "/textures/yuanmingyuan/fangwaiguan-material-r4/plaster-roughness.f812ca3e3b9b.webp": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/textures/yuanmingyuan/fangwaiguan-material-r4/plaster-roughness.f812ca3e3b9b.webp",
+      "bytes": 8585658,
+      "sha256": "f812ca3e3b9ba89399d53ee0b4141e44cd06e022fc78b332d8b69d2094def5ad"
+    },
+    "/textures/yuanmingyuan/jiuzhou-gravel-r1/gravelly_sand_diff_4k.png": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/textures/yuanmingyuan/jiuzhou-gravel-r1/gravelly_sand_diff_4k.png",
+      "bytes": 93642547,
+      "sha256": "e69f2dab8b81b329749cbc04777cb26b10f74670bf1ea3a2c6ed37b5ddc94f14"
+    },
+    "/textures/yuanmingyuan/jiuzhou-gravel-r1/gravelly_sand_nor_gl_4k.png": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/textures/yuanmingyuan/jiuzhou-gravel-r1/gravelly_sand_nor_gl_4k.png",
+      "bytes": 97109949,
+      "sha256": "bbca9ffa401b5a34b76f4be01d95708585785c25f8ba6a5eb90b93d97751c095"
+    },
+    "/textures/yuanmingyuan/jiuzhou-gravel-r1/gravelly_sand_rough_4k.png": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/textures/yuanmingyuan/jiuzhou-gravel-r1/gravelly_sand_rough_4k.png",
+      "bytes": 28200987,
+      "sha256": "7b7d293e62b450ddb192c90a6e6d3665d80e8943fdd6890fdba7cde15abfcfd6"
+    },
+    "/textures/yuanmingyuan/meadow-4k/color.webp": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/textures/yuanmingyuan/meadow-4k/color.webp",
+      "bytes": 20685252,
+      "sha256": "6e661b015337d9dbbd14b05a328d58a69aca323ba2fd619ebc144d69dfb58ffa"
+    },
+    "/textures/yuanmingyuan/meadow-4k/normal.webp": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/textures/yuanmingyuan/meadow-4k/normal.webp",
+      "bytes": 31887272,
+      "sha256": "a817af8a6e5e8daee92f9778d6374f44594ccb26eef5c7628d525c43868f3c03"
+    },
+    "/textures/yuanmingyuan/meadow-4k/roughness.webp": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/textures/yuanmingyuan/meadow-4k/roughness.webp",
+      "bytes": 8282514,
+      "sha256": "618d34b31555b11fd64c51590bacc5c99a91c439650d2d424940b75d58a86c34"
+    },
+    "/textures/yuanmingyuan-lake-stone/color.webp": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/textures/yuanmingyuan-lake-stone/color.webp",
+      "bytes": 6529090,
+      "sha256": "df407b9e81bd8db2bda41156b40d5e6ac3a5a47a93d0d1d09d121137b00541b3"
+    },
+    "/textures/yuanmingyuan-lake-stone/normal.webp": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/textures/yuanmingyuan-lake-stone/normal.webp",
+      "bytes": 7090898,
+      "sha256": "1fd3e0ad8e6fdb245fa34e98068e38045db93f6472212b51c6f73cea72474237"
+    }
+  }
+}

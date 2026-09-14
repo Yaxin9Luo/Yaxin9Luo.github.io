@@ -1,10 +1,11 @@
+import {fetchPublicAsset} from './public-asset-url.js';
 import {assetManifest} from './asset-manifest.js';
 /** Bounded, shared resource requests. This module deliberately has no engine imports. */
 export function resourceError(type,message,status){const error=new Error(message);error.type=type;if(status)error.status=status;return error;}
 export function redactResourceURL(value){
   try{const relative=!/^[a-z][a-z\d+.-]*:/i.test(value),url=new URL(value,'https://local.invalid');url.username='';url.password='';url.search='';url.hash='';return relative?url.pathname:url.href;}catch{return '[invalid URL]';}
 }
-export function createResourceLoader({fetchImpl=(...args)=>fetch(...args),now=()=>performance.now(),setTimeoutImpl=setTimeout,clearTimeoutImpl=clearTimeout,manifest={},onEvent=()=>{}}={}){
+export function createResourceLoader({fetchImpl=(...args)=>fetchPublicAsset(...args),now=()=>performance.now(),setTimeoutImpl=setTimeout,clearTimeoutImpl=clearTimeout,manifest={},onEvent=()=>{}}={}){
   const pending=new Map(),completed=new Map(),listeners=new Set([onEvent]),records=[];
   const emit=event=>{const safe={...event,id:/[?:]/.test(event.id)?redactResourceURL(event.id):event.id,url:redactResourceURL(event.url)};const previous=safe.phase==='fetching'?records.findLastIndex(record=>record.id===safe.id&&record.phase==='fetching'&&record.attempts===safe.attempts&&record.attemptId===safe.attemptId):-1;if(previous>=0)records[previous]=safe;else records.push(safe);if(records.length>1200)records.shift();for(const listener of listeners)listener(safe);};
   function load(resource,{signal,deadline=now()+20000,parse=buffer=>buffer,dispose=()=>{},onProgress=()=>{},attemptId}={}){

@@ -28,6 +28,7 @@ const escapeHtml = (value) => value.replaceAll('&', '&amp;').replaceAll('"', '&q
 
 run('node', ['scripts/sync-portfolio-data.mjs']);
 run('npm', ['--prefix', 'world', 'run', 'build']);
+run('node', ['scripts/prepare-public-assets.mjs']);
 run('bash', ['scripts/build-traditional.sh']);
 
 // Only this known generated destination is removed; source content is untouched.
@@ -73,3 +74,8 @@ for (const file of ['index.html', 'traditional/index.html', 'traditional/zh/inde
   if (!(await stat(path.join(destination, file))).size) throw new Error(`Empty build output: ${file}`);
 }
 console.log(`Combined website built at dist/: game /, traditional /traditional/, ${redirects} legacy page redirects.`);
+
+const publishedFiles=await files(destination);let publishedBytes=0;
+for(const file of publishedFiles)publishedBytes+=(await stat(path.join(destination,file))).size;
+if(publishedBytes>1000000000)throw new Error('GitHub Pages output exceeds 1 GB: '+publishedBytes);
+console.log('Published site bytes:',publishedBytes);

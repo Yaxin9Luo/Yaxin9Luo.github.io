@@ -15,6 +15,7 @@ function section(start,end){const from=source.indexOf(start),to=source.indexOf(e
 const pageFunctions=[
   source.match(/^const paused=.*;$/m)?.[0],
   section('function isJiuzhouComposition()', '\nfunction renderMap('),
+  section('function ensureSceneShoreGroveCurrent()', '\nfunction currentPlantingCollision('),
   section('function busy(','\nfunction setLanguage('),
   section('async function visit(','\nfunction advance('),
   section('function render(dt)','\nfunction tick('),

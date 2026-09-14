@@ -1,3 +1,4 @@
+import {fetchPublicAsset} from '../public-asset-url.js';
 import * as THREE from 'three';
 
 export const YUANMINGYUAN_ARCHIVE_SCHEMA = 1;
@@ -222,7 +223,7 @@ async function decompressGzip(input, expectedBytes, { signal, onProgress, phase 
 
 /** Descriptor hashes come from the offline manifest. No shared cache or hidden
  * dependency requests are created; cancellation never publishes a late scene. */
-export async function loadYuanmingyuanArchive(descriptor, { signal, fetchImpl = globalThis.fetch, onProgress, yieldControl } = {}) {
+export async function loadYuanmingyuanArchive(descriptor, { signal, fetchImpl = fetchPublicAsset, onProgress, yieldControl } = {}) {
   checkAbort(signal);
   const controller = new AbortController(), forwardAbort = () => controller.abort(signal.reason);
   signal?.addEventListener('abort', forwardAbort, { once: true });

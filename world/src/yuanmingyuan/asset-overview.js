@@ -1,3 +1,4 @@
+import {fetchPublicAsset} from '../public-asset-url.js';
 import * as THREE from 'three';
 import { archiveSHA256, loadYuanmingyuanArchive } from './asset-archive.js';
 
@@ -108,7 +109,7 @@ export function validateOverviewReport(report) {
 /** Load the independent overview archive with the same exact material/pixel
  * reader as a full archive. The caller owns visibility and full-asset loading.
  * An approval token must identify these precise report bytes before selection. */
-export async function loadYuanmingyuanOverview(descriptor, { signal, fetchImpl = fetch, onProgress, yieldControl } = {}) {
+export async function loadYuanmingyuanOverview(descriptor, { signal, fetchImpl = fetchPublicAsset, onProgress, yieldControl } = {}) {
   if (signal?.aborted) throw signal.reason ?? new DOMException('Overview aborted', 'AbortError');
   if (!descriptor?.overview?.url || !/^[a-f0-9]{64}$/.test(descriptor.overview.sha256 ?? '')) throw new Error('Overview descriptor and report SHA256 are required');
   const response = await fetchImpl(descriptor.overview.url, { signal });

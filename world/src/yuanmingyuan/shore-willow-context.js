@@ -1,3 +1,4 @@
+import {fetchPublicAsset} from '../public-asset-url.js';
 import * as THREE from 'three';
 import {shoreSHA256,stableShoreJSON} from './xianfa-shore-community-prepared-signature.js';
 import {retainedShoreWillowContext} from './shore-willow-context-data.js';
@@ -46,7 +47,7 @@ export function compareWillowContextPoses(actual,reference,{count,componentOffse
 /** Borrowed same-source pair validation. contract is an explicit immutable
  * identity record; the production wrapper below fixes its actual revision.
  * referenceBytes is a verified-data injection for small CPU fixtures. */
-export async function verifyWillowContextPair({first,second,contract,referenceBytes,fetchImpl=fetch,signal,onResource=()=>{}}){
+export async function verifyWillowContextPair({first,second,contract,referenceBytes,fetchImpl=fetchPublicAsset,signal,onResource=()=>{}}){
   signal?.throwIfAborted();
   const started=performance.now(),listeners=[],captured=[],attributes=new Map(),geometryOwners=new Map(),materialOwners=new Map(),geometries=[],poseComparisons=[],attributeSHA256=[];
   let invalidated=false;const invalidate=()=>{invalidated=true;};
@@ -138,7 +139,7 @@ export async function verifyWillowContextPair({first,second,contract,referenceBy
   }finally{for(const resource of listeners)resource.removeEventListener('dispose',invalidate);}
 }
 
-export async function verifyRetainedShoreWillows({plantingPilot,contextGroups,manifestSHA256,legacyExpectedSHA256,verifiedSourceFiles,signal,fetchImpl=fetch,onResource}){
+export async function verifyRetainedShoreWillows({plantingPilot,contextGroups,manifestSHA256,legacyExpectedSHA256,verifiedSourceFiles,signal,fetchImpl=fetchPublicAsset,onResource}){
   const contract=retainedShoreWillowContext;signal?.throwIfAborted();
   expect(manifestSHA256===contract.manifestSHA256&&legacyExpectedSHA256===contract.legacyExpectedSHA256,'context belongs to another source revision');
   expect(THREE.REVISION===contract.threeRevision&&plantingPilot?.diagnostics?.sourceFactory===contract.sourceFactory&&plantingPilot.diagnostics.plan?.sourceFreeze===contract.sourceFreeze&&plantingPilot.group?.userData.sourceFreeze===contract.sourceFreeze,'missing original full-source pilot identity');

@@ -1,3 +1,4 @@
+import {fetchPublicAsset,publicAssetResponseMatches} from '../public-asset-url.js';
 import * as THREE from 'three';
 import {archiveSHA256} from './asset-archive.js';
 import {loadBuildingDistanceArchive,validateBuildingDistanceReport,createBuildingDistanceSelection} from './zhengjuesi-distance-runtime.js';
@@ -40,7 +41,7 @@ const aborted=signal=>signal?.reason??new DOMException('Resident distance load a
  * beyond admission, pendingFull/coverage-gap remain explicit until an actual
  * full owner is mounted. ROOT owns loading/awaiting those independent full assets.
  */
-export function createMuseumDistanceLayer({root,descriptors=[],baseURL=globalThis.location?.href,fetchImpl=globalThis.fetch,loadDistance=loadBuildingDistanceArchive,configure,siteController=null,onChange=()=>{},onPrepareNear=()=>{},onNeedsFull=()=>{},signal}={}){
+export function createMuseumDistanceLayer({root,descriptors=[],baseURL=globalThis.location?.href,fetchImpl=fetchPublicAsset,loadDistance=loadBuildingDistanceArchive,configure,siteController=null,onChange=()=>{},onPrepareNear=()=>{},onNeedsFull=()=>{},signal}={}){
   if(!root?.isObject3D||!Array.isArray(descriptors)||typeof fetchImpl!=='function'||typeof loadDistance!=='function')throw new Error('Resident distance layer requires a scene root, descriptors and loader');
   const base=new URL(baseURL);
   if(!['http:','https:'].includes(base.protocol))throw new Error('Resident distance archives require an HTTP exhibition origin');
@@ -77,7 +78,7 @@ export function createMuseumDistanceLayer({root,descriptors=[],baseURL=globalThi
       else if(wasReady){record.reason='full-owner-retired; view-evaluation-required';record.needsFull=true;record.pendingFull=record.potentiallyVisible;record.selection.reset();}
     }
   }
-  async function exhibitionFetch(url,options){const response=await fetchImpl(sameOrigin(url),options);if(response.url)sameOrigin(response.url);return response;}
+  async function exhibitionFetch(url,options){const response=await fetchImpl(sameOrigin(url),options);if(!publicAssetResponseMatches(sameOrigin(url),response.url,base.href))throw new Error('Resident distance archive files must share the exhibition origin or exact published asset revision');return response;}
   async function approvedJSON(url,sha,loadingSignal){
     const response=await exhibitionFetch(url,{signal:loadingSignal});if(!response.ok)throw new Error(`Resident archive manifest HTTP ${response.status}`);const bytes=await response.arrayBuffer();if(loadingSignal.aborted)throw aborted(loadingSignal);if(await archiveSHA256(bytes)!==sha)throw new Error('Resident archive approved manifest SHA256 mismatch');return {bytes,manifest:JSON.parse(new TextDecoder().decode(bytes))};
   }

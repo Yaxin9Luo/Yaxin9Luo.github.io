@@ -1,3 +1,4 @@
+import './published-three-assets.js';
 import * as THREE from 'three';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 import {loadCompanionAssets,createCompanionActor,companionAssetDiagnostics} from './companion-assets.js';

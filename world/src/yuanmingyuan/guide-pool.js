@@ -1,3 +1,4 @@
+import {fetchPublicAsset} from '../public-asset-url.js';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {createCompanionActor} from '../companion-assets.js';
 import {companionManifest} from '../companion-manifest.js';
@@ -13,7 +14,7 @@ function disposeTemplate(template){
 
 // A museum visit owns this template. It never enters the portfolio's permanent
 // resource cache; all independently animated clones are released before it.
-export async function createMuseumGuidePool({signal,fetchImpl=(...args)=>fetch(...args),parse=buffer=>new GLTFLoader().parseAsync(buffer,'')}={}){
+export async function createMuseumGuidePool({signal,fetchImpl=(...args)=>fetchPublicAsset(...args),parse=buffer=>new GLTFLoader().parseAsync(buffer,'')}={}){
   signal?.throwIfAborted();
   const asset=companionManifest.elizabeth,response=await fetchImpl(asset.url,{signal});
   signal?.throwIfAborted();if(!response.ok)throw new Error(`Guide model could not be loaded (HTTP ${response.status}).`);

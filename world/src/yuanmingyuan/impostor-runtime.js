@@ -1,3 +1,4 @@
+import {fetchPublicAsset} from '../public-asset-url.js';
 import * as THREE from 'three';
 import { IMPOSTOR_MAPS, IMPOSTOR_PASSES, validateImpostorData } from './impostor-format.js';
 import { createImpostorMaterial } from './impostor-material.js';
@@ -72,7 +73,7 @@ export function createImpostorStudyAsset(input) {
   };
 }
 
-export async function loadImpostorStudy({ manifestURL, expectedManifestSHA256, signal, fetchImpl = fetch }) {
+export async function loadImpostorStudy({ manifestURL, expectedManifestSHA256, signal, fetchImpl = fetchPublicAsset }) {
   throwIfImpostorAborted(signal);
   if (!/^[0-9a-f]{64}$/.test(expectedManifestSHA256 ?? '')) throw new Error('Explicit study manifest SHA-256 required');
   const response = await fetchImpl(manifestURL, { signal }); if (!response.ok) throw new Error(`Impostor manifest HTTP ${response.status}`);

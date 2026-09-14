@@ -33,7 +33,7 @@ jobs:
           ruby-version: '3.3'
           bundler-cache: true
       - run: npm --prefix world ci
-      - run: npm --prefix world test
+      - run: npm --prefix world run test:release
       - run: npm run build:site
       - uses: actions/upload-pages-artifact@v4
         with:

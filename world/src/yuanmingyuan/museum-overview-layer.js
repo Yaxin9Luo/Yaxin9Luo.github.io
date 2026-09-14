@@ -1,3 +1,4 @@
+import {fetchPublicAsset,publicAssetResponseMatches} from '../public-asset-url.js';
 import * as THREE from 'three';
 import { loadYuanmingyuanOverview, OVERVIEW_MAXIMUM_PHYSICAL_PIXELS } from './asset-overview.js';
 
@@ -20,7 +21,7 @@ const abortReason = signal => signal?.reason ?? new DOMException('Museum overvie
  * setFullSite() identifies a mounted full model, not a requested destination.
  * No full-model scheduling or relaxed quality threshold is performed here.
  */
-export function createMuseumOverviewLayer({ root, descriptors, baseURL = globalThis.location?.href, fetchImpl = globalThis.fetch, loadOverview = loadYuanmingyuanOverview, configure, onChange = () => {}, signal } = {}) {
+export function createMuseumOverviewLayer({ root, descriptors, baseURL = globalThis.location?.href, fetchImpl = fetchPublicAsset, loadOverview = loadYuanmingyuanOverview, configure, onChange = () => {}, signal } = {}) {
   if (!root?.isObject3D || !Array.isArray(descriptors) || typeof fetchImpl !== 'function' || typeof loadOverview !== 'function') throw new Error('Museum overview layer requires a scene root, descriptors, and archive loader');
   const base = new URL(baseURL);
   if (!['http:', 'https:'].includes(base.protocol)) throw new Error('Museum overviews require an HTTP exhibition base URL');
@@ -63,7 +64,7 @@ export function createMuseumOverviewLayer({ root, descriptors, baseURL = globalT
   }
   async function exhibitionFetch(url, options) {
     const response = await fetchImpl(sameOrigin(url), options);
-    if (response.url) sameOrigin(response.url);
+    if (!publicAssetResponseMatches(sameOrigin(url),response.url,base.href)) throw new Error('Museum overview files must share the exhibition origin or exact published asset revision');
     return response;
   }
   async function readArchive(record, loadingSignal) {

@@ -1,3 +1,4 @@
+import '../published-three-assets.js';
 import {MuseumReader,mountMuseumDirectory,museumInterfaceCopy} from './museum-reader.js';
 import {museumEntry} from './museum-content.js';
 const url=new URL(location.href);let lang=url.searchParams.get('lang')==='en'?'en':'zh',disposed=false;

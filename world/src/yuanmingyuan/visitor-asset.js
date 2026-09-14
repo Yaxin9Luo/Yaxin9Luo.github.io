@@ -1,3 +1,4 @@
+import {fetchPublicAsset} from '../public-asset-url.js';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {MeshoptDecoder} from 'three/addons/libs/meshopt_decoder.module.js';
 import {assetManifest} from '../asset-manifest.js';
@@ -9,7 +10,7 @@ import {prepareWizardTemplate,createWizard,resetCharacterMotion} from '../charac
 // permanent template cache when visiting the independent museum page.
 export async function createMuseumVisitor({signal}={}){
   const source=assetManifest['/models/characters/wizard.glb'];signal?.throwIfAborted();
-  const response=await fetch(source.url,{signal});if(!response.ok)throw new Error(`Visitor model HTTP ${response.status}`);
+  const response=await fetchPublicAsset(source.url,{signal});if(!response.ok)throw new Error(`Visitor model HTTP ${response.status}`);
   const buffer=await response.arrayBuffer();signal?.throwIfAborted();assertSelfContainedGLB(buffer);
   const gltf=await new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).parseAsync(buffer,'');let group=null,disposed=false;
   function dispose(){if(disposed)return;disposed=true;signal?.removeEventListener('abort',dispose);

@@ -1,3 +1,4 @@
+import {fetchPublicAsset} from '../public-asset-url.js';
 import * as THREE from 'three';
 import {captureTerrainRegions} from './terrain-region-export.js';
 import {createGardenPlantingLayout} from './garden-planting-layout.js';
@@ -29,7 +30,7 @@ export async function parseXianfaShorePrepared({manifestBytes,binary,expectedMan
   const packed=new Uint8Array(input);signal?.throwIfAborted();const prepared=Object.freeze({manifest:freezeData(manifest),binary:packed,manifestSHA256:expectedManifestSHA256});admitted.add(prepared);return prepared;
 }
 
-export async function prepareXianfaShoreCommunity({signal,fetchImpl=fetch}={}){
+export async function prepareXianfaShoreCommunity({signal,fetchImpl=fetchPublicAsset}={}){
   const get=async url=>{const r=await fetchImpl(url,{signal});expect(r.ok,'cannot load '+url);return new Uint8Array(await r.arrayBuffer());};
   const [manifestBytes,binary]=await Promise.all([get(xianfaShorePreparedData.manifestURL),get(xianfaShorePreparedData.binaryURL)]);
   return parseXianfaShorePrepared({manifestBytes,binary,expectedManifestSHA256:xianfaShorePreparedData.manifestSHA256,signal});

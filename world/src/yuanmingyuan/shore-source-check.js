@@ -1,3 +1,4 @@
+import '../published-three-assets.js';
 import {inspectShoreSourceTarget,shoreSourceCheckPaths,sourceCheckSHA256} from './shore-source-check-fixture.js';
 import {inspectAllShoreSources} from './shore-source-check-batch.js';
 import {xianfaShorePreparedData,readPreparedShoreSource} from './xianfa-shore-community-prepared-data.js';

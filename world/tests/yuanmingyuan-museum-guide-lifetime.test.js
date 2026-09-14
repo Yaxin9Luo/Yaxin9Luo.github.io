@@ -25,6 +25,8 @@ function between(start,end){
 }
 const wiring=[
   between('function isJiuzhouComposition()', 'function renderMap('),
+  between('function releaseSceneShoreGrove()', 'function currentPlantingCollision('),
+  between('function failComposedScene(', 'function render(dt)'),
   between('function placeGuides(','async function visit('),
   between('async function visit(','function advance('),
   between('// A failed composition bootstrap','function busy('),
@@ -90,6 +92,7 @@ function fixture({composed=true,resident=false,throwPool=false,perSite=1}={}){
   }
   const context={
     query:new URLSearchParams(composed?'composition=xianfaqiao':''),
+    shoreGrove:null,shoreGroveLifetime:null,shoreGroveStatus:'idle',
     AbortController,AggregateError,console:{error:error=>logged.push(error)},composition,residents:resident?retained:null,residentBindings,borrowedOwners:new WeakSet(),residentArchitecture:resident?shared:null,
     createMuseumSiteController,createMuseumGuideEnsemble,createGuideRegion,
     museumSites:sites,museumSite:id=>sites.find(site=>site.id===id),guides:null,guideSurface:null,pool:{dispose(){events.push('asset-pool');}},lang:'en',

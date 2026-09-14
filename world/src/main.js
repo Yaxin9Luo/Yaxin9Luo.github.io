@@ -1,3 +1,4 @@
+import './published-three-assets.js';
 import './style.css';
 import './journal.css';
 import {Interface} from './ui.js';
