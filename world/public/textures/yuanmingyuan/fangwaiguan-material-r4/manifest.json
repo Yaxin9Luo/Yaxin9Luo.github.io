@@ -1,0 +1,137 @@
+{
+  "id": "fangwaiguan-material-r4-candidate",
+  "version": 1,
+  "artApproved": false,
+  "scope": "Material study only; unchanged building geometry",
+  "sources": {
+    "marble": {
+      "asset": "Marble021",
+      "provider": "ambientCG",
+      "sourceURL": "https://ambientcg.com/view?id=Marble021",
+      "license": "CC0-1.0",
+      "licenseURL": "https://docs.ambientcg.com/license/",
+      "tileMetres": 1.5,
+      "scaleEvidence": "Authored 1.5m repeat; provider physical size unavailable",
+      "width": 4096,
+      "height": 4096,
+      "files": {
+        "color": {
+          "path": "/textures/yuanmingyuan/fangwaiguan-material-r4/marble-color.1f2d31717ab6.webp",
+          "bytes": 12268426,
+          "sha256": "1f2d31717ab6d2825d5716f5ab0beba83b6f4ddc4c298980a62d180e29f7b88f",
+          "sourceSHA256": "d4821c594ee289b2d30ca81016d99c67cd75153584d0948079322c6f9b4ec48b",
+          "sourceBitDepth": "uchar",
+          "uploadBitDepth": 8,
+          "sourceDimensionsPreserved": true,
+          "rgba8RoundTripExact": true
+        },
+        "normal": {
+          "path": "/textures/yuanmingyuan/fangwaiguan-material-r4/marble-normal.8a5b84722bbe.webp",
+          "bytes": 4240454,
+          "sha256": "8a5b84722bbe719c315d9ef77709c93c3d2eea49638e2b3cfea3660bb952adcb",
+          "sourceSHA256": "01d481a8e5f6557107958e80972a88cc81f9f345559ff158f29fdf1c316c9ba9",
+          "sourceBitDepth": "ushort",
+          "uploadBitDepth": 8,
+          "sourceDimensionsPreserved": true,
+          "rgba8RoundTripExact": true
+        },
+        "roughness": {
+          "path": "/textures/yuanmingyuan/fangwaiguan-material-r4/marble-roughness.f73bbbfbc58e.webp",
+          "bytes": 3756210,
+          "sha256": "f73bbbfbc58ea9f0d21317025445351776c7522d557ff55080bd546ad489c4d6",
+          "sourceSHA256": "92a0cf43e991ccc02eb7a7c29b9461f6b6f34e8f92478593cbe6952663703d94",
+          "sourceBitDepth": "uchar",
+          "uploadBitDepth": 8,
+          "sourceDimensionsPreserved": true,
+          "rgba8RoundTripExact": true
+        }
+      }
+    },
+    "plaster": {
+      "asset": "beige_wall_001",
+      "provider": "Poly Haven",
+      "sourceURL": "https://polyhaven.com/a/beige_wall_001",
+      "license": "CC0-1.0",
+      "licenseURL": "https://polyhaven.com/license",
+      "tileMetres": 3,
+      "scaleEvidence": "Provider dimensions",
+      "width": 4096,
+      "height": 4096,
+      "files": {
+        "color": {
+          "path": "/textures/yuanmingyuan/fangwaiguan-material-r4/plaster-color.caa31b571f27.webp",
+          "bytes": 11705054,
+          "sha256": "caa31b571f2728e17e9cbefda71cbcdc83164be81bd142235e008c411eceb81a",
+          "sourceSHA256": "7ced089079b137008d4afcd7cd5987161ae529c316fdb20929a6fa8df4f9a0be",
+          "sourceBitDepth": "ushort",
+          "uploadBitDepth": 8,
+          "sourceDimensionsPreserved": true,
+          "rgba8RoundTripExact": true
+        },
+        "normal": {
+          "path": "/textures/yuanmingyuan/fangwaiguan-material-r4/plaster-normal.ca40671df20e.webp",
+          "bytes": 21904892,
+          "sha256": "ca40671df20e7c215b7c4cd385d04b61606cde8f844b1e6898f3b64a119b776d",
+          "sourceSHA256": "2484af72a106b834580bb2439523c209a7361974df550f8b2b9b72ee5ba2652e",
+          "sourceBitDepth": "ushort",
+          "uploadBitDepth": 8,
+          "sourceDimensionsPreserved": true,
+          "rgba8RoundTripExact": true
+        },
+        "roughness": {
+          "path": "/textures/yuanmingyuan/fangwaiguan-material-r4/plaster-roughness.f812ca3e3b9b.webp",
+          "bytes": 8585658,
+          "sha256": "f812ca3e3b9ba89399d53ee0b4141e44cd06e022fc78b332d8b69d2094def5ad",
+          "sourceSHA256": "9f2aa2c6457585a26e5cb47483a41d7756baf3555d4d90d4679ff148efeb638c",
+          "sourceBitDepth": "ushort",
+          "uploadBitDepth": 8,
+          "sourceDimensionsPreserved": true,
+          "rgba8RoundTripExact": true
+        }
+      }
+    },
+    "paving": {
+      "asset": "marble_01",
+      "provider": "Poly Haven",
+      "sourceURL": "https://polyhaven.com/a/marble_01",
+      "license": "CC0-1.0",
+      "licenseURL": "https://polyhaven.com/license",
+      "tileMetres": 1.5,
+      "scaleEvidence": "Provider dimensions",
+      "width": 4096,
+      "height": 4096,
+      "files": {
+        "color": {
+          "path": "/textures/yuanmingyuan/fangwaiguan-material-r4/paving-color.c3b748392c6c.webp",
+          "bytes": 16172484,
+          "sha256": "c3b748392c6c7ddc65adece633d845ee57fb1631293dda692bb194af57466c40",
+          "sourceSHA256": "a12784187d047bf6f2a1b4f81105740ea893c7bca6e0721b99868d8d4ebf48dc",
+          "sourceBitDepth": "uchar",
+          "uploadBitDepth": 8,
+          "sourceDimensionsPreserved": true,
+          "rgba8RoundTripExact": true
+        },
+        "normal": {
+          "path": "/textures/yuanmingyuan/fangwaiguan-material-r4/paving-normal.ac69730bbd89.webp",
+          "bytes": 3646566,
+          "sha256": "ac69730bbd89dbcded0992b923587633443a99c6042d88076ab95fcacf61beb9",
+          "sourceSHA256": "a18d48a8172db8403e2c710ef95a72244f9d0dc05469a7fdab86066e64f5b92d",
+          "sourceBitDepth": "uchar",
+          "uploadBitDepth": 8,
+          "sourceDimensionsPreserved": true,
+          "rgba8RoundTripExact": true
+        },
+        "roughness": {
+          "path": "/textures/yuanmingyuan/fangwaiguan-material-r4/paving-roughness.798a1f37eb71.webp",
+          "bytes": 2348432,
+          "sha256": "798a1f37eb71cec1d39971665b66fd33624aead8596f50dea5093679c5b6b08c",
+          "sourceSHA256": "fe6b25c7550d33880287ce99985c73d441bb286e9f94003ba130d7f0a37e55b4",
+          "sourceBitDepth": "ushort",
+          "uploadBitDepth": 8,
+          "sourceDimensionsPreserved": true,
+          "rgba8RoundTripExact": true
+        }
+      }
+    }
+  }
+}

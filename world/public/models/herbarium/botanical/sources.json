@@ -1,0 +1,64 @@
+[
+  {
+    "id": "fern_02",
+    "source": "https://polyhaven.com/a/fern_02",
+    "license": "CC0",
+    "runtimeGLB": "world/public/models/herbarium/botanical/fern_02.glb",
+    "sha256": "0997aa669e73f1fce052366ddb563754294b97379d6e185a6f6a24bfe66dc083",
+    "bytes": 18738904,
+    "derivative": "Original unresized 4096 source RGB copied exactly with matching original alpha; MASK alphaCutoff0.5; all original source variant meshes/normals/UVs unchanged.",
+    "width": 4096,
+    "height": 4096,
+    "maskedPixelFraction": 0.8466491103172302,
+    "variants": [
+      "fern_02_b",
+      "fern_02_c",
+      "fern_02_a",
+      "fern_02_d"
+    ],
+    "rgbSHA256": "f924354b032fcde77830b0c33c4dff80b4b143f793e70126894788f199b61960",
+    "alphaSHA256": "50dd262282e9787ae8abf4475b5d2071df8a88f5242f480602a0672347bd7ff9"
+  },
+  {
+    "id": "periwinkle_plant",
+    "source": "https://polyhaven.com/a/periwinkle_plant",
+    "license": "CC0",
+    "runtimeGLB": "world/public/models/herbarium/botanical/periwinkle_plant.glb",
+    "sha256": "7dc4b4edf073647d2c3c5b46e0ead8a035b1654e4871ff3ba048663860d6588e",
+    "bytes": 22202628,
+    "derivative": "Original unresized 4096 source RGB copied exactly with matching original alpha; MASK alphaCutoff0.5; all original source variant meshes/normals/UVs unchanged.",
+    "width": 4096,
+    "height": 4096,
+    "maskedPixelFraction": 0.6158159375190735,
+    "variants": [
+      "periwinkle_plant_04_LOD0",
+      "periwinkle_plant_06_LOD0",
+      "periwinkle_plant_03_LOD0",
+      "periwinkle_plant_02_LOD0",
+      "periwinkle_plant_05_LOD0",
+      "periwinkle_plant_01_LOD0"
+    ],
+    "rgbSHA256": "e9fc57386108c8d0c0f86bc1bfb74e2e727d55c8b67ec7ae4836db2f06c96dbf",
+    "alphaSHA256": "e7d9b8956d1d47b6ffe6e39f24bf0d8f70a28cc7566caea3e9a12a9a5e869b09"
+  },
+  {
+    "id": "potted_plant_01",
+    "source": "https://polyhaven.com/a/potted_plant_01",
+    "license": "CC0",
+    "runtimeGLB": "world/public/models/herbarium/botanical/potted_plant_01.glb",
+    "sha256": "8637c846709769f0ee3178ed4eccbb594129e0f457896c287f788b6a97449901",
+    "bytes": 35796560,
+    "derivative": "Original unresized 4096 source RGB copied exactly with matching original alpha; MASK alphaCutoff0.5; all original source variant meshes/normals/UVs unchanged.",
+    "width": 4096,
+    "height": 4096,
+    "maskedPixelFraction": 0.356293261051178,
+    "variants": [
+      "potted_plant_01_stem",
+      "potted_plant_01_pebbles",
+      "potted_plant_01_pot",
+      "potted_plant_01_leaves"
+    ],
+    "rgbSHA256": "6270061eb1f948e732f716bc26793e7f16e3d7796f8027da307c1dee8dd705d0",
+    "alphaSHA256": "8f02187c4c6b7b8a1eb69f983660dcc4a0a0afd532b625160155b1dae0e920a0"
+  }
+]

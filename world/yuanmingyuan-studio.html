@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>圆明园 · 模型研究 | Yuanmingyuan studio</title>
+  <link rel="stylesheet" href="/src/yuanmingyuan/studio.css">
+</head>
+<body data-ready="loading">
+  <main>
+    <section class="viewport" id="model-viewport" aria-label="圆明园模型审查">
+      <canvas aria-label="实际三维模型；拖动旋转，滚动缩放" tabindex="0"></canvas>
+      <div class="caption"><span>圆明园 / YUANMINGYUAN</span><h1 id="asset-title">模型研究</h1><p>比例研究 · Proportional study</p></div>
+      <div class="view-caption" id="view-caption">等待模型加载</div>
+    </section>
+    <aside aria-busy="true">
+      <a class="back" href="http://127.0.0.1:4246/work/yuanmingyuan/">← 研究图册 / Research atlas</a>
+      <div class="eyebrow">ASSET REVIEW</div>
+      <h2>先看模型本身。</h2>
+      <p class="intro">同一模型的四面体量、雕饰和材料。工作单位尚待图纸标定；此页不是建成的圆明园岛。</p>
+      <fieldset>
+        <legend>模型 <span>ASSET</span></legend>
+        <select id="studio-asset" aria-label="选择研究模型"></select>
+      </fieldset>
+      <fieldset id="views" disabled>
+        <legend>视角 <span>CAMERA</span></legend>
+        <div class="view-grid" id="view-buttons"></div>
+      </fieldset>
+      <label class="field-label" for="sculpture">雕像近景 <span>SCULPTURE</span></label>
+      <select id="sculpture" disabled></select>
+      <label class="field-label" for="lighting">光照 <span>LIGHTING</span></label>
+      <select id="lighting" disabled><option value="day">明亮日光</option><option value="neutral">中性结构审查</option><option value="night">月光材质审查</option></select>
+      <label class="checkbox"><input type="checkbox" id="wireframe" disabled> 显示线框 <span>Wireframe</span></label>
+      <button id="animate-water" disabled aria-pressed="false">播放水景 · Play water</button>
+      <button id="save-frame" class="primary" disabled>保存原生实机画面</button>
+      <div id="status" role="status" aria-live="polite">正在准备独立模型…</div>
+      <div id="capture-files" class="capture-files"></div>
+      <details><summary>制作与渲染信息</summary><pre id="readout"></pre></details>
+      <p class="footnote">生成的参考图仅用于色材与光照。尺寸、背面及兽首细节的推定会留在资料卡中。</p>
+    </aside>
+  </main>
+  <script type="module" src="/src/yuanmingyuan/studio.js"></script>
+</body>
+</html>

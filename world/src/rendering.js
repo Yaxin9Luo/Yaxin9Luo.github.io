@@ -29,16 +29,21 @@ class AntialiasedScenePass extends RenderPass {
   dispose(){this.target.dispose();}
 }
 
-export function createRendering(renderer,scene,camera) {
+export function createRendering(renderer,scene,camera,{clipBox=new THREE.Box3(new THREE.Vector3(-100,-25,-110),new THREE.Vector3(100,75,110))}={}) {
+  let quality='high',width=1,height=1,dpr=1,samples=0,resizedQuality=null;
   // Canvas antialiasing does not cover the offscreen scene used by the composer.
   const target=new THREE.WebGLRenderTarget(1,1,{type:THREE.HalfFloatType,depthBuffer:false,stencilBuffer:false});
   target.texture.name='Academy.postprocess';
   const composer=new EffectComposer(renderer,target);
+  // Use backing pixels directly so a DPR + viewport change sizes passes once.
+  composer.setPixelRatio(1);
   const scenePass=new AntialiasedScenePass(scene,camera);composer.addPass(scenePass);
   const ao=new GTAOPass(scene,camera,512,512,{},{radius:1.6,distanceExponent:1.4,thickness:.6,scale:1.0,samples:8},{lumaPhi:5,depthPhi:2,normalPhi:3,radius:5,rings:2,samples:8});
-  ao.blendIntensity=.55;ao.setSceneClipBox(new THREE.Box3(new THREE.Vector3(-100,-25,-110),new THREE.Vector3(100,75,110)));
+  ao.blendIntensity=.55;ao.setSceneClipBox(clipBox);
   // Only the normal/depth prepass needs depth. AO and denoise are screen images.
   ao.gtaoRenderTarget.depthBuffer=false;ao.pdRenderTarget.depthBuffer=false;
+  const resizeAO=ao.setSize.bind(ao);
+  ao.setSize=(w,h)=>{const scale=quality==='high'?.8:.65;resizeAO(Math.max(1,Math.round(w*scale)),Math.max(1,Math.round(h*scale)));};
   // The stock normal override cannot preserve alpha-cut foliage or transparent
   // spell membranes. Those surfaces must not become solid polygons in the AO buffer.
   const renderAO=ao.render.bind(ao);
@@ -57,8 +62,10 @@ export function createRendering(renderer,scene,camera) {
   // It is a fallback for the lightweight mode or a device without scene MSAA.
   const smaa=new SMAAPass();composer.addPass(smaa);
   composer.addPass(new OutputPass());
-  let quality='high',width=1,height=1,dpr=1,samples=0;
-  function resize(w=width,h=height,pixelRatio=dpr){width=w;height=h;dpr=pixelRatio;composer.setPixelRatio(dpr);composer.setSize(width,height);const scale=quality==='high'?.8:.65;ao.setSize(Math.max(1,Math.round(width*dpr*scale)),Math.max(1,Math.round(height*dpr*scale)));}
+  function resize(w=width,h=height,pixelRatio=dpr){
+    if(w===width&&h===height&&pixelRatio===dpr&&quality===resizedQuality)return;
+    width=w;height=h;dpr=pixelRatio;composer.setSize(width*dpr,height*dpr);resizedQuality=quality;
+  }
   return {
     render(dt){composer.render(dt);},resize,
     get samples(){return samples;},

@@ -1,0 +1,31 @@
+{
+  "tag": "b58adafc9f79b008",
+  "files": [
+    {
+      "path": "index.html",
+      "sha256": "3584bc62f316f1c96eca629973bcee68a883eff807ea901efd25c75254b20622"
+    },
+    {
+      "path": "src/haiyantang-sculpture.js",
+      "sha256": "02f057afb70f83465dd4361f33cf96086d6dcf381274cf8f1dcfee1f7c727faa"
+    },
+    {
+      "path": "src/haiyantang-study.js",
+      "sha256": "5e131de5479bd1893fdd054b376a7b8fbca3103e038ec28fbbd1bf023f958b9e"
+    },
+    {
+      "path": "src/studio.css",
+      "sha256": "cd0891c492af02d6ecc3d184bbdafdae82f91013ebd75ef0b906eb183eff918d"
+    },
+    {
+      "path": "src/studio.js",
+      "sha256": "088995f0d1b9dbfab6bcd847d3aa16137c635ceffd9158174f3c5fe64d6096c5"
+    },
+    {
+      "path": "src/study-geometry.js",
+      "sha256": "f586fd7d5fa783f2ca3063391eb97bd233e33aded8f6b6211e4bf4453786f4ad"
+    }
+  ],
+  "basis": "R2 archived builder and materials; current rat sculpture module; sculpture isolated for visual study; not full building",
+  "time": "2026-09-11T16:03:55.524773+00:00"
+}

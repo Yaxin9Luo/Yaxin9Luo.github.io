@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex"><title>垂柳 · 距离模型审查</title><link rel="stylesheet" href="/src/yuanmingyuan/zhengjuesi-distance-studio.css"><link rel="stylesheet" href="/src/yuanmingyuan/willow-distance-studio.css"></head>
+<body data-ready="loading"><main>
+  <section id="distance-stage"><canvas aria-label="垂柳源模型与近、中、远景，同机位原生对照" tabindex="0"></canvas><div class="caption"><span>圆明园 / WILLOW</span><h1>垂柳 · 距离对照</h1><p id="distance-caption">正在核对 R3 当前源码</p></div></section>
+  <aside><p class="eyebrow">GEOMETRY DISTANCE STUDY</p><h2>冠形、透光与枝叶。</h2><p>R3 木材稳定性修订。切换表示时保持镜头、灯光和曝光；全部距离档尚未验收。R1/R2 记录仅作历史参考，本版不继承旧视觉结论。</p>
+    <label for="distance-mode">表示</label><select id="distance-mode" disabled><option value="source">R3 当前源模型</option><option value="near">近景 · 原几何实例 · 待审</option><option value="mid">中景 · 强制对照 · 待审</option><option value="far">远景 · 强制对照 · 待审</option><option value="blend">交叉过渡 · 手动 · 待审</option><option value="auto">根据实际像素自动过渡 · 待审</option></select>
+    <label for="distance-view">固定机位</label><select id="distance-view" disabled><option value="near">近景冠形 · 16 m</option><option value="midFront" selected>中景正面 · 80 m</option><option value="midBack">中景背面 · 80 m</option><option value="midSide">中景侧面 · 80 m</option><option value="farFront">远景正面 · 750 m</option><option value="farSide">远景侧面 · 750 m</option><option value="transition">过渡斜面 · 80 m</option></select>
+    <label for="distance-range">镜头距离 <output id="distance-range-label">80 m</output></label><input id="distance-range" type="range" min="10" max="1200" value="80" step="1" disabled>
+    <div class="willow-row"><div><label for="distance-light">固定光照</label><select id="distance-light" disabled><option value="day">Day · Studio 日光</option><option value="night">Night · Studio 夜光</option></select></div><div><label for="distance-output">画面</label><select id="distance-output" disabled><option value="beauty">HDR + GTAO</option><option value="color">HDR · 不加 AO</option><option value="normal">法线覆盖</option><option value="depth">深度覆盖</option><option value="ao">AO 覆盖</option></select></div></div>
+    <label for="distance-sampling">插值取样 · 全部表示同条件</label><select id="distance-sampling" disabled><option value="pixel">原插值 · pixel 基线</option><option value="centroid-color">覆盖内颜色 · centroid-color</option><option value="centroid">覆盖内颜色与法线 · centroid</option></select>
+    <label><input id="distance-shadows" type="checkbox" checked disabled> 保留太阳光阴影</label>
+    <fieldset id="distance-blend-controls" disabled><legend>交叉过渡</legend><label for="distance-pair">方向</label><select id="distance-pair"><option value="near-mid">近 → 中</option><option value="mid-near">中 → 近</option><option value="mid-far">中 → 远</option><option value="far-mid">远 → 中</option><option value="near-far">近 → 远</option><option value="far-near">远 → 近</option></select>
+      <label for="distance-phase">混合进度 <output id="distance-phase-label">0%</output></label><input id="distance-phase" type="range" min="0" max="100" value="0" step="any"><div class="willow-phase-buttons" aria-label="固定过渡进度"><button type="button" data-phase="0">0%</button><button type="button" data-phase="25">25%</button><button type="button" data-phase="50">50%</button><button type="button" data-phase="75">75%</button><button type="button" data-phase="100">100%</button></div>
+    </fieldset>
+    <button id="distance-play-blend" disabled>播放交叉过渡 · 3 秒</button><button id="distance-approach" disabled>播放 900 → 16 m 接近</button><button id="distance-pause" disabled>暂停，保留当前帧</button>
+    <button id="distance-save" disabled>保存同帧原生 PNG + JSON</button><button id="distance-dispose">释放全部审查资源</button>
+    <p id="distance-status" role="status" aria-live="polite">正在顺序准备单一垂柳；不构造其他植物。</p><p id="distance-metrics"></p><div id="distance-capture-results" aria-live="polite"></div>
+    <details><summary>源码、镜头、阴影与处置记录</summary><pre id="distance-readout"></pre></details><p class="footnote">颜色与法线使用相同物理像素的淡化掩码；可切换法线、深度和无 AO 画面检查。阴影在自身灯光像素网格计算同一进度，效果仍待原生复核。原柳的几何与静态姿态保留，木材使用当前稳定性修订。旧证据与本版身份分别列于源码记录。</p>
+  </aside>
+</main><script type="module" src="/src/yuanmingyuan/willow-distance-studio.js"></script></body></html>

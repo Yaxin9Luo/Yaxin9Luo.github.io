@@ -160,6 +160,32 @@ test('loading UI shows bytes, bounded slow notice and retry while retaining the 
   }finally{restore();}
 });
 
+test('terminal detail failure offers explicit localized page reload without reusing the failed Game',()=>{
+  const {ui,element,restore}=reader();try{
+    let reloaded=0,coreStarts=0;location.href='https://portfolio.example/?lang=zh#paper/dvin';location.reload=()=>{reloaded++;};
+    const href=location.href,options=ui.options,progress=ui.snapshot.progress;
+    ui.loadingController={start(){coreStarts++;}};ui.game={};ui.ready=true;
+    ui.t=key=>key==='detailReload'?(ui.options.lang==='zh'?'重新加载页面':'Reload page'):key;
+    ui.applyLoadingState({availability:'interactive',enhancements:'loading-enhancements'});
+    const button=element('[data-action="world-reload"]');assert.equal(button.hidden,true);
+    ui.action('world-reload');assert.equal(reloaded,0);
+    ui.applyLoadingState({availability:'interactive',enhancements:'degraded'});
+    assert.equal(ui.failed,false);assert.equal(element('.world-loading').hidden,true);
+    assert.equal(element('.world-detail-status').textContent,'detailDegraded');assert.equal(button.hidden,false);assert.equal(button.textContent,'Reload page');
+    ui.options.lang='zh';ui.updateStatus();assert.equal(button.textContent,'重新加载页面');assert.equal(button.hidden,false);
+    assert.equal(reloaded,0,'failure never reloads without the visitor action');
+    ui.action('world-reload');assert.equal(reloaded,1);assert.equal(coreStarts,0);
+    assert.equal(location.href,href);assert.equal(ui.options,options);assert.equal(ui.snapshot.progress,progress);
+    assert.equal(ui.loadingState.enhancements,'degraded','reload does not certify the unfinished attempt');
+    ui.applyLoadingState({availability:'interactive',enhancements:'ready'});assert.equal(button.hidden,true);
+    ui.action('world-reload');assert.equal(reloaded,1);
+    ui.applyLoadingState({availability:'static-only',enhancements:'degraded',error:{type:'timeout'}});assert.equal(button.hidden,true);
+    assert.equal(element('[data-action="world-retry"]').hidden,false,'core-only recovery retains its original action');
+    ui.action('world-reload');assert.equal(reloaded,1);
+    ui.snapshot.position={x:0,y:10,z:0};ui.render();assert.match(ui.root.innerHTML,/class="world-detail-reload"[^>]*data-action="world-reload"[^>]*hidden/);
+  }finally{restore();}
+});
+
 test('changing language in a pending exhibition keeps the requested destination',()=>{
   const {ui,restore}=reader();try{
     ui.openExhibition('autodesign');const pending=ui.pendingStart;

@@ -1,0 +1,173 @@
+{
+  "schema": 2,
+  "id": "xianfaqiao",
+  "exportedAt": "2026-09-12T02:23:34.508Z",
+  "sourceDigest": "025c4c9cf874351128bbe922616fd495b35acd9fe5ef58f5ba4275533edeb869",
+  "sourceSHA256": {
+    "world/node_modules/three/build/three.core.js": "3718df126d69c125362a03340913204470d8c50238605150e57f808840fb7759",
+    "world/node_modules/three/build/three.module.js": "bbf5ed13fe4373f5bd38b14ea8e62e9f157327da5638edc6d3863e08b167c9c7",
+    "world/node_modules/three/examples/jsm/exporters/GLTFExporter.js": "318c588c527d03528a60610a4fc420018375a5c1bcf520e48f3666c5bc28d90d",
+    "world/node_modules/three/examples/jsm/geometries/RoundedBoxGeometry.js": "c1b7c9bd2cddff2e3f3a0723f618a3d364a47450e3d25771d21faed88410bec8",
+    "world/node_modules/three/examples/jsm/math/SimplexNoise.js": "4b1455617135e6b477de76244de07547d95570643379b72f4758e50161b06072",
+    "world/node_modules/three/examples/jsm/objects/MarchingCubes.js": "fe9c6ace2c079bf540befd164ce492de98c820d8b86a722b1060833d42ad9c80",
+    "world/node_modules/three/examples/jsm/utils/BufferGeometryUtils.js": "5c552223a9309883743b80538d6e9cdb45e3227f30d3ec56fb2c39b46e78d595",
+    "world/node_modules/three/package.json": "1d5c438acdc1fe5a52fb8ede2e417afd91fec91d22275c40f7b739591b24e4df",
+    "world/package-lock.json": "ff9b828866f47f089906a744802e639bb415f3aff1cf93a44cd2a9fc3c759d0a",
+    "world/package.json": "7fdc1a007c07c3d67a35de1b3c6a95bb0c79426f4dd2ddec287d4d13a688607d",
+    "world/scripts/export-xianfaqiao-deck-join-candidate.mjs": "b407010ea558f7167ef7d1713d463ca337e07cff86448ab4ea138070cfb7d854",
+    "world/scripts/export-yuanmingyuan-assets.mjs": "f5cd977150e5d086cb5bb190cce33435132d242395f9c65483bfdfaea680b55b",
+    "world/scripts/prepare-xianfashan-texture-pixels.mjs": "ff966b25f5dd41ddf46e7c8f7fc71284e7edcc6aaa2395bb2a9b233f48e9cb0d",
+    "world/src/asset-manifest.js": "e470201b3eaa20b593514df35fe59828168165625c7593bb06305e0720ff7ded",
+    "world/src/resource-loader.js": "4741f631487b9bcab9b7f40b399d51c457434e180f940d291c1e2dbed5688ed6",
+    "world/src/yuanmingyuan/asset-archive.js": "e07a9d352eae387e5a23e732e74d4fd39f029fb8efc28a43c7dcb58dfe7ee368",
+    "world/src/yuanmingyuan/huanghuazhen-geometry.js": "be09035264511496e08f83b713927d671d7389c90224a7b3735f663d00fd5a13",
+    "world/src/yuanmingyuan/study-geometry.js": "f586fd7d5fa783f2ca3063391eb97bd233e33aded8f6b6211e4bf4453786f4ad",
+    "world/src/yuanmingyuan/vegetation-textures.js": "26b2c9310b67aa8075832dc9857775b3097da330ebcf16a0e6a36cfcef696474",
+    "world/src/yuanmingyuan/xianfa-landscape-geometry.js": "8c6b339c769513ec048a30ee7fa43c4532c1f9371367094a9e810bdc67006f01",
+    "world/src/yuanmingyuan/xianfa-landscape-layout.js": "a7caccc2fecf890d2323b6aa5eeec884c71c5bc2cc8f9cc2127d6168142489e5",
+    "world/src/yuanmingyuan/xianfa-landscape-study.js": "2d76cebdf718fc8ace741f65d3e0dfd543a6c24d86916590599440b8d0a79166",
+    "world/src/yuanmingyuan/xianfa-landscape-views.js": "b5b060499d354f16b0aece6d9386f6c52b4897b1a95fcb0b27289382eee8bf41",
+    "world/src/yuanmingyuan/xianfaqiao-deck-joins.js": "4431699fdeb545d9af6ce91b25a1bd046d1232396f00d212880b5d612011fc50",
+    "world/src/yuanmingyuan/xianfashan-details.js": "c9a11fc5df93504b8614d06ed58a0e0a9dab48e1c7e2bc7e587a35cc9b2506e4",
+    "world/src/yuanmingyuan/xianfashan-materials.js": "5691fdd87c37c3b0f838f08fb5b9b867fadb190f174e44215ec3f7514f22d821",
+    "world/src/yuanmingyuan/yuanyingguan-geometry.js": "8067352e12aac8593daee2739a46467d4a46fc5cf9c4b96f34f1abf5828ed8d1"
+  },
+  "glb": {
+    "compression": "gzip",
+    "sha256": "bdd58e322b6916e581906ace46426eb4980a338b9b83245ba9b0858ee66e24e2",
+    "bytes": 37500548,
+    "transferSha256": "980a352539532f1dbf29aded1dfcdf5798511234c3ff47b4bb1b1e3a0b6c1e4f",
+    "transferBytes": 9216734,
+    "parts": [
+      {
+        "url": "xianfaqiao.glb.part-001.gzip.bin",
+        "bytes": 8388608,
+        "sha256": "5cd44afc23588ca8e77b31ed0ee288f5905ea17eb64610375b3d136b208137fa"
+      },
+      {
+        "url": "xianfaqiao.glb.part-002.gzip.bin",
+        "bytes": 828126,
+        "sha256": "2d8b90411f8b4815db494b4425ebd199c3ddde3cd8b43478cbb4017799a01aff"
+      }
+    ]
+  },
+  "runtime": {
+    "url": "xianfaqiao.runtime.json.gzip.bin",
+    "compression": "gzip",
+    "sha256": "89ff32710535c2c0e36e029af6761232ef8dc626bda9431d1a862556470f2a60",
+    "bytes": 219829,
+    "transferSha256": "315366d2f48625d82cd10213ffc6e7e10f4d19b3bc0ed8000bf10f709cc7b383",
+    "transferBytes": 14131
+  },
+  "verification": {
+    "mode": "exact-source-buffers-and-Three-runtime-state",
+    "compression": "none; PNG only for standard preview image layer",
+    "quantized": false,
+    "simplified": false,
+    "geometryReordered": false,
+    "sourceBuffersReusedBytes": 37404672,
+    "originalBytesAppended": 32768,
+    "standardExporterWarnings": [
+      "THREE.GLTFExporter: Merged metalnessMap and roughnessMap textures.",
+      "THREE.GLTFExporter: Merged metalnessMap and roughnessMap textures.",
+      "THREE.GLTFExporter: Merged metalnessMap and roughnessMap textures."
+    ],
+    "counts": {
+      "meshes": 34,
+      "triangles": 389632,
+      "storedTriangles": 389632,
+      "instances": 0,
+      "geometries": 34,
+      "materials": 8,
+      "textures": 2,
+      "nodes": 54
+    },
+    "nativeVisualReview": false,
+    "restoredResourceDisposal": {
+      "geometries": 34,
+      "materials": 8,
+      "textures": 2,
+      "instancedMeshes": 0,
+      "resources": 44,
+      "eachDisposedExactlyOnce": true
+    },
+    "exactRoundtripPassed": true
+  },
+  "nativeArchiveVisualReview": false,
+  "sourceDiagnosticsAcceptance": false,
+  "sourceResourceDisposal": {
+    "geometries": 34,
+    "materials": 8,
+    "textures": 2,
+    "instancedMeshes": 0,
+    "resources": 44,
+    "eachDisposedExactlyOnce": true,
+    "failures": []
+  },
+  "memoryBytes": {
+    "before": {
+      "rss": 125550592,
+      "heapTotal": 16793600,
+      "heapUsed": 10152768,
+      "external": 4488764,
+      "arrayBuffers": 573172
+    },
+    "afterConstruction": {
+      "rss": 216858624,
+      "heapTotal": 49037312,
+      "heapUsed": 13582128,
+      "external": 80503061,
+      "arrayBuffers": 56460949
+    },
+    "afterRoundtrip": {
+      "rss": 520421376,
+      "heapTotal": 52477952,
+      "heapUsed": 26152360,
+      "external": 158291229,
+      "arrayBuffers": 152916245
+    },
+    "afterSourceDisposal": {
+      "rss": 520470528,
+      "heapTotal": 52477952,
+      "heapUsed": 26201096,
+      "external": 158291229,
+      "arrayBuffers": 152916245
+    },
+    "note": "dispose releases ownership; CPU arrays remain reachable until process exit/GC"
+  },
+  "elapsedMilliseconds": 725.7622080000001,
+  "candidateReview": {
+    "revision": "deck-join-r2",
+    "status": "exact-roundtrip-candidate-native-pending",
+    "bounds": {
+      "min": [
+        -18.200000762939453,
+        -1.809999942779541,
+        -10
+      ],
+      "max": [
+        18.200000762939453,
+        8.305000305175781,
+        10
+      ],
+      "size": [
+        36.400001525878906,
+        10.115000247955322,
+        20
+      ]
+    },
+    "preservedBeforeManifest": "/assets/yuanmingyuan/xianfaqiao/7ae1a19b3bdbb7fe-gzip-bin-v1/manifest.json"
+  },
+  "transport": {
+    "version": "gzip-bin-v2",
+    "encoding": "gzip",
+    "filenameSuffix": ".gzip.bin",
+    "lossless": true,
+    "rawArchiveRetained": true,
+    "maximumFileBytesExclusive": 100663296,
+    "sourceManifestSHA256": "8921614f2ce82aa295251905908c6714f9ea986f9667d0e4bc9cc5c0bd178c56",
+    "producerSHA256": "f5cd977150e5d086cb5bb190cce33435132d242395f9c65483bfdfaea680b55b",
+    "runtimeDecoderSHA256": "e07a9d352eae387e5a23e732e74d4fd39f029fb8efc28a43c7dcb58dfe7ee368",
+    "decompressedBytesVerified": true
+  }
+}

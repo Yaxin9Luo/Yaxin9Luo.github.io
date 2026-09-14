@@ -11,7 +11,7 @@ import {readScanGeometry} from './helpers/scan-geometry.js';
 // Real GLB triangles and the actual clipped coast. Only browser image decoding
 // is substituted; the regression must never pass using empty source bounds.
 assert.equal(await loadScannedRockAssets({loadGLTFImpl:async asset=>readScanGeometry(asset.url)}),true);
-const world=createWorld(new THREE.Scene()),rocks=world.composition.stats.placements.filter(p=>p.type==='cliff-refine');
+const world=createWorld(new THREE.Scene(),{herbarium:false}),rocks=world.composition.stats.placements.filter(p=>p.type==='cliff-refine');
 
 test('cliff support uses full volumetric scans without modifying source topology or UVs',()=>{
   const source=readScanGeometry('/models/environment/scans/rock_moss_set_02.glb').scene.children;

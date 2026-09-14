@@ -1,0 +1,10 @@
+{
+  "purpose": "Exact pre-HDR source fixture for unchanged original main/depth/distance material implementation comparison. Text only; never imported or executed.",
+  "originalSource": "world/src/herbarium-community.js before accepted HDR adoption",
+  "archivalOrigin": "work/living-v8/hdr-adoption-draft/baseline/world/src/herbarium-community.js (historical provenance, not a runtime/test dependency)",
+  "fixture": {
+    "path": "world/tests/helpers/fixtures/herbarium-community-before-hdr.js.txt",
+    "bytes": 17513,
+    "sha256": "c4ae9c90c2589d21fe5ffb05d738762c7b7ad9d00c186d8610a9864f4544b291"
+  }
+}

@@ -16,7 +16,9 @@ const output=path.join(publicRoot,'runtime');await fs.mkdir(output,{recursive:tr
 await MeshoptEncoder.ready;await MeshoptDecoder.ready;
 const io=new NodeIO().registerExtensions(ALL_EXTENSIONS).registerDependencies({'meshopt.encoder':MeshoptEncoder,'meshopt.decoder':MeshoptDecoder});
 const wizardOnly=process.argv.includes('--wizard-only');
-const manifest=wizardOnly?{...assetManifest}:{},report=[];
+const terrainOnly=process.argv.includes('--terrain-only');
+if(wizardOnly&&terrainOnly)throw new Error('Choose either --wizard-only or --terrain-only.');
+const manifest=wizardOnly||terrainOnly?{...assetManifest}:{},report=[];
 async function publish(id,bytes,{phase=2,region='shared',variant='full',dependencies=[],source=id,extension='.glb'}={}){
   const sha=createHash('sha256').update(bytes).digest('hex'),slug=id.replace(/[^a-zA-Z0-9_-]+/g,'-').replace(/^-|-$/g,'');
   const name=`${slug}.${sha.slice(0,16)}${extension}`;await fs.writeFile(path.join(output,name),bytes);
@@ -31,6 +33,7 @@ for(const [id,source,phase,variant]of[
   ...['rock_face_02','rock_moss_set_02'].map(name=>[`${name}-preview`,`/models/environment/scans/${name}.glb`,2,'preview']),
   ...['rock_face_02','rock_moss_set_02'].map(name=>[`/models/environment/scans/${name}.glb`,`/models/environment/scans/${name}.glb`,2,'full']),
 ]){
+  if(terrainOnly)continue;
   if(wizardOnly&&source!=='/models/characters/wizard.glb')continue;
   const before=await fs.readFile(path.join(publicRoot,source));const doc=await io.readBinary(before);
   const names=doc.getRoot().listNodes().map(node=>node.getName()).filter(Boolean),clips=doc.getRoot().listAnimations().map(clip=>clip.getName());
@@ -58,12 +61,14 @@ for(const key of ['ground','cliffs']){
 scene.setExtras({shore:terrain.shore});await doc.transform(packing());
 await publish('navigation-terrain',await io.writeBinary(doc),{phase:1,region:'navigation',source:'world/src/world.js'});
 report.push({id:'navigation-terrain',bytes:manifest['navigation-terrain'].bytes,offlineGeometryMs:performance.now()-terrainStart,gridSpacing:.5,meshSimplification:false});
+if(!terrainOnly){
 async function visit(dir){for(const entry of await fs.readdir(dir,{withFileTypes:true})){const full=path.join(dir,entry.name);if(entry.isDirectory())await visit(full);else if(/\.(webp|png|jpg|hdr)$/.test(entry.name)){const id='/'+path.relative(publicRoot,full).split(path.sep).join('/');await publish(id,await fs.readFile(full),{phase:id.endsWith('.hdr')?3:2,source:id,extension:path.extname(id)});}}}
 await visit(path.join(publicRoot,'textures'));
 for(const id of ['/art/academy/cloud-panorama.webp','/art/night-garden/moon-lroc-2k.jpg','/art/night-garden/blossom-atlas.webp'])await publish(id,await fs.readFile(path.join(publicRoot,id)),{source:id,extension:path.extname(id)});
 }
+}
 await fs.writeFile(path.join(root,'src/asset-manifest.js'),`// Generated from actual bytes by scripts/prepare-runtime-assets.mjs.\nexport const assetManifest = ${JSON.stringify(manifest,null,2)};\n`);
-const reportPath=path.join(root,wizardOnly?'../docs/art/ground-motion-v6/transmission-report.json':'../docs/art/experience-v4/transmission-report.json');
+const reportPath=path.join(root,terrainOnly?'../docs/art/living-v8/herbarium/terrain-transmission-report.json':wizardOnly?'../docs/art/ground-motion-v6/transmission-report.json':'../docs/art/experience-v4/transmission-report.json');
 await fs.mkdir(path.dirname(reportPath),{recursive:true});
 await fs.writeFile(reportPath,JSON.stringify({meshopt:'1.2.0',gltfTransform:'4.5.0',normalBits:14,positionBits:16,assets:report},null,2)+'\n');
 console.log(JSON.stringify({assets:Object.keys(manifest).length,coreBytes:manifest['wizard-core'].bytes+manifest['navigation-terrain'].bytes}));

@@ -79,7 +79,7 @@ function palette(){
 class Builder {
   constructor(name,mats){this.group=new THREE.Group();this.group.name=name;this.m=mats;this.parts=new Map();this.solids=[];}
   add(geometry,mat,p=[0,0,0],s=[1,1,1],r=[0,0,0],preserveUV=false){
-    const g=geometry.index?geometry.toNonIndexed():geometry.clone();
+    const g=geometry.index&&!preserveUV?geometry.toNonIndexed():geometry.clone();
     g.applyMatrix4(new THREE.Matrix4().compose(new THREE.Vector3(...p),new THREE.Quaternion().setFromEuler(new THREE.Euler(...r)),new THREE.Vector3(...s)));
     if(!preserveUV)assignArchitecturalUVs(g,2.8);
     if(!this.parts.has(mat))this.parts.set(mat,[]);this.parts.get(mat).push(g);return this;
@@ -90,7 +90,17 @@ class Builder {
   beam(a,b,r,mat=this.m.wood,top=r){const av=new THREE.Vector3(...a),bv=new THREE.Vector3(...b),delta=bv.clone().sub(av),g=new THREE.CylinderGeometry(top,r,delta.length(),12);g.applyQuaternion(new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0,1,0),delta.normalize()));this.add(g,mat,av.add(bv).multiplyScalar(.5).toArray());g.dispose();return this;}
   boxSolid(name,x,z,w,d,bottom,top){this.solids.push({name,bottom,top,planes:[[1,0,0,x+w/2],[-1,0,0,-x+w/2],[0,0,1,z+d/2],[0,0,-1,-z+d/2],[0,-1,0,-bottom],[0,1,0,top]]});}
   roundSolid(name,x,z,r,bottom,top){const planes=[[0,-1,0,-bottom],[0,1,0,top]];for(let i=0;i<16;i++){const a=i*TAU/16,nx=Math.cos(a),nz=Math.sin(a);planes.push([nx,0,nz,r+nx*x+nz*z]);}this.solids.push({name,bottom,top,planes});}
-  finish(){for(const [mat,parts]of this.parts){const mesh=new THREE.Mesh(mergeGeometries(parts),mat);mesh.name=`${this.group.name} — ${mat.name}`;mesh.castShadow=true;mesh.receiveShadow=true;attachWindShadows(mesh);this.group.add(mesh);parts.forEach(g=>g.dispose());}this.group.userData.colliders=this.solids;this.parts.clear();return this.group;}
+  finish(){for(const [mat,parts]of this.parts){
+    // A mixed bucket keeps draw order by indexing only its expanded inputs.
+    // Pure architecture buckets retain their face-projected, expanded buffers.
+    if(parts.some(g=>g.index))for(const g of parts)if(!g.index){
+      const count=g.attributes.position.count,indices=count>65535?new Uint32Array(count):new Uint16Array(count);
+      for(let i=0;i<count;i++)indices[i]=i;g.setIndex(new THREE.BufferAttribute(indices,1));
+    }
+    const geometry=mergeGeometries(parts);parts.forEach(g=>g.dispose());
+    if(!geometry)throw new Error(`Cannot merge garden geometry: ${this.group.name} — ${mat.name}`);
+    const mesh=new THREE.Mesh(geometry,mat);mesh.name=`${this.group.name} — ${mat.name}`;mesh.castShadow=true;mesh.receiveShadow=true;attachWindShadows(mesh);this.group.add(mesh);
+  }this.group.userData.colliders=this.solids;this.parts.clear();return this.group;}
 }
 
 function clippedRectangle(w,d,cut=.65){

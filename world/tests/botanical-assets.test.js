@@ -33,7 +33,7 @@ test('real fetch/GLTF/Meshopt path retains mature cherry triangles, metre bounds
   try{await loadBotanicalVariant('cherry',881,'near');}finally{globalThis.fetch=previous;}
   assert.deepEqual(requests,[botanicalManifest['botanical/cherry/881/near'].url]);
   const cached=createGroveTree('cherry',881,'near'),source=createGroveTreeSource('cherry',881,'near');
-  assert.equal(triangles(cached.branchesMesh.geometry)+triangles(cached.leavesMesh.geometry),351654);
+  assert.equal(triangles(cached.branchesMesh.geometry)+triangles(cached.leavesMesh.geometry),triangles(source.branchesMesh.geometry)+triangles(source.leavesMesh.geometry));
   assert.deepEqual(cached.userData.botanicalDetail,source.userData.botanicalDetail);
   for(const part of['branchesMesh','leavesMesh']){
     const actual=cached[part].geometry,expected=source[part].geometry;
@@ -46,7 +46,8 @@ test('real fetch/GLTF/Meshopt path retains mature cherry triangles, metre bounds
 });
 
 test('packing report audits every variant against the unquantized source without simplification',async()=>{
-  const report=JSON.parse(await readFile(new URL('../../docs/art/experience-v4/botanical-transmission-report.json',import.meta.url)));
+  const report=JSON.parse(await readFile(new URL('../../docs/art/landscape-v7/botanical-transmission-report.json',import.meta.url)));
+  assert.equal(report.sourceSHA256,createHash('sha256').update(await readFile(new URL('../src/grove-foliage.js',import.meta.url))).digest('hex'),'report identifies the current source revision');
   assert.equal(report.meshSimplification,false);assert.equal(report.textureReplacement,false);assert.equal(report.colorBits,16);
   assert.equal(report.assets.length,Object.keys(botanicalManifest).length);
   for(const asset of report.assets){

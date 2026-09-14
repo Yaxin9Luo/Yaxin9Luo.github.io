@@ -1,0 +1,142 @@
+{
+  "schema": 2,
+  "id": "zhengjuesi",
+  "exportedAt": "2026-09-11T21:07:43.763Z",
+  "sourceDigest": "0942a9adbec13e571f836467c12004006bd5b6f4666cf86db36bd38dae54515e",
+  "sourceSHA256": {
+    "world/node_modules/three/build/three.core.js": "3718df126d69c125362a03340913204470d8c50238605150e57f808840fb7759",
+    "world/node_modules/three/build/three.module.js": "bbf5ed13fe4373f5bd38b14ea8e62e9f157327da5638edc6d3863e08b167c9c7",
+    "world/node_modules/three/examples/jsm/exporters/GLTFExporter.js": "318c588c527d03528a60610a4fc420018375a5c1bcf520e48f3666c5bc28d90d",
+    "world/node_modules/three/examples/jsm/geometries/RoundedBoxGeometry.js": "c1b7c9bd2cddff2e3f3a0723f618a3d364a47450e3d25771d21faed88410bec8",
+    "world/node_modules/three/examples/jsm/utils/BufferGeometryUtils.js": "5c552223a9309883743b80538d6e9cdb45e3227f30d3ec56fb2c39b46e78d595",
+    "world/node_modules/three/package.json": "1d5c438acdc1fe5a52fb8ede2e417afd91fec91d22275c40f7b739591b24e4df",
+    "world/package-lock.json": "ff9b828866f47f089906a744802e639bb415f3aff1cf93a44cd2a9fc3c759d0a",
+    "world/package.json": "7fdc1a007c07c3d67a35de1b3c6a95bb0c79426f4dd2ddec287d4d13a688607d",
+    "world/scripts/export-yuanmingyuan-assets.mjs": "11715a57af8eb219eb2a006135be53cd6fde8a33877e7b662552b18cc06c2603",
+    "world/src/asset-manifest.js": "e470201b3eaa20b593514df35fe59828168165625c7593bb06305e0720ff7ded",
+    "world/src/resource-loader.js": "4741f631487b9bcab9b7f40b399d51c457434e180f940d291c1e2dbed5688ed6",
+    "world/src/yuanmingyuan/asset-archive.js": "7c2939d9e004e2b32e54ae13530e9aeae506d85b3f3412250386dfe48d8aac1a",
+    "world/src/yuanmingyuan/chinese-architecture-geometry.js": "6d98692c4ceeaa3b1257b6df1e050091b91b28e5e69dcbe60011c3d7dd5bd1cd",
+    "world/src/yuanmingyuan/study-geometry.js": "f586fd7d5fa783f2ca3063391eb97bd233e33aded8f6b6211e4bf4453786f4ad",
+    "world/src/yuanmingyuan/vegetation-textures.js": "26b2c9310b67aa8075832dc9857775b3097da330ebcf16a0e6a36cfcef696474",
+    "world/src/yuanmingyuan/zhengjuesi-architecture.js": "75f5c94bff859b50a9e8621fe634cb992993d8697b8b176ed0256959c0fcc39b",
+    "world/src/yuanmingyuan/zhengjuesi-geometry.js": "d2a265c6b1b5c715a31c58dbda343c2ad99e465935db0be46f93f32c968ff9e1",
+    "world/src/yuanmingyuan/zhengjuesi-layout.js": "a45cfe7b377b26ee43f9ac454985fddbc9d1fdb93838e473907e77e8974f27b3",
+    "world/src/yuanmingyuan/zhengjuesi-materials.js": "76ba35d955dc1741d394cf4be377b6e5ad44f76638adcca8cae2af7f2cd043a2",
+    "world/src/yuanmingyuan/zhengjuesi-roofs.js": "1c153e78392e03db9d951773f6bb67ca12d0b2a9ed62b150fe781e7ca90dc5af",
+    "world/src/yuanmingyuan/zhengjuesi-study-views.js": "91101b4ca4345597f27ec87125560802fc53a9e23bddd5cb244327c97393dd47",
+    "world/src/yuanmingyuan/zhengjuesi-study.js": "5bb6ca02c2a7f1cb576459a6b4f06590ae76ca916089bde5fa3265bbbe5f84da"
+  },
+  "glb": {
+    "url": "zhengjuesi.glb.gzip.bin",
+    "compression": "gzip",
+    "sha256": "7b1cc033198272c4ba2cb9710af3a24bfaaa693fd733f948c55cf1e6205639c4",
+    "bytes": 51594624,
+    "transferSha256": "ce5a4dac24fe821bc646aa69c6c9a1e0c6ffce52770cc80dc6d26f327134b433",
+    "transferBytes": 10260176
+  },
+  "runtime": {
+    "url": "zhengjuesi.runtime.json.gzip.bin",
+    "compression": "gzip",
+    "sha256": "f52a1d522199c2441e3a00d05cd752669aaf3d4ca6683cd58a94a4fba39c5af5",
+    "bytes": 9817999,
+    "transferSha256": "1f4838e9ca4a7d7ccce2fca9930c83fbcbb8b42ecc9595526be431418a9de90c",
+    "transferBytes": 418143
+  },
+  "verification": {
+    "mode": "exact-source-buffers-and-Three-runtime-state",
+    "compression": "none; PNG only for standard preview image layer",
+    "quantized": false,
+    "simplified": false,
+    "geometryReordered": false,
+    "sourceBuffersReusedBytes": 29344136,
+    "originalBytesAppended": 12041404,
+    "standardExporterWarnings": [
+      "THREE.GLTFExporter: Merged metalnessMap and roughnessMap textures.",
+      "THREE.GLTFExporter: Merged metalnessMap and roughnessMap textures.",
+      "THREE.GLTFExporter: Merged metalnessMap and roughnessMap textures.",
+      "THREE.GLTFExporter: Merged metalnessMap and roughnessMap textures.",
+      "THREE.GLTFExporter: Merged metalnessMap and roughnessMap textures.",
+      "THREE.GLTFExporter: Merged metalnessMap and roughnessMap textures.",
+      "THREE.GLTFExporter: Merged metalnessMap and roughnessMap textures.",
+      "THREE.GLTFExporter: Merged metalnessMap and roughnessMap textures.",
+      "THREE.GLTFExporter: Merged metalnessMap and roughnessMap textures.",
+      "THREE.GLTFExporter: Merged metalnessMap and roughnessMap textures.",
+      "THREE.GLTFExporter: Merged metalnessMap and roughnessMap textures."
+    ],
+    "counts": {
+      "meshes": 2295,
+      "triangles": 20556276,
+      "storedTriangles": 509700,
+      "instances": 136723,
+      "geometries": 538,
+      "materials": 16,
+      "textures": 7,
+      "nodes": 2864
+    },
+    "nativeVisualReview": false,
+    "restoredResourceDisposal": {
+      "geometries": 538,
+      "materials": 16,
+      "textures": 7,
+      "instancedMeshes": 2295,
+      "resources": 2856,
+      "eachDisposedExactlyOnce": true
+    },
+    "exactRoundtripPassed": true
+  },
+  "nativeArchiveVisualReview": false,
+  "sourceDiagnosticsAcceptance": false,
+  "sourceResourceDisposal": {
+    "geometries": 538,
+    "materials": 16,
+    "textures": 7,
+    "instancedMeshes": 2295,
+    "resources": 2856,
+    "eachDisposedExactlyOnce": true
+  },
+  "memoryBytes": {
+    "before": {
+      "rss": 93290496,
+      "heapTotal": 16138240,
+      "heapUsed": 12438960,
+      "external": 8164426,
+      "arrayBuffers": 2804722
+    },
+    "afterConstruction": {
+      "rss": 276594688,
+      "heapTotal": 137379840,
+      "heapUsed": 76401400,
+      "external": 45407252,
+      "arrayBuffers": 41490519
+    },
+    "afterRoundtrip": {
+      "rss": 686915584,
+      "heapTotal": 194199552,
+      "heapUsed": 122350832,
+      "external": 191657594,
+      "arrayBuffers": 186281509
+    },
+    "afterSourceDisposal": {
+      "rss": 687407104,
+      "heapTotal": 194199552,
+      "heapUsed": 123700320,
+      "external": 191657594,
+      "arrayBuffers": 186281509
+    },
+    "note": "dispose events release renderer ownership; CPU arrays remain reachable until process exit or collection"
+  },
+  "elapsedMilliseconds": 2384.16175,
+  "transport": {
+    "version": "gzip-bin-v1",
+    "encoding": "gzip",
+    "filenameSuffix": ".gzip.bin",
+    "lossless": true,
+    "rawArchiveRetained": true,
+    "maximumFileBytesExclusive": 100663296,
+    "sourceManifestSHA256": "7053fdf00e758a4e179ea10d3dc2dedb69afa4a4bf8299579091ec1964b24e4b",
+    "producerSHA256": "11715a57af8eb219eb2a006135be53cd6fde8a33877e7b662552b18cc06c2603",
+    "runtimeDecoderSHA256": "7c2939d9e004e2b32e54ae13530e9aeae506d85b3f3412250386dfe48d8aac1a",
+    "decompressedBytesVerified": true
+  }
+}

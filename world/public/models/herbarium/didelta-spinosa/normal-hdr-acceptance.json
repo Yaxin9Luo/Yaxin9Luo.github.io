@@ -1,0 +1,590 @@
+{
+  "schema": "didelta-normal-hdr-acceptance-v1",
+  "decision": "ACCEPT_FOR_RUNTIME_INTEGRATION",
+  "scope": "Bounded static Didelta specimen derivative appearance; full-day/full-night/leaf-day/leaf-night, original EXR versus supplied-HALF control versus encoded HDR.",
+  "source": {
+    "url": "/models/herbarium/didelta-spinosa/textures/didelta_spinosa_nor_gl_8k.exr",
+    "upstreamURL": "https://dl.polyhaven.org/file/ph-assets/Models/exr/8k/didelta_spinosa/didelta_spinosa_nor_gl_8k.exr",
+    "bytes": 20504774,
+    "sha256": "67d8f96aba14560667ff6ad7058fb75b8f452a0dfd4792dff2f0961d8c632261",
+    "retainedUnchanged": true
+  },
+  "derivative": {
+    "url": "/models/herbarium/didelta-spinosa/textures/didelta_spinosa_nor_gl_8k.fb49f83f6955.astc-hdr.ktx2",
+    "bytes": 27297259,
+    "sha256": "fb49f83f6955641d070ff7e352926dbb19568f5b961a0817e78f202203b12564"
+  },
+  "recipe": {
+    "url": "/models/herbarium/didelta-spinosa/normal-hdr-recipe.json",
+    "bytes": 14810,
+    "sha256": "c7300637b5349ffa45967ad4567238e033e7cfe97ab81dc0cf1d78ed563ea0e8"
+  },
+  "runId": "plant-4cda36b7-f9bb-4e7a-b0c2-5bf365d37aa6",
+  "nativeSourceIdentity": "ae89fc36ecfbdc4ca69c467c45eae0fb7686a65bffecd173ea64cc26e14b54df",
+  "nativeSourceCount": 70,
+  "reviewedBy": [
+    "root",
+    "arcade_vine_art_v8"
+  ],
+  "originalPNGsActuallyOpenedPerReviewer": 12,
+  "captures": [
+    {
+      "normal": "original",
+      "preset": "full-day",
+      "png": "plant-4cda36b7-f9bb-4e7a-b0c2-5bf365d37aa6-full-day-original-e039c93aca81-1789072167225.png",
+      "json": "plant-4cda36b7-f9bb-4e7a-b0c2-5bf365d37aa6-full-day-original-e039c93aca81-1789072167225.json",
+      "dimensions": [
+        1845,
+        1440
+      ],
+      "commonConditionsSHA256": "e039c93aca810e9e00b5a2f7c27b46d68e52ea1bbca00f62f2d61d2af858fad0",
+      "rawFramebufferRGBA_SHA256": "ac400d264e10ebe180c19166b5cf95e3fe57324f5d21c9e96e6f2a1156101546",
+      "decodedRGBA_SHA256": "9dbbc8ea85256bfd2f1f111a820a0dc8d27cd8a0f5a65455507711a6ca66551a",
+      "pngSHA256": "fa7a2a59fa63c65b446b878330420ed0e6f06c00ec4aee45c1b50cb9afee1bac",
+      "sidecarSHA256": "4230143480c889c4cea436311e01d044319f7b214572e438028c1d5eb5a3872d"
+    },
+    {
+      "normal": "original",
+      "preset": "full-night",
+      "png": "plant-4cda36b7-f9bb-4e7a-b0c2-5bf365d37aa6-full-night-original-e9a81de189d9-1789072187138.png",
+      "json": "plant-4cda36b7-f9bb-4e7a-b0c2-5bf365d37aa6-full-night-original-e9a81de189d9-1789072187138.json",
+      "dimensions": [
+        1845,
+        1440
+      ],
+      "commonConditionsSHA256": "e9a81de189d9be6f4ff5c2cf1b12653448797fd1549e9ec0c1453f53598c9880",
+      "rawFramebufferRGBA_SHA256": "1a4019f1a5dcdef0cfc96a907c795878a3e1e877148267d9402f6ddbe514e4a9",
+      "decodedRGBA_SHA256": "5575aeeb2208fe35249ce07aa2b816451727df946b7e2c1b2be2910eb9821799",
+      "pngSHA256": "03d22fd195dd3945912575248c536124f3cd7338f7ff9a817f118c9ad74bac4f",
+      "sidecarSHA256": "d24039ddf12b7b4235c28aa4c47fa0cf5aa639f6bb8f2f29aab0233896569e3b"
+    },
+    {
+      "normal": "original",
+      "preset": "leaf-day",
+      "png": "plant-4cda36b7-f9bb-4e7a-b0c2-5bf365d37aa6-leaf-day-original-e04831cdc291-1789072218602.png",
+      "json": "plant-4cda36b7-f9bb-4e7a-b0c2-5bf365d37aa6-leaf-day-original-e04831cdc291-1789072218602.json",
+      "dimensions": [
+        1845,
+        1440
+      ],
+      "commonConditionsSHA256": "e04831cdc291a70c0ce1365092fb780538f87316b89ecf836a5e3b4dad53b179",
+      "rawFramebufferRGBA_SHA256": "3a3af1ef4fddbf78e290392992a4fca6d4e88949a4d67fdeac3be2b70a016d41",
+      "decodedRGBA_SHA256": "12dce3743f66935b124a3303311d6bcc6579ff43a449792825cb77589e59d1e8",
+      "pngSHA256": "87b791ac17a1639744eb30f5e9f571743f6736d0949bc32aae5ed0b4ea15fd64",
+      "sidecarSHA256": "edfaed5afd62281450b637cbb342106b15a9608e3d9c79501eed149ae6bbcc04"
+    },
+    {
+      "normal": "original",
+      "preset": "leaf-night",
+      "png": "plant-4cda36b7-f9bb-4e7a-b0c2-5bf365d37aa6-leaf-night-original-9f580af2c459-1789072237661.png",
+      "json": "plant-4cda36b7-f9bb-4e7a-b0c2-5bf365d37aa6-leaf-night-original-9f580af2c459-1789072237661.json",
+      "dimensions": [
+        1845,
+        1440
+      ],
+      "commonConditionsSHA256": "9f580af2c459d0500308c7b43bacab6dea37d1789e514a59651154d6ee1db75f",
+      "rawFramebufferRGBA_SHA256": "40142046779a4072b1a764a4434f5e66607432a0e6859d609ef4c1d3f2a95355",
+      "decodedRGBA_SHA256": "5bf2916fa6cb67ce02d79159cfa52f9df5867ae81d49b454b7f391e4b057155c",
+      "pngSHA256": "611b9a1bb23d13210dd469d96d6a91d873f9f3cbc84be3881ea7209159676800",
+      "sidecarSHA256": "d364069e65f7833080ec077a196a9009743c727fa0176eab408c5dd175643e80"
+    },
+    {
+      "normal": "control",
+      "preset": "full-day",
+      "png": "plant-4cda36b7-f9bb-4e7a-b0c2-5bf365d37aa6-full-day-control-e039c93aca81-1789072346193.png",
+      "json": "plant-4cda36b7-f9bb-4e7a-b0c2-5bf365d37aa6-full-day-control-e039c93aca81-1789072346193.json",
+      "dimensions": [
+        1845,
+        1440
+      ],
+      "commonConditionsSHA256": "e039c93aca810e9e00b5a2f7c27b46d68e52ea1bbca00f62f2d61d2af858fad0",
+      "rawFramebufferRGBA_SHA256": "348f1d74c83daeaebd344f551986007c1fc71761107b75fc9b6be0616661cdc4",
+      "decodedRGBA_SHA256": "84bccd9110064754474f53179a94953923ab7246c7efca873d0c35452b31afec",
+      "pngSHA256": "6cb88fa05661ffb59954fdbfc51b1b91bf6513885c988cff9335e4eac47ef702",
+      "sidecarSHA256": "69f0e20e58057aefd0c4b47d15a328b0ad9753413b18707d5ab6ced2b7c3a533"
+    },
+    {
+      "normal": "control",
+      "preset": "full-night",
+      "png": "plant-4cda36b7-f9bb-4e7a-b0c2-5bf365d37aa6-full-night-control-e9a81de189d9-1789072386135.png",
+      "json": "plant-4cda36b7-f9bb-4e7a-b0c2-5bf365d37aa6-full-night-control-e9a81de189d9-1789072386135.json",
+      "dimensions": [
+        1845,
+        1440
+      ],
+      "commonConditionsSHA256": "e9a81de189d9be6f4ff5c2cf1b12653448797fd1549e9ec0c1453f53598c9880",
+      "rawFramebufferRGBA_SHA256": "8893c5faf201bea53dbd350e5733a750aa594047a08eefc0153fc032d9f80721",
+      "decodedRGBA_SHA256": "f4222e2084d856cc6fd14118baa9652dded3f9c529f0db95f82052bb3b421954",
+      "pngSHA256": "d7193e5c012379f4daab00c8374404ca0f06cdd0578f95bbfb66df20a41a5309",
+      "sidecarSHA256": "38e7cc7dde789069cebeba9d4f8c87566c24e9bf204f731bdebae09ea1c63d66"
+    },
+    {
+      "normal": "control",
+      "preset": "leaf-day",
+      "png": "plant-4cda36b7-f9bb-4e7a-b0c2-5bf365d37aa6-leaf-day-control-e04831cdc291-1789072424071.png",
+      "json": "plant-4cda36b7-f9bb-4e7a-b0c2-5bf365d37aa6-leaf-day-control-e04831cdc291-1789072424071.json",
+      "dimensions": [
+        1845,
+        1440
+      ],
+      "commonConditionsSHA256": "e04831cdc291a70c0ce1365092fb780538f87316b89ecf836a5e3b4dad53b179",
+      "rawFramebufferRGBA_SHA256": "5f1004e736162dc32d5aff57d5c0effd840d993ee0a1a1d1532b65f003b30efd",
+      "decodedRGBA_SHA256": "1309b6878e13bbd17e8ee03ddc82da463ffdaba9a22f6660ebd2d1c5d0488690",
+      "pngSHA256": "deb17c8a40ad474b664b2990f4d1a4a305513903b23135808c564cdf3df5e13e",
+      "sidecarSHA256": "a0da40d813219c47cdbd20952a67ffae76fced98c266f27ca80ca76312eb0ad2"
+    },
+    {
+      "normal": "control",
+      "preset": "leaf-night",
+      "png": "plant-4cda36b7-f9bb-4e7a-b0c2-5bf365d37aa6-leaf-night-control-9f580af2c459-1789072477617.png",
+      "json": "plant-4cda36b7-f9bb-4e7a-b0c2-5bf365d37aa6-leaf-night-control-9f580af2c459-1789072477617.json",
+      "dimensions": [
+        1845,
+        1440
+      ],
+      "commonConditionsSHA256": "9f580af2c459d0500308c7b43bacab6dea37d1789e514a59651154d6ee1db75f",
+      "rawFramebufferRGBA_SHA256": "29c35550bc70607338494c1a62d97f98cd52ed8e38f2eb2d9a6f7e54f93ec71a",
+      "decodedRGBA_SHA256": "7bf49e0746b9a39200ca01b9c6435f92c14ca9c417887a9b71aa3a9ea11149d2",
+      "pngSHA256": "cda0938efe05f4141a187ca40573be7438c6f3b620c562f45197e083d7b25a08",
+      "sidecarSHA256": "4c60a9525b41499ee7207f3ca6d2e9fcff1767610f4cbc8e794dcf752dbd0e50"
+    },
+    {
+      "normal": "encoded",
+      "preset": "leaf-night",
+      "png": "plant-4cda36b7-f9bb-4e7a-b0c2-5bf365d37aa6-leaf-night-encoded-9f580af2c459-1789072536921.png",
+      "json": "plant-4cda36b7-f9bb-4e7a-b0c2-5bf365d37aa6-leaf-night-encoded-9f580af2c459-1789072536921.json",
+      "dimensions": [
+        1845,
+        1440
+      ],
+      "commonConditionsSHA256": "9f580af2c459d0500308c7b43bacab6dea37d1789e514a59651154d6ee1db75f",
+      "rawFramebufferRGBA_SHA256": "160dde9959c6521e764746a75ab8db5453ee7a00cf5300a36fa6ded61fb42e17",
+      "decodedRGBA_SHA256": "677b3e21859235e6fcd1e9d4d381413b69298cb5ee335caf6dfff13c3b157a68",
+      "pngSHA256": "6b360cb031becb7b7bf8585a87f4523a50ca757e904a359f428be7b65e818eb6",
+      "sidecarSHA256": "1725d18d66fdd48235e345c5dd656fd1e0b0f8d60c479415ca4179c68f7c9d5f"
+    },
+    {
+      "normal": "encoded",
+      "preset": "leaf-day",
+      "png": "plant-4cda36b7-f9bb-4e7a-b0c2-5bf365d37aa6-leaf-day-encoded-e04831cdc291-1789072561240.png",
+      "json": "plant-4cda36b7-f9bb-4e7a-b0c2-5bf365d37aa6-leaf-day-encoded-e04831cdc291-1789072561240.json",
+      "dimensions": [
+        1845,
+        1440
+      ],
+      "commonConditionsSHA256": "e04831cdc291a70c0ce1365092fb780538f87316b89ecf836a5e3b4dad53b179",
+      "rawFramebufferRGBA_SHA256": "0cb720f7f13aebae932aca8814b30abc14bf77ac9419592620531582d9b660ca",
+      "decodedRGBA_SHA256": "747d6c91c9e910a007792780ff45922a27a063bc1eca84e27512cabf53b4496b",
+      "pngSHA256": "1b9ecf5d23c67536e1e79fc283b980d58633124e5313b42740df09b297648807",
+      "sidecarSHA256": "6b6cb86ef99e3848eed228e0bc537f05a8dce692e8c5dee69eabfe2c67582bd2"
+    },
+    {
+      "normal": "encoded",
+      "preset": "full-day",
+      "png": "plant-4cda36b7-f9bb-4e7a-b0c2-5bf365d37aa6-full-day-encoded-e039c93aca81-1789072581593.png",
+      "json": "plant-4cda36b7-f9bb-4e7a-b0c2-5bf365d37aa6-full-day-encoded-e039c93aca81-1789072581593.json",
+      "dimensions": [
+        1845,
+        1440
+      ],
+      "commonConditionsSHA256": "e039c93aca810e9e00b5a2f7c27b46d68e52ea1bbca00f62f2d61d2af858fad0",
+      "rawFramebufferRGBA_SHA256": "c740dae4c63283d53b4d4196fa988562a7be56a5d9f041279bd66113677553cc",
+      "decodedRGBA_SHA256": "87dd1c12cb6f427acb7d94d43dc507a0371d18418e46f80bf786a02cf365d4b4",
+      "pngSHA256": "cc1e7c77b661b472b81b27aadcc41e126fe46fc46394f45d8f9cfd623a322211",
+      "sidecarSHA256": "0c4d48d056d99975a4770b0a1fd351fa39ae3aa6098efc70c2b22e60f266d03c"
+    },
+    {
+      "normal": "encoded",
+      "preset": "full-night",
+      "png": "plant-4cda36b7-f9bb-4e7a-b0c2-5bf365d37aa6-full-night-encoded-e9a81de189d9-1789072597260.png",
+      "json": "plant-4cda36b7-f9bb-4e7a-b0c2-5bf365d37aa6-full-night-encoded-e9a81de189d9-1789072597260.json",
+      "dimensions": [
+        1845,
+        1440
+      ],
+      "commonConditionsSHA256": "e9a81de189d9be6f4ff5c2cf1b12653448797fd1549e9ec0c1453f53598c9880",
+      "rawFramebufferRGBA_SHA256": "43f82b41393be6d42a881af1b22316f8dd89abc88f873edb38aa19102bcc62ed",
+      "decodedRGBA_SHA256": "0143f5a9c4cd76bb15b4b68c1e9e09203aa0b2a89c670a79216763bf17f27787",
+      "pngSHA256": "ad2135edf9cdac5fb4b7696604330fc6f8f839e429ed4c6b114e90dd2545789f",
+      "sidecarSHA256": "6b60fc4d6c67373e3cb15953454a294185eb87a18581f7d1bba95d7548252a9c"
+    }
+  ],
+  "captureEvidenceBoundary": "These twelve files were actually opened by root and independent reviewer. PNGs and sidecars remain in the authoring capture archive; their exact file names, sizes/dimensions where recorded, source condition and pixel/file hashes are included. Media are not bundled in the runtime asset folder. Linked JSON and review records are shipped byte-for-byte.",
+  "presentation": {
+    "mode": "defined-srgb-reference-composite",
+    "nativeDisplayPixelEqualityClaimed": false,
+    "rawAndReferenceHashesSeparate": true,
+    "decodedPNGReferenceHashesPassed": 12
+  },
+  "nativeCapabilities": {
+    "astc": true,
+    "astcProfiles": [
+      "ldr",
+      "hdr"
+    ],
+    "extColorBufferFloat": true,
+    "maxTextureSize": 16384,
+    "contextAttributes": {
+      "alpha": true,
+      "antialias": true,
+      "depth": true,
+      "desynchronized": false,
+      "failIfMajorPerformanceCaveat": false,
+      "powerPreference": "default",
+      "premultipliedAlpha": true,
+      "preserveDrawingBuffer": true,
+      "stencil": false,
+      "xrCompatible": false
+    }
+  },
+  "numericalAudit": {
+    "allDecodedDomainValid": true,
+    "pixelsCompared": 89478485,
+    "samplesCompared": 357913940,
+    "metricDefinition": "Codec-only compares decoded HALF to supplied HALF. Including mip rounding compares decoded HALF to the unquantized Float64 area-mean reference (base: exact original HALF). Angles use atan2(cross magnitude,dot) after RGB*2-1 and common normalScale(1,-1); no texture is normalized or changed.",
+    "allPixels": {
+      "codecOnly": {
+        "pixels": 89478485,
+        "channels": [
+          {
+            "channel": "R",
+            "minimum": 0.0244140625,
+            "maximum": 1.0,
+            "meanAbsoluteError": 0.0011492177361171305,
+            "meanSignedError": 8.003956993692744e-06,
+            "RMSE": 0.003089200636493004,
+            "maxAbsoluteError": 0.23291015625,
+            "exactSamples": 53706053,
+            "sourceAboveOne": 0,
+            "decodedAboveOne": 0,
+            "sourceAboveOneDecodedAtOrBelowOne": 0
+          },
+          {
+            "channel": "G",
+            "minimum": 0.0234375,
+            "maximum": 1.0,
+            "meanAbsoluteError": 0.0011439488775960077,
+            "meanSignedError": 7.806622279054795e-06,
+            "RMSE": 0.0030785391886484137,
+            "maxAbsoluteError": 0.223876953125,
+            "exactSamples": 53867893,
+            "sourceAboveOne": 0,
+            "decodedAboveOne": 0,
+            "sourceAboveOneDecodedAtOrBelowOne": 0
+          },
+          {
+            "channel": "B",
+            "minimum": 0.625,
+            "maximum": 1.1171875,
+            "meanAbsoluteError": 0.001252777331620906,
+            "meanSignedError": 0.0001248670946656199,
+            "RMSE": 0.002961201136430284,
+            "maxAbsoluteError": 0.19775390625,
+            "exactSamples": 54148292,
+            "sourceAboveOne": 4473253,
+            "decodedAboveOne": 8068652,
+            "sourceAboveOneDecodedAtOrBelowOne": 2036066
+          },
+          {
+            "channel": "A",
+            "minimum": 1.0,
+            "maximum": 1.0,
+            "meanAbsoluteError": 0.0,
+            "meanSignedError": 0.0,
+            "RMSE": 0.0,
+            "maxAbsoluteError": 0.0,
+            "exactSamples": 89478485,
+            "sourceAboveOne": 0,
+            "decodedAboveOne": 0,
+            "sourceAboveOneDecodedAtOrBelowOne": 0
+          }
+        ],
+        "angles": {
+          "definedPixels": 89478485,
+          "zeroLengthPixels": 0,
+          "maxDegrees": 34.45323126788265,
+          "meanDegrees": 0.2111510912567742,
+          "RMSDegrees": 0.5078328780796302,
+          "aboveDegrees": {
+            "0.5": 11548429,
+            "1": 4627678,
+            "2": 1132240,
+            "5": 54796
+          }
+        }
+      },
+      "includingMipRounding": {
+        "pixels": 89478485,
+        "channels": [
+          {
+            "channel": "R",
+            "minimum": 0.0244140625,
+            "maximum": 1.0,
+            "meanAbsoluteError": 0.0011496582620603966,
+            "meanSignedError": 7.977063643339398e-06,
+            "RMSE": 0.0030892512317890297,
+            "maxAbsoluteError": 0.23291015625,
+            "exactSamples": 53285789,
+            "sourceAboveOne": 0,
+            "decodedAboveOne": 0,
+            "sourceAboveOneDecodedAtOrBelowOne": 0
+          },
+          {
+            "channel": "G",
+            "minimum": 0.0234375,
+            "maximum": 1.0,
+            "meanAbsoluteError": 0.001144386739719903,
+            "meanSignedError": 7.790193923406513e-06,
+            "RMSE": 0.0030785714553779953,
+            "maxAbsoluteError": 0.22381591796875,
+            "exactSamples": 53444443,
+            "sourceAboveOne": 0,
+            "decodedAboveOne": 0,
+            "sourceAboveOneDecodedAtOrBelowOne": 0
+          },
+          {
+            "channel": "B",
+            "minimum": 0.625,
+            "maximum": 1.1171875,
+            "meanAbsoluteError": 0.0012532440459551214,
+            "meanSignedError": 0.0001241530952108741,
+            "RMSE": 0.0029607743131660207,
+            "maxAbsoluteError": 0.19775390625,
+            "exactSamples": 53617744,
+            "sourceAboveOne": 5001046,
+            "decodedAboveOne": 8068652,
+            "sourceAboveOneDecodedAtOrBelowOne": 2275637
+          },
+          {
+            "channel": "A",
+            "minimum": 1.0,
+            "maximum": 1.0,
+            "meanAbsoluteError": 0.0,
+            "meanSignedError": 0.0,
+            "RMSE": 0.0,
+            "maxAbsoluteError": 0.0,
+            "exactSamples": 89478485,
+            "sourceAboveOne": 0,
+            "decodedAboveOne": 0,
+            "sourceAboveOneDecodedAtOrBelowOne": 0
+          }
+        ],
+        "angles": {
+          "definedPixels": 89478485,
+          "zeroLengthPixels": 0,
+          "maxDegrees": 34.46059331486464,
+          "meanDegrees": 0.21116072356593565,
+          "RMSDegrees": 0.5078375105339759,
+          "aboveDegrees": {
+            "0.5": 11545628,
+            "1": 4627516,
+            "2": 1132234,
+            "5": 54804
+          }
+        }
+      }
+    },
+    "sourceAlphaForeground": {
+      "codecOnly": {
+        "pixels": 66280376,
+        "channels": [
+          {
+            "channel": "R",
+            "minimum": 0.0244140625,
+            "maximum": 1.0,
+            "meanAbsoluteError": 0.0015189015205888626,
+            "meanSignedError": 1.2466375598287475e-05,
+            "RMSE": 0.003566468666998204,
+            "maxAbsoluteError": 0.23291015625,
+            "exactSamples": 31793565,
+            "sourceAboveOne": 0,
+            "decodedAboveOne": 0,
+            "sourceAboveOneDecodedAtOrBelowOne": 0
+          },
+          {
+            "channel": "G",
+            "minimum": 0.0234375,
+            "maximum": 1.0,
+            "meanAbsoluteError": 0.0015131444957034298,
+            "meanSignedError": 1.0569701611183834e-05,
+            "RMSE": 0.0035556513931916662,
+            "maxAbsoluteError": 0.223876953125,
+            "exactSamples": 31935339,
+            "sourceAboveOne": 0,
+            "decodedAboveOne": 0,
+            "sourceAboveOneDecodedAtOrBelowOne": 0
+          },
+          {
+            "channel": "B",
+            "minimum": 0.625,
+            "maximum": 1.1171875,
+            "meanAbsoluteError": 0.001630077401287015,
+            "meanSignedError": 0.0001600888846020389,
+            "RMSE": 0.003362288181638406,
+            "maxAbsoluteError": 0.19775390625,
+            "exactSamples": 32134459,
+            "sourceAboveOne": 4222223,
+            "decodedAboveOne": 7707905,
+            "sourceAboveOneDecodedAtOrBelowOne": 1910032
+          },
+          {
+            "channel": "A",
+            "minimum": 1.0,
+            "maximum": 1.0,
+            "meanAbsoluteError": 0.0,
+            "meanSignedError": 0.0,
+            "RMSE": 0.0,
+            "maxAbsoluteError": 0.0,
+            "exactSamples": 66280376,
+            "sourceAboveOne": 0,
+            "decodedAboveOne": 0,
+            "sourceAboveOneDecodedAtOrBelowOne": 0
+          }
+        ],
+        "angles": {
+          "definedPixels": 66280376,
+          "zeroLengthPixels": 0,
+          "maxDegrees": 34.45323126788265,
+          "meanDegrees": 0.2792416606574215,
+          "RMSDegrees": 0.5862727934401663,
+          "aboveDegrees": {
+            "0.5": 11376160,
+            "1": 4575285,
+            "2": 1120917,
+            "5": 54425
+          }
+        }
+      },
+      "includingMipRounding": {
+        "pixels": 66280376,
+        "channels": [
+          {
+            "channel": "R",
+            "minimum": 0.0244140625,
+            "maximum": 1.0,
+            "meanAbsoluteError": 0.0015194795139917105,
+            "meanSignedError": 1.2431519772941811e-05,
+            "RMSE": 0.0035665269181377832,
+            "maxAbsoluteError": 0.23291015625,
+            "exactSamples": 31392167,
+            "sourceAboveOne": 0,
+            "decodedAboveOne": 0,
+            "sourceAboveOneDecodedAtOrBelowOne": 0
+          },
+          {
+            "channel": "G",
+            "minimum": 0.0234375,
+            "maximum": 1.0,
+            "meanAbsoluteError": 0.0015137209653295577,
+            "meanSignedError": 1.054977837820416e-05,
+            "RMSE": 0.003555688520704008,
+            "maxAbsoluteError": 0.22381591796875,
+            "exactSamples": 31530040,
+            "sourceAboveOne": 0,
+            "decodedAboveOne": 0,
+            "sourceAboveOneDecodedAtOrBelowOne": 0
+          },
+          {
+            "channel": "B",
+            "minimum": 0.625,
+            "maximum": 1.1171875,
+            "meanAbsoluteError": 0.001630654334197475,
+            "meanSignedError": 0.00015917061852389474,
+            "RMSE": 0.003361803093896429,
+            "maxAbsoluteError": 0.19775390625,
+            "exactSamples": 31633552,
+            "sourceAboveOne": 4723085,
+            "decodedAboveOne": 7707905,
+            "sourceAboveOneDecodedAtOrBelowOne": 2132812
+          },
+          {
+            "channel": "A",
+            "minimum": 1.0,
+            "maximum": 1.0,
+            "meanAbsoluteError": 0.0,
+            "meanSignedError": 0.0,
+            "RMSE": 0.0,
+            "maxAbsoluteError": 0.0,
+            "exactSamples": 66280376,
+            "sourceAboveOne": 0,
+            "decodedAboveOne": 0,
+            "sourceAboveOneDecodedAtOrBelowOne": 0
+          }
+        ],
+        "angles": {
+          "definedPixels": 66280376,
+          "zeroLengthPixels": 0,
+          "maxDegrees": 34.46059331486464,
+          "meanDegrees": 0.2792546550106804,
+          "RMSDegrees": 0.5862781050905898,
+          "aboveDegrees": {
+            "0.5": 11373363,
+            "1": 4575115,
+            "2": 1120914,
+            "5": 54432
+          }
+        }
+      }
+    },
+    "alphaSubsetDefinition": "If available, exact source G scalar; level 0 alpha>=128, lower levels unquantized footprint mean>=127.5. This is a source-mask proxy, not a claim about driver-generated alpha mips or actual camera visibility.",
+    "lossless": false,
+    "maxCodecOnlyNormalErrorDegrees": 34.45323126788265,
+    "includingMipRoundingMaxDegrees": 34.46059331486464
+  },
+  "evidence": {
+    "preparation": {
+      "url": "/models/herbarium/didelta-spinosa/normal-hdr-evidence/preparation.json",
+      "bytes": 50925,
+      "sha256": "28d25c6c37783a9922e51ebd9af2e7e55133f5e3d54bfbed341532920758d3ef"
+    },
+    "encoding": {
+      "url": "/models/herbarium/didelta-spinosa/normal-hdr-evidence/encoding.json",
+      "bytes": 8776,
+      "sha256": "2d37bfe08839599dac2ac124d90f875e68065de1b2a1a324aa9969e9ea6812ef"
+    },
+    "audit": {
+      "url": "/models/herbarium/didelta-spinosa/normal-hdr-evidence/audit.json",
+      "bytes": 211772,
+      "sha256": "0c06fe9f5d277370b0488b4aa190f951a431bc2a6b411f9daf2c89ead4353920"
+    },
+    "nativeSourceFreeze": {
+      "url": "/models/herbarium/didelta-spinosa/normal-hdr-evidence/native-r4-source.json",
+      "bytes": 14329,
+      "sha256": "d4a27668b695270a785bab55626d955f49512ea3db705a35195efc675c38f8de"
+    },
+    "nativeResult": {
+      "url": "/models/herbarium/didelta-spinosa/normal-hdr-evidence/native-r4-result.json",
+      "bytes": 67332,
+      "sha256": "b8b36c19c95236cf53c301f2af34140105f27a316214af911c141e156d89dc9e"
+    },
+    "nativePixelCheck": {
+      "url": "/models/herbarium/didelta-spinosa/normal-hdr-evidence/native-r4-pixel-check.json",
+      "bytes": 10443,
+      "sha256": "5348c04efb6a9f048db8ca520da1066873530991b68d7131b8cf0ac4530cfe89"
+    },
+    "rootArtReview": {
+      "url": "/models/herbarium/didelta-spinosa/normal-hdr-evidence/didelta-hdr-native-r4-root-art-review.md",
+      "bytes": 2129,
+      "sha256": "75a8cbbc40e83659ba940d52318059ecda87d1e8e0999dd3d1cb98f1c371871d"
+    },
+    "independentArtReview": {
+      "url": "/models/herbarium/didelta-spinosa/normal-hdr-evidence/didelta-hdr-native-r4-art-review.md",
+      "bytes": 3597,
+      "sha256": "5ce374b6db594e22dac84000766d2d8c0dcd00693a67033cf732c95b7ba6c22b"
+    },
+    "independentArtEvidence": {
+      "url": "/models/herbarium/didelta-spinosa/normal-hdr-evidence/didelta-hdr-native-r4-art-evidence.json",
+      "bytes": 14800,
+      "sha256": "a9e4766c15d9030e731b26fbdb74131aedf13267b4ce790c6b28497bcdd9f842"
+    }
+  },
+  "limitations": [
+    "34.45323126788265-degree codec-only maximum and 34.46059331486464-degree combined maximum remain real outliers; no uniform small-error guarantee.",
+    "Static specimen acceptance does not certify every outlier, moving-camera shimmer, every viewing distance, FPS, GPU memory or whole-island composition.",
+    "The original/control/encoded treatments share the pale source palette; this is not an island-lighting decision.",
+    "Main-world runtime and integrated map checks are separate pending gates.",
+    "Historical preparation/audit records intentionally retain their then-unapproved status; this later decision does not rewrite those records."
+  ],
+  "wholeIslandApproval": false,
+  "performanceApproval": false
+}

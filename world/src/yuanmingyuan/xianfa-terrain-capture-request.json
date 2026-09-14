@@ -1,0 +1,5233 @@
+{
+  "regions": [
+    {
+      "id": "24m-shore-and-two-willow-roots",
+      "minX": 830,
+      "maxX": 870,
+      "minZ": -583,
+      "maxZ": -543
+    },
+    {
+      "id": "pilot-rock-west",
+      "minX": 882,
+      "maxX": 886,
+      "minZ": -584,
+      "maxZ": -580
+    },
+    {
+      "id": "pilot-rock-east",
+      "minX": 898,
+      "maxX": 902,
+      "minZ": -582,
+      "maxZ": -578
+    }
+  ],
+  "probes": [
+    {
+      "id": "shore-sedge-01-centre",
+      "x": 842.496837911653,
+      "z": -554.3903787516828,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-01-footprint-0",
+      "x": 843.183237911653,
+      "z": -554.3903787516828,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-01-footprint-1",
+      "x": 842.9821960062594,
+      "z": -553.9050206570763,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-01-footprint-2",
+      "x": 842.496837911653,
+      "z": -553.7039787516827,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-01-footprint-3",
+      "x": 842.0114798170465,
+      "z": -553.9050206570763,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-01-footprint-4",
+      "x": 841.8104379116529,
+      "z": -554.3903787516828,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-01-footprint-5",
+      "x": 842.0114798170465,
+      "z": -554.8757368462892,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-01-footprint-6",
+      "x": 842.496837911653,
+      "z": -555.0767787516828,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-01-footprint-7",
+      "x": 842.9821960062594,
+      "z": -554.8757368462892,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-02-centre",
+      "x": 843.2486983492656,
+      "z": -554.4752662204454,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-02-footprint-0",
+      "x": 843.9974983492656,
+      "z": -554.4752662204454,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-02-footprint-1",
+      "x": 843.778179907018,
+      "z": -553.945784662693,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-02-footprint-2",
+      "x": 843.2486983492656,
+      "z": -553.7264662204454,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-02-footprint-3",
+      "x": 842.7192167915132,
+      "z": -553.945784662693,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-02-footprint-4",
+      "x": 842.4998983492657,
+      "z": -554.4752662204454,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-02-footprint-5",
+      "x": 842.7192167915132,
+      "z": -555.0047477781978,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-02-footprint-6",
+      "x": 843.2486983492656,
+      "z": -555.2240662204454,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-02-footprint-7",
+      "x": 843.778179907018,
+      "z": -555.0047477781978,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-03-centre",
+      "x": 843.8938431118622,
+      "z": -554.9457853330159,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-03-footprint-0",
+      "x": 844.5958431118622,
+      "z": -554.9457853330159,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-03-footprint-1",
+      "x": 844.3902320722552,
+      "z": -554.4493963726229,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-03-footprint-2",
+      "x": 843.8938431118622,
+      "z": -554.2437853330159,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-03-footprint-3",
+      "x": 843.3974541514692,
+      "z": -554.4493963726229,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-03-footprint-4",
+      "x": 843.1918431118622,
+      "z": -554.9457853330159,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-03-footprint-5",
+      "x": 843.3974541514692,
+      "z": -555.4421742934089,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-03-footprint-6",
+      "x": 843.8938431118622,
+      "z": -555.6477853330159,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-03-footprint-7",
+      "x": 844.3902320722552,
+      "z": -555.4421742934089,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-04-centre",
+      "x": 844.6772331807296,
+      "z": -554.9870163892722,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-04-footprint-0",
+      "x": 845.4728331807296,
+      "z": -554.9870163892722,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-04-footprint-1",
+      "x": 845.2398073358415,
+      "z": -554.4244422341602,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-04-footprint-2",
+      "x": 844.6772331807296,
+      "z": -554.1914163892721,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-04-footprint-3",
+      "x": 844.1146590256176,
+      "z": -554.4244422341602,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-04-footprint-4",
+      "x": 843.8816331807295,
+      "z": -554.9870163892722,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-04-footprint-5",
+      "x": 844.1146590256176,
+      "z": -555.5495905443842,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-04-footprint-6",
+      "x": 844.6772331807296,
+      "z": -555.7826163892722,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-04-footprint-7",
+      "x": 845.2398073358415,
+      "z": -555.5495905443842,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-05-centre",
+      "x": 845.2981243808226,
+      "z": -555.4308565830886,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-05-footprint-0",
+      "x": 846.0313243808226,
+      "z": -555.4308565830886,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-05-footprint-1",
+      "x": 845.8165750727886,
+      "z": -554.9124058911226,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-05-footprint-2",
+      "x": 845.2981243808226,
+      "z": -554.6976565830886,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-05-footprint-3",
+      "x": 844.7796736888566,
+      "z": -554.9124058911226,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-05-footprint-4",
+      "x": 844.5649243808226,
+      "z": -555.4308565830886,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-05-footprint-5",
+      "x": 844.7796736888566,
+      "z": -555.9493072750546,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-05-footprint-6",
+      "x": 845.2981243808226,
+      "z": -556.1640565830886,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-05-footprint-7",
+      "x": 845.8165750727886,
+      "z": -555.9493072750546,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-06-centre",
+      "x": 842.6787396304302,
+      "z": -555.1883209580523,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-06-footprint-0",
+      "x": 843.3495396304302,
+      "z": -555.1883209580523,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-06-footprint-1",
+      "x": 843.1530668592501,
+      "z": -554.7139937292324,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-06-footprint-2",
+      "x": 842.6787396304302,
+      "z": -554.5175209580523,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-06-footprint-3",
+      "x": 842.2044124016103,
+      "z": -554.7139937292324,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-06-footprint-4",
+      "x": 842.0079396304302,
+      "z": -555.1883209580523,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-06-footprint-5",
+      "x": 842.2044124016103,
+      "z": -555.6626481868722,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-06-footprint-6",
+      "x": 842.6787396304302,
+      "z": -555.8591209580522,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-06-footprint-7",
+      "x": 843.1530668592501,
+      "z": -555.6626481868722,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-07-centre",
+      "x": 843.3748168742845,
+      "z": -555.4138790893361,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-07-footprint-0",
+      "x": 844.1392168742846,
+      "z": -555.4138790893361,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-07-footprint-1",
+      "x": 843.9153292978235,
+      "z": -554.8733666657971,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-07-footprint-2",
+      "x": 843.3748168742845,
+      "z": -554.6494790893361,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-07-footprint-3",
+      "x": 842.8343044507455,
+      "z": -554.8733666657971,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-07-footprint-4",
+      "x": 842.6104168742845,
+      "z": -555.4138790893361,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-07-footprint-5",
+      "x": 842.8343044507455,
+      "z": -555.9543915128751,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-07-footprint-6",
+      "x": 843.3748168742845,
+      "z": -556.1782790893361,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-07-footprint-7",
+      "x": 843.9153292978235,
+      "z": -555.9543915128751,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-08-centre",
+      "x": 844.0660434056381,
+      "z": -555.7825332393912,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-08-footprint-0",
+      "x": 844.775843405638,
+      "z": -555.7825332393912,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-08-footprint-1",
+      "x": 844.5679477989243,
+      "z": -555.2806288461051,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-08-footprint-2",
+      "x": 844.0660434056381,
+      "z": -555.0727332393913,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-08-footprint-3",
+      "x": 843.5641390123519,
+      "z": -555.2806288461051,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-08-footprint-4",
+      "x": 843.3562434056381,
+      "z": -555.7825332393912,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-08-footprint-5",
+      "x": 843.5641390123519,
+      "z": -556.2844376326774,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-08-footprint-6",
+      "x": 844.0660434056381,
+      "z": -556.4923332393912,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-08-footprint-7",
+      "x": 844.5679477989243,
+      "z": -556.2844376326774,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-09-centre",
+      "x": 844.7548445807413,
+      "z": -555.8310403643985,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-09-footprint-0",
+      "x": 845.4412445807413,
+      "z": -555.8310403643985,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-09-footprint-1",
+      "x": 845.2402026753477,
+      "z": -555.3456822697921,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-09-footprint-2",
+      "x": 844.7548445807413,
+      "z": -555.1446403643985,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-09-footprint-3",
+      "x": 844.2694864861348,
+      "z": -555.3456822697921,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-09-footprint-4",
+      "x": 844.0684445807412,
+      "z": -555.8310403643985,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-09-footprint-5",
+      "x": 844.2694864861348,
+      "z": -556.316398459005,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-09-footprint-6",
+      "x": 844.7548445807413,
+      "z": -556.5174403643986,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-09-footprint-7",
+      "x": 845.2402026753477,
+      "z": -556.316398459005,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-10-centre",
+      "x": 845.4387950433437,
+      "z": -556.187567733202,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-10-footprint-0",
+      "x": 846.1875950433437,
+      "z": -556.187567733202,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-10-footprint-1",
+      "x": 845.9682766010961,
+      "z": -555.6580861754495,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-10-footprint-2",
+      "x": 845.4387950433437,
+      "z": -555.438767733202,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-10-footprint-3",
+      "x": 844.9093134855913,
+      "z": -555.6580861754495,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-10-footprint-4",
+      "x": 844.6899950433437,
+      "z": -556.187567733202,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-10-footprint-5",
+      "x": 844.9093134855913,
+      "z": -556.7170492909544,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-10-footprint-6",
+      "x": 845.4387950433437,
+      "z": -556.9363677332019,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-10-footprint-7",
+      "x": 845.9682766010961,
+      "z": -556.7170492909544,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-11-centre",
+      "x": 850.8085337816482,
+      "z": -556.7259968207827,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-11-footprint-0",
+      "x": 851.5105337816482,
+      "z": -556.7259968207827,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-11-footprint-1",
+      "x": 851.3049227420412,
+      "z": -556.2296078603897,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-11-footprint-2",
+      "x": 850.8085337816482,
+      "z": -556.0239968207827,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-11-footprint-3",
+      "x": 850.3121448212552,
+      "z": -556.2296078603897,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-11-footprint-4",
+      "x": 850.1065337816482,
+      "z": -556.7259968207827,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-11-footprint-5",
+      "x": 850.3121448212552,
+      "z": -557.2223857811757,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-11-footprint-6",
+      "x": 850.8085337816482,
+      "z": -557.4279968207827,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-11-footprint-7",
+      "x": 851.3049227420412,
+      "z": -557.2223857811757,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-12-centre",
+      "x": 851.608901344268,
+      "z": -556.5756247332602,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-12-footprint-0",
+      "x": 852.404501344268,
+      "z": -556.5756247332602,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-12-footprint-1",
+      "x": 852.17147549938,
+      "z": -556.0130505781482,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-12-footprint-2",
+      "x": 851.608901344268,
+      "z": -555.7800247332601,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-12-footprint-3",
+      "x": 851.046327189156,
+      "z": -556.0130505781482,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-12-footprint-4",
+      "x": 850.813301344268,
+      "z": -556.5756247332602,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-12-footprint-5",
+      "x": 851.046327189156,
+      "z": -557.1381988883721,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-12-footprint-6",
+      "x": 851.608901344268,
+      "z": -557.3712247332602,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-12-footprint-7",
+      "x": 852.17147549938,
+      "z": -557.1381988883721,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-13-centre",
+      "x": 852.3025532318719,
+      "z": -556.8521153458016,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-13-footprint-0",
+      "x": 853.0357532318719,
+      "z": -556.8521153458016,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-13-footprint-1",
+      "x": 852.8210039238379,
+      "z": -556.3336646538356,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-13-footprint-2",
+      "x": 852.3025532318719,
+      "z": -556.1189153458016,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-13-footprint-3",
+      "x": 851.7841025399059,
+      "z": -556.3336646538356,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-13-footprint-4",
+      "x": 851.5693532318719,
+      "z": -556.8521153458016,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-13-footprint-5",
+      "x": 851.7841025399059,
+      "z": -557.3705660377676,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-13-footprint-6",
+      "x": 852.3025532318719,
+      "z": -557.5853153458016,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-13-footprint-7",
+      "x": 852.8210039238379,
+      "z": -557.3705660377676,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-14-centre",
+      "x": 852.9962051194759,
+      "z": -557.2522991271114,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-14-footprint-0",
+      "x": 853.6670051194759,
+      "z": -557.2522991271114,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-14-footprint-1",
+      "x": 853.4705323482958,
+      "z": -556.7779718982915,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-14-footprint-2",
+      "x": 852.9962051194759,
+      "z": -556.5814991271114,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-14-footprint-3",
+      "x": 852.521877890656,
+      "z": -556.7779718982915,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-14-footprint-4",
+      "x": 852.3254051194759,
+      "z": -557.2522991271114,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-14-footprint-5",
+      "x": 852.521877890656,
+      "z": -557.7266263559313,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-14-footprint-6",
+      "x": 852.9962051194759,
+      "z": -557.9230991271114,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-14-footprint-7",
+      "x": 853.4705323482958,
+      "z": -557.7266263559313,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-15-centre",
+      "x": 853.7892966133446,
+      "z": -557.1722623708495,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-15-footprint-0",
+      "x": 854.5536966133446,
+      "z": -557.1722623708495,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-15-footprint-1",
+      "x": 854.3298090368836,
+      "z": -556.6317499473105,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-15-footprint-2",
+      "x": 853.7892966133446,
+      "z": -556.4078623708494,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-15-footprint-3",
+      "x": 853.2487841898056,
+      "z": -556.6317499473105,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-15-footprint-4",
+      "x": 853.0248966133446,
+      "z": -557.1722623708495,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-15-footprint-5",
+      "x": 853.2487841898056,
+      "z": -557.7127747943885,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-15-footprint-6",
+      "x": 853.7892966133446,
+      "z": -557.9366623708495,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-15-footprint-7",
+      "x": 854.3298090368836,
+      "z": -557.7127747943885,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-16-centre",
+      "x": 850.9758833629232,
+      "z": -557.4584544083924,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-16-footprint-0",
+      "x": 851.6856833629232,
+      "z": -557.4584544083924,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-16-footprint-1",
+      "x": 851.4777877562094,
+      "z": -556.9565500151062,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-16-footprint-2",
+      "x": 850.9758833629232,
+      "z": -556.7486544083924,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-16-footprint-3",
+      "x": 850.4739789696371,
+      "z": -556.9565500151062,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-16-footprint-4",
+      "x": 850.2660833629233,
+      "z": -557.4584544083924,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-16-footprint-5",
+      "x": 850.4739789696371,
+      "z": -557.9603588016786,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-16-footprint-6",
+      "x": 850.9758833629232,
+      "z": -558.1682544083924,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-16-footprint-7",
+      "x": 851.4777877562094,
+      "z": -557.9603588016786,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-17-centre",
+      "x": 851.7156170192841,
+      "z": -557.4269247771376,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-17-footprint-0",
+      "x": 852.4020170192841,
+      "z": -557.4269247771376,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-17-footprint-1",
+      "x": 852.2009751138905,
+      "z": -556.9415666825312,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-17-footprint-2",
+      "x": 851.7156170192841,
+      "z": -556.7405247771376,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-17-footprint-3",
+      "x": 851.2302589246776,
+      "z": -556.9415666825312,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-17-footprint-4",
+      "x": 851.029217019284,
+      "z": -557.4269247771376,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-17-footprint-5",
+      "x": 851.2302589246776,
+      "z": -557.9122828717441,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-17-footprint-6",
+      "x": 851.7156170192841,
+      "z": -558.1133247771377,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-17-footprint-7",
+      "x": 852.2009751138905,
+      "z": -557.9122828717441,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-18-centre",
+      "x": 852.4796042381485,
+      "z": -557.7106914584302,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-18-footprint-0",
+      "x": 853.2284042381484,
+      "z": -557.7106914584302,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-18-footprint-1",
+      "x": 853.0090857959009,
+      "z": -557.1812099006778,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-18-footprint-2",
+      "x": 852.4796042381485,
+      "z": -556.9618914584303,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-18-footprint-3",
+      "x": 851.950122680396,
+      "z": -557.1812099006778,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-18-footprint-4",
+      "x": 851.7308042381485,
+      "z": -557.7106914584302,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-18-footprint-5",
+      "x": 851.950122680396,
+      "z": -558.2401730161827,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-18-footprint-6",
+      "x": 852.4796042381485,
+      "z": -558.4594914584302,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-18-footprint-7",
+      "x": 853.0090857959009,
+      "z": -558.2401730161827,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-19-centre",
+      "x": 853.124749000745,
+      "z": -558.1812105710006,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-19-footprint-0",
+      "x": 853.826749000745,
+      "z": -558.1812105710006,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-19-footprint-1",
+      "x": 853.6211379611381,
+      "z": -557.6848216106076,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-19-footprint-2",
+      "x": 853.124749000745,
+      "z": -557.4792105710006,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-19-footprint-3",
+      "x": 852.628360040352,
+      "z": -557.6848216106076,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-19-footprint-4",
+      "x": 852.4227490007451,
+      "z": -558.1812105710006,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-19-footprint-5",
+      "x": 852.628360040352,
+      "z": -558.6775995313936,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-19-footprint-6",
+      "x": 853.124749000745,
+      "z": -558.8832105710006,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-19-footprint-7",
+      "x": 853.6211379611381,
+      "z": -558.6775995313936,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-20-centre",
+      "x": 853.9081390696125,
+      "z": -558.0162863459759,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-20-footprint-0",
+      "x": 854.7037390696125,
+      "z": -558.0162863459759,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-20-footprint-1",
+      "x": 854.4707132247245,
+      "z": -557.4537121908639,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-20-footprint-2",
+      "x": 853.9081390696125,
+      "z": -557.2206863459759,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-20-footprint-3",
+      "x": 853.3455649145005,
+      "z": -557.4537121908639,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-20-footprint-4",
+      "x": 853.1125390696125,
+      "z": -558.0162863459759,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-20-footprint-5",
+      "x": 853.3455649145005,
+      "z": -558.5788605010879,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-20-footprint-6",
+      "x": 853.9081390696125,
+      "z": -558.811886345976,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-20-footprint-7",
+      "x": 854.4707132247245,
+      "z": -558.5788605010879,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-21-centre",
+      "x": 859.3482131391775,
+      "z": -559.0155331211256,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-21-footprint-0",
+      "x": 860.0814131391775,
+      "z": -559.0155331211256,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-21-footprint-1",
+      "x": 859.8666638311435,
+      "z": -558.4970824291596,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-21-footprint-2",
+      "x": 859.3482131391775,
+      "z": -558.2823331211256,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-21-footprint-3",
+      "x": 858.8297624472115,
+      "z": -558.4970824291596,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-21-footprint-4",
+      "x": 858.6150131391774,
+      "z": -559.0155331211256,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-21-footprint-5",
+      "x": 858.8297624472115,
+      "z": -559.5339838130916,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-21-footprint-6",
+      "x": 859.3482131391775,
+      "z": -559.7487331211256,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-21-footprint-7",
+      "x": 859.8666638311435,
+      "z": -559.5339838130916,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-22-centre",
+      "x": 860.1558567705484,
+      "z": -558.918518871111,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-22-footprint-0",
+      "x": 860.8266567705484,
+      "z": -558.918518871111,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-22-footprint-1",
+      "x": 860.6301839993683,
+      "z": -558.4441916422911,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-22-footprint-2",
+      "x": 860.1558567705484,
+      "z": -558.247718871111,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-22-footprint-3",
+      "x": 859.6815295417285,
+      "z": -558.4441916422911,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-22-footprint-4",
+      "x": 859.4850567705485,
+      "z": -558.918518871111,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-22-footprint-5",
+      "x": 859.6815295417285,
+      "z": -559.3928460999309,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-22-footprint-6",
+      "x": 860.1558567705484,
+      "z": -559.589318871111,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-22-footprint-7",
+      "x": 860.6301839993683,
+      "z": -559.3928460999309,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-23-centre",
+      "x": 860.8689115081552,
+      "z": -559.1998601961533,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-23-footprint-0",
+      "x": 861.6333115081552,
+      "z": -559.1998601961533,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-23-footprint-1",
+      "x": 861.4094239316942,
+      "z": -558.6593477726143,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-23-footprint-2",
+      "x": 860.8689115081552,
+      "z": -558.4354601961533,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-23-footprint-3",
+      "x": 860.3283990846162,
+      "z": -558.6593477726143,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-23-footprint-4",
+      "x": 860.1045115081552,
+      "z": -559.1998601961533,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-23-footprint-5",
+      "x": 860.3283990846162,
+      "z": -559.7403726196923,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-23-footprint-6",
+      "x": 860.8689115081552,
+      "z": -559.9642601961533,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-23-footprint-7",
+      "x": 861.4094239316942,
+      "z": -559.7403726196923,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-24-centre",
+      "x": 861.5334591207547,
+      "z": -559.5515368524559,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-24-footprint-0",
+      "x": 862.2432591207547,
+      "z": -559.5515368524559,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-24-footprint-1",
+      "x": 862.0353635140409,
+      "z": -559.0496324591697,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-24-footprint-2",
+      "x": 861.5334591207547,
+      "z": -558.8417368524559,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-24-footprint-3",
+      "x": 861.0315547274686,
+      "z": -559.0496324591697,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-24-footprint-4",
+      "x": 860.8236591207548,
+      "z": -559.5515368524559,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-24-footprint-5",
+      "x": 861.0315547274686,
+      "z": -560.0534412457421,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-24-footprint-6",
+      "x": 861.5334591207547,
+      "z": -560.2613368524559,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-24-footprint-7",
+      "x": 862.0353635140409,
+      "z": -560.0534412457421,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-25-centre",
+      "x": 862.3119984771214,
+      "z": -559.5297086462027,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-25-footprint-0",
+      "x": 862.9983984771214,
+      "z": -559.5297086462027,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-25-footprint-1",
+      "x": 862.7973565717278,
+      "z": -559.0443505515963,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-25-footprint-2",
+      "x": 862.3119984771214,
+      "z": -558.8433086462027,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-25-footprint-3",
+      "x": 861.8266403825149,
+      "z": -559.0443505515963,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-25-footprint-4",
+      "x": 861.6255984771213,
+      "z": -559.5297086462027,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-25-footprint-5",
+      "x": 861.8266403825149,
+      "z": -560.0150667408092,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-25-footprint-6",
+      "x": 862.3119984771214,
+      "z": -560.2161086462028,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-25-footprint-7",
+      "x": 862.7973565717278,
+      "z": -560.0150667408092,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-26-centre",
+      "x": 859.4888838016984,
+      "z": -559.772244271239,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-26-footprint-0",
+      "x": 860.2376838016984,
+      "z": -559.772244271239,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-26-footprint-1",
+      "x": 860.0183653594509,
+      "z": -559.2427627134865,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-26-footprint-2",
+      "x": 859.4888838016984,
+      "z": -559.023444271239,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-26-footprint-3",
+      "x": 858.959402243946,
+      "z": -559.2427627134865,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-26-footprint-4",
+      "x": 858.7400838016985,
+      "z": -559.772244271239,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-26-footprint-5",
+      "x": 858.959402243946,
+      "z": -560.3017258289914,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-26-footprint-6",
+      "x": 859.4888838016984,
+      "z": -560.5210442712389,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-26-footprint-7",
+      "x": 860.0183653594509,
+      "z": -560.3017258289914,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-27-centre",
+      "x": 860.2771245830666,
+      "z": -559.7528414212361,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-27-footprint-0",
+      "x": 860.9791245830666,
+      "z": -559.7528414212361,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-27-footprint-1",
+      "x": 860.7735135434596,
+      "z": -559.2564524608431,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-27-footprint-2",
+      "x": 860.2771245830666,
+      "z": -559.0508414212361,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-27-footprint-3",
+      "x": 859.7807356226735,
+      "z": -559.2564524608431,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-27-footprint-4",
+      "x": 859.5751245830666,
+      "z": -559.7528414212361,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-27-footprint-5",
+      "x": 859.7807356226735,
+      "z": -560.2492303816291,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-27-footprint-6",
+      "x": 860.2771245830666,
+      "z": -560.4548414212361,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-27-footprint-7",
+      "x": 860.7735135434596,
+      "z": -560.2492303816291,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-28-centre",
+      "x": 861.0023061019251,
+      "z": -560.1505998462957,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-28-footprint-0",
+      "x": 861.7979061019252,
+      "z": -560.1505998462957,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-28-footprint-1",
+      "x": 861.5648802570371,
+      "z": -559.5880256911837,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-28-footprint-2",
+      "x": 861.0023061019251,
+      "z": -559.3549998462956,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-28-footprint-3",
+      "x": 860.4397319468131,
+      "z": -559.5880256911837,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-28-footprint-4",
+      "x": 860.2067061019251,
+      "z": -560.1505998462957,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-28-footprint-5",
+      "x": 860.4397319468131,
+      "z": -560.7131740014077,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-28-footprint-6",
+      "x": 861.0023061019251,
+      "z": -560.9461998462957,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-28-footprint-7",
+      "x": 861.5648802570371,
+      "z": -560.7131740014077,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-29-centre",
+      "x": 861.7662933207897,
+      "z": -560.2694423025634,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-29-footprint-0",
+      "x": 862.4994933207897,
+      "z": -560.2694423025634,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-29-footprint-1",
+      "x": 862.2847440127557,
+      "z": -559.7509916105975,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-29-footprint-2",
+      "x": 861.7662933207897,
+      "z": -559.5362423025634,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-29-footprint-3",
+      "x": 861.2478426288237,
+      "z": -559.7509916105975,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-29-footprint-4",
+      "x": 861.0330933207897,
+      "z": -560.2694423025634,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-29-footprint-5",
+      "x": 861.2478426288237,
+      "z": -560.7878929945294,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-29-footprint-6",
+      "x": 861.7662933207897,
+      "z": -561.0026423025635,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-29-footprint-7",
+      "x": 862.2847440127557,
+      "z": -560.7878929945294,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-30-centre",
+      "x": 862.4963255521491,
+      "z": -560.2767183713146,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-30-footprint-0",
+      "x": 863.1671255521491,
+      "z": -560.2767183713146,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-30-footprint-1",
+      "x": 862.970652780969,
+      "z": -559.8023911424947,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-30-footprint-2",
+      "x": 862.4963255521491,
+      "z": -559.6059183713146,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-30-footprint-3",
+      "x": 862.0219983233292,
+      "z": -559.8023911424947,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-30-footprint-4",
+      "x": 861.8255255521491,
+      "z": -560.2767183713146,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-30-footprint-5",
+      "x": 862.0219983233292,
+      "z": -560.7510456001345,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-30-footprint-6",
+      "x": 862.4963255521491,
+      "z": -560.9475183713146,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-30-footprint-7",
+      "x": 862.970652780969,
+      "z": -560.7510456001345,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-31-centre",
+      "x": 841.9511327553213,
+      "z": -558.0162863459759,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-31-footprint-0",
+      "x": 842.7155327553213,
+      "z": -558.0162863459759,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-31-footprint-1",
+      "x": 842.4916451788603,
+      "z": -557.4757739224369,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-31-footprint-2",
+      "x": 841.9511327553213,
+      "z": -557.2518863459759,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-31-footprint-3",
+      "x": 841.4106203317823,
+      "z": -557.4757739224369,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-31-footprint-4",
+      "x": 841.1867327553213,
+      "z": -558.0162863459759,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-31-footprint-5",
+      "x": 841.4106203317823,
+      "z": -558.5567987695149,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-31-footprint-6",
+      "x": 841.9511327553213,
+      "z": -558.7806863459759,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-31-footprint-7",
+      "x": 842.4916451788603,
+      "z": -558.5567987695149,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-32-centre",
+      "x": 842.4604575678976,
+      "z": -558.6590057523222,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-32-footprint-0",
+      "x": 843.1702575678976,
+      "z": -558.6590057523222,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-32-footprint-1",
+      "x": 842.9623619611838,
+      "z": -558.157101359036,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-32-footprint-2",
+      "x": 842.4604575678976,
+      "z": -557.9492057523222,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-32-footprint-3",
+      "x": 841.9585531746114,
+      "z": -558.157101359036,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-32-footprint-4",
+      "x": 841.7506575678976,
+      "z": -558.6590057523222,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-32-footprint-5",
+      "x": 841.9585531746114,
+      "z": -559.1609101456083,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-32-footprint-6",
+      "x": 842.4604575678976,
+      "z": -559.3688057523221,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-32-footprint-7",
+      "x": 842.9623619611838,
+      "z": -559.1609101456083,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-33-centre",
+      "x": 842.904297761714,
+      "z": -559.2338151836583,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-33-footprint-0",
+      "x": 843.5906977617141,
+      "z": -559.2338151836583,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-33-footprint-1",
+      "x": 843.3896558563205,
+      "z": -558.7484570890518,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-33-footprint-2",
+      "x": 842.904297761714,
+      "z": -558.5474151836582,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-33-footprint-3",
+      "x": 842.4189396671076,
+      "z": -558.7484570890518,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-33-footprint-4",
+      "x": 842.217897761714,
+      "z": -559.2338151836583,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-33-footprint-5",
+      "x": 842.4189396671076,
+      "z": -559.7191732782647,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-33-footprint-6",
+      "x": 842.904297761714,
+      "z": -559.9202151836583,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-33-footprint-7",
+      "x": 843.3896558563205,
+      "z": -559.7191732782647,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-34-centre",
+      "x": 841.3447936927305,
+      "z": -561.2662637214628,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-34-footprint-0",
+      "x": 842.0935936927305,
+      "z": -561.2662637214628,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-34-footprint-1",
+      "x": 841.8742752504829,
+      "z": -560.7367821637104,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-34-footprint-2",
+      "x": 841.3447936927305,
+      "z": -560.5174637214628,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-34-footprint-3",
+      "x": 840.8153121349781,
+      "z": -560.7367821637104,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-34-footprint-4",
+      "x": 840.5959936927305,
+      "z": -561.2662637214628,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-34-footprint-5",
+      "x": 840.8153121349781,
+      "z": -561.7957452792152,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-34-footprint-6",
+      "x": 841.3447936927305,
+      "z": -562.0150637214628,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-34-footprint-7",
+      "x": 841.8742752504829,
+      "z": -561.7957452792152,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-35-centre",
+      "x": 841.7934845990476,
+      "z": -561.9453634715645,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-35-footprint-0",
+      "x": 842.4954845990476,
+      "z": -561.9453634715645,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-35-footprint-1",
+      "x": 842.2898735594406,
+      "z": -561.4489745111715,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-35-footprint-2",
+      "x": 841.7934845990476,
+      "z": -561.2433634715645,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-35-footprint-3",
+      "x": 841.2970956386546,
+      "z": -561.4489745111715,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-35-footprint-4",
+      "x": 841.0914845990476,
+      "z": -561.9453634715645,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-35-footprint-5",
+      "x": 841.2970956386546,
+      "z": -562.4417524319575,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-35-footprint-6",
+      "x": 841.7934845990476,
+      "z": -562.6473634715645,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-35-footprint-7",
+      "x": 842.2898735594406,
+      "z": -562.4417524319575,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-36-centre",
+      "x": 842.3513165366312,
+      "z": -562.3940543778817,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-36-footprint-0",
+      "x": 843.1469165366312,
+      "z": -562.3940543778817,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-36-footprint-1",
+      "x": 842.9138906917432,
+      "z": -561.8314802227698,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-36-footprint-2",
+      "x": 842.3513165366312,
+      "z": -561.5984543778817,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-36-footprint-3",
+      "x": 841.7887423815192,
+      "z": -561.8314802227698,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-36-footprint-4",
+      "x": 841.5557165366312,
+      "z": -562.3940543778817,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-36-footprint-5",
+      "x": 841.7887423815192,
+      "z": -562.9566285329937,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-36-footprint-6",
+      "x": 842.3513165366312,
+      "z": -563.1896543778818,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-36-footprint-7",
+      "x": 842.9138906917432,
+      "z": -562.9566285329937,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-37-centre",
+      "x": 839.7925656924979,
+      "z": -562.9397595342134,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-37-footprint-0",
+      "x": 840.5257656924979,
+      "z": -562.9397595342134,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-37-footprint-1",
+      "x": 840.3110163844639,
+      "z": -562.4213088422474,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-37-footprint-2",
+      "x": 839.7925656924979,
+      "z": -562.2065595342134,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-37-footprint-3",
+      "x": 839.2741150005319,
+      "z": -562.4213088422474,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-37-footprint-4",
+      "x": 839.0593656924979,
+      "z": -562.9397595342134,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-37-footprint-5",
+      "x": 839.2741150005319,
+      "z": -563.4582102261794,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-37-footprint-6",
+      "x": 839.7925656924979,
+      "z": -563.6729595342134,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-37-footprint-7",
+      "x": 840.3110163844639,
+      "z": -563.4582102261794,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-38-centre",
+      "x": 840.1321155675487,
+      "z": -563.6431128468189,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-38-footprint-0",
+      "x": 840.8029155675487,
+      "z": -563.6431128468189,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-38-footprint-1",
+      "x": 840.6064427963686,
+      "z": -563.168785617999,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-38-footprint-2",
+      "x": 840.1321155675487,
+      "z": -562.9723128468189,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-38-footprint-3",
+      "x": 839.6577883387288,
+      "z": -563.168785617999,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-38-footprint-4",
+      "x": 839.4613155675487,
+      "z": -563.6431128468189,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-38-footprint-5",
+      "x": 839.6577883387288,
+      "z": -564.1174400756388,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-38-footprint-6",
+      "x": 840.1321155675487,
+      "z": -564.3139128468189,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-38-footprint-7",
+      "x": 840.6064427963686,
+      "z": -564.1174400756388,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-39-centre",
+      "x": 840.3018905050742,
+      "z": -564.2009447844024,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-39-footprint-0",
+      "x": 841.0662905050742,
+      "z": -564.2009447844024,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-39-footprint-1",
+      "x": 840.8424029286132,
+      "z": -563.6604323608634,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-39-footprint-2",
+      "x": 840.3018905050742,
+      "z": -563.4365447844024,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-39-footprint-3",
+      "x": 839.7613780815352,
+      "z": -563.6604323608634,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-39-footprint-4",
+      "x": 839.5374905050742,
+      "z": -564.2009447844024,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-39-footprint-5",
+      "x": 839.7613780815352,
+      "z": -564.7414572079414,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-39-footprint-6",
+      "x": 840.3018905050742,
+      "z": -564.9653447844024,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-39-footprint-7",
+      "x": 840.8424029286132,
+      "z": -564.7414572079414,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-40-centre",
+      "x": 858.5769498515618,
+      "z": -561.193503033952,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-40-footprint-0",
+      "x": 859.2867498515618,
+      "z": -561.193503033952,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-40-footprint-1",
+      "x": 859.078854244848,
+      "z": -560.6915986406658,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-40-footprint-2",
+      "x": 858.5769498515618,
+      "z": -560.483703033952,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-40-footprint-3",
+      "x": 858.0750454582757,
+      "z": -560.6915986406658,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-40-footprint-4",
+      "x": 857.8671498515619,
+      "z": -561.193503033952,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-40-footprint-5",
+      "x": 858.0750454582757,
+      "z": -561.6954074272381,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-40-footprint-6",
+      "x": 858.5769498515618,
+      "z": -561.9033030339519,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-40-footprint-7",
+      "x": 859.078854244848,
+      "z": -561.6954074272381,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-41-centre",
+      "x": 857.9099768827119,
+      "z": -561.387531533981,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-41-footprint-0",
+      "x": 858.596376882712,
+      "z": -561.387531533981,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-41-footprint-1",
+      "x": 858.3953349773184,
+      "z": -560.9021734393746,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-41-footprint-2",
+      "x": 857.9099768827119,
+      "z": -560.701131533981,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-41-footprint-3",
+      "x": 857.4246187881055,
+      "z": -560.9021734393746,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-41-footprint-4",
+      "x": 857.2235768827119,
+      "z": -561.387531533981,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-41-footprint-5",
+      "x": 857.4246187881055,
+      "z": -561.8728896285875,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-41-footprint-6",
+      "x": 857.9099768827119,
+      "z": -562.0739315339811,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-41-footprint-7",
+      "x": 858.3953349773184,
+      "z": -561.8728896285875,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-42-centre",
+      "x": 857.5340466639057,
+      "z": -561.8604760028019,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-42-footprint-0",
+      "x": 858.2828466639056,
+      "z": -561.8604760028019,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-42-footprint-1",
+      "x": 858.0635282216581,
+      "z": -561.3309944450494,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-42-footprint-2",
+      "x": 857.5340466639057,
+      "z": -561.1116760028019,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-42-footprint-3",
+      "x": 857.0045651061532,
+      "z": -561.3309944450494,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-42-footprint-4",
+      "x": 856.7852466639057,
+      "z": -561.8604760028019,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-42-footprint-5",
+      "x": 857.0045651061532,
+      "z": -562.3899575605543,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-42-footprint-6",
+      "x": 857.5340466639057,
+      "z": -562.6092760028018,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-42-footprint-7",
+      "x": 858.0635282216581,
+      "z": -562.3899575605543,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-43-centre",
+      "x": 856.9640879450703,
+      "z": -565.3772425658286,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-43-footprint-0",
+      "x": 857.6660879450703,
+      "z": -565.3772425658286,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-43-footprint-1",
+      "x": 857.4604769054633,
+      "z": -564.8808536054356,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-43-footprint-2",
+      "x": 856.9640879450703,
+      "z": -564.6752425658286,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-43-footprint-3",
+      "x": 856.4676989846773,
+      "z": -564.8808536054356,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-43-footprint-4",
+      "x": 856.2620879450703,
+      "z": -565.3772425658286,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-43-footprint-5",
+      "x": 856.4676989846773,
+      "z": -565.8736315262216,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-43-footprint-6",
+      "x": 856.9640879450703,
+      "z": -566.0792425658286,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-43-footprint-7",
+      "x": 857.4604769054633,
+      "z": -565.8736315262216,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-44-centre",
+      "x": 857.4734127576465,
+      "z": -566.019961972175,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-44-footprint-0",
+      "x": 858.2690127576466,
+      "z": -566.019961972175,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-44-footprint-1",
+      "x": 858.0359869127585,
+      "z": -565.457387817063,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-44-footprint-2",
+      "x": 857.4734127576465,
+      "z": -565.224361972175,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-44-footprint-3",
+      "x": 856.9108386025346,
+      "z": -565.457387817063,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-44-footprint-4",
+      "x": 856.6778127576465,
+      "z": -566.019961972175,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-44-footprint-5",
+      "x": 856.9108386025346,
+      "z": -566.582536127287,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-44-footprint-6",
+      "x": 857.4734127576465,
+      "z": -566.815561972175,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-44-footprint-7",
+      "x": 858.0359869127585,
+      "z": -566.582536127287,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-45-centre",
+      "x": 858.0191179139783,
+      "z": -566.5171600034994,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-45-footprint-0",
+      "x": 858.7523179139783,
+      "z": -566.5171600034994,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-45-footprint-1",
+      "x": 858.5375686059443,
+      "z": -565.9987093115334,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-45-footprint-2",
+      "x": 858.0191179139783,
+      "z": -565.7839600034994,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-45-footprint-3",
+      "x": 857.5006672220123,
+      "z": -565.9987093115334,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-45-footprint-4",
+      "x": 857.2859179139783,
+      "z": -566.5171600034994,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-45-footprint-5",
+      "x": 857.5006672220123,
+      "z": -567.0356106954654,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-45-footprint-6",
+      "x": 858.0191179139783,
+      "z": -567.2503600034994,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-45-footprint-7",
+      "x": 858.5375686059443,
+      "z": -567.0356106954654,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-46-centre",
+      "x": 856.5760309450121,
+      "z": -568.5787128163082,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-46-footprint-0",
+      "x": 857.2468309450121,
+      "z": -568.5787128163082,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-46-footprint-1",
+      "x": 857.050358173832,
+      "z": -568.1043855874883,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-46-footprint-2",
+      "x": 856.5760309450121,
+      "z": -567.9079128163082,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-46-footprint-3",
+      "x": 856.1017037161922,
+      "z": -568.1043855874883,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-46-footprint-4",
+      "x": 855.9052309450121,
+      "z": -568.5787128163082,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-46-footprint-5",
+      "x": 856.1017037161922,
+      "z": -569.0530400451281,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-46-footprint-6",
+      "x": 856.5760309450121,
+      "z": -569.2495128163082,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-46-footprint-7",
+      "x": 857.050358173832,
+      "z": -569.0530400451281,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-47-centre",
+      "x": 855.867826919906,
+      "z": -568.9376655413621,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-47-footprint-0",
+      "x": 856.632226919906,
+      "z": -568.9376655413621,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-47-footprint-1",
+      "x": 856.4083393434449,
+      "z": -568.3971531178231,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-47-footprint-2",
+      "x": 855.867826919906,
+      "z": -568.1732655413621,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-47-footprint-3",
+      "x": 855.327314496367,
+      "z": -568.3971531178231,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-47-footprint-4",
+      "x": 855.1034269199059,
+      "z": -568.9376655413621,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-47-footprint-5",
+      "x": 855.327314496367,
+      "z": -569.4781779649011,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-47-footprint-6",
+      "x": 855.867826919906,
+      "z": -569.7020655413621,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-47-footprint-7",
+      "x": 856.4083393434449,
+      "z": -569.4781779649011,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-48-centre",
+      "x": 855.5525306073588,
+      "z": -569.5803849477084,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-48-footprint-0",
+      "x": 856.2623306073588,
+      "z": -569.5803849477084,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-48-footprint-1",
+      "x": 856.054435000645,
+      "z": -569.0784805544222,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-48-footprint-2",
+      "x": 855.5525306073588,
+      "z": -568.8705849477084,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-48-footprint-3",
+      "x": 855.0506262140726,
+      "z": -569.0784805544222,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-48-footprint-4",
+      "x": 854.8427306073588,
+      "z": -569.5803849477084,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-48-footprint-5",
+      "x": 855.0506262140726,
+      "z": -570.0822893409945,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-48-footprint-6",
+      "x": 855.5525306073588,
+      "z": -570.2901849477083,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-sedge-48-footprint-7",
+      "x": 856.054435000645,
+      "z": -570.0822893409945,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-fern-49-centre",
+      "x": 840.6171868176214,
+      "z": -563.764380659337,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-fern-49-footprint-0",
+      "x": 841.4635868176214,
+      "z": -563.764380659337,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-fern-49-footprint-1",
+      "x": 841.2156819972176,
+      "z": -563.1658854797407,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-fern-49-footprint-2",
+      "x": 840.6171868176214,
+      "z": -562.917980659337,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-fern-49-footprint-3",
+      "x": 840.0186916380251,
+      "z": -563.1658854797407,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-fern-49-footprint-4",
+      "x": 839.7707868176213,
+      "z": -563.764380659337,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-fern-49-footprint-5",
+      "x": 840.0186916380251,
+      "z": -564.3628758389333,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-fern-49-footprint-6",
+      "x": 840.6171868176214,
+      "z": -564.610780659337,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-fern-49-footprint-7",
+      "x": 841.2156819972176,
+      "z": -564.3628758389333,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-fern-50-centre",
+      "x": 839.2711140986697,
+      "z": -565.0255659095259,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-fern-50-footprint-0",
+      "x": 840.0531140986698,
+      "z": -565.0255659095259,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-fern-50-footprint-1",
+      "x": 839.8240716015576,
+      "z": -564.472608406638,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-fern-50-footprint-2",
+      "x": 839.2711140986697,
+      "z": -564.2435659095258,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-fern-50-footprint-3",
+      "x": 838.7181565957818,
+      "z": -564.472608406638,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-fern-50-footprint-4",
+      "x": 838.4891140986697,
+      "z": -565.0255659095259,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-fern-50-footprint-5",
+      "x": 838.7181565957818,
+      "z": -565.5785234124138,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-fern-50-footprint-6",
+      "x": 839.2711140986697,
+      "z": -565.8075659095259,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-fern-50-footprint-7",
+      "x": 839.8240716015576,
+      "z": -565.5785234124138,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-fern-51-centre",
+      "x": 843.4791071930501,
+      "z": -563.4490843467898,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-fern-51-footprint-0",
+      "x": 844.3071071930501,
+      "z": -563.4490843467898,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-fern-51-footprint-1",
+      "x": 844.0645916078726,
+      "z": -562.8635999319674,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-fern-51-footprint-2",
+      "x": 843.4791071930501,
+      "z": -562.6210843467899,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-fern-51-footprint-3",
+      "x": 842.8936227782277,
+      "z": -562.8635999319674,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-fern-51-footprint-4",
+      "x": 842.6511071930502,
+      "z": -563.4490843467898,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-fern-51-footprint-5",
+      "x": 842.8936227782277,
+      "z": -564.0345687616123,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-fern-51-footprint-6",
+      "x": 843.4791071930501,
+      "z": -564.2770843467898,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-fern-51-footprint-7",
+      "x": 844.0645916078726,
+      "z": -564.0345687616123,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-fern-52-centre",
+      "x": 856.0424525699322,
+      "z": -569.2699393476618,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-fern-52-footprint-0",
+      "x": 856.8336525699322,
+      "z": -569.2699393476618,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-fern-52-footprint-1",
+      "x": 856.601915455207,
+      "z": -568.710476462387,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-fern-52-footprint-2",
+      "x": 856.0424525699322,
+      "z": -568.4787393476618,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-fern-52-footprint-3",
+      "x": 855.4829896846574,
+      "z": -568.710476462387,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-fern-52-footprint-4",
+      "x": 855.2512525699321,
+      "z": -569.2699393476618,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-fern-52-footprint-5",
+      "x": 855.4829896846574,
+      "z": -569.8294022329366,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-fern-52-footprint-6",
+      "x": 856.0424525699322,
+      "z": -570.0611393476618,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-fern-52-footprint-7",
+      "x": 856.601915455207,
+      "z": -569.8294022329366,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-fern-53-centre",
+      "x": 860.4323473830898,
+      "z": -570.2643354103108,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-fern-53-footprint-0",
+      "x": 861.2603473830898,
+      "z": -570.2643354103108,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-fern-53-footprint-1",
+      "x": 861.0178317979122,
+      "z": -569.6788509954883,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-fern-53-footprint-2",
+      "x": 860.4323473830898,
+      "z": -569.4363354103108,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-fern-53-footprint-3",
+      "x": 859.8468629682674,
+      "z": -569.6788509954883,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-fern-53-footprint-4",
+      "x": 859.6043473830898,
+      "z": -570.2643354103108,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-fern-53-footprint-5",
+      "x": 859.8468629682674,
+      "z": -570.8498198251332,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-fern-53-footprint-6",
+      "x": 860.4323473830898,
+      "z": -571.0923354103107,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-fern-53-footprint-7",
+      "x": 861.0178317979122,
+      "z": -570.8498198251332,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-fern-54-centre",
+      "x": 859.3894441954336,
+      "z": -571.962084785565,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-fern-54-footprint-0",
+      "x": 860.1530441954336,
+      "z": -571.962084785565,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-fern-54-footprint-1",
+      "x": 859.9293909335477,
+      "z": -571.422138047451,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-fern-54-footprint-2",
+      "x": 859.3894441954336,
+      "z": -571.198484785565,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-fern-54-footprint-3",
+      "x": 858.8494974573196,
+      "z": -571.422138047451,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-fern-54-footprint-4",
+      "x": 858.6258441954336,
+      "z": -571.962084785565,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-fern-54-footprint-5",
+      "x": 858.8494974573196,
+      "z": -572.5020315236791,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-fern-54-footprint-6",
+      "x": 859.3894441954336,
+      "z": -572.725684785565,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-fern-54-footprint-7",
+      "x": 859.9293909335477,
+      "z": -572.5020315236791,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-fern-55-centre",
+      "x": 845.6861813808808,
+      "z": -560.393135471332,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-fern-55-footprint-0",
+      "x": 846.4589813808808,
+      "z": -560.393135471332,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-fern-55-footprint-1",
+      "x": 846.2326335013818,
+      "z": -559.8466833508311,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-fern-55-footprint-2",
+      "x": 845.6861813808808,
+      "z": -559.620335471332,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-fern-55-footprint-3",
+      "x": 845.1397292603799,
+      "z": -559.8466833508311,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-fern-55-footprint-4",
+      "x": 844.9133813808809,
+      "z": -560.393135471332,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-fern-55-footprint-5",
+      "x": 845.1397292603799,
+      "z": -560.939587591833,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-fern-55-footprint-6",
+      "x": 845.6861813808808,
+      "z": -561.165935471332,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-fern-55-footprint-7",
+      "x": 846.2326335013818,
+      "z": -560.939587591833,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-fern-56-centre",
+      "x": 858.7224712265837,
+      "z": -564.7345231594824,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-fern-56-footprint-0",
+      "x": 859.5688712265837,
+      "z": -564.7345231594824,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-fern-56-footprint-1",
+      "x": 859.32096640618,
+      "z": -564.1360279798861,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-fern-56-footprint-2",
+      "x": 858.7224712265837,
+      "z": -563.8881231594823,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-fern-56-footprint-3",
+      "x": 858.1239760469874,
+      "z": -564.1360279798861,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-fern-56-footprint-4",
+      "x": 857.8760712265837,
+      "z": -564.7345231594824,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-fern-56-footprint-5",
+      "x": 858.1239760469874,
+      "z": -565.3330183390786,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-fern-56-footprint-6",
+      "x": 858.7224712265837,
+      "z": -565.5809231594824,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-fern-56-footprint-7",
+      "x": 859.32096640618,
+      "z": -565.3330183390786,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-flower-shrub-57-centre",
+      "x": 840.5201725676068,
+      "z": -560.0293320337775,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-flower-shrub-57-footprint-0",
+      "x": 841.2511725676068,
+      "z": -560.0293320337775,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-flower-shrub-57-footprint-1",
+      "x": 841.0370676246541,
+      "z": -559.5124369767301,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-flower-shrub-57-footprint-2",
+      "x": 840.5201725676068,
+      "z": -559.2983320337775,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-flower-shrub-57-footprint-3",
+      "x": 840.0032775105594,
+      "z": -559.5124369767301,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-flower-shrub-57-footprint-4",
+      "x": 839.7891725676068,
+      "z": -560.0293320337775,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-flower-shrub-57-footprint-5",
+      "x": 840.0032775105594,
+      "z": -560.5462270908248,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-flower-shrub-57-footprint-6",
+      "x": 840.5201725676068,
+      "z": -560.7603320337774,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-flower-shrub-57-footprint-7",
+      "x": 841.0370676246541,
+      "z": -560.5462270908248,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-flower-shrub-58-centre",
+      "x": 840.9931170364277,
+      "z": -560.8175728151456,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-flower-shrub-58-footprint-0",
+      "x": 841.7921170364277,
+      "z": -560.8175728151456,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-flower-shrub-58-footprint-1",
+      "x": 841.5580953545958,
+      "z": -560.2525944969775,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-flower-shrub-58-footprint-2",
+      "x": 840.9931170364277,
+      "z": -560.0185728151456,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-flower-shrub-58-footprint-3",
+      "x": 840.4281387182597,
+      "z": -560.2525944969775,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-flower-shrub-58-footprint-4",
+      "x": 840.1941170364278,
+      "z": -560.8175728151456,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-flower-shrub-58-footprint-5",
+      "x": 840.4281387182597,
+      "z": -561.3825511333137,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-flower-shrub-58-footprint-6",
+      "x": 840.9931170364277,
+      "z": -561.6165728151456,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-flower-shrub-58-footprint-7",
+      "x": 841.5580953545958,
+      "z": -561.3825511333137,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-flower-shrub-59-centre",
+      "x": 861.6450255082715,
+      "z": -566.2382440347077,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-flower-shrub-59-footprint-0",
+      "x": 862.3930255082715,
+      "z": -566.2382440347077,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-flower-shrub-59-footprint-1",
+      "x": 862.173941380599,
+      "z": -565.7093281623802,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-flower-shrub-59-footprint-2",
+      "x": 861.6450255082715,
+      "z": -565.4902440347076,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-flower-shrub-59-footprint-3",
+      "x": 861.116109635944,
+      "z": -565.7093281623802,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-flower-shrub-59-footprint-4",
+      "x": 860.8970255082714,
+      "z": -566.2382440347077,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-flower-shrub-59-footprint-5",
+      "x": 861.116109635944,
+      "z": -566.7671599070352,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-flower-shrub-59-footprint-6",
+      "x": 861.6450255082715,
+      "z": -566.9862440347077,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-flower-shrub-59-footprint-7",
+      "x": 862.173941380599,
+      "z": -566.7671599070352,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-flower-shrub-60-centre",
+      "x": 860.9537989769179,
+      "z": -566.7354420660321,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-flower-shrub-60-footprint-0",
+      "x": 861.735798976918,
+      "z": -566.7354420660321,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-flower-shrub-60-footprint-1",
+      "x": 861.5067564798059,
+      "z": -566.1824845631442,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-flower-shrub-60-footprint-2",
+      "x": 860.9537989769179,
+      "z": -565.953442066032,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-flower-shrub-60-footprint-3",
+      "x": 860.40084147403,
+      "z": -566.1824845631442,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-flower-shrub-60-footprint-4",
+      "x": 860.1717989769179,
+      "z": -566.7354420660321,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-flower-shrub-60-footprint-5",
+      "x": 860.40084147403,
+      "z": -567.28839956892,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-flower-shrub-60-footprint-6",
+      "x": 860.9537989769179,
+      "z": -567.5174420660321,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-flower-shrub-60-footprint-7",
+      "x": 861.5067564798059,
+      "z": -567.28839956892,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-rock-1-centre",
+      "x": 844.9828280682755,
+      "z": -558.2588219710123,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-rock-1-footprint-0",
+      "x": 845.8828280682754,
+      "z": -558.2588219710123,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-rock-1-footprint-1",
+      "x": 845.6192241713434,
+      "z": -557.6224258679443,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-rock-1-footprint-2",
+      "x": 844.9828280682755,
+      "z": -557.3588219710123,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-rock-1-footprint-3",
+      "x": 844.3464319652076,
+      "z": -557.6224258679443,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-rock-1-footprint-4",
+      "x": 844.0828280682755,
+      "z": -558.2588219710123,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-rock-1-footprint-5",
+      "x": 844.3464319652076,
+      "z": -558.8952180740802,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-rock-1-footprint-6",
+      "x": 844.9828280682755,
+      "z": -559.1588219710122,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-rock-1-footprint-7",
+      "x": 845.6192241713434,
+      "z": -558.8952180740802,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-rock-2-centre",
+      "x": 858.6618373203246,
+      "z": -562.503195409148,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-rock-2-footprint-0",
+      "x": 859.3518373203246,
+      "z": -562.503195409148,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-rock-2-footprint-1",
+      "x": 859.1497409993433,
+      "z": -562.0152917301293,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-rock-2-footprint-2",
+      "x": 858.6618373203246,
+      "z": -561.813195409148,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-rock-2-footprint-3",
+      "x": 858.1739336413059,
+      "z": -562.0152917301293,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-rock-2-footprint-4",
+      "x": 857.9718373203245,
+      "z": -562.503195409148,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-rock-2-footprint-5",
+      "x": 858.1739336413059,
+      "z": -562.9910990881667,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-rock-2-footprint-6",
+      "x": 858.6618373203246,
+      "z": -563.1931954091481,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "shore-rock-2-footprint-7",
+      "x": 859.1497409993433,
+      "z": -562.9910990881667,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior--12-0",
+      "x": 841.5145686302559,
+      "z": -551.928642157564,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior--12-2",
+      "x": 841.0294973801832,
+      "z": -553.8689271578547,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior--12-4",
+      "x": 840.5444261301105,
+      "z": -555.8092121581453,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior--12-6",
+      "x": 840.0593548800379,
+      "z": -557.749497158436,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior--12-8",
+      "x": 839.5742836299652,
+      "z": -559.6897821587266,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior--12-10",
+      "x": 839.0892123798925,
+      "z": -561.6300671590174,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior--12-12",
+      "x": 838.6041411298199,
+      "z": -563.570352159308,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior--12-14",
+      "x": 838.1190698797473,
+      "z": -565.5106371595987,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior--12-16",
+      "x": 837.6339986296746,
+      "z": -567.4509221598893,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior--10-0",
+      "x": 843.4548536305465,
+      "z": -552.4137134076366,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior--10-2",
+      "x": 842.9697823804738,
+      "z": -554.3539984079273,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior--10-4",
+      "x": 842.4847111304011,
+      "z": -556.2942834082179,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior--10-6",
+      "x": 841.9996398803285,
+      "z": -558.2345684085086,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior--10-8",
+      "x": 841.5145686302558,
+      "z": -560.1748534087992,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior--10-10",
+      "x": 841.0294973801831,
+      "z": -562.1151384090899,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior--10-12",
+      "x": 840.5444261301105,
+      "z": -564.0554234093805,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior--10-14",
+      "x": 840.0593548800379,
+      "z": -565.9957084096712,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior--10-16",
+      "x": 839.5742836299652,
+      "z": -567.9359934099618,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior--8-0",
+      "x": 845.3951386308372,
+      "z": -552.8987846577093,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior--8-2",
+      "x": 844.9100673807645,
+      "z": -554.839069658,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior--8-4",
+      "x": 844.4249961306919,
+      "z": -556.7793546582906,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior--8-6",
+      "x": 843.9399248806192,
+      "z": -558.7196396585813,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior--8-8",
+      "x": 843.4548536305465,
+      "z": -560.6599246588719,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior--8-10",
+      "x": 842.9697823804738,
+      "z": -562.6002096591626,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior--8-12",
+      "x": 842.4847111304013,
+      "z": -564.5404946594532,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior--8-14",
+      "x": 841.9996398803286,
+      "z": -566.4807796597439,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior--8-16",
+      "x": 841.5145686302559,
+      "z": -568.4210646600345,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior--6-0",
+      "x": 847.3354236311278,
+      "z": -553.3838559077819,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior--6-2",
+      "x": 846.8503523810551,
+      "z": -555.3241409080726,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior--6-4",
+      "x": 846.3652811309825,
+      "z": -557.2644259083633,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior--6-6",
+      "x": 845.8802098809098,
+      "z": -559.204710908654,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior--6-8",
+      "x": 845.3951386308371,
+      "z": -561.1449959089446,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior--6-10",
+      "x": 844.9100673807644,
+      "z": -563.0852809092353,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior--6-12",
+      "x": 844.4249961306919,
+      "z": -565.0255659095259,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior--6-14",
+      "x": 843.9399248806192,
+      "z": -566.9658509098166,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior--6-16",
+      "x": 843.4548536305465,
+      "z": -568.9061359101072,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior--4-0",
+      "x": 849.2757086314185,
+      "z": -553.8689271578546,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior--4-2",
+      "x": 848.7906373813458,
+      "z": -555.8092121581453,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior--4-4",
+      "x": 848.3055661312732,
+      "z": -557.7494971584359,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior--4-6",
+      "x": 847.8204948812005,
+      "z": -559.6897821587266,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior--4-8",
+      "x": 847.3354236311278,
+      "z": -561.6300671590172,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior--4-10",
+      "x": 846.8503523810551,
+      "z": -563.570352159308,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior--4-12",
+      "x": 846.3652811309826,
+      "z": -565.5106371595986,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior--4-14",
+      "x": 845.8802098809099,
+      "z": -567.4509221598893,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior--4-16",
+      "x": 845.3951386308372,
+      "z": -569.3912071601799,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior--2-0",
+      "x": 851.2159936317091,
+      "z": -554.3539984079273,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior--2-2",
+      "x": 850.7309223816364,
+      "z": -556.294283408218,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior--2-4",
+      "x": 850.2458511315638,
+      "z": -558.2345684085086,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior--2-6",
+      "x": 849.7607798814911,
+      "z": -560.1748534087993,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior--2-8",
+      "x": 849.2757086314184,
+      "z": -562.1151384090899,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior--2-10",
+      "x": 848.7906373813457,
+      "z": -564.0554234093806,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior--2-12",
+      "x": 848.3055661312732,
+      "z": -565.9957084096712,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior--2-14",
+      "x": 847.8204948812005,
+      "z": -567.935993409962,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior--2-16",
+      "x": 847.3354236311278,
+      "z": -569.8762784102526,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior-0-0",
+      "x": 853.1562786319998,
+      "z": -554.839069658,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior-0-2",
+      "x": 852.6712073819272,
+      "z": -556.7793546582907,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior-0-4",
+      "x": 852.1861361318545,
+      "z": -558.7196396585813,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior-0-6",
+      "x": 851.7010648817818,
+      "z": -560.659924658872,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior-0-8",
+      "x": 851.2159936317091,
+      "z": -562.6002096591626,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior-0-10",
+      "x": 850.7309223816364,
+      "z": -564.5404946594533,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior-0-12",
+      "x": 850.2458511315639,
+      "z": -566.4807796597439,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior-0-14",
+      "x": 849.7607798814912,
+      "z": -568.4210646600346,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior-0-16",
+      "x": 849.2757086314185,
+      "z": -570.3613496603252,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior-2-0",
+      "x": 855.0965636322906,
+      "z": -555.3241409080726,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior-2-2",
+      "x": 854.6114923822179,
+      "z": -557.2644259083634,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior-2-4",
+      "x": 854.1264211321452,
+      "z": -559.204710908654,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior-2-6",
+      "x": 853.6413498820725,
+      "z": -561.1449959089447,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior-2-8",
+      "x": 853.1562786319998,
+      "z": -563.0852809092353,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior-2-10",
+      "x": 852.6712073819272,
+      "z": -565.025565909526,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior-2-12",
+      "x": 852.1861361318546,
+      "z": -566.9658509098166,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior-2-14",
+      "x": 851.7010648817819,
+      "z": -568.9061359101073,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior-2-16",
+      "x": 851.2159936317092,
+      "z": -570.8464209103979,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior-4-0",
+      "x": 857.0368486325812,
+      "z": -555.8092121581453,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior-4-2",
+      "x": 856.5517773825085,
+      "z": -557.749497158436,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior-4-4",
+      "x": 856.0667061324358,
+      "z": -559.6897821587266,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior-4-6",
+      "x": 855.5816348823631,
+      "z": -561.6300671590174,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior-4-8",
+      "x": 855.0965636322904,
+      "z": -563.570352159308,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior-4-10",
+      "x": 854.6114923822178,
+      "z": -565.5106371595987,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior-4-12",
+      "x": 854.1264211321452,
+      "z": -567.4509221598893,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior-4-14",
+      "x": 853.6413498820725,
+      "z": -569.39120716018,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior-4-16",
+      "x": 853.1562786319998,
+      "z": -571.3314921604706,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior-6-0",
+      "x": 858.9771336328719,
+      "z": -556.294283408218,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior-6-2",
+      "x": 858.4920623827992,
+      "z": -558.2345684085087,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior-6-4",
+      "x": 858.0069911327265,
+      "z": -560.1748534087993,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior-6-6",
+      "x": 857.5219198826538,
+      "z": -562.11513840909,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior-6-8",
+      "x": 857.0368486325812,
+      "z": -564.0554234093806,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior-6-10",
+      "x": 856.5517773825085,
+      "z": -565.9957084096714,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior-6-12",
+      "x": 856.0667061324359,
+      "z": -567.935993409962,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior-6-14",
+      "x": 855.5816348823632,
+      "z": -569.8762784102527,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior-6-16",
+      "x": 855.0965636322906,
+      "z": -571.8165634105433,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior-8-0",
+      "x": 860.9174186331625,
+      "z": -556.7793546582907,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior-8-2",
+      "x": 860.4323473830898,
+      "z": -558.7196396585814,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior-8-4",
+      "x": 859.9472761330171,
+      "z": -560.659924658872,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior-8-6",
+      "x": 859.4622048829444,
+      "z": -562.6002096591627,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior-8-8",
+      "x": 858.9771336328718,
+      "z": -564.5404946594533,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior-8-10",
+      "x": 858.4920623827991,
+      "z": -566.480779659744,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior-8-12",
+      "x": 858.0069911327265,
+      "z": -568.4210646600346,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior-8-14",
+      "x": 857.5219198826538,
+      "z": -570.3613496603253,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior-8-16",
+      "x": 857.0368486325812,
+      "z": -572.301634660616,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior-10-0",
+      "x": 862.8577036334532,
+      "z": -557.2644259083634,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior-10-2",
+      "x": 862.3726323833805,
+      "z": -559.2047109086541,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior-10-4",
+      "x": 861.8875611333078,
+      "z": -561.1449959089447,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior-10-6",
+      "x": 861.4024898832351,
+      "z": -563.0852809092354,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior-10-8",
+      "x": 860.9174186331625,
+      "z": -565.025565909526,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior-10-10",
+      "x": 860.4323473830898,
+      "z": -566.9658509098167,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior-10-12",
+      "x": 859.9472761330172,
+      "z": -568.9061359101073,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior-10-14",
+      "x": 859.4622048829445,
+      "z": -570.846420910398,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior-10-16",
+      "x": 858.9771336328719,
+      "z": -572.7867059106886,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior-12-0",
+      "x": 864.7979886337438,
+      "z": -557.7494971584359,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior-12-2",
+      "x": 864.3129173836711,
+      "z": -559.6897821587266,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior-12-4",
+      "x": 863.8278461335984,
+      "z": -561.6300671590172,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior-12-6",
+      "x": 863.3427748835257,
+      "z": -563.570352159308,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior-12-8",
+      "x": 862.8577036334531,
+      "z": -565.5106371595986,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior-12-10",
+      "x": 862.3726323833804,
+      "z": -567.4509221598893,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior-12-12",
+      "x": 861.8875611333078,
+      "z": -569.3912071601799,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior-12-14",
+      "x": 861.4024898832351,
+      "z": -571.3314921604706,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "bed-boundary-and-interior-12-16",
+      "x": 860.9174186331625,
+      "z": -573.2717771607612,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "willow-2-2-centre",
+      "x": 841.6069187802522,
+      "z": -565.4681750094967,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "willow-2-2-root-0",
+      "x": 842.9769187802522,
+      "z": -565.4681750094967,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "willow-2-2-root-1",
+      "x": 842.8726337397926,
+      "z": -564.9438987071566,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "willow-2-2-root-2",
+      "x": 842.5756550704778,
+      "z": -564.4994387192711,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "willow-2-2-root-3",
+      "x": 842.1311950825923,
+      "z": -564.2024600499562,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "willow-2-2-root-4",
+      "x": 841.6069187802522,
+      "z": -564.0981750094967,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "willow-2-2-root-5",
+      "x": 841.082642477912,
+      "z": -564.2024600499562,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "willow-2-2-root-6",
+      "x": 840.6381824900266,
+      "z": -564.4994387192711,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "willow-2-2-root-7",
+      "x": 840.3412038207117,
+      "z": -564.9438987071566,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "willow-2-2-root-8",
+      "x": 840.2369187802522,
+      "z": -565.4681750094967,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "willow-2-2-root-9",
+      "x": 840.3412038207117,
+      "z": -565.9924513118368,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "willow-2-2-root-10",
+      "x": 840.6381824900266,
+      "z": -566.4369112997223,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "willow-2-2-root-11",
+      "x": 841.082642477912,
+      "z": -566.7338899690371,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "willow-2-2-root-12",
+      "x": 841.6069187802522,
+      "z": -566.8381750094967,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "willow-2-2-root-13",
+      "x": 842.1311950825923,
+      "z": -566.7338899690371,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "willow-2-2-root-14",
+      "x": 842.5756550704778,
+      "z": -566.4369112997223,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "willow-2-2-root-15",
+      "x": 842.8726337397926,
+      "z": -565.9924513118368,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "willow-2-3-centre",
+      "x": 858.0291117243318,
+      "z": -570.9160713441667,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "willow-2-3-root-0",
+      "x": 859.3391117243317,
+      "z": -570.9160713441667,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "willow-2-3-root-1",
+      "x": 859.2393939119215,
+      "z": -570.4147560477684,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "willow-2-3-root-2",
+      "x": 858.9554216076862,
+      "z": -569.9897614608122,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "willow-2-3-root-3",
+      "x": 858.53042702073,
+      "z": -569.7057891565769,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "willow-2-3-root-4",
+      "x": 858.0291117243318,
+      "z": -569.6060713441667,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "willow-2-3-root-5",
+      "x": 857.5277964279335,
+      "z": -569.7057891565769,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "willow-2-3-root-6",
+      "x": 857.1028018409773,
+      "z": -569.9897614608122,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "willow-2-3-root-7",
+      "x": 856.818829536742,
+      "z": -570.4147560477684,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "willow-2-3-root-8",
+      "x": 856.7191117243318,
+      "z": -570.9160713441667,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "willow-2-3-root-9",
+      "x": 856.818829536742,
+      "z": -571.4173866405649,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "willow-2-3-root-10",
+      "x": 857.1028018409773,
+      "z": -571.8423812275211,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "willow-2-3-root-11",
+      "x": 857.5277964279335,
+      "z": -572.1263535317564,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "willow-2-3-root-12",
+      "x": 858.0291117243318,
+      "z": -572.2260713441666,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "willow-2-3-root-13",
+      "x": 858.53042702073,
+      "z": -572.1263535317564,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "willow-2-3-root-14",
+      "x": 858.9554216076862,
+      "z": -571.8423812275211,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "willow-2-3-root-15",
+      "x": 859.2393939119215,
+      "z": -571.4173866405649,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "pilot-rock-west-centre",
+      "x": 884,
+      "z": -582,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "pilot-rock-west-root-0",
+      "x": 885.8,
+      "z": -582,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "pilot-rock-west-root-1",
+      "x": 885.6629831585203,
+      "z": -581.3111698217429,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "pilot-rock-west-root-2",
+      "x": 885.2727922061358,
+      "z": -580.7272077938642,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "pilot-rock-west-root-3",
+      "x": 884.6888301782571,
+      "z": -580.3370168414797,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "pilot-rock-west-root-4",
+      "x": 884,
+      "z": -580.2,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "pilot-rock-west-root-5",
+      "x": 883.3111698217429,
+      "z": -580.3370168414797,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "pilot-rock-west-root-6",
+      "x": 882.7272077938642,
+      "z": -580.7272077938642,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "pilot-rock-west-root-7",
+      "x": 882.3370168414797,
+      "z": -581.3111698217429,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "pilot-rock-west-root-8",
+      "x": 882.2,
+      "z": -582,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "pilot-rock-west-root-9",
+      "x": 882.3370168414797,
+      "z": -582.6888301782571,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "pilot-rock-west-root-10",
+      "x": 882.7272077938642,
+      "z": -583.2727922061358,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "pilot-rock-west-root-11",
+      "x": 883.3111698217429,
+      "z": -583.6629831585203,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "pilot-rock-west-root-12",
+      "x": 884,
+      "z": -583.8,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "pilot-rock-west-root-13",
+      "x": 884.6888301782571,
+      "z": -583.6629831585203,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "pilot-rock-west-root-14",
+      "x": 885.2727922061358,
+      "z": -583.2727922061358,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "pilot-rock-west-root-15",
+      "x": 885.6629831585203,
+      "z": -582.6888301782571,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "pilot-rock-east-centre",
+      "x": 900,
+      "z": -580,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "pilot-rock-east-root-0",
+      "x": 901.8,
+      "z": -580,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "pilot-rock-east-root-1",
+      "x": 901.6629831585203,
+      "z": -579.3111698217429,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "pilot-rock-east-root-2",
+      "x": 901.2727922061358,
+      "z": -578.7272077938642,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "pilot-rock-east-root-3",
+      "x": 900.6888301782571,
+      "z": -578.3370168414797,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "pilot-rock-east-root-4",
+      "x": 900,
+      "z": -578.2,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "pilot-rock-east-root-5",
+      "x": 899.3111698217429,
+      "z": -578.3370168414797,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "pilot-rock-east-root-6",
+      "x": 898.7272077938642,
+      "z": -578.7272077938642,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "pilot-rock-east-root-7",
+      "x": 898.3370168414797,
+      "z": -579.3111698217429,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "pilot-rock-east-root-8",
+      "x": 898.2,
+      "z": -580,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "pilot-rock-east-root-9",
+      "x": 898.3370168414797,
+      "z": -580.6888301782571,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "pilot-rock-east-root-10",
+      "x": 898.7272077938642,
+      "z": -581.2727922061358,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "pilot-rock-east-root-11",
+      "x": 899.3111698217429,
+      "z": -581.6629831585203,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "pilot-rock-east-root-12",
+      "x": 900,
+      "z": -581.8,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "pilot-rock-east-root-13",
+      "x": 900.6888301782571,
+      "z": -581.6629831585203,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "pilot-rock-east-root-14",
+      "x": 901.2727922061358,
+      "z": -581.2727922061358,
+      "includeBridges": true,
+      "maxY": null
+    },
+    {
+      "id": "pilot-rock-east-root-15",
+      "x": 901.6629831585203,
+      "z": -580.6888301782571,
+      "includeBridges": true,
+      "maxY": null
+    }
+  ],
+  "limits": {
+    "scope": "Shore community, two willow roots and two existing pilot stones only. Four juniper windows touching an active Xianfashan replacement are excluded.",
+    "requestSource": "work/yuanmingyuan/xianfa-shore-community-r1/terrain-capture-request.json",
+    "requestSourceSHA256": "78a28aafe0653fe93818483c3c3028dbfb8595c53757664c4b51dee137458694"
+  }
+}

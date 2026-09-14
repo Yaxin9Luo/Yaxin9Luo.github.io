@@ -1,0 +1,2041 @@
+{
+  "schema": "normal-ktx-native-plant-result-v1",
+  "scope": "Isolated full-source Didelta art comparison; not island approval, memory benchmark or production adoption",
+  "nativeExecuted": true,
+  "ownership": "Canonical shared original normal and other maps are retained. At most ONE private control/ASTC normal is live; private GPU and CPU mip references are released before another is loaded.",
+  "sourceIdentityBoundary": "Small source and artifact manifests are SHA-verified in the page. Frozen full binary SHA values are shown with actual transfer byte count and parsed format; full binary SHA is not recomputed in-browser, avoiding another giant buffer copy. Root must verify file identities around native capture.",
+  "renderingPolicy": "Static on demand, native devicePixelRatio, original studio renderer/lights/camera presets, full source geometry/maps; no simulation or frame-rate claim",
+  "capturePolicy": "Actual default framebuffer readPixels after cancellable GPU fence; raw top-left RGBA hash and alpha statistics retained. A reproducible sRGB reference composite uses the actual premultiplied buffer and verified CSS #28312f, then a separate opaque 2D encoder saves PNG. PNG must match reference presentation hash, not raw hash. Native display pixel equality is not claimed.",
+  "milestones": [
+    {
+      "name": "Creating the original studio renderer, environment and lights",
+      "elapsedMs": 241.60000000149012
+    },
+    {
+      "name": "Loading actual full LOD0 geometry and all original 8K maps",
+      "elapsedMs": 823.5
+    },
+    {
+      "name": "Original source is bound; waiting for the first actual plant frame",
+      "elapsedMs": 16054.19999999553
+    },
+    {
+      "name": "Bound control; waiting for actual rendered frame",
+      "elapsedMs": 134642.6000000015
+    },
+    {
+      "name": "Bound encoded; waiting for actual rendered frame",
+      "elapsedMs": 382639.799999997
+    }
+  ],
+  "resourceProgress": [
+    {
+      "id": "herbarium-didelta-lod0",
+      "phase": "ready",
+      "receivedBytes": 13656404,
+      "totalBytes": 13656404,
+      "elapsedMs": 112.39999999850988,
+      "type": null
+    },
+    {
+      "id": "herbarium-didelta-metadata",
+      "phase": "ready",
+      "receivedBytes": 11288,
+      "totalBytes": 11288,
+      "elapsedMs": 49.099999994039536,
+      "type": null
+    },
+    {
+      "id": "herbarium-didelta-map",
+      "phase": "ready",
+      "receivedBytes": 14664795,
+      "totalBytes": 14664795,
+      "elapsedMs": 913,
+      "type": null
+    },
+    {
+      "id": "herbarium-didelta-normalMap",
+      "phase": "ready",
+      "receivedBytes": 20504774,
+      "totalBytes": 20504774,
+      "elapsedMs": 14511,
+      "type": null
+    },
+    {
+      "id": "herbarium-didelta-roughnessMap",
+      "phase": "ready",
+      "receivedBytes": 48989,
+      "totalBytes": 48989,
+      "elapsedMs": 3418.60000000149,
+      "type": null
+    },
+    {
+      "id": "herbarium-didelta-alphaMap",
+      "phase": "ready",
+      "receivedBytes": 469671,
+      "totalBytes": 469671,
+      "elapsedMs": 3864.5,
+      "type": null
+    },
+    {
+      "id": "herbarium-didelta-translucencyMap",
+      "phase": "ready",
+      "receivedBytes": 662525,
+      "totalBytes": 662525,
+      "elapsedMs": 4192.70000000298,
+      "type": null
+    }
+  ],
+  "captures": [
+    {
+      "names": [
+        "plant-4cda36b7-f9bb-4e7a-b0c2-5bf365d37aa6-full-day-original-e039c93aca81-1789072167225.png",
+        "plant-4cda36b7-f9bb-4e7a-b0c2-5bf365d37aa6-full-day-original-e039c93aca81-1789072167225.json"
+      ],
+      "normal": "original",
+      "preset": "full-day",
+      "commonConditionsSHA256": "e039c93aca810e9e00b5a2f7c27b46d68e52ea1bbca00f62f2d61d2af858fad0",
+      "drawRevision": 4,
+      "readback": {
+        "method": "webgl2-default-framebuffer-readPixels",
+        "framebuffer": "default",
+        "width": 1845,
+        "height": 1440,
+        "rowOrder": "top-left",
+        "format": "RGBA",
+        "type": "UNSIGNED_BYTE",
+        "byteLength": 10627200,
+        "rgbaTopLeftSHA256": "ac400d264e10ebe180c19166b5cf95e3fe57324f5d21c9e96e6f2a1156101546",
+        "statistics": {
+          "pixels": 2656800,
+          "alphaMin": 129,
+          "alphaMax": 255,
+          "nonOpaquePixels": 20112,
+          "zeroAlphaPixels": 0,
+          "rgbAboveAlphaPixels": 3142,
+          "rgbAboveAlphaChannels": 5348,
+          "clippedPresentationChannels": 0
+        },
+        "drawRevision": 4,
+        "fence": {
+          "status": "CONDITION_SATISFIED",
+          "polls": 105,
+          "elapsedMs": 1223.5
+        },
+        "presentation": {
+          "rgbaTopLeftSHA256": "9dbbc8ea85256bfd2f1f111a820a0dc8d27cd8a0f5a65455507711a6ca66551a",
+          "mode": "premultiplied-over-css-srgb",
+          "interpretation": "defined-srgb-reference-composite",
+          "nativeDisplayPixelEqualityClaimed": false,
+          "backdropRGBA": [
+            40,
+            49,
+            47,
+            255
+          ],
+          "formula": "outRGB = min(255, floor((rawRGB*255 + backdropRGB*(255 - rawA) + 127)/255)); outA = 255",
+          "conditions": {
+            "context": {
+              "alpha": true,
+              "premultipliedAlpha": true,
+              "drawingBufferColorSpace": "srgb"
+            },
+            "styles": {
+              "canvas": {
+                "backgroundColor": "rgba(0, 0, 0, 0)",
+                "backgroundImage": "none",
+                "opacity": "1",
+                "filter": "none",
+                "backdropFilter": "none",
+                "mixBlendMode": "normal",
+                "transform": "none"
+              },
+              "main": {
+                "backgroundColor": "rgba(0, 0, 0, 0)",
+                "backgroundImage": "none",
+                "opacity": "1",
+                "filter": "none",
+                "backdropFilter": "none",
+                "mixBlendMode": "normal",
+                "transform": "none"
+              },
+              "body": {
+                "backgroundColor": "rgb(40, 49, 47)",
+                "backgroundImage": "none",
+                "opacity": "1",
+                "filter": "none",
+                "backdropFilter": "none",
+                "mixBlendMode": "normal",
+                "transform": "none"
+              },
+              "html": {
+                "backgroundColor": "rgba(0, 0, 0, 0)",
+                "backgroundImage": "none",
+                "opacity": "1",
+                "filter": "none",
+                "backdropFilter": "none",
+                "mixBlendMode": "normal",
+                "transform": "none"
+              }
+            }
+          },
+          "width": 1845,
+          "height": 1440,
+          "rowOrder": "top-left",
+          "opaque": true,
+          "encoder": "separate-canvas-2d-putImageData-srgb-image/png"
+        }
+      }
+    },
+    {
+      "names": [
+        "plant-4cda36b7-f9bb-4e7a-b0c2-5bf365d37aa6-full-night-original-e9a81de189d9-1789072187138.png",
+        "plant-4cda36b7-f9bb-4e7a-b0c2-5bf365d37aa6-full-night-original-e9a81de189d9-1789072187138.json"
+      ],
+      "normal": "original",
+      "preset": "full-night",
+      "commonConditionsSHA256": "e9a81de189d9be6f4ff5c2cf1b12653448797fd1549e9ec0c1453f53598c9880",
+      "drawRevision": 6,
+      "readback": {
+        "method": "webgl2-default-framebuffer-readPixels",
+        "framebuffer": "default",
+        "width": 1845,
+        "height": 1440,
+        "rowOrder": "top-left",
+        "format": "RGBA",
+        "type": "UNSIGNED_BYTE",
+        "byteLength": 10627200,
+        "rgbaTopLeftSHA256": "1a4019f1a5dcdef0cfc96a907c795878a3e1e877148267d9402f6ddbe514e4a9",
+        "statistics": {
+          "pixels": 2656800,
+          "alphaMin": 129,
+          "alphaMax": 255,
+          "nonOpaquePixels": 20112,
+          "zeroAlphaPixels": 0,
+          "rgbAboveAlphaPixels": 7,
+          "rgbAboveAlphaChannels": 14,
+          "clippedPresentationChannels": 0
+        },
+        "drawRevision": 6,
+        "fence": {
+          "status": "CONDITION_SATISFIED",
+          "polls": 72,
+          "elapsedMs": 683.0999999940395
+        },
+        "presentation": {
+          "rgbaTopLeftSHA256": "5575aeeb2208fe35249ce07aa2b816451727df946b7e2c1b2be2910eb9821799",
+          "mode": "premultiplied-over-css-srgb",
+          "interpretation": "defined-srgb-reference-composite",
+          "nativeDisplayPixelEqualityClaimed": false,
+          "backdropRGBA": [
+            40,
+            49,
+            47,
+            255
+          ],
+          "formula": "outRGB = min(255, floor((rawRGB*255 + backdropRGB*(255 - rawA) + 127)/255)); outA = 255",
+          "conditions": {
+            "context": {
+              "alpha": true,
+              "premultipliedAlpha": true,
+              "drawingBufferColorSpace": "srgb"
+            },
+            "styles": {
+              "canvas": {
+                "backgroundColor": "rgba(0, 0, 0, 0)",
+                "backgroundImage": "none",
+                "opacity": "1",
+                "filter": "none",
+                "backdropFilter": "none",
+                "mixBlendMode": "normal",
+                "transform": "none"
+              },
+              "main": {
+                "backgroundColor": "rgba(0, 0, 0, 0)",
+                "backgroundImage": "none",
+                "opacity": "1",
+                "filter": "none",
+                "backdropFilter": "none",
+                "mixBlendMode": "normal",
+                "transform": "none"
+              },
+              "body": {
+                "backgroundColor": "rgb(40, 49, 47)",
+                "backgroundImage": "none",
+                "opacity": "1",
+                "filter": "none",
+                "backdropFilter": "none",
+                "mixBlendMode": "normal",
+                "transform": "none"
+              },
+              "html": {
+                "backgroundColor": "rgba(0, 0, 0, 0)",
+                "backgroundImage": "none",
+                "opacity": "1",
+                "filter": "none",
+                "backdropFilter": "none",
+                "mixBlendMode": "normal",
+                "transform": "none"
+              }
+            }
+          },
+          "width": 1845,
+          "height": 1440,
+          "rowOrder": "top-left",
+          "opaque": true,
+          "encoder": "separate-canvas-2d-putImageData-srgb-image/png"
+        }
+      }
+    },
+    {
+      "names": [
+        "plant-4cda36b7-f9bb-4e7a-b0c2-5bf365d37aa6-leaf-day-original-e04831cdc291-1789072218602.png",
+        "plant-4cda36b7-f9bb-4e7a-b0c2-5bf365d37aa6-leaf-day-original-e04831cdc291-1789072218602.json"
+      ],
+      "normal": "original",
+      "preset": "leaf-day",
+      "commonConditionsSHA256": "e04831cdc291a70c0ce1365092fb780538f87316b89ecf836a5e3b4dad53b179",
+      "drawRevision": 8,
+      "readback": {
+        "method": "webgl2-default-framebuffer-readPixels",
+        "framebuffer": "default",
+        "width": 1845,
+        "height": 1440,
+        "rowOrder": "top-left",
+        "format": "RGBA",
+        "type": "UNSIGNED_BYTE",
+        "byteLength": 10627200,
+        "rgbaTopLeftSHA256": "3a3af1ef4fddbf78e290392992a4fca6d4e88949a4d67fdeac3be2b70a016d41",
+        "statistics": {
+          "pixels": 2656800,
+          "alphaMin": 137,
+          "alphaMax": 255,
+          "nonOpaquePixels": 36347,
+          "zeroAlphaPixels": 0,
+          "rgbAboveAlphaPixels": 4557,
+          "rgbAboveAlphaChannels": 7994,
+          "clippedPresentationChannels": 0
+        },
+        "drawRevision": 8,
+        "fence": {
+          "status": "CONDITION_SATISFIED",
+          "polls": 7,
+          "elapsedMs": 56
+        },
+        "presentation": {
+          "rgbaTopLeftSHA256": "12dce3743f66935b124a3303311d6bcc6579ff43a449792825cb77589e59d1e8",
+          "mode": "premultiplied-over-css-srgb",
+          "interpretation": "defined-srgb-reference-composite",
+          "nativeDisplayPixelEqualityClaimed": false,
+          "backdropRGBA": [
+            40,
+            49,
+            47,
+            255
+          ],
+          "formula": "outRGB = min(255, floor((rawRGB*255 + backdropRGB*(255 - rawA) + 127)/255)); outA = 255",
+          "conditions": {
+            "context": {
+              "alpha": true,
+              "premultipliedAlpha": true,
+              "drawingBufferColorSpace": "srgb"
+            },
+            "styles": {
+              "canvas": {
+                "backgroundColor": "rgba(0, 0, 0, 0)",
+                "backgroundImage": "none",
+                "opacity": "1",
+                "filter": "none",
+                "backdropFilter": "none",
+                "mixBlendMode": "normal",
+                "transform": "none"
+              },
+              "main": {
+                "backgroundColor": "rgba(0, 0, 0, 0)",
+                "backgroundImage": "none",
+                "opacity": "1",
+                "filter": "none",
+                "backdropFilter": "none",
+                "mixBlendMode": "normal",
+                "transform": "none"
+              },
+              "body": {
+                "backgroundColor": "rgb(40, 49, 47)",
+                "backgroundImage": "none",
+                "opacity": "1",
+                "filter": "none",
+                "backdropFilter": "none",
+                "mixBlendMode": "normal",
+                "transform": "none"
+              },
+              "html": {
+                "backgroundColor": "rgba(0, 0, 0, 0)",
+                "backgroundImage": "none",
+                "opacity": "1",
+                "filter": "none",
+                "backdropFilter": "none",
+                "mixBlendMode": "normal",
+                "transform": "none"
+              }
+            }
+          },
+          "width": 1845,
+          "height": 1440,
+          "rowOrder": "top-left",
+          "opaque": true,
+          "encoder": "separate-canvas-2d-putImageData-srgb-image/png"
+        }
+      }
+    },
+    {
+      "names": [
+        "plant-4cda36b7-f9bb-4e7a-b0c2-5bf365d37aa6-leaf-night-original-9f580af2c459-1789072237661.png",
+        "plant-4cda36b7-f9bb-4e7a-b0c2-5bf365d37aa6-leaf-night-original-9f580af2c459-1789072237661.json"
+      ],
+      "normal": "original",
+      "preset": "leaf-night",
+      "commonConditionsSHA256": "9f580af2c459d0500308c7b43bacab6dea37d1789e514a59651154d6ee1db75f",
+      "drawRevision": 10,
+      "readback": {
+        "method": "webgl2-default-framebuffer-readPixels",
+        "framebuffer": "default",
+        "width": 1845,
+        "height": 1440,
+        "rowOrder": "top-left",
+        "format": "RGBA",
+        "type": "UNSIGNED_BYTE",
+        "byteLength": 10627200,
+        "rgbaTopLeftSHA256": "40142046779a4072b1a764a4434f5e66607432a0e6859d609ef4c1d3f2a95355",
+        "statistics": {
+          "pixels": 2656800,
+          "alphaMin": 137,
+          "alphaMax": 255,
+          "nonOpaquePixels": 36347,
+          "zeroAlphaPixels": 0,
+          "rgbAboveAlphaPixels": 17,
+          "rgbAboveAlphaChannels": 28,
+          "clippedPresentationChannels": 0
+        },
+        "drawRevision": 10,
+        "fence": {
+          "status": "CONDITION_SATISFIED",
+          "polls": 2,
+          "elapsedMs": 10.299999997019768
+        },
+        "presentation": {
+          "rgbaTopLeftSHA256": "5bf2916fa6cb67ce02d79159cfa52f9df5867ae81d49b454b7f391e4b057155c",
+          "mode": "premultiplied-over-css-srgb",
+          "interpretation": "defined-srgb-reference-composite",
+          "nativeDisplayPixelEqualityClaimed": false,
+          "backdropRGBA": [
+            40,
+            49,
+            47,
+            255
+          ],
+          "formula": "outRGB = min(255, floor((rawRGB*255 + backdropRGB*(255 - rawA) + 127)/255)); outA = 255",
+          "conditions": {
+            "context": {
+              "alpha": true,
+              "premultipliedAlpha": true,
+              "drawingBufferColorSpace": "srgb"
+            },
+            "styles": {
+              "canvas": {
+                "backgroundColor": "rgba(0, 0, 0, 0)",
+                "backgroundImage": "none",
+                "opacity": "1",
+                "filter": "none",
+                "backdropFilter": "none",
+                "mixBlendMode": "normal",
+                "transform": "none"
+              },
+              "main": {
+                "backgroundColor": "rgba(0, 0, 0, 0)",
+                "backgroundImage": "none",
+                "opacity": "1",
+                "filter": "none",
+                "backdropFilter": "none",
+                "mixBlendMode": "normal",
+                "transform": "none"
+              },
+              "body": {
+                "backgroundColor": "rgb(40, 49, 47)",
+                "backgroundImage": "none",
+                "opacity": "1",
+                "filter": "none",
+                "backdropFilter": "none",
+                "mixBlendMode": "normal",
+                "transform": "none"
+              },
+              "html": {
+                "backgroundColor": "rgba(0, 0, 0, 0)",
+                "backgroundImage": "none",
+                "opacity": "1",
+                "filter": "none",
+                "backdropFilter": "none",
+                "mixBlendMode": "normal",
+                "transform": "none"
+              }
+            }
+          },
+          "width": 1845,
+          "height": 1440,
+          "rowOrder": "top-left",
+          "opaque": true,
+          "encoder": "separate-canvas-2d-putImageData-srgb-image/png"
+        }
+      }
+    },
+    {
+      "names": [
+        "plant-4cda36b7-f9bb-4e7a-b0c2-5bf365d37aa6-full-day-control-e039c93aca81-1789072346193.png",
+        "plant-4cda36b7-f9bb-4e7a-b0c2-5bf365d37aa6-full-day-control-e039c93aca81-1789072346193.json"
+      ],
+      "normal": "control",
+      "preset": "full-day",
+      "commonConditionsSHA256": "e039c93aca810e9e00b5a2f7c27b46d68e52ea1bbca00f62f2d61d2af858fad0",
+      "drawRevision": 13,
+      "readback": {
+        "method": "webgl2-default-framebuffer-readPixels",
+        "framebuffer": "default",
+        "width": 1845,
+        "height": 1440,
+        "rowOrder": "top-left",
+        "format": "RGBA",
+        "type": "UNSIGNED_BYTE",
+        "byteLength": 10627200,
+        "rgbaTopLeftSHA256": "348f1d74c83daeaebd344f551986007c1fc71761107b75fc9b6be0616661cdc4",
+        "statistics": {
+          "pixels": 2656800,
+          "alphaMin": 129,
+          "alphaMax": 255,
+          "nonOpaquePixels": 20112,
+          "zeroAlphaPixels": 0,
+          "rgbAboveAlphaPixels": 3141,
+          "rgbAboveAlphaChannels": 5347,
+          "clippedPresentationChannels": 0
+        },
+        "drawRevision": 13,
+        "fence": {
+          "status": "CONDITION_SATISFIED",
+          "polls": 174,
+          "elapsedMs": 1816.8999999985099
+        },
+        "presentation": {
+          "rgbaTopLeftSHA256": "84bccd9110064754474f53179a94953923ab7246c7efca873d0c35452b31afec",
+          "mode": "premultiplied-over-css-srgb",
+          "interpretation": "defined-srgb-reference-composite",
+          "nativeDisplayPixelEqualityClaimed": false,
+          "backdropRGBA": [
+            40,
+            49,
+            47,
+            255
+          ],
+          "formula": "outRGB = min(255, floor((rawRGB*255 + backdropRGB*(255 - rawA) + 127)/255)); outA = 255",
+          "conditions": {
+            "context": {
+              "alpha": true,
+              "premultipliedAlpha": true,
+              "drawingBufferColorSpace": "srgb"
+            },
+            "styles": {
+              "canvas": {
+                "backgroundColor": "rgba(0, 0, 0, 0)",
+                "backgroundImage": "none",
+                "opacity": "1",
+                "filter": "none",
+                "backdropFilter": "none",
+                "mixBlendMode": "normal",
+                "transform": "none"
+              },
+              "main": {
+                "backgroundColor": "rgba(0, 0, 0, 0)",
+                "backgroundImage": "none",
+                "opacity": "1",
+                "filter": "none",
+                "backdropFilter": "none",
+                "mixBlendMode": "normal",
+                "transform": "none"
+              },
+              "body": {
+                "backgroundColor": "rgb(40, 49, 47)",
+                "backgroundImage": "none",
+                "opacity": "1",
+                "filter": "none",
+                "backdropFilter": "none",
+                "mixBlendMode": "normal",
+                "transform": "none"
+              },
+              "html": {
+                "backgroundColor": "rgba(0, 0, 0, 0)",
+                "backgroundImage": "none",
+                "opacity": "1",
+                "filter": "none",
+                "backdropFilter": "none",
+                "mixBlendMode": "normal",
+                "transform": "none"
+              }
+            }
+          },
+          "width": 1845,
+          "height": 1440,
+          "rowOrder": "top-left",
+          "opaque": true,
+          "encoder": "separate-canvas-2d-putImageData-srgb-image/png"
+        }
+      }
+    },
+    {
+      "names": [
+        "plant-4cda36b7-f9bb-4e7a-b0c2-5bf365d37aa6-full-night-control-e9a81de189d9-1789072386135.png",
+        "plant-4cda36b7-f9bb-4e7a-b0c2-5bf365d37aa6-full-night-control-e9a81de189d9-1789072386135.json"
+      ],
+      "normal": "control",
+      "preset": "full-night",
+      "commonConditionsSHA256": "e9a81de189d9be6f4ff5c2cf1b12653448797fd1549e9ec0c1453f53598c9880",
+      "drawRevision": 15,
+      "readback": {
+        "method": "webgl2-default-framebuffer-readPixels",
+        "framebuffer": "default",
+        "width": 1845,
+        "height": 1440,
+        "rowOrder": "top-left",
+        "format": "RGBA",
+        "type": "UNSIGNED_BYTE",
+        "byteLength": 10627200,
+        "rgbaTopLeftSHA256": "8893c5faf201bea53dbd350e5733a750aa594047a08eefc0153fc032d9f80721",
+        "statistics": {
+          "pixels": 2656800,
+          "alphaMin": 129,
+          "alphaMax": 255,
+          "nonOpaquePixels": 20112,
+          "zeroAlphaPixels": 0,
+          "rgbAboveAlphaPixels": 7,
+          "rgbAboveAlphaChannels": 14,
+          "clippedPresentationChannels": 0
+        },
+        "drawRevision": 15,
+        "fence": {
+          "status": "CONDITION_SATISFIED",
+          "polls": 183,
+          "elapsedMs": 1733.0999999940395
+        },
+        "presentation": {
+          "rgbaTopLeftSHA256": "f4222e2084d856cc6fd14118baa9652dded3f9c529f0db95f82052bb3b421954",
+          "mode": "premultiplied-over-css-srgb",
+          "interpretation": "defined-srgb-reference-composite",
+          "nativeDisplayPixelEqualityClaimed": false,
+          "backdropRGBA": [
+            40,
+            49,
+            47,
+            255
+          ],
+          "formula": "outRGB = min(255, floor((rawRGB*255 + backdropRGB*(255 - rawA) + 127)/255)); outA = 255",
+          "conditions": {
+            "context": {
+              "alpha": true,
+              "premultipliedAlpha": true,
+              "drawingBufferColorSpace": "srgb"
+            },
+            "styles": {
+              "canvas": {
+                "backgroundColor": "rgba(0, 0, 0, 0)",
+                "backgroundImage": "none",
+                "opacity": "1",
+                "filter": "none",
+                "backdropFilter": "none",
+                "mixBlendMode": "normal",
+                "transform": "none"
+              },
+              "main": {
+                "backgroundColor": "rgba(0, 0, 0, 0)",
+                "backgroundImage": "none",
+                "opacity": "1",
+                "filter": "none",
+                "backdropFilter": "none",
+                "mixBlendMode": "normal",
+                "transform": "none"
+              },
+              "body": {
+                "backgroundColor": "rgb(40, 49, 47)",
+                "backgroundImage": "none",
+                "opacity": "1",
+                "filter": "none",
+                "backdropFilter": "none",
+                "mixBlendMode": "normal",
+                "transform": "none"
+              },
+              "html": {
+                "backgroundColor": "rgba(0, 0, 0, 0)",
+                "backgroundImage": "none",
+                "opacity": "1",
+                "filter": "none",
+                "backdropFilter": "none",
+                "mixBlendMode": "normal",
+                "transform": "none"
+              }
+            }
+          },
+          "width": 1845,
+          "height": 1440,
+          "rowOrder": "top-left",
+          "opaque": true,
+          "encoder": "separate-canvas-2d-putImageData-srgb-image/png"
+        }
+      }
+    },
+    {
+      "names": [
+        "plant-4cda36b7-f9bb-4e7a-b0c2-5bf365d37aa6-leaf-day-control-e04831cdc291-1789072424071.png",
+        "plant-4cda36b7-f9bb-4e7a-b0c2-5bf365d37aa6-leaf-day-control-e04831cdc291-1789072424071.json"
+      ],
+      "normal": "control",
+      "preset": "leaf-day",
+      "commonConditionsSHA256": "e04831cdc291a70c0ce1365092fb780538f87316b89ecf836a5e3b4dad53b179",
+      "drawRevision": 17,
+      "readback": {
+        "method": "webgl2-default-framebuffer-readPixels",
+        "framebuffer": "default",
+        "width": 1845,
+        "height": 1440,
+        "rowOrder": "top-left",
+        "format": "RGBA",
+        "type": "UNSIGNED_BYTE",
+        "byteLength": 10627200,
+        "rgbaTopLeftSHA256": "5f1004e736162dc32d5aff57d5c0effd840d993ee0a1a1d1532b65f003b30efd",
+        "statistics": {
+          "pixels": 2656800,
+          "alphaMin": 137,
+          "alphaMax": 255,
+          "nonOpaquePixels": 36347,
+          "zeroAlphaPixels": 0,
+          "rgbAboveAlphaPixels": 4557,
+          "rgbAboveAlphaChannels": 7993,
+          "clippedPresentationChannels": 0
+        },
+        "drawRevision": 17,
+        "fence": {
+          "status": "CONDITION_SATISFIED",
+          "polls": 594,
+          "elapsedMs": 8746.09999999404
+        },
+        "presentation": {
+          "rgbaTopLeftSHA256": "1309b6878e13bbd17e8ee03ddc82da463ffdaba9a22f6660ebd2d1c5d0488690",
+          "mode": "premultiplied-over-css-srgb",
+          "interpretation": "defined-srgb-reference-composite",
+          "nativeDisplayPixelEqualityClaimed": false,
+          "backdropRGBA": [
+            40,
+            49,
+            47,
+            255
+          ],
+          "formula": "outRGB = min(255, floor((rawRGB*255 + backdropRGB*(255 - rawA) + 127)/255)); outA = 255",
+          "conditions": {
+            "context": {
+              "alpha": true,
+              "premultipliedAlpha": true,
+              "drawingBufferColorSpace": "srgb"
+            },
+            "styles": {
+              "canvas": {
+                "backgroundColor": "rgba(0, 0, 0, 0)",
+                "backgroundImage": "none",
+                "opacity": "1",
+                "filter": "none",
+                "backdropFilter": "none",
+                "mixBlendMode": "normal",
+                "transform": "none"
+              },
+              "main": {
+                "backgroundColor": "rgba(0, 0, 0, 0)",
+                "backgroundImage": "none",
+                "opacity": "1",
+                "filter": "none",
+                "backdropFilter": "none",
+                "mixBlendMode": "normal",
+                "transform": "none"
+              },
+              "body": {
+                "backgroundColor": "rgb(40, 49, 47)",
+                "backgroundImage": "none",
+                "opacity": "1",
+                "filter": "none",
+                "backdropFilter": "none",
+                "mixBlendMode": "normal",
+                "transform": "none"
+              },
+              "html": {
+                "backgroundColor": "rgba(0, 0, 0, 0)",
+                "backgroundImage": "none",
+                "opacity": "1",
+                "filter": "none",
+                "backdropFilter": "none",
+                "mixBlendMode": "normal",
+                "transform": "none"
+              }
+            }
+          },
+          "width": 1845,
+          "height": 1440,
+          "rowOrder": "top-left",
+          "opaque": true,
+          "encoder": "separate-canvas-2d-putImageData-srgb-image/png"
+        }
+      }
+    },
+    {
+      "names": [
+        "plant-4cda36b7-f9bb-4e7a-b0c2-5bf365d37aa6-leaf-night-control-9f580af2c459-1789072477617.png",
+        "plant-4cda36b7-f9bb-4e7a-b0c2-5bf365d37aa6-leaf-night-control-9f580af2c459-1789072477617.json"
+      ],
+      "normal": "control",
+      "preset": "leaf-night",
+      "commonConditionsSHA256": "9f580af2c459d0500308c7b43bacab6dea37d1789e514a59651154d6ee1db75f",
+      "drawRevision": 19,
+      "readback": {
+        "method": "webgl2-default-framebuffer-readPixels",
+        "framebuffer": "default",
+        "width": 1845,
+        "height": 1440,
+        "rowOrder": "top-left",
+        "format": "RGBA",
+        "type": "UNSIGNED_BYTE",
+        "byteLength": 10627200,
+        "rgbaTopLeftSHA256": "29c35550bc70607338494c1a62d97f98cd52ed8e38f2eb2d9a6f7e54f93ec71a",
+        "statistics": {
+          "pixels": 2656800,
+          "alphaMin": 137,
+          "alphaMax": 255,
+          "nonOpaquePixels": 36347,
+          "zeroAlphaPixels": 0,
+          "rgbAboveAlphaPixels": 17,
+          "rgbAboveAlphaChannels": 28,
+          "clippedPresentationChannels": 0
+        },
+        "drawRevision": 19,
+        "fence": {
+          "status": "CONDITION_SATISFIED",
+          "polls": 96,
+          "elapsedMs": 922.6999999955297
+        },
+        "presentation": {
+          "rgbaTopLeftSHA256": "7bf49e0746b9a39200ca01b9c6435f92c14ca9c417887a9b71aa3a9ea11149d2",
+          "mode": "premultiplied-over-css-srgb",
+          "interpretation": "defined-srgb-reference-composite",
+          "nativeDisplayPixelEqualityClaimed": false,
+          "backdropRGBA": [
+            40,
+            49,
+            47,
+            255
+          ],
+          "formula": "outRGB = min(255, floor((rawRGB*255 + backdropRGB*(255 - rawA) + 127)/255)); outA = 255",
+          "conditions": {
+            "context": {
+              "alpha": true,
+              "premultipliedAlpha": true,
+              "drawingBufferColorSpace": "srgb"
+            },
+            "styles": {
+              "canvas": {
+                "backgroundColor": "rgba(0, 0, 0, 0)",
+                "backgroundImage": "none",
+                "opacity": "1",
+                "filter": "none",
+                "backdropFilter": "none",
+                "mixBlendMode": "normal",
+                "transform": "none"
+              },
+              "main": {
+                "backgroundColor": "rgba(0, 0, 0, 0)",
+                "backgroundImage": "none",
+                "opacity": "1",
+                "filter": "none",
+                "backdropFilter": "none",
+                "mixBlendMode": "normal",
+                "transform": "none"
+              },
+              "body": {
+                "backgroundColor": "rgb(40, 49, 47)",
+                "backgroundImage": "none",
+                "opacity": "1",
+                "filter": "none",
+                "backdropFilter": "none",
+                "mixBlendMode": "normal",
+                "transform": "none"
+              },
+              "html": {
+                "backgroundColor": "rgba(0, 0, 0, 0)",
+                "backgroundImage": "none",
+                "opacity": "1",
+                "filter": "none",
+                "backdropFilter": "none",
+                "mixBlendMode": "normal",
+                "transform": "none"
+              }
+            }
+          },
+          "width": 1845,
+          "height": 1440,
+          "rowOrder": "top-left",
+          "opaque": true,
+          "encoder": "separate-canvas-2d-putImageData-srgb-image/png"
+        }
+      }
+    },
+    {
+      "names": [
+        "plant-4cda36b7-f9bb-4e7a-b0c2-5bf365d37aa6-leaf-night-encoded-9f580af2c459-1789072536921.png",
+        "plant-4cda36b7-f9bb-4e7a-b0c2-5bf365d37aa6-leaf-night-encoded-9f580af2c459-1789072536921.json"
+      ],
+      "normal": "encoded",
+      "preset": "leaf-night",
+      "commonConditionsSHA256": "9f580af2c459d0500308c7b43bacab6dea37d1789e514a59651154d6ee1db75f",
+      "drawRevision": 21,
+      "readback": {
+        "method": "webgl2-default-framebuffer-readPixels",
+        "framebuffer": "default",
+        "width": 1845,
+        "height": 1440,
+        "rowOrder": "top-left",
+        "format": "RGBA",
+        "type": "UNSIGNED_BYTE",
+        "byteLength": 10627200,
+        "rgbaTopLeftSHA256": "160dde9959c6521e764746a75ab8db5453ee7a00cf5300a36fa6ded61fb42e17",
+        "statistics": {
+          "pixels": 2656800,
+          "alphaMin": 137,
+          "alphaMax": 255,
+          "nonOpaquePixels": 36347,
+          "zeroAlphaPixels": 0,
+          "rgbAboveAlphaPixels": 16,
+          "rgbAboveAlphaChannels": 27,
+          "clippedPresentationChannels": 0
+        },
+        "drawRevision": 21,
+        "fence": {
+          "status": "CONDITION_SATISFIED",
+          "polls": 181,
+          "elapsedMs": 1739.7999999970198
+        },
+        "presentation": {
+          "rgbaTopLeftSHA256": "677b3e21859235e6fcd1e9d4d381413b69298cb5ee335caf6dfff13c3b157a68",
+          "mode": "premultiplied-over-css-srgb",
+          "interpretation": "defined-srgb-reference-composite",
+          "nativeDisplayPixelEqualityClaimed": false,
+          "backdropRGBA": [
+            40,
+            49,
+            47,
+            255
+          ],
+          "formula": "outRGB = min(255, floor((rawRGB*255 + backdropRGB*(255 - rawA) + 127)/255)); outA = 255",
+          "conditions": {
+            "context": {
+              "alpha": true,
+              "premultipliedAlpha": true,
+              "drawingBufferColorSpace": "srgb"
+            },
+            "styles": {
+              "canvas": {
+                "backgroundColor": "rgba(0, 0, 0, 0)",
+                "backgroundImage": "none",
+                "opacity": "1",
+                "filter": "none",
+                "backdropFilter": "none",
+                "mixBlendMode": "normal",
+                "transform": "none"
+              },
+              "main": {
+                "backgroundColor": "rgba(0, 0, 0, 0)",
+                "backgroundImage": "none",
+                "opacity": "1",
+                "filter": "none",
+                "backdropFilter": "none",
+                "mixBlendMode": "normal",
+                "transform": "none"
+              },
+              "body": {
+                "backgroundColor": "rgb(40, 49, 47)",
+                "backgroundImage": "none",
+                "opacity": "1",
+                "filter": "none",
+                "backdropFilter": "none",
+                "mixBlendMode": "normal",
+                "transform": "none"
+              },
+              "html": {
+                "backgroundColor": "rgba(0, 0, 0, 0)",
+                "backgroundImage": "none",
+                "opacity": "1",
+                "filter": "none",
+                "backdropFilter": "none",
+                "mixBlendMode": "normal",
+                "transform": "none"
+              }
+            }
+          },
+          "width": 1845,
+          "height": 1440,
+          "rowOrder": "top-left",
+          "opaque": true,
+          "encoder": "separate-canvas-2d-putImageData-srgb-image/png"
+        }
+      }
+    },
+    {
+      "names": [
+        "plant-4cda36b7-f9bb-4e7a-b0c2-5bf365d37aa6-leaf-day-encoded-e04831cdc291-1789072561240.png",
+        "plant-4cda36b7-f9bb-4e7a-b0c2-5bf365d37aa6-leaf-day-encoded-e04831cdc291-1789072561240.json"
+      ],
+      "normal": "encoded",
+      "preset": "leaf-day",
+      "commonConditionsSHA256": "e04831cdc291a70c0ce1365092fb780538f87316b89ecf836a5e3b4dad53b179",
+      "drawRevision": 23,
+      "readback": {
+        "method": "webgl2-default-framebuffer-readPixels",
+        "framebuffer": "default",
+        "width": 1845,
+        "height": 1440,
+        "rowOrder": "top-left",
+        "format": "RGBA",
+        "type": "UNSIGNED_BYTE",
+        "byteLength": 10627200,
+        "rgbaTopLeftSHA256": "0cb720f7f13aebae932aca8814b30abc14bf77ac9419592620531582d9b660ca",
+        "statistics": {
+          "pixels": 2656800,
+          "alphaMin": 137,
+          "alphaMax": 255,
+          "nonOpaquePixels": 36347,
+          "zeroAlphaPixels": 0,
+          "rgbAboveAlphaPixels": 4557,
+          "rgbAboveAlphaChannels": 7999,
+          "clippedPresentationChannels": 0
+        },
+        "drawRevision": 23,
+        "fence": {
+          "status": "CONDITION_SATISFIED",
+          "polls": 3,
+          "elapsedMs": 18
+        },
+        "presentation": {
+          "rgbaTopLeftSHA256": "747d6c91c9e910a007792780ff45922a27a063bc1eca84e27512cabf53b4496b",
+          "mode": "premultiplied-over-css-srgb",
+          "interpretation": "defined-srgb-reference-composite",
+          "nativeDisplayPixelEqualityClaimed": false,
+          "backdropRGBA": [
+            40,
+            49,
+            47,
+            255
+          ],
+          "formula": "outRGB = min(255, floor((rawRGB*255 + backdropRGB*(255 - rawA) + 127)/255)); outA = 255",
+          "conditions": {
+            "context": {
+              "alpha": true,
+              "premultipliedAlpha": true,
+              "drawingBufferColorSpace": "srgb"
+            },
+            "styles": {
+              "canvas": {
+                "backgroundColor": "rgba(0, 0, 0, 0)",
+                "backgroundImage": "none",
+                "opacity": "1",
+                "filter": "none",
+                "backdropFilter": "none",
+                "mixBlendMode": "normal",
+                "transform": "none"
+              },
+              "main": {
+                "backgroundColor": "rgba(0, 0, 0, 0)",
+                "backgroundImage": "none",
+                "opacity": "1",
+                "filter": "none",
+                "backdropFilter": "none",
+                "mixBlendMode": "normal",
+                "transform": "none"
+              },
+              "body": {
+                "backgroundColor": "rgb(40, 49, 47)",
+                "backgroundImage": "none",
+                "opacity": "1",
+                "filter": "none",
+                "backdropFilter": "none",
+                "mixBlendMode": "normal",
+                "transform": "none"
+              },
+              "html": {
+                "backgroundColor": "rgba(0, 0, 0, 0)",
+                "backgroundImage": "none",
+                "opacity": "1",
+                "filter": "none",
+                "backdropFilter": "none",
+                "mixBlendMode": "normal",
+                "transform": "none"
+              }
+            }
+          },
+          "width": 1845,
+          "height": 1440,
+          "rowOrder": "top-left",
+          "opaque": true,
+          "encoder": "separate-canvas-2d-putImageData-srgb-image/png"
+        }
+      }
+    },
+    {
+      "names": [
+        "plant-4cda36b7-f9bb-4e7a-b0c2-5bf365d37aa6-full-day-encoded-e039c93aca81-1789072581593.png",
+        "plant-4cda36b7-f9bb-4e7a-b0c2-5bf365d37aa6-full-day-encoded-e039c93aca81-1789072581593.json"
+      ],
+      "normal": "encoded",
+      "preset": "full-day",
+      "commonConditionsSHA256": "e039c93aca810e9e00b5a2f7c27b46d68e52ea1bbca00f62f2d61d2af858fad0",
+      "drawRevision": 25,
+      "readback": {
+        "method": "webgl2-default-framebuffer-readPixels",
+        "framebuffer": "default",
+        "width": 1845,
+        "height": 1440,
+        "rowOrder": "top-left",
+        "format": "RGBA",
+        "type": "UNSIGNED_BYTE",
+        "byteLength": 10627200,
+        "rgbaTopLeftSHA256": "c740dae4c63283d53b4d4196fa988562a7be56a5d9f041279bd66113677553cc",
+        "statistics": {
+          "pixels": 2656800,
+          "alphaMin": 129,
+          "alphaMax": 255,
+          "nonOpaquePixels": 20112,
+          "zeroAlphaPixels": 0,
+          "rgbAboveAlphaPixels": 3136,
+          "rgbAboveAlphaChannels": 5347,
+          "clippedPresentationChannels": 0
+        },
+        "drawRevision": 25,
+        "fence": {
+          "status": "CONDITION_SATISFIED",
+          "polls": 2,
+          "elapsedMs": 9.199999995529652
+        },
+        "presentation": {
+          "rgbaTopLeftSHA256": "87dd1c12cb6f427acb7d94d43dc507a0371d18418e46f80bf786a02cf365d4b4",
+          "mode": "premultiplied-over-css-srgb",
+          "interpretation": "defined-srgb-reference-composite",
+          "nativeDisplayPixelEqualityClaimed": false,
+          "backdropRGBA": [
+            40,
+            49,
+            47,
+            255
+          ],
+          "formula": "outRGB = min(255, floor((rawRGB*255 + backdropRGB*(255 - rawA) + 127)/255)); outA = 255",
+          "conditions": {
+            "context": {
+              "alpha": true,
+              "premultipliedAlpha": true,
+              "drawingBufferColorSpace": "srgb"
+            },
+            "styles": {
+              "canvas": {
+                "backgroundColor": "rgba(0, 0, 0, 0)",
+                "backgroundImage": "none",
+                "opacity": "1",
+                "filter": "none",
+                "backdropFilter": "none",
+                "mixBlendMode": "normal",
+                "transform": "none"
+              },
+              "main": {
+                "backgroundColor": "rgba(0, 0, 0, 0)",
+                "backgroundImage": "none",
+                "opacity": "1",
+                "filter": "none",
+                "backdropFilter": "none",
+                "mixBlendMode": "normal",
+                "transform": "none"
+              },
+              "body": {
+                "backgroundColor": "rgb(40, 49, 47)",
+                "backgroundImage": "none",
+                "opacity": "1",
+                "filter": "none",
+                "backdropFilter": "none",
+                "mixBlendMode": "normal",
+                "transform": "none"
+              },
+              "html": {
+                "backgroundColor": "rgba(0, 0, 0, 0)",
+                "backgroundImage": "none",
+                "opacity": "1",
+                "filter": "none",
+                "backdropFilter": "none",
+                "mixBlendMode": "normal",
+                "transform": "none"
+              }
+            }
+          },
+          "width": 1845,
+          "height": 1440,
+          "rowOrder": "top-left",
+          "opaque": true,
+          "encoder": "separate-canvas-2d-putImageData-srgb-image/png"
+        }
+      }
+    },
+    {
+      "names": [
+        "plant-4cda36b7-f9bb-4e7a-b0c2-5bf365d37aa6-full-night-encoded-e9a81de189d9-1789072597260.png",
+        "plant-4cda36b7-f9bb-4e7a-b0c2-5bf365d37aa6-full-night-encoded-e9a81de189d9-1789072597260.json"
+      ],
+      "normal": "encoded",
+      "preset": "full-night",
+      "commonConditionsSHA256": "e9a81de189d9be6f4ff5c2cf1b12653448797fd1549e9ec0c1453f53598c9880",
+      "drawRevision": 27,
+      "readback": {
+        "method": "webgl2-default-framebuffer-readPixels",
+        "framebuffer": "default",
+        "width": 1845,
+        "height": 1440,
+        "rowOrder": "top-left",
+        "format": "RGBA",
+        "type": "UNSIGNED_BYTE",
+        "byteLength": 10627200,
+        "rgbaTopLeftSHA256": "43f82b41393be6d42a881af1b22316f8dd89abc88f873edb38aa19102bcc62ed",
+        "statistics": {
+          "pixels": 2656800,
+          "alphaMin": 129,
+          "alphaMax": 255,
+          "nonOpaquePixels": 20112,
+          "zeroAlphaPixels": 0,
+          "rgbAboveAlphaPixels": 7,
+          "rgbAboveAlphaChannels": 14,
+          "clippedPresentationChannels": 0
+        },
+        "drawRevision": 27,
+        "fence": {
+          "status": "CONDITION_SATISFIED",
+          "polls": 3,
+          "elapsedMs": 20.399999998509884
+        },
+        "presentation": {
+          "rgbaTopLeftSHA256": "0143f5a9c4cd76bb15b4b68c1e9e09203aa0b2a89c670a79216763bf17f27787",
+          "mode": "premultiplied-over-css-srgb",
+          "interpretation": "defined-srgb-reference-composite",
+          "nativeDisplayPixelEqualityClaimed": false,
+          "backdropRGBA": [
+            40,
+            49,
+            47,
+            255
+          ],
+          "formula": "outRGB = min(255, floor((rawRGB*255 + backdropRGB*(255 - rawA) + 127)/255)); outA = 255",
+          "conditions": {
+            "context": {
+              "alpha": true,
+              "premultipliedAlpha": true,
+              "drawingBufferColorSpace": "srgb"
+            },
+            "styles": {
+              "canvas": {
+                "backgroundColor": "rgba(0, 0, 0, 0)",
+                "backgroundImage": "none",
+                "opacity": "1",
+                "filter": "none",
+                "backdropFilter": "none",
+                "mixBlendMode": "normal",
+                "transform": "none"
+              },
+              "main": {
+                "backgroundColor": "rgba(0, 0, 0, 0)",
+                "backgroundImage": "none",
+                "opacity": "1",
+                "filter": "none",
+                "backdropFilter": "none",
+                "mixBlendMode": "normal",
+                "transform": "none"
+              },
+              "body": {
+                "backgroundColor": "rgb(40, 49, 47)",
+                "backgroundImage": "none",
+                "opacity": "1",
+                "filter": "none",
+                "backdropFilter": "none",
+                "mixBlendMode": "normal",
+                "transform": "none"
+              },
+              "html": {
+                "backgroundColor": "rgba(0, 0, 0, 0)",
+                "backgroundImage": "none",
+                "opacity": "1",
+                "filter": "none",
+                "backdropFilter": "none",
+                "mixBlendMode": "normal",
+                "transform": "none"
+              }
+            }
+          },
+          "width": 1845,
+          "height": 1440,
+          "rowOrder": "top-left",
+          "opaque": true,
+          "encoder": "separate-canvas-2d-putImageData-srgb-image/png"
+        }
+      }
+    }
+  ],
+  "privateDisposals": [
+    {
+      "reason": "switch to encoded",
+      "uuid": "de43e2d0-5cf3-4221-8ecf-e020ee2eb78e",
+      "cpuMipsCleared": true,
+      "imageReferenceCleared": true
+    }
+  ],
+  "error": null,
+  "runId": "plant-4cda36b7-f9bb-4e7a-b0c2-5bf365d37aa6",
+  "startedAt": "2026-09-10T20:28:41.783Z",
+  "identities": {
+    "artifactManifest": {
+      "path": "work/living-v8/normal-ktx-trial/full-hdr/runs/hdr-r1/native-artifacts.json",
+      "sha256": "2d2ff15c8746f56c258c0a94aae1b158ed06df6410b83b061e031e4f217fe744"
+    },
+    "sourceManifests": {
+      "source": {
+        "url": "/models/herbarium/didelta-spinosa/source.json",
+        "bytes": 5594,
+        "sha256": "c914fc780c08909842055ae76c5e03b3cca094c4f4eb696b607570db08e51890"
+      },
+      "geometry": {
+        "url": "/models/herbarium/didelta-spinosa/geometry-source.json",
+        "bytes": 11288,
+        "sha256": "42d8794b67d524fb6a339173683ad6793707d8173bdd923b031a42cfb5eef9dc"
+      },
+      "scalar": {
+        "url": "/models/herbarium/didelta-spinosa/scalar-source.json",
+        "bytes": 2097,
+        "sha256": "c71f392021b7d3f96914a89aac56c6ea9a0da9cb93ef8bca674c9abea94c2ccf"
+      }
+    },
+    "normalTreatments": {
+      "original": {
+        "path": "world/public/models/herbarium/didelta-spinosa/textures/didelta_spinosa_nor_gl_8k.exr",
+        "bytes": 20504774,
+        "sha256": "67d8f96aba14560667ff6ad7058fb75b8f452a0dfd4792dff2f0961d8c632261"
+      },
+      "control": {
+        "path": "work/living-v8/normal-ktx-trial/full-hdr/runs/hdr-r1/prepare/normal-half-unencoded.ktx2",
+        "bytes": 715828472,
+        "sha256": "3a6bee375e17996614bba02a67de55dbee4490a6459f61e0a7f4669a0b316392"
+      },
+      "encoded": {
+        "path": "work/living-v8/normal-ktx-trial/full-hdr/runs/hdr-r1/encode/normal-hdr4x4-q4-nordo.ktx2",
+        "bytes": 27297259,
+        "sha256": "fb49f83f6955641d070ff7e352926dbb19568f5b961a0817e78f202203b12564"
+      }
+    },
+    "geometry": {
+      "path": "world/public/models/herbarium/didelta-spinosa/didelta-spinosa-lod0.glb",
+      "bytes": 13656404,
+      "sha256": "9fdf6619fb9cfd3c049a0a1e0b6fa86c98df5658bce1d913cd8c49925be005c6",
+      "materialTreatment": "Geometry-only export; exact original 8K source material channels are prepared separately, not silently dropped by default glTF conversion."
+    },
+    "otherSourceChannels": [
+      {
+        "relative": "textures/didelta_spinosa_alpha_8k.png",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/8k/didelta_spinosa/didelta_spinosa_alpha_8k.png",
+        "bytes": 1084371,
+        "md5": "be02cb5fc0827d72148605ba18c89037",
+        "sha256": "3950c346d51f327b0f54a0f4ae55e1b12b8c7437ed7efd6ada409ee88aaff4fd"
+      },
+      {
+        "relative": "textures/didelta_spinosa_diff_8k.jpg",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/8k/didelta_spinosa/didelta_spinosa_diff_8k.jpg",
+        "bytes": 14664795,
+        "md5": "f14d0dd5ce22f2abbdd521f9bc0f2c23",
+        "sha256": "5083d942e785a013fe1ced3da1e35239520da6f5d9652af7482e02e011ea9c81"
+      },
+      {
+        "relative": "textures/didelta_spinosa_rough_8k.exr",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/exr/8k/didelta_spinosa/didelta_spinosa_rough_8k.exr",
+        "bytes": 48989,
+        "md5": "76834a3599f9554740dcf45603200239",
+        "sha256": "63a0189c519bf0b4f047ca16885b5659897810556b5a65f2c918d930e82b586d"
+      },
+      {
+        "relative": "textures/didelta_spinosa_translucency_8k.png",
+        "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/8k/didelta_spinosa/didelta_spinosa_translucency_8k.png",
+        "bytes": 2926562,
+        "md5": "3035e8911f31fa577b57e43f5354a48f",
+        "sha256": "3059f787526a1aeb0bae329df4e7f35ffac1d7408b32941ce2aa94fb6ecc18f1"
+      }
+    ],
+    "losslessScalarUploads": [
+      {
+        "original": "textures/didelta_spinosa_alpha_8k.png",
+        "originalSha256": "3950c346d51f327b0f54a0f4ae55e1b12b8c7437ed7efd6ada409ee88aaff4fd",
+        "sourceChannel": "G",
+        "output": "textures/didelta_spinosa_alpha_8k.r8.zlib",
+        "outputSha256": "6ff401f9ced350e40e22cac40a7549cc9ba888a0925e804124932c68b9156285",
+        "compressedBytes": 469671,
+        "width": 8192,
+        "height": 8192,
+        "uploadFormat": "R8",
+        "sampleType": "unsigned normalized 8-bit",
+        "sampleCount": 67108864,
+        "decodedBytes": 67108864,
+        "decodedSha256": "b006d403d420fe55812c19f6c7d71fcc2a93d4b91ebe31a530ace2cade67175e",
+        "ordering": "top row first, left to right; no color conversion, premultiplication, filtering or resampling"
+      },
+      {
+        "original": "textures/didelta_spinosa_translucency_8k.png",
+        "originalSha256": "3059f787526a1aeb0bae329df4e7f35ffac1d7408b32941ce2aa94fb6ecc18f1",
+        "sourceChannel": "R",
+        "output": "textures/didelta_spinosa_translucency_8k.r8.zlib",
+        "outputSha256": "0c0763fa92bfe0b6111998858ddc4da96e29e00e8febc826d61984a1b23f82d2",
+        "compressedBytes": 662525,
+        "width": 8192,
+        "height": 8192,
+        "uploadFormat": "R8",
+        "sampleType": "unsigned normalized 8-bit",
+        "sampleCount": 67108864,
+        "decodedBytes": 67108864,
+        "decodedSha256": "b395d0e757d5da11f3babd60cc2b55bf5df7fd4b52aedf2ae6f79ee1139ded36",
+        "ordering": "top row first, left to right; no color conversion, premultiplication, filtering or resampling"
+      }
+    ]
+  },
+  "artifactProvenance": {
+    "runId": "hdr-r1",
+    "preparationPath": "work/living-v8/normal-ktx-trial/full-hdr/runs/hdr-r1/prepare/preparation.json",
+    "preparationSHA256": "28d25c6c37783a9922e51ebd9af2e7e55133f5e3d54bfbed341532920758d3ef",
+    "encodingPath": "work/living-v8/normal-ktx-trial/full-hdr/runs/hdr-r1/encode/encoding.json",
+    "encodingSHA256": "2d37bfe08839599dac2ac124d90f875e68065de1b2a1a324aa9969e9ea6812ef",
+    "auditPath": "work/living-v8/normal-ktx-trial/full-hdr/runs/hdr-r1/audit/audit.json",
+    "auditSHA256": "0c06fe9f5d277370b0488b4aa190f951a431bc2a6b411f9daf2c89ead4353920",
+    "bindingsSHA256": "3a77c3666a524fa1ecb64eb0c3ad332c1d76604bf0161978f4caf4715e6821ab",
+    "toolVersion": "v5.0.0-rc2~3",
+    "libraryVersion": "v5.0.0-rc2~2",
+    "softwareDecode": "Official ktx extract --raw --transcode rgba16f --all",
+    "normalScaleX": 1,
+    "normalScaleY": -1,
+    "flipY": false,
+    "mips": "14 supplied HALF levels; level 0 exact pinned Three helper output, lower levels float64 mean then one HALF round",
+    "rawControlByteExact": true,
+    "driverGeneratedMipEquivalence": false,
+    "nativeArtApproval": false
+  },
+  "capabilities": {
+    "astc": true,
+    "astcProfiles": [
+      "ldr",
+      "hdr"
+    ],
+    "extColorBufferFloat": true,
+    "maxTextureSize": 16384,
+    "contextAttributes": {
+      "alpha": true,
+      "antialias": true,
+      "depth": true,
+      "desynchronized": false,
+      "failIfMajorPerformanceCaveat": false,
+      "powerPreference": "default",
+      "premultipliedAlpha": true,
+      "preserveDrawingBuffer": true,
+      "stencil": false,
+      "xrCompatible": false
+    }
+  },
+  "lastInvalidation": "explicit capture",
+  "originalNormalSampler": {
+    "magFilter": 9728,
+    "minFilter": 9987,
+    "wrapS": 10497,
+    "wrapT": 10497,
+    "immutableMipLevels": 14,
+    "effectiveAnisotropy": 1,
+    "anisotropyBasis": "actual GL query"
+  },
+  "actualNormalSampler": {
+    "magFilter": 9728,
+    "minFilter": 9987,
+    "wrapS": 10497,
+    "wrapT": 10497,
+    "immutableMipLevels": 14,
+    "effectiveAnisotropy": 1,
+    "anisotropyBasis": "actual GL query"
+  },
+  "lastDraw": {
+    "revision": 27,
+    "pass": 25,
+    "normal": "encoded",
+    "preset": "full-night",
+    "atMs": 475464.19999999553,
+    "render": {
+      "frame": 59,
+      "calls": 3,
+      "triangles": 469106,
+      "points": 0,
+      "lines": 0
+    },
+    "camera": [
+      3.340000582175951,
+      2.3099072590470313,
+      3.6967199216286346
+    ],
+    "target": [
+      -0.05669684366633487,
+      1.0361457243561745,
+      -0.12456468244393659
+    ],
+    "pixelWidth": 1845,
+    "pixelHeight": 1440
+  },
+  "lastCaptureAttempt": {
+    "status": "complete",
+    "savedFiles": [
+      "plant-4cda36b7-f9bb-4e7a-b0c2-5bf365d37aa6-full-night-encoded-e9a81de189d9-1789072597260.png",
+      "plant-4cda36b7-f9bb-4e7a-b0c2-5bf365d37aa6-full-night-encoded-e9a81de189d9-1789072597260.json"
+    ],
+    "readback": {
+      "method": "webgl2-default-framebuffer-readPixels",
+      "framebuffer": "default",
+      "width": 1845,
+      "height": 1440,
+      "rowOrder": "top-left",
+      "format": "RGBA",
+      "type": "UNSIGNED_BYTE",
+      "byteLength": 10627200,
+      "rgbaTopLeftSHA256": "43f82b41393be6d42a881af1b22316f8dd89abc88f873edb38aa19102bcc62ed",
+      "statistics": {
+        "pixels": 2656800,
+        "alphaMin": 129,
+        "alphaMax": 255,
+        "nonOpaquePixels": 20112,
+        "zeroAlphaPixels": 0,
+        "rgbAboveAlphaPixels": 7,
+        "rgbAboveAlphaChannels": 14,
+        "clippedPresentationChannels": 0
+      },
+      "drawRevision": 27,
+      "fence": {
+        "status": "CONDITION_SATISFIED",
+        "polls": 3,
+        "elapsedMs": 20.399999998509884
+      },
+      "presentation": {
+        "rgbaTopLeftSHA256": "0143f5a9c4cd76bb15b4b68c1e9e09203aa0b2a89c670a79216763bf17f27787",
+        "mode": "premultiplied-over-css-srgb",
+        "interpretation": "defined-srgb-reference-composite",
+        "nativeDisplayPixelEqualityClaimed": false,
+        "backdropRGBA": [
+          40,
+          49,
+          47,
+          255
+        ],
+        "formula": "outRGB = min(255, floor((rawRGB*255 + backdropRGB*(255 - rawA) + 127)/255)); outA = 255",
+        "conditions": {
+          "context": {
+            "alpha": true,
+            "premultipliedAlpha": true,
+            "drawingBufferColorSpace": "srgb"
+          },
+          "styles": {
+            "canvas": {
+              "backgroundColor": "rgba(0, 0, 0, 0)",
+              "backgroundImage": "none",
+              "opacity": "1",
+              "filter": "none",
+              "backdropFilter": "none",
+              "mixBlendMode": "normal",
+              "transform": "none"
+            },
+            "main": {
+              "backgroundColor": "rgba(0, 0, 0, 0)",
+              "backgroundImage": "none",
+              "opacity": "1",
+              "filter": "none",
+              "backdropFilter": "none",
+              "mixBlendMode": "normal",
+              "transform": "none"
+            },
+            "body": {
+              "backgroundColor": "rgb(40, 49, 47)",
+              "backgroundImage": "none",
+              "opacity": "1",
+              "filter": "none",
+              "backdropFilter": "none",
+              "mixBlendMode": "normal",
+              "transform": "none"
+            },
+            "html": {
+              "backgroundColor": "rgba(0, 0, 0, 0)",
+              "backgroundImage": "none",
+              "opacity": "1",
+              "filter": "none",
+              "backdropFilter": "none",
+              "mixBlendMode": "normal",
+              "transform": "none"
+            }
+          }
+        },
+        "width": 1845,
+        "height": 1440,
+        "rowOrder": "top-left",
+        "opaque": true,
+        "encoder": "separate-canvas-2d-putImageData-srgb-image/png"
+      }
+    }
+  },
+  "privateTransfer": {
+    "path": "work/living-v8/normal-ktx-trial/full-hdr/runs/hdr-r1/encode/normal-hdr4x4-q4-nordo.ktx2",
+    "receivedBytes": 27297259,
+    "totalBytes": 27297259,
+    "sha256FromFrozenManifest": "fb49f83f6955641d070ff7e352926dbb19568f5b961a0817e78f202203b12564"
+  },
+  "privateContainer": {
+    "kind": "encoded",
+    "width": 8192,
+    "height": 8192,
+    "levels": 14,
+    "vkFormat": 1000066000,
+    "DFD": 167,
+    "transfer": 1,
+    "primaries": 0,
+    "orientation": "rd",
+    "swizzle": null,
+    "supercompression": 2
+  },
+  "status": "ready",
+  "resourcesReady": true,
+  "busy": false,
+  "capturing": false,
+  "disposed": false,
+  "started": true,
+  "normal": "encoded",
+  "requestedNormal": null,
+  "preset": "full-night",
+  "view": "threequarter",
+  "light": "night",
+  "revision": 27,
+  "drawnRevision": 27,
+  "actualRendererPasses": 25,
+  "ready": true,
+  "elapsedWallMs": 476073.799999997,
+  "sourceConfiguration": {
+    "variant": "didelta_spinosa_large_LOD0",
+    "variantIndex": 0,
+    "sourceGeometry": {
+      "path": "world/public/models/herbarium/didelta-spinosa/didelta-spinosa-lod0.glb",
+      "bytes": 13656404,
+      "sha256": "9fdf6619fb9cfd3c049a0a1e0b6fa86c98df5658bce1d913cd8c49925be005c6",
+      "materialTreatment": "Geometry-only export; exact original 8K source material channels are prepared separately, not silently dropped by default glTF conversion."
+    },
+    "botanicalSource": {
+      "id": "didelta_spinosa",
+      "variant": "didelta_spinosa_large_LOD0",
+      "variantIndex": 0,
+      "variants": [
+        "didelta_spinosa_large_LOD0",
+        "didelta_spinosa_medium_LOD0",
+        "didelta_spinosa_small_LOD0"
+      ],
+      "sourceURL": "https://polyhaven.com/a/didelta_spinosa",
+      "license": "CC0-1.0",
+      "resolution": 8192,
+      "transform": "Unit scale, full LOD0; translated from actual basal stem anchor, preserving asymmetric source crown and all original split normals/UVs.",
+      "nativeSourceBounds": {
+        "min": [
+          -1.225670576095581,
+          -0.10013766586780548,
+          -2.6929798126220703
+        ],
+        "max": [
+          0.8972653150558472,
+          1.9721537828445435,
+          -0.8327707052230835
+        ]
+      }
+    },
+    "mesh": {
+      "name": "didelta_spinosa_large_LOD0",
+      "triangles": 234552,
+      "matrix": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0.107505786853532,
+        0.10013766586780548,
+        1.6383105764786403,
+        1
+      ],
+      "groupMatrix": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ]
+    },
+    "camera": {
+      "position": [
+        3.340000582175951,
+        2.3099072590470313,
+        3.6967199216286346
+      ],
+      "target": [
+        -0.05669684366633487,
+        1.0361457243561745,
+        -0.12456468244393659
+      ],
+      "quaternion": [
+        -0.11383025471440093,
+        0.3527355089868802,
+        0.0432781857052335,
+        0.9277646967057351
+      ],
+      "up": [
+        0,
+        1,
+        0
+      ],
+      "fov": 39,
+      "aspect": 1.28125,
+      "near": 0.01,
+      "far": 200
+    },
+    "light": {
+      "mode": "night",
+      "background": "23384b",
+      "floorColor": "56656a",
+      "floorY": -0.004,
+      "key": {
+        "color": "c2d5f2",
+        "intensity": 1,
+        "position": [
+          -9,
+          17,
+          10
+        ],
+        "shadowSize": [
+          4096,
+          4096
+        ],
+        "normalBias": 0.012,
+        "bias": -0.00006,
+        "frustum": {
+          "left": -15,
+          "right": 15,
+          "top": 13,
+          "bottom": -13,
+          "near": 0.1,
+          "far": 55
+        }
+      },
+      "hemi": {
+        "color": "e8f0e8",
+        "ground": "60624c",
+        "intensity": 0.65
+      },
+      "fill": {
+        "color": "c6dceb",
+        "intensity": 0.4,
+        "position": [
+          10,
+          8,
+          -6
+        ]
+      },
+      "environmentIntensity": 0.25
+    },
+    "renderer": {
+      "toneMapping": 4,
+      "exposure": 1.05,
+      "outputColorSpace": "srgb",
+      "shadowEnabled": true,
+      "shadowType": 1,
+      "contextAttributes": {
+        "alpha": true,
+        "antialias": true,
+        "depth": true,
+        "desynchronized": false,
+        "failIfMajorPerformanceCaveat": false,
+        "powerPreference": "default",
+        "premultipliedAlpha": true,
+        "preserveDrawingBuffer": true,
+        "stencil": false,
+        "xrCompatible": false
+      },
+      "nativeDPR": 2.5,
+      "renderDPR": 2.5,
+      "cssWidth": 738,
+      "cssHeight": 576,
+      "pixelWidth": 1845,
+      "pixelHeight": 1440
+    },
+    "material": {
+      "normalScale": [
+        1,
+        -1
+      ],
+      "alphaTest": 0.5,
+      "alphaToCoverage": true,
+      "side": 2,
+      "roughness": 1,
+      "metalness": 0,
+      "ior": 1.45,
+      "specularIntensity": 1,
+      "programKey": "didelta-original-thin-leaf-scalar-v2",
+      "canonicalProgramKey": "didelta-original-thin-leaf-scalar-v2",
+      "otherMapsRemainCanonical": true,
+      "shadowsRemainCanonical": true,
+      "shaderBindings": {
+        "translucency": {
+          "name": "Didelta original 8K translucencyMap",
+          "uuid": "3990ed1f-a32a-4546-a5f0-d705297c035a",
+          "width": 8192,
+          "height": 8192,
+          "format": 1028,
+          "type": 1009,
+          "colorSpace": "",
+          "flipY": false,
+          "premultiplyAlpha": false,
+          "generateMipmaps": true,
+          "magFilter": 1006,
+          "minFilter": 1008,
+          "wrapS": 1000,
+          "wrapT": 1000,
+          "anisotropyProperty": 8,
+          "channel": 0,
+          "offset": [
+            0,
+            0
+          ],
+          "repeat": [
+            1,
+            1
+          ],
+          "rotation": 0,
+          "mipmaps": [],
+          "source": "/models/herbarium/didelta-spinosa/textures/didelta_spinosa_translucency_8k.png"
+        },
+        "directTranslucency": 1,
+        "indirectTranslucency": 0
+      }
+    },
+    "otherMaps": {
+      "map": {
+        "name": "Didelta original 8K map",
+        "uuid": "b50536cb-3e70-4bff-bb18-ae59d1709d79",
+        "width": 8192,
+        "height": 8192,
+        "format": 1023,
+        "type": 1009,
+        "colorSpace": "srgb",
+        "flipY": false,
+        "premultiplyAlpha": false,
+        "generateMipmaps": true,
+        "magFilter": 1006,
+        "minFilter": 1008,
+        "wrapS": 1000,
+        "wrapT": 1000,
+        "anisotropyProperty": 8,
+        "channel": 0,
+        "offset": [
+          0,
+          0
+        ],
+        "repeat": [
+          1,
+          1
+        ],
+        "rotation": 0,
+        "mipmaps": [],
+        "source": "/models/herbarium/didelta-spinosa/textures/didelta_spinosa_diff_8k.jpg"
+      },
+      "roughnessMap": {
+        "name": "Didelta original 8K roughnessMap",
+        "uuid": "fc2b2c8b-0b43-4a7c-94a5-48ef507f10ed",
+        "width": 8192,
+        "height": 8192,
+        "format": 1028,
+        "type": 1016,
+        "colorSpace": "",
+        "flipY": false,
+        "premultiplyAlpha": false,
+        "generateMipmaps": true,
+        "magFilter": 1003,
+        "minFilter": 1008,
+        "wrapS": 1000,
+        "wrapT": 1000,
+        "anisotropyProperty": 8,
+        "channel": 0,
+        "offset": [
+          0,
+          0
+        ],
+        "repeat": [
+          1,
+          1
+        ],
+        "rotation": 0,
+        "mipmaps": [],
+        "source": "/models/herbarium/didelta-spinosa/textures/didelta_spinosa_rough_8k.exr"
+      },
+      "alphaMap": {
+        "name": "Didelta original 8K alphaMap",
+        "uuid": "2d47f7e7-82a5-4c09-b39c-29997330114e",
+        "width": 8192,
+        "height": 8192,
+        "format": 1028,
+        "type": 1009,
+        "colorSpace": "",
+        "flipY": false,
+        "premultiplyAlpha": false,
+        "generateMipmaps": true,
+        "magFilter": 1006,
+        "minFilter": 1008,
+        "wrapS": 1000,
+        "wrapT": 1000,
+        "anisotropyProperty": 8,
+        "channel": 0,
+        "offset": [
+          0,
+          0
+        ],
+        "repeat": [
+          1,
+          1
+        ],
+        "rotation": 0,
+        "mipmaps": [],
+        "source": "/models/herbarium/didelta-spinosa/textures/didelta_spinosa_alpha_8k.png"
+      }
+    },
+    "normal": {
+      "name": "Didelta study encoded · supplied HALF mips",
+      "uuid": "65d8800f-8290-43b2-aa25-51958547ba24",
+      "width": 8192,
+      "height": 8192,
+      "format": 37808,
+      "type": 1016,
+      "colorSpace": "",
+      "flipY": false,
+      "premultiplyAlpha": false,
+      "generateMipmaps": false,
+      "magFilter": 1003,
+      "minFilter": 1008,
+      "wrapS": 1000,
+      "wrapT": 1000,
+      "anisotropyProperty": 8,
+      "channel": 0,
+      "offset": [
+        0,
+        0
+      ],
+      "repeat": [
+        1,
+        1
+      ],
+      "rotation": 0,
+      "mipmaps": [
+        {
+          "width": 8192,
+          "height": 8192,
+          "bytes": 67108864
+        },
+        {
+          "width": 4096,
+          "height": 4096,
+          "bytes": 16777216
+        },
+        {
+          "width": 2048,
+          "height": 2048,
+          "bytes": 4194304
+        },
+        {
+          "width": 1024,
+          "height": 1024,
+          "bytes": 1048576
+        },
+        {
+          "width": 512,
+          "height": 512,
+          "bytes": 262144
+        },
+        {
+          "width": 256,
+          "height": 256,
+          "bytes": 65536
+        },
+        {
+          "width": 128,
+          "height": 128,
+          "bytes": 16384
+        },
+        {
+          "width": 64,
+          "height": 64,
+          "bytes": 4096
+        },
+        {
+          "width": 32,
+          "height": 32,
+          "bytes": 1024
+        },
+        {
+          "width": 16,
+          "height": 16,
+          "bytes": 256
+        },
+        {
+          "width": 8,
+          "height": 8,
+          "bytes": 64
+        },
+        {
+          "width": 4,
+          "height": 4,
+          "bytes": 16
+        },
+        {
+          "width": 2,
+          "height": 2,
+          "bytes": 16
+        },
+        {
+          "width": 1,
+          "height": 1,
+          "bytes": 16
+        }
+      ],
+      "source": null
+    }
+  }
+}

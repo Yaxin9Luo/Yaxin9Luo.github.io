@@ -1,3 +1,5 @@
+import {createCompanionFoleyBuffer,companionFoleyGain} from './companion-foley.js';
+
 /** Overlap the head and tail into one continuous noise cycle. */
 export function windCycle(sampleRate,duration=4,seed=197){
   const count=Math.max(8,Math.round(sampleRate*duration)),overlap=Math.max(2,Math.round(sampleRate*.12));
@@ -31,6 +33,9 @@ export class WorldAudio {
     this.musicStatus = 'idle';
     this._musicPromise = null;
     this._fetchAbort = null;
+    this.companionBuffers=new Map();this.companionPlayed=0;this.companionDropped=0;
+    this.companionHistory=[];
+    this.listenerPosition={...this.environment.position};
   }
 
   unlock() {
@@ -38,7 +43,7 @@ export class WorldAudio {
     this.unlocked = true;
     if (!this.enabled) return;
     if (!this.context) this._create();
-    this._syncContextState();
+    return this._syncContextState();
   }
 
   _syncContextState() {
@@ -46,13 +51,14 @@ export class WorldAudio {
     if(!context||this.disposed||context.state==='closed')return;
     const target=this.suspended?'suspended':this.enabled&&this.unlocked?'running':null;
     if(!target||context.state===target)return;
-    if(this._stateRequest?.context===context&&this._stateRequest.target===target)return;
+    if(this._stateRequest?.context===context&&this._stateRequest.target===target)return this._stateRequest.promise;
     const request=this._stateRequest={context,target};
     const operation=target==='running'?context.resume():context.suspend();
-    Promise.resolve(operation).then(()=>{
+    request.promise=Promise.resolve(operation).then(()=>{
       if(this._stateRequest===request)this._stateRequest=null;
-      if(this.context===context&&!this.disposed)this._syncContextState();
+      if(this.context===context&&!this.disposed)return this._syncContextState();
     },()=>{if(this._stateRequest===request)this._stateRequest=null;});
+    return request.promise;
   }
 
   _create() {
@@ -118,6 +124,7 @@ export class WorldAudio {
 
   setEnabled(enabled) {
     this.enabled = Boolean(enabled);
+    if(!this.enabled)this.cancelCompanionVoices();
     if (this.enabled && this.unlocked) this.unlock();
     if (this.enabled && this.musicStatus === 'unavailable') this._loadMusic();
     if (this.master && this.context) this.master.gain.setTargetAtTime(this.enabled ? .75 : 0, this.context.currentTime, .12);
@@ -125,17 +132,20 @@ export class WorldAudio {
 
   setSuspended(suspended) {
     this.suspended = Boolean(suspended);
+    if(this.suspended)this.cancelCompanionVoices();
     this._syncContextState();
   }
 
   setVolumes({ music = this.musicVolume, effects = this.effectsVolume } = {}) {
     if (Number.isFinite(music)) this.musicVolume = Math.min(1, Math.max(0, music));
     if (Number.isFinite(effects)) this.effectsVolume = Math.min(1, Math.max(0, effects));
+    if(this.effectsVolume===0)this.cancelCompanionVoices();
   }
 
-  setEnvironment(value) { this.environment = { ...this.environment, ...value }; }
+  setEnvironment(value) { this.environment = { ...this.environment, ...value };if(this.environment.reading)this.cancelCompanionVoices(); }
 
   setListener(position,forward){
+    this.listenerPosition={x:position.x,y:position.y,z:position.z};
     const listener=this.context?.listener;if(!listener?.positionX)return;
     const now=this.context.currentTime;
     for(const [name,value]of Object.entries({positionX:position.x,positionY:position.y,positionZ:position.z,forwardX:forward.x,forwardY:forward.y,forwardZ:forward.z,upX:0,upY:1,upZ:0}))listener[name].setTargetAtTime(value,now,.04);
@@ -240,6 +250,37 @@ export class WorldAudio {
     const voice={oscillator:source,gain,filter};this.voices.add(voice);source.onended=()=>{source.disconnect();filter.disconnect();gain.disconnect();this.voices.delete(voice);};source.start(start);source.stop(start+duration+.01);
   }
 
+  playCompanion(event,{isActive=()=>true,distanceFrom=this.listenerPosition}={}){
+    const context=this.context,position=event?.position;
+    if(this.disposed||this.suspended||!this.enabled||!this.unlocked||this.environment.reading||this.effectsVolume===0||context?.state!=='running'||!isActive())return false;
+    if(!event.owner||!position||![position.x,position.y,position.z].every(Number.isFinite))return false;
+    const distance=Math.hypot(position.x-distanceFrom?.x,position.y-distanceFrom?.y,position.z-distanceFrom?.z),level=companionFoleyGain(distance);
+    if(level===0||this.voices.size>=24){this.companionDropped++;return false;}
+    const key=event.kind+':'+event.variant;let buffer=this.companionBuffers.get(key);
+    if(!buffer){try{buffer=createCompanionFoleyBuffer(context,event.kind,event.variant);}catch{return false;}this.companionBuffers.set(key,buffer);}
+    if(!isActive()||this.suspended||this.disposed||context!==this.context)return false;
+    const source=context.createBufferSource(),gain=context.createGain(),panner=context.createPanner?.();source.buffer=buffer;gain.gain.value=level;
+    source.connect(gain);
+    if(panner){
+      panner.panningModel='HRTF';panner.distanceModel='inverse';panner.rolloffFactor=0;panner.refDistance=1;panner.maxDistance=18;
+      panner.positionX.value=position.x;panner.positionY.value=position.y;panner.positionZ.value=position.z;gain.connect(panner).connect(this.effectsBus);
+    }else gain.connect(this.effectsBus);
+    const voice={oscillator:source,gain,panner,companionOwner:event.owner};let released=false;
+    voice.release=()=>{if(released)return;released=true;source.onended=null;source.disconnect();gain.disconnect();panner?.disconnect();this.voices.delete(voice);};
+    this.voices.add(voice);source.onended=voice.release;
+    try{source.start(context.currentTime);source.stop(context.currentTime+buffer.duration+.01);}catch{voice.release();return false;}
+    this.companionPlayed++;this.companionHistory.push({sequence:this.companionPlayed,actorId:event.actorId,kind:event.kind,variant:event.variant,acceptedTime:event.time,contextTime:context.currentTime});if(this.companionHistory.length>32)this.companionHistory.shift();return true;
+  }
+
+  cancelCompanionVoices(owner){
+    for(const voice of this.voices)if(voice.companionOwner&&(owner===undefined||voice.companionOwner===owner)){
+      try{voice.oscillator.stop();}catch{/* An ended source still releases below. */}
+      voice.release();
+    }
+  }
+
+  companionSnapshot(){return {played:this.companionPlayed,dropped:this.companionDropped,activeVoices:[...this.voices].filter(v=>v.companionOwner).length,totalVoices:this.voices.size,unlocked:this.unlocked,enabled:this.enabled,suspended:this.suspended,contextState:this.context?.state||'idle',recentEvents:this.companionHistory.map(event=>({...event}))};}
+
   play(effect) {
     if (this.disposed || this.suspended || !this.enabled) return;
     if (effect === 'boost') {this._rustle(.65,.4,700);this._tone(90,.38,'sine',.04,145);}
@@ -264,6 +305,7 @@ export class WorldAudio {
   dispose() {
     if (this.disposed) return;
     this.disposed = true;
+    this.cancelCompanionVoices();this.companionBuffers.clear();
     this._fetchAbort?.abort();
     for (const voice of this.musicSources) {
       voice.source.onended = null;

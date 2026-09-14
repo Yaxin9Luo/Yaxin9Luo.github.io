@@ -1,0 +1,2234 @@
+{
+  "version": 1,
+  "width": 128,
+  "height": 128,
+  "layers": 42,
+  "files": {
+    "geometry": {
+      "path": "volume-sheets.json",
+      "bytes": 149785,
+      "sha256": "5c9485995672bbf5760a8c51e98f05f7615ca3f60546782a28f2596a843870d4"
+    },
+    "base": {
+      "path": "base-coverage-half.bin",
+      "bytes": 5505024,
+      "sha256": "f4ac53cf922247b8dcb0615ce3bf93d839e769b618afb7030c82a270629ba12a"
+    },
+    "normal": {
+      "path": "normal-moment-half.bin",
+      "bytes": 5505024,
+      "sha256": "77939d2efd7e9a5df140f2bc3f1ea3afcbf98f253fd29e3c8c753f995ca592ce"
+    }
+  },
+  "diagnostics": {
+    "version": 1,
+    "type": "actual-terminal-sprays-three-axes-two-depth-slabs",
+    "processedTerminals": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "partial": false,
+    "scratch": {
+      "scope": "one scanline of original projected convex fragments; no subtraction fragments",
+      "maximumRowFragments": 2600,
+      "maximumRowPolygonsPerCell": 41
+    },
+    "sourceRecordId": "pine-arm-3-secondary-6",
+    "sourceSha256": "efd2285a842d94a9f07f9b5d10df9bbeb7e813196c762b7f69fe5ca806115e47",
+    "tileSize": 128,
+    "subsamples": 4,
+    "grid": 4,
+    "layers": 42,
+    "cardTriangles": 1344,
+    "baseTextureBytes": 11010048,
+    "textureBytesWithMipsUpperBound": 14680064,
+    "milliseconds": 37237.782667,
+    "coverage": "analytical scanline union of original projected convex fragments per microcell, up to floating-point closure; linear premultiplied half-float field and mean-preserving hardware mipmaps",
+    "coverageIsExactUnion": true,
+    "lighting": "projected-area mean of actual source vertex colours and face-oriented normals within each depth slab; unresolved normal variance raises roughness",
+    "metrics": [
+      {
+        "layer": 0,
+        "coverageSum": 1849.223977475458,
+        "projectedAreaWithOverdraw": 2992.6814126066342,
+        "positivePixels": 6741,
+        "minimumAlpha": 5.085510110802716e-7,
+        "maximumAlpha": 1,
+        "meanAlpha": 0.11286767440646106
+      },
+      {
+        "layer": 1,
+        "coverageSum": 1721.285253261669,
+        "projectedAreaWithOverdraw": 2726.7026924266206,
+        "positivePixels": 6547,
+        "minimumAlpha": 0.00000251567030318256,
+        "maximumAlpha": 1,
+        "meanAlpha": 0.10505891438364678
+      },
+      {
+        "layer": 2,
+        "coverageSum": 2490.9838890682067,
+        "projectedAreaWithOverdraw": 4907.5334770430245,
+        "positivePixels": 7050,
+        "minimumAlpha": 2.7473994190785334e-9,
+        "maximumAlpha": 1,
+        "meanAlpha": 0.15203759088551067
+      },
+      {
+        "layer": 3,
+        "coverageSum": 1674.8869801080793,
+        "projectedAreaWithOverdraw": 2353.1044485165357,
+        "positivePixels": 6556,
+        "minimumAlpha": 9.673334133708522e-9,
+        "maximumAlpha": 1,
+        "meanAlpha": 0.10222698853198726
+      },
+      {
+        "layer": 4,
+        "coverageSum": 2028.931217988968,
+        "projectedAreaWithOverdraw": 3889.5668907107683,
+        "positivePixels": 6648,
+        "minimumAlpha": 4.064254994773364e-7,
+        "maximumAlpha": 1,
+        "meanAlpha": 0.12383613391045947
+      },
+      {
+        "layer": 5,
+        "coverageSum": 1711.4858159784678,
+        "projectedAreaWithOverdraw": 3190.9462718633417,
+        "positivePixels": 6159,
+        "minimumAlpha": 9.289626019882635e-27,
+        "maximumAlpha": 1,
+        "meanAlpha": 0.10446080419790453
+      },
+      {
+        "layer": 6,
+        "coverageSum": 1775.4493602615278,
+        "projectedAreaWithOverdraw": 3482.8785063998316,
+        "positivePixels": 5623,
+        "minimumAlpha": 3.4544978433359574e-8,
+        "maximumAlpha": 1,
+        "meanAlpha": 0.10836482911752489
+      },
+      {
+        "layer": 7,
+        "coverageSum": 1626.6033575942279,
+        "projectedAreaWithOverdraw": 2914.4630299656196,
+        "positivePixels": 5955,
+        "minimumAlpha": 2.8010701313974096e-8,
+        "maximumAlpha": 1,
+        "meanAlpha": 0.09927999008753832
+      },
+      {
+        "layer": 8,
+        "coverageSum": 2293.490548843938,
+        "projectedAreaWithOverdraw": 4420.560281140584,
+        "positivePixels": 6768,
+        "minimumAlpha": 5.638502216243069e-7,
+        "maximumAlpha": 1,
+        "meanAlpha": 0.13998355400658802
+      },
+      {
+        "layer": 9,
+        "coverageSum": 1562.2966336372117,
+        "projectedAreaWithOverdraw": 2177.4370530293786,
+        "positivePixels": 6236,
+        "minimumAlpha": 3.285286709342472e-7,
+        "maximumAlpha": 1,
+        "meanAlpha": 0.09535501914289622
+      },
+      {
+        "layer": 10,
+        "coverageSum": 1723.9097344313202,
+        "projectedAreaWithOverdraw": 2843.074102881768,
+        "positivePixels": 6415,
+        "minimumAlpha": 4.859390969613742e-7,
+        "maximumAlpha": 1,
+        "meanAlpha": 0.10521910000191163
+      },
+      {
+        "layer": 11,
+        "coverageSum": 1651.8702350259648,
+        "projectedAreaWithOverdraw": 2803.53209796813,
+        "positivePixels": 6365,
+        "minimumAlpha": 3.025123263000751e-8,
+        "maximumAlpha": 1,
+        "meanAlpha": 0.10082215789953398
+      },
+      {
+        "layer": 12,
+        "coverageSum": 1373.5315551955814,
+        "projectedAreaWithOverdraw": 2240.787178069926,
+        "positivePixels": 6091,
+        "minimumAlpha": 3.8094509591246606e-7,
+        "maximumAlpha": 1,
+        "meanAlpha": 0.08383371308566781
+      },
+      {
+        "layer": 13,
+        "coverageSum": 900.5403675339422,
+        "projectedAreaWithOverdraw": 1293.1900304442222,
+        "positivePixels": 5191,
+        "minimumAlpha": 1.2051270276880353e-25,
+        "maximumAlpha": 1,
+        "meanAlpha": 0.05496462204186659
+      },
+      {
+        "layer": 14,
+        "coverageSum": 1643.0762707311044,
+        "projectedAreaWithOverdraw": 2823.98729122829,
+        "positivePixels": 5650,
+        "minimumAlpha": 1.5906286421341065e-7,
+        "maximumAlpha": 1,
+        "meanAlpha": 0.10028541691474026
+      },
+      {
+        "layer": 15,
+        "coverageSum": 1398.2293386485255,
+        "projectedAreaWithOverdraw": 2023.8647348909976,
+        "positivePixels": 5952,
+        "minimumAlpha": 1.3344704541395913e-7,
+        "maximumAlpha": 1,
+        "meanAlpha": 0.08534114615774692
+      },
+      {
+        "layer": 16,
+        "coverageSum": 1424.1612301187545,
+        "projectedAreaWithOverdraw": 2571.388808125609,
+        "positivePixels": 4857,
+        "minimumAlpha": 4.1769744996145164e-8,
+        "maximumAlpha": 1,
+        "meanAlpha": 0.08692390320549039
+      },
+      {
+        "layer": 17,
+        "coverageSum": 1398.0406043690473,
+        "projectedAreaWithOverdraw": 2533.8833754921397,
+        "positivePixels": 5332,
+        "minimumAlpha": 3.46341491828233e-26,
+        "maximumAlpha": 1,
+        "meanAlpha": 0.08532962673150923
+      },
+      {
+        "layer": 18,
+        "coverageSum": 1980.1596434942921,
+        "projectedAreaWithOverdraw": 3530.955396430218,
+        "positivePixels": 6439,
+        "minimumAlpha": 0.0000014189400872055558,
+        "maximumAlpha": 1,
+        "meanAlpha": 0.12085935324061842
+      },
+      {
+        "layer": 19,
+        "coverageSum": 1994.1875982935867,
+        "projectedAreaWithOverdraw": 3669.5696453723435,
+        "positivePixels": 6334,
+        "minimumAlpha": 1.7751895439732657e-11,
+        "maximumAlpha": 1,
+        "meanAlpha": 0.1217155516536613
+      },
+      {
+        "layer": 20,
+        "coverageSum": 1798.2506324984026,
+        "projectedAreaWithOverdraw": 3198.2838391186974,
+        "positivePixels": 6135,
+        "minimumAlpha": 0.0000025269059733545873,
+        "maximumAlpha": 1,
+        "meanAlpha": 0.10975650833120133
+      },
+      {
+        "layer": 21,
+        "coverageSum": 1615.9106683662378,
+        "projectedAreaWithOverdraw": 2390.2271569507707,
+        "positivePixels": 6155,
+        "minimumAlpha": 3.8370194429950014e-27,
+        "maximumAlpha": 1,
+        "meanAlpha": 0.09862736012977526
+      },
+      {
+        "layer": 22,
+        "coverageSum": 1406.695792242213,
+        "projectedAreaWithOverdraw": 2177.2681427396533,
+        "positivePixels": 6339,
+        "minimumAlpha": 7.871834384332033e-8,
+        "maximumAlpha": 1,
+        "meanAlpha": 0.085857897475721
+      },
+      {
+        "layer": 23,
+        "coverageSum": 1781.5607566456351,
+        "projectedAreaWithOverdraw": 3064.7782287425925,
+        "positivePixels": 6567,
+        "minimumAlpha": 7.22663571650628e-7,
+        "maximumAlpha": 1,
+        "meanAlpha": 0.10873783915073457
+      },
+      {
+        "layer": 24,
+        "coverageSum": 887.688861377417,
+        "projectedAreaWithOverdraw": 1268.7807715412193,
+        "positivePixels": 5664,
+        "minimumAlpha": 0.00000209487984648149,
+        "maximumAlpha": 1,
+        "meanAlpha": 0.054180228355555235
+      },
+      {
+        "layer": 25,
+        "coverageSum": 1333.3386757667952,
+        "projectedAreaWithOverdraw": 2086.784174112413,
+        "positivePixels": 5985,
+        "minimumAlpha": 0.000001021739649331721,
+        "maximumAlpha": 1,
+        "meanAlpha": 0.08138053440959443
+      },
+      {
+        "layer": 26,
+        "coverageSum": 1708.0130457749108,
+        "projectedAreaWithOverdraw": 2768.883241602309,
+        "positivePixels": 6215,
+        "minimumAlpha": 3.5096320516458945e-7,
+        "maximumAlpha": 1,
+        "meanAlpha": 0.10424884312591008
+      },
+      {
+        "layer": 27,
+        "coverageSum": 1387.068876889528,
+        "projectedAreaWithOverdraw": 1989.3807026526451,
+        "positivePixels": 6006,
+        "minimumAlpha": 6.653736051021042e-8,
+        "maximumAlpha": 1,
+        "meanAlpha": 0.08465996563046435
+      },
+      {
+        "layer": 28,
+        "coverageSum": 1718.9888422947997,
+        "projectedAreaWithOverdraw": 3020.996743092327,
+        "positivePixels": 6399,
+        "minimumAlpha": 1.866875152245484e-7,
+        "maximumAlpha": 1,
+        "meanAlpha": 0.10491875258146971
+      },
+      {
+        "layer": 29,
+        "coverageSum": 1513.0412459693423,
+        "projectedAreaWithOverdraw": 2636.6460918892653,
+        "positivePixels": 5401,
+        "minimumAlpha": 5.613675853055611e-7,
+        "maximumAlpha": 1,
+        "meanAlpha": 0.09234870886043349
+      },
+      {
+        "layer": 30,
+        "coverageSum": 1996.664572804132,
+        "projectedAreaWithOverdraw": 3777.6909693993853,
+        "positivePixels": 6410,
+        "minimumAlpha": 9.577622250844797e-8,
+        "maximumAlpha": 1,
+        "meanAlpha": 0.12186673417993969
+      },
+      {
+        "layer": 31,
+        "coverageSum": 1883.5822041744816,
+        "projectedAreaWithOverdraw": 3402.6004406925827,
+        "positivePixels": 6654,
+        "minimumAlpha": 1.0724937737904838e-7,
+        "maximumAlpha": 1,
+        "meanAlpha": 0.11496473414150889
+      },
+      {
+        "layer": 32,
+        "coverageSum": 2920.979307892328,
+        "projectedAreaWithOverdraw": 6026.052565441997,
+        "positivePixels": 7762,
+        "minimumAlpha": 3.143376261505182e-7,
+        "maximumAlpha": 1,
+        "meanAlpha": 0.1782824284602251
+      },
+      {
+        "layer": 33,
+        "coverageSum": 1379.6193228219486,
+        "projectedAreaWithOverdraw": 1811.960463548693,
+        "positivePixels": 6527,
+        "minimumAlpha": 2.8259523610074666e-9,
+        "maximumAlpha": 0.9981714375317097,
+        "meanAlpha": 0.08420528093395682
+      },
+      {
+        "layer": 34,
+        "coverageSum": 1485.4920011563433,
+        "projectedAreaWithOverdraw": 2415.4859012590014,
+        "positivePixels": 6022,
+        "minimumAlpha": 1.4659145008977248e-8,
+        "maximumAlpha": 1,
+        "meanAlpha": 0.0906672363987026
+      },
+      {
+        "layer": 35,
+        "coverageSum": 1866.9810415505772,
+        "projectedAreaWithOverdraw": 3400.2288920129226,
+        "positivePixels": 6782,
+        "minimumAlpha": 8.582806648804608e-27,
+        "maximumAlpha": 1,
+        "meanAlpha": 0.11395147958682722
+      },
+      {
+        "layer": 36,
+        "coverageSum": 1767.7874817608838,
+        "projectedAreaWithOverdraw": 2910.280362540856,
+        "positivePixels": 6703,
+        "minimumAlpha": 1.075689084473197e-7,
+        "maximumAlpha": 1,
+        "meanAlpha": 0.10789718516606957
+      },
+      {
+        "layer": 37,
+        "coverageSum": 1760.7035947629768,
+        "projectedAreaWithOverdraw": 2757.71954372117,
+        "positivePixels": 7063,
+        "minimumAlpha": 3.332715081683091e-8,
+        "maximumAlpha": 1,
+        "meanAlpha": 0.10746481901629497
+      },
+      {
+        "layer": 38,
+        "coverageSum": 2346.5906685890795,
+        "projectedAreaWithOverdraw": 4295.817190158843,
+        "positivePixels": 7308,
+        "minimumAlpha": 5.2911175885128614e-8,
+        "maximumAlpha": 1,
+        "meanAlpha": 0.14322452811212644
+      },
+      {
+        "layer": 39,
+        "coverageSum": 1448.9646159605873,
+        "projectedAreaWithOverdraw": 1937.41879537096,
+        "positivePixels": 6465,
+        "minimumAlpha": 1.0222637847334681e-8,
+        "maximumAlpha": 1,
+        "meanAlpha": 0.08843778173587569
+      },
+      {
+        "layer": 40,
+        "coverageSum": 1910.5508997022569,
+        "projectedAreaWithOverdraw": 3617.5387383196303,
+        "positivePixels": 6009,
+        "minimumAlpha": 3.912530246452661e-7,
+        "maximumAlpha": 1,
+        "meanAlpha": 0.11661077268690533
+      },
+      {
+        "layer": 41,
+        "coverageSum": 1974.6135841011314,
+        "projectedAreaWithOverdraw": 3654.990486463029,
+        "positivePixels": 6354,
+        "minimumAlpha": 3.670201031980014e-9,
+        "maximumAlpha": 1,
+        "meanAlpha": 0.12052084863898507
+      }
+    ],
+    "nativeReviewed": false,
+    "mainSceneAllowed": false
+  },
+  "sheets": [
+    {
+      "layer": 0,
+      "terminal": 0,
+      "axis": 0,
+      "slab": 0,
+      "frame": {
+        "normal": [
+          1,
+          0,
+          0
+        ],
+        "u": [
+          0,
+          0,
+          -1
+        ],
+        "v": [
+          0,
+          1,
+          0
+        ]
+      },
+      "projectedBounds": {
+        "min": [
+          0.45834458354980717,
+          4.030977941328479,
+          1.6809321641921997
+        ],
+        "max": [
+          1.004841620883634,
+          4.472431444352673,
+          2.1318061351776123
+        ]
+      },
+      "depthRange": [
+        1.6809321641921997,
+        1.906369149684906
+      ],
+      "vertexOffset": 0,
+      "vertexCount": 25
+    },
+    {
+      "layer": 1,
+      "terminal": 0,
+      "axis": 0,
+      "slab": 1,
+      "frame": {
+        "normal": [
+          1,
+          0,
+          0
+        ],
+        "u": [
+          0,
+          0,
+          -1
+        ],
+        "v": [
+          0,
+          1,
+          0
+        ]
+      },
+      "projectedBounds": {
+        "min": [
+          0.45834458354980717,
+          4.030977941328479,
+          1.6809321641921997
+        ],
+        "max": [
+          1.004841620883634,
+          4.472431444352673,
+          2.1318061351776123
+        ]
+      },
+      "depthRange": [
+        1.906369149684906,
+        2.1318061351776123
+      ],
+      "vertexOffset": 25,
+      "vertexCount": 25
+    },
+    {
+      "layer": 2,
+      "terminal": 0,
+      "axis": 1,
+      "slab": 0,
+      "frame": {
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "u": [
+          1,
+          0,
+          0
+        ],
+        "v": [
+          0,
+          0,
+          -1
+        ]
+      },
+      "projectedBounds": {
+        "min": [
+          1.6736600033698543,
+          0.45834458354980717,
+          4.037875652313232
+        ],
+        "max": [
+          2.1390782959999575,
+          1.004841620883634,
+          4.46553373336792
+        ]
+      },
+      "depthRange": [
+        4.037875652313232,
+        4.251704692840576
+      ],
+      "vertexOffset": 50,
+      "vertexCount": 25
+    },
+    {
+      "layer": 3,
+      "terminal": 0,
+      "axis": 1,
+      "slab": 1,
+      "frame": {
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "u": [
+          1,
+          0,
+          0
+        ],
+        "v": [
+          0,
+          0,
+          -1
+        ]
+      },
+      "projectedBounds": {
+        "min": [
+          1.6736600033698543,
+          0.45834458354980717,
+          4.037875652313232
+        ],
+        "max": [
+          2.1390782959999575,
+          1.004841620883634,
+          4.46553373336792
+        ]
+      },
+      "depthRange": [
+        4.251704692840576,
+        4.46553373336792
+      ],
+      "vertexOffset": 75,
+      "vertexCount": 25
+    },
+    {
+      "layer": 4,
+      "terminal": 0,
+      "axis": 2,
+      "slab": 0,
+      "frame": {
+        "normal": [
+          0,
+          0,
+          1
+        ],
+        "u": [
+          1,
+          0,
+          0
+        ],
+        "v": [
+          0,
+          1,
+          0
+        ]
+      },
+      "projectedBounds": {
+        "min": [
+          1.6736600033698543,
+          4.030977941328479,
+          -0.996302604675293
+        ],
+        "max": [
+          2.1390782959999575,
+          4.472431444352673,
+          -0.4668835997581482
+        ]
+      },
+      "depthRange": [
+        -0.996302604675293,
+        -0.7315931022167206
+      ],
+      "vertexOffset": 100,
+      "vertexCount": 25
+    },
+    {
+      "layer": 5,
+      "terminal": 0,
+      "axis": 2,
+      "slab": 1,
+      "frame": {
+        "normal": [
+          0,
+          0,
+          1
+        ],
+        "u": [
+          1,
+          0,
+          0
+        ],
+        "v": [
+          0,
+          1,
+          0
+        ]
+      },
+      "projectedBounds": {
+        "min": [
+          1.6736600033698543,
+          4.030977941328479,
+          -0.996302604675293
+        ],
+        "max": [
+          2.1390782959999575,
+          4.472431444352673,
+          -0.4668835997581482
+        ]
+      },
+      "depthRange": [
+        -0.7315931022167206,
+        -0.4668835997581482
+      ],
+      "vertexOffset": 125,
+      "vertexCount": 25
+    },
+    {
+      "layer": 6,
+      "terminal": 1,
+      "axis": 0,
+      "slab": 0,
+      "frame": {
+        "normal": [
+          1,
+          0,
+          0
+        ],
+        "u": [
+          0,
+          0,
+          -1
+        ],
+        "v": [
+          0,
+          1,
+          0
+        ]
+      },
+      "projectedBounds": {
+        "min": [
+          0.7008530343732526,
+          4.0824577654561685,
+          1.9488930702209473
+        ],
+        "max": [
+          1.2177416836061785,
+          4.527725473526986,
+          2.5085108280181885
+        ]
+      },
+      "depthRange": [
+        1.9488930702209473,
+        2.228701949119568
+      ],
+      "vertexOffset": 150,
+      "vertexCount": 25
+    },
+    {
+      "layer": 7,
+      "terminal": 1,
+      "axis": 0,
+      "slab": 1,
+      "frame": {
+        "normal": [
+          1,
+          0,
+          0
+        ],
+        "u": [
+          0,
+          0,
+          -1
+        ],
+        "v": [
+          0,
+          1,
+          0
+        ]
+      },
+      "projectedBounds": {
+        "min": [
+          0.7008530343732526,
+          4.0824577654561685,
+          1.9488930702209473
+        ],
+        "max": [
+          1.2177416836061785,
+          4.527725473526986,
+          2.5085108280181885
+        ]
+      },
+      "depthRange": [
+        2.228701949119568,
+        2.5085108280181885
+      ],
+      "vertexOffset": 175,
+      "vertexCount": 25
+    },
+    {
+      "layer": 8,
+      "terminal": 1,
+      "axis": 1,
+      "slab": 0,
+      "frame": {
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "u": [
+          1,
+          0,
+          0
+        ],
+        "v": [
+          0,
+          0,
+          -1
+        ]
+      },
+      "projectedBounds": {
+        "min": [
+          1.9398669773532498,
+          0.7008530343732526,
+          4.089415073394775
+        ],
+        "max": [
+          2.517536920885886,
+          1.2177416836061785,
+          4.520768165588379
+        ]
+      },
+      "depthRange": [
+        4.089415073394775,
+        4.305091619491577
+      ],
+      "vertexOffset": 200,
+      "vertexCount": 25
+    },
+    {
+      "layer": 9,
+      "terminal": 1,
+      "axis": 1,
+      "slab": 1,
+      "frame": {
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "u": [
+          1,
+          0,
+          0
+        ],
+        "v": [
+          0,
+          0,
+          -1
+        ]
+      },
+      "projectedBounds": {
+        "min": [
+          1.9398669773532498,
+          0.7008530343732526,
+          4.089415073394775
+        ],
+        "max": [
+          2.517536920885886,
+          1.2177416836061785,
+          4.520768165588379
+        ]
+      },
+      "depthRange": [
+        4.305091619491577,
+        4.520768165588379
+      ],
+      "vertexOffset": 225,
+      "vertexCount": 25
+    },
+    {
+      "layer": 10,
+      "terminal": 1,
+      "axis": 2,
+      "slab": 0,
+      "frame": {
+        "normal": [
+          0,
+          0,
+          1
+        ],
+        "u": [
+          1,
+          0,
+          0
+        ],
+        "v": [
+          0,
+          1,
+          0
+        ]
+      },
+      "projectedBounds": {
+        "min": [
+          1.9398669773532498,
+          4.0824577654561685,
+          -1.209665298461914
+        ],
+        "max": [
+          2.517536920885886,
+          4.527725473526986,
+          -0.7089294195175171
+        ]
+      },
+      "depthRange": [
+        -1.209665298461914,
+        -0.9592973589897156
+      ],
+      "vertexOffset": 250,
+      "vertexCount": 25
+    },
+    {
+      "layer": 11,
+      "terminal": 1,
+      "axis": 2,
+      "slab": 1,
+      "frame": {
+        "normal": [
+          0,
+          0,
+          1
+        ],
+        "u": [
+          1,
+          0,
+          0
+        ],
+        "v": [
+          0,
+          1,
+          0
+        ]
+      },
+      "projectedBounds": {
+        "min": [
+          1.9398669773532498,
+          4.0824577654561685,
+          -1.209665298461914
+        ],
+        "max": [
+          2.517536920885886,
+          4.527725473526986,
+          -0.7089294195175171
+        ]
+      },
+      "depthRange": [
+        -0.9592973589897156,
+        -0.7089294195175171
+      ],
+      "vertexOffset": 275,
+      "vertexCount": 25
+    },
+    {
+      "layer": 12,
+      "terminal": 2,
+      "axis": 0,
+      "slab": 0,
+      "frame": {
+        "normal": [
+          1,
+          0,
+          0
+        ],
+        "u": [
+          0,
+          0,
+          -1
+        ],
+        "v": [
+          0,
+          1,
+          0
+        ]
+      },
+      "projectedBounds": {
+        "min": [
+          0.14580955380393612,
+          4.173883691910775,
+          2.049400806427002
+        ],
+        "max": [
+          0.9022911859135474,
+          4.7184231127462075,
+          2.565678596496582
+        ]
+      },
+      "depthRange": [
+        2.049400806427002,
+        2.307539701461792
+      ],
+      "vertexOffset": 300,
+      "vertexCount": 25
+    },
+    {
+      "layer": 13,
+      "terminal": 2,
+      "axis": 0,
+      "slab": 1,
+      "frame": {
+        "normal": [
+          1,
+          0,
+          0
+        ],
+        "u": [
+          0,
+          0,
+          -1
+        ],
+        "v": [
+          0,
+          1,
+          0
+        ]
+      },
+      "projectedBounds": {
+        "min": [
+          0.14580955380393612,
+          4.173883691910775,
+          2.049400806427002
+        ],
+        "max": [
+          0.9022911859135474,
+          4.7184231127462075,
+          2.565678596496582
+        ]
+      },
+      "depthRange": [
+        2.307539701461792,
+        2.565678596496582
+      ],
+      "vertexOffset": 325,
+      "vertexCount": 25
+    },
+    {
+      "layer": 14,
+      "terminal": 2,
+      "axis": 1,
+      "slab": 0,
+      "frame": {
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "u": [
+          1,
+          0,
+          0
+        ],
+        "v": [
+          0,
+          0,
+          -1
+        ]
+      },
+      "projectedBounds": {
+        "min": [
+          2.0410737452968473,
+          0.14580955380393612,
+          4.182392120361328
+        ],
+        "max": [
+          2.5740056576267367,
+          0.9022911859135474,
+          4.709914684295654
+        ]
+      },
+      "depthRange": [
+        4.182392120361328,
+        4.446153402328491
+      ],
+      "vertexOffset": 350,
+      "vertexCount": 25
+    },
+    {
+      "layer": 15,
+      "terminal": 2,
+      "axis": 1,
+      "slab": 1,
+      "frame": {
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "u": [
+          1,
+          0,
+          0
+        ],
+        "v": [
+          0,
+          0,
+          -1
+        ]
+      },
+      "projectedBounds": {
+        "min": [
+          2.0410737452968473,
+          0.14580955380393612,
+          4.182392120361328
+        ],
+        "max": [
+          2.5740056576267367,
+          0.9022911859135474,
+          4.709914684295654
+        ]
+      },
+      "depthRange": [
+        4.446153402328491,
+        4.709914684295654
+      ],
+      "vertexOffset": 375,
+      "vertexCount": 25
+    },
+    {
+      "layer": 16,
+      "terminal": 2,
+      "axis": 2,
+      "slab": 0,
+      "frame": {
+        "normal": [
+          0,
+          0,
+          1
+        ],
+        "u": [
+          1,
+          0,
+          0
+        ],
+        "v": [
+          0,
+          1,
+          0
+        ]
+      },
+      "projectedBounds": {
+        "min": [
+          2.0410737452968473,
+          4.173883691910775,
+          -0.8904711604118347
+        ],
+        "max": [
+          2.5740056576267367,
+          4.7184231127462075,
+          -0.1576295793056488
+        ]
+      },
+      "depthRange": [
+        -0.8904711604118347,
+        -0.5240503698587418
+      ],
+      "vertexOffset": 400,
+      "vertexCount": 25
+    },
+    {
+      "layer": 17,
+      "terminal": 2,
+      "axis": 2,
+      "slab": 1,
+      "frame": {
+        "normal": [
+          0,
+          0,
+          1
+        ],
+        "u": [
+          1,
+          0,
+          0
+        ],
+        "v": [
+          0,
+          1,
+          0
+        ]
+      },
+      "projectedBounds": {
+        "min": [
+          2.0410737452968473,
+          4.173883691910775,
+          -0.8904711604118347
+        ],
+        "max": [
+          2.5740056576267367,
+          4.7184231127462075,
+          -0.1576295793056488
+        ]
+      },
+      "depthRange": [
+        -0.5240503698587418,
+        -0.1576295793056488
+      ],
+      "vertexOffset": 425,
+      "vertexCount": 25
+    },
+    {
+      "layer": 18,
+      "terminal": 3,
+      "axis": 0,
+      "slab": 0,
+      "frame": {
+        "normal": [
+          1,
+          0,
+          0
+        ],
+        "u": [
+          0,
+          0,
+          -1
+        ],
+        "v": [
+          0,
+          1,
+          0
+        ]
+      },
+      "projectedBounds": {
+        "min": [
+          0.667013261587389,
+          4.1977455385269655,
+          2.2395076751708984
+        ],
+        "max": [
+          1.1721990964105051,
+          4.6052940122542845,
+          2.886666774749756
+        ]
+      },
+      "depthRange": [
+        2.2395076751708984,
+        2.563087224960327
+      ],
+      "vertexOffset": 450,
+      "vertexCount": 25
+    },
+    {
+      "layer": 19,
+      "terminal": 3,
+      "axis": 0,
+      "slab": 1,
+      "frame": {
+        "normal": [
+          1,
+          0,
+          0
+        ],
+        "u": [
+          0,
+          0,
+          -1
+        ],
+        "v": [
+          0,
+          1,
+          0
+        ]
+      },
+      "projectedBounds": {
+        "min": [
+          0.667013261587389,
+          4.1977455385269655,
+          2.2395076751708984
+        ],
+        "max": [
+          1.1721990964105051,
+          4.6052940122542845,
+          2.886666774749756
+        ]
+      },
+      "depthRange": [
+        2.563087224960327,
+        2.886666774749756
+      ],
+      "vertexOffset": 475,
+      "vertexCount": 25
+    },
+    {
+      "layer": 20,
+      "terminal": 3,
+      "axis": 1,
+      "slab": 0,
+      "frame": {
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "u": [
+          1,
+          0,
+          0
+        ],
+        "v": [
+          0,
+          0,
+          -1
+        ]
+      },
+      "projectedBounds": {
+        "min": [
+          2.229069625177691,
+          0.667013261587389,
+          4.204113483428955
+        ],
+        "max": [
+          2.8971048247429634,
+          1.1721990964105051,
+          4.598926067352295
+        ]
+      },
+      "depthRange": [
+        4.204113483428955,
+        4.401519775390625
+      ],
+      "vertexOffset": 500,
+      "vertexCount": 25
+    },
+    {
+      "layer": 21,
+      "terminal": 3,
+      "axis": 1,
+      "slab": 1,
+      "frame": {
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "u": [
+          1,
+          0,
+          0
+        ],
+        "v": [
+          0,
+          0,
+          -1
+        ]
+      },
+      "projectedBounds": {
+        "min": [
+          2.229069625177691,
+          0.667013261587389,
+          4.204113483428955
+        ],
+        "max": [
+          2.8971048247429634,
+          1.1721990964105051,
+          4.598926067352295
+        ]
+      },
+      "depthRange": [
+        4.401519775390625,
+        4.598926067352295
+      ],
+      "vertexOffset": 525,
+      "vertexCount": 25
+    },
+    {
+      "layer": 22,
+      "terminal": 3,
+      "axis": 2,
+      "slab": 0,
+      "frame": {
+        "normal": [
+          0,
+          0,
+          1
+        ],
+        "u": [
+          1,
+          0,
+          0
+        ],
+        "v": [
+          0,
+          1,
+          0
+        ]
+      },
+      "projectedBounds": {
+        "min": [
+          2.229069625177691,
+          4.1977455385269655,
+          -1.164305567741394
+        ],
+        "max": [
+          2.8971048247429634,
+          4.6052940122542845,
+          -0.6749067902565002
+        ]
+      },
+      "depthRange": [
+        -1.164305567741394,
+        -0.9196061789989471
+      ],
+      "vertexOffset": 550,
+      "vertexCount": 25
+    },
+    {
+      "layer": 23,
+      "terminal": 3,
+      "axis": 2,
+      "slab": 1,
+      "frame": {
+        "normal": [
+          0,
+          0,
+          1
+        ],
+        "u": [
+          1,
+          0,
+          0
+        ],
+        "v": [
+          0,
+          1,
+          0
+        ]
+      },
+      "projectedBounds": {
+        "min": [
+          2.229069625177691,
+          4.1977455385269655,
+          -1.164305567741394
+        ],
+        "max": [
+          2.8971048247429634,
+          4.6052940122542845,
+          -0.6749067902565002
+        ]
+      },
+      "depthRange": [
+        -0.9196061789989471,
+        -0.6749067902565002
+      ],
+      "vertexOffset": 575,
+      "vertexCount": 25
+    },
+    {
+      "layer": 24,
+      "terminal": 4,
+      "axis": 0,
+      "slab": 0,
+      "frame": {
+        "normal": [
+          1,
+          0,
+          0
+        ],
+        "u": [
+          0,
+          0,
+          -1
+        ],
+        "v": [
+          0,
+          1,
+          0
+        ]
+      },
+      "projectedBounds": {
+        "min": [
+          -0.05923832231952298,
+          4.276834011077881,
+          2.2561399936676025
+        ],
+        "max": [
+          0.7479101496358072,
+          4.794106960296631,
+          2.7300775051116943
+        ]
+      },
+      "depthRange": [
+        2.2561399936676025,
+        2.4931087493896484
+      ],
+      "vertexOffset": 600,
+      "vertexCount": 25
+    },
+    {
+      "layer": 25,
+      "terminal": 4,
+      "axis": 0,
+      "slab": 1,
+      "frame": {
+        "normal": [
+          1,
+          0,
+          0
+        ],
+        "u": [
+          0,
+          0,
+          -1
+        ],
+        "v": [
+          0,
+          1,
+          0
+        ]
+      },
+      "projectedBounds": {
+        "min": [
+          -0.05923832231952298,
+          4.276834011077881,
+          2.2561399936676025
+        ],
+        "max": [
+          0.7479101496358072,
+          4.794106960296631,
+          2.7300775051116943
+        ]
+      },
+      "depthRange": [
+        2.4931087493896484,
+        2.7300775051116943
+      ],
+      "vertexOffset": 625,
+      "vertexCount": 25
+    },
+    {
+      "layer": 26,
+      "terminal": 4,
+      "axis": 1,
+      "slab": 0,
+      "frame": {
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "u": [
+          1,
+          0,
+          0
+        ],
+        "v": [
+          0,
+          0,
+          -1
+        ]
+      },
+      "projectedBounds": {
+        "min": [
+          2.248495840257214,
+          -0.05923832231952298,
+          4.284916400909424
+        ],
+        "max": [
+          2.7377216585220827,
+          0.7479101496358072,
+          4.786024570465088
+        ]
+      },
+      "depthRange": [
+        4.284916400909424,
+        4.535470485687256
+      ],
+      "vertexOffset": 650,
+      "vertexCount": 25
+    },
+    {
+      "layer": 27,
+      "terminal": 4,
+      "axis": 1,
+      "slab": 1,
+      "frame": {
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "u": [
+          1,
+          0,
+          0
+        ],
+        "v": [
+          0,
+          0,
+          -1
+        ]
+      },
+      "projectedBounds": {
+        "min": [
+          2.248495840257214,
+          -0.05923832231952298,
+          4.284916400909424
+        ],
+        "max": [
+          2.7377216585220827,
+          0.7479101496358072,
+          4.786024570465088
+        ]
+      },
+      "depthRange": [
+        4.535470485687256,
+        4.786024570465088
+      ],
+      "vertexOffset": 675,
+      "vertexCount": 25
+    },
+    {
+      "layer": 28,
+      "terminal": 4,
+      "axis": 2,
+      "slab": 0,
+      "frame": {
+        "normal": [
+          0,
+          0,
+          1
+        ],
+        "u": [
+          1,
+          0,
+          0
+        ],
+        "v": [
+          0,
+          1,
+          0
+        ]
+      },
+      "projectedBounds": {
+        "min": [
+          2.248495840257214,
+          4.276834011077881,
+          -0.7352984547615051
+        ],
+        "max": [
+          2.7377216585220827,
+          4.794106960296631,
+          0.04662662744522095
+        ]
+      },
+      "depthRange": [
+        -0.7352984547615051,
+        -0.3443359136581421
+      ],
+      "vertexOffset": 700,
+      "vertexCount": 25
+    },
+    {
+      "layer": 29,
+      "terminal": 4,
+      "axis": 2,
+      "slab": 1,
+      "frame": {
+        "normal": [
+          0,
+          0,
+          1
+        ],
+        "u": [
+          1,
+          0,
+          0
+        ],
+        "v": [
+          0,
+          1,
+          0
+        ]
+      },
+      "projectedBounds": {
+        "min": [
+          2.248495840257214,
+          4.276834011077881,
+          -0.7352984547615051
+        ],
+        "max": [
+          2.7377216585220827,
+          4.794106960296631,
+          0.04662662744522095
+        ]
+      },
+      "depthRange": [
+        -0.3443359136581421,
+        0.04662662744522095
+      ],
+      "vertexOffset": 725,
+      "vertexCount": 25
+    },
+    {
+      "layer": 30,
+      "terminal": 5,
+      "axis": 0,
+      "slab": 0,
+      "frame": {
+        "normal": [
+          1,
+          0,
+          0
+        ],
+        "u": [
+          0,
+          0,
+          -1
+        ],
+        "v": [
+          0,
+          1,
+          0
+        ]
+      },
+      "projectedBounds": {
+        "min": [
+          0.5610521570328744,
+          4.285176446360927,
+          2.489326238632202
+        ],
+        "max": [
+          1.0236253007765739,
+          4.746499846058507,
+          3.0079853534698486
+        ]
+      },
+      "depthRange": [
+        2.489326238632202,
+        2.7486557960510254
+      ],
+      "vertexOffset": 750,
+      "vertexCount": 25
+    },
+    {
+      "layer": 31,
+      "terminal": 5,
+      "axis": 0,
+      "slab": 1,
+      "frame": {
+        "normal": [
+          1,
+          0,
+          0
+        ],
+        "u": [
+          0,
+          0,
+          -1
+        ],
+        "v": [
+          0,
+          1,
+          0
+        ]
+      },
+      "projectedBounds": {
+        "min": [
+          0.5610521570328744,
+          4.285176446360927,
+          2.489326238632202
+        ],
+        "max": [
+          1.0236253007765739,
+          4.746499846058507,
+          3.0079853534698486
+        ]
+      },
+      "depthRange": [
+        2.7486557960510254,
+        3.0079853534698486
+      ],
+      "vertexOffset": 775,
+      "vertexCount": 25
+    },
+    {
+      "layer": 32,
+      "terminal": 5,
+      "axis": 1,
+      "slab": 0,
+      "frame": {
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "u": [
+          1,
+          0,
+          0
+        ],
+        "v": [
+          0,
+          0,
+          -1
+        ]
+      },
+      "projectedBounds": {
+        "min": [
+          2.4809607690380466,
+          0.5610521570328744,
+          4.292384624481201
+        ],
+        "max": [
+          3.016350823064004,
+          1.0236253007765739,
+          4.739291667938232
+        ]
+      },
+      "depthRange": [
+        4.292384624481201,
+        4.515838146209717
+      ],
+      "vertexOffset": 800,
+      "vertexCount": 25
+    },
+    {
+      "layer": 33,
+      "terminal": 5,
+      "axis": 1,
+      "slab": 1,
+      "frame": {
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "u": [
+          1,
+          0,
+          0
+        ],
+        "v": [
+          0,
+          0,
+          -1
+        ]
+      },
+      "projectedBounds": {
+        "min": [
+          2.4809607690380466,
+          0.5610521570328744,
+          4.292384624481201
+        ],
+        "max": [
+          3.016350823064004,
+          1.0236253007765739,
+          4.739291667938232
+        ]
+      },
+      "depthRange": [
+        4.515838146209717,
+        4.739291667938232
+      ],
+      "vertexOffset": 825,
+      "vertexCount": 25
+    },
+    {
+      "layer": 34,
+      "terminal": 5,
+      "axis": 2,
+      "slab": 0,
+      "frame": {
+        "normal": [
+          0,
+          0,
+          1
+        ],
+        "u": [
+          1,
+          0,
+          0
+        ],
+        "v": [
+          0,
+          1,
+          0
+        ]
+      },
+      "projectedBounds": {
+        "min": [
+          2.4809607690380466,
+          4.285176446360927,
+          -1.0163975954055786
+        ],
+        "max": [
+          3.016350823064004,
+          4.746499846058507,
+          -0.5682798624038696
+        ]
+      },
+      "depthRange": [
+        -1.0163975954055786,
+        -0.7923387289047241
+      ],
+      "vertexOffset": 850,
+      "vertexCount": 25
+    },
+    {
+      "layer": 35,
+      "terminal": 5,
+      "axis": 2,
+      "slab": 1,
+      "frame": {
+        "normal": [
+          0,
+          0,
+          1
+        ],
+        "u": [
+          1,
+          0,
+          0
+        ],
+        "v": [
+          0,
+          1,
+          0
+        ]
+      },
+      "projectedBounds": {
+        "min": [
+          2.4809607690380466,
+          4.285176446360927,
+          -1.0163975954055786
+        ],
+        "max": [
+          3.016350823064004,
+          4.746499846058507,
+          -0.5682798624038696
+        ]
+      },
+      "depthRange": [
+        -0.7923387289047241,
+        -0.5682798624038696
+      ],
+      "vertexOffset": 875,
+      "vertexCount": 25
+    },
+    {
+      "layer": 36,
+      "terminal": 6,
+      "axis": 0,
+      "slab": 0,
+      "frame": {
+        "normal": [
+          1,
+          0,
+          0
+        ],
+        "u": [
+          0,
+          0,
+          -1
+        ],
+        "v": [
+          0,
+          1,
+          0
+        ]
+      },
+      "projectedBounds": {
+        "min": [
+          0.07288487495914582,
+          4.3481767639037106,
+          2.5189707279205322
+        ],
+        "max": [
+          0.6880914395855319,
+          4.76322813187876,
+          3.0052883625030518
+        ]
+      },
+      "depthRange": [
+        2.5189707279205322,
+        2.762129545211792
+      ],
+      "vertexOffset": 900,
+      "vertexCount": 25
+    },
+    {
+      "layer": 37,
+      "terminal": 6,
+      "axis": 0,
+      "slab": 1,
+      "frame": {
+        "normal": [
+          1,
+          0,
+          0
+        ],
+        "u": [
+          0,
+          0,
+          -1
+        ],
+        "v": [
+          0,
+          1,
+          0
+        ]
+      },
+      "projectedBounds": {
+        "min": [
+          0.07288487495914582,
+          4.3481767639037106,
+          2.5189707279205322
+        ],
+        "max": [
+          0.6880914395855319,
+          4.76322813187876,
+          3.0052883625030518
+        ]
+      },
+      "depthRange": [
+        2.762129545211792,
+        3.0052883625030518
+      ],
+      "vertexOffset": 925,
+      "vertexCount": 25
+    },
+    {
+      "layer": 38,
+      "terminal": 6,
+      "axis": 1,
+      "slab": 0,
+      "frame": {
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "u": [
+          1,
+          0,
+          0
+        ],
+        "v": [
+          0,
+          0,
+          -1
+        ]
+      },
+      "projectedBounds": {
+        "min": [
+          2.511126895104685,
+          0.07288487495914582,
+          4.35466194152832
+        ],
+        "max": [
+          3.013132195318899,
+          0.6880914395855319,
+          4.75674295425415
+        ]
+      },
+      "depthRange": [
+        4.35466194152832,
+        4.555702447891235
+      ],
+      "vertexOffset": 950,
+      "vertexCount": 25
+    },
+    {
+      "layer": 39,
+      "terminal": 6,
+      "axis": 1,
+      "slab": 1,
+      "frame": {
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "u": [
+          1,
+          0,
+          0
+        ],
+        "v": [
+          0,
+          0,
+          -1
+        ]
+      },
+      "projectedBounds": {
+        "min": [
+          2.511126895104685,
+          0.07288487495914582,
+          4.35466194152832
+        ],
+        "max": [
+          3.013132195318899,
+          0.6880914395855319,
+          4.75674295425415
+        ]
+      },
+      "depthRange": [
+        4.555702447891235,
+        4.75674295425415
+      ],
+      "vertexOffset": 975,
+      "vertexCount": 25
+    },
+    {
+      "layer": 40,
+      "terminal": 6,
+      "axis": 2,
+      "slab": 0,
+      "frame": {
+        "normal": [
+          0,
+          0,
+          1
+        ],
+        "u": [
+          1,
+          0,
+          0
+        ],
+        "v": [
+          0,
+          1,
+          0
+        ]
+      },
+      "projectedBounds": {
+        "min": [
+          2.511126895104685,
+          4.3481767639037106,
+          -0.6784788370132446
+        ],
+        "max": [
+          3.013132195318899,
+          4.76322813187876,
+          -0.0824974775314331
+        ]
+      },
+      "depthRange": [
+        -0.6784788370132446,
+        -0.38048815727233887
+      ],
+      "vertexOffset": 1000,
+      "vertexCount": 25
+    },
+    {
+      "layer": 41,
+      "terminal": 6,
+      "axis": 2,
+      "slab": 1,
+      "frame": {
+        "normal": [
+          0,
+          0,
+          1
+        ],
+        "u": [
+          1,
+          0,
+          0
+        ],
+        "v": [
+          0,
+          1,
+          0
+        ]
+      },
+      "projectedBounds": {
+        "min": [
+          2.511126895104685,
+          4.3481767639037106,
+          -0.6784788370132446
+        ],
+        "max": [
+          3.013132195318899,
+          4.76322813187876,
+          -0.0824974775314331
+        ]
+      },
+      "depthRange": [
+        -0.38048815727233887,
+        -0.0824974775314331
+      ],
+      "vertexOffset": 1025,
+      "vertexCount": 25
+    }
+  ],
+  "provenance": {
+    "kind": "offline-derived-fields-from-authored-project-geometry",
+    "photoOrHistoricalSource": false,
+    "originalSource": {
+      "path": "src/yuanmingyuan/garden-vegetation.js",
+      "sha256": "efd2285a842d94a9f07f9b5d10df9bbeb7e813196c762b7f69fe5ca806115e47",
+      "pineFunctionSha256": "502e58bbe327157e57cd85e4ca9a961059b14c0845d348dbcdca9b89efe0f4bb",
+      "rootsFunctionSha256": "f31c87279ca080bee31f3b209dc6f9496764c3c5e70a065056c357de2b19a053",
+      "geometrySha256": "59376f8a0703e92c00b274b3936c494eda7c43bed787e218ac1b7be3d25c8bd6",
+      "method": "Execute actual private pine/roots function bytes with a branch/instance recorder; no mature branch geometry or full tree constructed",
+      "authoredIndividual": true,
+      "historicalBranchSurvey": false
+    },
+    "sourceRecords": "pine-arm-3-secondary-6",
+    "sourceShootIds": [
+      "arm-3/fork-6/terminal-0/shoot-0",
+      "arm-3/fork-6/terminal-0/shoot-1",
+      "arm-3/fork-6/terminal-0/shoot-2",
+      "arm-3/fork-6/terminal-0/shoot-3",
+      "arm-3/fork-6/terminal-1/shoot-0",
+      "arm-3/fork-6/terminal-1/shoot-1",
+      "arm-3/fork-6/terminal-1/shoot-2",
+      "arm-3/fork-6/terminal-1/shoot-3",
+      "arm-3/fork-6/terminal-2/shoot-0",
+      "arm-3/fork-6/terminal-2/shoot-1",
+      "arm-3/fork-6/terminal-2/shoot-2",
+      "arm-3/fork-6/terminal-2/shoot-3",
+      "arm-3/fork-6/terminal-3/shoot-0",
+      "arm-3/fork-6/terminal-3/shoot-1",
+      "arm-3/fork-6/terminal-3/shoot-2",
+      "arm-3/fork-6/terminal-3/shoot-3",
+      "arm-3/fork-6/terminal-4/shoot-0",
+      "arm-3/fork-6/terminal-4/shoot-1",
+      "arm-3/fork-6/terminal-4/shoot-2",
+      "arm-3/fork-6/terminal-4/shoot-3",
+      "arm-3/fork-6/terminal-5/shoot-0",
+      "arm-3/fork-6/terminal-5/shoot-1",
+      "arm-3/fork-6/terminal-5/shoot-2",
+      "arm-3/fork-6/terminal-5/shoot-3",
+      "arm-3/fork-6/terminal-6/shoot-0",
+      "arm-3/fork-6/terminal-6/shoot-1",
+      "arm-3/fork-6/terminal-6/shoot-2",
+      "arm-3/fork-6/terminal-6/shoot-3"
+    ],
+    "bakeDependencies": [
+      {
+        "path": "src/yuanmingyuan/pine-cluster-source.js",
+        "sha256": "9638ec48c053d0a199b18233c3c93096a0526b0cf91f7ec2ea797f6738eb9842"
+      },
+      {
+        "path": "src/yuanmingyuan/pine-cluster-baker.js",
+        "sha256": "03cdeaa75403618f23e5925958e6c5f3dffcb6a1631fe5fb99930404ebd52865"
+      },
+      {
+        "path": "src/yuanmingyuan/pine-cluster-records.js",
+        "sha256": "9aa326a59477154586bb87595e551e4fbbac11e1c01e35d3afa5cad8c2541649"
+      },
+      {
+        "path": "src/yuanmingyuan/vegetation-geometry.js",
+        "sha256": "59376f8a0703e92c00b274b3936c494eda7c43bed787e218ac1b7be3d25c8bd6"
+      },
+      {
+        "path": "src/yuanmingyuan/pine-shoot-lod-materials.js",
+        "sha256": "97da19bc915c7ae015a003e1c6ecd3c5f6ec2df61091a149532331fec59bc84e"
+      },
+      {
+        "path": "src/yuanmingyuan/willow-distance-sampling.js",
+        "sha256": "6bdd5eb7b37e91a431450b938350d85dcdcfc0445bc19fc818bf0063ace513d8"
+      }
+    ],
+    "fullTreeConstructed": false,
+    "nativeReviewed": false
+  }
+}

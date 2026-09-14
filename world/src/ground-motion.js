@@ -26,6 +26,9 @@ function pointSurface(x,z,ceiling,world,groundFeetY){
   }
   return best;
 }
+// Companions use this same surface selection with their own measured footprint
+// and much smaller permitted relief; they do not inherit the rider's step size.
+export {pointSurface as sampleGroundSurface,walkable as isWalkableSurface};
 function footprintStep(x,z,feetY,radius,maxRise,hit,world){
   for(const solid of world.colliders||[]){
     if(!walkable(solid)||solid.bottom>feetY+GROUND_MOTION.skin||solid.top>feetY+maxRise+EPS||solid.top<(hit?.y??-Infinity)-EPS)continue;

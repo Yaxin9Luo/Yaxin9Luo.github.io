@@ -283,13 +283,15 @@ function fitGroundFeet(group,animation,support){
 }
 
 /** Every instance has independent animation transforms and shared geometry/material/texture storage. */
-export function createWizard() {
-  if (!templates.wizard) {
+export function prepareWizardTemplate(gltf){return prepareTemplate(gltf,'wizard');}
+
+export function createWizard({template=templates.wizard}={}) {
+  if (!template) {
     const fallback = createFallbackWizard();
     fallback.userData.assetSource = 'Procedural fallback; character assets have not loaded';
     return fallback;
   }
-  const wizard = animatedClone(templates.wizard, 'wizard');
+  const wizard = animatedClone(template, 'wizard');
   const cape = wizard.getObjectByName('rider-cape');
   cape.userData.restRotationX = cape.rotation.x;
   wizard.userData.cape = cape;

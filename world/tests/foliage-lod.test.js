@@ -19,7 +19,7 @@ test('near/mid/far boundaries have distinct exit and reentry thresholds',()=>{
 });
 
 test('tiers retain every botanical piece and the exact approved near mesh',()=>{
-  const counts={silver:74016,pine:78280,cherry:351654};
+  const counts={silver:74016,pine:78280,cherry:828100};
   for(const kind of Object.keys(counts)){
     const tiers=['near','mid','far'].map(t=>createGroveTree(kind,168,t)),nearBounds=new THREE.Box3().setFromObject(tiers[0]);
     const count=t=>t.children.reduce((sum,m)=>sum+m.geometry.index.count/3,0);

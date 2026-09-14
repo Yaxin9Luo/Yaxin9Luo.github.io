@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import {loadPBRTexture} from './asset-cache.js';
 
 /** Same local PBR cache and tint/roughness treatment as the authored gardens. */
-export function createAtelierMaterials({loadTexture=typeof document==='undefined'?null:loadPBRTexture}={}){
+export function createAtelierMaterials({loadTexture=typeof document==='undefined'?null:loadPBRTexture,onChange=()=>{}}={}){
   let disposed=false;const jobs=[],errors=[],materials={};
   const pbr=(key,set,color,{metres,normal=.3,albedo=.6,floor=.6,...options})=>{
     const material=new THREE.MeshStandardMaterial({color,roughness:.86,normalScale:new THREE.Vector2(normal,normal),...options});
@@ -16,7 +16,7 @@ export function createAtelierMaterials({loadTexture=typeof document==='undefined
     };
     material.customProgramCacheKey=()=>`atelier-pbr-${set}-${albedo}-${floor}`;
     if(loadTexture)for(const [channel,property]of [['color','map'],['normal','normalMap'],['roughness','roughnessMap']]){
-      jobs.push(Promise.resolve().then(()=>loadTexture(set,channel)).then(texture=>{if(!disposed){material[property]=texture;material.needsUpdate=true;}}).catch(error=>errors.push({set,channel,message:String(error?.message||error)})));
+      jobs.push(Promise.resolve().then(()=>loadTexture(set,channel)).then(texture=>{if(!disposed){material[property]=texture;material.needsUpdate=true;onChange();}}).catch(error=>{errors.push({set,channel,message:String(error?.message||error)});if(!disposed)onChange();}));
     }
     materials[key]=material;return material;
   };

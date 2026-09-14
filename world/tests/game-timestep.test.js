@@ -5,6 +5,8 @@ import { Game } from '../src/game.js';
 import { GROUND_MOTION, queryGroundSupport } from '../src/ground-motion.js';
 import { CHARACTER_GROUND_MOTION } from '../src/characters.js';
 import { EnvironmentClock } from '../src/environment-time.js';
+import {createAtmosphere} from '../src/atmosphere.js';
+import {createReviewLoading} from '../src/review-loading.js';
 
 // Real frame dispatch, movement, ground collision, cooldowns, projectiles and
 // effect lifetimes; only browser/GPU presentation and portfolio UI are omitted.
@@ -57,6 +59,64 @@ function advance(game, seconds, fps) {
   const start = game._lastFrame;
   for (let i = 1; i <= Math.round(seconds * fps); i++) game._tick(start + i * 1000 / fps);
 }
+
+function staticReview(t) {
+  const game=fixture(t);game._keys.clear();game.shield=0;game.options.gameplay=false;game.options.reducedMotion=true;
+  game._reviewRendering={pending:true,staticComparison:false,continuous:false,lastView:null,idle:false};
+  game.setReviewRendering({staticComparison:true});let draws=0;game.rendering.render=()=>{draws++;};
+  return {game,draws:()=>draws};
+}
+
+test('review demand rendering coalesces identical passes while preserving actual simulation dispatch',t=>{
+  const {game,draws}=staticReview(t);advance(game,1,20);
+  assert.equal(draws(),1);assert.ok(Math.abs(game._simulationTime-1)<1e-8,'render idling does not alter the simulation clock');
+  game.requestRender();game.requestRender();advance(game,.2,20);assert.equal(draws(),2);
+  let requests=0;game.rendering.render=()=>{requests++;if(requests===1)game.requestRender();};
+  game.requestRender();advance(game,.2,20);assert.equal(requests,2,'a request made inside render survives for the next real pass');
+});
+
+test('review demand rendering keeps first/full callbacks behind a successful actual pass',t=>{
+  const {game,draws}=staticReview(t);advance(game,.1,20);let core=0,full=0;
+  game._firstFrame=()=>{core++;};game._fullFrame=()=>{full++;};
+  game.rendering.render=()=>{throw new Error('real pass failed');};
+  assert.throws(()=>game._tick(1150),/real pass failed/);assert.equal(core,0);assert.equal(full,0);
+  game.rendering.render=()=>{};game._tick(1200);assert.equal(core,1);assert.equal(full,1);
+  assert.equal(game._frameCount,2);assert.equal(draws(),1);
+});
+
+test('review demand rendering resumes for measurement, real input and camera movement then returns idle',t=>{
+  const {game,draws}=staticReview(t);advance(game,.1,20);
+  game.setReviewRendering({continuous:true});advance(game,.2,20);assert.equal(draws(),5);
+  game.setReviewRendering({continuous:false});advance(game,.2,20);assert.equal(draws(),6);
+  game._keys.add('KeyD');const x=game.position.x;advance(game,.2,20);assert.equal(draws(),10);assert.ok(game.position.x>x);
+  game._keys.clear();advance(game,.2,20);const stopped=draws();advance(game,.2,20);assert.equal(draws(),stopped);
+  game.camera.position.x+=2;advance(game,.2,20);assert.equal(draws(),stopped+1);
+  game.setPaused(true);advance(game,.2,20);assert.equal(draws(),stopped+2,'pause changes request their own real frame');
+  game.setOption('reducedMotion',false);advance(game,.2,20);assert.equal(draws(),stopped+6,'live motion always renders continuously');
+});
+
+test('review demand rendering cannot opt in normal Game and retains invalidation across hidden/context gates',t=>{
+  const normal=fixture(t);normal._keys.clear();normal.options.reducedMotion=true;let normalDraws=0;normal.rendering.render=()=>normalDraws++;
+  assert.equal(normal.setReviewRendering({staticComparison:true}),false);advance(normal,.2,20);assert.equal(normalDraws,4);
+  const {game,draws}=staticReview(t);advance(game,.1,20);game.requestRender();document.hidden=true;advance(game,.2,20);assert.equal(draws(),1);
+  document.hidden=false;game._contextLost=true;advance(game,.2,20);assert.equal(draws(),1);
+  game._contextLost=false;advance(game,.2,20);assert.equal(draws(),2);
+  game._disposed=true;assert.equal(game.requestRender(),false);advance(game,.2,20);assert.equal(draws(),2);
+});
+
+test('staged review holds after the actual core render, resumes one real full frame and consumes no inactive time',async t=>{
+  const game=fixture(t),frames=new Map();let next=1,now=1000,draws=0,core=0,full=0,ready=false;
+  const schedule=callback=>{const id=next++;frames.set(id,callback);return id;},cancel=id=>frames.delete(id);
+  globalThis.requestAnimationFrame=schedule;game._tick=game._tick.bind(game);game.rendering.render=()=>{draws++;};
+  const loading=createReviewLoading({mode:'staged',now:()=>now,schedule,cancel,setTimer:()=>1,clearTimer(){}});t.after(()=>loading.dispose());
+  game._firstFrame=()=>{core++;loading.progress({phase:'first-frame'});};game._animation=schedule(game._tick);
+  const frame=()=>{const [id,fn]=frames.entries().next().value;frames.delete(id);fn(now);};frame();assert.equal(draws,1);assert.equal(core,1);
+  loading.attach(game);loading.progress({phase:'enhancements-begin',deadline:901000});assert.equal(frames.size,0);
+  const position=game.position.clone(),time=game._simulationTime;now=601000;
+  await Promise.resolve().then(()=>{game.world.complete=true;loading.progress({phase:'enhancements',enhancements:'ready'});game._fullFrame=()=>{full++;ready=loading.completeFrame(true);};});
+  assert.equal(draws,1);assert.equal(full,0);assert.equal(ready,false);assert.equal(frames.size,1);frame();assert.equal(draws,2);assert.equal(full,1);assert.equal(ready,true);assert.equal(frames.size,1);assert.equal(game._simulationTime,time);assert.deepEqual(game.position,position);
+  loading.progress({phase:'enhancements',enhancements:'ready'});assert.equal(frames.size,1);
+});
 
 for (const fps of [60, 15, 9, 8]) for (const run of [false, true]) {
   test(`${run ? 'running' : 'walking'} covers the same wall-clock distance through real frame dispatch at ${fps} FPS`, t => {
@@ -146,4 +206,16 @@ for (const suspension of ['hidden', 'context']) test(`${suspension} frames do no
   if (suspension === 'hidden') document.hidden = true; else game._contextLost = true;
   game._tick(11000); game._tick(21000);
   assert.equal(game.position.x, 0); assert.equal(game._simulationTime, 0); assert.equal(game.cooldown, 3);
+});
+
+for(const fps of [8,30,60])test(`real Game dispatch advances atmosphere by accepted seconds at ${fps} fps and respects all pause gates`,t=>{
+  const game=fixture(t),atmosphere=createAtmosphere(game.scene,{heightAt:()=>7,lanternCount:3,fireflyCount:3,birdCount:3});
+  game.world.atmosphere=atmosphere;game.world.update=(time,dt,reduced,camera,viewport,context)=>atmosphere.update(time,dt,reduced,context);game.world.releaseLantern=p=>atmosphere.releaseLantern(p);
+  t.after(()=>atmosphere.releaseResources());assert.equal(game.releaseLantern(),true);advance(game,2,fps);
+  assert.ok(Math.abs(atmosphere.activityTime-2)<1e-8);assert.ok(Math.abs(atmosphere.fauna.motion.released[0].age-2)<1e-8);
+  game.setPaused(true);advance(game,5,fps);assert.ok(Math.abs(atmosphere.activityTime-2)<1e-8);assert.equal(game.releaseLantern(),false);
+  game.setPaused(false);game._tick(15000);assert.ok(Math.abs(atmosphere.activityTime-2)<1e-8);advance(game,1,fps);assert.ok(Math.abs(atmosphere.activityTime-3)<1e-8);
+  game.options.reducedMotion=true;advance(game,2,fps);const held=atmosphere.fauna.snapshot();advance(game,2,fps);assert.deepEqual(atmosphere.fauna.snapshot(),held);
+  game.options.reducedMotion=false;game.started=false;advance(game,2,fps);assert.ok(Math.abs(atmosphere.activityTime-3)<1e-8);assert.equal(game.releaseLantern(),false);
+  game.started=true;document.hidden=true;advance(game,2,fps);assert.ok(Math.abs(atmosphere.activityTime-3)<1e-8);document.hidden=false;game._contextLost=true;advance(game,2,fps);assert.ok(Math.abs(atmosphere.activityTime-3)<1e-8);
 });

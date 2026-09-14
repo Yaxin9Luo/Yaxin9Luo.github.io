@@ -1,0 +1,415 @@
+{
+  "schema": "didelta-normal-hdr-recipe-v1",
+  "scope": "One full-resolution lossy normal derivative; original normal EXR and every other source map retained.",
+  "source": {
+    "url": "/models/herbarium/didelta-spinosa/textures/didelta_spinosa_nor_gl_8k.exr",
+    "upstreamURL": "https://dl.polyhaven.org/file/ph-assets/Models/exr/8k/didelta_spinosa/didelta_spinosa_nor_gl_8k.exr",
+    "bytes": 20504774,
+    "sha256": "67d8f96aba14560667ff6ad7058fb75b8f452a0dfd4792dff2f0961d8c632261",
+    "retainedUnchanged": true
+  },
+  "sourceLicense": {
+    "author": "Jenelle van Heerden",
+    "license": "CC0-1.0",
+    "sourceURL": "https://polyhaven.com/a/didelta_spinosa",
+    "licenseURL": "https://polyhaven.com/license"
+  },
+  "sourceManifest": {
+    "url": "/models/herbarium/didelta-spinosa/source.json",
+    "bytes": 5594,
+    "sha256": "c914fc780c08909842055ae76c5e03b3cca094c4f4eb696b607570db08e51890"
+  },
+  "derivative": {
+    "url": "/models/herbarium/didelta-spinosa/textures/didelta_spinosa_nor_gl_8k.fb49f83f6955.astc-hdr.ktx2",
+    "bytes": 27297259,
+    "sha256": "fb49f83f6955641d070ff7e352926dbb19568f5b961a0817e78f202203b12564"
+  },
+  "tool": {
+    "name": "KTX-Software",
+    "packageURL": "https://github.com/KhronosGroup/KTX-Software/releases/download/v5.0.0-rc2/KTX-Software-5.0.0-rc2-Darwin-arm64.pkg",
+    "packageBytes": 8367613,
+    "packageSHA256": "8fe97686ee65b103e49507d25a6c504d4bb4796d065350d4b6c4fd3b09d3978f",
+    "cliVersion": "v5.0.0-rc2~3",
+    "libraryVersion": "v5.0.0-rc2~2",
+    "quality": 4,
+    "threads": 6,
+    "RDO": false
+  },
+  "input": {
+    "width": 8192,
+    "height": 8192,
+    "levels": 14,
+    "format": "R16G16B16A16_SFLOAT",
+    "byteOrder": "little-endian",
+    "orientation": {
+      "rowOrder": "Exact decodeShrubTextureData normalMap output after its one EXR row reversal; top row first",
+      "noAdditionalFlip": true,
+      "noSwizzle": true,
+      "noNormalization": true,
+      "firstRowSHA256": "b706dc44817d0117d94e95f3f32a5e184d6136c864921be7a53c89214203d0ac",
+      "lastRowSHA256": "1fe74fd4c6681a98e27d15e9cd0357821aa659ae8d8e5522cd0cd13fe66ae8ba"
+    },
+    "decoderBindings": [
+      {
+        "path": "world/src/herbarium-texture-data.js",
+        "bytes": 1535,
+        "sha256": "389b451b27bcd1419e159f41e4ef5575f259c610ae9ee4709af89ada33e7b684"
+      },
+      {
+        "path": "world/src/herbarium-community.js",
+        "bytes": 17513,
+        "sha256": "c4ae9c90c2589d21fe5ffb05d738762c7b7ad9d00c186d8610a9864f4544b291"
+      },
+      {
+        "path": "world/node_modules/three/examples/jsm/loaders/EXRLoader.js",
+        "bytes": 86154,
+        "sha256": "1355b32a2ee1226bffd0f96558f3d21e300832813ab70d51ec971025ebc34d5d"
+      },
+      {
+        "path": "world/node_modules/three/examples/jsm/libs/fflate.module.js",
+        "bytes": 89384,
+        "sha256": "209a4412eb48ce609edb4391992a792ffcc3983d30ee7e2b0b89a8c470f3cd8a"
+      },
+      {
+        "path": "world/node_modules/three/src/extras/DataUtils.js",
+        "bytes": 4553,
+        "sha256": "c13af55f853b7882c7435d06b9c66333e9d68b42b22f6c257a060d6248052d6b"
+      },
+      {
+        "path": "world/node_modules/three/package.json",
+        "bytes": 3826,
+        "sha256": "1d5c438acdc1fe5a52fb8ede2e417afd91fec91d22275c40f7b739591b24e4df"
+      },
+      {
+        "path": "world/node_modules/three/build/three.module.js",
+        "bytes": 650153,
+        "sha256": "bbf5ed13fe4373f5bd38b14ea8e62e9f157327da5638edc6d3863e08b167c9c7"
+      },
+      {
+        "path": "world/node_modules/three/build/three.core.js",
+        "bytes": 1443056,
+        "sha256": "3718df126d69c125362a03340913204470d8c50238605150e57f808840fb7759"
+      }
+    ],
+    "base": {
+      "path": "mip00.rgba16f",
+      "bytes": 536870912,
+      "sha256": "1324d06839bf263fefe472edaf08b6fcb1113977af337b8a83bc910dde77c5c9"
+    },
+    "domain": [
+      {
+        "channel": "R",
+        "pixels": 67108864,
+        "min": 0.02197265625,
+        "max": 0.98779296875,
+        "aboveOne": 0
+      },
+      {
+        "channel": "G",
+        "pixels": 67108864,
+        "min": 0.024871826171875,
+        "max": 0.97998046875,
+        "aboveOne": 0
+      },
+      {
+        "channel": "B",
+        "pixels": 67108864,
+        "min": 0.61328125,
+        "max": 1.0419921875,
+        "aboveOne": 3882293
+      },
+      {
+        "channel": "A",
+        "pixels": 67108864,
+        "min": 1,
+        "max": 1,
+        "aboveOne": 0
+      }
+    ],
+    "mipRule": "Float64 left-associated 2x2 component mean of prior unquantized float64 level; level 0 retains decoded HALF bits; each lower level rounds once to HALF. No feedback from HALF outputs, clamp, rescale, channel/row change, or normal renormalization.",
+    "suppliedMips": [
+      {
+        "level": 0,
+        "width": 8192,
+        "height": 8192,
+        "half": {
+          "path": "mip00.rgba16f",
+          "bytes": 536870912,
+          "sha256": "1324d06839bf263fefe472edaf08b6fcb1113977af337b8a83bc910dde77c5c9"
+        },
+        "firstRowSHA256": "b706dc44817d0117d94e95f3f32a5e184d6136c864921be7a53c89214203d0ac",
+        "lastRowSHA256": "1fe74fd4c6681a98e27d15e9cd0357821aa659ae8d8e5522cd0cd13fe66ae8ba"
+      },
+      {
+        "level": 1,
+        "width": 4096,
+        "height": 4096,
+        "half": {
+          "path": "mip01.rgba16f",
+          "bytes": 134217728,
+          "sha256": "ded833e6cddcd88cfaf5547bde51f060772dc27f9461176aedc5ec3de6419a44"
+        },
+        "firstRowSHA256": "5e9975beff5192eaa03be300c431063d299b008c9173e8b74fd8bb0f66a89874",
+        "lastRowSHA256": "9b0948569d97d4b9905cf0d3532e2c837b179f48552c104139ae02f77df836cf"
+      },
+      {
+        "level": 2,
+        "width": 2048,
+        "height": 2048,
+        "half": {
+          "path": "mip02.rgba16f",
+          "bytes": 33554432,
+          "sha256": "8562ef706e7f0465739f05a7aa909bf0affaf62588aaca0bfd8bbf3b1ce0bcad"
+        },
+        "firstRowSHA256": "58ec2b8a19c15b2c354944d147917e6b4b47f6759e5a0104df2566cf68fed37f",
+        "lastRowSHA256": "26eff4850eed06a7b9f4703ff8c5c510eb457734b641fa5e7552b1b6f07dc417"
+      },
+      {
+        "level": 3,
+        "width": 1024,
+        "height": 1024,
+        "half": {
+          "path": "mip03.rgba16f",
+          "bytes": 8388608,
+          "sha256": "6407e2b55c5ab9db643d4c8d23808358472279a41303ff56c925b1f793ebf85d"
+        },
+        "firstRowSHA256": "24398b0ddf524c96b7a1ae96a9b3ca6424aa1fa22f3c0eaea5c2401c56336956",
+        "lastRowSHA256": "88e7d94db6cbb94050717f1609775794186389a39efef3fa763e7cba5c253813"
+      },
+      {
+        "level": 4,
+        "width": 512,
+        "height": 512,
+        "half": {
+          "path": "mip04.rgba16f",
+          "bytes": 2097152,
+          "sha256": "fa30bfa23c7b800b23fab85b9105377062cfa8e1e98de9aa9d04de0c8f471f69"
+        },
+        "firstRowSHA256": "d51912d512883ed4e35aff90208c87334c2cf4defef325ca7958e0fe0b090984",
+        "lastRowSHA256": "aa270194fbceb2d77440affee9270d288e3c3582348b94a57b6ed5e9d95f2c10"
+      },
+      {
+        "level": 5,
+        "width": 256,
+        "height": 256,
+        "half": {
+          "path": "mip05.rgba16f",
+          "bytes": 524288,
+          "sha256": "572074ccbc9f96f3832aaddaf2dcc7d66de89aa322e8d69def6eb76e0e26fb3f"
+        },
+        "firstRowSHA256": "441173b4e483cc9ffa80d873e3b4375eca99c0380e9884457279e60183dfb0b1",
+        "lastRowSHA256": "3b2cf6a924731ac07c47d7904e95d2f4a4820a50d268b4b2861e09c4da8f36e6"
+      },
+      {
+        "level": 6,
+        "width": 128,
+        "height": 128,
+        "half": {
+          "path": "mip06.rgba16f",
+          "bytes": 131072,
+          "sha256": "bde6c86a2f8b5176878e3033dfb81b59a472602baea3a2ba22a8a16212f4e54a"
+        },
+        "firstRowSHA256": "d69734ff9980a3733ac237dec30388b5f7302472298bddfb2c2568d49609ec63",
+        "lastRowSHA256": "201ded2d3d6752e12e7295c5613914249e925624ca4cd71a1eaf041e3c73c816"
+      },
+      {
+        "level": 7,
+        "width": 64,
+        "height": 64,
+        "half": {
+          "path": "mip07.rgba16f",
+          "bytes": 32768,
+          "sha256": "b7bbbf5105791f629c798739c6ea95159c53b235ce09daa063e8673119c036ed"
+        },
+        "firstRowSHA256": "c784e31ec63aec1f77a03422edd2a66c9fda7f8c0fbf8eece6764a28b4f5b480",
+        "lastRowSHA256": "f9d31774bb50e7da82a47c98016f41612cea66a2d97e623a841e4a6cdab64e08"
+      },
+      {
+        "level": 8,
+        "width": 32,
+        "height": 32,
+        "half": {
+          "path": "mip08.rgba16f",
+          "bytes": 8192,
+          "sha256": "58324b4dffe1d791215f833f7188aef1b958bf92c245928ed07800f2eb35b72d"
+        },
+        "firstRowSHA256": "a9c54a163517f2cf3fdffa3ef768e67aafceb39f09c8882ae61a2de809ebf3d4",
+        "lastRowSHA256": "824674c189e34f100bf2d553056e57602cb451f796c343dd192be55db1c63c6d"
+      },
+      {
+        "level": 9,
+        "width": 16,
+        "height": 16,
+        "half": {
+          "path": "mip09.rgba16f",
+          "bytes": 2048,
+          "sha256": "e59b16a654be17fce92370667c41d11789751642a3b2d036a5fb61953e1d2d35"
+        },
+        "firstRowSHA256": "e6d49f3c00048a9e479996aa37a09472e9559a13d0c800f7fe761a3f34fcb421",
+        "lastRowSHA256": "6892217633caea69b7ef15a9b956b9708acc370a12430e0838a961a9ad29b0f6"
+      },
+      {
+        "level": 10,
+        "width": 8,
+        "height": 8,
+        "half": {
+          "path": "mip10.rgba16f",
+          "bytes": 512,
+          "sha256": "1ed486371f6c2dc6e6102e3caf369b1efc395345f8e7ac15f7020bd49159f10d"
+        },
+        "firstRowSHA256": "e431b42c45986dba9a7a6a2bbf96929594b38da1208a297151835a1cb9574d87",
+        "lastRowSHA256": "30a95b3e51b1d9b46bb232f1fd96e17fa677e64b55e3319ced74e9efc6812ed1"
+      },
+      {
+        "level": 11,
+        "width": 4,
+        "height": 4,
+        "half": {
+          "path": "mip11.rgba16f",
+          "bytes": 128,
+          "sha256": "bb8536437f2e3eb23e7c384ed77f86dd72f05c4a15d4c90e2da4ae4284fc8ee9"
+        },
+        "firstRowSHA256": "0b7e4cb5618cfb7b48fe81c57d670ccf99a71a05c253b110a95a1107be4f29db",
+        "lastRowSHA256": "62e736d93756419d29b0ff27c3febfc96d9752e4f36da4073b8ab841f1f68dc7"
+      },
+      {
+        "level": 12,
+        "width": 2,
+        "height": 2,
+        "half": {
+          "path": "mip12.rgba16f",
+          "bytes": 32,
+          "sha256": "178727239f2b035a8accbcfa47fd9022801247d1fbe4f9df230d312b3514494b"
+        },
+        "firstRowSHA256": "8b5138344514752a04713979ddc5dab16e2961cc197b6c2b031780c340062bee",
+        "lastRowSHA256": "071f9dbc3494e9c91953848e80db86947c1bfdff3ccaff56edd6b6581de73d4a"
+      },
+      {
+        "level": 13,
+        "width": 1,
+        "height": 1,
+        "half": {
+          "path": "mip13.rgba16f",
+          "bytes": 8,
+          "sha256": "47f03e93398fb6eae19fcee9798d936d891d1f84f270a97e1546ced18e8309ec"
+        },
+        "firstRowSHA256": "47f03e93398fb6eae19fcee9798d936d891d1f84f270a97e1546ced18e8309ec",
+        "lastRowSHA256": "47f03e93398fb6eae19fcee9798d936d891d1f84f270a97e1546ced18e8309ec"
+      }
+    ],
+    "normalRenormalization": false,
+    "clampRescaleOrGammaConversion": false
+  },
+  "encode": {
+    "argvTemplate": [
+      "${KTX_EXECUTABLE}",
+      "create",
+      "--raw",
+      "--format",
+      "R16G16B16A16_SFLOAT",
+      "--width",
+      "8192",
+      "--height",
+      "8192",
+      "--levels",
+      "14",
+      "--assign-tf",
+      "linear",
+      "--assign-primaries",
+      "none",
+      "--assign-texcoord-origin",
+      "top-left",
+      "--fail-on-color-conversions",
+      "--fail-on-origin-changes",
+      "--encode",
+      "uastc-hdr-4x4",
+      "--uastc-quality",
+      "4",
+      "--uastc-hdr-uber-mode",
+      "--uastc-hdr-ultra-quant",
+      "--uastc-hdr-favor-astc",
+      "--threads",
+      "6",
+      "--zstd",
+      "18",
+      "mip00.rgba16f",
+      "mip01.rgba16f",
+      "mip02.rgba16f",
+      "mip03.rgba16f",
+      "mip04.rgba16f",
+      "mip05.rgba16f",
+      "mip06.rgba16f",
+      "mip07.rgba16f",
+      "mip08.rgba16f",
+      "mip09.rgba16f",
+      "mip10.rgba16f",
+      "mip11.rgba16f",
+      "mip12.rgba16f",
+      "mip13.rgba16f",
+      "didelta_spinosa_nor_gl_8k.fb49f83f6955.astc-hdr.ktx2"
+    ],
+    "templateMeaning": "Run in a directory containing the explicit audited mip00..mip13.rgba16f inputs. KTX_EXECUTABLE denotes the verified CLI executable; these are argv tokens, not a shell expansion command. The documented decode/mip algorithm must be reproduced and every supplied-input hash checked first.",
+    "executedReturnCode": 0,
+    "executedElapsedSeconds": 967.6772927080019,
+    "noImplicitMipGeneration": true,
+    "rawControlExact": true,
+    "rawControl": {
+      "path": "normal-half-unencoded.ktx2",
+      "bytes": 715828472,
+      "sha256": "3a6bee375e17996614bba02a67de55dbee4490a6459f61e0a7f4669a0b316392"
+    }
+  },
+  "output": {
+    "vkFormat": 1000066000,
+    "DFDColorModel": 167,
+    "transferFunction": "linear",
+    "primaries": "none",
+    "orientation": "rd",
+    "swizzle": null,
+    "supercompression": "Zstd",
+    "supercompressionScheme": 2,
+    "block": [
+      4,
+      4,
+      16
+    ],
+    "blockPlaneBytes": 89478512,
+    "blockPlaneBytesBoundary": "Format arithmetic for fourteen ASTC block planes; not measured GPU memory, RSS or performance."
+  },
+  "runtime": {
+    "selection": "Actual renderer ASTC hdr profile and maxTextureSize >=8192; otherwise the retained original EXR.",
+    "format": 37808,
+    "type": 1016,
+    "flipY": false,
+    "normalScale": [
+      1,
+      -1
+    ],
+    "colorSpace": "none",
+    "minFilter": "LinearMipmapLinearFilter",
+    "magFilter": "NearestFilter",
+    "wrap": "RepeatWrapping",
+    "anisotropyProperty": 8,
+    "generateMipmaps": false,
+    "suppliedLevels": 14,
+    "driverGeneratedMipEquivalenceClaimed": false
+  },
+  "evidence": {
+    "preparation": {
+      "url": "/models/herbarium/didelta-spinosa/normal-hdr-evidence/preparation.json",
+      "bytes": 50925,
+      "sha256": "28d25c6c37783a9922e51ebd9af2e7e55133f5e3d54bfbed341532920758d3ef"
+    },
+    "encoding": {
+      "url": "/models/herbarium/didelta-spinosa/normal-hdr-evidence/encoding.json",
+      "bytes": 8776,
+      "sha256": "2d37bfe08839599dac2ac124d90f875e68065de1b2a1a324aa9969e9ea6812ef"
+    },
+    "audit": {
+      "url": "/models/herbarium/didelta-spinosa/normal-hdr-evidence/audit.json",
+      "bytes": 211772,
+      "sha256": "0c06fe9f5d277370b0488b4aa190f951a431bc2a6b411f9daf2c89ead4353920"
+    }
+  },
+  "archivalRecordBoundary": "Linked evidence files are unchanged recorded outputs. Paths inside them identify historical authoring inputs/commands, not additional public resources. Full raw controls and supplied mip files are retained in the authoring archive and are not shipped; their complete hashes and preparation algorithm are recorded here. This JSON is a portable recipe and evidence record, not an automatic encoder runner."
+}

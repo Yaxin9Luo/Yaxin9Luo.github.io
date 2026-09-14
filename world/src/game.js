@@ -7,7 +7,15 @@ import {loadLandscapeSurfaces,loadMountainArt,loadNightEnvironment} from './land
 import {loadArchitectureAssets} from './architecture.js';
 import {loadAtmosphereAssets} from './atmosphere.js';
 import {loadEnvironmentSignage} from './environment-signage.js';
+import {loadHerbariumAssets} from './herbarium-assets.js';
+import {getShrubNormalSourceState} from './herbarium-community.js';
+import {installHerbariumRenderBatches,isHerbariumRenderSource} from './herbarium-render-batches.js';
+import {selectShrubNormalEncoding,canRestoreShrubNormal,shrubNormalCapabilities} from './herbarium-normal-policy.js';
 import {loadBotanicalAssets} from './botanical-cache.js';
+import {createCompanionSystem} from './companion-system.js';
+import {createCompanionSupport} from './companion-support.js';
+import {createCompanionInstallation} from './companion-installation.js';
+import {COMPANION_PLACEMENTS} from './companion-placements.js';
 import {loadScannedRockAssets,hydrateScannedRocks} from './rock-scans.js';
 import { EnvironmentClock, TIME_MODES, TIME_PERIODS, TIME_PHASES } from './environment-time.js';
 import {createWandIllumination} from './illumination.js';
@@ -38,15 +46,24 @@ const HIGHLANDS = { night: ['#315a67','#506f85','#758c9f'].map(color => new THRE
 const turnDelta = (from, to) => THREE.MathUtils.euclideanModulo(to - from + Math.PI, TAU) - Math.PI;
 const copyProgress = (p) => ({ ...p, visited: [...p.visited], crystals: [...p.crystals] });
 
+function firstVisibleOccluder(raycaster,objects=[]){
+  return raycaster.intersectObjects(objects,true).find(hit=>{
+    for(let object=hit.object;object;object=object.parent)if(object.visible===false&&!isHerbariumRenderSource(object))return false;
+    return true;
+  });
+}
+
 /** Playable flight, discoveries, dueling, and an ordered broom race. */
 export class Game {
   static async createAsync(canvas,callbacks={},options={},context={}){
     const {signal,onProgress=()=>{},deadline=performance.now()+20000}=context;
+    if(context.reviewEnhancementBudgetMs!==undefined&&context.reviewEnhancementBudgetMs!==900000)throw new RangeError('Staged review enhancement budget must be 15 minutes');
     signal?.throwIfAborted();
     // Capability detection and all decoding use the one renderer that will display the world.
     const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:false,powerPreference:'high-performance'});
     let game;
     try{
+      context.onRenderer?.(renderer);
       const [,gltf]=await Promise.all([
         loadWizardAsset({...context,variant:'core'}),
         loadGLTF({id:'navigation-terrain',url:'/runtime/navigation-terrain.glb',phase:1},context),
@@ -61,13 +78,16 @@ export class Game {
         terrain[name]=mesh.userData.worldGeometry;
       }
       await new Promise(resolve=>setTimeout(resolve,0));signal?.throwIfAborted();
-      game=new Game(canvas,callbacks,options,{renderer,terrain,progressive:true});
+      onProgress({phase:'assembly-begin',activeResource:'core scene and renderer'});
+      game=new Game(canvas,callbacks,options,{renderer,terrain,progressive:true,signal,reviewDemandRendering:context.reviewDemandRendering===true});
+      onProgress({phase:'rendering-setup',activeResource:'waiting for core GPU frame'});
       await new Promise((resolve,reject)=>{
         const cancel=()=>{game.dispose();reject(signal.reason);};signal?.addEventListener('abort',cancel,{once:true});
         game._firstFrame=()=>{signal?.removeEventListener('abort',cancel);if(performance.now()>=deadline){game.dispose();const error=new Error('Core render deadline exceeded');error.type='timeout';reject(error);}else resolve();};
       });
       signal?.throwIfAborted();
       onProgress({phase:'first-frame'});
+      signal?.throwIfAborted();
       // Schedule after the readiness promise. Enhancement failures cannot revoke interactivity.
       game._enhancementTimer=setTimeout(()=>game._beginEnhancements(context),0);
       return game;
@@ -109,8 +129,10 @@ export class Game {
     this._lastFrame = 0;
     this._lastSnapshot = -1;
     this._frameCount = 0;
+    this._reviewRendering=bootstrap.reviewDemandRendering===true?{pending:true,staticComparison:false,continuous:false,lastView:null,idle:false,requestedRevision:0,drawnRevision:null,drawingRevision:null}:null;
     this._listeners = [];
     this._disposed = false;
+    this._lifetimeSignal=bootstrap.signal;
     this._suspended = Boolean(document.hidden);
     this._contextLost = false;
     this._keys = new Set();
@@ -160,7 +182,7 @@ export class Game {
       this._landscapeLighting = [];
       this.world.root.traverse(object => { if (Number.isInteger(object.material?.userData.backgroundLayer)) this._landscapeLighting.push(object.material); });
       this.buildingColliders = BUILDING_COLLIDERS.concat(this.world.environmentColliders || []);
-      this.exhibitionStage = createExhibitionStage(this.scene, terrainHeight, { lang: this.options.lang });
+      this.exhibitionStage = createExhibitionStage(this.scene, terrainHeight, { lang: this.options.lang, onVisualChange:()=>this.requestRender() });
       this.buildingColliders.push(...(this.exhibitionStage.colliders || []));
       // The workshop display occupies the old generic project gateway footprint.
       const projectPortal = this.world.portals.find(portal => portal.id === 'projects');
@@ -186,6 +208,7 @@ export class Game {
       this._bindEvents();
       this._tick = this._tick.bind(this);
       this._animation = requestAnimationFrame(this._tick);
+      if(!bootstrap.progressive)this._loadCompanions({deadline:performance.now()+90000}).catch(()=>{});
     } catch (error) {
       this.dispose();
       throw error;
@@ -194,10 +217,22 @@ export class Game {
 
   async _beginEnhancements(context){
     if(this._disposed)return;
+    if(this._enhancementPromise)return this._enhancementPromise;
+    if(this._enhancementStarted)return;
+    this._enhancementStarted=true;
+    this._enhancementPromise=(async()=>{
     this._enhancementController=new AbortController();const signal=this._enhancementController.signal;
-    const options={signal,deadline:performance.now()+90000,attemptId:context.attemptId};
-    this._enhancementContext=context;let degraded=false;
-    const observe=promise=>promise.then(value=>{if(value===false)degraded=true;return value;},error=>{degraded=true;return null;});
+    const reviewDeadline=context.reviewEnhancementBudgetMs===900000?performance.now()+900000:null;
+    const assetDeadline=milliseconds=>reviewDeadline??performance.now()+milliseconds;
+    const options={signal,deadline:assetDeadline(90000),attemptId:context.attemptId};
+    this._enhancementContext=context;let degraded=false;const errors=[];
+    context.onProgress?.({phase:'enhancements-begin',...(reviewDeadline!==null?{deadline:reviewDeadline}:{})});
+    if(signal.aborted||this._disposed)return;
+    const observe=promise=>promise.then(value=>{if(value===false)degraded=true;return value;},error=>{degraded=true;errors.push(error.message);context.onProgress?.({phase:'enhancement-failed',activeResource:error.message});return null;});
+    this._herbariumNormalSelection=selectShrubNormalEncoding(this.renderer);
+    const herbariumReady=loadHerbariumAssets({...options,deadline:assetDeadline(180000),normalEncoding:this._herbariumNormalSelection.encoding});
+    // Start early; the constructor is gated below and never mutates after return.
+    herbariumReady.catch(()=>{});
     const tasks=[
       observe(loadLandscapeSurfaces(options)),observe(loadMountainArt(options)),observe(loadArchitectureAssets(options)),
       observe(loadAtmosphereAssets(options)),observe(loadEnvironmentSignage(options)),
@@ -205,44 +240,96 @@ export class Game {
       observe((async()=>{
         await loadScannedRockAssets({...options,variant:'preview'});if(signal.aborted)return;
         hydrateScannedRocks(this.world.root);
-        const ready=await loadScannedRockAssets({...options,deadline:performance.now()+90000});if(!signal.aborted)hydrateScannedRocks(this.world.root);return ready;
+        const ready=await loadScannedRockAssets({...options,deadline:assetDeadline(90000)});if(!signal.aborted)hydrateScannedRocks(this.world.root);return ready;
       })()),
     ];
-    if(this.environment.night>.05)tasks.push(observe(this._loadNightEnvironment(options)));
+    if(this.environment.night>.05||context.preloadNightEnvironment)tasks.push(observe(this._loadNightEnvironment(options)));
     if(this.options.gameplay)tasks.push(observe(this._loadEncounters(options)));
     this.world.priority=id=>{
       if(this._requestedRegion===id)return -10000;
       const location=locations.find(item=>item.id===id);return location?Math.hypot(location.x-this.position.x,location.z-this.position.z):10000;
     };
-    tasks.push(observe(this.world.enhance({signal,prepareRegion:async region=>{
+    const worldReady=this.world.enhance({signal,prepareRegion:async region=>{
+      context.onProgress?.({phase:'prepare',region});
+      if(region==='herbarium'){await herbariumReady;signal.throwIfAborted();return true;}
       const families=region==='gardens'?[{kind:'silver',seed:154},{kind:'cherry',seed:154}]:region==='vegetation'?[{kind:'pine',seed:168},{kind:'silver',seed:499}]:[{kind:'cherry',seed:881},{kind:'lilac',seed:910}];
       try{
-        await loadBotanicalAssets({...options,deadline:performance.now()+90000,families,levels:region==='gardens'?['near']:['near','mid','far']});
+        await loadBotanicalAssets({...options,deadline:assetDeadline(90000),families,levels:region==='gardens'?['near']:['near','mid','far']});
         return true;
       }catch(error){signal.throwIfAborted();degraded=true;return false;}
     },onRegion:region=>{
       if(this._disposed)return;
       this._refreshWorldBindings();hydrateScannedRocks(this.world.root);
-      context.onProgress?.({phase:'assembly',region:region.region,assemblyMs:region.assemblyMs});
-    }})));
+      context.onProgress?.({phase:'assembly',region:region.region,assemblyMs:region.assemblyMs,...(region.assemblySteps?{assemblySteps:region.assemblySteps}:{})});
+    }});
+    tasks.push(observe(worldReady));
+    tasks.push(observe(this._loadCompanions(options,worldReady)));
     await Promise.all(tasks);
     if(signal.aborted||this._disposed)return;
     this._refreshWorldBindings();
-    context.onProgress?.({phase:'enhancements',enhancements:degraded?'degraded':'ready'});
+    const enhancements=degraded?'degraded':'ready';
+    context.onProgress?.({phase:'enhancements',enhancements,errors});
+    if(signal.aborted||this._disposed)return;
+    this._fullFrame=()=>context.onProgress?.({phase:'full-frame',enhancements,errors});
+    })();
+    return this._enhancementPromise;
   }
+
+  herbariumNormalSnapshot(){const selection=this._herbariumNormalSelection??null,source=getShrubNormalSourceState();return {selection,currentCapabilities:shrubNormalCapabilities(this.renderer),source,restoreEncoding:selection?.encoding||source.encoding,restoreEncodingOrigin:selection?'game-selection':source.encoding?`${source.status}-source`:null,restoreFailure:this._herbariumNormalRestoreFailure??null};}
 
   _refreshWorldBindings(){
     this._landscapeLighting.length=0;
     this.world.root.traverse(object=>{if(Number.isInteger(object.material?.userData.backgroundLayer))this._landscapeLighting.push(object.material);});
     registerWorldLighting(this.world);registerWorldLighting(this.world,this.exhibitionStage.group);
     this.buildingColliders=BUILDING_COLLIDERS.concat(this.world.environmentColliders||[],this.exhibitionStage.colliders||[]);
+    this.companionSupport?.invalidate();this.companions?.rebind({});this._updateCompanions(0);
     this._recoverGroundSupport();
     this._updateEnvironment(0);this._syncDiscoveries();this.renderer.shadowMap.needsUpdate=true;
+    this.requestRender();
   }
+
+  _loadCompanions(options={},worldReady=Promise.resolve()){
+    if(!this._companionInstallation)this._companionInstallation=createCompanionInstallation({signal:this._lifetimeSignal,install:()=>{
+      if(this._disposed||options.signal?.aborted)throw new DOMException('Game closed','AbortError');
+      this.companionSupport=createCompanionSupport(()=>({heightAt:this.world.heightAt,colliders:this.buildingColliders}));
+      this.companionRoot=new THREE.Group();this.companionRoot.name='Courtyard companions';this.world.root.add(this.companionRoot);
+      try{
+        this.companions=createCompanionSystem({root:this.companionRoot,placements:COMPANION_PLACEMENTS,language:this.options.lang,
+          getWorld:()=>({heightAt:this.companionSupport.heightAt,colliders:this.buildingColliders,collidersFor:this.companionSupport.collidersFor,waterLevel:WATER_LEVEL,visitorCollider:this._companionVisitorCollider()}),
+          isActive:()=>this._companionsActive(),onMessage:text=>this._message(text.en,text.zh),
+          onSound:event=>this.audio.playCompanion(event,{isActive:()=>this._companionsActive()&&!this.options.reducedMotion,distanceFrom:this.position}),onSilence:({owner})=>this.audio.cancelCompanionVoices(owner)});
+        if(this.companions.snapshot().actors.some(actor=>!actor.valid))throw new Error('Companion courtyard placement is unsupported or obstructed');
+        this.world.occluders.push(this.companionRoot);this._updateCompanions(0);
+        this.renderer.shadowMap.needsUpdate=true;
+        this.requestRender();
+      }catch(error){this.companions?.dispose();this.companionSupport.dispose();this.companionRoot.removeFromParent();this.companions=null;throw error;}
+      return {dispose:()=>{this.companions?.dispose();this.companionSupport?.dispose();this.companionRoot?.removeFromParent();this.world.occluders=this.world.occluders.filter(object=>object!==this.companionRoot);}};
+    }});
+    return this._companionInstallation.request({...options,worldReady});
+  }
+
+  _companionsActive(){return !this._disposed&&!this._lifetimeSignal?.aborted&&this.started&&!this._isPaused();}
+
+  _companionVisitorCollider(){
+    if(!this.started||this.exhibition)return null;
+    const p=this.position,grounded=this.locomotion?.mode!=='flying',bottom=p.y+(grounded?CHARACTER_GROUND_MOTION.soleY:-1.6),top=bottom+(grounded?GROUND_MOTION.height:3.2),radius=grounded?.65:1.1;
+    const planes=[[0,1,0,top],[0,-1,0,-bottom]];
+    for(let i=0;i<8;i++){const a=i*Math.PI/4,nx=Math.cos(a),nz=Math.sin(a);planes.push([nx,0,nz,nx*p.x+nz*p.z+radius]);}
+    return {id:'visitor',bottom,top,planes};
+  }
+
+  _updateCompanions(dt){
+    if(!this.companions)return;
+    const active=this._companionsActive();this.companions.setPaused(!active);
+    this.companions.update(active?dt:0,{reducedMotion:this.options.reducedMotion,language:this.options.lang,playerPosition:this.position,night:this.environment?.night});
+    this.nearestCompanion=active?this.companions.nearest(this.position):null;
+  }
+
+  companionSnapshot(){return {installation:this._companionInstallation?.snapshot()||{status:'idle',error:null},...(this.companions?.snapshot()||{actors:[]}),audio:this.audio.companionSnapshot?.()};}
 
   _loadNightEnvironment(options={}){
     this._nightAttempted=true;
-    if(!this._nightRequest)this._nightRequest=loadNightEnvironment(this.scene,options).catch(error=>{this._nightRequest=null;throw error;});
+    if(!this._nightRequest)this._nightRequest=loadNightEnvironment(this.scene,options).then(result=>{this.requestRender();return result;}).catch(error=>{this._nightRequest=null;throw error;});
     return this._nightRequest;
   }
 
@@ -379,13 +466,15 @@ export class Game {
       if (['Space','Enter'].includes(event.code) && event.target?.closest?.('button,a,summary,[role="button"]')) return;
       if (this.started && !this._isPaused() && MOVEMENT_KEYS.has(event.code) && !this._typing(event)) event.preventDefault();
     });
-    this._listen(window, 'blur', () => { this._suspended = true; this._clearControls(); this.audio.setSuspended(true); });
-    this._listen(window, 'focus', () => { this._suspended = Boolean(document.hidden); this.audio.setSuspended(this._suspended); this._lastFrame = 0; });
+    this._listen(window, 'blur', () => { this._suspended = true; this._clearControls(); this.audio.setSuspended(true); this._updateCompanions(0); this.requestRender(); });
+    this._listen(window, 'focus', () => { this._suspended = Boolean(document.hidden); this.audio.setSuspended(this._suspended); this._lastFrame = 0; this._updateCompanions(0); this.requestRender(); });
     this._listen(document, 'visibilitychange', () => {
       this._suspended = Boolean(document.hidden);
       this._clearControls();
       this.audio.setSuspended(this._suspended);
+      this._updateCompanions(0);
       this._lastFrame = 0;
+      this.requestRender();
     });
     this._listen(this.canvas, 'contextmenu', (event) => event.preventDefault());
     this._listen(this.canvas, 'pointerdown', (event) => this._pointerDown(event));
@@ -402,13 +491,25 @@ export class Game {
       this._contextLost = true;
       this._clearControls();
       this.audio.setSuspended(true);
+      this._updateCompanions(0);
       this._message('Graphics paused. Reload to return to the world; your discoveries are saved.', '画面已暂停。刷新页面即可重新进入世界；探索进度已保存。');
     });
     this._listen(this.canvas, 'webglcontextrestored', () => {
+      const normalEncoding=this._herbariumNormalSelection?.encoding||getShrubNormalSourceState().encoding;
+      if(normalEncoding&&!canRestoreShrubNormal(this.renderer,normalEncoding)){
+        this._contextLost=true;this._herbariumNormalRestoreFailure=shrubNormalCapabilities(this.renderer);
+        this._enhancementController?.abort(new Error('Restored renderer cannot retain the selected full-resolution shrub normal'));
+        this.audio.setSuspended(true);
+        this._message('Graphics changed. Reload to choose supported full-quality assets; your discoveries are saved.', '图形能力已改变。请刷新以选择受支持的完整画质资源；探索进度已保存。');
+        return;
+      }
+      this._herbariumNormalRestoreFailure=null;
       this._contextLost = false;
       this.renderer.shadowMap.needsUpdate = true;
       this.audio.setSuspended(this._suspended);
+      this._updateCompanions(0);
       this._lastFrame = 0;
+      this.requestRender();
     });
     if (typeof ResizeObserver !== 'undefined') {
       this._resizeObserver = new ResizeObserver(() => this._resize());
@@ -499,6 +600,8 @@ export class Game {
     if (artifactHit) { this._activateArtifact(artifactHit.object.userData.portfolioAction); return; }
     const exhibitHit=this._pickExhibit();
     if(exhibitHit?.object.userData.paper){this.callbacks.onExhibit?.(exhibitHit.object.userData.paper);return;}
+    const companionHit=this._pickWorldTarget(this.companions?.pickMeshes||[],130);
+    if(companionHit){const id=this.companions.idForObject(companionHit.object);if(id&&this._companionReachable(id)){this.interact({companionId:id});return;}}
     this._flightPlane.constant = -this.position.y;
     if (this._raycaster.ray.intersectPlane(this._flightPlane, this._scratch)) {
       if (this.tour) this.endTour();
@@ -514,11 +617,20 @@ export class Game {
   _pickWorldTarget(targets, range) {
     const hit = this._raycaster.intersectObjects(targets, false).find(item => item.distance < range);
     if (!hit) return null;
-    const blocker = this._raycaster.intersectObjects(this.world.occluders || [], true)[0];
+    const blocker = firstVisibleOccluder(this._raycaster,this.world.occluders);
     return blocker && blocker.object !== hit.object && blocker.distance < hit.distance - .05 ? null : hit;
   }
 
-  interact() {
+  _companionReachable(id){
+    if(!this._companionsActive())return false;
+    const actor=this.companions?.snapshot().actors.find(a=>a.id===id);
+    if(!actor?.valid||Math.hypot(actor.position.x-this.position.x,actor.position.z-this.position.z)>6.25||Math.abs(actor.position.y-this.position.y)>3.5)return false;
+    const origin=new THREE.Vector3(this.position.x,this.position.y+1,this.position.z),target=new THREE.Vector3(actor.position.x,actor.position.y+1.4,actor.position.z),direction=target.sub(origin),distance=direction.length();
+    const ray=new THREE.Raycaster(origin,direction.normalize(),0,distance),hit=firstVisibleOccluder(ray,this.world.occluders);
+    return !hit||hit.object.userData.companionId===id||hit.distance>=distance-.05;
+  }
+
+  interact({companionId}={}) {
     if (!this.started || this._isPaused()) return false;
     if (this.nearestExhibition) this.callbacks.onExhibition?.(this.nearestExhibition);
     else if (this.nearestClock) this.cycleTime();
@@ -526,6 +638,11 @@ export class Game {
     else if (this.nearestPaper) this.callbacks.onExhibit?.(this.nearestPaper);
     else if (this.nearest === 'projects') this.callbacks.onExhibition?.('autodesign');
     else if (this.nearest) this.callbacks.onInteract?.(this.nearest);
+    else if(companionId||this.nearestCompanion){
+      const id=companionId||this.nearestCompanion.id;
+      if(!this._companionReachable(id))return false;
+      this.audio.unlock();const accepted=this.companions.interact(id,{playerPosition:this.position});this._updateCompanions(0);this.requestRender();this._emitFrame();return accepted;
+    }
     else { this._message('Approach an exhibition, a gateway, or the courtyard clock.', '靠近作品展台、传送门或庭院中的星仪时钟。', 'interact', 2); return false; }
     return true;
   }
@@ -552,12 +669,14 @@ export class Game {
     if(!this.environmentClock.jumpTo(period,this._isPaused()||!this.started||this.options.reducedMotion))return false;
     if(!this._nightRequest)this._nightAttempted=false;
     this.options.timeOfDay='auto';this.audio.play('clock');this._updateEnvironment(0);
+    this.requestRender();
     this.callbacks.onTimeChange?.('auto');this._emitFrame();return true;
   }
 
   toggleIllumination() {
     if(!this.started||this._isPaused()||!this.illumination)return false;
     this.illumination.setEnabled(!this.illumination.getState().enabled,{immediate:this.options.reducedMotion});
+    this.requestRender();
     this._emitFrame();return true;
   }
 
@@ -649,7 +768,7 @@ export class Game {
   _pickExhibit() {
     const hit=this._raycaster.intersectObjects((this.world.exhibits||[]).map(e=>e.group),true).find(h=>h.distance<80);
     if(!hit)return null;
-    const blocker=this._raycaster.intersectObjects(this.world.occluders||[],true)[0];
+    const blocker=firstVisibleOccluder(this._raycaster,this.world.occluders);
     return blocker&&blocker.distance<hit.distance-.05?null:hit;
   }
 
@@ -775,12 +894,14 @@ export class Game {
     for (const projectile of this._projectiles) this._retireProjectile(projectile);
     this._updateCamera(1, true);
     this.renderer.shadowMap.needsUpdate = true;
+    this.requestRender();
   }
 
   setPaused(paused) {
     this.paused = Boolean(paused);
     this._clearControls();
     this._lastFrame = 0;
+    this.requestRender();
     this._emitFrame();
   }
 
@@ -819,6 +940,7 @@ export class Game {
     this.cameraElevation=preset.elevation;
     this.cameraDistance=preset.distance;
     this.zoomTarget=1;
+    this.requestRender();
     this._emitFrame();
     return true;
   }
@@ -846,6 +968,7 @@ export class Game {
   releaseLantern() {
     if(!this.started||this._isPaused())return false;
     if(this.world.releaseLantern?.(this.position)){
+      this.requestRender();
       this.audio.unlock();this.audio.play('ring');
       this._message('A little light, on its way.', '一盏灯，慢慢飞向夜空。','lantern',3);
       return true;
@@ -984,7 +1107,7 @@ export class Game {
       if (!value) { this._cancelPendingCast();this._combat = false; this._endRace(); this.shield = 0; for (const projectile of this._projectiles) this._retireProjectile(projectile); }
       this._syncDiscoveries();
     }
-    this._emitFrame();
+    this.requestRender();this._emitFrame();
   }
 
   _applyQuality() {
@@ -1014,6 +1137,57 @@ export class Game {
     this.rendering?.resize(width,height,this._dpr);
     this.camera.aspect = width / height;
     this.camera.updateProjectionMatrix();
+    this.requestRender();
+  }
+
+  // Only a review creation context may enable this policy. RAF and accepted
+  // simulation deltas keep their normal ownership; only identical GPU passes idle.
+  setReviewRendering({staticComparison,continuous}={}) {
+    const review=this._reviewRendering;if(!review||this._disposed)return false;
+    if(staticComparison!==undefined)review.staticComparison=Boolean(staticComparison);
+    if(continuous!==undefined)review.continuous=Boolean(continuous);
+    return this.requestRender();
+  }
+
+  requestRender() {
+    if(!this._reviewRendering||this._disposed)return false;
+    const review=this._reviewRendering;review.pending=true;review.idle=false;
+    review.requestedRevision=(review.requestedRevision||0)+1;return review.requestedRevision;
+  }
+
+  reviewRenderingSnapshot() {
+    const review=this._reviewRendering;if(!review)return null;
+    return {policy:review.staticComparison&&this.options.reducedMotion&&!review.continuous?'on-demand':'continuous',idle:review.idle,pending:review.pending,activeMotion:Boolean(review.activeMotion),requestedRevision:review.requestedRevision??0,drawnRevision:review.drawnRevision??null,drawingRevision:review.drawingRevision??null,renderedFrames:this._frameCount};
+  }
+
+  _renderFrame(dt) {
+    if(this._disposed||this._contextLost)return false;
+    // Authoring, placement and support finish before rendering borrows static
+    // source meshes as instances. No scene builder or collider is replaced.
+    if(this.world?.complete&&this.world.herbarium?.group&&!this._herbariumRenderBatches)this._herbariumRenderBatches=installHerbariumRenderBatches(this.world.herbarium.group,{signal:this._lifetimeSignal});
+    const review=this._reviewRendering;let view;
+    if(review){
+      view=[...this.camera.position,...this.camera.quaternion,this.camera.fov,this.camera.aspect,...(this.position?.toArray()||[]),this.heading,...(this.wizard?.quaternion.toArray()||[])];
+      const moving=!this._isPaused()&&Boolean(this._keys?.size||this._touch?.x||this._touch?.z||Object.values(this._controls||{}).some(Boolean)||this._destination||this.tour||this.race||this._pendingCast||this._characterCastActive||this._projectiles?.some(p=>p.active)||this._particles?.some(p=>p.life>0));
+      review.activeMotion=moving;
+      const changed=!review.lastView||view.some((value,index)=>value!==review.lastView[index]);
+      if(review.staticComparison&&this.options.reducedMotion&&!review.continuous&&!review.pending&&!changed&&!moving&&!this._firstFrame&&!this._fullFrame){review.idle=true;return false;}
+      // Consume before rendering: callbacks may request another frame while a
+      // pass or its real first/full-frame milestone is being completed.
+      review.pending=false;review.idle=false;review.drawingRevision=review.requestedRevision??0;
+    }
+    this.renderer.info.reset();
+    const reflection=this.world?.lake?.reflection;
+    try{
+      reflection?.beginFrame(this.renderer,this.scene,this.camera,()=>this.environment,{revision:review?.drawingRevision??null,force:Boolean(this._firstFrame||this._fullFrame)});
+      this.rendering.render(dt);
+    }catch(error){if(review){review.pending=true;review.drawingRevision=null;}throw error;}
+    finally{reflection?.endFrame();}
+    this._frameCount++;
+    if(review){review.lastView=view;review.drawnRevision=review.drawingRevision;review.drawingRevision=null;}
+    if(this._fullFrame){const ready=this._fullFrame;this._fullFrame=null;ready();}
+    if(this._firstFrame){const ready=this._firstFrame;this._firstFrame=null;ready();}
+    return true;
   }
 
   _tick(timestamp) {
@@ -1048,6 +1222,7 @@ export class Game {
         if (this._controls.fire || this._keys.has('Space')) this.cast();
         this._updateParticles(stepDt);
       }
+      this._updateCompanions(stepDt);
       // Pose events share the movement clock: a charged spell releases at a
       // simulated wand pose and advances only for the remaining substeps.
       this._updateWizard(stepDt, playing);
@@ -1055,7 +1230,7 @@ export class Game {
     }
     playing = this.started && !this._isPaused();
     if (!this.started) this._idleWisps();
-    this.world.update(this._time, dt, this.options.reducedMotion,this.camera,{width:this.canvas.width,height:this.canvas.height});
+    this.world.update(this._time, dt, this.options.reducedMotion,this.camera,{width:this.canvas.width,height:this.canvas.height},{paused:this._isPaused(),started:this.started});
     this.exhibitionStage.setFocused?.(Boolean(this.exhibition||this.nearestExhibition),{reducedMotion:this.options.reducedMotion});
     this.exhibitionStage.update(this._time,this._suspended?0:dt,this.options.reducedMotion);
     if(this.exhibitionStage.consumeShadowUpdate?.())this.renderer.shadowMap.needsUpdate=true;
@@ -1066,10 +1241,7 @@ export class Game {
     this._updateTarget();
     this.audio.update(this._time, playing ? this.velocity.length() : 0);
     if (playing && this._frameCount % 4 === 0) this.renderer.shadowMap.needsUpdate = true;
-    this.renderer.info.reset();
-    this.rendering.render(dt);
-    this._frameCount++;
-    if(this._firstFrame){const ready=this._firstFrame;this._firstFrame=null;ready();}
+    this._renderFrame(dt);
     if (this._time - this._lastSnapshot >= .1) this._emitFrame();
   }
 
@@ -1133,7 +1305,7 @@ export class Game {
   }
 
   _groundWorld() {
-    return {heightAt:this.world.heightAt||terrainHeight,colliders:this.buildingColliders||BUILDING_COLLIDERS,waterLevel:WATER_LEVEL};
+    return {heightAt:this.world.heightAt||terrainHeight,colliders:(this.buildingColliders||BUILDING_COLLIDERS).concat(this.companions?.colliders||[]),waterLevel:WATER_LEVEL};
   }
 
   _resetLocomotion() {
@@ -1276,7 +1448,7 @@ export class Game {
   }
 
   _avoidBuildings() {
-    const hit=resolveRiderCollision(this.position,this.velocity,this.buildingColliders || BUILDING_COLLIDERS);
+    const hit=resolveRiderCollision(this.position,this.velocity,(this.buildingColliders||BUILDING_COLLIDERS).concat(this.companions?.colliders||[]));
     this.position.copy(hit.position);this.velocity.copy(hit.velocity);
   }
 
@@ -1669,6 +1841,7 @@ export class Game {
   }
 
   _emitFrame() {
+    this._updateCompanions(0);
     if (this._disposed || !this.renderer || !this.callbacks.onFrame) return;
     this._lastSnapshot = this._time;
     const landmarks = locations.map((location, index) => {
@@ -1682,6 +1855,7 @@ export class Game {
       environment:this.environmentClock.getSnapshot({started:this.started,paused:this._isPaused(),reducedMotion:this.options.reducedMotion,pauseReason:this._contextLost?'graphics':this._suspended?'hidden':this.exhibition?'exhibition':this.paused?'reading':null}),
       illumination:{...this.illumination.getState(),available:this.started&&!this._isPaused()},
       audio: { enabled: this.options.sound, status: this.audio.musicStatus, contextState: this.audio.context?.state || 'idle' },
+      companions:this.companionSnapshot(),nearestCompanion:this._companionsActive()&&this.nearestCompanion&&this._companionReachable(this.nearestCompanion.id)?this.nearestCompanion:null,
       nearestExhibition: this.started ? this.nearestExhibition : null, nearestClock: this.started && this.nearestClock,
       nearestArtifact: this.started ? this.nearestArtifact : null,
       started: this.started, paused: this._isPaused(), mana: this.mana, health: this.health,
@@ -1690,6 +1864,8 @@ export class Game {
       nearest: this.started ? this.nearest : null, nearestPaper:this.started?this.nearestPaper:null, progress: copyProgress(this.progress),
       race: this.race ? { ...this.race } : null, speed: Math.hypot(this.velocity.x, this.velocity.z),
       fps: Math.round(this.fps), drawCalls: this.renderer.info.render.calls, triangles: this.renderer.info.render.triangles,
+      renderedFrames:this._frameCount,reviewRendering:this.reviewRenderingSnapshot(),
+      herbariumBatches:this._herbariumRenderBatches?.metrics??null,
       target: this._target ? `wisp-${this._target.id}` : null, quality: this.options.quality, landmarks,
       renderSize: { width: this.canvas.width, height: this.canvas.height, samples: this.rendering.samples },
     });
@@ -1699,6 +1875,7 @@ export class Game {
     if (this._disposed) return;
     this._disposed = true;
     clearTimeout(this._enhancementTimer);this._enhancementController?.abort();
+    this._companionInstallation?.dispose();
     cancelAnimationFrame(this._animation);
     this._removeDprListener?.();
     this._removeDprListener = null;
@@ -1711,6 +1888,9 @@ export class Game {
     this.illumination?.dispose();
     this.exhibitionStage?.dispose();
     this.rendering?.dispose();
+    this._herbariumRenderBatches?.dispose();
+    // Registered herbarium owners must leave before generic scene teardown.
+    this.world?.dispose?.();
     const geometries = new Set();
     const materials = new Set();
     const textures = new Set();

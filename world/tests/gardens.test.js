@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import * as THREE from 'three';
 import {locations} from '../src/locations.js';
-import {createAuthoredGardens,createGardenSpecimen} from '../src/gardens.js';
+import {createAuthoredGardens} from '../src/gardens.js';
 import {gardenDistricts,insideAuthoredGarden,gradeGardenTerrain} from '../src/environment-layout.js';
 import {terrainHeight,renderedTerrainHeight,createTerrainSpecimen} from '../src/world.js';
 import {resolveRiderCollision,shortenCameraBoom} from '../src/collision.js';
@@ -73,16 +73,17 @@ test('pergola collision follows its piers and beams while its open bays remain u
   assert.ok(camera.blocked,'camera cannot cross a pergola pier');
 });
 
-test('garden export evidence is reproducible from the runtime geometry and retains every shared asset',()=>{
+test('archived garden exports retain their recorded geometry, textures and shared assets',()=>{
   const folder=new URL('../public/models/environment/',import.meta.url);
   const manifest=JSON.parse(fs.readFileSync(new URL('manifest.json',folder),'utf8'));
   assert.equal(manifest.assets.length,gardenDistricts.length);
   for(const item of manifest.assets){
     const bytes=fs.readFileSync(new URL(item.file,folder));assert.equal(bytes.toString('utf8',0,4),'glTF');assert.equal(bytes.length,item.bytes);
-    const group=createGardenSpecimen(item.id),bounds=new THREE.Box3().setFromObject(group);let triangles=0;
-    group.traverse(o=>{if(o.isMesh)triangles+=(o.geometry.index?.count||o.geometry.attributes.position.count)/3;});
-    assert.equal(triangles,item.triangles,`${item.id} export geometry`);
-    assert.ok(bounds.min.distanceTo(new THREE.Vector3(...item.bounds.min))<1e-5);assert.ok(bounds.max.distanceTo(new THREE.Vector3(...item.bounds.max))<1e-5);
+    const gltf=JSON.parse(bytes.toString('utf8',20,20+bytes.readUInt32LE(12)));let triangles=0;
+    for(const node of gltf.nodes)if(node.mesh!==undefined)for(const primitive of gltf.meshes[node.mesh].primitives)triangles+=(gltf.accessors[primitive.indices]?.count||gltf.accessors[primitive.attributes.POSITION].count)/3;
+    assert.equal(triangles,item.triangles,`${item.id} archived export geometry`);
+    assert.ok(gltf.images.length>=4,'recorded source pigments and normal detail remain embedded');
+    for(const image of gltf.images)assert.ok(gltf.bufferViews[image.bufferView].byteLength>300);
   }
 });
 

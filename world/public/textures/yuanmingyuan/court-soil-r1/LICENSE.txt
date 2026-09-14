@@ -1,0 +1,9 @@
+Brown Mud — Rob Tuytel / Poly Haven
+License: CC0 1.0 Universal
+Source: https://polyhaven.com/a/brown_mud
+License statement: https://polyhaven.com/license
+CC0 deed: https://creativecommons.org/publicdomain/zero/1.0/
+
+Powered by Poly Haven. The public API was used for offline asset discovery; the website runtime does not depend on that API.
+All four provider PNG files are original 4096 x 4096 files, with no image edits, resizing or recompression.
+Use in this authored museum garden is a contemporary material choice, not a historical material claim.

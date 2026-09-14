@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>松枝梢 · 材质代理实验</title></head>
+<body>
+  <main id="impostor-stage" aria-label="真实松枝梢与材质代理对照"></main>
+  <aside class="impostor-panel">
+    <p class="impostor-kicker">圆明园 · 独立材料实验</p><h1>一枝松梢，多个视角</h1>
+    <p>近景保留完整 4,160 三角；派生代理仍待原生审查，尚未开放主场景使用。</p>
+    <div class="impostor-controls">
+      <label>显示 <select id="impostor-mode"><option value="source">完整原型</option><option value="proxy" disabled>材质代理</option><option value="pair" disabled>两片深度交叉检查</option></select></label>
+      <label>代理数据 <select id="impostor-debug"><option value="0">实际光照</option><option value="1">基础色</option><option value="2">表面法线</option><option value="3">重建深度</option><option value="4">粗糙度 / 金属 / AO</option><option value="5">原型自发光</option></select></label>
+      <label>时间 <input id="impostor-hour" type="range" min="0" max="24" step=".01" value="12"><output id="impostor-hour-label">12:00</output></label>
+      <label><input id="impostor-reflection" type="checkbox" checked> 水镜 · 实际反射相机</label>
+      <label><input id="impostor-occluder" type="checkbox"> 显示前后遮挡量尺</label>
+      <label>烘焙尺寸 <select id="impostor-size"><option>64</option><option selected>128</option><option>256</option></select> 每视角像素</label>
+      <button id="impostor-bake">烘焙这一枝 · 16 视角</button><button id="impostor-cancel" disabled>取消烘焙</button>
+      <button id="impostor-dispose">结束审查并释放资源</button>
+      <label>归档 SHA <input id="impostor-archive-sha" type="text" placeholder="已记录的 manifest SHA-256"></label>
+      <label>本地实验文件 <input id="impostor-archive-files" type="file" multiple accept=".json,.bin"></label>
+      <div class="impostor-view-buttons"><button data-view="front">正面</button><button data-view="side">侧面</button><button data-view="back">背面</button><button data-view="below">低视角</button></div>
+    </div>
+    <p id="impostor-status" role="status">完整原型已准备；尚未烘焙。</p>
+    <details><summary>验证状态与相机记录</summary><pre id="impostor-metadata"></pre></details>
+    <div id="impostor-downloads"></div>
+    <p class="impostor-limit">本实验使用独立连续灯光。阴影与 GTAO 法线通道尚未实现；单层深度的遮挡显露、针叶覆盖及斜视质量均待实测。</p>
+  </aside>
+  <script type="module" src="/src/yuanmingyuan/impostor-studio.js"></script>
+</body></html>

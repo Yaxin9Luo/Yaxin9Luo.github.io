@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>地面纹理 · 采样隔离审查</title>
+<style>
+:root{font:13px/1.65 Inter,"PingFang SC",sans-serif;color:#e7ecdf;background:#29392e;color-scheme:dark}*{box-sizing:border-box}body{margin:0}canvas{display:block;width:100vw;height:100vh}aside{position:fixed;right:16px;top:16px;bottom:16px;width:290px;overflow:auto;padding:20px;background:#19271eee;border:1px solid #82937777;border-radius:6px}h1{font:24px/1.3 serif;margin:0 0 12px}p{font-size:12px;color:#becbb7}.eyebrow{font-size:10px;letter-spacing:.14em;color:#d6c69b}label{display:block;margin:14px 0 5px}select,button{width:100%;padding:9px;background:#263b2c;color:#e8eddd;border:1px solid #65755f;border-radius:3px;font:inherit}button{margin-top:12px;cursor:pointer}button:disabled,select:disabled{opacity:.45;cursor:wait}input[type=checkbox]{margin-right:8px}pre{font:10px/1.5 monospace;white-space:pre-wrap;overflow-wrap:anywhere;color:#b7c9b4}#ground-status{color:#ead39f}#ground-results a{display:block;color:#c9deba;overflow-wrap:anywhere;font-size:10px}details{margin-top:18px}.note{border-top:1px solid #496044;padding-top:12px}body[data-ready=disposed] aside{border-color:#bb945f}@media(max-width:700px){aside{width:240px;right:8px;top:8px;bottom:8px;padding:14px}}
+</style></head>
+<body data-ready="loading">
+<canvas id="ground-canvas" aria-label="单块地面，原生纹理采样对照" tabindex="0"></canvas>
+<aside><p class="eyebrow">YUANMINGYUAN · SAMPLING STUDY</p><h1>地面纹理<br>同机位采样对照</h1>
+<p>仅一块平面。切换采样方式保留机位、灯光、纹理与物理尺度；此页用于查因，尚未经过原生验收。</p>
+<label for="ground-resolution">纹理输入</label><select id="ground-resolution" disabled><option value="1k">原 1K</option><option value="4k">冻结 4K · 无损 WebP</option></select>
+<label for="ground-sampling">采样方式</label><select id="ground-sampling" disabled><option value="main">主场景原 non-repeating 函数</option><option value="caller-gradients">候选 A · 调用前求导，保留同样混合</option><option value="implicit-blend">诊断 B · 隐式 lookup，保留同样混合</option><option value="stock-grad">诊断 C · 单次 stock 查询 + 显式导数</option><option value="stock-lookup">Three 原始 lookup · 保留同样色彩/PBR重映射</option><option value="stock-material">完整 Three 默认材质 · 不保留色彩重映射</option></select>
+<p>候选未验收。A 仅移出导数计算；B 的隐式导数在格点边缘可能产生接缝；C 与 stock lookup 只差显式导数。原 main 默认不变。</p>
+<label for="ground-uv">UV 数值范围</label><select id="ground-uv" disabled><option value="world">原世界坐标 UV</option><option value="local">局部 UV · 保留全局格点与贴图相位</option></select>
+<label><input id="ground-normal" type="checkbox" checked disabled>法线强度 .42；取消后为 0</label>
+<label for="ground-view">固定机位</label><select id="ground-view" disabled><option value="main">476 / 第 5 帧的原机位</option><option value="close">裁图中心 · 2m 高近景</option><option value="top">裁图中心 · 俯视</option></select>
+<label for="ground-light">固定灯光</label><select id="ground-light" disabled><option value="day">主场景白天 · phase .46</option><option value="night">主场景月夜 · 固定时相</option></select>
+<button id="ground-retry" disabled>重新加载当前分辨率</button><button id="ground-save" disabled>保存同帧原生 PNG + JSON</button><button id="ground-dispose">释放审查资源</button>
+<p id="ground-status" role="status" aria-live="polite">正在准备独立平面…</p><p id="ground-metrics"></p><div id="ground-results"></div>
+<details><summary>源码、真实 GLSL、机位与资源记录</summary><pre id="ground-readout"></pre></details>
+<p class="note">单平面与三张地表贴图。使用主场景的直射光、半球光、补光和曝光；为隔离采样，不加载 HDR、天空、水面、阴影遮挡、GTAO 或建筑。完整默认材质会改变颜色/PBR重映射，优先用 lookup 档对照。</p>
+</aside><script type="module" src="/src/yuanmingyuan/ground-sampling-studio.js"></script></body></html>

@@ -1,0 +1,99 @@
+{
+  "schema": "jiuzhou-ground-public-materials-v1",
+  "scope": "Contemporary museum ground material outside preserved source court/platform footprints. No historical paving or planting reconstruction claim.",
+  "sources": [
+    {
+      "id": "gravelly_sand",
+      "provider": "Poly Haven",
+      "author": "Dario Barresi",
+      "sourceUrl": "https://polyhaven.com/a/gravelly_sand",
+      "license": "CC0-1.0",
+      "providerLicenseUrl": "https://polyhaven.com/license",
+      "tileMetres": 2.5,
+      "encoding": "Three unchanged original 4096-square 16-bit RGB PNGs. Default browser image decoding / WebGL UnsignedByteType is not 16-bit GPU preservation.",
+      "originalFiles": "Each runtime PNG is identical to the separately retained official vendor download."
+    },
+    {
+      "id": "aerial_grass_rock",
+      "provider": "Poly Haven",
+      "author": "Rob Tuytel",
+      "sourceUrl": "https://polyhaven.com/a/aerial_grass_rock",
+      "license": "CC0-1.0",
+      "providerLicenseUrl": "https://polyhaven.com/license",
+      "tileMetres": 15,
+      "manifestUrl": "/textures/yuanmingyuan/meadow-4k/manifest.json",
+      "manifestSHA256": "bb31ce94db9a2a42fb970054768ad35b43b839a1c2328e1a8a672afefa04218b",
+      "encoding": "Original 16-bit PNG integer samples quantized to 8-bit RGB using round(value/257); alpha is removed only after every quantized alpha code is 255. Near-opaque source-alpha deviations are reported. WebP adds zero decoded-pixel error against the retained 8-bit reference. This is not 16-bit preservation."
+    }
+  ],
+  "maps": [
+    {
+      "url": "/textures/yuanmingyuan/jiuzhou-gravel-r1/gravelly_sand_diff_4k.png",
+      "sha256": "e69f2dab8b81b329749cbc04777cb26b10f74670bf1ea3a2c6ed37b5ddc94f14",
+      "bytes": 93642547,
+      "width": 4096,
+      "height": 4096,
+      "encoding": "original 16-bit RGB PNG",
+      "material": "gravelly_sand",
+      "colorSpace": "sRGB",
+      "normalConvention": null
+    },
+    {
+      "url": "/textures/yuanmingyuan/jiuzhou-gravel-r1/gravelly_sand_nor_gl_4k.png",
+      "sha256": "bbca9ffa401b5a34b76f4be01d95708585785c25f8ba6a5eb90b93d97751c095",
+      "bytes": 97109949,
+      "width": 4096,
+      "height": 4096,
+      "encoding": "original 16-bit RGB PNG",
+      "material": "gravelly_sand",
+      "colorSpace": "linear",
+      "normalConvention": "OpenGL (+Y)"
+    },
+    {
+      "url": "/textures/yuanmingyuan/jiuzhou-gravel-r1/gravelly_sand_rough_4k.png",
+      "sha256": "7b7d293e62b450ddb192c90a6e6d3665d80e8943fdd6890fdba7cde15abfcfd6",
+      "bytes": 28200987,
+      "width": 4096,
+      "height": 4096,
+      "encoding": "original 16-bit RGB PNG",
+      "material": "gravelly_sand",
+      "colorSpace": "linear",
+      "normalConvention": null
+    },
+    {
+      "url": "/textures/yuanmingyuan/meadow-4k/color.webp",
+      "sha256": "6e661b015337d9dbbd14b05a328d58a69aca323ba2fd619ebc144d69dfb58ffa",
+      "bytes": 20685252,
+      "width": 4096,
+      "height": 4096,
+      "encoding": "existing 8-bit RGB lossless WebP, original 16-bit quantization provenance retained",
+      "material": "aerial_grass_rock",
+      "colorSpace": "sRGB",
+      "normalConvention": null
+    },
+    {
+      "url": "/textures/yuanmingyuan/meadow-4k/normal.webp",
+      "sha256": "a817af8a6e5e8daee92f9778d6374f44594ccb26eef5c7628d525c43868f3c03",
+      "bytes": 31887272,
+      "width": 4096,
+      "height": 4096,
+      "encoding": "existing 8-bit RGB lossless WebP, original 16-bit quantization provenance retained",
+      "material": "aerial_grass_rock",
+      "colorSpace": "linear",
+      "normalConvention": "OpenGL (+Y)"
+    },
+    {
+      "url": "/textures/yuanmingyuan/meadow-4k/roughness.webp",
+      "sha256": "618d34b31555b11fd64c51590bacc5c99a91c439650d2d424940b75d58a86c34",
+      "bytes": 8282514,
+      "width": 4096,
+      "height": 4096,
+      "encoding": "existing 8-bit RGB lossless WebP, original 16-bit quantization provenance retained",
+      "material": "aerial_grass_rock",
+      "colorSpace": "linear",
+      "normalConvention": null
+    }
+  ],
+  "publicRoot": "These are ordinary world/public assets copied by the normal world Vite public directory. No review plugin, CDN request, API or work/ path is needed by the published module.",
+  "normalBasis": "Original source normal-map UV shared by both materials; gravel /2.5 and meadow /15, all original triangles retained."
+}

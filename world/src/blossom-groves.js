@@ -32,7 +32,7 @@ export function createBlossomGroves(root,heightAt,{nearPath=()=>false,trees=true
       }
     });
     const path=new THREE.BufferGeometry();path.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));path.setIndex(indices);path.computeVertexNormals();support.addGeometry(path);planarUV(path,.5);add(path,stone,`${park.id} stone walk`);
-    const placements=park.trees.filter(([x,z])=>heightAt(x,z)>.5&&!nearPath(x,z)).map(([x,z,s],i)=>({x,z,y:heightAt(x,z)-.035,s,r:i*2.399+park.seed}));
+    const placements=park.trees.filter(([x,z])=>heightAt(x,z)>.5&&!nearPath(x,z)).map(([x,z,s],i)=>({x,z,y:heightAt(x,z)-.035,sx:s*(.91+(i%3)*.075),sy:s*(.93+((i*2)%5)*.045),sz:s*(.96+((i+1)%3)*.055),r:i*2.399+park.seed}));
     if(trees)definitions.push({kind:park.kind,seed:park.seed,placements});
     const [ox,oz]=park.overlook,oy=heightAt(ox,oz)+.085;
     const daisGeometry=new THREE.CircleGeometry(2.8,72);daisGeometry.rotateX(-Math.PI/2);

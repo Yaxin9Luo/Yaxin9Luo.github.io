@@ -3,9 +3,14 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import crypto from 'node:crypto';
 import * as THREE from 'three';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+import {MeshoptDecoder} from 'three/addons/libs/meshopt_decoder.module.js';
 import {createEnvironmentComposition,createFootingSpecimen} from '../src/environment-composition.js';
 import {environmentSignLabels} from '../src/environment-signage.js';
-import {terrainHeight,renderedTerrainHeight} from '../src/world.js';
+import {terrainHeight,renderedTerrainHeight,islandGeometry} from '../src/world.js';
+import {assetManifest} from '../src/asset-manifest.js';
+import {mutableGeometry} from '../src/gltf-resource.js';
+import {createSurfaceSupport} from '../src/surface-support.js';
 
 const scanFolder=new URL('../public/models/environment/scans/',import.meta.url);
 test('runtime scans preserve the publisher geometry buffer, native 4K PBR and provenance',()=>{
@@ -58,4 +63,30 @@ test('authored banks use low botanical placements outside garden boundaries and 
   const sample=createFootingSpecimen(),box=new THREE.Box3().setFromObject(sample);
   assert.ok(box.max.y>1.2);assert.ok(box.max.y<3,'footing sample remains human-scale');
   assert.ok(sample.children.some(m=>m.name==='Jointed mossy masonry footings'));
+});
+
+test('castle apron face interiors stay attached to generated and decoded runtime terrain without crossing water',async()=>{
+  const bytes=fs.readFileSync(new URL(`../public${assetManifest['navigation-terrain'].url}`,import.meta.url));
+  const gltf=await new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).parseAsync(bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength),'');
+  gltf.scene.updateMatrixWorld(true);const mesh=gltf.scene.getObjectByName('ground'),loaded=mutableGeometry(mesh.geometry).applyMatrix4(mesh.matrixWorld),terrain=islandGeometry();
+  for(const groundGeometry of [terrain.ground,loaded]){
+    const support=createSurfaceSupport(()=>-Infinity);support.addGeometry(groundGeometry);
+    const composition=createEnvironmentComposition(new THREE.Group(),renderedTerrainHeight,()=>false,{groundGeometry}),aprons=composition.group.children.filter(m=>m.name.includes('foundation rock apron'));
+    assert.equal(aprons.length,3,'side and rear foundations join broad continuous rock banks');
+    for(const apron of aprons){
+      const p=apron.geometry.attributes.position,index=apron.geometry.index;
+      assert.ok(index.count>500,'aprons preserve useful foundation coverage');
+      for(let i=0;i<index.count;i+=3){
+        const [a,b,c]=[0,1,2].map(j=>new THREE.Vector3().fromBufferAttribute(p,index.getX(i+j)));
+        assert.ok(b.clone().sub(a).cross(c.clone().sub(a)).y>0,'foundation banks face upward');
+        for(const [u,v]of [[1/3,1/3],[.1,.2],[.2,.7],[.7,.1]]){
+          const point=a.clone().multiplyScalar(1-u-v).addScaledVector(b,u).addScaledVector(c,v),ground=support.heightAt(point.x,point.z);
+          assert.ok(Number.isFinite(ground),`apron crosses unsupported water at ${point.x}, ${point.z}`);
+          assert.ok(point.y-ground>=.01&&point.y-ground<=.045,`apron diverges from actual ground by ${point.y-ground} m at ${point.x}, ${point.z}`);
+          assert.ok(point.z<-12,'castle portal and front approach remain open');
+        }
+      }
+    }
+  }
+  terrain.ground.dispose();terrain.cliffs.dispose();loaded.dispose();
 });

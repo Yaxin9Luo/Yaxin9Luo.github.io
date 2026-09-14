@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "source": "https://polyhaven.com/a/didelta_spinosa",
+  "license": "CC0-1.0",
+  "recipe": "world/scripts/pack-herbarium-scalars.mjs",
+  "encoding": "zlib DEFLATE of the complete single-channel byte plane; no header or pixel quantization",
+  "originalFiles": "Original downloaded PNGs remain unchanged alongside the derivatives.",
+  "runtime": "Scalar R is used in physical/depth/distance alpha shaders and the original translucency shader. Full dimensions, mip generation, anisotropy and sampler state are retained.",
+  "files": [
+    {
+      "original": "textures/didelta_spinosa_alpha_8k.png",
+      "originalSha256": "3950c346d51f327b0f54a0f4ae55e1b12b8c7437ed7efd6ada409ee88aaff4fd",
+      "sourceChannel": "G",
+      "output": "textures/didelta_spinosa_alpha_8k.r8.zlib",
+      "outputSha256": "6ff401f9ced350e40e22cac40a7549cc9ba888a0925e804124932c68b9156285",
+      "compressedBytes": 469671,
+      "width": 8192,
+      "height": 8192,
+      "uploadFormat": "R8",
+      "sampleType": "unsigned normalized 8-bit",
+      "sampleCount": 67108864,
+      "decodedBytes": 67108864,
+      "decodedSha256": "b006d403d420fe55812c19f6c7d71fcc2a93d4b91ebe31a530ace2cade67175e",
+      "ordering": "top row first, left to right; no color conversion, premultiplication, filtering or resampling"
+    },
+    {
+      "original": "textures/didelta_spinosa_translucency_8k.png",
+      "originalSha256": "3059f787526a1aeb0bae329df4e7f35ffac1d7408b32941ce2aa94fb6ecc18f1",
+      "sourceChannel": "R",
+      "output": "textures/didelta_spinosa_translucency_8k.r8.zlib",
+      "outputSha256": "0c0763fa92bfe0b6111998858ddc4da96e29e00e8febc826d61984a1b23f82d2",
+      "compressedBytes": 662525,
+      "width": 8192,
+      "height": 8192,
+      "uploadFormat": "R8",
+      "sampleType": "unsigned normalized 8-bit",
+      "sampleCount": 67108864,
+      "decodedBytes": 67108864,
+      "decodedSha256": "b395d0e757d5da11f3babd60cc2b55bf5df7fd4b52aedf2ae6f79ee1139ded36",
+      "ordering": "top row first, left to right; no color conversion, premultiplication, filtering or resampling"
+    }
+  ]
+}

@@ -1,0 +1,224 @@
+{
+  "id": "polyhaven-shrub04-complete-curved-sprays-r1",
+  "variants": [
+    {
+      "id": 0,
+      "vertices": 2513,
+      "triangles": 3726,
+      "vertexByteOffset": 0,
+      "indexByteOffset": 80416,
+      "byteLength": 125128,
+      "stride": 32,
+      "sourceRoot": [
+        -0.5105187892913818,
+        -0.002650568960234523,
+        -3.2737181754782796e-05
+      ],
+      "min": [
+        -0.024235188961029053,
+        0.0,
+        -0.030262617394328117
+      ],
+      "max": [
+        0.08195728063583374,
+        0.1524507850408554,
+        0.054619450122117996
+      ],
+      "rootBand": {
+        "min": [
+          -0.0015389323234558105,
+          0.0,
+          -0.0018416346283629537
+        ],
+        "max": [
+          0.003700077533721924,
+          0.005915632005780935,
+          0.0028029531240463257
+        ],
+        "maxRadius": 0.004458247218281031
+      }
+    },
+    {
+      "id": 1,
+      "vertices": 4420,
+      "triangles": 6589,
+      "vertexByteOffset": 125128,
+      "indexByteOffset": 266568,
+      "byteLength": 220508,
+      "stride": 32,
+      "sourceRoot": [
+        -0.3403223752975464,
+        -0.002383045619353652,
+        -0.00021581894543487579
+      ],
+      "min": [
+        -0.06325870752334595,
+        0.0,
+        -0.06597591191530228
+      ],
+      "max": [
+        0.04835224151611328,
+        0.16234077513217926,
+        0.06409859657287598
+      ],
+      "rootBand": {
+        "min": [
+          -0.003464609384536743,
+          0.0,
+          -0.001976285595446825
+        ],
+        "max": [
+          0.003561258316040039,
+          0.005599914118647575,
+          0.001977247418835759
+        ],
+        "maxRadius": 0.003593904199078679
+      }
+    },
+    {
+      "id": 2,
+      "vertices": 4108,
+      "triangles": 6177,
+      "vertexByteOffset": 345636,
+      "indexByteOffset": 477092,
+      "byteLength": 205580,
+      "stride": 32,
+      "sourceRoot": [
+        -0.16539283096790314,
+        -0.005937241483479738,
+        -0.0008351132273674011
+      ],
+      "min": [
+        -0.07633575797080994,
+        0.0,
+        -0.07298585772514343
+      ],
+      "max": [
+        0.0457121878862381,
+        0.21919968724250793,
+        0.05876882001757622
+      ],
+      "rootBand": {
+        "min": [
+          -0.007165372371673584,
+          0.0,
+          -0.0016702276188880205
+        ],
+        "max": [
+          0.0011486411094665527,
+          0.005961872171610594,
+          0.0016702271532267332
+        ],
+        "maxRadius": 0.007165372371673584
+      }
+    },
+    {
+      "id": 3,
+      "vertices": 7244,
+      "triangles": 10835,
+      "vertexByteOffset": 551216,
+      "indexByteOffset": 783024,
+      "byteLength": 361828,
+      "stride": 32,
+      "sourceRoot": [
+        0.0025944255758076906,
+        -0.004625620320439339,
+        -0.002415163442492485
+      ],
+      "min": [
+        -0.12392882257699966,
+        0.0,
+        -0.07259440422058105
+      ],
+      "max": [
+        0.04634178429841995,
+        0.21365737915039062,
+        0.07350288331508636
+      ],
+      "rootBand": {
+        "min": [
+          -0.005565290339291096,
+          0.0,
+          -0.0015675369650125504
+        ],
+        "max": [
+          0.0023445270489901304,
+          0.005567280109971762,
+          0.003203467233106494
+        ],
+        "maxRadius": 0.005794203840196133
+      }
+    }
+  ],
+  "sourceTriangles": 27327,
+  "sourceVertices": 18285,
+  "componentCount": 528,
+  "partition": {
+    "physicalProximity": 0.0025,
+    "majorComponents": [
+      2492,
+      4399,
+      4066,
+      7184
+    ],
+    "minorSeamIslands": [
+      {
+        "vertices": 21,
+        "variant": 3,
+        "minimumGap": 0.002545747673138976,
+        "otherVariantGap": 0.1293558031320572
+      },
+      {
+        "vertices": 18,
+        "variant": 3,
+        "minimumGap": 0.01067395880818367,
+        "otherVariantGap": 0.04577759653329849
+      },
+      {
+        "vertices": 21,
+        "variant": 3,
+        "minimumGap": 0.002545699942857027,
+        "otherVariantGap": 0.1405165195465088
+      },
+      {
+        "vertices": 21,
+        "variant": 2,
+        "minimumGap": 0.0025457264855504036,
+        "otherVariantGap": 0.027668559923768044
+      },
+      {
+        "vertices": 21,
+        "variant": 2,
+        "minimumGap": 0.002545731607824564,
+        "otherVariantGap": 0.05109047889709473
+      },
+      {
+        "vertices": 21,
+        "variant": 1,
+        "minimumGap": 0.002545698080211878,
+        "otherVariantGap": 0.07919140160083771
+      },
+      {
+        "vertices": 21,
+        "variant": 0,
+        "minimumGap": 0.002545727416872978,
+        "otherVariantGap": 0.05726853758096695
+      }
+    ],
+    "geometryMovedOrWelded": false
+  },
+  "sourceSurfaceArea": 0.07685623317956924,
+  "binarySha256": "bd32ebadd60869a1afe872cbff74d4366cf8db3b6dc98b2c5f77b46e30e25ecd",
+  "binaryBytes": 913044,
+  "geometryPolicy": "All original vertices and triangles retained; only connected-island partition and removal of display translation. Actual alpha is evaluated by native material and CPU fragment rasterizer. No decimation or alpha-card area counting.",
+  "alpha": {
+    "resolution": [
+      4096,
+      4096
+    ],
+    "threshold": 0.5,
+    "imageRowUV": true,
+    "fourSampleRejectedAreaFraction": 0.05171955814785084,
+    "notCoverageProof": "This diagnostic is not bed coverage; full pixel-level alpha rasterization is required."
+  }
+}

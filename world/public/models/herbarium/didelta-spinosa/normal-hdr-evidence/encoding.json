@@ -1,0 +1,217 @@
+{
+  "status": "ready-for-full-error-audit-not-art-approval",
+  "artifact": {
+    "path": "normal-hdr4x4-q4-nordo.ktx2",
+    "bytes": 27297259,
+    "sha256": "fb49f83f6955641d070ff7e352926dbb19568f5b961a0817e78f202203b12564"
+  },
+  "levels": [
+    {
+      "level": 0,
+      "width": 8192,
+      "height": 8192,
+      "decoded": {
+        "path": "hdr-decoded/output_level0.raw",
+        "bytes": 536870912,
+        "sha256": "89ab7fb27e80cffe7d5521ad555a0f7faa83af58fef88aa75d6ab038c064f35f"
+      }
+    },
+    {
+      "level": 1,
+      "width": 4096,
+      "height": 4096,
+      "decoded": {
+        "path": "hdr-decoded/output_level1.raw",
+        "bytes": 134217728,
+        "sha256": "fe916fa05df5d8a432e6a1a53782309afb04a97daf7eb92b7a37408f8707c935"
+      }
+    },
+    {
+      "level": 2,
+      "width": 2048,
+      "height": 2048,
+      "decoded": {
+        "path": "hdr-decoded/output_level2.raw",
+        "bytes": 33554432,
+        "sha256": "727835db92826c606f03a8425d256c7fb6140d7b62004f96e3a498fd7bb93ac3"
+      }
+    },
+    {
+      "level": 3,
+      "width": 1024,
+      "height": 1024,
+      "decoded": {
+        "path": "hdr-decoded/output_level3.raw",
+        "bytes": 8388608,
+        "sha256": "155c90e24c5e66dbcfdc62ff36e79a30651a584b007aac0b69069db017225a88"
+      }
+    },
+    {
+      "level": 4,
+      "width": 512,
+      "height": 512,
+      "decoded": {
+        "path": "hdr-decoded/output_level4.raw",
+        "bytes": 2097152,
+        "sha256": "603a76413f399cae296a6ae05d5f014cb8180274a8fe53dde1f7ce1872a8ff44"
+      }
+    },
+    {
+      "level": 5,
+      "width": 256,
+      "height": 256,
+      "decoded": {
+        "path": "hdr-decoded/output_level5.raw",
+        "bytes": 524288,
+        "sha256": "bd5bbd877b338ca4837ad41f12d99331a53342948eda882985306722edcda535"
+      }
+    },
+    {
+      "level": 6,
+      "width": 128,
+      "height": 128,
+      "decoded": {
+        "path": "hdr-decoded/output_level6.raw",
+        "bytes": 131072,
+        "sha256": "440277ab79ba28c055da657efe5e660c09fdf7d833a77a05b09f4fa83e061b7b"
+      }
+    },
+    {
+      "level": 7,
+      "width": 64,
+      "height": 64,
+      "decoded": {
+        "path": "hdr-decoded/output_level7.raw",
+        "bytes": 32768,
+        "sha256": "f6c92ac6ff23693939978b8a01a3fd72fcce93d011062ef3f924bbbe02a03e91"
+      }
+    },
+    {
+      "level": 8,
+      "width": 32,
+      "height": 32,
+      "decoded": {
+        "path": "hdr-decoded/output_level8.raw",
+        "bytes": 8192,
+        "sha256": "6bce480d28f020304abbebbe97617a196f04fd5ee96f3b98fccd6a1558eef7fc"
+      }
+    },
+    {
+      "level": 9,
+      "width": 16,
+      "height": 16,
+      "decoded": {
+        "path": "hdr-decoded/output_level9.raw",
+        "bytes": 2048,
+        "sha256": "30766b31aff6bcf5409464ee383fbe5339ad0116bdb1eeda1e220eaf6e2fc97f"
+      }
+    },
+    {
+      "level": 10,
+      "width": 8,
+      "height": 8,
+      "decoded": {
+        "path": "hdr-decoded/output_level10.raw",
+        "bytes": 512,
+        "sha256": "381444eaade1393e1020e5f461fbd46d449333eb8114a2fe535a04490bb0369c"
+      }
+    },
+    {
+      "level": 11,
+      "width": 4,
+      "height": 4,
+      "decoded": {
+        "path": "hdr-decoded/output_level11.raw",
+        "bytes": 128,
+        "sha256": "cd6dc1420e043d30b079c6e86d108257af3ac82a644e2f58816223c89ec6c6f9"
+      }
+    },
+    {
+      "level": 12,
+      "width": 2,
+      "height": 2,
+      "decoded": {
+        "path": "hdr-decoded/output_level12.raw",
+        "bytes": 32,
+        "sha256": "88d1fbbc84755c390fd822f2d431eb0a104e958ff79a6c3e5c85960f6a749e55"
+      }
+    },
+    {
+      "level": 13,
+      "width": 1,
+      "height": 1,
+      "decoded": {
+        "path": "hdr-decoded/output_level13.raw",
+        "bytes": 8,
+        "sha256": "47f03e93398fb6eae19fcee9798d936d891d1f84f270a97e1546ced18e8309ec"
+      }
+    }
+  ],
+  "preparationSHA256": "28d25c6c37783a9922e51ebd9af2e7e55133f5e3d54bfbed341532920758d3ef",
+  "bindingsSHA256": "3a77c3666a524fa1ecb64eb0c3ad332c1d76604bf0161978f4caf4715e6821ab",
+  "disk": {
+    "requiredFreeBytes": 2147483648,
+    "actualFreeBytes": 13574082560
+  },
+  "encoderMemoryLowerBoundBytes": 2147483640,
+  "encoderMemoryNote": "Full HALF KTX chain and float32 RGBA image copies coexist before pData is freed: 2 GiB minus 8 bytes before all other overhead. External unchanged official encoder is allowed to exceed the scripts 2 GiB guard. Measured child RSS is sampled, not a guaranteed peak.",
+  "encodeCommand": {
+    "command": [
+      "/Users/yaxinluo/Documents/Codex/2026-09-07/https-yaxin9luo-github-io-https-yaxin9luo/outputs/academy-living-v8/work/living-v8/normal-ktx-trial/tooling-hdr/runtime/bin/ktx",
+      "create",
+      "--raw",
+      "--format",
+      "R16G16B16A16_SFLOAT",
+      "--width",
+      "8192",
+      "--height",
+      "8192",
+      "--levels",
+      "14",
+      "--assign-tf",
+      "linear",
+      "--assign-primaries",
+      "none",
+      "--assign-texcoord-origin",
+      "top-left",
+      "--fail-on-color-conversions",
+      "--fail-on-origin-changes",
+      "--encode",
+      "uastc-hdr-4x4",
+      "--uastc-quality",
+      "4",
+      "--uastc-hdr-uber-mode",
+      "--uastc-hdr-ultra-quant",
+      "--uastc-hdr-favor-astc",
+      "--threads",
+      "6",
+      "--zstd",
+      "18",
+      "/Users/yaxinluo/Documents/Codex/2026-09-07/https-yaxin9luo-github-io-https-yaxin9luo/outputs/academy-living-v8/work/living-v8/normal-ktx-trial/full-hdr/runs/hdr-r1/prepare/mip00.rgba16f",
+      "/Users/yaxinluo/Documents/Codex/2026-09-07/https-yaxin9luo-github-io-https-yaxin9luo/outputs/academy-living-v8/work/living-v8/normal-ktx-trial/full-hdr/runs/hdr-r1/prepare/mip01.rgba16f",
+      "/Users/yaxinluo/Documents/Codex/2026-09-07/https-yaxin9luo-github-io-https-yaxin9luo/outputs/academy-living-v8/work/living-v8/normal-ktx-trial/full-hdr/runs/hdr-r1/prepare/mip02.rgba16f",
+      "/Users/yaxinluo/Documents/Codex/2026-09-07/https-yaxin9luo-github-io-https-yaxin9luo/outputs/academy-living-v8/work/living-v8/normal-ktx-trial/full-hdr/runs/hdr-r1/prepare/mip03.rgba16f",
+      "/Users/yaxinluo/Documents/Codex/2026-09-07/https-yaxin9luo-github-io-https-yaxin9luo/outputs/academy-living-v8/work/living-v8/normal-ktx-trial/full-hdr/runs/hdr-r1/prepare/mip04.rgba16f",
+      "/Users/yaxinluo/Documents/Codex/2026-09-07/https-yaxin9luo-github-io-https-yaxin9luo/outputs/academy-living-v8/work/living-v8/normal-ktx-trial/full-hdr/runs/hdr-r1/prepare/mip05.rgba16f",
+      "/Users/yaxinluo/Documents/Codex/2026-09-07/https-yaxin9luo-github-io-https-yaxin9luo/outputs/academy-living-v8/work/living-v8/normal-ktx-trial/full-hdr/runs/hdr-r1/prepare/mip06.rgba16f",
+      "/Users/yaxinluo/Documents/Codex/2026-09-07/https-yaxin9luo-github-io-https-yaxin9luo/outputs/academy-living-v8/work/living-v8/normal-ktx-trial/full-hdr/runs/hdr-r1/prepare/mip07.rgba16f",
+      "/Users/yaxinluo/Documents/Codex/2026-09-07/https-yaxin9luo-github-io-https-yaxin9luo/outputs/academy-living-v8/work/living-v8/normal-ktx-trial/full-hdr/runs/hdr-r1/prepare/mip08.rgba16f",
+      "/Users/yaxinluo/Documents/Codex/2026-09-07/https-yaxin9luo-github-io-https-yaxin9luo/outputs/academy-living-v8/work/living-v8/normal-ktx-trial/full-hdr/runs/hdr-r1/prepare/mip09.rgba16f",
+      "/Users/yaxinluo/Documents/Codex/2026-09-07/https-yaxin9luo-github-io-https-yaxin9luo/outputs/academy-living-v8/work/living-v8/normal-ktx-trial/full-hdr/runs/hdr-r1/prepare/mip10.rgba16f",
+      "/Users/yaxinluo/Documents/Codex/2026-09-07/https-yaxin9luo-github-io-https-yaxin9luo/outputs/academy-living-v8/work/living-v8/normal-ktx-trial/full-hdr/runs/hdr-r1/prepare/mip11.rgba16f",
+      "/Users/yaxinluo/Documents/Codex/2026-09-07/https-yaxin9luo-github-io-https-yaxin9luo/outputs/academy-living-v8/work/living-v8/normal-ktx-trial/full-hdr/runs/hdr-r1/prepare/mip12.rgba16f",
+      "/Users/yaxinluo/Documents/Codex/2026-09-07/https-yaxin9luo-github-io-https-yaxin9luo/outputs/academy-living-v8/work/living-v8/normal-ktx-trial/full-hdr/runs/hdr-r1/prepare/mip13.rgba16f",
+      "/Users/yaxinluo/Documents/Codex/2026-09-07/https-yaxin9luo-github-io-https-yaxin9luo/outputs/academy-living-v8/work/living-v8/normal-ktx-trial/full-hdr/runs/hdr-r1/encode/normal-hdr4x4-q4-nordo.ktx2"
+    ],
+    "cwd": "/Users/yaxinluo/Documents/Codex/2026-09-07/https-yaxin9luo-github-io-https-yaxin9luo/outputs/academy-living-v8/work/living-v8/normal-ktx-trial/full-hdr/runs/hdr-r1/encode",
+    "returnCode": 0,
+    "elapsedSeconds": 967.6772927080019,
+    "watchdogSeconds": 21600,
+    "sampledPeakRSSBytes": 1279311872,
+    "rssSamples": 1878,
+    "rssScope": "owned child process, 0.5s sampling; not a guaranteed peak; encoder internal footprint may exceed script guard",
+    "stdout": "hdr-create.stdout",
+    "stderr": "hdr-create.stderr",
+    "error": null
+  }
+}

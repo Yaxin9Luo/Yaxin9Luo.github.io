@@ -1,0 +1,214 @@
+{
+  "schema": 2,
+  "id": "xianfashan",
+  "exportedAt": "2026-09-12T00:38:41.247Z",
+  "sourceDigest": "9091fc3b7c570b688ef38bac1a2f0642edbf88f1733d4da8f39eb2fe957663a3",
+  "sourceSHA256": {
+    "world/node_modules/three/build/three.core.js": "3718df126d69c125362a03340913204470d8c50238605150e57f808840fb7759",
+    "world/node_modules/three/build/three.module.js": "bbf5ed13fe4373f5bd38b14ea8e62e9f157327da5638edc6d3863e08b167c9c7",
+    "world/node_modules/three/examples/jsm/exporters/GLTFExporter.js": "318c588c527d03528a60610a4fc420018375a5c1bcf520e48f3666c5bc28d90d",
+    "world/node_modules/three/examples/jsm/geometries/RoundedBoxGeometry.js": "c1b7c9bd2cddff2e3f3a0723f618a3d364a47450e3d25771d21faed88410bec8",
+    "world/node_modules/three/examples/jsm/math/SimplexNoise.js": "4b1455617135e6b477de76244de07547d95570643379b72f4758e50161b06072",
+    "world/node_modules/three/examples/jsm/objects/MarchingCubes.js": "fe9c6ace2c079bf540befd164ce492de98c820d8b86a722b1060833d42ad9c80",
+    "world/node_modules/three/examples/jsm/utils/BufferGeometryUtils.js": "5c552223a9309883743b80538d6e9cdb45e3227f30d3ec56fb2c39b46e78d595",
+    "world/node_modules/three/package.json": "1d5c438acdc1fe5a52fb8ede2e417afd91fec91d22275c40f7b739591b24e4df",
+    "world/package-lock.json": "ff9b828866f47f089906a744802e639bb415f3aff1cf93a44cd2a9fc3c759d0a",
+    "world/package.json": "7fdc1a007c07c3d67a35de1b3c6a95bb0c79426f4dd2ddec287d4d13a688607d",
+    "world/public/textures/meadow/color.webp": "4142f57cd397bf7ee1553797d93220ac7f40c2c41d0468f4713a3eedc53f0e4b",
+    "world/public/textures/meadow/normal.webp": "b390b29f47a873fc7c1915835732f94018cef39f5fd51d551cab578f12bd3a5e",
+    "world/public/textures/meadow/roughness.webp": "91eaa64d91cc2dc13417758fc23789c7d9b4577fe47785113e1bc2e9d9a6ce63",
+    "world/public/textures/yuanmingyuan-lake-stone/normal.webp": "1fd3e0ad8e6fdb245fa34e98068e38045db93f6472212b51c6f73cea72474237",
+    "world/public/textures/yuanmingyuan-lake-stone/roughness.webp": "5e103cdf05e5611303be895dbd1ea5dd45d9e3aaa5aeefd9d140a80b2859372c",
+    "world/scripts/export-yuanmingyuan-assets.mjs": "469a2eef055b334e0913055d10c5433deacea7e31d3dd93fee0a0dd67c0178de",
+    "world/scripts/prepare-xianfashan-texture-pixels.mjs": "ff966b25f5dd41ddf46e7c8f7fc71284e7edcc6aaa2395bb2a9b233f48e9cb0d",
+    "world/src/asset-manifest.js": "e470201b3eaa20b593514df35fe59828168165625c7593bb06305e0720ff7ded",
+    "world/src/resource-loader.js": "4741f631487b9bcab9b7f40b399d51c457434e180f940d291c1e2dbed5688ed6",
+    "world/src/yuanmingyuan/asset-archive.js": "7c2939d9e004e2b32e54ae13530e9aeae506d85b3f3412250386dfe48d8aac1a",
+    "world/src/yuanmingyuan/huanghuazhen-geometry.js": "be09035264511496e08f83b713927d671d7389c90224a7b3735f663d00fd5a13",
+    "world/src/yuanmingyuan/study-geometry.js": "f586fd7d5fa783f2ca3063391eb97bd233e33aded8f6b6211e4bf4453786f4ad",
+    "world/src/yuanmingyuan/vegetation-textures.js": "26b2c9310b67aa8075832dc9857775b3097da330ebcf16a0e6a36cfcef696474",
+    "world/src/yuanmingyuan/xianfa-landscape-geometry.js": "8c6b339c769513ec048a30ee7fa43c4532c1f9371367094a9e810bdc67006f01",
+    "world/src/yuanmingyuan/xianfa-landscape-layout.js": "a7caccc2fecf890d2323b6aa5eeec884c71c5bc2cc8f9cc2127d6168142489e5",
+    "world/src/yuanmingyuan/xianfa-landscape-study.js": "bcb3570ca854fca129b7e772bf64bb86ff91ac1ac7b55fe9afbd73dc42d272d3",
+    "world/src/yuanmingyuan/xianfashan-details.js": "c9a11fc5df93504b8614d06ed58a0e0a9dab48e1c7e2bc7e587a35cc9b2506e4",
+    "world/src/yuanmingyuan/xianfashan-materials.js": "5691fdd87c37c3b0f838f08fb5b9b867fadb190f174e44215ec3f7514f22d821",
+    "world/src/yuanmingyuan/yuanyingguan-geometry.js": "8067352e12aac8593daee2739a46467d4a46fc5cf9c4b96f34f1abf5828ed8d1"
+  },
+  "sourcePixels": {
+    "meadow/color": {
+      "path": "/textures/meadow/color.webp",
+      "width": 1024,
+      "height": 1024,
+      "channels": 4,
+      "origin": "lower-left",
+      "encodedSha256": "4142f57cd397bf7ee1553797d93220ac7f40c2c41d0468f4713a3eedc53f0e4b",
+      "decodedSha256": "b48851869f10db285c7fc66ab4aa17ec3ff13d1df1fdafca320389ea9adb2771"
+    },
+    "meadow/normal": {
+      "path": "/textures/meadow/normal.webp",
+      "width": 1024,
+      "height": 1024,
+      "channels": 4,
+      "origin": "lower-left",
+      "encodedSha256": "b390b29f47a873fc7c1915835732f94018cef39f5fd51d551cab578f12bd3a5e",
+      "decodedSha256": "9fdabba44db6d1460a638178c8f88495c0f3a41d00bb4040b9479463b02724d6"
+    },
+    "meadow/roughness": {
+      "path": "/textures/meadow/roughness.webp",
+      "width": 1024,
+      "height": 1024,
+      "channels": 4,
+      "origin": "lower-left",
+      "encodedSha256": "91eaa64d91cc2dc13417758fc23789c7d9b4577fe47785113e1bc2e9d9a6ce63",
+      "decodedSha256": "0e4595759e38b4a36d68f8b2d1a799af4c27a6ea08615dd9764abcd10c18bce9"
+    },
+    "stone/normal": {
+      "path": "/textures/yuanmingyuan-lake-stone/normal.webp",
+      "width": 2048,
+      "height": 2048,
+      "channels": 4,
+      "origin": "lower-left",
+      "encodedSha256": "1fd3e0ad8e6fdb245fa34e98068e38045db93f6472212b51c6f73cea72474237",
+      "decodedSha256": "b176e9ab3747edf0b0cfee390ea9c026232a41702c96ad75020ea90d5de24535"
+    },
+    "stone/roughness": {
+      "path": "/textures/yuanmingyuan-lake-stone/roughness.webp",
+      "width": 2048,
+      "height": 2048,
+      "channels": 4,
+      "origin": "lower-left",
+      "encodedSha256": "5e103cdf05e5611303be895dbd1ea5dd45d9e3aaa5aeefd9d140a80b2859372c",
+      "decodedSha256": "932813cf7a95e5e7c1cd364f9db56a2c3686ffe7b700fbf69a53cadf9a019416"
+    }
+  },
+  "sourcePixelDecoder": {
+    "implementation": "sharp",
+    "version": "0.35.4",
+    "webpVersion": "1.6.0",
+    "operation": "full-size decode, vertical flip, RGBA output; no resize or generated replacement"
+  },
+  "glb": {
+    "compression": "gzip",
+    "sha256": "abff998999aa15293e73811b44a6cdd56915370d0313490daec06b57d8c9cc15",
+    "bytes": 307039668,
+    "transferSha256": "f22898948a981163cd6f38f4ca6e023702fd770bde0aca188af012923cc7ee3e",
+    "transferBytes": 140147832,
+    "parts": [
+      {
+        "url": "xianfashan.glb.part-001.gzip.bin",
+        "bytes": 67108864,
+        "sha256": "094cfa66a0089c4725385ecd81be961b1d77cd57c562becaec6cd834118c02d7"
+      },
+      {
+        "url": "xianfashan.glb.part-002.gzip.bin",
+        "bytes": 67108864,
+        "sha256": "73d4f9eadfb2eb6d558afcab47ccf9c3ae342320569d3fc4bab7cd8038c3af78"
+      },
+      {
+        "url": "xianfashan.glb.part-003.gzip.bin",
+        "bytes": 5930104,
+        "sha256": "bef4333ed8bb2b395b5e1bbdf2e657295f90f30fd8eb186c084d22c112123a5a"
+      }
+    ]
+  },
+  "runtime": {
+    "url": "xianfashan.runtime.json.gzip.bin",
+    "compression": "gzip",
+    "sha256": "6cc3347f1552764cb477586f6ad041e72ec56907b39a16233a5f477c2c7a8f51",
+    "bytes": 1518466,
+    "transferSha256": "0bc422d34759fc17c6b6064ff4aeaeca2cf8d1dc7ae1d866717fd6c3066713cd",
+    "transferBytes": 58072
+  },
+  "verification": {
+    "mode": "exact-source-buffers-and-Three-runtime-state",
+    "compression": "none; PNG only for standard preview image layer",
+    "quantized": false,
+    "simplified": false,
+    "geometryReordered": false,
+    "sourceBuffersReusedBytes": 183566208,
+    "originalBytesAppended": 46153728,
+    "standardExporterWarnings": [
+      "THREE.GLTFExporter: Merged metalnessMap and roughnessMap textures.",
+      "THREE.GLTFExporter: Merged metalnessMap and roughnessMap textures.",
+      "THREE.GLTFExporter: Merged metalnessMap and roughnessMap textures.",
+      "THREE.GLTFExporter: Merged metalnessMap and roughnessMap textures.",
+      "THREE.GLTFExporter: Merged metalnessMap and roughnessMap textures.",
+      "THREE.GLTFExporter: Merged metalnessMap and roughnessMap textures.",
+      "THREE.GLTFExporter: Merged metalnessMap and roughnessMap textures."
+    ],
+    "counts": {
+      "meshes": 272,
+      "triangles": 1912148,
+      "storedTriangles": 1912148,
+      "instances": 0,
+      "geometries": 272,
+      "materials": 15,
+      "textures": 6,
+      "nodes": 413
+    },
+    "nativeVisualReview": false,
+    "restoredResourceDisposal": {
+      "geometries": 272,
+      "materials": 15,
+      "textures": 6,
+      "instancedMeshes": 0,
+      "resources": 293,
+      "eachDisposedExactlyOnce": true
+    },
+    "exactRoundtripPassed": true
+  },
+  "nativeArchiveVisualReview": false,
+  "sourceDiagnosticsAcceptance": false,
+  "sourceResourceDisposal": {
+    "geometries": 272,
+    "materials": 15,
+    "textures": 6,
+    "instancedMeshes": 0,
+    "resources": 293,
+    "eachDisposedExactlyOnce": true
+  },
+  "memoryBytes": {
+    "before": {
+      "rss": 297484288,
+      "heapTotal": 15351808,
+      "heapUsed": 11419056,
+      "external": 81901363,
+      "arrayBuffers": 59764443
+    },
+    "afterConstruction": {
+      "rss": 775110656,
+      "heapTotal": 90980352,
+      "heapUsed": 27787568,
+      "external": 417958670,
+      "arrayBuffers": 414046603
+    },
+    "afterRoundtrip": {
+      "rss": 2581463040,
+      "heapTotal": 88031232,
+      "heapUsed": 21525344,
+      "external": 1045613352,
+      "arrayBuffers": 1040237267
+    },
+    "afterSourceDisposal": {
+      "rss": 2582069248,
+      "heapTotal": 88031232,
+      "heapUsed": 21704992,
+      "external": 1045613352,
+      "arrayBuffers": 1040237267
+    },
+    "note": "dispose events release renderer ownership; CPU arrays remain reachable until process exit or collection"
+  },
+  "elapsedMilliseconds": 5283.5993339999995,
+  "transport": {
+    "version": "gzip-bin-v2",
+    "encoding": "gzip",
+    "filenameSuffix": ".gzip.bin",
+    "lossless": true,
+    "rawArchiveRetained": true,
+    "maximumFileBytesExclusive": 100663296,
+    "sourceManifestSHA256": "9496008dcac318156d8b0a51055f68db52e5264561f08c502c1009f1eab8bcb8",
+    "producerSHA256": "1b9ac57980f42b140b5d74f97a20b2127ccd7e103bf1d4cb122b6bf8c9bed102",
+    "runtimeDecoderSHA256": "8f83abe3b26ab431839f638fe9a69de77079913d10b16647de7bc7132f232ae1",
+    "decompressedBytesVerified": true
+  }
+}

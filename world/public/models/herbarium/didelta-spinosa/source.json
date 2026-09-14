@@ -1,0 +1,95 @@
+{
+  "id": "didelta_spinosa",
+  "author": "Jenelle van Heerden",
+  "license": "CC0-1.0",
+  "sourceURL": "https://polyhaven.com/a/didelta_spinosa",
+  "licenseURL": "https://polyhaven.com/license",
+  "description": "Scan-informed source PBR plant model; retain three complete LOD0 growth stages. This is not a claim that each whole plant is an untouched photogrammetry scan.",
+  "originalSource": {
+    "path": "work/living-v8/source-assets/polyhaven/didelta_spinosa/8k/didelta_spinosa_8k.blend",
+    "sha256": "b14062cde215ac091a6a0fe79e8650cc2e3bc034eeeacfdc219636fa32abdc3a"
+  },
+  "geometry": {
+    "path": "world/public/models/herbarium/didelta-spinosa/didelta-spinosa-lod0.glb",
+    "bytes": 13656404,
+    "sha256": "9fdf6619fb9cfd3c049a0a1e0b6fa86c98df5658bce1d913cd8c49925be005c6",
+    "materialTreatment": "Geometry-only export; exact original 8K source material channels are prepared separately, not silently dropped by default glTF conversion."
+  },
+  "materialSource": "work/living-v8/source-assets/polyhaven/didelta_spinosa/material-node-tree.json",
+  "materialSourceSha256": "87dd6a8971dd847e3dff9db5a0e48fbc564ca5080ade010a1d1b11d2500a6f8b",
+  "activeChannels": [
+    "diffuse",
+    "NormalGL",
+    "roughness",
+    "alpha",
+    "translucency"
+  ],
+  "inactiveChannels": {
+    "ao": "Texture has no outgoing source link.",
+    "displacement": "Group output is not connected to Material Output."
+  },
+  "precision": "Original 8192x8192 files unchanged. NormalGL and roughness are native HALF EXRs and decode/upload as HalfFloat, never via 8-bit image conversion.",
+  "axisAndNormals": "Blender exact loop triangles and original split normals exported Y-up. Runtime shifts by actual basal root. All textures aligned to glTF top-origin UVs; native missing tangent attributes use the same normalScale.y=-1 correction as GLTFLoader.",
+  "translucency": "Source alpha x translucency mask x 1.7 retains direct diffuse transmission; transmitted pigment uses source HSV saturation 1.3/value 1.1. Following the matched three-mode native D1 review, the candidate disables broad unoccluded additive indirect transmission while keeping existing reflected PBR/ambient light. All source maps remain bound; full R1/direct/reflected-only diagnostic modes are preserved. This is a documented Three.js approximation, not an exact Cycles equivalence.",
+  "files": [
+    {
+      "relative": "textures/didelta_spinosa_alpha_8k.png",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/8k/didelta_spinosa/didelta_spinosa_alpha_8k.png",
+      "bytes": 1084371,
+      "md5": "be02cb5fc0827d72148605ba18c89037",
+      "sha256": "3950c346d51f327b0f54a0f4ae55e1b12b8c7437ed7efd6ada409ee88aaff4fd"
+    },
+    {
+      "relative": "textures/didelta_spinosa_diff_8k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/8k/didelta_spinosa/didelta_spinosa_diff_8k.jpg",
+      "bytes": 14664795,
+      "md5": "f14d0dd5ce22f2abbdd521f9bc0f2c23",
+      "sha256": "5083d942e785a013fe1ced3da1e35239520da6f5d9652af7482e02e011ea9c81"
+    },
+    {
+      "relative": "textures/didelta_spinosa_ao_8k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/8k/didelta_spinosa/didelta_spinosa_ao_8k.jpg",
+      "bytes": 4165104,
+      "md5": "7e3449f7c9692683812a3415152e7284",
+      "sha256": "197deafe28103ae67d88961ee525e6edc649e4cf14693fbcf9e9929e80da14cf"
+    },
+    {
+      "relative": "textures/didelta_spinosa_rough_8k.exr",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/exr/8k/didelta_spinosa/didelta_spinosa_rough_8k.exr",
+      "bytes": 48989,
+      "md5": "76834a3599f9554740dcf45603200239",
+      "sha256": "63a0189c519bf0b4f047ca16885b5659897810556b5a65f2c918d930e82b586d"
+    },
+    {
+      "relative": "textures/didelta_spinosa_translucency_8k.png",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/8k/didelta_spinosa/didelta_spinosa_translucency_8k.png",
+      "bytes": 2926562,
+      "md5": "3035e8911f31fa577b57e43f5354a48f",
+      "sha256": "3059f787526a1aeb0bae329df4e7f35ffac1d7408b32941ce2aa94fb6ecc18f1"
+    },
+    {
+      "relative": "textures/didelta_spinosa_disp_8k.png",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/8k/didelta_spinosa/didelta_spinosa_disp_8k.png",
+      "bytes": 14693045,
+      "md5": "4bcea0f6d78402ab3a87712a238bcd36",
+      "sha256": "3ee9f9ad8daaf5e9e7edbd5b11b12ac059cc33bd3bbd1688354e31695b848f3c"
+    },
+    {
+      "relative": "textures/didelta_spinosa_nor_gl_8k.exr",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/exr/8k/didelta_spinosa/didelta_spinosa_nor_gl_8k.exr",
+      "bytes": 20504774,
+      "md5": "29ca67821e35dc306387903f0cbcb72a",
+      "sha256": "67d8f96aba14560667ff6ad7058fb75b8f452a0dfd4792dff2f0961d8c632261"
+    }
+  ],
+  "stage": "Canonical source/community candidate; no island approval",
+  "materialReview": "work/living-v8/community-material-d1-root-review.md; community R2 complete native source art gate pending.",
+  "runtimePacking": {
+    "manifest": "scalar-source.json",
+    "recipe": "world/scripts/pack-herbarium-scalars.mjs",
+    "retainedOriginals": true,
+    "scalarUploads": "Original alpha G and translucency R planes, 8192 x 8192 unsigned 8-bit, lossless DEFLATE, R8 texture storage. Original sampled values and sampler/mips retained.",
+    "halfUploads": "Original normal RGBA16F and roughness R16F, identical DWAA HALF decode and top-origin row order, now performed by a cancellable worker with transferred buffers.",
+    "nativeStatus": "Integrated R2 main/shadow appearance and loading still require native review."
+  }
+}

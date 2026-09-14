@@ -1,0 +1,21 @@
+{
+  "catalogueUrl": "https://digitalarchive.npm.gov.tw/Collection/Detail/2106?dep=P",
+  "manifestUrl": "https://digitalarchive.npm.gov.tw/Integrate/GetJson?cid=2106&dept=P",
+  "imageUrl": "https://iiifod.npm.gov.tw/iiif/2/K2D%2FK2D000204N000000000PAJ/full/1000,/0/default.jpg",
+  "itemId": "K2D000204N000000000PAJ",
+  "title": "御製重刻淳化閣帖（一） 冊",
+  "objectNumber": "故帖000204N000000000",
+  "attribution": "御製重刻淳化閣帖（一） 冊。國立故宮博物院，臺北。",
+  "original": "Qing imperial recarving ordered in 1769; album includes a Qianlong preface dated 1772. Individual calligraphies are historic modelbook attributions, not assertions that legendary authorship is established.",
+  "rights": "CC0 for low-resolution images at or below 1 megapixel, per the museum collection page; public IIIF endpoint used without the separate download-form CAPTCHA. The IIIF manifest also links Taiwan Government Data Open License. Full attribution retained.",
+  "rightsUrl": "https://digitalarchive.npm.gov.tw/Collection/Detail/2106?dep=P",
+  "pixels": [
+    1000,
+    749
+  ],
+  "bytes": 77828,
+  "sha256": "f9feb5864caa8f74d9b227a254dce2ef159f0077fce0f15ad1406e62d532b4c6",
+  "checkedAt": "2026-09-11T18:58:44.289079+00:00",
+  "use": "Original unaltered low-resolution JPEG. Any model UV crop and repetition must be declared; not a reconstruction of the full original stone order.",
+  "publicDistributionAuthorizedByLicense": true
+}

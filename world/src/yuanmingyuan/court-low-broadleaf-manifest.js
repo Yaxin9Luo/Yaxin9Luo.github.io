@@ -1,0 +1,102 @@
+// Frozen self-hosted source identity; original native proof hashes remain unchanged.
+const manifest={
+  "id": "court-low-broadleaf-r1",
+  "baseUrl": "/models/yuanmingyuan/court-low-broadleaf-r1/",
+  "provider": "Poly Haven",
+  "asset": "shrub_04",
+  "author": "Rico Cilliers",
+  "sourceURL": "https://polyhaven.com/a/shrub_04",
+  "license": "CC0-1.0",
+  "licenseURL": "https://polyhaven.com/license",
+  "historicallySurveyed": false,
+  "botanicalIdentity": "Generic contemporary reconstruction; not identified as Buxus.",
+  "sourceTriangles": 27327,
+  "scanCopies": 140,
+  "triangles": 1020245,
+  "meshes": 3,
+  "review": "work/yuanmingyuan/court-low-broadleaf-r1/freeze.json",
+  "reviewedFactorySha256": "4b1c860f3f4cfae8d201d8905e56b4e372ec2fe8c9f66ef2a47ea2f3c9d1829d",
+  "nativeWholePngSha256": "469c6dac60af8fbb28f25b6acf5ae6c927e93bcf0487e7204e8414616fb6f8e8",
+  "nativeScope": "Whole-day individual shrub approved to proceed to midlayer drift composition review.",
+  "nativeCompositionReviewed": false,
+  "bounds": {
+    "min": [
+      -0.49993962049484253,
+      -0.03000451624393463,
+      -0.5045164823532104
+    ],
+    "max": [
+      0.5083619356155396,
+      0.6475418210029602,
+      0.4442823529243469
+    ],
+    "size": [
+      1.008301556110382,
+      0.6775463372468948,
+      0.9487988352775574
+    ]
+  },
+  "root": {
+    "mesh": "low-broadleaf-ground-roots",
+    "min": [
+      -0.07031861692667007,
+      -0.03000451624393463,
+      -0.07204722613096237
+    ],
+    "max": [
+      0.057986028492450714,
+      0.10333021730184555,
+      0.06634502857923508
+    ],
+    "bandMaximumY": 0.005,
+    "bandVertices": 1089,
+    "radius": 0.07579315283474522
+  },
+  "files": {
+    "spec": {
+      "file": "derived/complete-sprays.json",
+      "bytes": 5423,
+      "sha256": "0415956c3247adf0ec4a210e111f8f5f37183aba54516680618b9f17005b81a8"
+    },
+    "geometry": {
+      "file": "derived/complete-sprays.bin",
+      "bytes": 913044,
+      "sha256": "bd32ebadd60869a1afe872cbff74d4366cf8db3b6dc98b2c5f77b46e30e25ecd"
+    },
+    "map": {
+      "file": "source-package/shrub_04/textures/shrub_04_diff_4k.jpg",
+      "bytes": 3774294,
+      "sha256": "679a0535697744ef515b4fc11269a82a487af293a1cdcf0c22a637b706ecad6b",
+      "width": 4096,
+      "height": 4096,
+      "mimeType": "image/jpeg"
+    },
+    "normalMap": {
+      "file": "source-package/shrub_04/textures/shrub_04_nor_gl_4k.jpg",
+      "bytes": 4500988,
+      "sha256": "ff84a4f93401dd013ed008e8cd4753c44b4c676c69aa100c5d9bcdf0049c090e",
+      "width": 4096,
+      "height": 4096,
+      "mimeType": "image/jpeg"
+    },
+    "arm": {
+      "file": "source-package/shrub_04/textures/shrub_04_arm_4k.jpg",
+      "bytes": 3180025,
+      "sha256": "b799e606a02fa95c2fe13e44f25a171a898c0f55392b7f3a59c16a1b1895337b",
+      "width": 4096,
+      "height": 4096,
+      "mimeType": "image/jpeg"
+    },
+    "alphaMap": {
+      "file": "source-package/shrub_04/textures/shrub_04_alpha_4k.png",
+      "bytes": 206515,
+      "sha256": "fcd06f9e956b3165163e3ad0f34a954b10b73713b49d67865cbe9c99a8e46606",
+      "width": 4096,
+      "height": 4096,
+      "mimeType": "image/png"
+    }
+  }
+};
+for(const record of Object.values(manifest.files))Object.freeze(record);
+Object.freeze(manifest.files);
+export const courtLowBroadleafSourceManifest=Object.freeze(manifest);

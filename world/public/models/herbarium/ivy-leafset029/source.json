@@ -1,0 +1,120 @@
+{
+  "asset": "ambientCG LeafSet029",
+  "assetPage": "https://ambientcg.com/view?id=LeafSet029",
+  "license": "CC0-1.0",
+  "licensePage": "https://docs.ambientcg.com/license/",
+  "sourceArchive": "https://ambientcg.com/get?file=LeafSet029_4K-PNG.zip",
+  "sourceArchiveSha256": "71310a6562da6d39cf340fd5f0271dc10b8635b5b68579032cabdc9fecffb15d",
+  "technique": "Photometric Stereo",
+  "sourceDimensions": "ca.25cm x25cm atlas",
+  "files": [
+    {
+      "path": "LeafSet029_4K-PNG_Color.png",
+      "sha256": "88f9e81eaf04096e5a136ab20e2b8dc5112525ee752b5f92a212c23a42a26dd2",
+      "bytes": 9991841,
+      "channel": "Color",
+      "colorSpace": "srgb",
+      "pixelTreatment": "Unchanged original 4096 by 4096 PNG"
+    },
+    {
+      "path": "LeafSet029_4K-PNG_NormalGL.png",
+      "sha256": "213b325efc88421c2e424b620fe1b3bc4e02edd4af8374ecd269f493a212772b",
+      "bytes": 42156015,
+      "channel": "NormalGL",
+      "colorSpace": "none",
+      "pixelTreatment": "Unchanged original 4096 by 4096 PNG"
+    },
+    {
+      "path": "LeafSet029_4K-PNG_Opacity.png",
+      "sha256": "54f19d46f54b23d6d8e7934f50f53903c0061692e532cb149f39e90f7cd9d034",
+      "bytes": 194332,
+      "channel": "Opacity",
+      "colorSpace": "none",
+      "pixelTreatment": "Unchanged original 4096 by 4096 PNG"
+    },
+    {
+      "path": "LeafSet029_4K-PNG_Roughness.png",
+      "sha256": "a210875e17314db9160c5439728fef15aee2c1eaf1b90a93af2000d95fb7f9c2",
+      "bytes": 1781731,
+      "channel": "Roughness",
+      "colorSpace": "none",
+      "pixelTreatment": "Unchanged original 4096 by 4096 PNG"
+    }
+  ],
+  "selection": "Six healthy leaf cells in the first two rows; no concept pixels. Opacity controls the true silhouette including scanned holes. NormalGL uses matching atlas UVs and tangent-space convention. Displacement is not used: macro blade curvature is authored shallow geometry and scan relief comes from NormalGL. Scattering is not used: no emission or lighting changes.",
+  "atlasCoordinateConvention": "Original PNG pixels, origin top left. All texture UVs are (x/4096, 1-y/4096) with common loader flipY decoding. The scanned basal sinus connects to the authored petiole.",
+  "selectedLeaves": [
+    {
+      "bounds": [
+        168,
+        167,
+        1234,
+        1215
+      ],
+      "petioleRoot": [
+        316,
+        711
+      ]
+    },
+    {
+      "bounds": [
+        1461,
+        200,
+        2650,
+        1263
+      ],
+      "petioleRoot": [
+        1555,
+        690
+      ]
+    },
+    {
+      "bounds": [
+        2891,
+        184,
+        3960,
+        1174
+      ],
+      "petioleRoot": [
+        3070,
+        683
+      ]
+    },
+    {
+      "bounds": [
+        282,
+        1512,
+        1198,
+        2610
+      ],
+      "petioleRoot": [
+        343,
+        2042
+      ]
+    },
+    {
+      "bounds": [
+        1434,
+        1448,
+        2683,
+        2653
+      ],
+      "petioleRoot": [
+        1509,
+        2053
+      ]
+    },
+    {
+      "bounds": [
+        2848,
+        1419,
+        4019,
+        2686
+      ],
+      "petioleRoot": [
+        3030,
+        2042
+      ]
+    }
+  ]
+}

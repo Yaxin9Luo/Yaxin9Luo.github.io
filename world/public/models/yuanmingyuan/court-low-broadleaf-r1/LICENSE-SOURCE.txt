@@ -1,0 +1,11 @@
+Poly Haven Shrub 04
+Original scanned model and four original 4096 x 4096 textures by Rico Cilliers.
+Source: https://polyhaven.com/a/shrub_04
+Original source license: CC0-1.0 (Creative Commons Zero v1.0 Universal).
+Provider license statement: https://polyhaven.com/license
+License text: https://creativecommons.org/publicdomain/zero/1.0/legalcode
+
+Original JPEG/PNG, glTF and binary files are preserved byte for byte. No texture was resized or recompressed.
+Derived complete-sprays.bin partitions the original connected geometry into four canonical sprays without simplifying faces or changing UVs. The source JSON records original root translations.
+The authored low crown and supporting branches are a contemporary portfolio reconstruction, not a measured historical specimen. The source is not asserted to be Buxus or an original Yuanmingyuan planting.
+See source-package/manifest.json for original download URLs and checksums, and source-manifest.json for the deployed package roster, reviewed source identity and limited native review scope.

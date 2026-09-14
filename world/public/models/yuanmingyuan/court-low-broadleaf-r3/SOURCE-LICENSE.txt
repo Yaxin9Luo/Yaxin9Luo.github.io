@@ -1,0 +1,12 @@
+Bilberry Leaf 01 — original front surface maps
+Creator: Dorian Zgraggen / cgbookcase
+License: CC0 1.0 Universal (CC0-1.0).
+Official asset page: https://www.cgbookcase.com/textures/bilberry-leaf-01
+Official license source: https://www.cgbookcase.com/textures
+License text: https://creativecommons.org/publicdomain/zero/1.0/
+Original download: https://cgbookcase-volume.b-cdn.net/t/BilberryLeaf01_MR_2K.zip
+Original archive SHA256: 986153bc3cda47ff5ee536286f5983a467e9b807b7135e31bd9518672c57685b
+
+This delivery contains only the untouched front BaseColor, Normal and Roughness PNGs. Each remains 1024 x 2048, RGBA8. The original complete acquisition manifest is retained byte-for-byte; its other listed archive members are provenance, not files required by this three-map delivery.
+No resizing, recompression, recoloring, alpha processing or hand-painted replacement has occurred. The normal map is DirectX; private Three material normalScale is [1,-1]. BaseColor is sRGB; data maps have no color-space conversion. ImageBitmap decodes vertically flipped and Texture.flipY is false, preserving original image top at UV v=1.
+Contemporary exhibition surface art only. No claim that bilberry was historically planted at Yuanmingyuan. Geometry, material and composition remain pending native aesthetic acceptance; file availability is not admission.

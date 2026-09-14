@@ -5,6 +5,7 @@ import {bridges} from './locations.js';
 
 const scans = new Map();
 const pending = new Map();
+const batchState = new WeakMap();
 let revision=0;
 const ids = ['rock_face_02', 'rock_moss_set_02'];
 
@@ -67,17 +68,21 @@ export function createScannedRockSpecimen(kind = 'face') {
   group.userData.assetReady = pieces.length > 0; return group;
 }
 
-/** Instanced real scans. Offline geometry factories can run before texture
- * loading; browser startup awaits loadScannedRockAssets and treats failure as
- * an asset-load error, so there is no procedural replacement at runtime. */
-export function addScannedRocks(root, placements, name = 'Authored scanned fieldstone') {
+/** Keep authored intent before assets arrive. Optional per-source placement and
+ * material factories are reapplied for every preview/full revision. Materials
+ * returned by the factory belong to this batch unless they are the source. */
+export function addScannedRocks(root, placements, name = 'Authored scanned fieldstone', options = {}) {
   const group = new THREE.Group(); group.name = name; root.add(group);
-  const batches = new Map(), entries = [];
-  for (const [index, placement] of placements.entries()) {
-    const id = placement.kind === 'face' ? ids[0] : ids[1], pieces = scans.get(id);
+  populateScannedRocks(group,placements,options);return group;
+}
+
+function populateScannedRocks(group,placements,options){
+  const batches = new Map(), entries = [], materials = new Map(), ownedMaterials = new Set();
+  for (const [index, intent] of placements.entries()) {
+    const id = intent.kind === 'face' ? ids[0] : ids[1], pieces = scans.get(id);
     if (!pieces) continue;
-    const piece = (placement.piece ?? index) % pieces.length;
-    const source=pieces[piece];
+    const piece = (intent.piece ?? index) % pieces.length;
+    const source=pieces[piece],placement=options.resolvePlacement?.(intent,source)||intent;
     if(!scanClearsBridgeDeck(source.geometry,placement))continue;
     const key = `${id}/${piece}/${Math.floor(placement.x / 36)},${Math.floor(placement.z / 36)}`;
     if (!batches.has(key)) batches.set(key, {source, placements: []});
@@ -85,23 +90,31 @@ export function addScannedRocks(root, placements, name = 'Authored scanned field
   }
   let triangles = 0;
   for (const [key, batch] of batches) {
-    const mesh = new THREE.InstancedMesh(batch.source.geometry, batch.source.material, batch.placements.length);
-    mesh.name = `${name} / ${key}`;
+    const sourceMaterial=batch.source.material;
+    if(!materials.has(sourceMaterial)){
+      const material=options.materialFactory?.(sourceMaterial)||sourceMaterial;materials.set(sourceMaterial,material);
+      if(material!==sourceMaterial)ownedMaterials.add(material);
+    }
+    const mesh = new THREE.InstancedMesh(batch.source.geometry, materials.get(sourceMaterial), batch.placements.length);
+    mesh.name = `${group.name} / ${key}`;
     const tinted=batch.placements.some(p=>p.tint);
     batch.placements.forEach((placement, i) => {mesh.setMatrixAt(i, placementMatrix(placement));if(tinted)mesh.setColorAt(i,new THREE.Color(placement.tint||'#ffffff'));});
     mesh.castShadow = mesh.receiveShadow = true; mesh.computeBoundingSphere(); mesh.computeBoundingBox();
     mesh.userData.scanSource = batch.source.userData.scanSource; group.add(mesh);
     triangles += batch.source.geometry.index.count / 3 * mesh.count;
   }
-  group.userData = {assetReady: scannedRockReady(), revision, placements: entries, sourcePlacements:placements, scanBatch:true, instanceCount: entries.length, triangles};
-  return group;
+  Object.assign(group.userData,{assetReady: scannedRockReady(), revision, placements: entries, sourcePlacements:placements, scanBatch:true, instanceCount: entries.length, triangles});
+  batchState.set(group,{options,ownedMaterials});
 }
 
 export function hydrateScannedRocks(root){
   if(!scans.size)return;
   const pending=[];root.traverse(object=>{if(object.userData.scanBatch&&object.userData.revision!==revision)pending.push(object);});
   for(const group of pending){
-    const replacement=addScannedRocks(group.parent,group.userData.sourcePlacements,group.name);
-    replacement.position.copy(group.position);replacement.quaternion.copy(group.quaternion);replacement.scale.copy(group.scale);group.traverse(mesh=>{if(mesh.isInstancedMesh)mesh.dispose();});group.removeFromParent();
+    const {options={},ownedMaterials=new Set()}=batchState.get(group)||{};
+    group.traverse(mesh=>{if(mesh.isInstancedMesh)mesh.dispose();});ownedMaterials.forEach(material=>material.dispose());group.clear();
+    populateScannedRocks(group,group.userData.sourcePlacements,options);
+    // Preserve group identity, authored transforms and external registration.
+    group.dispatchEvent({type:'scanhydrated',disposedMaterials:ownedMaterials});
   }
 }

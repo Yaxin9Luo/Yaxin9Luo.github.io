@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>海晏堂 · 模型研究 | Haiyantang studio</title>
+  <link rel="stylesheet" href="./src/studio.css">
+</head>
+<body data-ready="loading">
+  <main>
+    <section class="viewport" aria-label="鼠像独立审查">
+      <canvas aria-label="海晏堂实际三维模型；拖动旋转，滚动缩放" tabindex="0"></canvas>
+      <div class="caption"><span>圆明园 / YUANMINGYUAN</span><h1>鼠像 · 石身铜首</h1><p>比例研究 · Proportional study</p></div>
+      <div class="view-caption" id="view-caption">等待模型加载</div>
+    </section>
+    <aside aria-busy="true">
+      <a class="back" href="http://127.0.0.1:4246/work/yuanmingyuan/">← 研究图册 / Research atlas</a>
+      <div class="eyebrow">ASSET REVIEW · 01</div>
+      <h2>先看模型本身。</h2>
+      <p class="intro">同一模型的四面体量、雕饰和材料。工作单位尚待图纸标定；此页不是建成的圆明园岛。</p>
+      <fieldset id="views" disabled>
+        <legend>视角 <span>CAMERA</span></legend>
+        <div class="view-grid">
+          <button data-view="front" aria-pressed="false">西正面</button>
+          <button data-view="threequarter" aria-pressed="false">斜向全貌</button>
+          <button data-view="north" aria-pressed="false">北侧</button>
+          <button data-view="south" aria-pressed="false">南侧</button>
+          <button data-view="back" aria-pressed="false">东侧水工楼</button>
+          <button data-view="aerial" aria-pressed="false">俯瞰</button>
+          <button data-view="fountain" aria-pressed="false">生肖水法</button>
+          <button data-view="stone" aria-pressed="false">石雕与窗</button>
+          <button data-view="roof" aria-pressed="false">屋顶瓦作</button>
+          <button data-view="stairs" aria-pressed="false">阶梯与栏杆</button>
+        </div>
+      </fieldset>
+      <label class="field-label" for="sculpture">雕像近景 <span>SCULPTURE</span></label>
+      <select id="sculpture" disabled>
+        <option value="">选择生肖或中央石蚌</option>
+        <option value="rat">鼠 · Rat</option><option value="ox">牛 · Ox</option>
+        <option value="tiger">虎 · Tiger</option><option value="rabbit">兔 · Rabbit</option>
+        <option value="dragon">龙 · Dragon</option><option value="snake">蛇 · Snake</option>
+        <option value="horse">马 · Horse</option><option value="goat">羊 · Goat</option>
+        <option value="monkey">猴 · Monkey</option><option value="rooster">鸡 · Rooster</option>
+        <option value="dog">狗 · Dog</option><option value="pig">猪 · Pig</option>
+        <option value="clam">中央石蚌 · Clam</option>
+      </select>
+      <label class="field-label" for="lighting">光照 <span>LIGHTING</span></label>
+      <select id="lighting" disabled><option value="day">明亮日光</option><option value="neutral">中性结构审查</option><option value="night">月光材质审查</option></select>
+      <label class="checkbox"><input type="checkbox" id="wireframe" disabled> 显示线框 <span>Wireframe</span></label>
+      <button id="save-frame" class="primary" disabled>保存原生实机画面</button>
+      <div id="status" role="status" aria-live="polite">正在准备独立模型…</div>
+      <div id="capture-files" class="capture-files"></div>
+      <details><summary>制作与渲染信息</summary><pre id="readout"></pre></details>
+      <p class="footnote">生成的参考图仅用于色材与光照。尺寸、背面及兽首细节的推定会留在资料卡中。</p>
+    </aside>
+  </main>
+  <script type="module" src="./src/studio.js"></script>
+</body>
+</html>

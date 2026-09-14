@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex"><title>正觉寺 · 距离模型审查</title><link rel="stylesheet" href="/src/yuanmingyuan/zhengjuesi-distance-studio.css"></head>
+<body data-ready="loading"><main><section id="distance-stage"><canvas aria-label="正觉寺完整模型与距离模型，相同视角对照" tabindex="0"></canvas><div class="caption"><span>圆明园 / ZHENGJUESI</span><h1>一座寺院，两个距离。</h1><p id="distance-caption">等待归档 · 此试点尚未准入世界</p></div></section><aside>
+<p class="eyebrow">DISTANCE PILOT</p><h2>保留屋面、院落与光。</h2><p>完整源和远景表示共享同一镜头与光照。此页用于审查，强制显示远景不等于通过审核。</p>
+<label for="distance-mode">模型</label><select id="distance-mode"><option value="full">完整无损源</option><option value="distance">距离模型 · 强制对照</option><option value="transition">按像素误差过渡 · 待审</option></select>
+<label for="distance-view">方向</label><select id="distance-view"><option value="oblique">东南斜向</option><option value="south">正南</option><option value="north">正北</option></select>
+<label for="distance-range">距离 <output id="distance-range-label">500 m</output></label><input id="distance-range" type="range" min="40" max="1000" value="500" step="1">
+<div class="presets" role="group" aria-label="距离预设"><button type="button" data-distance-preset="range" data-value="200">200 m</button><button type="button" data-distance-preset="range" data-value="350">350 m</button><button type="button" data-distance-preset="range" data-value="500">500 m</button><button type="button" data-distance-preset="range" data-value="600">600 m</button></div>
+<label for="distance-height">视点高度 <output id="distance-height-label">40 m</output></label><input id="distance-height" type="range" min="1.7" max="120" value="40" step=".1">
+<div class="presets" role="group" aria-label="高度预设"><button type="button" data-distance-preset="height" data-value="1.7">低角度</button><button type="button" data-distance-preset="height" data-value="40">40 m</button><button type="button" data-distance-preset="height" data-value="90">90 m</button></div>
+<label for="distance-hour">时间 <output id="distance-hour-label">12:00</output></label><input id="distance-hour" type="range" min="0" max="24" value="12" step=".1">
+<div class="presets" role="group" aria-label="光照预设"><button type="button" data-distance-preset="hour" data-value="12">日光</button><button type="button" data-distance-preset="hour" data-value="0">月夜</button></div>
+<button id="distance-approach">播放 600→200 m 接近</button><button id="distance-save">保存同帧 PNG + JSON</button><button id="distance-dispose">释放审查资源</button>
+<p id="distance-status" role="status">正在顺序加载完整归档和距离归档…</p><p id="distance-metrics"></p><p id="distance-transition">尚未播放接近；完成或暂停后可保存切档记录。</p><details><summary>完整实机与误差记录</summary><pre id="distance-readout"></pre></details><p class="footnote">几何误差使用实际物理像素。屋瓦、倒角的插值光照及阴影仍须实机判断；原始源和失败证据保留。</p>
+</aside></main><script type="module" src="/src/yuanmingyuan/zhengjuesi-distance-studio.js"></script></body></html>

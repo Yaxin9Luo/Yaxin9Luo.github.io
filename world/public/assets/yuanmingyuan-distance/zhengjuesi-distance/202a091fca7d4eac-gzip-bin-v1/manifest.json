@@ -1,0 +1,5104 @@
+{
+  "schema": 2,
+  "id": "zhengjuesi-distance",
+  "kind": "yuanmingyuan-building-distance-pilot",
+  "exportedAt": "2026-09-11T22:13:22.363Z",
+  "sourceDigest": "202a091fca7d4eacfd7a12a8b3cb750efe8fdb9c79e0c24fe72c8ce4ca31b40c",
+  "sourceSHA256": {
+    "world/node_modules/three/examples/jsm/geometries/RoundedBoxGeometry.js": "c1b7c9bd2cddff2e3f3a0723f618a3d364a47450e3d25771d21faed88410bec8",
+    "world/node_modules/three/package.json": "1d5c438acdc1fe5a52fb8ede2e417afd91fec91d22275c40f7b739591b24e4df",
+    "world/node_modules/three/src/constants.js": "3444ef8433dedd2d8b391bc1139b5f3c9f433ea3487473b366e624814d73d26e",
+    "world/node_modules/three/src/core/BufferAttribute.js": "ffd9bdc55ea7c0b5cec9865a68b71ebd076d0c49f9d50adb5f9ce570c1961c09",
+    "world/node_modules/three/src/core/BufferGeometry.js": "be1b8ad6ce3e502904fd989f5b6690d8fedcbadb74508aec99fc87dfd567e8c7",
+    "world/node_modules/three/src/core/EventDispatcher.js": "bf032f809ea34e50cf0b63512d9c7e0ba9fd90ca8b0c81c9e5efe121bce1bd97",
+    "world/node_modules/three/src/core/Layers.js": "0727a1f8f987a0da6ffe91ea55cef7e8c18822dc1a69c44fc282525127b361ea",
+    "world/node_modules/three/src/core/Object3D.js": "99d720abcea9720a2743dcbbd84e393d7094538d4a8495ea4869150030aa7d82",
+    "world/node_modules/three/src/extras/DataUtils.js": "c13af55f853b7882c7435d06b9c66333e9d68b42b22f6c257a060d6248052d6b",
+    "world/node_modules/three/src/geometries/BoxGeometry.js": "9b3799b446b031e55ac60795859f3f941cb8bd32579ea43d29f32d98cd661d7c",
+    "world/node_modules/three/src/geometries/CylinderGeometry.js": "ec4aaa60e490afaf76c6ee6e2c11a373f647381eb737d1d6f095f4cbb0c063ff",
+    "world/node_modules/three/src/math/Box3.js": "382b33a3b235b3f5a37a8949d8f8a9efdf056c62ce5ed79692b54944a80487e1",
+    "world/node_modules/three/src/math/Euler.js": "33a964a95f6c87ccc65e5d049810f9133e0f1a574777a37a724c7c03b4adba22",
+    "world/node_modules/three/src/math/MathUtils.js": "e329b0574b9b1ed34c169c11abfd3cfb3cf5ea61b062e17a72d400a8515b1f16",
+    "world/node_modules/three/src/math/Matrix3.js": "cb9e8810e0d2d3005098aad5f3b4837f65e9c3685776cabea6f4d953ab4f0e98",
+    "world/node_modules/three/src/math/Matrix4.js": "11d813da5b4a03de3e75dcb9780657a9cc276f682c30aa876c461d6429dcf39c",
+    "world/node_modules/three/src/math/Quaternion.js": "27de8858ac6ec90f0b830c8e1bc5c2c6d8f1328a9b9903fd73b24e0d25389d29",
+    "world/node_modules/three/src/math/Sphere.js": "b242e17b2d5aa4d519c42122143c9587b3aff8df629d3a8ad6dcef1b66030ac2",
+    "world/node_modules/three/src/math/Vector2.js": "29af0fe7fd3431d9d63e2f54251e08d08f044858ec6e14ddf44de81ed1a07858",
+    "world/node_modules/three/src/math/Vector3.js": "834c56c4a10a54ee1f967f111d792be37639b5a8761c6f190622184297bf3dc8",
+    "world/node_modules/three/src/utils.js": "28f06d2e36ee99dcf3bad7dc10b13ed8715a5b8ed3468b1c7386384b0699e52a",
+    "world/package-lock.json": "ff9b828866f47f089906a744802e639bb415f3aff1cf93a44cd2a9fc3c759d0a",
+    "world/scripts/export-yuanmingyuan-assets.mjs": "11715a57af8eb219eb2a006135be53cd6fde8a33877e7b662552b18cc06c2603",
+    "world/scripts/zhengjuesi-distance-export.mjs": "504cbbed980c7829a7559530092f7ac6b072954dcdbe5cded3c5edabd9028e61",
+    "world/src/asset-manifest.js": "e470201b3eaa20b593514df35fe59828168165625c7593bb06305e0720ff7ded",
+    "world/src/resource-loader.js": "4741f631487b9bcab9b7f40b399d51c457434e180f940d291c1e2dbed5688ed6",
+    "world/src/yuanmingyuan/asset-archive.js": "7c2939d9e004e2b32e54ae13530e9aeae506d85b3f3412250386dfe48d8aac1a",
+    "world/src/yuanmingyuan/asset-overview.js": "7d6a252ef56211fd4b09c0d7ee604279078fef44d0e2fcdab22d33a71f3ea06d",
+    "world/src/yuanmingyuan/chinese-architecture-geometry.js": "6d98692c4ceeaa3b1257b6df1e050091b91b28e5e69dcbe60011c3d7dd5bd1cd",
+    "world/src/yuanmingyuan/study-geometry.js": "f586fd7d5fa783f2ca3063391eb97bd233e33aded8f6b6211e4bf4453786f4ad",
+    "world/src/yuanmingyuan/vegetation-textures.js": "26b2c9310b67aa8075832dc9857775b3097da330ebcf16a0e6a36cfcef696474",
+    "world/src/yuanmingyuan/zhengjuesi-distance-builder.js": "bc2feb0f0a5108c1ad51e80b7287d00b90ebb569a5f715d346156df70540a142",
+    "world/src/yuanmingyuan/zhengjuesi-distance-geometry.js": "c1d084eaae37a88525224f22d8162d5b23155bdf3e0b7b2bd5044964b4ec3a65"
+  },
+  "distance": {
+    "report": {
+      "schema": 1,
+      "kind": "yuanmingyuan-building-distance",
+      "id": "zhengjuesi",
+      "sourceArchiveDigest": "cfe62c4d8102267f90a2801f53e49db70e906cbba402235a67fe118513624df6",
+      "sourceRootWorldMatrix": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "requestedMaximumErrorWorld": 0.05,
+      "maximumErrorArchiveWorld": 0.049857996355187825,
+      "maximumMatrixEncodingErrorWorld": 0.000004243850709253258,
+      "maximumVertexEncodingErrorWorld": 0.000004259643341659347,
+      "fullArchiveRetained": true,
+      "texturePixelsUnchanged": true,
+      "materialResponse": "original PBR; sparse vertex-color material clones only",
+      "nativeDistanceVisualReview": false,
+      "originalTriangles": 20558700,
+      "distanceTriangles": 4762112,
+      "originalDraws": 2295,
+      "distanceDraws": 63,
+      "originalInstances": 136799,
+      "representedInstances": 136799,
+      "instancedDraws": 49,
+      "mergedDraws": 14,
+      "retainedIndividualDraws": 0,
+      "sourceVerticesMoved": false,
+      "candidateVerticesChanged": true,
+      "geometries": [
+        {
+          "name": "zhengjuesi-prototype-box",
+          "sourceTriangles": 12,
+          "instances": 20016,
+          "retainedInstances": 20016,
+          "variants": []
+        },
+        {
+          "name": "zhengjuesi-prototype-dressed-stone",
+          "sourceTriangles": 300,
+          "instances": 17123,
+          "retainedInstances": 302,
+          "variants": [
+            {
+              "name": "zhengjuesi-prototype-dressed-stone-distance-flat-bevel",
+              "triangles": 12,
+              "proof": {
+                "method": "closed-star-kernel-inset-cube-common-ray-v1",
+                "certified": true,
+                "maximumError": 0.038105290971596095,
+                "axisErrorBounds": [
+                  0.022000100000000022,
+                  0.022000100000000022,
+                  0.022000100000000022
+                ],
+                "numericalGuard": 1e-7,
+                "texturePixelsUnchanged": true,
+                "normalAndUVField": "flat faces; bevel field approximated",
+                "visualLightingAcceptance": false
+              },
+              "instances": 16821,
+              "maximumWorldError": 0.041197862982981184
+            }
+          ]
+        },
+        {
+          "name": "zhengjuesi-prototype-rail-lotus-bud",
+          "sourceTriangles": 160,
+          "instances": 80,
+          "retainedInstances": 80,
+          "variants": []
+        },
+        {
+          "name": "zhengjuesi-prototype-rail-relief-petal",
+          "sourceTriangles": 256,
+          "instances": 432,
+          "retainedInstances": 432,
+          "variants": []
+        },
+        {
+          "name": "zhengjuesi-prototype-wall-coping-tile",
+          "sourceTriangles": 116,
+          "instances": 3052,
+          "retainedInstances": 0,
+          "variants": [
+            {
+              "name": "zhengjuesi-prototype-wall-coping-tile-distance-2x2",
+              "triangles": 20,
+              "proof": {
+                "method": "six-sheet-common-parameter-triangle-overlay-v1",
+                "certified": true,
+                "maximumError": 0.03728588996844427,
+                "axisErrorBounds": [
+                  0.030469075845314032,
+                  0.030469075845314032,
+                  1.0000001110223025e-9
+                ],
+                "numericalGuard": 1e-9,
+                "intersectionPolygons": 212,
+                "coverage": [
+                  {
+                    "part": "outer",
+                    "sourceArea": 0.9999999999999999,
+                    "targetArea": 1,
+                    "maximumAreaResidual": 1.6653345369377348e-16
+                  },
+                  {
+                    "part": "inner",
+                    "sourceArea": 1,
+                    "targetArea": 1,
+                    "maximumAreaResidual": 1.6653345369377348e-16
+                  },
+                  {
+                    "part": "lip-left",
+                    "sourceArea": 1,
+                    "targetArea": 1,
+                    "maximumAreaResidual": 0
+                  },
+                  {
+                    "part": "lip-right",
+                    "sourceArea": 1,
+                    "targetArea": 1,
+                    "maximumAreaResidual": 0
+                  },
+                  {
+                    "part": "cap-start",
+                    "sourceArea": 1,
+                    "targetArea": 1,
+                    "maximumAreaResidual": 1.6653345369377348e-16
+                  },
+                  {
+                    "part": "cap-end",
+                    "sourceArea": 0.9999999999999999,
+                    "targetArea": 1,
+                    "maximumAreaResidual": 1.6653345369377348e-16
+                  }
+                ],
+                "visualLightingAcceptance": false
+              },
+              "instances": 3052,
+              "maximumWorldError": 0.0430897809324914
+            },
+            {
+              "name": "zhengjuesi-prototype-wall-coping-tile-distance-4x2",
+              "triangles": 36,
+              "proof": {
+                "method": "six-sheet-common-parameter-triangle-overlay-v1",
+                "certified": true,
+                "maximumError": 0.009974684944402613,
+                "axisErrorBounds": [
+                  0.009944780532296318,
+                  0.009944780532296332,
+                  1.0000001110223025e-9
+                ],
+                "numericalGuard": 1e-9,
+                "intersectionPolygons": 228,
+                "coverage": [
+                  {
+                    "part": "outer",
+                    "sourceArea": 0.9999999999999999,
+                    "targetArea": 1,
+                    "maximumAreaResidual": 1.3877787807814457e-16
+                  },
+                  {
+                    "part": "inner",
+                    "sourceArea": 1,
+                    "targetArea": 1,
+                    "maximumAreaResidual": 8.326672684688674e-17
+                  },
+                  {
+                    "part": "lip-left",
+                    "sourceArea": 1,
+                    "targetArea": 1,
+                    "maximumAreaResidual": 0
+                  },
+                  {
+                    "part": "lip-right",
+                    "sourceArea": 1,
+                    "targetArea": 1,
+                    "maximumAreaResidual": 0
+                  },
+                  {
+                    "part": "cap-start",
+                    "sourceArea": 1,
+                    "targetArea": 1,
+                    "maximumAreaResidual": 8.326672684688674e-17
+                  },
+                  {
+                    "part": "cap-end",
+                    "sourceArea": 0.9999999999999999,
+                    "targetArea": 1,
+                    "maximumAreaResidual": 1.3877787807814457e-16
+                  }
+                ],
+                "visualLightingAcceptance": false
+              },
+              "instances": 0,
+              "maximumWorldError": 0
+            },
+            {
+              "name": "zhengjuesi-prototype-wall-coping-tile-distance-7x2",
+              "triangles": 60,
+              "proof": {
+                "method": "six-sheet-common-parameter-triangle-overlay-v1",
+                "certified": true,
+                "maximumError": 0.004051616145544158,
+                "axisErrorBounds": [
+                  0.0040375004277954105,
+                  0.004011455060673714,
+                  1.0000000555111513e-9
+                ],
+                "numericalGuard": 1e-9,
+                "intersectionPolygons": 172,
+                "coverage": [
+                  {
+                    "part": "outer",
+                    "sourceArea": 0.9999999999999999,
+                    "targetArea": 0.9999999999999998,
+                    "maximumAreaResidual": 1.3877787807814457e-16
+                  },
+                  {
+                    "part": "inner",
+                    "sourceArea": 1,
+                    "targetArea": 0.9999999999999998,
+                    "maximumAreaResidual": 8.326672684688674e-17
+                  },
+                  {
+                    "part": "lip-left",
+                    "sourceArea": 1,
+                    "targetArea": 1,
+                    "maximumAreaResidual": 0
+                  },
+                  {
+                    "part": "lip-right",
+                    "sourceArea": 1,
+                    "targetArea": 1,
+                    "maximumAreaResidual": 0
+                  },
+                  {
+                    "part": "cap-start",
+                    "sourceArea": 1,
+                    "targetArea": 0.9999999999999998,
+                    "maximumAreaResidual": 8.326672684688674e-17
+                  },
+                  {
+                    "part": "cap-end",
+                    "sourceArea": 0.9999999999999999,
+                    "targetArea": 0.9999999999999998,
+                    "maximumAreaResidual": 1.3877787807814457e-16
+                  }
+                ],
+                "visualLightingAcceptance": false
+              },
+              "instances": 0,
+              "maximumWorldError": 0
+            }
+          ]
+        },
+        {
+          "name": "zhengjuesi-prototype-lotus-oval-panel",
+          "sourceTriangles": 256,
+          "instances": 2,
+          "retainedInstances": 2,
+          "variants": []
+        },
+        {
+          "name": "zhengjuesi-prototype-gate-lotus-petal",
+          "sourceTriangles": 472,
+          "instances": 36,
+          "retainedInstances": 36,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 528,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 340,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 340,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 340,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 340,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 340,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 340,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "zhengjuesi-prototype-lotus-column-base",
+          "sourceTriangles": 336,
+          "instances": 264,
+          "retainedInstances": 264,
+          "variants": []
+        },
+        {
+          "name": "zhengjuesi-prototype-tapered-round-column",
+          "sourceTriangles": 224,
+          "instances": 264,
+          "retainedInstances": 0,
+          "variants": [
+            {
+              "name": "zhengjuesi-prototype-tapered-round-column-distance-3",
+              "triangles": 12,
+              "proof": {
+                "method": "closed-frustum-common-height-angle-v1",
+                "certified": true,
+                "maximumError": 0.5546058461780036,
+                "axisErrorBounds": [
+                  0.5546058461779946,
+                  1e-7,
+                  0.5546058461779946
+                ],
+                "radialErrorBound": 0.5546058461779946,
+                "axialErrorBound": 1e-7,
+                "numericalGuard": 1e-7,
+                "normalAndUVField": "authored analytic circular normals and cylinder UV at reduced angular vertices",
+                "visualLightingAcceptance": false
+              },
+              "instances": 0,
+              "maximumWorldError": 0
+            },
+            {
+              "name": "zhengjuesi-prototype-tapered-round-column-distance-4",
+              "triangles": 16,
+              "proof": {
+                "method": "closed-frustum-common-height-angle-v1",
+                "certified": true,
+                "maximumError": 0.31471962809597753,
+                "axisErrorBounds": [
+                  0.31471962809596166,
+                  1e-7,
+                  0.31471962809596166
+                ],
+                "radialErrorBound": 0.31471962809596166,
+                "axialErrorBound": 1e-7,
+                "numericalGuard": 1e-7,
+                "normalAndUVField": "authored analytic circular normals and cylinder UV at reduced angular vertices",
+                "visualLightingAcceptance": false
+              },
+              "instances": 60,
+              "maximumWorldError": 0.04091383540177107
+            },
+            {
+              "name": "zhengjuesi-prototype-tapered-round-column-distance-6",
+              "triangles": 24,
+              "proof": {
+                "method": "closed-frustum-common-height-angle-v1",
+                "certified": true,
+                "maximumError": 0.14337232946597295,
+                "axisErrorBounds": [
+                  0.1433723294659381,
+                  1e-7,
+                  0.1433723294659381
+                ],
+                "radialErrorBound": 0.1433723294659381,
+                "axialErrorBound": 1e-7,
+                "numericalGuard": 1e-7,
+                "normalAndUVField": "authored analytic circular normals and cylinder UV at reduced angular vertices",
+                "visualLightingAcceptance": false
+              },
+              "instances": 204,
+              "maximumWorldError": 0.049034032121199084
+            },
+            {
+              "name": "zhengjuesi-prototype-tapered-round-column-distance-8",
+              "triangles": 32,
+              "proof": {
+                "method": "closed-frustum-common-height-angle-v1",
+                "certified": true,
+                "maximumError": 0.0834007749454898,
+                "axisErrorBounds": [
+                  0.08340077494542986,
+                  1e-7,
+                  0.08340077494542986
+                ],
+                "radialErrorBound": 0.08340077494542986,
+                "axialErrorBound": 1e-7,
+                "numericalGuard": 1e-7,
+                "normalAndUVField": "authored analytic circular normals and cylinder UV at reduced angular vertices",
+                "visualLightingAcceptance": false
+              },
+              "instances": 0,
+              "maximumWorldError": 0
+            }
+          ]
+        },
+        {
+          "name": "zhengjuesi-prototype-column-collar",
+          "sourceTriangles": 144,
+          "instances": 528,
+          "retainedInstances": 528,
+          "variants": []
+        },
+        {
+          "name": "zhengjuesi-prototype-arch-leaf-1.13--1",
+          "sourceTriangles": 104,
+          "instances": 2,
+          "retainedInstances": 2,
+          "variants": []
+        },
+        {
+          "name": "zhengjuesi-prototype-gate-brass-boss",
+          "sourceTriangles": 168,
+          "instances": 182,
+          "retainedInstances": 182,
+          "variants": []
+        },
+        {
+          "name": "zhengjuesi-prototype-door-ring",
+          "sourceTriangles": 448,
+          "instances": 6,
+          "retainedInstances": 6,
+          "variants": []
+        },
+        {
+          "name": "zhengjuesi-prototype-arch-leaf-1.13-1",
+          "sourceTriangles": 104,
+          "instances": 2,
+          "retainedInstances": 2,
+          "variants": []
+        },
+        {
+          "name": "zhengjuesi-prototype-arch-leaf-1.4--1",
+          "sourceTriangles": 104,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "zhengjuesi-prototype-arch-leaf-1.4-1",
+          "sourceTriangles": 104,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 11040,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "zhengjuesi-prototype-convex-lap-cover-tile",
+          "sourceTriangles": 176,
+          "instances": 30956,
+          "retainedInstances": 0,
+          "variants": [
+            {
+              "name": "zhengjuesi-prototype-convex-lap-cover-tile-distance-2x2",
+              "triangles": 20,
+              "proof": {
+                "method": "six-sheet-common-parameter-triangle-overlay-v1",
+                "certified": true,
+                "maximumError": 0.030465771025608424,
+                "axisErrorBounds": [
+                  0.023868719317576816,
+                  0.023868158395294735,
+                  0.00040400128228759767
+                ],
+                "numericalGuard": 1e-9,
+                "intersectionPolygons": 276,
+                "coverage": [
+                  {
+                    "part": "outer",
+                    "sourceArea": 0.9999999999999996,
+                    "targetArea": 1,
+                    "maximumAreaResidual": 1.6653345369377348e-16
+                  },
+                  {
+                    "part": "inner",
+                    "sourceArea": 1.0000000000000004,
+                    "targetArea": 1,
+                    "maximumAreaResidual": 1.1102230246251565e-16
+                  },
+                  {
+                    "part": "lip-left",
+                    "sourceArea": 1,
+                    "targetArea": 1,
+                    "maximumAreaResidual": 0
+                  },
+                  {
+                    "part": "lip-right",
+                    "sourceArea": 1,
+                    "targetArea": 1,
+                    "maximumAreaResidual": 0
+                  },
+                  {
+                    "part": "cap-start",
+                    "sourceArea": 1,
+                    "targetArea": 1,
+                    "maximumAreaResidual": 1.6653345369377348e-16
+                  },
+                  {
+                    "part": "cap-end",
+                    "sourceArea": 0.9999999999999999,
+                    "targetArea": 1,
+                    "maximumAreaResidual": 1.6653345369377348e-16
+                  }
+                ],
+                "visualLightingAcceptance": false
+              },
+              "instances": 30956,
+              "maximumWorldError": 0.044455701443821716
+            },
+            {
+              "name": "zhengjuesi-prototype-convex-lap-cover-tile-distance-4x2",
+              "triangles": 36,
+              "proof": {
+                "method": "six-sheet-common-parameter-triangle-overlay-v1",
+                "certified": true,
+                "maximumError": 0.009397762110636749,
+                "axisErrorBounds": [
+                  0.00779325934342412,
+                  0.008901978113315043,
+                  0.00040400128228759767
+                ],
+                "numericalGuard": 1e-9,
+                "intersectionPolygons": 300,
+                "coverage": [
+                  {
+                    "part": "outer",
+                    "sourceArea": 0.9999999999999996,
+                    "targetArea": 1,
+                    "maximumAreaResidual": 2.0816681711721685e-16
+                  },
+                  {
+                    "part": "inner",
+                    "sourceArea": 1.0000000000000004,
+                    "targetArea": 1,
+                    "maximumAreaResidual": 1.1102230246251565e-16
+                  },
+                  {
+                    "part": "lip-left",
+                    "sourceArea": 1,
+                    "targetArea": 1,
+                    "maximumAreaResidual": 0
+                  },
+                  {
+                    "part": "lip-right",
+                    "sourceArea": 1,
+                    "targetArea": 1,
+                    "maximumAreaResidual": 0
+                  },
+                  {
+                    "part": "cap-start",
+                    "sourceArea": 1,
+                    "targetArea": 1,
+                    "maximumAreaResidual": 8.326672684688674e-17
+                  },
+                  {
+                    "part": "cap-end",
+                    "sourceArea": 0.9999999999999999,
+                    "targetArea": 1,
+                    "maximumAreaResidual": 1.3877787807814457e-16
+                  }
+                ],
+                "visualLightingAcceptance": false
+              },
+              "instances": 0,
+              "maximumWorldError": 0
+            },
+            {
+              "name": "zhengjuesi-prototype-convex-lap-cover-tile-distance-7x2",
+              "triangles": 60,
+              "proof": {
+                "method": "six-sheet-common-parameter-triangle-overlay-v1",
+                "certified": true,
+                "maximumError": 0.004532278584075942,
+                "axisErrorBounds": [
+                  0.003230759011341095,
+                  0.004532278584075942,
+                  0.00040400128228759767
+                ],
+                "numericalGuard": 1e-9,
+                "intersectionPolygons": 241,
+                "coverage": [
+                  {
+                    "part": "outer",
+                    "sourceArea": 0.9999999999999996,
+                    "targetArea": 0.9999999999999998,
+                    "maximumAreaResidual": 1.1102230246251565e-16
+                  },
+                  {
+                    "part": "inner",
+                    "sourceArea": 1.0000000000000004,
+                    "targetArea": 0.9999999999999998,
+                    "maximumAreaResidual": 1.1102230246251565e-16
+                  },
+                  {
+                    "part": "lip-left",
+                    "sourceArea": 1,
+                    "targetArea": 1,
+                    "maximumAreaResidual": 0
+                  },
+                  {
+                    "part": "lip-right",
+                    "sourceArea": 1,
+                    "targetArea": 1,
+                    "maximumAreaResidual": 0
+                  },
+                  {
+                    "part": "cap-start",
+                    "sourceArea": 1,
+                    "targetArea": 0.9999999999999998,
+                    "maximumAreaResidual": 8.326672684688674e-17
+                  },
+                  {
+                    "part": "cap-end",
+                    "sourceArea": 0.9999999999999999,
+                    "targetArea": 0.9999999999999998,
+                    "maximumAreaResidual": 1.3877787807814457e-16
+                  }
+                ],
+                "visualLightingAcceptance": false
+              },
+              "instances": 0,
+              "maximumWorldError": 0
+            }
+          ]
+        },
+        {
+          "name": "zhengjuesi-prototype-solid-lotus-tile-end",
+          "sourceTriangles": 80,
+          "instances": 4186,
+          "retainedInstances": 0,
+          "variants": [
+            {
+              "name": "zhengjuesi-prototype-solid-lotus-tile-end-distance-3",
+              "triangles": 12,
+              "proof": {
+                "method": "closed-frustum-common-height-angle-v1",
+                "certified": true,
+                "maximumError": 0.05774688119518259,
+                "axisErrorBounds": [
+                  0.057746881195096016,
+                  1e-7,
+                  0.057746881195096016
+                ],
+                "radialErrorBound": 0.057746881195096016,
+                "axialErrorBound": 1e-7,
+                "numericalGuard": 1e-7,
+                "normalAndUVField": "authored analytic circular normals and cylinder UV at reduced angular vertices",
+                "visualLightingAcceptance": false
+              },
+              "instances": 0,
+              "maximumWorldError": 0
+            },
+            {
+              "name": "zhengjuesi-prototype-solid-lotus-tile-end-distance-4",
+              "triangles": 16,
+              "proof": {
+                "method": "closed-frustum-common-height-angle-v1",
+                "certified": true,
+                "maximumError": 0.03303860073279796,
+                "axisErrorBounds": [
+                  0.033038600732646625,
+                  1e-7,
+                  0.033038600732646625
+                ],
+                "radialErrorBound": 0.033038600732646625,
+                "axialErrorBound": 1e-7,
+                "numericalGuard": 1e-7,
+                "normalAndUVField": "authored analytic circular normals and cylinder UV at reduced angular vertices",
+                "visualLightingAcceptance": false
+              },
+              "instances": 4186,
+              "maximumWorldError": 0.03303870187063258
+            },
+            {
+              "name": "zhengjuesi-prototype-solid-lotus-tile-end-distance-6",
+              "triangles": 24,
+              "proof": {
+                "method": "closed-frustum-common-height-angle-v1",
+                "certified": true,
+                "maximumError": 0.015389828974079083,
+                "axisErrorBounds": [
+                  0.015389828973754193,
+                  1e-7,
+                  0.015389828973754193
+                ],
+                "radialErrorBound": 0.015389828973754193,
+                "axialErrorBound": 1e-7,
+                "numericalGuard": 1e-7,
+                "normalAndUVField": "authored analytic circular normals and cylinder UV at reduced angular vertices",
+                "visualLightingAcceptance": false
+              },
+              "instances": 0,
+              "maximumWorldError": 0
+            },
+            {
+              "name": "zhengjuesi-prototype-solid-lotus-tile-end-distance-8",
+              "triangles": 32,
+              "proof": {
+                "method": "closed-frustum-common-height-angle-v1",
+                "certified": true,
+                "maximumError": 0.009212758858684571,
+                "axisErrorBounds": [
+                  0.009212758858141845,
+                  1e-7,
+                  0.009212758858141845
+                ],
+                "radialErrorBound": 0.009212758858141845,
+                "axialErrorBound": 1e-7,
+                "numericalGuard": 1e-7,
+                "normalAndUVField": "authored analytic circular normals and cylinder UV at reduced angular vertices",
+                "visualLightingAcceptance": false
+              },
+              "instances": 0,
+              "maximumWorldError": 0
+            }
+          ]
+        },
+        {
+          "name": "zhengjuesi-prototype-concave-lap-pan-tile",
+          "sourceTriangles": 176,
+          "instances": 30946,
+          "retainedInstances": 0,
+          "variants": [
+            {
+              "name": "zhengjuesi-prototype-concave-lap-pan-tile-distance-2x2",
+              "triangles": 20,
+              "proof": {
+                "method": "six-sheet-common-parameter-triangle-overlay-v1",
+                "certified": true,
+                "maximumError": 0.03562403362982897,
+                "axisErrorBounds": [
+                  0.027655970773020074,
+                  0.027655302349503676,
+                  0.00047600369317626955
+                ],
+                "numericalGuard": 1e-9,
+                "intersectionPolygons": 276,
+                "coverage": [
+                  {
+                    "part": "outer",
+                    "sourceArea": 0.9999999999999996,
+                    "targetArea": 1,
+                    "maximumAreaResidual": 1.6653345369377348e-16
+                  },
+                  {
+                    "part": "inner",
+                    "sourceArea": 1.0000000000000004,
+                    "targetArea": 1,
+                    "maximumAreaResidual": 1.1102230246251565e-16
+                  },
+                  {
+                    "part": "lip-left",
+                    "sourceArea": 1,
+                    "targetArea": 1,
+                    "maximumAreaResidual": 0
+                  },
+                  {
+                    "part": "lip-right",
+                    "sourceArea": 1,
+                    "targetArea": 1,
+                    "maximumAreaResidual": 0
+                  },
+                  {
+                    "part": "cap-start",
+                    "sourceArea": 1,
+                    "targetArea": 1,
+                    "maximumAreaResidual": 1.6653345369377348e-16
+                  },
+                  {
+                    "part": "cap-end",
+                    "sourceArea": 0.9999999999999999,
+                    "targetArea": 1,
+                    "maximumAreaResidual": 1.6653345369377348e-16
+                  }
+                ],
+                "visualLightingAcceptance": false
+              },
+              "instances": 30722,
+              "maximumWorldError": 0.0498570903645844
+            },
+            {
+              "name": "zhengjuesi-prototype-concave-lap-pan-tile-distance-4x2",
+              "triangles": 36,
+              "proof": {
+                "method": "six-sheet-common-parameter-triangle-overlay-v1",
+                "certified": true,
+                "maximumError": 0.010735586823544417,
+                "axisErrorBounds": [
+                  0.009023311882704596,
+                  0.010132033845701494,
+                  0.00047600369317626955
+                ],
+                "numericalGuard": 1e-9,
+                "intersectionPolygons": 300,
+                "coverage": [
+                  {
+                    "part": "outer",
+                    "sourceArea": 0.9999999999999996,
+                    "targetArea": 1,
+                    "maximumAreaResidual": 2.0816681711721685e-16
+                  },
+                  {
+                    "part": "inner",
+                    "sourceArea": 1.0000000000000004,
+                    "targetArea": 1,
+                    "maximumAreaResidual": 1.1102230246251565e-16
+                  },
+                  {
+                    "part": "lip-left",
+                    "sourceArea": 1,
+                    "targetArea": 1,
+                    "maximumAreaResidual": 0
+                  },
+                  {
+                    "part": "lip-right",
+                    "sourceArea": 1,
+                    "targetArea": 1,
+                    "maximumAreaResidual": 0
+                  },
+                  {
+                    "part": "cap-start",
+                    "sourceArea": 1,
+                    "targetArea": 1,
+                    "maximumAreaResidual": 8.326672684688674e-17
+                  },
+                  {
+                    "part": "cap-end",
+                    "sourceArea": 0.9999999999999999,
+                    "targetArea": 1,
+                    "maximumAreaResidual": 1.3877787807814457e-16
+                  }
+                ],
+                "visualLightingAcceptance": false
+              },
+              "instances": 224,
+              "maximumWorldError": 0.017985586519353055
+            },
+            {
+              "name": "zhengjuesi-prototype-concave-lap-pan-tile-distance-7x2",
+              "triangles": 60,
+              "proof": {
+                "method": "six-sheet-common-parameter-triangle-overlay-v1",
+                "certified": true,
+                "maximumError": 0.004983575151992812,
+                "axisErrorBounds": [
+                  0.003583599881959915,
+                  0.004983575151992812,
+                  0.00047600369317626955
+                ],
+                "numericalGuard": 1e-9,
+                "intersectionPolygons": 241,
+                "coverage": [
+                  {
+                    "part": "outer",
+                    "sourceArea": 0.9999999999999996,
+                    "targetArea": 0.9999999999999998,
+                    "maximumAreaResidual": 1.1102230246251565e-16
+                  },
+                  {
+                    "part": "inner",
+                    "sourceArea": 1.0000000000000004,
+                    "targetArea": 0.9999999999999998,
+                    "maximumAreaResidual": 1.1102230246251565e-16
+                  },
+                  {
+                    "part": "lip-left",
+                    "sourceArea": 1,
+                    "targetArea": 1,
+                    "maximumAreaResidual": 0
+                  },
+                  {
+                    "part": "lip-right",
+                    "sourceArea": 1,
+                    "targetArea": 1,
+                    "maximumAreaResidual": 0
+                  },
+                  {
+                    "part": "cap-start",
+                    "sourceArea": 1,
+                    "targetArea": 0.9999999999999998,
+                    "maximumAreaResidual": 8.326672684688674e-17
+                  },
+                  {
+                    "part": "cap-end",
+                    "sourceArea": 0.9999999999999999,
+                    "targetArea": 0.9999999999999998,
+                    "maximumAreaResidual": 1.3877787807814457e-16
+                  }
+                ],
+                "visualLightingAcceptance": false
+              },
+              "instances": 0,
+              "maximumWorldError": 0
+            }
+          ]
+        },
+        {
+          "name": "zhengjuesi-prototype-rod-10",
+          "sourceTriangles": 40,
+          "instances": 24336,
+          "retainedInstances": 0,
+          "variants": [
+            {
+              "name": "zhengjuesi-prototype-rod-10-distance-3",
+              "triangles": 12,
+              "proof": {
+                "method": "closed-frustum-common-height-angle-v1",
+                "certified": true,
+                "maximumError": 0.5976594776215305,
+                "axisErrorBounds": [
+                  0.5976594776215222,
+                  1e-7,
+                  0.5976594776215222
+                ],
+                "radialErrorBound": 0.5976594776215222,
+                "axialErrorBound": 1e-7,
+                "numericalGuard": 1e-7,
+                "normalAndUVField": "authored analytic circular normals and cylinder UV at reduced angular vertices",
+                "visualLightingAcceptance": false
+              },
+              "instances": 24336,
+              "maximumWorldError": 0.040640958179838295
+            },
+            {
+              "name": "zhengjuesi-prototype-rod-10-distance-4",
+              "triangles": 16,
+              "proof": {
+                "method": "closed-frustum-common-height-angle-v1",
+                "certified": true,
+                "maximumError": 0.3577732595395032,
+                "axisErrorBounds": [
+                  0.3577732595394892,
+                  1e-7,
+                  0.3577732595394892
+                ],
+                "radialErrorBound": 0.3577732595394892,
+                "axialErrorBound": 1e-7,
+                "numericalGuard": 1e-7,
+                "normalAndUVField": "authored analytic circular normals and cylinder UV at reduced angular vertices",
+                "visualLightingAcceptance": false
+              },
+              "instances": 0,
+              "maximumWorldError": 0
+            },
+            {
+              "name": "zhengjuesi-prototype-rod-10-distance-6",
+              "triangles": 24,
+              "proof": {
+                "method": "closed-frustum-common-height-angle-v1",
+                "certified": true,
+                "maximumError": 0.18642596090949246,
+                "axisErrorBounds": [
+                  0.18642596090946564,
+                  1e-7,
+                  0.18642596090946564
+                ],
+                "radialErrorBound": 0.18642596090946564,
+                "axialErrorBound": 1e-7,
+                "numericalGuard": 1e-7,
+                "normalAndUVField": "authored analytic circular normals and cylinder UV at reduced angular vertices",
+                "visualLightingAcceptance": false
+              },
+              "instances": 0,
+              "maximumWorldError": 0
+            },
+            {
+              "name": "zhengjuesi-prototype-rod-10-distance-8",
+              "triangles": 32,
+              "proof": {
+                "method": "closed-frustum-common-height-angle-v1",
+                "certified": true,
+                "maximumError": 0.12645440638899694,
+                "axisErrorBounds": [
+                  0.1264544063889574,
+                  1e-7,
+                  0.1264544063889574
+                ],
+                "radialErrorBound": 0.1264544063889574,
+                "axialErrorBound": 1e-7,
+                "numericalGuard": 1e-7,
+                "normalAndUVField": "authored analytic circular normals and cylinder UV at reduced angular vertices",
+                "visualLightingAcceptance": false
+              },
+              "instances": 0,
+              "maximumWorldError": 0
+            }
+          ]
+        },
+        {
+          "name": "zhengjuesi-prototype-rafter-painted-end",
+          "sourceTriangles": 120,
+          "instances": 2028,
+          "retainedInstances": 2028,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "zhengjuesi-prototype-cap-10",
+          "sourceTriangles": 10,
+          "instances": 380,
+          "retainedInstances": 380,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "zhengjuesi-prototype-cap-12",
+          "sourceTriangles": 12,
+          "instances": 158,
+          "retainedInstances": 158,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 104,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 480,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "zhengjuesi-prototype-cap-6",
+          "sourceTriangles": 6,
+          "instances": 72,
+          "retainedInstances": 72,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 480,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 104,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 480,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 480,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "zhengjuesi-prototype-authored-ridge-beast",
+          "sourceTriangles": 14496,
+          "instances": 62,
+          "retainedInstances": 62,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 4496,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "zhengjuesi-prototype-sash-relief-0.864750-0.900000",
+          "sourceTriangles": 640,
+          "instances": 40,
+          "retainedInstances": 40,
+          "variants": []
+        },
+        {
+          "name": "zhengjuesi-prototype-bracket-0.91",
+          "sourceTriangles": 332,
+          "instances": 140,
+          "retainedInstances": 140,
+          "variants": []
+        },
+        {
+          "name": "zhengjuesi-prototype-bracket-1.16",
+          "sourceTriangles": 332,
+          "instances": 140,
+          "retainedInstances": 140,
+          "variants": []
+        },
+        {
+          "name": "zhengjuesi-prototype-bracket-1.38",
+          "sourceTriangles": 332,
+          "instances": 140,
+          "retainedInstances": 140,
+          "variants": []
+        },
+        {
+          "name": "zhengjuesi-prototype-rod-16",
+          "sourceTriangles": 64,
+          "instances": 60,
+          "retainedInstances": 0,
+          "variants": [
+            {
+              "name": "zhengjuesi-prototype-rod-16-distance-3",
+              "triangles": 12,
+              "proof": {
+                "method": "closed-frustum-common-height-angle-v1",
+                "certified": true,
+                "maximumError": 0.5675880267119617,
+                "axisErrorBounds": [
+                  0.567588026711953,
+                  1e-7,
+                  0.567588026711953
+                ],
+                "radialErrorBound": 0.567588026711953,
+                "axialErrorBound": 1e-7,
+                "numericalGuard": 1e-7,
+                "normalAndUVField": "authored analytic circular normals and cylinder UV at reduced angular vertices",
+                "visualLightingAcceptance": false
+              },
+              "instances": 0,
+              "maximumWorldError": 0
+            },
+            {
+              "name": "zhengjuesi-prototype-rod-16-distance-4",
+              "triangles": 16,
+              "proof": {
+                "method": "closed-frustum-common-height-angle-v1",
+                "certified": true,
+                "maximumError": 0.3277018086299353,
+                "axisErrorBounds": [
+                  0.3277018086299201,
+                  1e-7,
+                  0.3277018086299201
+                ],
+                "radialErrorBound": 0.3277018086299201,
+                "axialErrorBound": 1e-7,
+                "numericalGuard": 1e-7,
+                "normalAndUVField": "authored analytic circular normals and cylinder UV at reduced angular vertices",
+                "visualLightingAcceptance": false
+              },
+              "instances": 60,
+              "maximumWorldError": 0.049158389247727745
+            },
+            {
+              "name": "zhengjuesi-prototype-rod-16-distance-6",
+              "triangles": 24,
+              "proof": {
+                "method": "closed-frustum-common-height-angle-v1",
+                "certified": true,
+                "maximumError": 0.15635450999992848,
+                "axisErrorBounds": [
+                  0.1563545099998965,
+                  1e-7,
+                  0.1563545099998965
+                ],
+                "radialErrorBound": 0.1563545099998965,
+                "axialErrorBound": 1e-7,
+                "numericalGuard": 1e-7,
+                "normalAndUVField": "authored analytic circular normals and cylinder UV at reduced angular vertices",
+                "visualLightingAcceptance": false
+              },
+              "instances": 0,
+              "maximumWorldError": 0
+            },
+            {
+              "name": "zhengjuesi-prototype-rod-16-distance-8",
+              "triangles": 32,
+              "proof": {
+                "method": "closed-frustum-common-height-angle-v1",
+                "certified": true,
+                "maximumError": 0.09638295547944015,
+                "axisErrorBounds": [
+                  0.09638295547938827,
+                  1e-7,
+                  0.09638295547938827
+                ],
+                "radialErrorBound": 0.09638295547938827,
+                "axialErrorBound": 1e-7,
+                "numericalGuard": 1e-7,
+                "normalAndUVField": "authored analytic circular normals and cylinder UV at reduced angular vertices",
+                "visualLightingAcceptance": false
+              },
+              "instances": 0,
+              "maximumWorldError": 0
+            }
+          ]
+        },
+        {
+          "name": "",
+          "sourceTriangles": 11040,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 104,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 480,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 480,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 104,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 480,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 480,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 4496,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "zhengjuesi-prototype-sash-relief-0.891500-0.900000",
+          "sourceTriangles": 640,
+          "instances": 44,
+          "retainedInstances": 44,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 10680,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "zhengjuesi-prototype-sash-relief-0.929000-0.900000",
+          "sourceTriangles": 640,
+          "instances": 12,
+          "retainedInstances": 12,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 11040,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 104,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 480,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 480,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 104,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 480,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 480,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 4496,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 28,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 28,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "zhengjuesi-prototype-sash-relief-0.903455-0.900000",
+          "sourceTriangles": 640,
+          "instances": 32,
+          "retainedInstances": 32,
+          "variants": []
+        },
+        {
+          "name": "zhengjuesi-prototype-sash-relief-3.877821-0.070000",
+          "sourceTriangles": 640,
+          "instances": 8,
+          "retainedInstances": 8,
+          "variants": []
+        },
+        {
+          "name": "zhengjuesi-prototype-cloud-corbel-1",
+          "sourceTriangles": 740,
+          "instances": 32,
+          "retainedInstances": 32,
+          "variants": []
+        },
+        {
+          "name": "zhengjuesi-prototype-cloud-corbel--1",
+          "sourceTriangles": 740,
+          "instances": 32,
+          "retainedInstances": 32,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 8064,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "zhengjuesi-prototype-sash-relief-2.625180-0.300000",
+          "sourceTriangles": 640,
+          "instances": 8,
+          "retainedInstances": 8,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "zhengjuesi-prototype-wenshu-pavilion-finial",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 7680,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "zhengjuesi-prototype-sash-relief-0.866500-0.768200",
+          "sourceTriangles": 640,
+          "instances": 56,
+          "retainedInstances": 56,
+          "variants": []
+        },
+        {
+          "name": "zhengjuesi-prototype-rod-12",
+          "sourceTriangles": 48,
+          "instances": 14,
+          "retainedInstances": 0,
+          "variants": [
+            {
+              "name": "zhengjuesi-prototype-rod-12-distance-3",
+              "triangles": 12,
+              "proof": {
+                "method": "closed-frustum-common-height-angle-v1",
+                "certified": true,
+                "maximumError": 0.5825809153420887,
+                "axisErrorBounds": [
+                  0.5825809153420801,
+                  1e-7,
+                  0.5825809153420801
+                ],
+                "radialErrorBound": 0.5825809153420801,
+                "axialErrorBound": 1e-7,
+                "numericalGuard": 1e-7,
+                "normalAndUVField": "authored analytic circular normals and cylinder UV at reduced angular vertices",
+                "visualLightingAcceptance": false
+              },
+              "instances": 14,
+              "maximumWorldError": 0.02621681423210848
+            },
+            {
+              "name": "zhengjuesi-prototype-rod-12-distance-4",
+              "triangles": 16,
+              "proof": {
+                "method": "closed-frustum-common-height-angle-v1",
+                "certified": true,
+                "maximumError": 0.3426946972600617,
+                "axisErrorBounds": [
+                  0.34269469726004714,
+                  1e-7,
+                  0.34269469726004714
+                ],
+                "radialErrorBound": 0.34269469726004714,
+                "axialErrorBound": 1e-7,
+                "numericalGuard": 1e-7,
+                "normalAndUVField": "authored analytic circular normals and cylinder UV at reduced angular vertices",
+                "visualLightingAcceptance": false
+              },
+              "instances": 0,
+              "maximumWorldError": 0
+            },
+            {
+              "name": "zhengjuesi-prototype-rod-12-distance-6",
+              "triangles": 24,
+              "proof": {
+                "method": "closed-frustum-common-height-angle-v1",
+                "certified": true,
+                "maximumError": 0.17134739863005274,
+                "axisErrorBounds": [
+                  0.17134739863002357,
+                  1e-7,
+                  0.17134739863002357
+                ],
+                "radialErrorBound": 0.17134739863002357,
+                "axialErrorBound": 1e-7,
+                "numericalGuard": 1e-7,
+                "normalAndUVField": "authored analytic circular normals and cylinder UV at reduced angular vertices",
+                "visualLightingAcceptance": false
+              },
+              "instances": 0,
+              "maximumWorldError": 0
+            },
+            {
+              "name": "zhengjuesi-prototype-rod-12-distance-8",
+              "triangles": 32,
+              "proof": {
+                "method": "closed-frustum-common-height-angle-v1",
+                "certified": true,
+                "maximumError": 0.11137584410956021,
+                "axisErrorBounds": [
+                  0.11137584410951533,
+                  1e-7,
+                  0.11137584410951533
+                ],
+                "radialErrorBound": 0.11137584410951533,
+                "axialErrorBound": 1e-7,
+                "numericalGuard": 1e-7,
+                "normalAndUVField": "authored analytic circular normals and cylinder UV at reduced angular vertices",
+                "visualLightingAcceptance": false
+              },
+              "instances": 0,
+              "maximumWorldError": 0
+            }
+          ]
+        },
+        {
+          "name": "",
+          "sourceTriangles": 32,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "zhengjuesi-prototype-sash-relief-0.866500-0.726800",
+          "sourceTriangles": 640,
+          "instances": 56,
+          "retainedInstances": 56,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 104,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 104,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 4496,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "zhengjuesi-prototype-sash-relief-0.639750-0.900000",
+          "sourceTriangles": 640,
+          "instances": 240,
+          "retainedInstances": 240,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 11040,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 104,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 480,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 480,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 104,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 480,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 480,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 4496,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 11040,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 104,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 480,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 480,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 104,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 480,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 480,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 4496,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 104,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 104,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 4496,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "zhengjuesi-prototype-sash-relief-1.091417-0.772800",
+          "sourceTriangles": 640,
+          "instances": 48,
+          "retainedInstances": 48,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 104,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 104,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 4496,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 11040,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 104,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 480,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 480,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 104,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 480,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 480,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 4496,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 11040,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 104,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 480,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 480,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 104,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 480,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 480,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 4496,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 104,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 104,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 4496,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 104,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 104,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 4496,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "zhengjuesi-prototype-barrel-drum",
+          "sourceTriangles": 480,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "zhengjuesi-prototype-drum-skin",
+          "sourceTriangles": 192,
+          "instances": 2,
+          "retainedInstances": 2,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 11040,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 104,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 480,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 480,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 104,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 480,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 480,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 4496,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "zhengjuesi-prototype-hollow-cast-bronze-bell",
+          "sourceTriangles": 1248,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "zhengjuesi-prototype-bell-hanger",
+          "sourceTriangles": 672,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "zhengjuesi-prototype-rod-14",
+          "sourceTriangles": 56,
+          "instances": 1,
+          "retainedInstances": 0,
+          "variants": [
+            {
+              "name": "zhengjuesi-prototype-rod-14-distance-3",
+              "triangles": 12,
+              "proof": {
+                "method": "closed-frustum-common-height-angle-v1",
+                "certified": true,
+                "maximumError": 0.5734890178637609,
+                "axisErrorBounds": [
+                  0.5734890178637523,
+                  1e-7,
+                  0.5734890178637523
+                ],
+                "radialErrorBound": 0.5734890178637523,
+                "axialErrorBound": 1e-7,
+                "numericalGuard": 1e-7,
+                "normalAndUVField": "authored analytic circular normals and cylinder UV at reduced angular vertices",
+                "visualLightingAcceptance": false
+              },
+              "instances": 1,
+              "maximumWorldError": 0.02580704782934677
+            },
+            {
+              "name": "zhengjuesi-prototype-rod-14-distance-4",
+              "triangles": 16,
+              "proof": {
+                "method": "closed-frustum-common-height-angle-v1",
+                "certified": true,
+                "maximumError": 0.3336027997817344,
+                "axisErrorBounds": [
+                  0.3336027997817194,
+                  1e-7,
+                  0.3336027997817194
+                ],
+                "radialErrorBound": 0.3336027997817194,
+                "axialErrorBound": 1e-7,
+                "numericalGuard": 1e-7,
+                "normalAndUVField": "authored analytic circular normals and cylinder UV at reduced angular vertices",
+                "visualLightingAcceptance": false
+              },
+              "instances": 0,
+              "maximumWorldError": 0
+            },
+            {
+              "name": "zhengjuesi-prototype-rod-14-distance-6",
+              "triangles": 24,
+              "proof": {
+                "method": "closed-frustum-common-height-angle-v1",
+                "certified": true,
+                "maximumError": 0.1622555011517266,
+                "axisErrorBounds": [
+                  0.1622555011516958,
+                  1e-7,
+                  0.1622555011516958
+                ],
+                "radialErrorBound": 0.1622555011516958,
+                "axialErrorBound": 1e-7,
+                "numericalGuard": 1e-7,
+                "normalAndUVField": "authored analytic circular normals and cylinder UV at reduced angular vertices",
+                "visualLightingAcceptance": false
+              },
+              "instances": 0,
+              "maximumWorldError": 0
+            },
+            {
+              "name": "zhengjuesi-prototype-rod-14-distance-8",
+              "triangles": 32,
+              "proof": {
+                "method": "closed-frustum-common-height-angle-v1",
+                "certified": true,
+                "maximumError": 0.10228394663123641,
+                "axisErrorBounds": [
+                  0.10228394663118753,
+                  1e-7,
+                  0.10228394663118753
+                ],
+                "radialErrorBound": 0.10228394663118753,
+                "axialErrorBound": 1e-7,
+                "numericalGuard": 1e-7,
+                "normalAndUVField": "authored analytic circular normals and cylinder UV at reduced angular vertices",
+                "visualLightingAcceptance": false
+              },
+              "instances": 0,
+              "maximumWorldError": 0
+            }
+          ]
+        },
+        {
+          "name": "",
+          "sourceTriangles": 11040,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 104,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 480,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 480,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 104,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 480,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 480,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 4496,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "zhengjuesi-prototype-sash-relief-1.335500-0.568100",
+          "sourceTriangles": 640,
+          "instances": 88,
+          "retainedInstances": 88,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 104,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 104,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 4496,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 104,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 104,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 4496,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 104,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 104,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 4496,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 104,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 104,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 4496,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 104,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 104,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 4496,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 104,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 104,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 4496,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 104,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 104,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 4496,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 12,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 104,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 104,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 960,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 800,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        },
+        {
+          "name": "",
+          "sourceTriangles": 4496,
+          "instances": 1,
+          "retainedInstances": 1,
+          "variants": []
+        }
+      ],
+      "numericQualification": "geometric upper bounds plus measured Float32 encoding displacement; GPU arithmetic, light, shadows and transitions require native review",
+      "boundsArchiveWorld": {
+        "min": [
+          -33.013999956846234,
+          -0.15000000596046448,
+          -74.29499998688698
+        ],
+        "max": [
+          50.79499998688699,
+          15.039999604225159,
+          95.5
+        ]
+      },
+      "triangleReduction": 0.7683651203626689,
+      "drawReduction": 0.9725490196078431,
+      "provenance": {
+        "sourceArchiveDigest": "cfe62c4d8102267f90a2801f53e49db70e906cbba402235a67fe118513624df6",
+        "sourceManifestSHA256": "babc37d385c656663ddefc55f775cb82deaa7ac13242028d0e98bf4cbbae17a6",
+        "producerSHA256": {
+          "world/node_modules/three/examples/jsm/geometries/RoundedBoxGeometry.js": "c1b7c9bd2cddff2e3f3a0723f618a3d364a47450e3d25771d21faed88410bec8",
+          "world/node_modules/three/package.json": "1d5c438acdc1fe5a52fb8ede2e417afd91fec91d22275c40f7b739591b24e4df",
+          "world/node_modules/three/src/constants.js": "3444ef8433dedd2d8b391bc1139b5f3c9f433ea3487473b366e624814d73d26e",
+          "world/node_modules/three/src/core/BufferAttribute.js": "ffd9bdc55ea7c0b5cec9865a68b71ebd076d0c49f9d50adb5f9ce570c1961c09",
+          "world/node_modules/three/src/core/BufferGeometry.js": "be1b8ad6ce3e502904fd989f5b6690d8fedcbadb74508aec99fc87dfd567e8c7",
+          "world/node_modules/three/src/core/EventDispatcher.js": "bf032f809ea34e50cf0b63512d9c7e0ba9fd90ca8b0c81c9e5efe121bce1bd97",
+          "world/node_modules/three/src/core/Layers.js": "0727a1f8f987a0da6ffe91ea55cef7e8c18822dc1a69c44fc282525127b361ea",
+          "world/node_modules/three/src/core/Object3D.js": "99d720abcea9720a2743dcbbd84e393d7094538d4a8495ea4869150030aa7d82",
+          "world/node_modules/three/src/extras/DataUtils.js": "c13af55f853b7882c7435d06b9c66333e9d68b42b22f6c257a060d6248052d6b",
+          "world/node_modules/three/src/geometries/BoxGeometry.js": "9b3799b446b031e55ac60795859f3f941cb8bd32579ea43d29f32d98cd661d7c",
+          "world/node_modules/three/src/geometries/CylinderGeometry.js": "ec4aaa60e490afaf76c6ee6e2c11a373f647381eb737d1d6f095f4cbb0c063ff",
+          "world/node_modules/three/src/math/Box3.js": "382b33a3b235b3f5a37a8949d8f8a9efdf056c62ce5ed79692b54944a80487e1",
+          "world/node_modules/three/src/math/Euler.js": "33a964a95f6c87ccc65e5d049810f9133e0f1a574777a37a724c7c03b4adba22",
+          "world/node_modules/three/src/math/MathUtils.js": "e329b0574b9b1ed34c169c11abfd3cfb3cf5ea61b062e17a72d400a8515b1f16",
+          "world/node_modules/three/src/math/Matrix3.js": "cb9e8810e0d2d3005098aad5f3b4837f65e9c3685776cabea6f4d953ab4f0e98",
+          "world/node_modules/three/src/math/Matrix4.js": "11d813da5b4a03de3e75dcb9780657a9cc276f682c30aa876c461d6429dcf39c",
+          "world/node_modules/three/src/math/Quaternion.js": "27de8858ac6ec90f0b830c8e1bc5c2c6d8f1328a9b9903fd73b24e0d25389d29",
+          "world/node_modules/three/src/math/Sphere.js": "b242e17b2d5aa4d519c42122143c9587b3aff8df629d3a8ad6dcef1b66030ac2",
+          "world/node_modules/three/src/math/Vector2.js": "29af0fe7fd3431d9d63e2f54251e08d08f044858ec6e14ddf44de81ed1a07858",
+          "world/node_modules/three/src/math/Vector3.js": "834c56c4a10a54ee1f967f111d792be37639b5a8761c6f190622184297bf3dc8",
+          "world/node_modules/three/src/utils.js": "28f06d2e36ee99dcf3bad7dc10b13ed8715a5b8ed3468b1c7386384b0699e52a",
+          "world/package-lock.json": "ff9b828866f47f089906a744802e639bb415f3aff1cf93a44cd2a9fc3c759d0a",
+          "world/scripts/export-yuanmingyuan-assets.mjs": "11715a57af8eb219eb2a006135be53cd6fde8a33877e7b662552b18cc06c2603",
+          "world/scripts/zhengjuesi-distance-export.mjs": "504cbbed980c7829a7559530092f7ac6b072954dcdbe5cded3c5edabd9028e61",
+          "world/src/asset-manifest.js": "e470201b3eaa20b593514df35fe59828168165625c7593bb06305e0720ff7ded",
+          "world/src/resource-loader.js": "4741f631487b9bcab9b7f40b399d51c457434e180f940d291c1e2dbed5688ed6",
+          "world/src/yuanmingyuan/asset-archive.js": "7c2939d9e004e2b32e54ae13530e9aeae506d85b3f3412250386dfe48d8aac1a",
+          "world/src/yuanmingyuan/asset-overview.js": "7d6a252ef56211fd4b09c0d7ee604279078fef44d0e2fcdab22d33a71f3ea06d",
+          "world/src/yuanmingyuan/chinese-architecture-geometry.js": "6d98692c4ceeaa3b1257b6df1e050091b91b28e5e69dcbe60011c3d7dd5bd1cd",
+          "world/src/yuanmingyuan/study-geometry.js": "f586fd7d5fa783f2ca3063391eb97bd233e33aded8f6b6211e4bf4453786f4ad",
+          "world/src/yuanmingyuan/vegetation-textures.js": "26b2c9310b67aa8075832dc9857775b3097da330ebcf16a0e6a36cfcef696474",
+          "world/src/yuanmingyuan/zhengjuesi-distance-builder.js": "bc2feb0f0a5108c1ad51e80b7287d00b90ebb569a5f715d346156df70540a142",
+          "world/src/yuanmingyuan/zhengjuesi-distance-geometry.js": "c1d084eaae37a88525224f22d8162d5b23155bdf3e0b7b2bd5044964b4ec3a65"
+        },
+        "maximumErrorWorld": 0.05,
+        "profile": "zhengjuesi-tiles-stone-closed-frusta-v1",
+        "batching": "per-instance-error-opaque-hybrid-v1",
+        "sourceArchiveVisualReview": {
+          "status": "native-comparison-passed-for-museum-loading",
+          "evidence": "work/yuanmingyuan/zhengjuesi-archive-native-review-r3.json",
+          "evidenceSHA256": "954e605c61f56281d26aa46632c8019257859ff4403700e2e4ad969d9dd075b8",
+          "sourceTag": "879f68b14343e640",
+          "note": "Full-source/archive equivalence passed; this derived distance result still requires separate native review."
+        },
+        "sourceDiagnosticsAcceptance": false
+      }
+    },
+    "sha256": "e9098933a5bee7d007e2c8d2fda82357243f236f48109658d5b4a90a0c0c18cf"
+  },
+  "glb": {
+    "url": "zhengjuesi-distance.glb.gzip.bin",
+    "compression": "gzip",
+    "sha256": "04f223cca52934d19f4da13e91b8d93da3c938d0034460abc42dd2da14c10ee5",
+    "bytes": 72810480,
+    "transferSha256": "4d67c9db155ae08a439e39c59cc168e98ca1656ace8663200a45b52f3cc4a4cc",
+    "transferBytes": 12102692
+  },
+  "runtime": {
+    "url": "zhengjuesi-distance.runtime.json.gzip.bin",
+    "compression": "gzip",
+    "sha256": "c1b32bb1617072d41f35e5b84228f9258904362c9b7d780b0d1c060fa0da26ab",
+    "bytes": 1961718,
+    "transferSha256": "f42901335ad60eb6115ae198222df304ce4d474a30b0bfddc4146bd43f5eaceb",
+    "transferBytes": 81377
+  },
+  "verification": {
+    "mode": "exact-derived-distance-buffers-and-Three-runtime-state",
+    "compression": "none; PNG only for standard preview image layer",
+    "quantized": false,
+    "simplified": true,
+    "geometryReordered": true,
+    "sourceBuffersReusedBytes": 52102836,
+    "originalBytesAppended": 11998460,
+    "standardExporterWarnings": [
+      "THREE.GLTFExporter: Merged metalnessMap and roughnessMap textures.",
+      "THREE.GLTFExporter: Merged metalnessMap and roughnessMap textures.",
+      "THREE.GLTFExporter: Merged metalnessMap and roughnessMap textures.",
+      "THREE.GLTFExporter: Merged metalnessMap and roughnessMap textures.",
+      "THREE.GLTFExporter: Merged metalnessMap and roughnessMap textures.",
+      "THREE.GLTFExporter: Merged metalnessMap and roughnessMap textures.",
+      "THREE.GLTFExporter: Merged metalnessMap and roughnessMap textures.",
+      "THREE.GLTFExporter: Merged metalnessMap and roughnessMap textures.",
+      "THREE.GLTFExporter: Merged metalnessMap and roughnessMap textures.",
+      "THREE.GLTFExporter: Merged metalnessMap and roughnessMap textures.",
+      "THREE.GLTFExporter: Merged metalnessMap and roughnessMap textures.",
+      "THREE.GLTFExporter: Merged metalnessMap and roughnessMap textures.",
+      "THREE.GLTFExporter: Merged metalnessMap and roughnessMap textures.",
+      "THREE.GLTFExporter: Merged metalnessMap and roughnessMap textures.",
+      "THREE.GLTFExporter: Merged metalnessMap and roughnessMap textures.",
+      "THREE.GLTFExporter: Merged metalnessMap and roughnessMap textures.",
+      "THREE.GLTFExporter: Merged metalnessMap and roughnessMap textures.",
+      "THREE.GLTFExporter: Merged metalnessMap and roughnessMap textures.",
+      "THREE.GLTFExporter: Merged metalnessMap and roughnessMap textures."
+    ],
+    "counts": {
+      "meshes": 63,
+      "triangles": 4762112,
+      "storedTriangles": 601808,
+      "instances": 136052,
+      "geometries": 47,
+      "materials": 28,
+      "textures": 7,
+      "nodes": 65
+    },
+    "nativeVisualReview": false,
+    "restoredResourceDisposal": {
+      "geometries": 47,
+      "materials": 28,
+      "textures": 7,
+      "instancedMeshes": 49,
+      "resources": 131,
+      "eachDisposedExactlyOnce": true
+    },
+    "exactRoundtripPassed": true,
+    "fullSourceVisualEquivalence": false,
+    "comparedExactlyAgainst": "derived distance result only"
+  },
+  "sourceDiagnosticsAcceptance": false,
+  "nativeArchiveVisualReview": false,
+  "distanceResourceDisposal": {
+    "geometries": 48,
+    "materials": 14,
+    "instancedMeshes": 49,
+    "borrowedSourceResourcesDisposed": 0,
+    "idempotent": true
+  },
+  "combinedResourceDisposal": {
+    "reachableUniqueResources": 2941,
+    "disposedExactlyOnce": 2941,
+    "sharedSourceResourcesCountedOnce": true
+  },
+  "memoryBytes": {
+    "before": {
+      "rss": 85426176,
+      "heapTotal": 14434304,
+      "heapUsed": 11580800,
+      "external": 4172669,
+      "arrayBuffers": 294930
+    },
+    "afterRestore": {
+      "rss": 323715072,
+      "heapTotal": 62668800,
+      "heapUsed": 40509936,
+      "external": 106911833,
+      "arrayBuffers": 102973613
+    },
+    "afterBuild": {
+      "rss": 571686912,
+      "heapTotal": 227819520,
+      "heapUsed": 148423992,
+      "external": 168017129,
+      "arrayBuffers": 164079389
+    },
+    "afterExactRoundtrip": {
+      "rss": 1141981184,
+      "heapTotal": 210649088,
+      "heapUsed": 155023360,
+      "external": 367632468,
+      "arrayBuffers": 363699394
+    },
+    "afterDisposal": {
+      "rss": 1165836288,
+      "heapTotal": 215187456,
+      "heapUsed": 165877216,
+      "external": 370202414,
+      "arrayBuffers": 366269340
+    }
+  },
+  "resourceUsage": {
+    "userCPUTime": 4167427,
+    "systemCPUTime": 410116,
+    "maxRSS": 1139088,
+    "sharedMemorySize": 0,
+    "unsharedDataSize": 0,
+    "unsharedStackSize": 0,
+    "minorPageFault": 79946,
+    "majorPageFault": 2669,
+    "swappedOut": 0,
+    "fsRead": 0,
+    "fsWrite": 0,
+    "ipcSent": 0,
+    "ipcReceived": 0,
+    "signalsCount": 0,
+    "voluntaryContextSwitches": 452,
+    "involuntaryContextSwitches": 21694
+  },
+  "elapsedMilliseconds": 3461.447791,
+  "transport": {
+    "version": "gzip-bin-v1",
+    "encoding": "gzip",
+    "filenameSuffix": ".gzip.bin",
+    "lossless": true,
+    "rawArchiveRetained": true,
+    "maximumFileBytesExclusive": 100663296,
+    "sourceManifestSHA256": "c971b170cdfb70902a3e7f7a35a880a4371d53bd16e9ef2181fe0ba54c86343b",
+    "producerSHA256": "11715a57af8eb219eb2a006135be53cd6fde8a33877e7b662552b18cc06c2603",
+    "runtimeDecoderSHA256": "7c2939d9e004e2b32e54ae13530e9aeae506d85b3f3412250386dfe48d8aac1a",
+    "decompressedBytesVerified": true
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "basis": "Pre-joint study snapshot matches the original xianfashan-r2 otherStudiesSHA256. Only the separately authorized bridge deck calls change.",
+  "originalOtherStudiesSHA256": "d94a9cb288bde31d309b3b41eabf307605ba65ea85856f9cde1cd02d9b06fda6",
+  "unchangedFangheSHA256": "953a84f37fdfdd3fd50bb0683b0cad1519f4899c59e47ef7eac6d3f9fb3fdabb",
+  "bridgeStudyFunctionSHA256": "fa2a99ffe2fd3cbdc37fc4d0bf904ff16b531a14a31353590b9d207365637156",
+  "bridgeJoinHelperSHA256": "4431699fdeb545d9af6ce91b25a1bd046d1232396f00d212880b5d612011fc50"
+}

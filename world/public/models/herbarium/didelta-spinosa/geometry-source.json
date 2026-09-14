@@ -1,0 +1,471 @@
+{
+  "source": "work/living-v8/source-assets/polyhaven/didelta_spinosa/8k/didelta_spinosa_8k.blend",
+  "sourceSha256": "b14062cde215ac091a6a0fe79e8650cc2e3bc034eeeacfdc219636fa32abdc3a",
+  "blender": "5.1.2",
+  "sourceUnchanged": true,
+  "axis": "Original Blender Z up retained in editable source; exported GLB rotates to Y up. Source layout is baked in vertex coordinates and retained in GLB; runtime applies recorded basal root translation only.",
+  "meshes": [
+    {
+      "name": "didelta_spinosa_large_LOD0",
+      "vertices": 154745,
+      "polygons": 116741,
+      "triangles": 234552,
+      "uvLayers": [
+        "UVMap"
+      ],
+      "colorAttributes": [],
+      "basalVertices": 48,
+      "rootBlender": [
+        -0.107505786853532,
+        1.6383105764786403,
+        -0.10013766586780548
+      ],
+      "rootGLTF": [
+        -0.107505786853532,
+        -0.10013766586780548,
+        -1.6383105764786403
+      ],
+      "boundsGLTF": {
+        "min": [
+          -1.225670576095581,
+          -0.10013766586780548,
+          -2.6929798126220703
+        ],
+        "max": [
+          0.8972653150558472,
+          1.9721537828445435,
+          -0.8327707052230835
+        ]
+      },
+      "tangentMethod": "Original ngons exported to their exact loop triangles with original split normals. No tangent attribute; runtime follows GLTFLoader normalScale.y=-1 for glTF derivative tangent frames."
+    },
+    {
+      "name": "didelta_spinosa_medium_LOD0",
+      "vertices": 96098,
+      "polygons": 71514,
+      "triangles": 143747,
+      "uvLayers": [
+        "UVMap"
+      ],
+      "colorAttributes": [],
+      "basalVertices": 26,
+      "rootBlender": [
+        -0.074231062657558,
+        0.017842097601924952,
+        -0.09610245376825333
+      ],
+      "rootGLTF": [
+        -0.074231062657558,
+        -0.09610245376825333,
+        -0.017842097601924952
+      ],
+      "boundsGLTF": {
+        "min": [
+          -0.7142535448074341,
+          -0.09610245376825333,
+          -0.806404173374176
+        ],
+        "max": [
+          0.5597487688064575,
+          1.2049150466918945,
+          0.7656465172767639
+        ]
+      },
+      "tangentMethod": "Original ngons exported to their exact loop triangles with original split normals. No tangent attribute; runtime follows GLTFLoader normalScale.y=-1 for glTF derivative tangent frames."
+    },
+    {
+      "name": "didelta_spinosa_small_LOD0",
+      "vertices": 26488,
+      "polygons": 19323,
+      "triangles": 38888,
+      "uvLayers": [
+        "UVMap"
+      ],
+      "colorAttributes": [],
+      "basalVertices": 10,
+      "rootBlender": [
+        -0.0760639939457178,
+        -1.4486864447593688,
+        -0.08885807543992996
+      ],
+      "rootGLTF": [
+        -0.0760639939457178,
+        -0.08885807543992996,
+        1.4486864447593688
+      ],
+      "boundsGLTF": {
+        "min": [
+          -0.4819674789905548,
+          -0.08885807543992996,
+          0.8127429485321045
+        ],
+        "max": [
+          0.3370351791381836,
+          0.8465679287910461,
+          1.8699182271957397
+        ]
+      },
+      "tangentMethod": "Original ngons exported to their exact loop triangles with original split normals. No tangent attribute; runtime follows GLTFLoader normalScale.y=-1 for glTF derivative tangent frames."
+    }
+  ],
+  "materials": [
+    {
+      "name": "didelta_spinosa",
+      "displacementMethod": "BUMP",
+      "surfaceRenderMethod": "DITHERED",
+      "nodes": [
+        {
+          "name": "Material Output",
+          "type": "ShaderNodeOutputMaterial",
+          "image": null,
+          "operation": null,
+          "blendType": null,
+          "space": null,
+          "inputs": {
+            "Displacement": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "Thickness": 0.0
+          }
+        },
+        {
+          "name": "Image Texture",
+          "type": "ShaderNodeTexImage",
+          "image": "didelta_spinosa_disp.png",
+          "operation": null,
+          "blendType": null,
+          "space": null,
+          "inputs": {}
+        },
+        {
+          "name": "Displacement",
+          "type": "ShaderNodeDisplacement",
+          "image": null,
+          "operation": null,
+          "blendType": null,
+          "space": "OBJECT",
+          "inputs": {
+            "Midlevel": 0.5,
+            "Scale": 0.05000000074505806,
+            "Normal": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          }
+        },
+        {
+          "name": "Image Texture.001",
+          "type": "ShaderNodeTexImage",
+          "image": "didelta_spinosa_diff.png",
+          "operation": null,
+          "blendType": null,
+          "space": null,
+          "inputs": {}
+        },
+        {
+          "name": "Image Texture.002",
+          "type": "ShaderNodeTexImage",
+          "image": "didelta_spinosa_rough.png",
+          "operation": null,
+          "blendType": null,
+          "space": null,
+          "inputs": {}
+        },
+        {
+          "name": "Image Texture.003",
+          "type": "ShaderNodeTexImage",
+          "image": "didelta_spinosa_nor_gl.png",
+          "operation": null,
+          "blendType": null,
+          "space": null,
+          "inputs": {}
+        },
+        {
+          "name": "Image Texture.004",
+          "type": "ShaderNodeTexImage",
+          "image": "didelta_spinosa_ao.png",
+          "operation": null,
+          "blendType": null,
+          "space": null,
+          "inputs": {}
+        },
+        {
+          "name": "Mapping",
+          "type": "ShaderNodeMapping",
+          "image": null,
+          "operation": null,
+          "blendType": null,
+          "space": null,
+          "inputs": {
+            "Location": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "Rotation": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "Scale": [
+              1.0,
+              1.0,
+              1.0
+            ]
+          }
+        },
+        {
+          "name": "Reroute",
+          "type": "NodeReroute",
+          "image": null,
+          "operation": null,
+          "blendType": null,
+          "space": null,
+          "inputs": {}
+        },
+        {
+          "name": "Texture Coordinate",
+          "type": "ShaderNodeTexCoord",
+          "image": null,
+          "operation": null,
+          "blendType": null,
+          "space": null,
+          "inputs": {}
+        },
+        {
+          "name": "Frame",
+          "type": "NodeFrame",
+          "image": null,
+          "operation": null,
+          "blendType": null,
+          "space": null,
+          "inputs": {}
+        },
+        {
+          "name": "Frame.001",
+          "type": "NodeFrame",
+          "image": null,
+          "operation": null,
+          "blendType": null,
+          "space": null,
+          "inputs": {}
+        },
+        {
+          "name": "Image Texture.005",
+          "type": "ShaderNodeTexImage",
+          "image": "didelta_spinosa_alpha.png",
+          "operation": null,
+          "blendType": null,
+          "space": null,
+          "inputs": {}
+        },
+        {
+          "name": "Group",
+          "type": "ShaderNodeGroup",
+          "image": null,
+          "operation": null,
+          "blendType": null,
+          "space": null,
+          "inputs": {
+            "Specular": 0.5,
+            "Wetness": 0.0,
+            "Hue": 0.5,
+            "Saturation": 1.0,
+            "Value": 1.0,
+            "Disp scale": 1.0
+          }
+        },
+        {
+          "name": "Image Texture.006",
+          "type": "ShaderNodeTexImage",
+          "image": "didelta_spinosa_translucency.png",
+          "operation": null,
+          "blendType": null,
+          "space": null,
+          "inputs": {}
+        }
+      ],
+      "links": [
+        {
+          "from": [
+            "Image Texture",
+            "Color"
+          ],
+          "to": [
+            "Displacement",
+            "Height"
+          ]
+        },
+        {
+          "from": [
+            "Reroute",
+            "Output"
+          ],
+          "to": [
+            "Image Texture.004",
+            "Vector"
+          ]
+        },
+        {
+          "from": [
+            "Reroute",
+            "Output"
+          ],
+          "to": [
+            "Image Texture.002",
+            "Vector"
+          ]
+        },
+        {
+          "from": [
+            "Reroute",
+            "Output"
+          ],
+          "to": [
+            "Image Texture",
+            "Vector"
+          ]
+        },
+        {
+          "from": [
+            "Reroute",
+            "Output"
+          ],
+          "to": [
+            "Image Texture.003",
+            "Vector"
+          ]
+        },
+        {
+          "from": [
+            "Mapping",
+            "Vector"
+          ],
+          "to": [
+            "Reroute",
+            "Input"
+          ]
+        },
+        {
+          "from": [
+            "Texture Coordinate",
+            "UV"
+          ],
+          "to": [
+            "Mapping",
+            "Vector"
+          ]
+        },
+        {
+          "from": [
+            "Reroute",
+            "Output"
+          ],
+          "to": [
+            "Image Texture.005",
+            "Vector"
+          ]
+        },
+        {
+          "from": [
+            "Reroute",
+            "Output"
+          ],
+          "to": [
+            "Image Texture.001",
+            "Vector"
+          ]
+        },
+        {
+          "from": [
+            "Image Texture.001",
+            "Color"
+          ],
+          "to": [
+            "Group",
+            "Diffuse"
+          ]
+        },
+        {
+          "from": [
+            "Image Texture.005",
+            "Color"
+          ],
+          "to": [
+            "Group",
+            "Alpha"
+          ]
+        },
+        {
+          "from": [
+            "Image Texture.002",
+            "Color"
+          ],
+          "to": [
+            "Group",
+            "Rough"
+          ]
+        },
+        {
+          "from": [
+            "Displacement",
+            "Displacement"
+          ],
+          "to": [
+            "Group",
+            "Disp map"
+          ]
+        },
+        {
+          "from": [
+            "Image Texture.003",
+            "Color"
+          ],
+          "to": [
+            "Group",
+            "Normal"
+          ]
+        },
+        {
+          "from": [
+            "Group",
+            "Shader"
+          ],
+          "to": [
+            "Material Output",
+            "Surface"
+          ]
+        },
+        {
+          "from": [
+            "Reroute",
+            "Output"
+          ],
+          "to": [
+            "Image Texture.006",
+            "Vector"
+          ]
+        },
+        {
+          "from": [
+            "Image Texture.006",
+            "Color"
+          ],
+          "to": [
+            "Group",
+            "Translucency"
+          ]
+        }
+      ]
+    }
+  ],
+  "output": {
+    "path": "world/public/models/herbarium/didelta-spinosa/didelta-spinosa-lod0.glb",
+    "bytes": 13656404,
+    "sha256": "9fdf6619fb9cfd3c049a0a1e0b6fa86c98df5658bce1d913cd8c49925be005c6",
+    "materialTreatment": "Geometry-only export; exact original 8K source material channels are prepared separately, not silently dropped by default glTF conversion."
+  }
+}

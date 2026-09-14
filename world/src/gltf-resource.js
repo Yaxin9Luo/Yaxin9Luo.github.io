@@ -1,7 +1,7 @@
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {MeshoptDecoder} from 'three/addons/libs/meshopt_decoder.module.js';
 import {resourceLoader,assertSelfContainedGLB} from './resource-loader.js';
-import {Float32BufferAttribute} from 'three';
+import {BufferAttribute} from 'three';
 
 /** CPU transforms must not write world metres back into normalized integer accessors. */
 export function mutableGeometry(source){
@@ -9,8 +9,8 @@ export function mutableGeometry(source){
   for(const name of ['position','normal','tangent']){
     const attribute=geometry.getAttribute(name);if(!attribute)continue;
     if(attribute.normalized||!(attribute.array instanceof Float32Array)){
-      const values=[];for(let i=0;i<attribute.count;i++)for(let j=0;j<attribute.itemSize;j++)values.push(attribute.getComponent(i,j));
-      geometry.setAttribute(name,new Float32BufferAttribute(values,attribute.itemSize));
+      const values=new Float32Array(attribute.count*attribute.itemSize);for(let i=0;i<attribute.count;i++)for(let j=0;j<attribute.itemSize;j++)values[i*attribute.itemSize+j]=attribute.getComponent(i,j);
+      geometry.setAttribute(name,new BufferAttribute(values,attribute.itemSize));
     }
   }
   return geometry;
@@ -43,6 +43,9 @@ export function loadGLTF(resource,options={}){
         for(const value of Object.values(material))if(value?.isTexture)value.userData.sharedAsset=true;
       }
     });
+    // Static consumers need the scene, not the parser's BIN/dependency cache.
+    // parseAsync has already awaited every plugin's afterRoot hook.
+    if(gltf.animations?.length===0)delete gltf.parser;
     return gltf;
   },dispose:disposeGLTF});
 }

@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex"><title>圆明园 · Yuanmingyuan</title><link rel="stylesheet" href="/src/yuanmingyuan/museum-reader.css"><link rel="stylesheet" href="/src/yuanmingyuan/museum-scene.css"></head>
+<body data-ready="loading">
+  <canvas id="museum-canvas" aria-label="圆明园三维游览场景" tabindex="0"></canvas>
+  <header class="garden-header">
+    <a class="garden-brand" href="/" aria-label="返回个人主页"><span class="garden-seal" aria-hidden="true">园</span><span><strong>圆明园</strong><small>YUANMINGYUAN</small></span></a>
+    <nav aria-label="游览工具"><button id="map-toggle" data-copy="map">园图</button><button id="directory-toggle" data-copy="directory">展览目录</button><button id="sound-toggle" aria-pressed="false">声音：关</button><button id="language" aria-label="Switch language">EN</button></nav>
+  </header>
+  <div class="garden-loading" id="loading" role="status"><span class="garden-loader" aria-hidden="true"></span><p id="loading-copy">正在准备园林…</p><button id="reload-scene" data-copy="reloadScene" hidden>重新载入场景</button><a href="/museum-reader.html" data-copy="readInstead">先阅读历史展签</a></div>
+  <section class="garden-location" aria-live="polite"><span id="region-name"></span><h1 id="site-title">圆明三园</h1><p id="scope-note" data-copy="study">建模研究预览 · 尚未公开</p></section>
+  <aside class="garden-settings"><label><span data-copy="light">光照</span><select id="time-mode" aria-label="光照 / Time of day"><option value="auto">时间流逝</option><option value="day">白天</option><option value="dawn">晨光</option><option value="dusk">暮色</option><option value="night">月夜</option></select></label><button id="camera-mode" data-copy="camera">跟随视角</button><button id="flight-toggle" data-copy="land">降落 · B</button></aside>
+  <button id="inspect" class="garden-inspect" disabled><kbd>E</kbd><span data-copy="read">阅读展签</span></button>
+  <div class="garden-message" id="message" role="status" aria-live="polite"></div>
+  <div id="touch-controls" class="garden-touch">
+    <div id="touch-pad" class="garden-touch-pad" aria-label="拖动移动 / Drag to move"><span id="touch-knob"></span></div>
+    <div class="garden-touch-actions"><button data-action="up" aria-label="上升 / Ascend">↑</button><button data-action="down" aria-label="下降 / Descend">↓</button><button data-action="boost" data-copy="boost">加速</button></div>
+  </div>
+  <footer class="garden-footer"><p id="controls-copy">WASD 移动 · Shift 加速 · 空格 / C 升降 · B 起降 · 拖动视角</p><button id="help-toggle" data-copy="help">操作说明</button></footer>
+  <dialog id="map-dialog" class="garden-map-dialog" aria-labelledby="map-title"><header><div><span class="museum-eyebrow">YUANMINGYUAN</span><h2 id="map-title" data-copy="mapTitle">圆明三园</h2></div><button data-close="map-dialog" data-copy="close">关闭</button></header><p data-copy="mapIntro">选择景点传送。园图采用比例研究布局；海岛为本站的展示设计。</p><div id="garden-map"></div><div id="destinations" class="garden-destinations"></div><div id="jiuzhou-viewpoints" class="garden-destinations" hidden></div><p><a id="tour-route-link" href="/yuanmingyuan.html?composition=xianfaqiao&amp;planting=western&amp;court=garden-r4&amp;yangquelong=refined-r1&amp;lang=zh">返回西洋楼游线</a></p><p><a id="jiuzhou-tour-link" href="/yuanmingyuan.html?composition=jiuzhou&amp;view=central&amp;lang=zh">进入九州清晏：三路院落与水岸</a></p><p><a id="overview-route-link" href="/yuanmingyuan.html?lang=zh" hidden>返回三园研究总览</a></p></dialog>
+  <dialog id="directory-dialog" class="garden-directory-dialog" aria-labelledby="directory-title"><header><h2 id="directory-title" data-copy="directory">展览目录</h2><button data-close="directory-dialog" data-copy="close">关闭</button></header><div id="directory"></div></dialog>
+  <dialog id="help-dialog" class="garden-help-dialog" aria-labelledby="help-title"><header><h2 id="help-title" data-copy="help">操作说明</h2><button data-close="help-dialog" data-copy="close">关闭</button></header><p id="help-copy"></p><p data-copy="historyNote">海岛和导游角色是当代展示设计。历史圆明园位于北京，图档中的推定会在展签中说明。</p></dialog>
+  <details id="review-tools" class="garden-review" hidden><summary>实机检查 / Review</summary><button id="review-pause" aria-pressed="false">定格动画 / Freeze</button><button id="review-sample">运行 30 帧并定格 / Sample</button><button data-review-drive="walk">步行 2 秒 / Walk</button><button data-review-drive="run">奔跑 2 秒 / Run</button><button data-review-drive="back">后退 2 秒 / Back</button><button data-review-drive="left" data-duration="0.5">左移半秒 / Step left</button><button data-review-drive="right" data-duration="0.5">右移半秒 / Step right</button><button id="capture">保存原生画面与数据</button><output id="telemetry"></output></details>
+  <script type="module" src="/src/yuanmingyuan/museum-scene.js"></script>
+</body></html>

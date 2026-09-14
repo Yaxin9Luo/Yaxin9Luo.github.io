@@ -1,0 +1,119 @@
+{
+  "id": "cgbookcase-bilberry-leaf-01-original",
+  "sourcePage": "https://www.cgbookcase.com/textures/bilberry-leaf-01",
+  "downloadPage": "https://www.cgbookcase.com/textures/thanks?t=BilberryLeaf01_MR_2K.zip&r=2&u=BilberryLeaf01",
+  "downloadURL": "https://cgbookcase-volume.b-cdn.net/t/BilberryLeaf01_MR_2K.zip",
+  "sourceDownloadCode": "download-page.js",
+  "license": "CC0-1.0",
+  "licenseSource": "https://www.cgbookcase.com/textures",
+  "creator": "Dorian Zgraggen / cgbookcase",
+  "acquiredAt": "2026-09-13T01:50:04.843540+00:00",
+  "transport": "Mac streamed public CDN bytes over SSH without local archive storage; extraction/verification/storage on niulai. Official CDN requires ordinary source-page Referer; no authentication.",
+  "archiveSHA256": "986153bc3cda47ff5ee536286f5983a467e9b807b7135e31bd9518672c57685b",
+  "maps": [
+    {
+      "path": "work/yuanmingyuan/court-leaf-material-research-r1/bilberry-01-original/BilberryLeaf01_2K_front_AO.png",
+      "filename": "BilberryLeaf01_2K_front_AO.png",
+      "bytes": 668456,
+      "sha256": "bdba5dc2a86419fca5597bcbcbf078e89a18ea5d31a22b7b01030bc213dc4413",
+      "width": 1024,
+      "height": 2048,
+      "bitDepth": 8,
+      "pngColorType": 6
+    },
+    {
+      "path": "work/yuanmingyuan/court-leaf-material-research-r1/bilberry-01-original/BilberryLeaf01_2K_back_AO.png",
+      "filename": "BilberryLeaf01_2K_back_AO.png",
+      "bytes": 825048,
+      "sha256": "6e4b3daec991190d8d71e15c5fcb275f9497b49da6f4ac09fb458393607ff960",
+      "width": 1024,
+      "height": 2048,
+      "bitDepth": 8,
+      "pngColorType": 6
+    },
+    {
+      "path": "work/yuanmingyuan/court-leaf-material-research-r1/bilberry-01-original/BilberryLeaf01_2K_front_BaseColor.png",
+      "filename": "BilberryLeaf01_2K_front_BaseColor.png",
+      "bytes": 2594594,
+      "sha256": "bd6fee1075f66214c3b65a913a371107689984d37097db8b01863df0a31e0932",
+      "width": 1024,
+      "height": 2048,
+      "bitDepth": 8,
+      "pngColorType": 6
+    },
+    {
+      "path": "work/yuanmingyuan/court-leaf-material-research-r1/bilberry-01-original/BilberryLeaf01_2K_back_BaseColor.png",
+      "filename": "BilberryLeaf01_2K_back_BaseColor.png",
+      "bytes": 2476395,
+      "sha256": "279041721d384ace88f3bc626d912a1081892c61024dcadb6f68637269e607bd",
+      "width": 1024,
+      "height": 2048,
+      "bitDepth": 8,
+      "pngColorType": 6
+    },
+    {
+      "path": "work/yuanmingyuan/court-leaf-material-research-r1/bilberry-01-original/BilberryLeaf01_2K_front_Height.png",
+      "filename": "BilberryLeaf01_2K_front_Height.png",
+      "bytes": 822587,
+      "sha256": "b785c2f9c2163913192935d67d7a2cf3db3e30e5ae331088e9debe32b1f37342",
+      "width": 1024,
+      "height": 2048,
+      "bitDepth": 8,
+      "pngColorType": 6
+    },
+    {
+      "path": "work/yuanmingyuan/court-leaf-material-research-r1/bilberry-01-original/BilberryLeaf01_2K_back_Height.png",
+      "filename": "BilberryLeaf01_2K_back_Height.png",
+      "bytes": 1036464,
+      "sha256": "f9965b7ffd6f738595eb42bdf8c298578cc685330f0246c7213d24cca7b1061b",
+      "width": 1024,
+      "height": 2048,
+      "bitDepth": 8,
+      "pngColorType": 6
+    },
+    {
+      "path": "work/yuanmingyuan/court-leaf-material-research-r1/bilberry-01-original/BilberryLeaf01_2K_front_Normal.png",
+      "filename": "BilberryLeaf01_2K_front_Normal.png",
+      "bytes": 4179392,
+      "sha256": "52350c490f57a82d519259ab6e05422581c8e02ce77920744045dff05ec1f96c",
+      "width": 1024,
+      "height": 2048,
+      "bitDepth": 8,
+      "pngColorType": 6
+    },
+    {
+      "path": "work/yuanmingyuan/court-leaf-material-research-r1/bilberry-01-original/BilberryLeaf01_2K_back_Normal.png",
+      "filename": "BilberryLeaf01_2K_back_Normal.png",
+      "bytes": 5045963,
+      "sha256": "5b64d9cde1de4d2c43757927c969d5f0fa2539a95c6f1ad74763e62306bd04d2",
+      "width": 1024,
+      "height": 2048,
+      "bitDepth": 8,
+      "pngColorType": 6
+    },
+    {
+      "path": "work/yuanmingyuan/court-leaf-material-research-r1/bilberry-01-original/BilberryLeaf01_2K_front_Roughness.png",
+      "filename": "BilberryLeaf01_2K_front_Roughness.png",
+      "bytes": 1751683,
+      "sha256": "8e90979a27ee159bd60ffeb903f663b328006938274066dc756052e73b304f42",
+      "width": 1024,
+      "height": 2048,
+      "bitDepth": 8,
+      "pngColorType": 6
+    },
+    {
+      "path": "work/yuanmingyuan/court-leaf-material-research-r1/bilberry-01-original/BilberryLeaf01_2K_back_Roughness.png",
+      "filename": "BilberryLeaf01_2K_back_Roughness.png",
+      "bytes": 2108192,
+      "sha256": "ee468fc09e5f5fa9413595546e2706e85dcbe637fa8181247b1e8ddfbc0c60c5",
+      "width": 1024,
+      "height": 2048,
+      "bitDepth": 8,
+      "pngColorType": 6
+    }
+  ],
+  "normalConvention": "DirectX, as declared on official asset page",
+  "usedInProduction": false,
+  "unmodifiedOriginals": true,
+  "historicalBoundary": "Surface art only; plant is authored exhibition landscaping, not a claim that bilberry was historically planted."
+}

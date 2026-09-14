@@ -1,0 +1,9 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>保留柳树上下文检查 / Retained willow context</title><style>
+body{max-width:1100px;margin:32px auto;padding:0 20px;background:#f3f1e9;color:#253a34;font:16px/1.5 system-ui,sans-serif}h1{font-size:26px}button{font:inherit;padding:10px 16px;margin:0 8px 8px 0;border:1px solid #658171;border-radius:5px;background:#fff}button:disabled{opacity:.5}pre{padding:14px;background:#fff;border:1px solid #c2c9ba;border-radius:5px;font:12px/1.45 monospace;white-space:pre-wrap;overflow-wrap:anywhere}#status{font-weight:600}
+</style></head><body data-status="idle">
+<h1>保留柳树上下文检查 / Retained willow context</h1>
+<p>执行主场景同一公共工厂的一棵完整柳树，arrange:false。不生成其他植物、地形、群落或 LOD，不解码照片，不创建 renderer 或 WebGL。需要独占 CPU 时段；打开页面不会构造模型。原属性仅供只读比较，检查后释放全部 source 资源。</p>
+<button id="run" type="button">检查一棵完整原柳 / Check one full source willow</button><button id="save" type="button" disabled>保存 JSON / Save JSON</button>
+<p id="status" role="status">等待运行 / Ready</p><pre id="identity"></pre><pre id="summary"></pre><details><summary>完整属性摘要 / Complete attribute summary</summary><pre id="attributes"></pre></details>
+<script type="module" src="/src/yuanmingyuan/shore-willow-context-check.js"></script></body></html>

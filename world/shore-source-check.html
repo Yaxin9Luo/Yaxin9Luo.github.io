@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>湖岸源属性检查 · Shore source check</title>
+<style>
+body{max-width:1100px;margin:32px auto;padding:0 20px;background:#f3f1e9;color:#253a34;font:16px/1.5 system-ui,sans-serif}h1{font-size:26px}button{font:inherit;padding:10px 16px;margin:0 8px 8px 0;border:1px solid #658171;border-radius:5px;background:#fff}button:disabled{opacity:.5}pre,textarea{box-sizing:border-box;width:100%;padding:14px;background:#fff;border:1px solid #c2c9ba;border-radius:5px;font:12px/1.45 monospace;overflow:auto}pre{white-space:pre-wrap;overflow-wrap:anywhere}textarea{height:210px;resize:vertical}.scope{max-width:950px;color:#4a6056}#status{font-weight:600}summary{cursor:pointer;padding:10px 0}
+</style></head>
+<body data-status="idle">
+<h1>湖岸源属性检查 / Shore source check</h1>
+<p class="scope">目标模式执行冻结花灌木函数，到第二花序即停。全源模式顺序执行真实完整地被工厂的 91 网格，再执行原湖石几何函数；前一个 owner 释放后才进入后一个。不加载柳树、地形、贴图或群落落位，不创建 renderer 或 WebGL。只审查源属性，不能冒充主场景验收。</p>
+<button id="run" type="button">运行目标检查 / Check target</button><button id="run-all" type="button">检查全部 92 源 / Check all 92 sources</button><button id="run-trace" type="button">追踪目标归一化 / Trace target normalization</button><button id="save" type="button" disabled>保存 JSON / Save JSON</button>
+<p id="status" role="status">等待运行 / Ready to run</p>
+<pre id="identity">诊断源码身份将在运行时核验 / Source identity is checked on run.</pre>
+<h2>实际属性 SHA / Actual attribute SHA</h2><pre id="attributes">尚未运行 / Not run</pre>
+<h2>原始法线位值 / Original normal Uint32 bits</h2><p class="scope">完整 Float32 存储位值，以 Uint32 数组显示；保留负零及最低位，不四舍五入。</p><textarea id="normal-bits" readonly aria-label="完整 normal Uint32 位数组 / Complete normal Uint32 bits"></textarea>
+<details><summary>诊断与每朵花的输入 / Diagnostics and per-flower inputs</summary><pre id="diagnostics"></pre></details>
+<script type="module" src="/src/yuanmingyuan/shore-source-check.js"></script>
+</body></html>

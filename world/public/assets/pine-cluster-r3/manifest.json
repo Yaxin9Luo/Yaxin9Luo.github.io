@@ -1,0 +1,398 @@
+{
+  "version": 3,
+  "width": 256,
+  "height": 256,
+  "layers": 6,
+  "files": {
+    "geometry": {
+      "path": "visible-depth-surfaces.json",
+      "bytes": 678776,
+      "sha256": "e6931a0f459d026463b7930eb7be3766c491fdd9806a478fc22763003df11633"
+    },
+    "visibility": {
+      "path": "visibility-depth-half.bin",
+      "bytes": 3145728,
+      "sha256": "1173abab48013854169784a8d1ca45b89d5037f76bd921162b20281ee0458745"
+    },
+    "normals": {
+      "path": "joint-normals-half.bin",
+      "bytes": 18874368,
+      "sha256": "cc6e4850ab38090653a7acd180863d696fd8147d05aa117dbc1b89ea2410d6c0"
+    },
+    "colors": {
+      "path": "joint-colors-half.bin",
+      "bytes": 18874368,
+      "sha256": "599f4c5247cdadf142103bc00a40c00f2d97dd51a9d5268cc1db385423cd2c02"
+    }
+  },
+  "views": [
+    {
+      "layer": 0,
+      "axis": 0,
+      "side": 0,
+      "normal": [
+        1,
+        0,
+        0
+      ],
+      "frame": {
+        "normal": [
+          1,
+          0,
+          0
+        ],
+        "u": [
+          0,
+          0,
+          -1
+        ],
+        "v": [
+          0,
+          1,
+          0
+        ]
+      },
+      "min": [
+        -0.04662662744522095,
+        4.037875652313232,
+        1.6809321641921997
+      ],
+      "max": [
+        1.209665298461914,
+        4.786024570465088,
+        3.0079853534698486
+      ],
+      "start": 0,
+      "count": 6144
+    },
+    {
+      "layer": 1,
+      "axis": 0,
+      "side": 1,
+      "normal": [
+        -1,
+        0,
+        0
+      ],
+      "frame": {
+        "normal": [
+          1,
+          0,
+          0
+        ],
+        "u": [
+          0,
+          0,
+          -1
+        ],
+        "v": [
+          0,
+          1,
+          0
+        ]
+      },
+      "min": [
+        -0.04662662744522095,
+        4.037875652313232,
+        1.6809321641921997
+      ],
+      "max": [
+        1.209665298461914,
+        4.786024570465088,
+        3.0079853534698486
+      ],
+      "start": 6144,
+      "count": 6144
+    },
+    {
+      "layer": 2,
+      "axis": 1,
+      "side": 0,
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "frame": {
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "u": [
+          1,
+          0,
+          0
+        ],
+        "v": [
+          0,
+          0,
+          -1
+        ]
+      },
+      "min": [
+        1.6809321641921997,
+        -0.04662662744522095,
+        4.037875652313232
+      ],
+      "max": [
+        3.0079853534698486,
+        1.209665298461914,
+        4.786024570465088
+      ],
+      "start": 12288,
+      "count": 6144
+    },
+    {
+      "layer": 3,
+      "axis": 1,
+      "side": 1,
+      "normal": [
+        0,
+        -1,
+        0
+      ],
+      "frame": {
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "u": [
+          1,
+          0,
+          0
+        ],
+        "v": [
+          0,
+          0,
+          -1
+        ]
+      },
+      "min": [
+        1.6809321641921997,
+        -0.04662662744522095,
+        4.037875652313232
+      ],
+      "max": [
+        3.0079853534698486,
+        1.209665298461914,
+        4.786024570465088
+      ],
+      "start": 18432,
+      "count": 6144
+    },
+    {
+      "layer": 4,
+      "axis": 2,
+      "side": 0,
+      "normal": [
+        0,
+        0,
+        1
+      ],
+      "frame": {
+        "normal": [
+          0,
+          0,
+          1
+        ],
+        "u": [
+          1,
+          0,
+          0
+        ],
+        "v": [
+          0,
+          1,
+          0
+        ]
+      },
+      "min": [
+        1.6809321641921997,
+        4.037875652313232,
+        -1.209665298461914
+      ],
+      "max": [
+        3.0079853534698486,
+        4.786024570465088,
+        0.04662662744522095
+      ],
+      "start": 24576,
+      "count": 6144
+    },
+    {
+      "layer": 5,
+      "axis": 2,
+      "side": 1,
+      "normal": [
+        0,
+        0,
+        -1
+      ],
+      "frame": {
+        "normal": [
+          0,
+          0,
+          1
+        ],
+        "u": [
+          1,
+          0,
+          0
+        ],
+        "v": [
+          0,
+          1,
+          0
+        ]
+      },
+      "min": [
+        1.6809321641921997,
+        4.037875652313232,
+        -1.209665298461914
+      ],
+      "max": [
+        3.0079853534698486,
+        4.786024570465088,
+        0.04662662744522095
+      ],
+      "start": 30720,
+      "count": 6144
+    }
+  ],
+  "diagnostics": {
+    "revision": "r3",
+    "sourceRecordId": "pine-arm-3-secondary-6",
+    "sourceSha256": "efd2285a842d94a9f07f9b5d10df9bbeb7e813196c762b7f69fe5ca806115e47",
+    "sourceTriangles": 117306,
+    "partial": false,
+    "terminals": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "views": 6,
+    "bins": 6,
+    "quadratureDirectionsPerBin": 4,
+    "deterministicPbrEvaluations": 24,
+    "subpixelSamplesPerTexel": 256,
+    "carrierGrid": 32,
+    "storedFoliageTriangles": 12288,
+    "submittedFoliageTrianglesPerPass": 2048,
+    "textureBytes": 40894464,
+    "textureBytesWithMipsUpperBound": 54525952,
+    "metrics": [
+      {
+        "layer": 0,
+        "coveredTexels": 31092,
+        "partialTexels": 28547,
+        "coverageSum": 16572.99609375,
+        "maximumHalfWeightError": 0,
+        "raster": {
+          "triangleCount": 116480,
+          "sourceSamples": 8485374,
+          "intervalSamples": 11080648,
+          "nearestTies": 0,
+          "maximumActiveTriangles": 4771,
+          "rowIndexBytes": 33774644,
+          "triangleScratchBytes": 26091520,
+          "scratchPolicy": "one fixed scanline; bounded typed triangle/row index; no fragment polygons"
+        }
+      },
+      {
+        "layer": 1,
+        "coveredTexels": 31092,
+        "partialTexels": 28547,
+        "coverageSum": 16572.99609375,
+        "maximumHalfWeightError": 0,
+        "raster": {
+          "triangleCount": 116480,
+          "sourceSamples": 8485374,
+          "intervalSamples": 11080648,
+          "nearestTies": 0,
+          "maximumActiveTriangles": 4771,
+          "rowIndexBytes": 33774644,
+          "triangleScratchBytes": 26091520,
+          "scratchPolicy": "one fixed scanline; bounded typed triangle/row index; no fragment polygons"
+        }
+      },
+      {
+        "layer": 2,
+        "coveredTexels": 36546,
+        "partialTexels": 35884,
+        "coverageSum": 15980.19140625,
+        "maximumHalfWeightError": 0,
+        "raster": {
+          "triangleCount": 116480,
+          "sourceSamples": 8181858,
+          "intervalSamples": 8232638,
+          "nearestTies": 0,
+          "maximumActiveTriangles": 2804,
+          "rowIndexBytes": 20700548,
+          "triangleScratchBytes": 26091520,
+          "scratchPolicy": "one fixed scanline; bounded typed triangle/row index; no fragment polygons"
+        }
+      },
+      {
+        "layer": 3,
+        "coveredTexels": 36546,
+        "partialTexels": 35884,
+        "coverageSum": 15980.19140625,
+        "maximumHalfWeightError": 0,
+        "raster": {
+          "triangleCount": 116480,
+          "sourceSamples": 8181858,
+          "intervalSamples": 8232638,
+          "nearestTies": 0,
+          "maximumActiveTriangles": 2804,
+          "rowIndexBytes": 20700548,
+          "triangleScratchBytes": 26091520,
+          "scratchPolicy": "one fixed scanline; bounded typed triangle/row index; no fragment polygons"
+        }
+      },
+      {
+        "layer": 4,
+        "coveredTexels": 30960,
+        "partialTexels": 28625,
+        "coverageSum": 15705.37890625,
+        "maximumHalfWeightError": 0,
+        "raster": {
+          "triangleCount": 116480,
+          "sourceSamples": 8041154,
+          "intervalSamples": 10519446,
+          "nearestTies": 0,
+          "maximumActiveTriangles": 4771,
+          "rowIndexBytes": 33774644,
+          "triangleScratchBytes": 26091520,
+          "scratchPolicy": "one fixed scanline; bounded typed triangle/row index; no fragment polygons"
+        }
+      },
+      {
+        "layer": 5,
+        "coveredTexels": 30960,
+        "partialTexels": 28625,
+        "coverageSum": 15705.37890625,
+        "maximumHalfWeightError": 0,
+        "raster": {
+          "triangleCount": 116480,
+          "sourceSamples": 8041154,
+          "intervalSamples": 10519446,
+          "nearestTies": 0,
+          "maximumActiveTriangles": 4771,
+          "rowIndexBytes": 33774644,
+          "triangleScratchBytes": 26091520,
+          "scratchPolicy": "one fixed scanline; bounded typed triangle/row index; no fragment polygons"
+        }
+      }
+    ],
+    "milliseconds": 5335.481707999999,
+    "completeTreeConstructed": false,
+    "mainSceneAllowed": false,
+    "nativeReviewed": false
+  }
+}

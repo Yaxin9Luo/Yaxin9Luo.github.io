@@ -1,0 +1,59 @@
+.museum-directory,.museum-dialog{--ym-ink:#213e39;--ym-muted:#6c7569;--ym-paper:#f4f0e5;--ym-brass:#997742;--ym-line:#d7d5c6;font-family:Inter,"PingFang SC","Noto Sans SC",system-ui,sans-serif;color:var(--ym-ink);color-scheme:light}
+.museum-directory *,.museum-dialog *{box-sizing:border-box}
+.museum-button,.museum-region-filters button{appearance:none;background:transparent;border:1px solid var(--ym-line);border-radius:3px;color:inherit;padding:11px 15px;font:inherit;font-size:13px;text-decoration:none;cursor:pointer}
+.museum-button:hover,.museum-region-filters button:hover{background:#dedbcf}
+.museum-directory button:focus-visible,.museum-directory input:focus-visible,.museum-dialog :focus-visible{outline:3px solid #876834;outline-offset:4px}
+.museum-directory-tools{display:grid;gap:20px}
+.museum-search{width:100%;background:#fffdf6;border:1px solid var(--ym-line);padding:17px 20px;color:var(--ym-ink);font:inherit;border-radius:3px}
+.museum-region-filters{display:flex;gap:9px;flex-wrap:wrap}
+.museum-region-filters button[aria-pressed=true]{background:var(--ym-ink);border-color:var(--ym-ink);color:#fffaf0}
+.museum-count{font-size:12px;color:var(--ym-muted);margin:26px 0 16px}
+.museum-directory-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.museum-directory-card{display:flex;flex-direction:column;align-items:flex-start;text-align:left;gap:15px;padding:27px;border:1px solid var(--ym-line);background:#fbf8ef;color:var(--ym-ink);font:inherit;cursor:pointer;min-width:0;transition:border-color .2s,background .2s}
+.museum-directory-card:hover{background:#fffdf6;border-color:var(--ym-brass)}
+.museum-directory-card h3{font-family:"Songti SC",Georgia,serif;font-size:25px;font-weight:500;line-height:1.35;margin:0;text-wrap:balance}
+.museum-directory-card p{font-size:14px;line-height:1.8;color:var(--ym-muted);margin:0 0 18px}
+.museum-eyebrow{font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--ym-brass);line-height:1.6}
+.museum-card-arrow{margin-top:auto;font-size:12px;color:var(--ym-brass)}
+.museum-empty{grid-column:1/-1;padding:40px;border:1px solid var(--ym-line);text-align:center}
+.museum-dialog{position:fixed;inset:0;width:min(1200px,calc(100vw - 64px));max-width:none;max-height:calc(100dvh - 64px);padding:0;border:1px solid #ddd4bd;background:var(--ym-paper);box-shadow:0 25px 120px #031b2250;border-radius:4px;overflow:auto}
+.museum-dialog::backdrop{background:#0b2628bb;backdrop-filter:blur(7px)}
+.museum-dialog-header{position:sticky;top:0;z-index:2;display:flex;justify-content:space-between;align-items:center;padding:18px 28px;border-bottom:1px solid var(--ym-line);background:#f4f0e5f5;gap:16px}
+.museum-dialog-label{display:block;font-size:10px;letter-spacing:.14em;margin-top:3px}
+.museum-dialog-controls{display:flex;gap:8px;flex:none}
+.museum-dialog-controls button{min-width:44px;min-height:44px}
+.museum-dialog-controls [data-museum-action=close]{font-size:26px;line-height:20px}
+.museum-exhibit-body{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr)}
+.museum-exhibit-media{padding:32px 28px;background:#e9e5d8;border-right:1px solid var(--ym-line);min-width:0}
+.museum-exhibit-media figure{margin:0}
+.museum-exhibit-media img{display:block;width:100%;height:auto;min-height:160px;object-fit:contain;background:#ded8c8;border:1px solid #c3b799}
+.museum-exhibit-media figcaption{font-size:12px;line-height:1.8;color:#596356;padding:20px 2px}
+.museum-exhibit-media figcaption strong{font-weight:500;font-family:"Songti SC",Georgia,serif;font-size:20px;color:var(--ym-ink)}
+.museum-exhibit-media figcaption p{margin:10px 0}
+.museum-dialog a{color:#755b2d;text-underline-offset:3px;overflow-wrap:anywhere}
+.museum-exhibit-media small{display:block;font-size:10px;color:var(--ym-muted)}
+.museum-media-tools{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:11px}
+.museum-media-tools a{margin-right:auto}
+.museum-exhibit-copy{padding:30px 36px 38px;min-width:0}
+.museum-exhibit-intro{padding:27px 36px 24px;border-bottom:1px solid var(--ym-line)}
+.museum-exhibit-intro>.museum-eyebrow{margin:0}
+.museum-exhibit-intro h2{font-family:"Songti SC",Georgia,serif;font-size:clamp(27px,3vw,40px);font-weight:500;line-height:1.25;letter-spacing:-.02em;margin:10px 0 15px;overflow-wrap:break-word}
+.museum-exhibit-intro h2:focus{outline:none}
+.museum-exhibit-copy>p{font-size:14px;line-height:1.9;margin:0 0 20px}
+.museum-exhibit-intro>.museum-lead{font-size:18px;line-height:1.7;color:#59634f;max-width:900px;margin:0}
+.museum-evidence-note{border-left:2px solid var(--ym-brass);padding:3px 0 3px 17px;margin:30px 0;font-size:12px;line-height:1.9;color:var(--ym-muted)}
+.museum-evidence-note strong{font-weight:500;color:var(--ym-brass)}
+.museum-evidence-note p{margin:4px 0 0}
+.museum-source-list{border-top:1px solid var(--ym-line);border-bottom:1px solid var(--ym-line);font-size:12px;line-height:1.7}
+.museum-source-list summary{cursor:pointer;padding:17px 0;color:var(--ym-brass)}
+.museum-source-list ol{margin:0 0 22px;padding-left:20px}
+.museum-source-list li+li{margin-top:12px}
+.museum-source-list small{display:block;color:var(--ym-muted)}
+.museum-related{display:flex;flex-wrap:wrap;gap:8px;padding-top:25px}
+.museum-related>span{width:100%;margin-bottom:6px}
+.museum-dialog-text-only{width:min(780px,calc(100vw - 64px))}
+.museum-dialog-text-only .museum-exhibit-body{display:block}
+.museum-dialog-text-only .museum-exhibit-copy{padding:38px 55px 45px}
+@media(max-width:850px){.museum-directory-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.museum-exhibit-body{grid-template-columns:1fr}.museum-exhibit-media{border-right:0;border-bottom:1px solid var(--ym-line)}.museum-exhibit-media img{max-height:46vh}.museum-dialog{width:calc(100vw - 36px);max-height:calc(100dvh - 36px)}}
+@media(max-width:540px){.museum-directory-grid{grid-template-columns:1fr}.museum-directory-card{padding:24px}.museum-region-filters{gap:7px}.museum-region-filters button{padding:10px 11px;font-size:12px}.museum-dialog,.museum-dialog-text-only{width:calc(100vw - 20px);max-height:calc(100dvh - 20px)}.museum-dialog-header{padding:12px 18px}.museum-exhibit-media{padding:22px 18px}.museum-exhibit-copy,.museum-dialog-text-only .museum-exhibit-copy{padding:26px 23px 30px}.museum-exhibit-intro{padding:23px}.museum-exhibit-intro h2{font-size:29px}.museum-exhibit-intro>.museum-lead{font-size:17px}.museum-media-tools{gap:7px}.museum-media-tools .museum-button{padding:10px}.museum-dialog-label{font-size:9px}}
+@media(prefers-reduced-motion:reduce){.museum-directory-card{transition:none}}

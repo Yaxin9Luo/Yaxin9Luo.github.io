@@ -1,0 +1,359 @@
+{
+  "schema": "normal-ktx-native-freeze-v1",
+  "at": "2026-09-10T20:26:36.232086+00:00",
+  "url": "http://127.0.0.1:4232/@fs/Users/yaxinluo/Documents/Codex/2026-09-07/https-yaxin9luo-github-io-https-yaxin9luo/outputs/academy-living-v8/work/living-v8/normal-ktx-trial/native-plant/index.html?manifest=work%2Fliving-v8%2Fnormal-ktx-trial%2Ffull-hdr%2Fruns%2Fhdr-r1%2Fnative-artifacts.json&sha256=2d2ff15c8746f56c258c0a94aae1b158ed06df6410b83b061e031e4f217fe744&variant=0",
+  "files": [
+    {
+      "path": "work/living-v8/check-native-plant-captures.mjs",
+      "bytes": 7271,
+      "sha256": "922481f17d37bc697dba51bff80047f17fb7895189ed8942dd66c72cf6b2b4f1"
+    },
+    {
+      "path": "work/living-v8/normal-ktx-trial/full-hdr/runs/hdr-r1/audit/audit.json",
+      "bytes": 211772,
+      "sha256": "0c06fe9f5d277370b0488b4aa190f951a431bc2a6b411f9daf2c89ead4353920"
+    },
+    {
+      "path": "work/living-v8/normal-ktx-trial/full-hdr/runs/hdr-r1/encode/encoding.json",
+      "bytes": 8776,
+      "sha256": "2d37bfe08839599dac2ac124d90f875e68065de1b2a1a324aa9969e9ea6812ef"
+    },
+    {
+      "path": "work/living-v8/normal-ktx-trial/full-hdr/runs/hdr-r1/encode/normal-hdr4x4-q4-nordo.ktx2",
+      "bytes": 27297259,
+      "sha256": "fb49f83f6955641d070ff7e352926dbb19568f5b961a0817e78f202203b12564"
+    },
+    {
+      "path": "work/living-v8/normal-ktx-trial/full-hdr/runs/hdr-r1/native-artifacts.json",
+      "bytes": 1935,
+      "sha256": "2d2ff15c8746f56c258c0a94aae1b158ed06df6410b83b061e031e4f217fe744"
+    },
+    {
+      "path": "work/living-v8/normal-ktx-trial/full-hdr/runs/hdr-r1/prepare/normal-half-unencoded.ktx2",
+      "bytes": 715828472,
+      "sha256": "3a6bee375e17996614bba02a67de55dbee4490a6459f61e0a7f4669a0b316392"
+    },
+    {
+      "path": "work/living-v8/normal-ktx-trial/full-hdr/runs/hdr-r1/prepare/preparation.json",
+      "bytes": 50925,
+      "sha256": "28d25c6c37783a9922e51ebd9af2e7e55133f5e3d54bfbed341532920758d3ef"
+    },
+    {
+      "path": "work/living-v8/normal-ktx-trial/native-plant/README.md",
+      "bytes": 9219,
+      "sha256": "f0832d35cfb3e6405735850bf0def9e13589c1af7366ba701f50909d52a1a48d"
+    },
+    {
+      "path": "work/living-v8/normal-ktx-trial/native-plant/alpha-presentation-probe-r1-result.json",
+      "bytes": 1379,
+      "sha256": "9da5edfb487df6a48455c2439d6f4fe052046dec13139b1e5d2016048a066b1e"
+    },
+    {
+      "path": "work/living-v8/normal-ktx-trial/native-plant/alpha-presentation-probe-r1.jpg",
+      "bytes": 28387,
+      "sha256": "d0e16f6145792dfe589baa11af992b4a9c30d9b43e761a1fa5944d1400a1e893"
+    },
+    {
+      "path": "work/living-v8/normal-ktx-trial/native-plant/alpha-presentation-probe.html",
+      "bytes": 1946,
+      "sha256": "68d35e82bd56b71111417f530f65ae6e08b227c2235370ca770a67dcc3fa877a"
+    },
+    {
+      "path": "work/living-v8/normal-ktx-trial/native-plant/availability-checks.json",
+      "bytes": 2765,
+      "sha256": "5eb8a7ebb7d8d04f2e2297daae63c82f6552247c1534bb92f83f67b8c295a4ce"
+    },
+    {
+      "path": "work/living-v8/normal-ktx-trial/native-plant/comparison-tools.js",
+      "bytes": 11529,
+      "sha256": "bb242b04a8ffbc30657b3e68f9e7e4085840f676f1de906fcba1041bd316e20a"
+    },
+    {
+      "path": "work/living-v8/normal-ktx-trial/native-plant/comparison-tools.test.mjs",
+      "bytes": 24027,
+      "sha256": "e596a76fd5958c07890502df1a1401efb7830948b1479ed38355df56250c997d"
+    },
+    {
+      "path": "work/living-v8/normal-ktx-trial/native-plant/comparison.js",
+      "bytes": 35755,
+      "sha256": "a0f82d63f96e62a200df81b3255731783f9265ad328aa275a281aee52e4a9563"
+    },
+    {
+      "path": "work/living-v8/normal-ktx-trial/native-plant/directory-url-regression-r2.json",
+      "bytes": 702,
+      "sha256": "a7f56ef8348c3f0822a6468c64a9cb3e131861796595750022f5d52c4d1771fe"
+    },
+    {
+      "path": "work/living-v8/normal-ktx-trial/native-plant/helper-tests.log",
+      "bytes": 1299,
+      "sha256": "f7ac0476ab8b54d5d3f367c01438eb2e1da725845bc657f10efb7b730e4de9d9"
+    },
+    {
+      "path": "work/living-v8/normal-ktx-trial/native-plant/index.html",
+      "bytes": 3294,
+      "sha256": "7214d4f0ec37ff926873d203a4da7ea9593029da8b9df535e57aece544432ee1"
+    },
+    {
+      "path": "work/living-v8/normal-ktx-trial/native-plant/presentation-r2-green.log",
+      "bytes": 3067,
+      "sha256": "38501a2df000eca1ab1497b3386809b34d8164d65df959c9aeda26ae03f9407f"
+    },
+    {
+      "path": "work/living-v8/normal-ktx-trial/native-plant/presentation-r2-ready.json",
+      "bytes": 8301,
+      "sha256": "f444ba6fdcd25643d58184f0f7e8077424fcd94818d8a49f4d3849a7772826a0"
+    },
+    {
+      "path": "work/living-v8/normal-ktx-trial/native-plant/presentation-r2-report.md",
+      "bytes": 8017,
+      "sha256": "f6d80a52d09ff7d1ffcbaff25d916f1a85943b1a4f3cccb588d3b44a47a3f5b8"
+    },
+    {
+      "path": "work/living-v8/normal-ktx-trial/native-plant/readback-green-r2.log",
+      "bytes": 2636,
+      "sha256": "63f38b7b4cfebbc1ac30f85adfe98b4f8285341d9e1d03f3bf9bb563812f0ba2"
+    },
+    {
+      "path": "work/living-v8/normal-ktx-trial/native-plant/readback-ready.json",
+      "bytes": 4340,
+      "sha256": "889256cebf7d9a45b3158616d49a39ede5411368ec358a69f6f41dfaf256a905"
+    },
+    {
+      "path": "work/living-v8/normal-ktx-trial/native-plant/readback-report.md",
+      "bytes": 4125,
+      "sha256": "2a7c42365d24bb7e77433664842d3a77946514cb1979513fb21c6d3ce709fd0e"
+    },
+    {
+      "path": "work/living-v8/normal-ktx-trial/native-plant/source-binding.js",
+      "bytes": 669,
+      "sha256": "d0e00b4a2cfb0de8a42ed2baef5d4cfc24d81acf9c5ba252c790d859b21f7006"
+    },
+    {
+      "path": "work/living-v8/normal-ktx-trial/native-plant/syntax-checks.json",
+      "bytes": 1706,
+      "sha256": "6a0f8e174bce6f0c30c5b3976b394be8a376b79e6961eb2975a75e6821d15186"
+    },
+    {
+      "path": "work/living-v8/normal-ktx-trial/native-plant/vite.config.mjs",
+      "bytes": 760,
+      "sha256": "ee310bd1f4d328fce6d815b9132fe8fe644d923786b76e10ed9f43b122eb7ebd"
+    },
+    {
+      "path": "world/herbarium-studio.html",
+      "bytes": 4939,
+      "sha256": "c3815c23435a1356834e1c13d53bcd42438cdaff9d815c1b7de3a6ef56b738fe"
+    },
+    {
+      "path": "world/node_modules/three/build/three.core.js",
+      "bytes": 1443056,
+      "sha256": "3718df126d69c125362a03340913204470d8c50238605150e57f808840fb7759"
+    },
+    {
+      "path": "world/node_modules/three/build/three.module.js",
+      "bytes": 650153,
+      "sha256": "bbf5ed13fe4373f5bd38b14ea8e62e9f157327da5638edc6d3863e08b167c9c7"
+    },
+    {
+      "path": "world/node_modules/three/examples/jsm/controls/OrbitControls.js",
+      "bytes": 40504,
+      "sha256": "faabb4e8dfd9235ee4a9fd7c9a3d75f90f1689dbd4944bd6fd32117dacec5f93"
+    },
+    {
+      "path": "world/node_modules/three/examples/jsm/environments/RoomEnvironment.js",
+      "bytes": 4960,
+      "sha256": "55f466192cc84298755a424c5e040345006b2ee1455589b3b54126c2ea4123f4"
+    },
+    {
+      "path": "world/node_modules/three/examples/jsm/geometries/ConvexGeometry.js",
+      "bytes": 1710,
+      "sha256": "f52f4c5f0cc42eaef25d7330e912693ae1d7a9b0df0a599cd35f5854e9ecb34e"
+    },
+    {
+      "path": "world/node_modules/three/examples/jsm/libs/fflate.module.js",
+      "bytes": 89384,
+      "sha256": "209a4412eb48ce609edb4391992a792ffcc3983d30ee7e2b0b89a8c470f3cd8a"
+    },
+    {
+      "path": "world/node_modules/three/examples/jsm/libs/ktx-parse.module.js",
+      "bytes": 19932,
+      "sha256": "f40c491f6c44dde511268121f778a0050e73b1a15fd844c1ae2c78c73213eafc"
+    },
+    {
+      "path": "world/node_modules/three/examples/jsm/libs/meshopt_decoder.module.js",
+      "bytes": 29256,
+      "sha256": "d428e73a000057c6c94bfcedc3412d0c2dc14ca8800e88553aab05113ad2bf19"
+    },
+    {
+      "path": "world/node_modules/three/examples/jsm/libs/zstddec.module.js",
+      "bytes": 39754,
+      "sha256": "5cbf818e842628a4464e748594a6deae18ceddda3c2f541e7b3a0ff5fc7611e2"
+    },
+    {
+      "path": "world/node_modules/three/examples/jsm/loaders/EXRLoader.js",
+      "bytes": 86154,
+      "sha256": "1355b32a2ee1226bffd0f96558f3d21e300832813ab70d51ec971025ebc34d5d"
+    },
+    {
+      "path": "world/node_modules/three/examples/jsm/loaders/GLTFLoader.js",
+      "bytes": 114959,
+      "sha256": "97642d720f16cc9a0c9844934198e4d0c023bea8e89576d0f7545d03b2d103d2"
+    },
+    {
+      "path": "world/node_modules/three/examples/jsm/loaders/KTX2Loader.js",
+      "bytes": 36567,
+      "sha256": "3a3233ce3409443076d3414b78832e1405fcfac5ecb34d367365fd0781127d6c"
+    },
+    {
+      "path": "world/node_modules/three/examples/jsm/math/ColorSpaces.js",
+      "bytes": 4290,
+      "sha256": "cc35c01c793cd17ccded7bc8142abffd3ce0d60dd6de8d5d216983bd05aee262"
+    },
+    {
+      "path": "world/node_modules/three/examples/jsm/math/ConvexHull.js",
+      "bytes": 32974,
+      "sha256": "7b7d53ed4533556f555440676d2cbc3680ffab32b1a910c79c9a522019bd3a06"
+    },
+    {
+      "path": "world/node_modules/three/examples/jsm/utils/BufferGeometryUtils.js",
+      "bytes": 37621,
+      "sha256": "5c552223a9309883743b80538d6e9cdb45e3227f30d3ec56fb2c39b46e78d595"
+    },
+    {
+      "path": "world/node_modules/three/examples/jsm/utils/SkeletonUtils.js",
+      "bytes": 11535,
+      "sha256": "b1632a703206c3d830de9fcbe515696770d04b71a15ee6b50afa6d2c3298c86f"
+    },
+    {
+      "path": "world/node_modules/three/examples/jsm/utils/WorkerPool.js",
+      "bytes": 3110,
+      "sha256": "5ac7095fd566bc9ae48376055fd66edf27cb9ebbf9e1269dc206bfd4933ae9eb"
+    },
+    {
+      "path": "world/node_modules/three/package.json",
+      "bytes": 3826,
+      "sha256": "1d5c438acdc1fe5a52fb8ede2e417afd91fec91d22275c40f7b739591b24e4df"
+    },
+    {
+      "path": "world/node_modules/vite/package.json",
+      "bytes": 5093,
+      "sha256": "4e41dd20c7a12e7e70915b235c0bf5b5158ec6709c1390804128af0867d6d6d9"
+    },
+    {
+      "path": "world/public/models/herbarium/didelta-spinosa/didelta-spinosa-lod0.glb",
+      "bytes": 13656404,
+      "sha256": "9fdf6619fb9cfd3c049a0a1e0b6fa86c98df5658bce1d913cd8c49925be005c6"
+    },
+    {
+      "path": "world/public/models/herbarium/didelta-spinosa/geometry-source.json",
+      "bytes": 11288,
+      "sha256": "42d8794b67d524fb6a339173683ad6793707d8173bdd923b031a42cfb5eef9dc"
+    },
+    {
+      "path": "world/public/models/herbarium/didelta-spinosa/scalar-source.json",
+      "bytes": 2097,
+      "sha256": "c71f392021b7d3f96914a89aac56c6ea9a0da9cb93ef8bca674c9abea94c2ccf"
+    },
+    {
+      "path": "world/public/models/herbarium/didelta-spinosa/source.json",
+      "bytes": 5594,
+      "sha256": "c914fc780c08909842055ae76c5e03b3cca094c4f4eb696b607570db08e51890"
+    },
+    {
+      "path": "world/public/models/herbarium/didelta-spinosa/textures/didelta_spinosa_alpha_8k.r8.zlib",
+      "bytes": 469671,
+      "sha256": "6ff401f9ced350e40e22cac40a7549cc9ba888a0925e804124932c68b9156285"
+    },
+    {
+      "path": "world/public/models/herbarium/didelta-spinosa/textures/didelta_spinosa_diff_8k.jpg",
+      "bytes": 14664795,
+      "sha256": "5083d942e785a013fe1ced3da1e35239520da6f5d9652af7482e02e011ea9c81"
+    },
+    {
+      "path": "world/public/models/herbarium/didelta-spinosa/textures/didelta_spinosa_nor_gl_8k.exr",
+      "bytes": 20504774,
+      "sha256": "67d8f96aba14560667ff6ad7058fb75b8f452a0dfd4792dff2f0961d8c632261"
+    },
+    {
+      "path": "world/public/models/herbarium/didelta-spinosa/textures/didelta_spinosa_rough_8k.exr",
+      "bytes": 48989,
+      "sha256": "63a0189c519bf0b4f047ca16885b5659897810556b5a65f2c918d930e82b586d"
+    },
+    {
+      "path": "world/public/models/herbarium/didelta-spinosa/textures/didelta_spinosa_translucency_8k.r8.zlib",
+      "bytes": 662525,
+      "sha256": "0c0763fa92bfe0b6111998858ddc4da96e29e00e8febc826d61984a1b23f82d2"
+    },
+    {
+      "path": "world/review-capture-plugin.js",
+      "bytes": 1948,
+      "sha256": "ae67eeca0cf54a2258b25b8d07715dc6b2f110ed679466ddfc819190752754ee"
+    },
+    {
+      "path": "world/src/architecture.js",
+      "bytes": 6698,
+      "sha256": "8dfcd8132d3344cd269ae11921cdfdc14b7d67ed6784f11e307ee9bbc25e1e8f"
+    },
+    {
+      "path": "world/src/asset-cache.js",
+      "bytes": 1933,
+      "sha256": "6d63da3931f8b815937af50e2aab229e20303be4f3febc138bbf4d09dd6ca63f"
+    },
+    {
+      "path": "world/src/asset-manifest.js",
+      "bytes": 24336,
+      "sha256": "430a78fc80f90c0d2910c81637fd5bf4460862b0a310092bfa2d5a3f18428b8f"
+    },
+    {
+      "path": "world/src/gltf-resource.js",
+      "bytes": 2551,
+      "sha256": "1087a3cac995ea3c4a0be20031a0b36ebee38cfb345d617c5020ccc0ec616761"
+    },
+    {
+      "path": "world/src/herbarium-assets.js",
+      "bytes": 66326,
+      "sha256": "0a157f4bc506f2179619366bff2cafe12923be5a4d05298e8b110d76cb48e5d1"
+    },
+    {
+      "path": "world/src/herbarium-community-layout.js",
+      "bytes": 1088,
+      "sha256": "0bc0a8f9106e58ede99583317e816f2370c3115b77392173f4cd65401b03e539"
+    },
+    {
+      "path": "world/src/herbarium-community.js",
+      "bytes": 17513,
+      "sha256": "c4ae9c90c2589d21fe5ffb05d738762c7b7ad9d00c186d8610a9864f4544b291"
+    },
+    {
+      "path": "world/src/herbarium-studio.js",
+      "bytes": 18122,
+      "sha256": "8db4e0254df0ea0f8709808406b99d51690c0f80f42e21d1486a9d9ca5cd49d4"
+    },
+    {
+      "path": "world/src/herbarium-texture-data.js",
+      "bytes": 1535,
+      "sha256": "389b451b27bcd1419e159f41e4ef5575f259c610ae9ee4709af89ada33e7b684"
+    },
+    {
+      "path": "world/src/herbarium-texture-loader.js",
+      "bytes": 2733,
+      "sha256": "9a1b92a2464f9128fe18549c7ece50f7e0405eebe5f0846ecfd719e8915a80da"
+    },
+    {
+      "path": "world/src/herbarium-texture-worker.js",
+      "bytes": 304,
+      "sha256": "80d7667fb7846e80fe822003089c3c32dff710d3cbfbc7ac798ce991d5a2badf"
+    },
+    {
+      "path": "world/src/resource-loader.js",
+      "bytes": 7695,
+      "sha256": "4741f631487b9bcab9b7f40b399d51c457434e180f940d291c1e2dbed5688ed6"
+    },
+    {
+      "path": "world/vite.config.js",
+      "bytes": 730,
+      "sha256": "a280b2217edbc5598c5840fc3740ddb4d4a638ec2970c4a12e3eff95be896e30"
+    }
+  ],
+  "identity": "ae89fc36ecfbdc4ca69c467c45eae0fb7686a65bffecd173ea64cc26e14b54df",
+  "boundary": "R4 changes onlythreepresentationcapturefiles and root postflightchecker; allpriorassets/runtimebindingsmatch. PNG is definedsRGBreferencecomposite, separateactualbrowserviewrequired."
+}

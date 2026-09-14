@@ -1,0 +1,316 @@
+{
+  "version": 1,
+  "assetId": "aerial_grass_rock",
+  "variant": "meadow-4k-rgb8-lossless-r1",
+  "provider": "Poly Haven",
+  "title": "Aerial Grass Rock",
+  "authors": {
+    "Rob Tuytel": "All"
+  },
+  "sourceUrl": "https://polyhaven.com/a/aerial_grass_rock",
+  "metadataUrls": [
+    "https://api.polyhaven.com/info/aerial_grass_rock",
+    "https://api.polyhaven.com/files/aerial_grass_rock"
+  ],
+  "license": "CC0-1.0",
+  "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "providerLicenseUrl": "https://polyhaven.com/license",
+  "tileMeters": [
+    15,
+    15
+  ],
+  "sourceDimensionsMillimeters": [
+    15000,
+    15000
+  ],
+  "formatLimit": "Original 16-bit PNG integer samples quantized to 8-bit RGB using round(value/257); alpha is removed only after every quantized alpha code is 255. Near-opaque source-alpha deviations are reported. WebP adds zero decoded-pixel error against the retained 8-bit reference. This is not 16-bit preservation.",
+  "nativeReview": "pending same-camera 1K/4K A/B; not selected as the default",
+  "files": {
+    "color": {
+      "path": "/textures/yuanmingyuan/meadow-4k/color.webp",
+      "bytes": 20685252,
+      "sha256": "6e661b015337d9dbbd14b05a328d58a69aca323ba2fd619ebc144d69dfb58ffa",
+      "width": 4096,
+      "height": 4096,
+      "channels": "RGB",
+      "bitDepth": 8,
+      "colorSpace": "sRGB",
+      "encoding": {
+        "format": "WebP",
+        "lossless": true,
+        "nearLossless": false,
+        "effort": 6,
+        "alpha": false
+      },
+      "source": {
+        "url": "https://dl.polyhaven.org/file/ph-assets/Textures/png/4k/aerial_grass_rock/aerial_grass_rock_diff_4k.png",
+        "path": "work/yuanmingyuan/ground-material-4k-r1/color-4k.png",
+        "bytes": 98214149,
+        "sha256": "719cffbc6f7cfec846cc2ba9610228dce5475cd2677f19f462bec6edc3e30ad9",
+        "md5": "9a25a2042860883b50eb063b54a52191",
+        "providerMD5": "9a25a2042860883b50eb063b54a52191",
+        "providerSize": 98214149,
+        "verification": "Recomputed full-file SHA256, provider MD5 and byte size before conversion",
+        "width": 4096,
+        "height": 4096,
+        "channels": "RGBA",
+        "bitDepth": 16,
+        "profile": false,
+        "alpha": {
+          "samples": 16777216,
+          "minimum16bit": 65533,
+          "maximum16bit": 65535,
+          "nonOpaquePixels16bit": 10618891,
+          "minimum8bit": 255,
+          "maximum8bit": 255,
+          "nonOpaquePixels8bit": 0,
+          "maximumUNormDifferenceOnRemoval": 0.000030518043793392735,
+          "removed": true,
+          "removalPolicy": "All quantized alpha codes are 255; original near-opaque 16-bit deviations are reported, not claimed preserved"
+        }
+      },
+      "reference": {
+        "path": "work/yuanmingyuan/ground-material-4k-r1/color-reference-8bit.png",
+        "bytes": 41816933,
+        "sha256": "cd4e6aa836419cb4d56a73ad2e2ac132237f93e0d7b098094cef25668c8fbfe5",
+        "md5": "282f65a58622ff71ce10a329a4358a57",
+        "width": 4096,
+        "height": 4096,
+        "channels": "RGB",
+        "bitDepth": 8,
+        "decodedRGBSHA256": "a7a39a1c0ea65b8934853313d2dfa8423e245daebc9948e4bf987f68a3633057",
+        "quantization": {
+          "method": "round(u16 / 257), clamped 0..255; encoded values, no transfer function",
+          "sourceBits": 16,
+          "outputBits": 8,
+          "componentsCompared": 50331648,
+          "maximumAbsoluteUNormError": 0.001953154802777246,
+          "meanAbsoluteUNormError": 0.0009396311290173903,
+          "rmsUNormError": 0.0011076997831001223
+        },
+        "encodeVerification": {
+          "pixelsCompared": 16777216,
+          "componentsCompared": 50331648,
+          "samplingStridePixels": 1,
+          "changedPixels": 0,
+          "changedComponents": 0,
+          "maximumAbsoluteError8bit": 0,
+          "meanAbsoluteError8bit": 0,
+          "rmsError8bit": 0
+        }
+      },
+      "verification": {
+        "decodedRGBSHA256": "a7a39a1c0ea65b8934853313d2dfa8423e245daebc9948e4bf987f68a3633057",
+        "pixelsCompared": 16777216,
+        "componentsCompared": 50331648,
+        "samplingStridePixels": 1,
+        "changedPixels": 0,
+        "changedComponents": 0,
+        "maximumAbsoluteError8bit": 0,
+        "meanAbsoluteError8bit": 0,
+        "rmsError8bit": 0
+      },
+      "buildMilliseconds": 14418.075959
+    },
+    "normal": {
+      "path": "/textures/yuanmingyuan/meadow-4k/normal.webp",
+      "bytes": 31887272,
+      "sha256": "a817af8a6e5e8daee92f9778d6374f44594ccb26eef5c7628d525c43868f3c03",
+      "width": 4096,
+      "height": 4096,
+      "channels": "RGB",
+      "bitDepth": 8,
+      "colorSpace": "linear / no color conversion",
+      "encoding": {
+        "format": "WebP",
+        "lossless": true,
+        "nearLossless": false,
+        "effort": 6,
+        "alpha": false
+      },
+      "source": {
+        "url": "https://dl.polyhaven.org/file/ph-assets/Textures/png/4k/aerial_grass_rock/aerial_grass_rock_nor_gl_4k.png",
+        "path": "work/yuanmingyuan/ground-material-4k-r1/normal-4k.png",
+        "bytes": 102797112,
+        "sha256": "219307ef4f5f729c5b2169c99a4651d339025785d043e2e1f5b25d156646ac80",
+        "md5": "d78f7fe235a324d9017c75f077b2b4ca",
+        "providerMD5": "d78f7fe235a324d9017c75f077b2b4ca",
+        "providerSize": 102797112,
+        "verification": "Recomputed full-file SHA256, provider MD5 and byte size before conversion",
+        "width": 4096,
+        "height": 4096,
+        "channels": "RGBA",
+        "bitDepth": 16,
+        "profile": false,
+        "alpha": {
+          "samples": 16777216,
+          "minimum16bit": 65533,
+          "maximum16bit": 65535,
+          "nonOpaquePixels16bit": 10618891,
+          "minimum8bit": 255,
+          "maximum8bit": 255,
+          "nonOpaquePixels8bit": 0,
+          "maximumUNormDifferenceOnRemoval": 0.000030518043793392735,
+          "removed": true,
+          "removalPolicy": "All quantized alpha codes are 255; original near-opaque 16-bit deviations are reported, not claimed preserved"
+        }
+      },
+      "reference": {
+        "path": "work/yuanmingyuan/ground-material-4k-r1/normal-reference-8bit.png",
+        "bytes": 43821432,
+        "sha256": "b0000ef8e64ebddb498e9db4b7b0c67c887ca3652beeb14afd32f940a5041ef1",
+        "md5": "add75f7f20e9b39eed2d416da3d05505",
+        "width": 4096,
+        "height": 4096,
+        "channels": "RGB",
+        "bitDepth": 8,
+        "decodedRGBSHA256": "b5d8d4b27a4a6ab6ba5a7435f412c8b47801ad5f8a6e5fe3f3dce41a3454b58e",
+        "quantization": {
+          "method": "round(u16 / 257), clamped 0..255; encoded values, no transfer function",
+          "sourceBits": 16,
+          "outputBits": 8,
+          "componentsCompared": 50331648,
+          "maximumAbsoluteUNormError": 0.001953154802777246,
+          "meanAbsoluteUNormError": 0.0009793491070514049,
+          "rmsUNormError": 0.001131649424618727
+        },
+        "encodeVerification": {
+          "pixelsCompared": 16777216,
+          "componentsCompared": 50331648,
+          "samplingStridePixels": 1,
+          "changedPixels": 0,
+          "changedComponents": 0,
+          "maximumAbsoluteError8bit": 0,
+          "meanAbsoluteError8bit": 0,
+          "rmsError8bit": 0
+        }
+      },
+      "verification": {
+        "decodedRGBSHA256": "b5d8d4b27a4a6ab6ba5a7435f412c8b47801ad5f8a6e5fe3f3dce41a3454b58e",
+        "pixelsCompared": 16777216,
+        "componentsCompared": 50331648,
+        "samplingStridePixels": 1,
+        "changedPixels": 0,
+        "changedComponents": 0,
+        "maximumAbsoluteError8bit": 0,
+        "meanAbsoluteError8bit": 0,
+        "rmsError8bit": 0,
+        "normalDirectionErrorDegrees": {
+          "samplingStridePixels": 1,
+          "sampleCount": 16777216,
+          "mean": 0,
+          "maximum": 0
+        }
+      },
+      "normalConvention": "OpenGL (+Y)",
+      "normalQuantizationErrorDegrees": {
+        "unit": "degrees",
+        "sampleCount": 16777216,
+        "samplingStridePixels": 1,
+        "mean": 0.17756678157019795,
+        "rms": 0.1905767778183064,
+        "maximum": 0.7040658145451867,
+        "percentile50": {
+          "lower": 0.18230000000000002,
+          "upper": 0.1824
+        },
+        "percentile95": {
+          "lower": 0.28550000000000003,
+          "upper": 0.2856
+        },
+        "percentile99": {
+          "lower": 0.3229,
+          "upper": 0.323
+        },
+        "percentileBinWidth": 0.0001
+      },
+      "buildMilliseconds": 13991.769916000001
+    },
+    "roughness": {
+      "path": "/textures/yuanmingyuan/meadow-4k/roughness.webp",
+      "bytes": 8282514,
+      "sha256": "618d34b31555b11fd64c51590bacc5c99a91c439650d2d424940b75d58a86c34",
+      "width": 4096,
+      "height": 4096,
+      "channels": "RGB",
+      "bitDepth": 8,
+      "colorSpace": "linear / no color conversion",
+      "encoding": {
+        "format": "WebP",
+        "lossless": true,
+        "nearLossless": false,
+        "effort": 6,
+        "alpha": false
+      },
+      "source": {
+        "url": "https://dl.polyhaven.org/file/ph-assets/Textures/png/4k/aerial_grass_rock/aerial_grass_rock_rough_4k.png",
+        "path": "work/yuanmingyuan/ground-material-4k-r1/roughness-4k.png",
+        "bytes": 34923634,
+        "sha256": "69d54083ab1d6cb9d8a69e51bf9c372be277803d0b5449bbe1b0b66644d5ac50",
+        "md5": "6f35ed65acb136c6117a017a894aa9ad",
+        "providerMD5": "6f35ed65acb136c6117a017a894aa9ad",
+        "providerSize": 34923634,
+        "verification": "Recomputed full-file SHA256, provider MD5 and byte size before conversion",
+        "width": 4096,
+        "height": 4096,
+        "channels": "GrayAlpha",
+        "bitDepth": 16,
+        "profile": false,
+        "alpha": {
+          "samples": 16777216,
+          "minimum16bit": 65533,
+          "maximum16bit": 65535,
+          "nonOpaquePixels16bit": 10618891,
+          "minimum8bit": 255,
+          "maximum8bit": 255,
+          "nonOpaquePixels8bit": 0,
+          "maximumUNormDifferenceOnRemoval": 0.000030518043793392735,
+          "removed": true,
+          "removalPolicy": "All quantized alpha codes are 255; original near-opaque 16-bit deviations are reported, not claimed preserved"
+        }
+      },
+      "reference": {
+        "path": "work/yuanmingyuan/ground-material-4k-r1/roughness-reference-8bit.png",
+        "bytes": 13868786,
+        "sha256": "3966d7035f6950a044ae5a43156d7754a33e0d1238e08ca8b6e416b5bed48442",
+        "md5": "2cc5b950816e22e8c82d4fb12668c8d5",
+        "width": 4096,
+        "height": 4096,
+        "channels": "RGB",
+        "bitDepth": 8,
+        "decodedRGBSHA256": "9b2d6237127afdf9c9be17caefff153198ddc4b6e70c1b70e398ca601cea06bf",
+        "quantization": {
+          "method": "round(u16 / 257), clamped 0..255; encoded values, no transfer function",
+          "sourceBits": 16,
+          "outputBits": 8,
+          "componentsCompared": 50331648,
+          "maximumAbsoluteUNormError": 0.001953154802777246,
+          "meanAbsoluteUNormError": 0.0009803348185040428,
+          "rmsUNormError": 0.0011320059221699636
+        },
+        "encodeVerification": {
+          "pixelsCompared": 16777216,
+          "componentsCompared": 50331648,
+          "samplingStridePixels": 1,
+          "changedPixels": 0,
+          "changedComponents": 0,
+          "maximumAbsoluteError8bit": 0,
+          "meanAbsoluteError8bit": 0,
+          "rmsError8bit": 0
+        }
+      },
+      "verification": {
+        "decodedRGBSHA256": "9b2d6237127afdf9c9be17caefff153198ddc4b6e70c1b70e398ca601cea06bf",
+        "pixelsCompared": 16777216,
+        "componentsCompared": 50331648,
+        "samplingStridePixels": 1,
+        "changedPixels": 0,
+        "changedComponents": 0,
+        "maximumAbsoluteError8bit": 0,
+        "meanAbsoluteError8bit": 0,
+        "rmsError8bit": 0
+      },
+      "buildMilliseconds": 10147.504416
+    }
+  }
+}

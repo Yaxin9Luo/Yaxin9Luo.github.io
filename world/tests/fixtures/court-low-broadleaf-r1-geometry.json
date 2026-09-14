@@ -1,0 +1,91 @@
+{
+  "source": "Frozen native-reviewed low-crown r1 CPU geometry; all Float32 attribute and Uint32 index bytes.",
+  "nativePNG": "469c6dac60af8fbb28f25b6acf5ae6c927e93bcf0487e7204e8414616fb6f8e8",
+  "frozenGeometryExport": "bd95a9e444043be7fe7fbc47d0d9ff1cfa13773397d56ec956c053c12bc702bb",
+  "meshes": [
+    {
+      "attributes": {
+        "position": {
+          "count": 639975,
+          "itemSize": 3,
+          "sha256": "c12753334762fee5d9c258b56b398993b5722c0ad7df3a5732d69e55fae51191"
+        },
+        "normal": {
+          "count": 639975,
+          "itemSize": 3,
+          "sha256": "189f2772515f1585977d35887ca74f6836d8bbfdaaf43fb0de72542845eda295"
+        },
+        "color": {
+          "count": 639975,
+          "itemSize": 3,
+          "sha256": "aae4cd6ffd9d7b4c6ceccace99b7fa97c416db3937d1c1776033044934c0b418"
+        },
+        "uv": {
+          "count": 639975,
+          "itemSize": 2,
+          "sha256": "b5a7d7bb2c36cba74d051365c3e321c2ab531f599a225df2f2067d247ac6abde"
+        }
+      },
+      "index": {
+        "count": 2869335,
+        "sha256": "664cbd37c0ae071fd2a99fd2993529068dcd8e2d566522e8a12fb5b56125efb9"
+      }
+    },
+    {
+      "attributes": {
+        "position": {
+          "count": 33886,
+          "itemSize": 3,
+          "sha256": "95dec23f7834247d12e2614d5d82f91d91a3af6d30d766e07384ebaa15a5248a"
+        },
+        "normal": {
+          "count": 33886,
+          "itemSize": 3,
+          "sha256": "53a61000018aab1214d8a9d4f683c6ad03de154182971e5df8512610e91d0980"
+        },
+        "color": {
+          "count": 33886,
+          "itemSize": 3,
+          "sha256": "8531f1893949a5ef70b64df8aaf1ff0edf680e171e619a954c8bd96d35dfda11"
+        },
+        "uv": {
+          "count": 33886,
+          "itemSize": 2,
+          "sha256": "bb4559dcd6508ab6c236eed64d8014a12ba45cb56218814d53f07e8bc89896e8"
+        }
+      },
+      "index": {
+        "count": 180480,
+        "sha256": "b5b5123b77888f6fa4846847b0b72538ec3520ef733e8fd6930fecb8db16b3b6"
+      }
+    },
+    {
+      "attributes": {
+        "position": {
+          "count": 2008,
+          "itemSize": 3,
+          "sha256": "eaea105d850f81bfb86261ff4df3e3318ed40a7b05f634eeadd84383083f6818"
+        },
+        "normal": {
+          "count": 2008,
+          "itemSize": 3,
+          "sha256": "21e50a6bbfe0a4eca6f3de34a99e73e6960ee6b3fc8ea9a54b30e0ee3910e55e"
+        },
+        "color": {
+          "count": 2008,
+          "itemSize": 3,
+          "sha256": "59754268b64330c8b0ab810d3045a0e7fd230ee0cc4a675aa84e83c64cff3f3e"
+        },
+        "uv": {
+          "count": 2008,
+          "itemSize": 2,
+          "sha256": "37e469aa7ea5ff25db86ef9377d068672e75b576d0a3b5e07ff7f169d2ce98ec"
+        }
+      },
+      "index": {
+        "count": 10920,
+        "sha256": "11c4a6ff6e7e6477cf8408417ccb25831245a266d3da16e87a8f23f0d0de85c8"
+      }
+    }
+  ]
+}

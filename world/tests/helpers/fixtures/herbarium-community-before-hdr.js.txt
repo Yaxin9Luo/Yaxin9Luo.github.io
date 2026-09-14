@@ -1,0 +1,156 @@
+import * as THREE from 'three';
+import {communityShrubs as shrubs,communityFerns as ferns,communityFlowers as flowers} from './herbarium-community-layout.js';
+import {decodeShrubTexture} from './herbarium-texture-loader.js';
+import {resourceLoader} from './resource-loader.js';
+import {loadGLTF} from './gltf-resource.js';
+import {assignArchitecturalUVs} from './architecture.js';
+import {getHerbariumMaterials,loadHerbariumBotanicalAssets,createHerbariumBotanicalSpecimen,cloneHerbariumAsset,disposeHerbariumAsset} from './herbarium-assets.js';
+
+const sourceRoot='/models/herbarium/didelta-spinosa/',V=(...p)=>new THREE.Vector3(...p),owners=new WeakMap(),understoreyTemplates=new Map();
+const channels={map:'diff_8k.jpg',normalMap:'nor_gl_8k.exr',roughnessMap:'rough_8k.exr',alphaMap:'alpha_8k.png',translucencyMap:'translucency_8k.png'};
+const scalarChannels={alphaMap:'alpha_8k.r8.zlib',translucencyMap:'translucency_8k.r8.zlib'};
+let source,understoreyReady=false,materialMode='direct';
+const directTranslucency={value:1},indirectTranslucency={value:0};
+
+/** Bounded source-review isolation; all original maps remain loaded and bound. */
+export function setShrubMaterialMode(mode){
+  if(!['source','direct','reflection'].includes(mode))throw new RangeError(`Unknown shrub material diagnostic: ${mode}`);
+  materialMode=mode;directTranslucency.value=mode==='reflection'?0:1;indirectTranslucency.value=mode==='source'?1:0;
+  if(source)source.material.userData.diagnosticMode=mode;
+}
+export function getShrubMaterialMode(){return materialMode;}
+
+/** Keep 8K source pixels and native HALF precision. No import-time requests. */
+export function loadShrubTexture(key,options={}){
+  if(!channels[key])throw new RangeError(`Unknown shrub material channel: ${key}`);
+  const file=`textures/didelta_spinosa_${scalarChannels[key]||channels[key]}`;
+  return resourceLoader.load({id:`herbarium-didelta-${key}`,url:sourceRoot+file,phase:2},{...options,parse:async(buffer,{signal})=>{
+    let texture;
+    if(key!=='map'){
+      const parsed=await decodeShrubTexture(buffer,{key,signal});
+      texture=new THREE.DataTexture(parsed.data,parsed.width,parsed.height,parsed.format,parsed.type);
+    }else{
+      const blob=new Blob([buffer]);let image;
+      if(typeof createImageBitmap==='function')image=await createImageBitmap(blob,{imageOrientation:'none',premultiplyAlpha:'none',colorSpaceConversion:'none'});
+      else{const url=URL.createObjectURL(blob);try{image=new Image();image.src=url;await image.decode();}finally{URL.revokeObjectURL(url);}}
+      texture=new THREE.Texture(image);
+    }
+    if(texture.image.width!==8192||texture.image.height!==8192){texture.image.close?.();texture.dispose();throw new Error('Didelta requires the complete original 8192 x 8192 maps.');}
+    if(scalarChannels[key])texture.magFilter=THREE.LinearFilter; // Original PNG Texture default, unlike DataTexture.
+    texture.flipY=false;texture.colorSpace=key==='map'?THREE.SRGBColorSpace:THREE.NoColorSpace;texture.wrapS=texture.wrapT=THREE.RepeatWrapping;texture.anisotropy=8;texture.generateMipmaps=true;texture.minFilter=THREE.LinearMipmapLinearFilter;texture.name=`Didelta original 8K ${key}`;texture.userData={sharedAsset:true,source:sourceRoot+`textures/didelta_spinosa_${channels[key]}`,...(scalarChannels[key]?{uploadSource:sourceRoot+file,sourceChannel:key==='alphaMap'?'G':'R',packingManifest:sourceRoot+'scalar-source.json'}:{})};texture.needsUpdate=true;return texture;
+  },dispose:texture=>{texture.image?.close?.();texture.dispose();}});
+}
+
+function scalarAlpha(shader){shader.fragmentShader=shader.fragmentShader.replace('#include <alphamap_fragment>',THREE.ShaderChunk.alphamap_fragment.replace(').g;',').r;'));}
+function shrubShadowMaterial(Kind,textures){
+  // Three's automatic shadow materials use fixed alphaTest .5, no coverage.
+  const material=new Kind({map:textures.map,alphaMap:textures.alphaMap,alphaTest:.5});
+  material.userData={sharedAsset:true,sourceAsset:'didelta_spinosa'};material.onBeforeCompile=scalarAlpha;material.customProgramCacheKey=()=> 'didelta-scalar-alpha-shadow-v1';return material;
+}
+function shrubMaterial(textures){
+  const material=new THREE.MeshPhysicalMaterial({name:'Didelta source PBR with thin-leaf translucency',color:'#ffffff',map:textures.map,normalMap:textures.normalMap,roughnessMap:textures.roughnessMap,alphaMap:textures.alphaMap,alphaTest:.5,alphaToCoverage:true,side:THREE.DoubleSide,depthWrite:true,roughness:1,metalness:0,ior:1.45,specularIntensity:1});
+  // GLTFLoader applies the same Y sign when a source has derivative tangents.
+  // Preserve original split normals; do not rebuild them to repair ngon export.
+  material.normalScale.set(1,-1);material.userData={sharedAsset:true,sourceAsset:'didelta_spinosa',license:'CC0-1.0',sourceURL:'https://polyhaven.com/a/didelta_spinosa',translucencySource:textures.translucencyMap.userData.source,materialTranslation:'Original active links: diffuse, normal strength 1, roughness, alpha and alpha-masked translucency x1.7; translucency HSV saturation x1.3/value x1.1. Source AO and displacement outputs are unconnected and retained as provenance only. Reviewed candidate keeps direct-light transmission and the existing reflected PBR/ambient response. Broad unoccluded additive indirect transmission is disabled; full R1 and reflected-only modes remain explicit diagnostics. No emission.'};
+  material.onBeforeCompile=shader=>{
+    scalarAlpha(shader);
+    shader.uniforms.shrubTranslucencyMap={value:textures.translucencyMap};shader.uniforms.shrubDirectTranslucency=directTranslucency;shader.uniforms.shrubIndirectTranslucency=indirectTranslucency;
+    shader.fragmentShader=shader.fragmentShader.replace('#include <common>','#include <common>\nuniform sampler2D shrubTranslucencyMap;\nuniform float shrubDirectTranslucency;\nuniform float shrubIndirectTranslucency;\nvec3 shrubTransmittedColor;\nfloat shrubTranslucency;');
+    shader.fragmentShader=shader.fragmentShader.replace('#include <roughnessmap_fragment>',THREE.ShaderChunk.roughnessmap_fragment.replace('texelRoughness.g','texelRoughness.r'));
+    shader.fragmentShader=shader.fragmentShader.replace('#include <lights_physical_pars_fragment>',`#include <lights_physical_pars_fragment>
+void RE_Direct_Shrub(const in IncidentLight light,const in vec3 position,const in vec3 normal,const in vec3 viewDir,const in vec3 clearcoatNormal,const in PhysicalMaterial material,inout ReflectedLight reflectedLight){
+  RE_Direct_Physical(light,position,normal,viewDir,clearcoatNormal,material,reflectedLight);
+  reflectedLight.directDiffuse += light.color * saturate(dot(-normal,light.direction)) * BRDF_Lambert(shrubTransmittedColor) * shrubTranslucency * shrubDirectTranslucency;
+}
+#undef RE_Direct
+#define RE_Direct RE_Direct_Shrub`);
+    shader.fragmentShader=shader.fragmentShader.replace('#include <lights_physical_fragment>',`float shrubMax=max(max(diffuseColor.r,diffuseColor.g),diffuseColor.b);
+float shrubMin=min(min(diffuseColor.r,diffuseColor.g),diffuseColor.b);
+float shrubSaturation=min(1.3,shrubMax/max(shrubMax-shrubMin,0.000001));
+shrubTransmittedColor=max(vec3(0.0),(vec3(shrubMax)-(vec3(shrubMax)-diffuseColor.rgb)*shrubSaturation)*1.1);
+shrubTranslucency=saturate(texture2D(shrubTranslucencyMap,vMapUv).r*1.7)*diffuseColor.a;
+#include <lights_physical_fragment>`);
+    shader.fragmentShader=shader.fragmentShader.replace('#include <lights_fragment_end>',`#include <lights_fragment_end>
+vec3 shrubBackIrradiance=getAmbientLightIrradiance(ambientLightColor);
+#if NUM_HEMI_LIGHTS > 0
+  for(int shrubLight=0;shrubLight<NUM_HEMI_LIGHTS;shrubLight++)shrubBackIrradiance+=getHemisphereLightIrradiance(hemisphereLights[shrubLight],-geometryNormal);
+#endif
+#if defined(USE_ENVMAP) && defined(ENVMAP_TYPE_CUBE_UV)
+  shrubBackIrradiance+=getIBLIrradiance(-geometryNormal);
+#endif
+reflectedLight.indirectDiffuse+=shrubBackIrradiance*BRDF_Lambert(shrubTransmittedColor)*shrubTranslucency*shrubIndirectTranslucency;`);
+  };
+  material.customProgramCacheKey=()=> 'didelta-original-thin-leaf-scalar-v2';return material;
+}
+
+/** The same binding boundary is used by native loading and decoded-source tests. */
+export function bindShrubSource(gltf,metadata,textures){
+  if(source)return source;
+  for(const key of Object.keys(channels))if(!textures[key]?.isTexture||textures[key].image?.width!==8192||textures[key].image?.height!==8192)throw new Error(`Incomplete original shrub ${key}`);
+  gltf.scene.updateMatrixWorld(true);const variants=[];
+  for(const record of metadata.meshes){
+    const mesh=gltf.scene.getObjectByName(record.name);if(!mesh?.isMesh)throw new Error(`Missing source shrub ${record.name}`);
+    if((mesh.geometry.index?.count||mesh.geometry.attributes.position.count)/3!==record.triangles)throw new Error(`Full LOD0 triangles changed for ${record.name}`);
+    const matrix=new THREE.Matrix4().makeTranslation(...record.rootGLTF.map(v=>-v)).multiply(mesh.matrixWorld);
+    variants.push({name:record.name,geometry:mesh.geometry,matrix,record});
+  }
+  if(variants.length!==3)throw new Error('Didelta requires its three original LOD0 growth stages.');
+  source={variants,metadata,material:shrubMaterial(textures),depthMaterial:shrubShadowMaterial(THREE.MeshDepthMaterial,textures),distanceMaterial:shrubShadowMaterial(THREE.MeshDistanceMaterial,textures)};return source;
+}
+
+export async function loadShrubAssets(options={}){
+  const results=await Promise.allSettled([
+    loadGLTF({id:'herbarium-didelta-lod0',url:sourceRoot+'didelta-spinosa-lod0.glb',phase:2},options),
+    resourceLoader.load({id:'herbarium-didelta-metadata',url:sourceRoot+'geometry-source.json',phase:2},{...options,parse:buffer=>JSON.parse(new TextDecoder().decode(buffer))}),
+    ...Object.keys(channels).map(key=>loadShrubTexture(key,options)),
+  ]);
+  const failed=results.find(r=>r.status==='rejected');if(failed)throw new Error(`Shrub source preload failed: ${failed.reason?.message||failed.reason}`);
+  return bindShrubSource(results[0].value,results[1].value,Object.fromEntries(Object.keys(channels).map((key,i)=>[key,results[i+2].value])));
+}
+export async function loadHerbariumCommunityAssets(options={}){
+  await Promise.all([loadShrubAssets(options),...['fern_02','periwinkle_plant'].map(kind=>loadHerbariumBotanicalAssets({kind,...options}))]);
+  for(const id of ['fern_02','periwinkle_plant']){
+    const materials=Object.values(getHerbariumMaterials()).filter(m=>m.userData.sourceAsset===id);
+    if(!materials.length||materials.some(m=>['map','normalMap','roughnessMap'].some(key=>m[key]?.image?.width!==4096||m[key]?.image?.height!==4096)))throw new Error(`Community requires complete accepted 4K ${id} materials.`);
+  }
+  understoreyReady=true;
+}
+
+function shrub(variant){
+  if(!source)throw new Error('Call and await loadShrubAssets before creating a shrub specimen.');
+  const item=source.variants[variant];if(!item)throw new RangeError('Unknown shrub growth stage.');
+  const mesh=new THREE.Mesh(item.geometry,source.material);mesh.name=item.name;mesh.matrixAutoUpdate=false;mesh.matrix.copy(item.matrix);mesh.castShadow=mesh.receiveShadow=true;mesh.userData={sharedAsset:true,sourceAsset:'didelta_spinosa',variant,rootAnchor:item.record.rootGLTF};
+  mesh.customDepthMaterial=source.depthMaterial;mesh.customDistanceMaterial=source.distanceMaterial;
+  const group=new THREE.Group();group.add(mesh);return group;
+}
+function finish(group,owned=[]){
+  group.updateMatrixWorld(true);const box=new THREE.Box3().setFromObject(group),size=box.getSize(V());group.userData={herbarium:true,version:8,studyOwner:'community',...group.userData,actualBounds:{min:box.min.toArray(),max:box.max.toArray()},dimensions:{width:size.x,height:size.y,depth:size.z},maxWindDisplacement:0,wind:'Static unchanged source geometry; no wind vertex modifier'};owners.set(group,{owned});return group;
+}
+export function createShrubSpecimen({variant=0}={}){
+  const group=shrub(variant);group.name=`Didelta original LOD0 · ${source.variants[variant].name}`;finish(group);
+  const d=group.userData.dimensions,box=new THREE.Box3().setFromObject(group),center=box.getCenter(V()),span=Math.max(d.width,d.height,d.depth),target=center.toArray();
+  group.userData.botanicalSource={id:'didelta_spinosa',variant:source.variants[variant].name,variantIndex:variant,variants:source.variants.map(v=>v.name),sourceURL:'https://polyhaven.com/a/didelta_spinosa',license:'CC0-1.0',resolution:8192,transform:'Unit scale, full LOD0; translated from actual basal stem anchor, preserving asymmetric source crown and all original split normals/UVs.',nativeSourceBounds:source.variants[variant].record.boundsGLTF};
+  group.userData.studyViews={front:{eye:center.clone().add(V(0,.12,span*2.3)).toArray(),target},threequarter:{eye:center.clone().add(V(span*1.6,span*.6,span*1.8)).toArray(),target},profile:{eye:center.clone().add(V(span*2.3,.12,0)).toArray(),target},back:{eye:center.clone().add(V(0,.12,-span*2.3)).toArray(),target},overview:{eye:center.clone().add(V(span,span*2.4,span)).toArray(),target},close:{eye:center.clone().add(V(.42,.28,span*.73)).toArray(),target:center.clone().add(V(0,.14,0)).toArray()},roots:{eye:[.78,.40,1.14],target:[0,.10,0]}};
+  return group;
+}
+
+// One asymmetric middle layer: tall sheltered body, smaller shoulder and low
+// terminal plants. These are complete source shrubs, not enlarged fern blades.
+
+function understorey(id,variant){const key=`${id}:${variant}`;if(!understoreyTemplates.has(key))understoreyTemplates.set(key,createHerbariumBotanicalSpecimen(id,{variant}));return cloneHerbariumAsset(understoreyTemplates.get(key));}
+export function createHerbariumCommunity({terrain=null}={}){
+  if(!source||(!terrain&&!understoreyReady))throw new Error('Call and await loadHerbariumCommunityAssets before creating a community.');
+  const group=new THREE.Group(),owned=[],roots=[];group.name=terrain?`Regional woody community / ${terrain.id}`:'Layered woody garden community';
+  const place=(plant,record)=>{
+    if(terrain){const c=Math.cos(terrain.rotation||0),s=Math.sin(terrain.rotation||0),x=terrain.x+plant.position.x*c+plant.position.z*s,z=terrain.z-plant.position.x*s+plant.position.z*c;plant.position.set(x,terrain.heightAt(x,z),z);plant.rotation.y+=terrain.rotation||0;plant.updateMatrixWorld(true);if(terrain.accept&&!terrain.accept(plant,record))return false;}
+    group.add(plant);const root=plant.position.toArray();plant.userData={...plant.userData,...(terrain?{site:'regional-planting',regionalCommunity:terrain.id,drift:terrain.id,rootedAt:root}:{}),botanicalSource:plant.userData.botanicalSource||{id:record.species,variantIndex:record.variant,sourceURL:'https://polyhaven.com/a/didelta_spinosa',resolution:8192}};roots.push({...record,root});return true;
+  };
+  const contour=[[-5.24,.02],[-4.83,-1.77],[-3.24,-2.17],[-1.28,-2.58],[.35,-2.06],[2.28,-1.98],[4.15,-1.31],[4.72,-.08],[5.20,1.20],[4.82,2.54],[3.44,3.34],[2.18,3.14],[.28,3.43],[-1.30,3.60],[-2.70,3.17],[-4.33,2.76],[-5.12,1.66]];
+  const shape=new THREE.Shape(contour.map(([x,z])=>new THREE.Vector2(x,-z))),soilGeometry=new THREE.ShapeGeometry(shape,16);soilGeometry.rotateX(-Math.PI/2);assignArchitecturalUVs(soilGeometry,1.5);const soil=new THREE.Mesh(soilGeometry,getHerbariumMaterials().soil);soil.name='Continuous supported specimen loam';soil.receiveShadow=true;soil.userData.support=true;if(!terrain)group.add(soil);else soilGeometry.dispose();
+  for(const [variant,x,z,scale,yaw]of shrubs){const plant=shrub(variant);plant.position.set(x,0,z);plant.rotation.y=yaw;plant.scale.setScalar(scale);place(plant,{species:'didelta_spinosa',variant,scale,yaw,layer:'woody middle'});}
+  for(const [x,z,variant,scale,yaw]of ferns){const plant=understorey('fern_02',variant);plant.position.set(x,0,z);plant.rotation.y=yaw;plant.scale.setScalar(scale);if(place(plant,{species:'fern_02',variant,scale,yaw,layer:'low fern'}))owned.push(plant);else disposeHerbariumAsset(plant);}
+  flowers.forEach(([x,z],i)=>{const scale=2.10+(i%4)*.16,yaw=i*2.399,plant=understorey('periwinkle_plant',0);plant.position.set(x,0,z);plant.rotation.y=yaw;plant.scale.setScalar(scale);if(place(plant,{species:'periwinkle_plant',variant:0,scale,yaw,layer:'low flowers'}))owned.push(plant);else disposeHerbariumAsset(plant);});
+  group.userData={community:true,plantRoots:roots,colliders:[],supportMeshes:terrain?[]:[soil.name],sourceManifest:sourceRoot+'source.json',sourceAssets:['didelta_spinosa','fern_02','periwinkle_plant'],originalAuthoring:'Authored irregular community of full source woody shrubs; lower shoulders and selected accepted fern/periwinkle groups connect into woody feet and openings at unchanged reviewed scales. Existing loam PBR retained; no global scatter, material or lighting changes.',studyFloorY:-.006,studyViews:{front:{eye:[0,4.1,16],target:[0,1.0,.45]},threequarter:{eye:[12,8.0,13],target:[0,.90,.40]},profile:{eye:[15,4.1,.50],target:[0,.9,.50]},back:{eye:[0,4.1,-15],target:[0,.9,.5]},overview:{eye:[6,15,9],target:[0,.5,.5]},eye:{eye:[6.8,3.05,8.2],target:[-1.0,1.20,.4]},interior:{eye:[-3.6,1.65,4.4],target:[-.9,1.15,.50]},close:{eye:[-1.4,2.5,2.0],target:[-1.55,1.60,-.60]},roots:{eye:[-7.30,1.00,-.12],target:[-3.82,.22,.12]}}};
+  finish(group,owned);if(!terrain)owners.get(group).soilGeometry=soilGeometry;return group;
+}
+export function disposeCommunityAsset(group){const owner=owners.get(group);if(!owner)return;owners.delete(group);group.removeFromParent();for(const plant of owner.owned)disposeHerbariumAsset(plant);owner.soilGeometry?.dispose();group.userData.disposed=true;}

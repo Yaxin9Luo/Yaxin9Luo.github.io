@@ -68,3 +68,19 @@ test('late optional delivery skips disposed backdrops and aborted consumers, and
   camera.position.y=225;rig.updateMatrixWorld(true);
   for(const mesh of result.group.children){mesh.onBeforeRender(null,null,camera);assert.equal(mesh.material.uniforms.reflectionMix.value,0);mesh.geometry.dispose();mesh.material.dispose();}
 });
+
+
+test('painted feet fade continuously to the physical lake at every cape and bank, preserving the upper art',()=>{
+  // Evaluate the actual scalar shader expressions; shape coefficients remain
+  // art-directed while the physical water contact and upper-art contract hold.
+  const expression=name=>mountainMatteFragment.match(new RegExp(`float ${name}=([^;]+);`))[1];
+  const evaluate=new Function('cape','bank','y','max','mix','smoothstep',`const worldPoint={y};const contactWidth=${expression('contactWidth')};return ${expression('contactFade')};`);
+  const mix=(a,b,t)=>a+(b-a)*t,smoothstep=(a,b,x)=>THREE.MathUtils.smoothstep(x,a,b);
+  for(const cape of [0,.25,.5,.75,1])for(const bank of [-18,-9,0,9,18]){
+    const sample=y=>evaluate(cape,bank,y,Math.max,mix,smoothstep);
+    assert.equal(sample(-20),0);assert.equal(sample(-15),0);assert.equal(sample(40),1,'upper mineral painting stays untouched');
+    assert.ok(sample(-14.99)<.00001,'contact has a soft zero slope');
+    let previous=0;for(let y=-15;y<=40;y+=.25){const value=sample(y);assert.ok(Number.isFinite(value)&&value>=previous&&value<=1);previous=value;}
+  }
+  assert.ok(mountainMatteFragment.includes('baseFade*=contactFade;'),'the contact invariant must drive actual fragment alpha');
+});

@@ -52,10 +52,11 @@ function batchDecoration(parent,targets){
 }
 
 /** A physical portfolio scene. Long-form reading stays in accessible HTML. */
-export function createExhibitionStage(scene,heightAt,{lang='en',loadMedia,loadSurface}={}){
+export function createExhibitionStage(scene,heightAt,{lang='en',loadMedia,loadSurface,onVisualChange=()=>{}}={}){
   const group=new THREE.Group();group.name='research-atelier-exhibition';const ground=heightAt(62,57);group.position.set(62,ground+.13,57);scene.add(group);
   const interactiveTargets=[],colliders=[],disposables=new Set(),motion=new ExhibitMotion();let disposed=false,reducedMotion=false,shadowDirty=true;
-  const surfaces=createAtelierMaterials(loadSurface?{loadTexture:loadSurface}:{}),materials=surfaces.materials;
+  const notifyVisualChange=()=>{if(!disposed)onVisualChange();};
+  const surfaces=createAtelierMaterials({...(loadSurface?{loadTexture:loadSurface}:{}),onChange:notifyVisualChange}),materials=surfaces.materials;
   const add=(geometry,material,position,parent=group)=>{
     if(material.userData.metresPerRepeat){if(geometry.index){const indexed=geometry;geometry=indexed.toNonIndexed();indexed.dispose();}assignArchitecturalUVs(geometry,material.userData.metresPerRepeat);}
     const mesh=new THREE.Mesh(geometry,material);mesh.position.set(...position);mesh.castShadow=true;mesh.receiveShadow=true;parent.add(mesh);return mesh;
@@ -279,15 +280,15 @@ export function createExhibitionStage(scene,heightAt,{lang='en',loadMedia,loadSu
     for(const mesh of interactiveTargets){mesh.userData.exhibition.projectId=state.projectId;mesh.userData.exhibition.mediaIndex=state.mediaIndex;}
     setStatus();
   }
-  function setStatus(message){const p=getProject(state.projectId),media=getProjectMedia(p.id,state.mediaIndex),l=state.lang,kind=media?({output:{en:'OUTPUT',zh:'产物'},method:{en:'METHOD',zh:'方法'},process:{en:'PROCESS',zh:'过程'}})[media.kind][l]:{en:'PAPER & CODE',zh:'论文与代码'}[l];updateFace(statusPlaque,[{text:message||`${media?`${String(state.mediaIndex+1).padStart(2,'0')} / ${String(p.media.length).padStart(2,'0')} · `:''}${kind} · ${p.year}`,size:64}],{width:1024,height:96,dark:true});}
+  function setStatus(message){const p=getProject(state.projectId),media=getProjectMedia(p.id,state.mediaIndex),l=state.lang,kind=media?({output:{en:'OUTPUT',zh:'产物'},method:{en:'METHOD',zh:'方法'},process:{en:'PROCESS',zh:'过程'}})[media.kind][l]:{en:'PAPER & CODE',zh:'论文与代码'}[l];updateFace(statusPlaque,[{text:message||`${media?`${String(state.mediaIndex+1).padStart(2,'0')} / ${String(p.media.length).padStart(2,'0')} · `:''}${kind} · ${p.year}`,size:64}],{width:1024,height:96,dark:true});notifyVisualChange();}
   async function selectMedia(){
     const p=getProject(state.projectId),media=getProjectMedia(state.projectId,state.mediaIndex);motion.media(state.mediaIndex,p.media.length,reducedMotion);
     for(const mesh of interactiveTargets)mesh.userData.exhibition.mediaIndex=state.mediaIndex;
     if(!media){selection.invalidate();screen.visible=false;deskPrint.visible=false;emptyScreen.visible=true;state.loadedSource=null;setStatus();return;}
     if(!loadMedia&&typeof document==='undefined')return;
     setStatus(state.lang==='zh'?'正在载入图像 · 下方可直接阅读':'Loading image · Read the project below');
-    const complete=await selection.select(media.src);
-    if(!disposed&&!complete&&selection.error)setStatus(state.lang==='zh'?'保留上一张图像 · 当前图像请查看来源':'Previous image retained · View current image at its source');
+    const pending=selection.select(media.src),revision=selection.revision,complete=await pending;
+    if(!disposed&&revision===selection.revision&&!complete&&selection.error)setStatus(state.lang==='zh'?'保留上一张图像 · 当前图像请查看来源':'Previous image retained · View current image at its source');
   }
   refreshLabels();selectMedia();return state;
 }

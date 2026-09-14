@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>松枝簇 · 远景体积试点</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#10191c;color:#dde5e5;font:14px/1.45 system-ui,sans-serif}header{padding:14px 20px;border-bottom:1px solid #354345;display:flex;gap:18px;align-items:center;justify-content:space-between}h1{font-size:18px;margin:0;font-weight:550}header p{margin:2px 0 0;color:#a6b9b8;font-size:12px}a{color:#a7d7cf}.controls{padding:12px 20px;display:flex;gap:12px;flex-wrap:wrap;align-items:center;background:#182529}label{display:flex;gap:7px;align-items:center}select,button,input{font:inherit}select,button{color:#e4eceb;border:1px solid #57706c;background:#263b3c;border-radius:5px;padding:6px 9px}button{cursor:pointer}button:disabled,select:disabled{opacity:.45;cursor:default}input[type=range]{width:140px;accent-color:#b9d7c3}.workspace{display:grid;grid-template-columns:minmax(0,1fr) 285px;height:calc(100dvh - 159px);min-height:420px}#pine-stage{position:relative;min-width:0;overflow:hidden;background:#8b999b}canvas{display:block;width:100%;height:100%;touch-action:none}.caption{position:absolute;left:16px;bottom:14px;pointer-events:none;padding:7px 12px;background:#152527ce;border-radius:5px;font-size:12px}.panel{overflow:auto;padding:14px;border-left:1px solid #354345}#pine-status{margin:0 0 13px;color:#c8dcd5}.metrics{font-size:12px;color:#b8ccc7;white-space:pre-wrap}details{margin-top:15px;font-size:12px}pre{font-size:10px;white-space:pre-wrap;overflow-wrap:anywhere}#pine-files a{display:block;font-size:11px;overflow-wrap:anywhere;padding:4px 0}.tag{color:#f3c7a3}output{min-width:35px;font-variant-numeric:tabular-nums}@media(max-width:850px){.workspace{grid-template-columns:1fr;height:65dvh}.panel{max-height:230px;border-left:0}.controls{gap:8px}}
+</style></head><body data-ready="loading">
+<header><div><h1>松枝簇 · 原始几何 / 多方向折面</h1><p>实际 arm 3 / fork 6 · 28 个 shoot · 远景试点 · <span class="tag">尚未原生验收</span></p></div><a href="/asset-studio.html">返回单体工作室</a></header>
+<div class="controls">
+<label>表示 <select id="pine-mode"><option value="source">源 28 个 shoot</option><option value="low">体积折面候选</option><option value="blend">过渡对照</option></select></label>
+<label>视角 <select id="pine-view"><option value="front">正面</option><option value="oblique">斜向</option><option value="side">侧面</option><option value="back">背面</option><option value="top">顶面</option><option value="underside">下视</option></select></label>
+<label>距离 <input id="pine-distance" type="range" min="2" max="200" step="1" value="30"><output id="pine-distance-label">30.00</output></label>
+<label>光照 <select id="pine-light"><option value="day">日光</option><option value="night">月光</option></select></label>
+<label>通道 <select id="pine-output"><option value="beauty">完整画面</option><option value="color">照明 / 无 AO</option><option value="normal">法线</option><option value="depth">深度</option><option value="ao">AO</option></select></label>
+<label><input id="pine-water" type="checkbox">实际水镜</label>
+<label>过渡 <input id="pine-phase" type="range" min="0" max="100" step="1" value="50"><output id="pine-phase-label">50%</output></label>
+<button id="pine-play">播放过渡</button><button id="pine-orbit">环绕</button><button id="pine-pause">暂停</button>
+<button id="pine-save">保存原生 PNG + JSON</button><button id="pine-dispose">释放</button>
+</div>
+<main class="workspace"><div id="pine-stage"><canvas aria-label="松枝簇原生对照画布"></canvas><div class="caption" id="pine-caption">准备真实枝簇，保留全部源几何。</div></div><aside class="panel"><p id="pine-status">读取源码身份…</p><p class="metrics" id="pine-metrics"></p><div id="pine-files"></div><details><summary>同帧证据与资源信息</summary><pre id="pine-readout"></pre></details><p class="metrics">固定 PBR / HDR / 4096 阴影 / 全尺寸 GTAO。候选保留两层深度，使用实际源颜色、覆盖及法线场；当前水镜相机参与照明与覆盖选择。请在 30–80 m 比较。有限像素的颗粒、斜向变化与运动仍待检查；本页不代表整树或园区准入。</p></aside></main>
+<script type="module" src="/src/yuanmingyuan/pine-cluster-studio.js"></script>
+</body></html>

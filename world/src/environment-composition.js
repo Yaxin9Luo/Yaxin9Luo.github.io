@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
 import {beveledBlock,assignArchitecturalUVs} from './architecture.js';
-import {surface,planarUV} from './landscape.js';
+import {surface,groundMaterial,planarUV} from './landscape.js';
 import {addScannedRocks,scannedRockReady,scannedRockSource} from './rock-scans.js';
 import {createGroveShrub,createGardenFlower} from './grove-foliage.js';
 import {attachWindShadows} from './environment-wind.js';
@@ -162,7 +162,7 @@ function masonryRuns(root,runs,heightAt){
   for(const [index,run] of runs.entries()){
     const [ax,az,bx,bz,top]=run,length=Math.hypot(bx-ax,bz-az),dx=(bx-ax)/length,dz=(bz-az)/length,rotation=Math.atan2(dx,dz),count=Math.ceil(length/1.26);
     for(let i=0;i<count;i++){
-      const t=(i+.5)/count,x=THREE.MathUtils.lerp(ax,bx,t),z=THREE.MathUtils.lerp(az,bz,t),ground=heightAt(x,z),bottom=Math.min(ground-.12,top-.7),height=top-bottom;
+      const t=(i+.5)/count,x=THREE.MathUtils.lerp(ax,bx,t),z=THREE.MathUtils.lerp(az,bz,t),ground=Math.min(...[-.6,0,.6].flatMap(u=>[-.7,.7].map(v=>heightAt(x+dx*u+dz*v,z+dz*u-dx*v)))),bottom=Math.min(ground-.12,top-.7),height=top-bottom;
       const rows=Math.max(2,Math.ceil(height/.46));
       for(let row=0;row<rows;row++){
         const h=height/rows-.022,y=bottom+(row+.5)*height/rows,joint=(row%2?.17:-.17),variation=.025*Math.sin(i*1.7+index+row),width=.76+(rows-row)*.075;
@@ -174,24 +174,57 @@ function masonryRuns(root,runs,heightAt){
   parts.forEach((list,i)=>{if(list.length)addMesh(root,mergeGeometries(list),materials[i],i?'Weathered limestone foundation caps':'Jointed mossy masonry footings');list.forEach(g=>g.dispose());});
 }
 
+function foundationAprons(root,groundGeometry){
+  if(!groundGeometry)return;
+  const runs=[{id:'west',a:[-29.1,-60],b:[-29.1,-17],out:[-1,0],width:9.2},{id:'east',a:[29.1,-17],b:[29.1,-60],out:[1,0],width:10.4},{id:'rear',a:[-28,-61.1],b:[28,-61.1],out:[0,-1],width:10.8}];
+  const ground=groundGeometry.attributes.position,normal=groundGeometry.attributes.normal,faces=groundGeometry.index;
+  for(const [r,run]of runs.entries()){
+    const positions=[],normals=[],colors=[],indices=[],vertices=new Map(),dx=run.b[0]-run.a[0],dz=run.b[1]-run.a[1],length2=dx*dx+dz*dz;
+    const footprint=(x,z)=>{
+      const t=((x-run.a[0])*dx+(z-run.a[1])*dz)/length2;
+      if(t<0||t>1)return null;
+      const across=(x-run.a[0])*run.out[0]+(z-run.a[1])*run.out[1],taper=.25+.75*Math.sin(t*Math.PI)**.35,width=run.width*taper*(1+.12*Math.sin(t*17+r)+.065*Math.sin(t*37-r));
+      return across>=0&&across<=width?across/width:null;
+    };
+    // Select the actual rendered triangles, including clipped shoreline faces.
+    // Their edges already encode every terrain break and water-channel gap.
+    for(let i=0;i<(faces?.count||ground.count);i+=3){
+      const ids=[0,1,2].map(j=>faces?faces.getX(i+j):i+j),x=ids.reduce((sum,j)=>sum+ground.getX(j),0)/3,z=ids.reduce((sum,j)=>sum+ground.getZ(j),0)/3;
+      if(footprint(x,z)===null)continue;
+      for(const id of ids){
+        if(!vertices.has(id)){
+          const x=ground.getX(id),z=ground.getZ(id),u=footprint(x,z)??1,color=new THREE.Color('#b5b5a1').lerp(new THREE.Color('#9fab8e'),THREE.MathUtils.smoothstep(u,.25,1));
+          vertices.set(id,positions.length/3);positions.push(x,ground.getY(id)+.026,z);colors.push(color.r,color.g,color.b);
+          if(normal)normals.push(normal.getX(id),normal.getY(id),normal.getZ(id));
+        }
+        indices.push(vertices.get(id));
+      }
+    }
+    const geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));geometry.setAttribute('color',new THREE.Float32BufferAttribute(colors,3));geometry.setIndex(indices);
+    if(normal)geometry.setAttribute('normal',new THREE.Float32BufferAttribute(normals,3));else geometry.computeVertexNormals();planarUV(geometry,.4);
+    const mesh=addMesh(root,geometry,surface('mossy-rock',{vertexColors:true,color:'#d0cebc',albedoStrength:.88,roughness:1}),`${run.id} foundation rock apron`);mesh.castShadow=false;
+  }
+}
+
 function groundPatch(root,patch,heightAt,free){
-  const positions=[],colors=[],indices=[],segments=64,bands=7,palette=palettes[patch.palette],phase=patch.x*.17+patch.z*.09;
+  const positions=[],colors=[],interior=[],indices=[],segments=64,bands=7,palette=palettes[patch.palette],phase=patch.x*.17+patch.z*.09;
   for(let row=0;row<bands;row++)for(let i=0;i<=segments;i++){
     const a=i/segments*TAU,r=(.008+row/(bands-1)*.992)*(1+.085*Math.sin(a*3+phase)+.052*Math.cos(a*5-phase)),x=patch.x+Math.cos(a)*patch.rx*r,z=patch.z+Math.sin(a)*patch.rz*r;
-    positions.push(x,heightAt(x,z)+.031,z);const c=new THREE.Color(palette[0]).lerp(new THREE.Color(palette[1]),row/(bands-1)*.42);colors.push(c.r,c.g,c.b);
+    positions.push(x,heightAt(x,z)+.031,z);const c=new THREE.Color(palette[0]).lerp(new THREE.Color(palette[1]),row/(bands-1)*.42);colors.push(c.r,c.g,c.b);interior.push(1-THREE.MathUtils.smoothstep(row/(bands-1),.32,1));
     if(row<bands-1&&i<segments){const q=row*(segments+1)+i;indices.push(q,q+1,q+segments+1,q+1,q+segments+2,q+segments+1);}
   }
   const kept=[];
   for(let i=0;i<indices.length;i+=3){const face=indices.slice(i,i+3);if(face.every(v=>free(positions[v*3],positions[v*3+2])))kept.push(...face);}
-  const geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));geometry.setAttribute('color',new THREE.Float32BufferAttribute(colors,3));geometry.setIndex(kept);geometry.computeVertexNormals();planarUV(geometry,.42);
-  const mesh=addMesh(root,geometry,surface('forest-ground',{vertexColors:true,color:'#e7e6cb',albedoStrength:.77,roughness:1,roughnessFloor:.9}),`${patch.id} irregular soil and moss ribbon`);mesh.castShadow=false;
+  const geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));geometry.setAttribute('color',new THREE.Float32BufferAttribute(colors,3));geometry.setAttribute('soilInterior',new THREE.Float32BufferAttribute(interior,1));geometry.setIndex(kept);geometry.computeVertexNormals();planarUV(geometry,.42);
+  const mesh=addMesh(root,geometry,groundMaterial({transition:true}),`${patch.id} irregular soil and moss ribbon`);mesh.castShadow=false;
 }
 
-export function createEnvironmentComposition(root,heightAt,nearPath=()=>false,{shoreline=[],shoreField=null}={}){
+export function createEnvironmentComposition(root,heightAt,nearPath=()=>false,{shoreline=[],shoreField=null,groundGeometry=null}={}){
   const group=new THREE.Group();group.name='Authored geology, castle footings and regional banks';root.add(group);
   const free=(x,z)=>heightAt(x,z)>.35&&!insideAuthoredGarden(x,z,.16)&&!nearPath(x,z);
   const rocks=[],shrubs=[],flowers={heather:[],ochre:[],sage:[]},placements=[];
   const runs=[[-29.9,-51,-29.9,-25,9.56],[29.9,-51,29.9,-26,9.56],[-26,-14.4,-13,-14.4,9.52],[14,-14.4,26,-14.4,9.52]];
+  foundationAprons(group,groundGeometry);
   masonryRuns(group,runs,heightAt);
   for(const [index,patch]of regionPatches.entries()){
     groundPatch(group,patch,heightAt,free);

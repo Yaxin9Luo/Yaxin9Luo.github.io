@@ -1,0 +1,31 @@
+{
+  "purpose": "Unchanged source sections and exact small mound buffers before the Xianfashan-only art revision",
+  "geometryFunctions": {
+    "landscapeMaterials": "8bc697676cc7d4ebb684057270c1f3d233a5fae249beec6a2bc8e4c8b22ecb8b",
+    "hillHeightSampler": "652f7f6a9325a65108a475830697a361a630fd122fc2201a6bbe6094d49a6498",
+    "spiralDeckGeometry": "d58c30b491c278d2462f8523ec55953c819f8789b526f67f80ff7e4d58a5cfcd",
+    "spiralParapetGeometry": "8bf0e0166d52285dcafca735d221a82304952d228e3ac1534671ea4c7f9e7fdc",
+    "gateWallGeometry": "8791f363101950eee6dff726bff294400d4cb5ff834a855774bf6dc1872bd3d0",
+    "pavilionRoofSampler": "207d53af54894207ee878bf70b4ca450fdedfdc58c80fb3f5d976089dbfb6649",
+    "octagonalTiledRoof": "5b325382d19dc839da755d423fb2d2c5bdaf041a1702ff082ba5bbddcb8d8ea6",
+    "scenicWingContour": "5ddc48e1379f1939f223b987227ffe3ff6e3866466c0a07d69e3b6f93fdc5878",
+    "paintedWingGeometry": "e05baf679334e0d332dd5158838907d9c38c847ddee9c3261d369c04315d1254",
+    "scenicPaintingTexture": "0172652107e90ddba9cf4787a0ce37a4c855e7a40251f70f6304a9c5a567fc4e",
+    "waterLanding": "c1e153d6c271a91d4a6cc8794e4005b258ca193033fdda7e271d67dfc540ed4c",
+    "fiveSluiceWallGeometry": "7c90da9d4f71eaaeb761b186bf281e4a1dfc1040af2bfd9b6255440f2c55df22",
+    "bridgeScreenGeometry": "b6b079c35bca2ff5988f56870e60b2b1bdbaff58cbd812ae49fe611c259127fe",
+    "bridgeScreenTop": "eb21e8f6f4b2aff8910158b87738b06781d51bbd36ec3a7ba74562d123ab69ef"
+  },
+  "otherStudiesSHA256": "d94a9cb288bde31d309b3b41eabf307605ba65ea85856f9cde1cd02d9b06fda6",
+  "otherStudioEntriesSHA256": "365a312bcb179248d87f0933800228d3b4e859d4573f4d0878cf16d848b38de5",
+  "sharedBuilders": {
+    "huanghuazhen-geometry.js": "be09035264511496e08f83b713927d671d7389c90224a7b3735f663d00fd5a13",
+    "yuanyingguan-geometry.js": "8067352e12aac8593daee2739a46467d4a46fc5cf9c4b96f34f1abf5828ed8d1",
+    "study-geometry.js": "f586fd7d5fa783f2ca3063391eb97bd233e33aded8f6b6211e4bf4453786f4ad"
+  },
+  "mound36": {
+    "position": "157fe548cad17adef3caf917084883669d1c5156ea6d33b4a533a1e2fd975dc2",
+    "normal": "31fec7dbaecc88306aa772614fc455c95e743592a14ddace2eabc949b1d9b90b",
+    "index": "bc4234cc4223b64490a994ad6da155f3441178068c56d064c3ab9cfadd472382"
+  }
+}
