@@ -1,6 +1,7 @@
 import {getGardenGroup} from './garden-layout.js';
 
 const definitions=[
+  {id:'wanfang-anhe',assetId:'wanfang-anhe',entryId:'wanfang-anhe',arrival:[34,8,17.92],focus:[0,4,0],guide:[39,2,17.92],placementOffset:[0,-2,0],alignment:'Align the authored waterline with the garden lake; local shore composition and .32 metre per chi remain reconstruction assumptions.'},
   {id:'yuanyingguan',assetId:'yuanyingguan',entryId:'yuanyingguan',arrival:[-14,8,14],focus:[0,8,-10],guide:[-16,0,22]},
   {id:'haiyantang',assetId:'haiyantang',entryId:'haiyantang',arrival:[0,15,40],focus:[0,10,-4],guide:[-20,0,23]},
   {id:'fangwaiguan',assetId:'fangwaiguan',entryId:'fangwaiguan',arrival:[0,9,11],focus:[0,5,0],guide:[9,0,10]},

@@ -2,6 +2,7 @@ import { Vector3 } from 'three';
 import { GROUND_MOTION } from '../ground-motion.js';
 
 const bodies = Object.freeze({
+  pine: { name: 'pine-r3-trunk-and-roots', kind: 'planting-trunk', bands: 4 },
   willow: { name: 'willow-trunk-and-roots', kind: 'planting-trunk', bands: 4 },
   juniper: { name: 'juniper-visible-trunk', kind: 'planting-trunk', bands: 4 },
   'lake-rock': { name: 'lake-rock-main', kind: 'planting-stone', bands: 5 },
@@ -132,7 +133,7 @@ export function createMuseumPlantingColliders(pilot, { terrain, reservedPolygons
   const solids = [], sources = [], clearances = [], ids = new Set();
   for (const part of pilot.parts) {
     signal?.throwIfAborted(); const { species, placementId } = part.userData, spec = bodies[species];
-    if (!spec || typeof placementId !== 'string' || ids.has(placementId)) throw new Error('Only unique registered willow/juniper/lake-rock placements are supported.');
+    if (!spec || typeof placementId !== 'string' || ids.has(placementId)) throw new Error('Only unique registered pine/willow/juniper/lake-rock placements are supported.');
     ids.add(placementId); const mesh = part.getObjectByName(spec.name); if (!mesh) throw new Error(`Missing original planting body: ${placementId}/${spec.name}`);
     const extracted = extractBody(mesh, part, spec, signal); solids.push(...extracted.solids); sources.push(extracted.source);
     for (const reserve of reserves) {

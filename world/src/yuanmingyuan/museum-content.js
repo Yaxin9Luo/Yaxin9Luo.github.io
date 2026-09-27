@@ -1,3 +1,7 @@
+import {wanfangAnheMuseumSources,wanfangAnheMuseumEntries,wanfangAnheMuseumImages} from './wanfang-anhe-museum-content.js';
+import {dagongmenMuseumSources,dagongmenMuseumEntries,dagongmenMuseumImages} from './dagongmen-museum-content.js';
+import {zhengdaGuangmingMuseumSources,zhengdaGuangmingMuseumEntries,zhengdaGuangmingMuseumImages} from './zhengda-guangming-museum-content.js';
+import {frontCourtMuseumSources,frontCourtMuseumEntries} from './front-court-museum-content.js';
 import {supplementalImages,supplementalEntryImages} from './museum-image-supplement.js';
 import {fuhaiSources,fuhaiEntries,fuhaiImageCandidates} from './fuhai-museum-content.js';
 import {hanjingtangSources,hanjingtangImages,hanjingtangEntries} from './hanjingtang-museum-content.js';
@@ -14,6 +18,8 @@ export const museumRegions=[
   {id:'qichunyuan',title:b('绮春园','Qichunyuan'),subtitle:b('相连的小园与水岸','Connected gardens and waterways')},
 ];
 export const museumSources={
+  ...wanfangAnheMuseumSources,
+  ...dagongmenMuseumSources,...zhengdaGuangmingMuseumSources,...frontCourtMuseumSources,
   ...haiyueMuseumSources,
   ...jiuzhouMuseumSources,
   ...fuhaiSources,
@@ -43,6 +49,8 @@ export const museumSources={
   xianfaqiaoPhotographs:{title:b('中国摄影家协会所刊 · 线法桥历史照片','Historic photographs of Xianfaqiao, reproduced on the China Photographers Association website'),url:'https://www.cpanet.org.cn/uploads/soft/141209/xtt1.pdf',kind:b('Bennett 摄影史试读，图 5.28、5.40；毁后影像','Bennett photography-history sample, figures 5.28 and 5.40; post-destruction photographs')},
 };
 export const museumImages={
+  ...wanfangAnheMuseumImages,
+  ...dagongmenMuseumImages,...zhengdaGuangmingMuseumImages,
   ...haiyueMuseumImages,
   ...jiuzhouMuseumImages,
   ...hanjingtangImages,
@@ -55,6 +63,8 @@ export const museumImages={
 const northCourtExhibitionNote=b('历史图像可用于比照建筑与庭园的关系。本场景新增的北院花带、植物搭配、种植土和铺地材质属于当代展陈设计；其确切历史尺度、植栽与材质仍待考证。','Historical images provide a reference for the relationship between the buildings and gardens. The new north-court planting beds, plant mix, soil and paving materials are contemporary exhibition design; their exact historical dimensions, planting and materials remain to be established.');
 const entry=(id,region,kind,title,lead,paragraphs,sources,related=[],images=[],note=null)=>({id,region,kind,title,lead,paragraphs,sources,related,images,note});
 export const museumEntries=[
+  ...wanfangAnheMuseumEntries,
+  ...dagongmenMuseumEntries,...zhengdaGuangmingMuseumEntries,...frontCourtMuseumEntries,
   ...haiyueEntries,
   ...jiuzhouMuseumEntries,
   ...zhengjuesiEntries,

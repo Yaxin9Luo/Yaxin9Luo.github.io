@@ -7,9 +7,9 @@ import {jiuzhouCompositionId,jiuzhouSiteId,jiuzhouIslandId,jiuzhouCompositionVie
 async function loadOriginal(id,{signal}){
   if(id!=='jiuzhou')throw new Error('Unknown Jiuzhou source.');
   signal.throwIfAborted();
-  const {prepareJiuzhouSurfaceSource}=await import('./jiuzhou-surface-source.js');
+  const {prepareJiuzhouCourtyardSource}=await import('./jiuzhou-courtyard-source.js');
   signal.throwIfAborted();
-  return prepareJiuzhouSurfaceSource({signal});
+  return prepareJiuzhouCourtyardSource({signal});
 }
 function sameRing(a,b){
   if(!Array.isArray(a)||a.length!==b.length)return false;
@@ -81,7 +81,7 @@ export function createJiuzhouComposition({root,signal,load=loadOriginal,layout,l
   function assertPlacement(){
     const record=ensemble.get(jiuzhouSiteId);
     if(!record||record.owner.disposed||record.support.disposed||record.owner.group.parent!==ensemble.group)throw new Error('Jiuzhou original owner or support is unavailable.');
-    record.owner.group.updateWorldMatrix(true,true);
+    record.owner.group.updateWorldMatrix(true,false);
     const expected=[1,0,0,0,0,1,0,0,0,0,1,0,...site.position,1];
     for(const node of new Set([record.owner.group,record.owner.collisionGroup].filter(Boolean))){
       node.updateWorldMatrix(true,false);

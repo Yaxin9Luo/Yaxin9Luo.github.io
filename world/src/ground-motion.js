@@ -48,7 +48,7 @@ function obstructed(x,y,z,radius,height,world){
 }
 /** Returns {valid,y,normal,surfaceId,reason}. No input or world mutation. */
 export function queryGroundSupport({x,z,feetY=0,maxRise=GROUND_MOTION.stepUp,maxDrop=GROUND_MOTION.stepDown,
-  radius=GROUND_MOTION.radius,height=GROUND_MOTION.height,allowSteps=false},world){
+  radius=GROUND_MOTION.radius,height=GROUND_MOTION.height,allowSteps=false,settleFootprint=false},world){
   if(!world||typeof world.heightAt!=='function'||![x,z,feetY,maxRise,maxDrop,radius,height].every(Number.isFinite))return {valid:false,reason:'no-support'};
   let hit=pointSurface(x,z,feetY+maxRise,world,allowSteps?feetY:undefined);
   if(allowSteps)hit=footprintStep(x,z,feetY,radius,maxRise,hit,world);
@@ -57,19 +57,24 @@ export function queryGroundSupport({x,z,feetY=0,maxRise=GROUND_MOTION.stepUp,max
   const minNormal=Math.cos((world.maxSlope??GROUND_MOTION.maxSlope)*Math.PI/180);
   if(hit.normal.y<minNormal)return {...hit,valid:false,reason:'slope'};
   if(hit.y<feetY-maxDrop-EPS)return {...hit,valid:false,reason:'edge'};
+  let footprintHit=hit;
   for(let i=0;i<8;i++){
     const angle=i*Math.PI/4,sample=pointSurface(x+Math.cos(angle)*radius,z+Math.sin(angle)*radius,allowSteps?feetY+maxRise:hit.y+radius*Math.tan(GROUND_MOTION.maxSlope*Math.PI/180)+.015,world,allowSteps?feetY:undefined);
     if(!sample||sample.y<=(world.waterLevel??GROUND_MOTION.waterLevel)+.05||Math.abs(sample.y-hit.y)>(allowSteps?Math.max(maxRise,maxDrop):Math.max(.035,radius*Math.tan(GROUND_MOTION.maxSlope*Math.PI/180)+.015)))return {...hit,valid:false,reason:'edge'};
     const smallBevel=allowSteps&&sample.top<=feetY+maxRise+EPS&&sample.bottom<=feetY+GROUND_MOTION.skin&&sample.top-sample.y<=GROUND_MOTION.skin;
     if(sample.normal.y<minNormal&&!smallBevel)return {...hit,valid:false,reason:'slope'};
     if(allowSteps&&sample.y>hit.y&&sample.y<=feetY+maxRise+EPS)hit=sample;
+    if(settleFootprint&&!allowSteps&&sample.y>footprintHit.y&&sample.y<=feetY+maxRise+EPS)footprintHit=sample;
   }
+  // A sole can span a recessed joint. Keep every original landing edge/slope
+  // check above, then rest on the highest actual validated footprint contact.
+  if(settleFootprint&&!allowSteps)hit=footprintHit;
   if(obstructed(x,hit.y,z,radius,height,world))return {...hit,valid:false,reason:'blocked'};
   return {...hit,valid:true,reason:null};
 }
 /** Finds support directly below; the caller owns the safe flight approach. */
 export function findSafeLanding(position,world,options={}){
-  return queryGroundSupport({x:position.x,z:position.z,feetY:position.y,maxRise:0,maxDrop:Math.max(0,position.y-(world.waterLevel??GROUND_MOTION.waterLevel)),...options},world);
+  return queryGroundSupport({x:position.x,z:position.z,feetY:position.y,maxRise:0,maxDrop:Math.max(0,position.y-(world.waterLevel??GROUND_MOTION.waterLevel)),settleFootprint:true,...options},world);
 }
 /** Camera-relative direction should already be converted to world X/Z by caller. */
 export function stepGroundMotion(state,input,dt,world){

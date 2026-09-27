@@ -1,0 +1,162 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="1024" viewBox="0 0 1120 1024" role="img" aria-labelledby="title desc">
+<title id="title">万方安和：分间与水院 / Wanfang Anhe: bays and water inlets</title>
+<desc id="desc">数字模型平面关系示意，中央十字十三间，外围四支各五间；三座桥与南面码头连接水陆。此为当代解释图，不是清代原图或实测图。 Interpretive diagram of the digital model: thirteen central bays, four wings of five bays, three bridges and a southern landing. Not a Qing drawing or measured survey.</desc>
+<defs><linearGradient id="water" x2="0" y2="1"><stop stop-color="#c2dfd5"/><stop offset="1" stop-color="#9fc8c0"/></linearGradient><pattern id="ripples" width="116" height="62" patternUnits="userSpaceOnUse"><path d="M 15 30 Q 27 25 39 30 T 63 30" fill="none" stroke="#ffffff" stroke-opacity=".16" stroke-width="1"/></pattern></defs>
+<g font-family="Noto Sans CJK SC, Noto Sans, sans-serif">
+<rect width="1120" height="1024" fill="#f4f0e5"/>
+<text x="54" y="57" font-size="32" fill="#233f3c" font-weight="600">万方安和</text>
+<text x="1065" y="55" font-size="17" fill="#5d7870" text-anchor="end" letter-spacing="2">WANFANG ANHE</text>
+<text x="54" y="92" font-size="18" fill="#627c72" >分间与水院 · 平面关系示意</text>
+<text x="1065" y="91" font-size="18" fill="#627c72" text-anchor="end">Bays &amp; water inlets</text>
+<rect x="32" y="120" width="1056" height="700" rx="3" fill="url(#water)"/>
+<rect x="32" y="120" width="1056" height="700" rx="3" fill="url(#ripples)"/>
+<path d="M 992 212 L 992 158 M 982 175 L 992 151 L 1002 175" fill="none" stroke="#365e57" stroke-width="1.8"/>
+<text x="992" y="144" font-size="14" fill="#365e57" text-anchor="middle">北 / N</text>
+<polygon data-bridge="northwest-one-span-bridge" points="303.44,241.32 303.44,147.72 326.48,147.72 326.48,241.32" fill="#ddd3b9" stroke="#807e66" stroke-width="1.3"/>
+<circle cx="314.96" cy="134.52" r="13" fill="#496d63"/>
+<text x="314.96" y="139.52" font-size="14" fill="#fffdf3" text-anchor="middle" font-weight="600">1</text>
+<polygon data-bridge="northeast-three-span-bridge" points="789.68,274.44 914,274.44 914,297.48 789.68,297.48" fill="#ddd3b9" stroke="#807e66" stroke-width="1.3"/>
+<path d="M 825.52 274.44 L 825.52 297.48" fill="none" stroke="#9c977e" stroke-width="1"/>
+<path d="M 861.36 274.44 L 861.36 297.48" fill="none" stroke="#9c977e" stroke-width="1"/>
+<circle cx="927.2" cy="285.96" r="13" fill="#496d63"/>
+<text x="927.2" y="290.96" font-size="14" fill="#fffdf3" text-anchor="middle" font-weight="600">2</text>
+<polygon data-bridge="southeast-one-span-bridge" points="789.68,704.52 883.28,704.52 883.28,727.56 789.68,727.56" fill="#ddd3b9" stroke="#807e66" stroke-width="1.3"/>
+<circle cx="896.48" cy="716.04" r="13" fill="#496d63"/>
+<text x="896.48" y="721.04" font-size="14" fill="#fffdf3" text-anchor="middle" font-weight="600">3</text>
+<polygon points="270.32,241.32 574.64,241.32 574.64,456.36 700.4,456.36 700.4,241.32 789.68,241.32 789.68,545.64 574.64,545.64 574.64,671.4 789.68,671.4 789.68,760.68 485.36,760.68 485.36,545.64 359.6,545.64 359.6,760.68 270.32,760.68 270.32,456.36 485.36,456.36 485.36,330.6 270.32,330.6" fill="#716f53" opacity=".10" transform="translate(2 4)"/>
+<polygon id="stone-platform" points="270.32,241.32 574.64,241.32 574.64,456.36 700.4,456.36 700.4,241.32 789.68,241.32 789.68,545.64 574.64,545.64 574.64,671.4 789.68,671.4 789.68,760.68 485.36,760.68 485.36,545.64 359.6,545.64 359.6,760.68 270.32,760.68 270.32,456.36 485.36,456.36 485.36,330.6 270.32,330.6" fill="#e8ddc4" stroke="#817f65" stroke-width="1.8"/>
+<rect data-bay="central-1" data-part="central" x="341.84" y="474.12" width="53.76" height="53.76" fill="#d4c195" stroke="#ab966d" stroke-width=".85"/>
+<rect data-bay="central-2" data-part="central" x="395.6" y="474.12" width="53.76" height="53.76" fill="#d4c195" stroke="#ab966d" stroke-width=".85"/>
+<rect data-bay="central-3" data-part="central" x="449.36" y="474.12" width="53.76" height="53.76" fill="#d4c195" stroke="#ab966d" stroke-width=".85"/>
+<rect data-bay="central-4" data-part="central" x="503.12" y="474.12" width="53.76" height="53.76" fill="#d4c195" stroke="#ab966d" stroke-width=".85"/>
+<rect data-bay="central-5" data-part="central" x="556.88" y="474.12" width="53.76" height="53.76" fill="#d4c195" stroke="#ab966d" stroke-width=".85"/>
+<rect data-bay="central-6" data-part="central" x="610.64" y="474.12" width="53.76" height="53.76" fill="#d4c195" stroke="#ab966d" stroke-width=".85"/>
+<rect data-bay="central-7" data-part="central" x="664.4" y="474.12" width="53.76" height="53.76" fill="#d4c195" stroke="#ab966d" stroke-width=".85"/>
+<rect data-bay="central-8" data-part="central" x="503.12" y="312.84" width="53.76" height="53.76" fill="#d4c195" stroke="#ab966d" stroke-width=".85"/>
+<rect data-bay="central-9" data-part="central" x="503.12" y="366.6" width="53.76" height="53.76" fill="#d4c195" stroke="#ab966d" stroke-width=".85"/>
+<rect data-bay="central-10" data-part="central" x="503.12" y="420.36" width="53.76" height="53.76" fill="#d4c195" stroke="#ab966d" stroke-width=".85"/>
+<rect data-bay="central-11" data-part="central" x="503.12" y="527.88" width="53.76" height="53.76" fill="#d4c195" stroke="#ab966d" stroke-width=".85"/>
+<rect data-bay="central-12" data-part="central" x="503.12" y="581.64" width="53.76" height="53.76" fill="#d4c195" stroke="#ab966d" stroke-width=".85"/>
+<rect data-bay="central-13" data-part="central" x="503.12" y="635.4" width="53.76" height="53.76" fill="#d4c195" stroke="#ab966d" stroke-width=".85"/>
+<rect data-bay="north-1" data-part="north" x="288.08" y="259.08" width="53.76" height="53.76" fill="#76a596" stroke="#528475" stroke-width=".85"/>
+<rect data-bay="north-2" data-part="north" x="341.84" y="259.08" width="53.76" height="53.76" fill="#76a596" stroke="#528475" stroke-width=".85"/>
+<rect data-bay="north-3" data-part="north" x="395.6" y="259.08" width="53.76" height="53.76" fill="#76a596" stroke="#528475" stroke-width=".85"/>
+<rect data-bay="north-4" data-part="north" x="449.36" y="259.08" width="53.76" height="53.76" fill="#76a596" stroke="#528475" stroke-width=".85"/>
+<rect data-bay="north-5" data-part="north" x="503.12" y="259.08" width="53.76" height="53.76" fill="#76a596" stroke="#528475" stroke-width=".85"/>
+<rect data-bay="east-1" data-part="east" x="718.16" y="259.08" width="53.76" height="53.76" fill="#76a596" stroke="#528475" stroke-width=".85"/>
+<rect data-bay="east-2" data-part="east" x="718.16" y="312.84" width="53.76" height="53.76" fill="#76a596" stroke="#528475" stroke-width=".85"/>
+<rect data-bay="east-3" data-part="east" x="718.16" y="366.6" width="53.76" height="53.76" fill="#76a596" stroke="#528475" stroke-width=".85"/>
+<rect data-bay="east-4" data-part="east" x="718.16" y="420.36" width="53.76" height="53.76" fill="#76a596" stroke="#528475" stroke-width=".85"/>
+<rect data-bay="east-5" data-part="east" x="718.16" y="474.12" width="53.76" height="53.76" fill="#76a596" stroke="#528475" stroke-width=".85"/>
+<rect data-bay="south-1" data-part="south" x="503.12" y="689.16" width="53.76" height="53.76" fill="#76a596" stroke="#528475" stroke-width=".85"/>
+<rect data-bay="south-2" data-part="south" x="556.88" y="689.16" width="53.76" height="53.76" fill="#76a596" stroke="#528475" stroke-width=".85"/>
+<rect data-bay="south-3" data-part="south" x="610.64" y="689.16" width="53.76" height="53.76" fill="#76a596" stroke="#528475" stroke-width=".85"/>
+<rect data-bay="south-4" data-part="south" x="664.4" y="689.16" width="53.76" height="53.76" fill="#76a596" stroke="#528475" stroke-width=".85"/>
+<rect data-bay="south-5" data-part="south" x="718.16" y="689.16" width="53.76" height="53.76" fill="#76a596" stroke="#528475" stroke-width=".85"/>
+<rect data-bay="west-1" data-part="west" x="288.08" y="474.12" width="53.76" height="53.76" fill="#76a596" stroke="#528475" stroke-width=".85"/>
+<rect data-bay="west-2" data-part="west" x="288.08" y="527.88" width="53.76" height="53.76" fill="#76a596" stroke="#528475" stroke-width=".85"/>
+<rect data-bay="west-3" data-part="west" x="288.08" y="581.64" width="53.76" height="53.76" fill="#76a596" stroke="#528475" stroke-width=".85"/>
+<rect data-bay="west-4" data-part="west" x="288.08" y="635.4" width="53.76" height="53.76" fill="#76a596" stroke="#528475" stroke-width=".85"/>
+<rect data-bay="west-5" data-part="west" x="288.08" y="689.16" width="53.76" height="53.76" fill="#76a596" stroke="#528475" stroke-width=".85"/>
+<polygon points="288.08,259.08 556.88,259.08 556.88,474.12 718.16,474.12 718.16,259.08 771.92,259.08 771.92,527.88 556.88,527.88 556.88,689.16 771.92,689.16 771.92,742.92 503.12,742.92 503.12,527.88 341.84,527.88 341.84,742.92 288.08,742.92 288.08,474.12 503.12,474.12 503.12,312.84 288.08,312.84" fill="none" stroke="#4a6a5e" stroke-width="2"/>
+<rect x="340.24" y="472.52" width="3.2" height="3.2" fill="#365f53"/>
+<rect x="340.24" y="526.28" width="3.2" height="3.2" fill="#365f53"/>
+<rect x="394" y="472.52" width="3.2" height="3.2" fill="#365f53"/>
+<rect x="394" y="526.28" width="3.2" height="3.2" fill="#365f53"/>
+<rect x="447.76" y="472.52" width="3.2" height="3.2" fill="#365f53"/>
+<rect x="447.76" y="526.28" width="3.2" height="3.2" fill="#365f53"/>
+<rect x="501.52" y="472.52" width="3.2" height="3.2" fill="#365f53"/>
+<rect x="501.52" y="526.28" width="3.2" height="3.2" fill="#365f53"/>
+<rect x="555.28" y="472.52" width="3.2" height="3.2" fill="#365f53"/>
+<rect x="555.28" y="526.28" width="3.2" height="3.2" fill="#365f53"/>
+<rect x="609.04" y="472.52" width="3.2" height="3.2" fill="#365f53"/>
+<rect x="609.04" y="526.28" width="3.2" height="3.2" fill="#365f53"/>
+<rect x="662.8" y="472.52" width="3.2" height="3.2" fill="#365f53"/>
+<rect x="662.8" y="526.28" width="3.2" height="3.2" fill="#365f53"/>
+<rect x="716.56" y="472.52" width="3.2" height="3.2" fill="#365f53"/>
+<rect x="716.56" y="526.28" width="3.2" height="3.2" fill="#365f53"/>
+<rect x="501.52" y="311.24" width="3.2" height="3.2" fill="#365f53"/>
+<rect x="501.52" y="365" width="3.2" height="3.2" fill="#365f53"/>
+<rect x="555.28" y="311.24" width="3.2" height="3.2" fill="#365f53"/>
+<rect x="555.28" y="365" width="3.2" height="3.2" fill="#365f53"/>
+<rect x="501.52" y="418.76" width="3.2" height="3.2" fill="#365f53"/>
+<rect x="555.28" y="418.76" width="3.2" height="3.2" fill="#365f53"/>
+<rect x="501.52" y="580.04" width="3.2" height="3.2" fill="#365f53"/>
+<rect x="555.28" y="580.04" width="3.2" height="3.2" fill="#365f53"/>
+<rect x="501.52" y="633.8" width="3.2" height="3.2" fill="#365f53"/>
+<rect x="555.28" y="633.8" width="3.2" height="3.2" fill="#365f53"/>
+<rect x="501.52" y="687.56" width="3.2" height="3.2" fill="#365f53"/>
+<rect x="555.28" y="687.56" width="3.2" height="3.2" fill="#365f53"/>
+<rect x="286.48" y="257.48" width="3.2" height="3.2" fill="#365f53"/>
+<rect x="286.48" y="311.24" width="3.2" height="3.2" fill="#365f53"/>
+<rect x="340.24" y="257.48" width="3.2" height="3.2" fill="#365f53"/>
+<rect x="340.24" y="311.24" width="3.2" height="3.2" fill="#365f53"/>
+<rect x="394" y="257.48" width="3.2" height="3.2" fill="#365f53"/>
+<rect x="394" y="311.24" width="3.2" height="3.2" fill="#365f53"/>
+<rect x="447.76" y="257.48" width="3.2" height="3.2" fill="#365f53"/>
+<rect x="447.76" y="311.24" width="3.2" height="3.2" fill="#365f53"/>
+<rect x="501.52" y="257.48" width="3.2" height="3.2" fill="#365f53"/>
+<rect x="555.28" y="257.48" width="3.2" height="3.2" fill="#365f53"/>
+<rect x="716.56" y="257.48" width="3.2" height="3.2" fill="#365f53"/>
+<rect x="716.56" y="311.24" width="3.2" height="3.2" fill="#365f53"/>
+<rect x="770.32" y="257.48" width="3.2" height="3.2" fill="#365f53"/>
+<rect x="770.32" y="311.24" width="3.2" height="3.2" fill="#365f53"/>
+<rect x="716.56" y="365" width="3.2" height="3.2" fill="#365f53"/>
+<rect x="770.32" y="365" width="3.2" height="3.2" fill="#365f53"/>
+<rect x="716.56" y="418.76" width="3.2" height="3.2" fill="#365f53"/>
+<rect x="770.32" y="418.76" width="3.2" height="3.2" fill="#365f53"/>
+<rect x="770.32" y="472.52" width="3.2" height="3.2" fill="#365f53"/>
+<rect x="770.32" y="526.28" width="3.2" height="3.2" fill="#365f53"/>
+<rect x="501.52" y="741.32" width="3.2" height="3.2" fill="#365f53"/>
+<rect x="555.28" y="741.32" width="3.2" height="3.2" fill="#365f53"/>
+<rect x="609.04" y="687.56" width="3.2" height="3.2" fill="#365f53"/>
+<rect x="609.04" y="741.32" width="3.2" height="3.2" fill="#365f53"/>
+<rect x="662.8" y="687.56" width="3.2" height="3.2" fill="#365f53"/>
+<rect x="662.8" y="741.32" width="3.2" height="3.2" fill="#365f53"/>
+<rect x="716.56" y="687.56" width="3.2" height="3.2" fill="#365f53"/>
+<rect x="716.56" y="741.32" width="3.2" height="3.2" fill="#365f53"/>
+<rect x="770.32" y="687.56" width="3.2" height="3.2" fill="#365f53"/>
+<rect x="770.32" y="741.32" width="3.2" height="3.2" fill="#365f53"/>
+<rect x="286.48" y="472.52" width="3.2" height="3.2" fill="#365f53"/>
+<rect x="286.48" y="526.28" width="3.2" height="3.2" fill="#365f53"/>
+<rect x="286.48" y="580.04" width="3.2" height="3.2" fill="#365f53"/>
+<rect x="340.24" y="580.04" width="3.2" height="3.2" fill="#365f53"/>
+<rect x="286.48" y="633.8" width="3.2" height="3.2" fill="#365f53"/>
+<rect x="340.24" y="633.8" width="3.2" height="3.2" fill="#365f53"/>
+<rect x="286.48" y="687.56" width="3.2" height="3.2" fill="#365f53"/>
+<rect x="340.24" y="687.56" width="3.2" height="3.2" fill="#365f53"/>
+<rect x="286.48" y="741.32" width="3.2" height="3.2" fill="#365f53"/>
+<rect x="340.24" y="741.32" width="3.2" height="3.2" fill="#365f53"/>
+<rect data-dock-tread="1" x="622.16" y="760.68" width="30.72" height="3.943" fill="#ddd1b4" stroke="#918b72" stroke-width=".7"/>
+<rect data-dock-tread="2" x="622.16" y="764.623" width="30.72" height="3.943" fill="#ddd1b4" stroke="#918b72" stroke-width=".7"/>
+<rect data-dock-tread="3" x="622.16" y="768.566" width="30.72" height="3.943" fill="#ddd1b4" stroke="#918b72" stroke-width=".7"/>
+<rect data-dock-tread="4" x="622.16" y="772.509" width="30.72" height="3.943" fill="#ddd1b4" stroke="#918b72" stroke-width=".7"/>
+<rect data-dock-tread="5" x="622.16" y="776.451" width="30.72" height="3.943" fill="#ddd1b4" stroke="#918b72" stroke-width=".7"/>
+<rect data-dock-tread="6" x="622.16" y="780.394" width="30.72" height="3.943" fill="#ddd1b4" stroke="#918b72" stroke-width=".7"/>
+<rect data-dock-tread="7" x="622.16" y="784.337" width="30.72" height="3.943" fill="#ddd1b4" stroke="#918b72" stroke-width=".7"/>
+<text x="530" y="509" font-size="25" fill="#674f2c" text-anchor="middle" font-weight="600">13</text>
+<text x="422.48" y="293.96" font-size="25" fill="#234f40" text-anchor="middle" font-weight="600">5</text>
+<text x="745.04" y="401.48" font-size="25" fill="#234f40" text-anchor="middle" font-weight="600">5</text>
+<text x="637.52" y="724.04" font-size="25" fill="#234f40" text-anchor="middle" font-weight="600">5</text>
+<text x="314.96" y="616.52" font-size="25" fill="#234f40" text-anchor="middle" font-weight="600">5</text>
+<path d="M 400.48 389.48 q 11 -7 22 0 t 22 0 M 400.48 400.48 q 11 -7 22 0 t 22 0" fill="none" stroke="#68998e" stroke-width="1.6" opacity=".8"/>
+<path d="M 615.52 389.48 q 11 -7 22 0 t 22 0 M 615.52 400.48 q 11 -7 22 0 t 22 0" fill="none" stroke="#68998e" stroke-width="1.6" opacity=".8"/>
+<path d="M 615.52 604.52 q 11 -7 22 0 t 22 0 M 615.52 615.52 q 11 -7 22 0 t 22 0" fill="none" stroke="#68998e" stroke-width="1.6" opacity=".8"/>
+<path d="M 400.48 604.52 q 11 -7 22 0 t 22 0 M 400.48 615.52 q 11 -7 22 0 t 22 0" fill="none" stroke="#68998e" stroke-width="1.6" opacity=".8"/>
+<path d="M 637.52 792.28 L 637.52 799" fill="none" stroke="#6d897b" stroke-width="1"/>
+<text x="655.52" y="791" font-size="17" fill="#365e57" >南面码头</text>
+<text x="655.52" y="812" font-size="13" fill="#50786c" >Boat landing</text>
+<rect x="58" y="852" width="19" height="19" fill="#d4c195" stroke="#ab966d"/>
+<text x="89" y="868" font-size="18" fill="#294f4b" >中央十字：13 间</text>
+<text x="89" y="893" font-size="14" fill="#697c70" >Central cross · 13 bays</text>
+<rect x="423" y="852" width="19" height="19" fill="#76a596" stroke="#528475"/>
+<text x="454" y="868" font-size="18" fill="#294f4b" >外围四支：各 5 间</text>
+<text x="454" y="893" font-size="14" fill="#697c70" >Four wings · 5 bays each</text>
+<circle cx="803" cy="861" r="12" fill="#496d63"/>
+<text x="803" y="866" font-size="13" fill="#fffdf3" text-anchor="middle">1</text>
+<text x="825" y="868" font-size="18" fill="#294f4b" >三处桥接岸</text>
+<text x="825" y="893" font-size="14" fill="#697c70" >Three bridges to shore</text>
+<path d="M 54 920 H 1066" stroke="#d5d2bf"/>
+<text x="54" y="952" font-size="17" fill="#617267" >按数字模型绘制；“间”是柱间分段，不等于封闭房间。</text>
+<text x="54" y="978" font-size="15" fill="#617267" >Interpretive model plan; not a Qing drawing or measured survey.</text>
+</g></svg>

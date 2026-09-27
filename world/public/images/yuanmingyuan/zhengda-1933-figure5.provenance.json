@@ -1,0 +1,20 @@
+{
+  "role": "historical-plan-reproduction",
+  "sourcePDF": {
+    "path": "work/yuanmingyuan/zhengda-guangming-primary-study-r1/1933-primary-r1/NLC-1933-v4-n2.pdf",
+    "sha256": "f057108aa3b4d4d284b94892d1c34aab96ed16ab7c1231d8cb10b05e878960bf",
+    "bytes": 11289308
+  },
+  "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/6/61/NLC404-01J000317-23042_%E4%B8%AD%E5%9C%8B%E7%87%9F%E9%80%A0%E5%AD%B8%E7%A4%BE%E5%BD%99%E5%88%8A_1933%E5%B9%B44%E5%8D%B72%E6%9C%9F.pdf",
+  "figure": 5,
+  "pdfPage": 189,
+  "originalPageRender": {
+    "path": "work/yuanmingyuan/zhengda-guangming-primary-study-r1/1933-primary-r1/analysis-r1/page-renders/pdf-189-full.png",
+    "sha256": "6a35473600cfbe98e0b63ceb7a9e66b79b6989aba9751d09bce997b408dee6f1"
+  },
+  "publicCandidateSHA256": "6a35473600cfbe98e0b63ceb7a9e66b79b6989aba9751d09bce997b408dee6f1",
+  "transformation": "Byte-identical copy of the full page render; no crop, retouch, OCR, AI enhancement or invented annotations.",
+  "rightsSource": "https://commons.wikimedia.org/wiki/File:NLC404-01J000317-23042_中國營造學社彙刊_1933年4卷2期.pdf",
+  "rightsStatement": "Historical plan reproduced in a 1933 journal; consult the linked source catalog rights notice. No ownership of the historical plan is claimed.",
+  "published": false
+}

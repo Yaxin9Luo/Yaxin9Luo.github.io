@@ -151,7 +151,7 @@ const groups=[
   group('jiuzhou-north','九洲北部水院','yuanmingyuan',[323,382],['ciyun-puhu','shangxia-tianguang'],{museumEntryId:'jiuzhou',heightHint:15}),
   group('jiuzhou-west','九洲西部园居','yuanmingyuan',[258,441],['xinghua-chunguan','tantan-dangdang','rugu-hanjin'],{museumEntryId:'jiuzhou',heightHint:12}),
   group('changchun-xianguan','长春仙馆','yuanmingyuan',[284,558],['changchun-xianguan','western-court-galleries'],{heightHint:12}),
-  group('wanfang-anhe','万方安和','yuanmingyuan',[236,335],['wanfang-anhe'],{heightHint:10}),
+  group('wanfang-anhe','万方安和','yuanmingyuan',[236,335],['wanfang-anhe'],{heightHint:10,assetId:'wanfang-anhe',museumEntryId:'wanfang-anhe',limit:'Source-informed 33-bay reconstruction. Tongzhi rebuilding records and later model photographs are distinguished from pre-1860 evidence; local shore shape and the .32 m/chi scale are inferred.'}),
   group('wuling-chunse','武陵春色与西路园中园','yuanmingyuan',[239,287],['wuling-chunse','western-rock-and-water-gardens'],{heightHint:13}),
   group('anyougong-northwest','安佑宫与西北宗教园林','yuanmingyuan',[114,191],['anyougong','ritian-linyu','huifang-shuyuan'],{heightHint:20}),
   group('north-rural-gardens','北路农桑与村居','yuanmingyuan',[580,82],['duojia-ruyun','yuyue-yuanfei','beiyuan-shancun'],{heightHint:10}),

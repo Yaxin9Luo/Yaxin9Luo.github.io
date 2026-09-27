@@ -1,5 +1,7 @@
 import '../published-three-assets.js';
 import * as THREE from 'three';
+import {createWanfangAnheShore} from './wanfang-anhe-shore.js';
+import {prepareWanfangAnheGroundSurface} from './wanfang-anhe-ground-surface.js';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 import {createMuseumLandscape,configureMuseumLandscapeAsset} from './museum-landscape.js';
 import {createGardenTerrain} from './garden-terrain.js';
@@ -15,6 +17,7 @@ import {createMuseumGuidePool} from './guide-pool.js';
 import {createMuseumGuides} from './museum-guides.js';
 import {createMuseumGuideEnsemble} from './museum-guide-ensemble.js';
 import {createMuseumGuideWorld} from './museum-guide-world.js';
+import {createFrontCourtMuseumLandscape} from './front-court-museum-landscape.js';
 import {selectMuseumGuidePlacements} from './museum-guide-placement.js';
 import {createMuseumSiteController} from './site-controller.js';
 import {museumSites,museumSite,sitePoint,museumCourts} from './museum-sites.js';
@@ -40,9 +43,11 @@ import {createMuseumPausedRedraw} from './museum-paused-redraw.js';
 import {setWillowSampling,willowSamplingProgramAudit} from './willow-distance-sampling.js';
 import {createXianfaqiaoComposition,xianfaqiaoRouteLanding} from './xianfaqiao-composition.js';
 import {createJiuzhouComposition,jiuzhouViewLanding} from './jiuzhou-composition.js';
+import {createFrontCourtMuseum,frontCourtViewLanding,isFrontCourtRoute,frontCourtSiteId,frontCourtRequestedSite,frontCourtMapGeometry} from './front-court-museum.js';
 import {createXianfaqiaoGardenPlantingLayout} from './xianfaqiao-garden-planting.js';
 import {extendFuhaiNortheastBankContext,fuhaiNortheastBankContextRegionId} from './fuhai-ne-bank-context-r1.js';
 import {gardenReviewCameraSightline} from './garden-review-camera.js';
+import {resolveMuseumCameraPose} from './museum-camera-clearance.js';
 import {createWesternGardenScenePlanting} from './western-garden-scene.js';
 import {createJiuzhouShoreGrove} from './jiuzhou-shore-grove.js';
 import {createXieqiquCourtGardenOwner} from './xieqiqu-court-garden-owner.js';
@@ -70,12 +75,18 @@ if(query.get('composition')==='jiuzhou'){
   Object.assign(copy.en,{mapTitle:'Jiuzhou Qingyan: courts and waterfront',study:'One complete architectural assembly · Proportional study',mapIntro:'Four views share one complete assembly. Fly to a court or land at its safe entry. About 12.47 m of open water still separates the original Ruyi south landing from the mainland. Exhibits identify historical evidence and unresolved parts.'});
   copy.zh.mapIntro+=' 外围岸林为当代展园设计。';copy.en.mapIntro+=' The peripheral shore groves are contemporary exhibition planting.';
 }
+if(isFrontCourtRoute(query)){
+  Object.assign(copy.zh,{mapTitle:'前朝：大宫门、二宫门与正大光明',study:'前朝三建筑 · 当代展陈布局',mapIntro:'四处入口共用三座完整建筑，可沿御路和东侧可见旁路步行。地图中的建筑框为完整模型包络，实线表示游览路径。两院间距、园墙开口与旁路为当代展示设计；原门洞净高仍限制当前戴帽角色通行。'});
+  Object.assign(copy.en,{mapTitle:'Front court: Dagongmen, Ergongmen & Zhengda Guangming',study:'Three front-court buildings · Contemporary exhibition layout',mapIntro:'Four entries share three complete buildings. Walk along the approach and visible eastern paths. Map rectangles show complete model envelopes; the solid line marks the visitor route. Court spacing, the wall opening and side paths are contemporary design; original door clearances still restrict the current hatted visitor.'});
+}
 let lang=query.get('lang')==='en'?'en':'zh',disposed=false,ready=false,loading=false,capturing=false,contextLost=false,reviewPaused=query.get('review')==='still';
 copy.zh.boost='加速';copy.en.boost='Faster';
 copy.zh.reloadScene='重新载入场景';copy.en.reloadScene='Reload scene';
 copy.zh.graphicsLost='场景显示已中断。请重新载入场景；历史展签仍可单独阅读。';copy.en.graphicsLost='The scene display was interrupted. Reload the scene, or continue reading the historical exhibits.';
 copy.zh.soundOn='声音：开';copy.zh.soundOff='声音：关';copy.en.soundOn='Sound on';copy.en.soundOff='Sound off';
 let renderer=null,rendering=null,controls=null,terrain=null,terrainAssets=null,groundTextures=null,water=null,environment=null,visitor=null,pool=null,guides=null,guideSurface=null,architecture=null,sites=null,nav=null,currentSite=null,residents=null;
+let cameraClearance=null,correctingCamera=false,followingVisitorCamera=false,groundedInputActive=false;
+let frontCourtLandscape=null;
 let residentArchitecture=null,preparedGroundSources=null,plantingPilot=null,plantingCollisions=null,plantingReview=null,shoreCommunity=null,shoreUnderstory=null,shoreBank=null,sceneFailure=null,composition=null,westernPlanting=null,westernPlantingLifetime=null;
 let shoreGrove=null,shoreGroveLifetime=null,shoreGroveTask=null,shoreGroveCleanup=Promise.resolve(),shoreGroveStatus='inactive',shoreGroveError=null;
 const residentBindings=new Map(),borrowedOwners=new WeakSet();
@@ -85,6 +96,30 @@ let frameTiming=null,reviewFramesRemaining=0;
 let groundReview='dry-scale15';
 let cullingMode=query.get('cull')==='1'?(query.get('viewcache')==='8'?'8':'3'):'stock';
 let reviewMotion=null,reviewMotionResult=null;
+let wanfangMuseumShore=null,wanfangMuseumShoreCollision=null,wanfangShoreRetirement=Promise.resolve(null);
+function retireWanfangMuseumShore(){
+ const owner=wanfangMuseumShore;if(!owner)return wanfangShoreRetirement;
+ const errors=[];try{releaseSceneGuides();}catch(error){errors.push(error);}
+ wanfangMuseumShoreCollision=null;wanfangMuseumShore=null;
+ try{owner.dispose();}catch(error){errors.push(error);}
+ wanfangShoreRetirement=Promise.resolve().then(()=>owner.whenIdle()).then(()=>{if(errors.length)throw new AggregateError(errors,'Wanfang shore retirement failed');return {disposed:owner.disposed,collisionReferenceRetired:wanfangMuseumShoreCollision===null,groupDetached:owner.group.parent===null,snapshot:owner.snapshot()};},error=>{throw new AggregateError([...errors,error],'Wanfang shore drain failed');});
+ return wanfangShoreRetirement;
+}
+async function prepareWanfangMuseumShore(site){
+ if(site.id!=='wanfang-anhe'||composition)return;
+ const owner=await createWanfangAnheShore({root:scene,terrain,architecture:()=>architecture,site,signal:controller.signal,createGround:options=>prepareWanfangAnheGroundSurface({...options,meadowOwner:groundTextures}),onProgress:({completed,total})=>busy(true,lang==='zh'?'正在安置万方水岸… '+completed+' / '+total:'Preparing Wanfang banks… '+completed+' / '+total)});
+ if(disposed||controller.signal.aborted){try{owner.dispose();}finally{await owner.whenIdle();}controller.signal.throwIfAborted();throw new Error('Wanfang scene ended during shore preparation.');}
+ try{owner.assertCurrent();}
+ catch(error){
+  const errors=[error];
+  try{owner.dispose();}catch(cleanup){errors.push(cleanup);}
+  try{await owner.whenIdle();}catch(cleanup){errors.push(cleanup);}
+  if(errors.length>1)throw new AggregateError(errors,'Wanfang shore validation and cleanup failed',{cause:error});
+  throw error;
+ }
+ wanfangMuseumShore=owner;wanfangMuseumShoreCollision=owner.collision;
+}
+
 $('review-tools').hidden=!query.has('review');
 function timingSummary(){
   if(!frameSamples.length)return null;
@@ -95,6 +130,7 @@ function timingSummary(){
   return summary;
 }
 const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(45,1,.08,22000),keys=new Set(),forward=new THREE.Vector3(),right=new THREE.Vector3();
+const groundedInputForward=new THREE.Vector3(0,0,-1),observedCameraForward=new THREE.Vector3(0,0,-1),lastCameraForward=new THREE.Vector3(0,0,-1);
 const audio=createMuseumAudio();
 const state={mode:'flying',position:{x:770,y:22,z:-595},heading:0,gaitPhase:0,speed:0,support:null,transition:null};
 const dialogs=['map-dialog','directory-dialog','help-dialog'];
@@ -104,9 +140,9 @@ const redraw=createMuseumPausedRedraw({
   render:dt=>{const drawn=render(dt);if(drawn&&query.has('review'))$('telemetry').textContent=JSON.stringify(evidence(),null,2);return drawn;},
   isPaused:paused,canRender:()=>ready&&!loading&&!disposed&&!contextLost&&!document.hidden,
 });
-const touch=createMuseumTouchControls({pad:$('touch-pad'),knob:$('touch-knob'),buttons:[...document.querySelectorAll('[data-action]')],isActive:()=>!paused(),signal:controller.signal});
+const touch=createMuseumTouchControls({pad:$('touch-pad'),knob:$('touch-knob'),buttons:[...document.querySelectorAll('[data-action]')],isActive:()=>!paused(),onInput:input=>resetVisitorMovementIfIdle(input),signal:controller.signal});
 if(query.get('controls')==='touch')document.body.dataset.touch='true';
-const reader=new MuseumReader({lang,onOpen:()=>{keys.clear();touch.clear();guides?.setPaused(true);audio.play('page');redraw.request();},onClose:()=>{guides?.setPaused(false);start();},onLanguage:next=>setLanguage(next)});
+const reader=new MuseumReader({lang,onOpen:()=>{clearVisitorMovement();guides?.setPaused(true);audio.play('page');redraw.request();},onClose:()=>{guides?.setPaused(false);start();},onLanguage:next=>setLanguage(next)});
 const directory=mountMuseumDirectory($('directory'),{lang,onEntry:(id,button)=>reader.open(id,{trigger:button})});
 function message(text,duration=4){$('message').textContent=text;messageUntil=performance.now()+duration*1000;}
 async function prepareMuseumRendering(resource,id,signal){
@@ -146,6 +182,12 @@ async function loadSceneBuilding(id,{signal,manifestURL,expectedManifestSHA256,b
   return manifestURL?loadMuseumArchive(id,manifestURL,{signal,expectedManifestSHA256}):loadMuseumModel(id,{signal});
 }
 async function prepareMuseumGround(){
+  if(isFrontCourtRoute(query)){
+    composition=createFrontCourtMuseum({root:scene,signal:controller.signal,beforeDispose:releaseSceneFrontCourtDependents});
+    const plan=await composition.prepare();controller.signal.throwIfAborted();
+    ({layout:gardenLayout,pads:terrainPads,courts:terrainCourts=[],paths:terrainPaths=[],replacements:terrainReplacements=[]}=plan);
+    architecture=composition.support;renderDestinations();return;
+  }
   if(query.get('composition')==='jiuzhou'){
     composition=createJiuzhouComposition({root:scene,signal:controller.signal,beforeDispose:releaseSceneJiuzhouDependents});
     const plan=await composition.prepare();controller.signal.throwIfAborted();
@@ -163,6 +205,22 @@ async function prepareMuseumGround(){
     load:(descriptor,{signal})=>loadSceneBuilding(descriptor.assetId,{signal,manifestURL:descriptor.source.manifestURL,expectedManifestSHA256:descriptor.source.approvedManifestSHA256}),
   });
   ({layout:gardenLayout,pads:terrainPads,courts:terrainCourts=[],paths:terrainPaths=[],replacements:terrainReplacements=[]}=createMuseumLandscape({readyAssetIds:preparedGroundSources.readyAssetIds}));
+}
+async function prepareSceneFrontCourtLandscape(){
+  frontCourtLandscape=createFrontCourtMuseumLandscape({root:scene});
+  await frontCourtLandscape.prepare({terrain,composition});controller.signal.throwIfAborted();
+}
+function releaseSceneFrontCourtDependents(){
+  const errors=[];
+  for(const release of [releaseSceneGuides,()=>frontCourtLandscape?.dispose()])try{release();}catch(error){errors.push(error);}
+  if(errors.length)throw new AggregateError(errors,'Front-court dependent cleanup failed');
+}
+function ensureSceneFrontCourtLandscapeCurrent(){
+  if(!isFrontCourtComposition())return true;
+  try{
+    if(!frontCourtLandscape)throw new Error('Front-court landscape is unavailable.');
+    frontCourtLandscape.assertCurrent();return true;
+  }catch(error){return failComposedScene(error);}
 }
 // Regional planting shares the retained architecture dispatcher and actual
 // terrain. North court edge, outer forelake bank and bridge approaches are
@@ -268,7 +326,8 @@ function ensureSceneShoreGroveCurrent(){
 function currentPlantingCollision(){
   // These owners are route-exclusive: western requires Xianfaqiao; pilot
   // requires no composition. A retired Jiuzhou grove never revives either.
-  return isJiuzhouComposition()?shoreGrove?.collision??null:westernPlanting?westernPlanting.collision:plantingCollisions;
+  if(wanfangMuseumShoreCollision)return wanfangMuseumShoreCollision;
+  return isFrontCourtComposition()?frontCourtLandscape?.collision??null:isJiuzhouComposition()?shoreGrove?.collision??null:westernPlanting?westernPlanting.collision:plantingCollisions;
 }
 async function prepareSceneShoreBank(){
   const {loadShoreBankStudyR1}=await import('./shore-bank-integration.js');
@@ -312,7 +371,7 @@ async function prepareSceneShoreBank(){
       if(!ready||loading||capturing||disposed||state.transition)return;
       const approach={x:848.9361587563676,y:8,z:-555.2271266580581},support=nav.landing(approach);
       if(!support.valid){message(`${lang==='zh'?'岸边起点不能安全落地':'The shore start is not safe'}: ${support.reason}`);return;}
-      setReviewPaused(true);keys.clear();touch.clear();reviewMotion=null;reviewMotionResult=null;frameSamples.length=0;
+      setReviewPaused(true);clearVisitorMovement();reviewMotion=null;reviewMotionResult=null;frameSamples.length=0;
       state.position={x:approach.x,y:support.y,z:approach.z};state.mode='grounded';state.support=support;state.transition=null;state.speed=0;state.gaitPhase=0;
       const direction={x:.9701425001453318,z:-.24253562503633427};state.heading=museumTravelHeading(direction.x,direction.z);
       state.shoreWalkReview={entry:'visible shore start; live navigation landing',approach,landing:{y:support.y,normal:{...support.normal},surfaceId:support.surfaceId},direction,scope:'Dry shore beside the replacement; this route does not enter the submerged bed.'};
@@ -353,7 +412,7 @@ function prepareCompositionReview(){
     const result=xianfaqiaoRouteLanding(composition,nav);
     if(!result.valid){message(`${copy[lang].unsafe} ${result.reason}`);return false;}
     const {approach,support,position,direction}=result;
-    setReviewPaused(true);keys.clear();touch.clear();reviewMotionResult=null;frameSamples.length=0;
+    setReviewPaused(true);clearVisitorMovement();reviewMotionResult=null;frameSamples.length=0;
     state.position=position;state.mode='grounded';state.support=support;state.transition=null;state.speed=0;state.gaitPhase=0;state.heading=museumTravelHeading(direction.x,direction.z);
     state.compositionWalkReview={entry:'visible north approach start; live navigation landing',approach,landing:{y:support.y,normal:{...support.normal},surfaceId:support.surfaceId},direction,routeId:composition.candidate.compositionReview.route.id,scope:'Two seconds along the north approach; a complete bridge crossing and gate passage still require actual movement review.'};
     resetCharacterMotion(visitor.group,{mode:'grounded'});plantingReview=null;delete state.compositionView;controls.minDistance=4;
@@ -374,7 +433,7 @@ function releaseSceneGuides(){
   if(errors.length)throw new AggregateError(errors,'Museum guide cleanup failed');
 }
 function releaseCompositionScene(){
-  const errors=[];try{releaseSceneJiuzhouDependents();}catch(error){errors.push(error);}
+  const errors=[];for(const release of [releaseSceneJiuzhouDependents,releaseSceneFrontCourtDependents])try{release();}catch(error){errors.push(error);}
   const owned=[sites,westernPlanting,composition,terrainAssets,pool,visitor,water,terrain,groundTextures,environment,controls,rendering,renderer];
   guides=null;guideSurface=null;sites=null;westernPlanting=null;architecture=null;terrainAssets=null;pool=null;visitor=null;water=null;terrain=null;groundTextures=null;environment=null;controls=null;rendering=null;renderer=null;nav=null;
   for(const resource of owned)if(resource){
@@ -383,7 +442,7 @@ function releaseCompositionScene(){
   }
   return errors;
 }
-function busy(value,text){loading=value;$('loading').hidden=contextLost?false:!value;if(contextLost)$('loading-copy').textContent=copy[lang].graphicsLost;else if(text)$('loading-copy').textContent=text;keys.clear();touch.clear();last=0;document.body.dataset.ready=contextLost?'context-lost':value?'loading':ready?'true':'failed';}
+function busy(value,text){loading=value;$('loading').hidden=contextLost?false:!value;if(contextLost)$('loading-copy').textContent=copy[lang].graphicsLost;else if(text)$('loading-copy').textContent=text;clearVisitorMovement();last=0;document.body.dataset.ready=contextLost?'context-lost':value?'loading':ready?'true':'failed';}
 function setLanguage(next){
   lang=next==='en'?'en':'zh';document.documentElement.lang=lang;
   for(const el of document.querySelectorAll('[data-copy]'))el.textContent=copy[lang][el.dataset.copy];
@@ -391,7 +450,7 @@ function setLanguage(next){
   for(const option of $('time-mode').options)option.textContent=copy[lang][option.value];
   if(reader.lang!==lang)reader.setLanguage(lang);directory.setLanguage(lang);guides?.setLanguage(lang);renderDestinations();locationCaption();syncControls();
 }
-function locationCaption(){renderTourLink();renderJiuzhouViews();if(!currentSite)return;const entry=museumEntry(currentSite.entryId);$('site-title').textContent=entry.title[lang];$('region-name').textContent=museumRegions.find(region=>region.id===currentSite.region).title[lang];}
+function locationCaption(){renderTourLink();renderJiuzhouViews();renderFrontCourtViews();if(!currentSite)return;const entry=museumEntry(currentSite.entryId);$('site-title').textContent=entry.title[lang];$('region-name').textContent=museumRegions.find(region=>region.id===currentSite.region).title[lang];}
 function syncControls(){
   const sound=audio.snapshot().enabled;$('sound-toggle').textContent=copy[lang][sound?'soundOn':'soundOff'];$('sound-toggle').setAttribute('aria-pressed',String(sound));
   $('flight-toggle').textContent=copy[lang][state.mode==='grounded'?'fly':'land'];$('flight-toggle').disabled=!!state.transition||!ready||capturing||loading||contextLost;
@@ -400,28 +459,38 @@ function syncControls(){
 }
 function svgNode(tag,attrs){const node=document.createElementNS('http://www.w3.org/2000/svg',tag);for(const [key,value]of Object.entries(attrs))node.setAttribute(key,String(value));return node;}
 function isJiuzhouComposition(){return query.get('composition')==='jiuzhou'&&Boolean(composition?.views);}
+function isFrontCourtComposition(){return isFrontCourtRoute(query)&&Boolean(composition?.views);}
 function renderMap(){
-  const jiuzhou=isJiuzhouComposition();
+  const jiuzhou=isJiuzhouComposition(),dagongmen=isFrontCourtComposition();
   const threeSites=composition?.sites.some(site=>site.id==='yangquelong');
-  const mapLabel=jiuzhou?(lang==='zh'?'九州清晏三路院落与水岸位置图':'Jiuzhou courts and waterfront map'):composition?(threeSites?(lang==='zh'?'谐奇趣、线法桥与养雀笼位置图':'Map of Xieqiqu, Xianfaqiao and Yangquelong'):(lang==='zh'?'谐奇趣与线法桥位置图':'Map of Xieqiqu and Xianfaqiao')):(lang==='zh'?'圆明三园位置图':'Map of the three gardens');
+  const mapLabel=dagongmen?(lang==='zh'?'前朝三建筑与可见旁路位置图':'Front-court buildings and visible visitor paths'):jiuzhou?(lang==='zh'?'九州清晏三路院落与水岸位置图':'Jiuzhou courts and waterfront map'):composition?(threeSites?(lang==='zh'?'谐奇趣、线法桥与养雀笼位置图':'Map of Xieqiqu, Xianfaqiao and Yangquelong'):(lang==='zh'?'谐奇趣与线法桥位置图':'Map of Xieqiqu and Xianfaqiao')):(lang==='zh'?'圆明三园位置图':'Map of the three gardens');
   let jiuzhouBox;
-  if(jiuzhou){
-    const site=composition.sites[0],points=[...(composition.plan?.jiuzhou.worldOutline??[]),...Object.values(composition.views).map(view=>{const p=sitePoint(site,view.arrival);return [p.x,p.z];})];
+  if(jiuzhou||dagongmen){
+    const site=composition.sites[0],points=[...((dagongmen?composition.plan?.frontCourt:composition.plan?.jiuzhou)?.worldOutline??[]),...Object.values(composition.views).map(view=>{const p=sitePoint(dagongmen?composition.sites.find(s=>s.id===view.siteId):site,view.arrival);return [p.x,p.z];})];
     const minX=Math.min(...points.map(p=>p[0]))-12,minZ=Math.min(...points.map(p=>p[1]))-12,maxX=Math.max(...points.map(p=>p[0]))+12,maxZ=Math.max(...points.map(p=>p[1]))+12;
     jiuzhouBox=[minX,minZ,maxX-minX,maxZ-minZ].join(' ');
   }
-  const svg=svgNode('svg',{viewBox:jiuzhou?jiuzhouBox:composition?(threeSites?'292 -680 190 226':'292 -632 172 178'):'-1320 -1000 2700 2020','aria-label':mapLabel,role:'img'}),polygon=(ring,fill,stroke='none')=>svgNode('polygon',{points:ring.map(p=>p.join(',')).join(' '),fill,stroke,'stroke-width':composition ? .6 : 3});
+  const svg=svgNode('svg',{viewBox:jiuzhou||dagongmen?jiuzhouBox:composition?(threeSites?'292 -680 190 226':'292 -632 172 178'):'-1320 -1000 2700 2020','aria-label':mapLabel,role:'img'}),polygon=(ring,fill,stroke='none')=>svgNode('polygon',{points:ring.map(p=>p.join(',')).join(' '),fill,stroke,'stroke-width':composition ? .6 : 3});
   svg.append(polygon(createExhibitionCoast(gardenLayout),'#d8ddc6'));
   for(const lake of [...gardenLayout.waterBodies,...gardenLayout.ornamentalWaters,...gardenLayout.channels])svg.append(polygon(lake.polygon,'#89b3ad'));
   for(const island of gardenLayout.islands)svg.append(polygon(island.polygon,'#d8ddc6'));
   for(const garden of gardenLayout.gardens)svg.append(polygon(garden.boundary,'none','#768c70'));
   if(composition){for(const court of terrainCourts)if(court.water)svg.append(polygon(court.water.surfacePolygon,'#89b3ad'));for(const path of terrainPaths)svg.append(polygon(path.polygon,'#eee3c9'));}
   for(const site of composition?.sites??museumSites){const dot=svgNode('circle',{cx:site.position[0],cy:site.position[2],r:composition?2.2:14,fill:site.id===currentSite?.id?'#9c6939':'#345e4b',stroke:'#fcf7de','stroke-width':composition ? .7 : 5});const title=svgNode('title',{});title.textContent=museumEntry(site.entryId).title[lang];dot.append(title);svg.append(dot);}
+  if(dagongmen){
+    const map=frontCourtMapGeometry();
+    for(const shape of map.buildings)svg.append(polygon(shape.polygon,'#b5a58c','#765f49'));
+    for(const ring of [...map.courts,...map.lanes])svg.append(polygon(ring,'#eee3c9','#b7a386'));
+    svg.append(svgNode('polyline',{points:map.visitorRoute.map(p=>p.join(',')).join(' '),fill:'none',stroke:'#8b4a2f','stroke-width':.8,'aria-label':lang==='zh'?'东侧可见旁路':'Visible eastern visitor route'}));
+    for(const view of Object.values(composition.views)){
+      const p=sitePoint(composition.sites.find(s=>s.id===view.siteId),view.entry),dot=svgNode('circle',{cx:p.x,cy:p.z,r:2.2,fill:view.id===currentSite?.viewId?'#9c6939':'#345e4b'}),title=svgNode('title',{});title.textContent=view.title[lang];dot.append(title);svg.append(dot);
+    }
+  }
   $('garden-map').replaceChildren(svg);
 }
 function renderTourLink(){
   const link=$('tour-route-link');if(!link)return;
-  const western=query.get('composition')==='xianfaqiao',jiuzhou=query.get('composition')==='jiuzhou';
+  const western=query.get('composition')==='xianfaqiao',jiuzhou=query.get('composition')==='jiuzhou',dagongmen=isFrontCourtRoute(query);
   const previous=western?query:new URLSearchParams(query.get('returnTour')??'composition=xianfaqiao&planting=western&court=garden-r4&yangquelong=refined-r1');
   const route=new URLSearchParams({composition:'xianfaqiao'});
   if(previous.get('planting')==='western')route.set('planting','western');
@@ -432,23 +501,32 @@ function renderTourLink(){
   route.set('site',ids.includes(requested)?requested:'xieqiqu');
   const view=jiuzhou?(currentSite?.viewId??query.get('view')):query.get('returnJiuzhouView');
   const retainedView=['central','western','eastern','waterfront'].includes(view)?view:'central';
-  const current=currentSite?.id??query.get('site');
-  const overview=new URLSearchParams({site:museumSite(current)?current:'xieqiqu',lang,returnTour:route.toString(),returnJiuzhouView:retainedView});
+  const current=currentSite?.id??query.get('site'),overviewSite=museumSite(current)?current:(museumSite(query.get('returnOverviewSite'))?query.get('returnOverviewSite'):'xieqiqu');
+  const dagongmenView=dagongmen?(currentSite?.viewId??query.get('view')):(query.get('returnFrontCourtView')??query.get('returnDagongmenView')),retainedDagongmenView=['gate','screen','erg','hall'].includes(dagongmenView)?dagongmenView:'gate';
+  const overview=new URLSearchParams({site:overviewSite,lang,returnTour:route.toString(),returnJiuzhouView:retainedView,returnFrontCourtView:retainedDagongmenView});
+
   if(western){
     link.href='/yuanmingyuan.html?'+overview;link.textContent=lang==='zh'?'三园研究总览（其余园区制作中）':'Three-garden study overview (other areas in progress)';
   }else{
-    route.set('lang',lang);route.set('returnJiuzhouView',retainedView);
+    route.set('lang',lang);route.set('returnJiuzhouView',retainedView);route.set('returnFrontCourtView',retainedDagongmenView);route.set('returnOverviewSite',overviewSite);
     link.href='/yuanmingyuan.html?'+route;link.textContent=lang==='zh'?'返回西洋楼游线':'Return to the Western Buildings route';
   }
   const jiuzhouLink=$('jiuzhou-tour-link');
   if(jiuzhouLink){
     jiuzhouLink.hidden=jiuzhou;
-    const returnRoute=new URLSearchParams(route);returnRoute.delete('lang');returnRoute.delete('returnJiuzhouView');
-    jiuzhouLink.href='/yuanmingyuan.html?'+new URLSearchParams({composition:'jiuzhou',view:retainedView,lang,returnTour:returnRoute.toString()});
+    const returnRoute=new URLSearchParams(route);returnRoute.delete('lang');returnRoute.delete('returnJiuzhouView');returnRoute.delete('returnDagongmenView');returnRoute.delete('returnFrontCourtView');returnRoute.delete('returnOverviewSite');
+    jiuzhouLink.href='/yuanmingyuan.html?'+new URLSearchParams({composition:'jiuzhou',view:retainedView,lang,returnTour:returnRoute.toString(),returnFrontCourtView:retainedDagongmenView,returnOverviewSite:overviewSite});
     jiuzhouLink.textContent=lang==='zh'?'进入九州清晏：三路院落与水岸':'Enter Jiuzhou Qingyan: courts and waterfront';
   }
+  const dagongmenLink=$('dagongmen-tour-link');
+  if(dagongmenLink){
+    const returnRoute=new URLSearchParams(route);for(const key of ['lang','returnJiuzhouView','returnDagongmenView','returnFrontCourtView','returnOverviewSite'])returnRoute.delete(key);
+    dagongmenLink.hidden=dagongmen;
+    dagongmenLink.href='/yuanmingyuan.html?'+new URLSearchParams({composition:'front-court',view:retainedDagongmenView,lang,returnTour:returnRoute.toString(),returnJiuzhouView:retainedView,returnOverviewSite:overviewSite});
+    dagongmenLink.textContent=lang==='zh'?'进入前朝：大宫门、二宫门与正大光明':'Enter the front court: Dagongmen, Ergongmen & Zhengda Guangming';
+  }
   const overviewLink=$('overview-route-link');
-  if(overviewLink){overviewLink.hidden=!jiuzhou;overviewLink.href='/yuanmingyuan.html?'+overview;overviewLink.textContent=lang==='zh'?'返回三园研究总览':'Return to the three-garden study overview';}
+  if(overviewLink){overviewLink.hidden=!(jiuzhou||dagongmen);overviewLink.href='/yuanmingyuan.html?'+overview;overviewLink.textContent=lang==='zh'?'返回三园研究总览':'Return to the three-garden study overview';}
 }
 function renderJiuzhouViews(){
   const list=$('jiuzhou-viewpoints');if(!list)return;
@@ -466,15 +544,41 @@ function landJiuzhouView(){
   if(!isJiuzhouComposition()||!ready||loading||disposed||contextLost||capturing||state.transition||!visitor||!nav||!ensureSceneShoreGroveCurrent())return false;
   const result=jiuzhouViewLanding(composition,nav,currentSite?.viewId??'central');
   if(!result.valid){message(copy[lang].unsafe);return false;}
-  keys.clear();touch.clear();reviewMotion=null;reviewMotionResult=null;
+  clearVisitorMovement();reviewMotion=null;reviewMotionResult=null;
   state.position=result.position;state.support=result.support;state.mode='grounded';state.transition=null;state.speed=0;state.gaitPhase=0;
   const focus=sitePoint(currentSite,currentSite.focus);state.heading=museumTravelHeading(focus.x-state.position.x,focus.z-state.position.z);
-  resetCharacterMotion(visitor.group,{mode:'grounded'});frameVisitor();advance(0);syncControls();redraw.request();return true;
+  resetCharacterMotion(visitor.group,{mode:'grounded'});frameVisitor({initialLanding:true});advance(0);syncControls();redraw.request();return true;
+}
+function renderFrontCourtViews(){
+  const list=$('front-court-viewpoints');if(!list)return;
+  list.replaceChildren();list.hidden=!isFrontCourtComposition();if(list.hidden)return;
+  for(const view of Object.values(composition.views)){
+    const button=document.createElement('button');button.type='button';button.dataset.frontCourtView=view.id;
+    button.textContent=view.title[lang];button.setAttribute('aria-pressed',String((currentSite?.viewId??'gate')===view.id));
+    button.addEventListener('click',()=>{closeDialog('map-dialog');visit(view.siteId,{viewId:view.id});});list.append(button);
+  }
+  const land=document.createElement('button');land.type='button';land.dataset.frontCourtAction='land';
+  land.textContent=lang==='zh'?'回到当前查看点的安全入口':'Return to this view’s safe entry';
+  land.addEventListener('click',()=>{closeDialog('map-dialog');landFrontCourtView();});list.append(land);
+}
+function landFrontCourtView(){
+  if(!isFrontCourtComposition()||!ready||loading||disposed||contextLost||capturing||state.transition||!visitor||!nav)return false;
+  if(!applyFrontCourtLanding(currentSite?.viewId??'gate'))return false;
+  advance(0);syncControls();redraw.request();return true;
+}
+function applyFrontCourtLanding(viewId){
+  const result=frontCourtViewLanding(composition,nav,viewId);
+  if(!result.valid){message(copy[lang].unsafe);return false;}
+  clearVisitorMovement();reviewMotion=null;reviewMotionResult=null;
+  state.position=result.position;state.support=result.support;state.mode='grounded';state.transition=null;state.speed=0;state.gaitPhase=0;
+  const focus=sitePoint(currentSite,currentSite.focus);state.heading=museumTravelHeading(focus.x-state.position.x,focus.z-state.position.z);
+  state.frontCourtView={id:viewId,siteId:result.siteId,entry:{...result.position},safeLanding:true};
+  resetCharacterMotion(visitor.group,{mode:'grounded'});frameVisitor();return true;
 }
 function renderDestinations(){
-  renderTourLink();renderJiuzhouViews();$('destinations').replaceChildren();for(const site of composition?.sites??museumSites){const entry=museumEntry(site.entryId),button=document.createElement('button'),small=document.createElement('small');button.type='button';button.dataset.site=site.id;button.textContent=entry.title[lang];small.textContent=entry.title[lang==='zh'?'en':'zh'];button.append(small);button.addEventListener('click',()=>{closeDialog('map-dialog');visit(site.id);});$('destinations').append(button);}renderMap();
+  renderTourLink();renderJiuzhouViews();renderFrontCourtViews();$('destinations').replaceChildren();for(const site of composition?.sites??museumSites){const entry=museumEntry(site.entryId),button=document.createElement('button'),small=document.createElement('small');button.type='button';button.dataset.site=site.id;button.textContent=entry.title[lang];small.textContent=entry.title[lang==='zh'?'en':'zh'];button.append(small);button.addEventListener('click',()=>{closeDialog('map-dialog');visit(site.id);});$('destinations').append(button);}renderMap();
 }
-function openDialog(id,trigger){keys.clear();touch.clear();$(id).returnFocus=trigger;$(id).showModal();guides?.setPaused(true);audio.update({reading:true});}
+function openDialog(id,trigger){clearVisitorMovement();$(id).returnFocus=trigger;$(id).showModal();guides?.setPaused(true);audio.update({reading:true});}
 function closeDialog(id){$(id).close();}
 for(const id of dialogs){$(id).addEventListener('close',()=>{$(id).returnFocus?.focus();guides?.setPaused(false);audio.update({reading:reader.isOpen});start();});}
 for(const button of document.querySelectorAll('[data-close]'))button.addEventListener('click',()=>closeDialog(button.dataset.close));
@@ -487,38 +591,90 @@ document.addEventListener('pointerdown',()=>audio.unlock(),{signal:controller.si
 $('time-mode').addEventListener('change',()=>{environment?.clock.setMode($('time-mode').value,true);redraw.request();});
 $('camera-mode').addEventListener('click',()=>changeCamera());
 $('flight-toggle').addEventListener('click',toggleFlight);$('inspect').addEventListener('click',inspect);
+// Automatic camera clearance may change the view, but not a held movement's
+// direction. Releasing all horizontal input starts the next move in the visible view.
+function visitorMovementAxes(tactile=touch.snapshot()){
+  const z=Number(keys.has('KeyW')||keys.has('ArrowUp'))-Number(keys.has('KeyS')||keys.has('ArrowDown'))+tactile.z,x=Number(keys.has('KeyD')||keys.has('ArrowRight'))-Number(keys.has('KeyA')||keys.has('ArrowLeft'))+tactile.x;
+  return {tactile,x,z};
+}
+function resetVisitorMovementIfIdle(tactile=touch.snapshot()){const {x,z}=visitorMovementAxes(tactile);if(!x&&!z)groundedInputActive=false;}
+function clearVisitorMovement(){keys.clear();touch.clear();groundedInputActive=false;}
+function readVisitorCameraForward(target){camera.getWorldDirection(target);target.y=0;if(target.lengthSq()<.001)target.set(0,0,-1);return target.normalize();}
+function trackVisitorCameraInput(){
+  readVisitorCameraForward(observedCameraForward);
+  if(groundedInputActive&&!correctingCamera&&!followingVisitorCamera&&observedCameraForward.distanceToSquared(lastCameraForward)>1e-12)groundedInputForward.copy(observedCameraForward);
+  lastCameraForward.copy(observedCameraForward);
+}
 function changeCamera(){cameraMode=(cameraMode+1)%3;frameVisitor();syncControls();redraw.request();}
-function frameVisitor(){if(!controls)return;controls.minDistance=4;plantingReview=null;const p=state.position,offset=[[4,5,12],[7,75,14],[8,2,12]][cameraMode],yaw=currentSite?.viewYaw??currentSite?.rotationY??0,c=Math.cos(yaw),s=Math.sin(yaw);controls.target.set(p.x,p.y+1,p.z);camera.position.set(p.x+offset[0]*c+offset[2]*s,p.y+offset[1],p.z-offset[0]*s+offset[2]*c);controls.update();}
+function ensureVisitorCameraClearance(){
+  if(!controls||!terrain||!architecture||state.mode!=='grounded'||state.transition||cameraMode===1||plantingReview){cameraClearance=null;return;}
+  const p=state.position;
+  // Authored exhibit/plant study cameras have their own framing. Ordinary orbit
+  // keeps this target on the visitor because panning is disabled.
+  if(Math.hypot(controls.target.x-p.x,controls.target.y-p.y-1,controls.target.z-p.z)>1e-5){cameraClearance=null;return;}
+  const previousAdjustment=cameraClearance?.lastAdjustment??null;
+  cameraClearance=resolveMuseumCameraPose({position:camera.position.toArray(),target:controls.target.toArray(),visitor:[p.x,p.y,p.z],height:museumVisitorCollider(state).height,terrain,architecture,near:camera.near,fov:camera.fov,aspect:camera.aspect});
+  cameraClearance.lastAdjustment=cameraClearance.clear&&cameraClearance.adjusted?{from:cameraClearance.desiredPosition,to:cameraClearance.position,target:cameraClearance.target,visitor:[p.x,p.y,p.z],reason:cameraClearance.desired.reason}:previousAdjustment;
+  if(!cameraClearance.clear||!cameraClearance.adjusted)return;
+  const damping=controls.enableDamping;correctingCamera=true;controls.enableDamping=false;
+  try{
+    // Flush any pending damped orbit before applying the checked pose; prevent
+    // that bookkeeping change from queuing another expensive still frame.
+    if(damping)controls.update();
+    camera.position.fromArray(cameraClearance.position);controls.target.fromArray(cameraClearance.target);controls.update();
+  }finally{controls.enableDamping=damping;correctingCamera=false;}
+}
+// Only the western public default landing uses this initial yaw.
+// Free orbit and ordinary camera-mode resets retain their original path.
+function jiuzhouWelcomingYaw(site){
+  const yaw=site?.viewYaw??site?.rotationY??0;
+  return isJiuzhouComposition()&&site?.viewId==='western'&&cameraMode===0?yaw+(-60)*Math.PI/180:yaw;
+}
+function frameVisitor({initialLanding=false}={}){groundedInputActive=false;if(!controls)return;controls.minDistance=4;plantingReview=null;const p=state.position,offset=[[4,5,12],[7,75,14],[8,2,12]][cameraMode],yaw=initialLanding?jiuzhouWelcomingYaw(currentSite):(currentSite?.viewYaw??currentSite?.rotationY??0),c=Math.cos(yaw),s=Math.sin(yaw);controls.target.set(p.x,p.y+1,p.z);camera.position.set(p.x+offset[0]*c+offset[2]*s,p.y+offset[1],p.z-offset[0]*s+offset[2]*c);controls.update();ensureVisitorCameraClearance();}
 function inspect(){if(paused()||!currentSite)return;const nearest=guides?.nearest(state.position);if(nearest&&guides.interact(nearest.id,{playerPosition:state.position})){message(copy[lang].guide);return;}reader.open(nearest?.entryId??currentSite.entryId,{trigger:$('inspect')});}
 function toggleFlight(){
   if(paused()||state.transition||!visitor)return;
-  if(!ensureSceneShoreGroveCurrent())return;
+  if(!ensureSceneShoreGroveCurrent()||!ensureSceneFrontCourtLandscapeCurrent())return;
   if(state.mode==='grounded'){
     state.transition={mode:'mounting',elapsed:0,from:{...state.position},to:{...state.position,y:state.position.y+8}};state.mode='mounting';
   }else{
     const support=nav.landing(state.position);if(!support.valid){message(copy[lang].unsafe);return;}
     state.transition={mode:'dismounting',elapsed:0,from:{...state.position},to:{x:state.position.x,y:support.y,z:state.position.z},support};state.mode='dismounting';
   }
-  keys.clear();touch.clear();syncControls();
+  clearVisitorMovement();syncControls();
 }
 const movementCodes=new Set(['KeyW','KeyA','KeyS','KeyD','ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Space','KeyC','ShiftLeft','ShiftRight']);
 function keydown(event){
   if(event.target.closest('input,select,textarea,dialog')||event.ctrlKey||event.metaKey||event.altKey)return;
-  if(movementCodes.has(event.code)){if(!paused()){event.preventDefault();audio.unlock();keys.add(event.code);}return;}
+  if(movementCodes.has(event.code)){if(!paused()){event.preventDefault();audio.unlock();keys.add(event.code);resetVisitorMovementIfIdle();}return;}
   if(event.repeat)return;
   if(event.code==='KeyE'){event.preventDefault();inspect();}else if(event.code==='KeyB'){event.preventDefault();toggleFlight();}else if(event.code==='KeyV'){event.preventDefault();changeCamera();}else if(event.code==='KeyM'){event.preventDefault();if($('map-dialog').open)closeDialog('map-dialog');else{renderMap();openDialog('map-dialog',canvas);}}
 }
-document.addEventListener('keydown',keydown);const keyup=event=>keys.delete(event.code);document.addEventListener('keyup',keyup);const clearKeys=()=>{keys.clear();touch.clear();};addEventListener('blur',clearKeys);
+document.addEventListener('keydown',keydown);const keyup=event=>{keys.delete(event.code);resetVisitorMovementIfIdle();};document.addEventListener('keyup',keyup);const clearKeys=()=>{clearVisitorMovement();};addEventListener('blur',clearKeys);
 function createGuideRegion(site){
   const world=createMuseumGuideWorld({site,terrain,architecture,centre:sitePoint(site,site.guide),visitorCollider:()=>museumVisitorCollider(state)});
   try{
+    if(site.id==='wanfang-anhe'&&wanfangMuseumShoreCollision){
+      const staticCollidersFor=world.collidersFor;
+      world.collidersFor=(...args)=>staticCollidersFor(...args).concat(wanfangMuseumShoreCollision?.dynamicColliders()??[]);
+    }
+    if(isFrontCourtComposition()){
+      const staticCollidersFor=world.collidersFor;
+      world.collidersFor=(...args)=>staticCollidersFor(...args).concat(frontCourtLandscape?.collision?.dynamicColliders()??[]);
+    }
     const centre=sitePoint(site,site.guide),exhibitIds=[site.entryId,...museumEntry(site.entryId).related.filter(id=>museumEntry(id))];
     // The Jiuzhou visitor arrives in flight. Reserve its authored ground entry
     // when choosing initial guide positions; landing still checks live colliders.
-    const entryClearance=isJiuzhouComposition()?sitePoint(site,composition.getView(site.viewId??'central').entry):state.position;
-    const {placements,rejected}=selectMuseumGuidePlacements({site,centre,world,architecture,visitorPosition:entryClearance,entryIds:exhibitIds});
-    world.placementReview={accepted:placements.length,placements:placements.map(p=>({id:p.id,position:{...p.position},heading:p.heading,waypoints:p.waypoints.map(w=>({...w}))})),rejected};
-    const regionGuides=placements.length?createMuseumGuides({pool,root:scene,...world,placements,language:lang,isActive:()=>!paused(),onSound:event=>audio.companion(event,{isActive:()=>!paused(),distanceFrom:state.position}),onSilence:({owner})=>audio.silence(owner),onInspect:({entryId})=>reader.open(entryId,{trigger:$('inspect')})}):null;
+    const entryClearance=isJiuzhouComposition()||isFrontCourtComposition()?sitePoint(site,composition.getView(site.viewId??(isFrontCourtComposition()?'gate':'central')).entry):state.position;
+    let placementView;
+    if(isJiuzhouComposition()&&cameraMode!==1){
+      const p=entryClearance,offset=[[4,5,12],[7,75,14],[8,2,12]][cameraMode],yaw=jiuzhouWelcomingYaw(site),c=Math.cos(yaw),s=Math.sin(yaw);
+      const pose=resolveMuseumCameraPose({position:[p.x+offset[0]*c+offset[2]*s,p.y+offset[1],p.z-offset[0]*s+offset[2]*c],target:[p.x,p.y+1,p.z],visitor:[p.x,p.y,p.z],height:museumVisitorCollider({mode:'grounded',position:p}).height,terrain,architecture,near:camera.near,fov:camera.fov,aspect:camera.aspect});
+      if(pose.clear)placementView=pose;
+    }
+    const {placements,rejected,compositionReview}=selectMuseumGuidePlacements({site,centre,world,architecture,visitorPosition:entryClearance,entryIds:exhibitIds,view:placementView});
+    world.placementReview={...(compositionReview?{composition:compositionReview}:{}),accepted:placements.length,placements:placements.map(p=>({id:p.id,position:{...p.position},heading:p.heading,waypoints:p.waypoints.map(w=>({...w}))})),rejected};
+    const regionGuides=placements.length?createMuseumGuides({pool,root:scene,...world,placements,primaryEntryId:isJiuzhouComposition()?site.entryId:undefined,language:lang,isActive:()=>!paused(),onSound:event=>audio.companion(event,{isActive:()=>!paused(),distanceFrom:state.position}),onSilence:({owner})=>audio.silence(owner),onInspect:({entryId})=>reader.open(entryId,{trigger:$('inspect')})}):null;
     return {guides:regionGuides,world};
   }catch(error){try{world.dispose();}catch(cleanup){throw new AggregateError([error,cleanup],'Guide region initialization and support cleanup failed',{cause:error});}throw error;}
 }
@@ -536,37 +692,63 @@ function placeGuides(site,{reset=false}={}){
   const region=createGuideRegion(site);guides=region.guides;guideSurface=region.world;
 }
 async function visit(id,{teleport=true,viewId}={}){
+  if(isFrontCourtComposition())id=frontCourtSiteId(id);
   const base=composition?composition.sites.find(site=>site.id===id):museumSite(id);if(!base||disposed||loading||contextLost||!sites)return;
   let site=base;
-  if(isJiuzhouComposition()){
-    const requestedView=viewId??currentSite?.viewId??query.get('view');
-    const view=composition.getView(Object.hasOwn(composition.views,requestedView)?requestedView:'central');
+  if(isJiuzhouComposition()||isFrontCourtComposition()){
+    const requestedView=viewId??currentSite?.viewId??query.get('view'),candidate=Object.hasOwn(composition.views,requestedView)?composition.getView(requestedView):null;
+    const view=candidate&&(!isFrontCourtComposition()||candidate.siteId===base.id)?candidate:composition.getView(isFrontCourtComposition()?base.defaultView:'central');
     // A temporary visit caption/arrival is not another persistent descriptor.
     site={...base,...view,id:base.id,viewId:view.id};
   }
   const previousSite=currentSite,wasReady=ready;
   busy(true,copy[lang].building);currentSite=site;locationCaption();
+  const retiredWanfangShore=wanfangMuseumShore!==null;
+  try{await retireWanfangMuseumShore();}
+  catch(error){
+   currentSite=previousSite;ready=false;sceneFailure={message:error.message,stage:'wanfang-shore-retirement'};
+   busy(false);redraw.cancel();document.body.dataset.ready='failed';$('loading').hidden=false;$('loading-copy').textContent=copy[lang].failed+' '+error.message;
+   $('telemetry').textContent=JSON.stringify(evidence(),null,2);console.error(error);return;
+  }
+  if(disposed||contextLost)return;
   let asset=null,loadFailure=null;
   try{asset=await sites.select(id);}catch(error){loadFailure=error;}
   if(disposed)return;
   if(!asset){
+    if(retiredWanfangShore){
+      currentSite=previousSite;ready=false;sceneFailure={message:loadFailure?.message??copy[lang].failed,stage:'wanfang-site-after-shore-retirement'};
+      busy(false);redraw.cancel();locationCaption();syncControls();document.body.dataset.ready='failed';$('loading').hidden=false;$('loading-copy').textContent=copy[lang].failed+' '+sceneFailure.message;
+      $('telemetry').textContent=JSON.stringify(evidence(),null,2);if(loadFailure)console.error(loadFailure);return;
+    }
     currentSite=previousSite;ready=wasReady;busy(false);locationCaption();syncControls();message(loadFailure?`${copy[lang].failed} ${loadFailure.message||String(loadFailure)}`:copy[lang].failed,15);
     // select() retired the primary owner; render restores any warm resident
     // before restarting an already initialized world. A first load stays failed.
     redraw.request();$('telemetry').textContent=JSON.stringify(evidence(),null,2);start();return;
   }
-  if(!ensureSceneShoreGroveCurrent())return;
+  if(!ensureSceneShoreGroveCurrent()||!ensureSceneFrontCourtLandscapeCurrent())return;
   if(westernPlanting&&!westernPlanting.disposed)try{westernPlanting.assertCurrent();}catch(error){message(error.message,12);}
   if(teleport){reviewMotion=null;reviewMotionResult=null;delete state.shoreWalkReview;delete state.compositionWalkReview;state.position=sitePoint(site,site.arrival);state.mode='flying';state.transition=null;state.speed=0;const focus=sitePoint(site,site.focus);state.heading=museumTravelHeading(focus.x-state.position.x,focus.z-state.position.z);state.gaitPhase=0;resetCharacterMotion(visitor.group,{mode:'flying'});frameVisitor();}
   audio.setEmitter(['yuanyingguan','haiyantang','xieqiqu','yangquelong'].includes(site.id)?sitePoint(site,[site.guide[0],2,site.guide[2]]):null);
-  placeGuides(site,{reset:teleport});ready=true;advance(0);busy(false);locationCaption();syncControls();redraw.request();$('telemetry').textContent=JSON.stringify(evidence(),null,2);start();
+  try{await prepareWanfangMuseumShore(site);}
+  catch(error){
+    if(disposed||contextLost)return;
+    ready=false;sceneFailure={message:error.message,stage:'wanfang-shore-preparation'};
+    busy(false);redraw.cancel();document.body.dataset.ready='failed';$('loading').hidden=false;$('loading-copy').textContent=copy[lang].failed+' '+error.message;
+    $('telemetry').textContent=JSON.stringify(evidence(),null,2);console.error(error);return;
+  }
+  if(disposed||contextLost)return;
+  placeGuides(site,{reset:teleport});if(isFrontCourtComposition()&&teleport&&!applyFrontCourtLanding(site.viewId)){failComposedScene(new Error('No safe front-court visitor entry with current guide colliders.'));return;}ready=true;advance(0);busy(false);locationCaption();syncControls();redraw.request();$('telemetry').textContent=JSON.stringify(evidence(),null,2);start();
 }
 function advance(dt){
-  if(!ensureSceneShoreGroveCurrent())return;
+  if(!ensureSceneShoreGroveCurrent()||!ensureSceneFrontCourtLandscapeCurrent())return;
   const navigationStart=performance.now();
   const before={...state.position};
-  camera.getWorldDirection(forward);forward.y=0;if(forward.lengthSq()<.001)forward.set(0,0,-1);forward.normalize();right.crossVectors(forward,THREE.Object3D.DEFAULT_UP).normalize();
-  const tactile=touch.snapshot(),z=Number(keys.has('KeyW')||keys.has('ArrowUp'))-Number(keys.has('KeyS')||keys.has('ArrowDown'))+tactile.z,x=Number(keys.has('KeyD')||keys.has('ArrowRight'))-Number(keys.has('KeyA')||keys.has('ArrowLeft'))+tactile.x;
+  const {tactile,x,z}=visitorMovementAxes();
+  if(state.mode==='grounded'&&!state.transition&&(x||z)){
+    if(!groundedInputActive)readVisitorCameraForward(groundedInputForward);
+    groundedInputActive=true;forward.copy(groundedInputForward);
+  }else{groundedInputActive=false;readVisitorCameraForward(forward);}
+  right.crossVectors(forward,THREE.Object3D.DEFAULT_UP).normalize();
   const input={x:forward.x*z+right.x*x,z:forward.z*z+right.z*x,boost:keys.has('ShiftLeft')||keys.has('ShiftRight')||tactile.boost,vertical:Math.max(-1,Math.min(1,Number(keys.has('Space'))-Number(keys.has('KeyC'))+tactile.vertical))};
   // Visible review controls drive the same navigation and animation path as
   // ordinary input. They neither teleport the visitor nor skip collision tests.
@@ -592,7 +774,7 @@ function advance(dt){
   const support=state.support?.valid?{...state.support,x:state.position.x,z:state.position.z,heightAt:(a,b)=>nav.surfaceAt(a,b)?.height??state.position.y}:undefined;
   updateCharacter(visitor.group,{dt,mode:state.mode,groundSpeed:state.speed,gaitPhase:state.gaitPhase,transitionProgress:progress,groundSupport:support,speed:state.speed/64,boost:input.boost,vertical:input.vertical});
   if(frameTiming)frameTiming.poseMs+=performance.now()-poseStart;
-  const delta=new THREE.Vector3(state.position.x-before.x,state.position.y-before.y,state.position.z-before.z);controls.target.add(delta);camera.position.add(delta);controls.update();
+  const delta=new THREE.Vector3(state.position.x-before.x,state.position.y-before.y,state.position.z-before.z);controls.target.add(delta);camera.position.add(delta);followingVisitorCamera=true;try{controls.update();}finally{followingVisitorCamera=false;}
   if(reviewMotion){reviewMotion.elapsed+=dt;reviewMotion.pathDistance+=delta.length();}
 }
 function evidence({full=false}={}){
@@ -604,8 +786,10 @@ function evidence({full=false}={}){
   data.guidePlacement=guideSurface?.placementReview??null;
   data.waterReflections=water?.snapshot?.();
   data.residentBuildings=residents?.snapshot??null;
-  data.composition=composition?.snapshot??null;data.compositionView=state.compositionView??null;data.compositionWalkReview=state.compositionWalkReview??null;
-  data.westernPlanting=westernPlanting?.snapshot({full})??null;data.gardenViewPreflight=state.gardenViewPreflight??null;
+  data.frontCourtLandscape=frontCourtLandscape?.snapshot()??null;
+  data.frontCourtView=state.frontCourtView??null;data.composition=composition?.snapshot??null;data.compositionView=state.compositionView??null;data.compositionWalkReview=state.compositionWalkReview??null;
+  data.wanfangMuseumShore=wanfangMuseumShore?.snapshot({full})??null;
+  data.westernPlanting=westernPlanting?.snapshot({full})??null;data.gardenViewPreflight=state.gardenViewPreflight??null;data.cameraClearance=cameraClearance;
   data.shoreGrove={status:shoreGroveStatus,error:shoreGroveError,owner:shoreGrove?.snapshot({full})??null,contemporaryExhibition:true,nativeCompositionReviewed:false};
   const planting=plantingPilot?.diagnostics;
   data.plantingPilot=full?planting??null:planting?{id:planting.id,placements:planting.plan.placements.length,trianglesPerPass:planting.trianglesPerPass,geometryAndInstanceBytes:planting.geometryAndInstanceBytes,rootContacts:planting.rootContacts.map(({id,sourceVerticesAtOrBelowDatum,belowCurrentTerrain,maximumGap})=>({id,sourceVerticesAtOrBelowDatum,belowCurrentTerrain,maximumGap}))}:null;
@@ -629,7 +813,7 @@ function evidence({full=false}={}){
   return data;
 }
 function failComposedScene(error){const cleanupErrors=releaseCompositionScene();sceneFailure={message:error.message,cleanupErrors:cleanupErrors.map(error=>error.message)};ready=false;busy(false);redraw.cancel();audio.silence();document.body.dataset.ready='failed';$('loading').hidden=false;$('loading-copy').textContent=copy[lang].failed+' '+error.message;$('telemetry').textContent=JSON.stringify(evidence(),null,2);console.error(error);return false;}
-function render(dt){if(!ready||disposed||contextLost||document.hidden)return false;if(!ensureSceneShoreGroveCurrent())return false;const sample=environment.update(dt,{paused:paused(),focus:controls.target,shadowSpan:85});document.body.dataset.night=String(sample.night>.5);audio.update({night:sample.night,reading:reader.isOpen||dialogs.some(id=>$(id).open),position:state.position,camera:camera.position,forward:camera.getWorldDirection(new THREE.Vector3()),speed:state.speed,time});water.update(time,sample,camera);const active=sites.resource;if(composition){try{composition.update(time);shoreGrove?.update(time);}catch(error){return failComposedScene(error);}}else{if(active&&residents?.get(sites.snapshot.siteId)?.owner!==active)active.update?.(time);residents?.update(time);residents?.evaluate({camera,renderer,additionalViews:water.reflectionViews?.(camera)??[]});}westernPlanting?.update(time);renderer.shadowMap.needsUpdate=true;renderer.info.reset();rendering.render(dt);return true;}
+function render(dt){if(!ready||disposed||contextLost||document.hidden)return false;if(!ensureSceneShoreGroveCurrent()||!ensureSceneFrontCourtLandscapeCurrent())return false;ensureVisitorCameraClearance();const sample=environment.update(dt,{paused:paused(),focus:controls.target,shadowSpan:85});document.body.dataset.night=String(sample.night>.5);audio.update({night:sample.night,reading:reader.isOpen||dialogs.some(id=>$(id).open),position:state.position,camera:camera.position,forward:camera.getWorldDirection(new THREE.Vector3()),speed:state.speed,time});water.update(time,sample,camera);wanfangMuseumShore?.update(time);const active=sites.resource;if(composition){try{composition.update(time);shoreGrove?.update(time);frontCourtLandscape?.update(time);}catch(error){return failComposedScene(error);}}else{if(active&&residents?.get(sites.snapshot.siteId)?.owner!==active)active.update?.(time);residents?.update(time);residents?.evaluate({camera,renderer,additionalViews:water.reflectionViews?.(camera)??[]});}westernPlanting?.update(time);renderer.shadowMap.needsUpdate=true;renderer.info.reset();rendering.render(dt);return true;}
 function tick(now){
   raf=0;if(paused())return;const rawDt=last?Math.max(0,(now-last)/1000):0;last=now;
   const frameStart=performance.now();frameTiming={intervalMs:rawDt*1000,navigationMs:0,poseMs:0,guidesMs:0,renderCpuMs:0,cpuMs:0};
@@ -649,12 +833,12 @@ function resize(){if(!renderer||disposed||contextLost)return;const dpr=devicePix
 const observer=new ResizeObserver(resize);observer.observe(canvas);
 document.addEventListener('visibilitychange',()=>{redraw.cancel();clearKeys();audio.setSuspended(document.hidden);cancelAnimationFrame(raf);raf=0;last=0;if(!document.hidden){redraw.request();start();}});
 function showGraphicsRecovery(){document.body.dataset.ready='context-lost';$('loading').hidden=false;$('loading-copy').textContent=copy[lang].graphicsLost;$('reload-scene').hidden=false;syncControls();$('telemetry').textContent=JSON.stringify(evidence(),null,2);}
-canvas.addEventListener('webglcontextlost',event=>{event.preventDefault();contextLost=true;redraw.cancel();cancelAnimationFrame(raf);raf=0;keys.clear();touch.clear();audio.setSuspended(true);if(isJiuzhouComposition())try{releaseSceneJiuzhouDependents();}catch(error){console.error(new AggregateError([error],'Museum scene cleanup failed'));}showGraphicsRecovery();});
+canvas.addEventListener('webglcontextlost',event=>{event.preventDefault();contextLost=true;redraw.cancel();cancelAnimationFrame(raf);raf=0;clearVisitorMovement();audio.setSuspended(true);if(isJiuzhouComposition())try{releaseSceneJiuzhouDependents();}catch(error){console.error(new AggregateError([error],'Museum scene cleanup failed'));}showGraphicsRecovery();});
 // GPU-only environment maps and postprocess targets need a fresh scene owner.
 // A restored WebGL context alone must not re-label stale resources as ready.
 canvas.addEventListener('webglcontextrestored',()=>{if(!disposed&&contextLost)showGraphicsRecovery();});
 $('reload-scene').addEventListener('click',()=>location.reload());
-function setReviewPaused(value){reviewPaused=value;if(value){reviewFramesRemaining=0;reviewMotion=null;}keys.clear();touch.clear();cancelAnimationFrame(raf);raf=0;guides?.setPaused(reviewPaused);$('review-pause').textContent=reviewPaused?'继续动画 / Resume':'定格动画 / Freeze';$('review-pause').setAttribute('aria-pressed',String(reviewPaused));$('telemetry').textContent=JSON.stringify(evidence(),null,2);redraw.request();start();}
+function setReviewPaused(value){reviewPaused=value;if(value){reviewFramesRemaining=0;reviewMotion=null;}clearVisitorMovement();cancelAnimationFrame(raf);raf=0;guides?.setPaused(reviewPaused);$('review-pause').textContent=reviewPaused?'继续动画 / Resume':'定格动画 / Freeze';$('review-pause').setAttribute('aria-pressed',String(reviewPaused));$('telemetry').textContent=JSON.stringify(evidence(),null,2);redraw.request();start();}
 $('review-pause').addEventListener('click',()=>setReviewPaused(!reviewPaused));
 $('review-sample').addEventListener('click',()=>{reviewMotion=null;frameSamples.length=0;reviewFramesRemaining=30;setReviewPaused(false);});
 // Visible review controls exercise the real scene, its water and resident
@@ -779,7 +963,7 @@ for(const button of document.querySelectorAll('[data-review-drive]'))button.addE
 });
 if(reviewPaused){$('review-tools').open=true;$('review-pause').textContent='继续动画 / Resume';$('review-pause').setAttribute('aria-pressed','true');}
 $('capture').addEventListener('click',async()=>{
-  if(!ready||capturing||disposed)return;capturing=true;$('capture').disabled=true;document.body.dataset.capturing='true';syncControls();cancelAnimationFrame(raf);raf=0;keys.clear();touch.clear();
+  if(!ready||capturing||disposed)return;capturing=true;$('capture').disabled=true;document.body.dataset.capturing='true';syncControls();cancelAnimationFrame(raf);raf=0;clearVisitorMovement();
   try{if(!redraw.flush())throw new Error('The scene is not available for a fresh native frame.');const frame=readNativeFrame(renderer,canvas),data=evidence({full:true});data.capture={readback:frame.readback,width:frame.width,height:frame.height};const name=`museum-world-${sourceTag}-${currentSite.id}-${Date.now()}-${++serial}`,json=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const blob=await encodeNativeFrame(frame);if(disposed)throw new Error('No native frame');
     for(const [ext,body]of [['png',blob],['json',json]]){const response=await fetch(`/__review_capture/${name}.${ext}`,{method:'POST',body,signal:controller.signal});if(!response.ok)throw new Error(`Capture HTTP ${response.status}`);}message(`已保存 / Saved ${name}.png + JSON`,10);
   }catch(error){if(!disposed)message(error.message,10);}finally{capturing=false;$('capture').disabled=false;document.body.dataset.capturing='false';syncControls();start();}
@@ -787,7 +971,10 @@ $('capture').addEventListener('click',async()=>{
 function dispose(){
   if(disposed)return;disposed=true;
   const errors=[],previousCompositionCleanup=composition?.cleanupError;
-  for(const release of [()=>redraw.dispose(),releaseSceneJiuzhouDependents,()=>westernPlantingLifetime?.abort(),()=>westernPlanting?.dispose(),()=>controller.abort(),()=>keys.clear(),()=>cancelAnimationFrame(raf),()=>observer.disconnect(),
+  for(const release of [()=>redraw.dispose(),()=>{
+    const finish=retireWanfangMuseumShore();
+    finish.catch(error=>console.error(error));
+   },releaseSceneJiuzhouDependents,releaseSceneFrontCourtDependents,()=>westernPlantingLifetime?.abort(),()=>westernPlanting?.dispose(),()=>controller.abort(),clearVisitorMovement,()=>cancelAnimationFrame(raf),()=>observer.disconnect(),
     ()=>document.removeEventListener('keydown',keydown),()=>document.removeEventListener('keyup',keyup),()=>removeEventListener('blur',clearKeys),
     ()=>reader.dispose(),()=>directory.dispose(),()=>audio.dispose(),()=>sites?.dispose(),()=>westernPlanting?.dispose(),()=>composition?.dispose(),
     ()=>plantingCollisions?.dispose(),()=>shoreCommunity?.dispose(),()=>shoreBank?.dispose(),()=>shoreUnderstory?.dispose(),()=>plantingPilot?.dispose(),()=>residentArchitecture?.dispose(),()=>residents?.dispose(),()=>preparedGroundSources?.dispose(),()=>terrainAssets?.dispose(),()=>{if(!composition)architecture?.dispose();},
@@ -804,13 +991,15 @@ setLanguage(lang);
 try{
   renderer=new THREE.WebGLRenderer({canvas,antialias:true,preserveDrawingBuffer:true});renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFShadowMap;renderer.shadowMap.autoUpdate=false;
   renderer.info.autoReset=false;rendering=createRendering(renderer,scene,camera,{clipBox:new THREE.Box3(new THREE.Vector3(-1800,-40,-1500),new THREE.Vector3(1800,450,1500))});rendering.setQuality('high');
-  controls=new OrbitControls(camera,canvas);controls.enablePan=false;controls.enableDamping=false;controls.minDistance=4;controls.maxDistance=3200;controls.minPolarAngle=.04;controls.maxPolarAngle=Math.PI*.87;controls.addEventListener('change',()=>{if(paused())redraw.request();});
+  controls=new OrbitControls(camera,canvas);controls.enablePan=false;controls.enableDamping=false;controls.minDistance=4;controls.maxDistance=3200;controls.minPolarAngle=.04;controls.maxPolarAngle=Math.PI*.87;controls.addEventListener('change',()=>{trackVisitorCameraInput();if(!correctingCamera&&paused())redraw.request();});
   resize();busy(true,copy[lang].terrain);await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));controller.signal.throwIfAborted();
   await prepareMuseumGround();controller.signal.throwIfAborted();
   terrain=createGardenTerrain({layout:gardenLayout,coastline:createExhibitionCoast(gardenLayout),assetCourts:composition?terrainCourts:[...museumCourts(),...terrainCourts],assetPads:terrainPads,assetPaths:terrainPaths,replacements:terrainReplacements});scene.add(terrain.group);nav=createMuseumNavigation({terrain,architecture:()=>architecture,dynamicColliders:()=>[...(guides?.colliders||[]),...(currentPlantingCollision()?.dynamicColliders()||[])]});
   terrainAssets=createMuseumTerrainAssets({terrain,replacements:terrainReplacements});
   groundTextures=await loadGardenGroundTextures({resolution:'4k',signal:controller.signal});applyGardenGroundTextures(terrain.earthMaterial,groundTextures);
-  water=createGardenWater({terrain,layout:gardenLayout});water.setReflectionCropEnabled(query.get('reflectioncrop')==='1');scene.add(water.group);composition?.bindWater({terrain,water});environment=await createGardenEnvironment({renderer,scene,signal:controller.signal,timeMode:'auto',lightYaw:query.get('composition')==='xianfaqiao'&&query.get('court')==='garden-r4'?-120:0});
+  water=createGardenWater({terrain,layout:gardenLayout});water.setReflectionCropEnabled(query.get('reflectioncrop')==='1');scene.add(water.group);
+  if(isFrontCourtComposition())await prepareSceneFrontCourtLandscape();controller.signal.throwIfAborted();
+  composition?.bindWater({terrain,water,...(isFrontCourtComposition()?{dynamicColliders:()=>[...(guides?.colliders??[]),...(frontCourtLandscape?.collision?.dynamicColliders()??[])]}:{})});environment=await createGardenEnvironment({renderer,scene,signal:controller.signal,timeMode:'auto',lightYaw:query.get('composition')==='xianfaqiao'&&query.get('court')==='garden-r4'?-120:0});
   busy(true,copy[lang].visitor);visitor=await createMuseumVisitor({signal:controller.signal});scene.add(visitor.group);pool=await createMuseumGuidePool({signal:controller.signal});
   sites=createMuseumSiteController({sites:composition?.sites??museumSites,signal:controller.signal,load:async(site,{signal})=>{
     if(composition){const resource=await composition.borrow(site.id,{signal});borrowedOwners.add(resource);return resource;}
@@ -928,7 +1117,7 @@ try{
   }
   if(!composition&&['r1','r2','r3','r4'].includes(query.get('bank'))){await prepareSceneShoreBank();controller.signal.throwIfAborted();}
   if(composition&&query.get('composition')==='xianfaqiao'&&query.has('review'))prepareCompositionReview();
-  busy(false);await visit(composition?(composition.sites.find(site=>site.id===query.get('site'))?.id??composition.sites[0].id):(museumSite(query.get('site'))?.id||'yuanyingguan'));
+  busy(false);await visit(isFrontCourtComposition()?frontCourtRequestedSite(query).siteId:composition?(composition.sites.find(site=>site.id===query.get('site'))?.id??composition.sites[0].id):(museumSite(query.get('site'))?.id||'yuanyingguan'));
   if(composition&&!ready&&!disposed)throw new Error('The composed site could not mount its retained source and guides.');
   if(!disposed&&ready)message(copy[lang].ready,6);
 }catch(error){if(!disposed){const cleanupErrors=composition?releaseCompositionScene():[];sceneFailure={message:error.message,...(cleanupErrors.length?{cleanupErrors:cleanupErrors.map(error=>error.message)}:{}),plantingPlan:error.plan??null,shorePlacement:error.diagnostics??error.cause?.diagnostics??null};ready=false;busy(false);if(contextLost)showGraphicsRecovery();else{document.body.dataset.ready='failed';$('loading').hidden=false;$('loading-copy').textContent=`${copy[lang].failed} ${error.message}`;}$('telemetry').textContent=JSON.stringify(evidence(),null,2);console.error(error);}}

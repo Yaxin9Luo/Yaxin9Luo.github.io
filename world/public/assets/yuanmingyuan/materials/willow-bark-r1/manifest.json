@@ -1,0 +1,68 @@
+{
+  "id": "willow-bark-r1-public-materials",
+  "license": "CC0-1.0",
+  "licenseURL": "https://polyhaven.com/license",
+  "sourceURL": "https://polyhaven.com/a/bark_willow",
+  "authors": {
+    "photography": "Dimitrios Savva",
+    "processing": "Dario Barresi"
+  },
+  "sourceTileMetres": 1,
+  "assets": [
+    {
+      "file": "bark_willow_diff_4k.png",
+      "url": "/assets/yuanmingyuan/materials/willow-bark-r1/bark_willow_diff_4k.png",
+      "bytes": 88364007,
+      "sha256": "007e810e496e1b9d23510f198a7bb448cc5548feb7a997d0c80ec585a361e4f9",
+      "width": 4096,
+      "height": 4096,
+      "sourceURL": "https://dl.polyhaven.org/file/ph-assets/Textures/png/4k/bark_willow/bark_willow_diff_4k.png"
+    },
+    {
+      "file": "bark_willow_rough_4k.png",
+      "url": "/assets/yuanmingyuan/materials/willow-bark-r1/bark_willow_rough_4k.png",
+      "bytes": 37306459,
+      "sha256": "828b177867dedb7507e9d33c5777056fd2e25bee1f730b4d45e2bd9899629d33",
+      "width": 4096,
+      "height": 4096,
+      "sourceURL": "https://dl.polyhaven.org/file/ph-assets/Textures/png/4k/bark_willow/bark_willow_rough_4k.png"
+    },
+    {
+      "file": "bark-willow-height-4096.u16le",
+      "url": "/assets/yuanmingyuan/materials/willow-bark-r1/bark-willow-height-4096.u16le",
+      "bytes": 33554432,
+      "sha256": "2b11ab4032871882435c09f354ee57efeaf785b6dbc103b19d2e6e9fcc3f9cff",
+      "width": 4096,
+      "height": 4096,
+      "sourceURL": "https://dl.polyhaven.org/file/ph-assets/Textures/png/4k/bark_willow/bark_willow_disp_4k.png"
+    }
+  ],
+  "heightDerivation": {
+    "path": "derived/bark-willow-height-4096.u16le",
+    "bytes": 33554432,
+    "sha256": "2b11ab4032871882435c09f354ee57efeaf785b6dbc103b19d2e6e9fcc3f9cff",
+    "source": "original/bark_willow_disp_4k.png",
+    "sourceSHA256": "de1d8589ccdf75bf9fef01afb6a6a5604e0a8d105322a1fe0a9c4137fa146d2f",
+    "width": 4096,
+    "height": 4096,
+    "storage": "unsigned 16-bit little-endian row-major",
+    "rowOrigin": "top-left like decoded PNG; UV v=0 at image bottom requires sample row 1-v",
+    "normalization": "raw / 65535, no percentile remap or color correction",
+    "min": 114,
+    "max": 65173,
+    "mean": 28582.609728753567,
+    "quantiles": {
+      "p01": 10434.0,
+      "p05": 15910.0,
+      "p50": 27970.0,
+      "p95": 44865.0,
+      "p99": 53288.0
+    },
+    "heightMetres": "Unknown: provider height values are relative. Geometric displacement amplitude is a bounded modeling choice, not a measured absolute height.",
+    "physicalTileWidthMetres": 1,
+    "conversion": "Lossless unsigned representation of every original grayscale sample; original source PNG retained."
+  },
+  "historicalClaim": "A contemporary scanned bark presentation; not evidence for a historical individual tree.",
+  "sourceProvenanceSHA256": "b219ed3f20ca443c38ddd34d0aa706d5000e576986a8f80a1525311535e6dd7e",
+  "heightFormatSHA256": "d8e8edb67646678befb07e6c86ef5e29e6fc795ee3d17692dd7e85a7a7580c08"
+}

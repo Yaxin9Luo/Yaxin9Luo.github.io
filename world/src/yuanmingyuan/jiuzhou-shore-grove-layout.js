@@ -7,7 +7,7 @@ import {shoreUnderstoryTriangles} from './jiuzhou-shore-grove-source-metrics.js'
 export const jiuzhouShoreGroveId='jiuzhou-shore-grove-r4';
 export const jiuzhouShoreGroveRegionIds=Object.freeze(['a','b','c','d'].map(id=>'jiuzhou-shore-'+id));
 const forms=Object.freeze({
- willow:{radius:6.5,height:8.4,triangles:7925316},
+ willow:{radius:6.5,height:8.4,triangles:8475606},
  sedge:{radius:.9,height:.7,triangles:0},
  fern:{radius:1.30,height:.85,triangles:0},
 });
@@ -2532,7 +2532,7 @@ export function createJiuzhouShoreGroveLayout({layout=gardenLayout}={}){
    const serial=serials[species]=(serials[species]??0)+1;
    return {id:plantId??id+'-'+species+'-'+serial,species,...(variant?{variant}:{}),position:[x,null,z],scale:1,yaw,burial:.004,...(drift?{drift}:{}),
     envelope:{radius:form.radius,height:form.height},
-    evidence:{status:'contemporary-exhibition-design',surveyed:false,islandId:island.id,fullSourceRetained:true,sourceRevision:species==='willow'?'original-reviewed-willow':'jiuzhou-shore-understory-r4',sourceGeometryChanged:species!=='willow'}};
+    evidence:{status:'contemporary-exhibition-design',surveyed:false,islandId:island.id,fullSourceRetained:true,sourceRevision:species==='willow'?'willow-root-continuum-r5':'jiuzhou-shore-understory-r4',sourceGeometryChanged:true}};
   });
   const bounds={minX:Infinity,maxX:-Infinity,minZ:Infinity,maxZ:-Infinity};
   for(const p of placements){const[x,,z]=p.position,r=p.envelope.radius;bounds.minX=Math.min(bounds.minX,x-r);bounds.maxX=Math.max(bounds.maxX,x+r);bounds.minZ=Math.min(bounds.minZ,z-r);bounds.maxZ=Math.max(bounds.maxZ,z+r);}

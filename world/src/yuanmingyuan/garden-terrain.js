@@ -1,3 +1,4 @@
+import {createGroundPathProfile} from './terrain-ground-path.js';
 import * as THREE from 'three';
 import { gardenLayout, pointInPolygon } from './garden-layout.js';
 import { prepareTerrainPads, applyTerrainPads } from './terrain-pads.js';
@@ -23,6 +24,7 @@ function groundPath(path) {
   if (!path.id || ![path.from, path.to].every(point => Array.isArray(point) && point.length === 3 && point.every(Number.isFinite)) || !Number.isFinite(path.width) || path.width <= 0 || !Number.isFinite(path.thickness) || path.thickness <= 0) throw new Error('Asset paths need id, finite world endpoints, positive width and thickness');
   const [from, to] = [path.from, path.to], dx = to[0] - from[0], dz = to[2] - from[2], length = Math.hypot(dx, dz);
   if (length < 1e-5) throw new Error('Asset paths need distinct XZ endpoints');
+  if(path.conformToTerrain!==undefined&&typeof path.conformToTerrain!=='boolean')throw new Error('Terrain conformance must be an explicit boolean.');
   const nx = -dz / length * path.width / 2, nz = dx / length * path.width / 2;
   return { ...path, length, polygon: [[from[0] - nx, from[2] - nz], [to[0] - nx, to[2] - nz], [to[0] + nx, to[2] + nz], [from[0] + nx, from[2] + nz]] };
 }
@@ -271,11 +273,24 @@ export function createGardenTerrain({ layout = gardenLayout, assetCourts = [], a
   addMesh(islandBase, stoneMaterial, islandBase.name, 'island-foundation');
   const soilGeometryCount = supportGeometries.length, soilSampler = createTriangleSampler(supportGeometries), stone = new MasonryBatch('yuanming-bridge-stone-balustrades', palette.stone);
   const sampleSoil=(x,z,maxY=Infinity)=>higherTerrainSurface(soilSampler.sample(x,z,maxY),samplePatches(x,z,{maxY,includeBridges:false}));
+  function releaseTerrainResources(detailSampler){const errors=[];for(const action of [...[...patchOwners.values()].map(patch=>()=>patch.dispose()),()=>detailSampler?.dispose(),()=>soilSampler.dispose(),()=>shore.dispose(),()=>oceanShore.dispose(),...[waterIndex,assetWaterIndex,islandIndex,courtIndex,courtNearIndex,hillIndex,padNearIndex].map(index=>()=>index.clear()),...[...resources.geometries].map(geometry=>()=>geometry.dispose()),...[...resources.materials].map(material=>()=>material.dispose()),...[...resources.textures].map(texture=>()=>texture.dispose()),()=>group.clear()])try{action();}catch(error){errors.push(error);}if(errors.length)throw new AggregateError(errors,'Terrain disposal failed');}
+
   for (const path of pathDefs) {
     const batch = new MasonryBatch(`${path.id}-stone-path`, palette.stone), from = [path.from[0], path.from[2]], to = [path.to[0], path.to[2]];
-    batch.beam(from, to, path.width, path.from[1] - path.thickness, path.from[1], path.to[1] - path.thickness, path.to[1]);
+    let profile=null;
+    try{if(path.conformToTerrain)profile=createGroundPathProfile(path,sampleSoil);}
+    catch(error){
+      try{releaseTerrainResources(null);}catch(cleanup){throw new AggregateError([error,cleanup],'Terrain path preparation and cleanup failed');}
+      throw error;
+    }
+    if(profile){
+      for(let i=1;i<profile.sections.length;i++){
+        const a=profile.sections[i-1],b=profile.sections[i];
+        batch.beam([a.x,a.z],[b.x,b.z],path.width,a.y-path.thickness,a.y,b.y-path.thickness,b.y);
+      }
+    }else batch.beam(from, to, path.width, path.from[1] - path.thickness, path.from[1], path.to[1] - path.thickness, path.to[1]);
     const geometry = batch.geometry(), mesh = addMesh(geometry, stoneMaterial, geometry.name, 'exhibition-ground-path', true);
-    mesh.userData.evidence = 'exhibition-design';pathRecords.push({ ...path, geometry });
+    mesh.userData.evidence = 'exhibition-design';pathRecords.push({ ...path,...(profile?{to:[path.to[0],profile.endY,path.to[2]],terrainProfile:profile}:{}), geometry });
   }
   for (const bridge of layout.bridges ?? []) {
     const built = createArchBridgeGeometry(bridge, (x, z) => sampleSoil(x, z)?.height, waters[0]?.surfaceY ?? 2);
@@ -376,7 +391,7 @@ export function createGardenTerrain({ layout = gardenLayout, assetCourts = [], a
     },triangleCount:localSoil.triangleCount+localDetail.triangleCount,dispose(){if(released)return;released=true;localSoil.dispose();localDetail.dispose();}};
   }
   let disposed = false;
-  function dispose() {if(disposed)return;disposed=true;const errors=[];for(const action of [...[...patchOwners.values()].map(patch=>()=>patch.dispose()),()=>sampler.dispose(),()=>soilSampler.dispose(),()=>shore.dispose(),()=>oceanShore.dispose(),...[waterIndex,assetWaterIndex,islandIndex,courtIndex,courtNearIndex,hillIndex,padNearIndex].map(index=>()=>index.clear()),...[...resources.geometries].map(geometry=>()=>geometry.dispose()),...[...resources.materials].map(material=>()=>material.dispose()),...[...resources.textures].map(texture=>()=>texture.dispose()),()=>group.clear()])try{action();}catch(error){errors.push(error);}if(errors.length)throw new AggregateError(errors,'Terrain disposal failed');}
+  function dispose() {if(disposed)return;disposed=true;releaseTerrainResources(sampler);}
   function replacement(id){const patch=patchOwners.get(id);if(!patch)throw new Error(`Unknown terrain replacement: ${id}`);return patch;}
   return { group, earthMaterial, heightAt: (x, z, options) => surfaceAt(x, z, options)?.height, surfaceAt, createGuideSupport, waterSurfaces, colliders, diagnostics, bridges: bridgeRecords,
     colorAt(x,y,z,target){if(disposed)throw new Error('Terrain color owner has been disposed');if(![x,y,z].every(Number.isFinite)||(target!==undefined&&!target?.isColor))throw new Error('Terrain color needs finite world XYZ and an optional Color target');return groundColor(x,y,z,target);},
