@@ -116,5 +116,8 @@ export const publishedAssets = Object.freeze({
   "/textures/yuanmingyuan/meadow-4k/normal.webp": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/textures/yuanmingyuan/meadow-4k/normal.webp",
   "/textures/yuanmingyuan/meadow-4k/roughness.webp": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/textures/yuanmingyuan/meadow-4k/roughness.webp",
   "/textures/yuanmingyuan-lake-stone/color.webp": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/textures/yuanmingyuan-lake-stone/color.webp",
-  "/textures/yuanmingyuan-lake-stone/normal.webp": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/textures/yuanmingyuan-lake-stone/normal.webp"
+  "/textures/yuanmingyuan-lake-stone/normal.webp": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/textures/yuanmingyuan-lake-stone/normal.webp",
+  "/assets/yuanmingyuan/materials/willow-bark-r1/bark_willow_diff_4k.png": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/3aa1309f0711a877500ac0f77010ddb00f2bea3c/world/public/assets/yuanmingyuan/materials/willow-bark-r1/bark_willow_diff_4k.png",
+  "/assets/yuanmingyuan/materials/willow-bark-r1/bark_willow_rough_4k.png": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/3aa1309f0711a877500ac0f77010ddb00f2bea3c/world/public/assets/yuanmingyuan/materials/willow-bark-r1/bark_willow_rough_4k.png",
+  "/assets/yuanmingyuan/materials/willow-bark-r1/bark-willow-height-4096.u16le": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/3aa1309f0711a877500ac0f77010ddb00f2bea3c/world/public/assets/yuanmingyuan/materials/willow-bark-r1/bark-willow-height-4096.u16le"
 });

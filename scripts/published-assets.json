@@ -585,6 +585,21 @@
       "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/69b950ccd0bcd5b3f78d474e35826368eb7a3d90/world/public/textures/yuanmingyuan-lake-stone/normal.webp",
       "bytes": 7090898,
       "sha256": "1fd3e0ad8e6fdb245fa34e98068e38045db93f6472212b51c6f73cea72474237"
+    },
+    "/assets/yuanmingyuan/materials/willow-bark-r1/bark_willow_diff_4k.png": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/3aa1309f0711a877500ac0f77010ddb00f2bea3c/world/public/assets/yuanmingyuan/materials/willow-bark-r1/bark_willow_diff_4k.png",
+      "bytes": 88364007,
+      "sha256": "007e810e496e1b9d23510f198a7bb448cc5548feb7a997d0c80ec585a361e4f9"
+    },
+    "/assets/yuanmingyuan/materials/willow-bark-r1/bark_willow_rough_4k.png": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/3aa1309f0711a877500ac0f77010ddb00f2bea3c/world/public/assets/yuanmingyuan/materials/willow-bark-r1/bark_willow_rough_4k.png",
+      "bytes": 37306459,
+      "sha256": "828b177867dedb7507e9d33c5777056fd2e25bee1f730b4d45e2bd9899629d33"
+    },
+    "/assets/yuanmingyuan/materials/willow-bark-r1/bark-willow-height-4096.u16le": {
+      "url": "https://raw.githubusercontent.com/Yaxin9Luo/Yaxin9Luo.github.io/3aa1309f0711a877500ac0f77010ddb00f2bea3c/world/public/assets/yuanmingyuan/materials/willow-bark-r1/bark-willow-height-4096.u16le",
+      "bytes": 33554432,
+      "sha256": "2b11ab4032871882435c09f354ee57efeaf785b6dbc103b19d2e6e9fcc3f9cff"
     }
   }
 }
