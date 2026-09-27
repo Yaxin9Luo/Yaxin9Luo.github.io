@@ -15,6 +15,6 @@
   "publicCandidateSHA256": "6a35473600cfbe98e0b63ceb7a9e66b79b6989aba9751d09bce997b408dee6f1",
   "transformation": "Byte-identical copy of the full page render; no crop, retouch, OCR, AI enhancement or invented annotations.",
   "rightsSource": "https://commons.wikimedia.org/wiki/File:NLC404-01J000317-23042_中國營造學社彙刊_1933年4卷2期.pdf",
-  "rightsStatement": "Historical plan reproduced in a 1933 journal; consult the linked source catalog rights notice. No ownership of the historical plan is claimed.",
-  "published": false
+  "rightsStatement": "Wikimedia Commons marks the source PDF public domain (credit: National Library of China; author: 中國營造學社); checked 2026-09-27. No ownership of the historical plan is claimed.",
+  "published": true
 }

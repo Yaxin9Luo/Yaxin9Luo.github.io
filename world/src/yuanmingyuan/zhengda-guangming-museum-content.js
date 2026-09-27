@@ -174,7 +174,7 @@ export const zhengdaGuangmingMuseumImages={
       "en": "Original caption: National Library of Peiping · Mirrored scan of the 1933 Bulletin"
     },
     "source": "https://upload.wikimedia.org/wikipedia/commons/6/61/NLC404-01J000317-23042_%E4%B8%AD%E5%9C%8B%E7%87%9F%E9%80%A0%E5%AD%B8%E7%A4%BE%E5%BD%99%E5%88%8A_1933%E5%B9%B44%E5%8D%B72%E6%9C%9F.pdf#page=189",
-    "license": "Historical plan reproduction; source catalog rights notice linked in provenance",
+    "license": "Public domain (Wikimedia Commons; National Library of China scan of the 1933 Bulletin)",
     "width": 1250,
     "height": 1817,
     "role": "historical-source-image",
