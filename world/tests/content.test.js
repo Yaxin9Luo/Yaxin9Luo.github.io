@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
-import {profile,research,publications,experience,journey,news,links,cvForLanguage,openSource} from '../src/content.js';
+import {profile,research,publications,selectedPublications,experience,journey,news,links,cvForLanguage,openSource} from '../src/content.js';
 import {renderJournal} from '../src/journal.js';
 import {locations} from '../src/locations.js';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../..');
@@ -41,19 +41,19 @@ test('both resume HTML files and the website share the dated GitHub star snapsho
   }
 });
 
-test('traditional pages receive the same current facts and all resume publications',()=>{
+test('traditional pages receive the same current facts and selected publications',()=>{
   const data=JSON.parse(fs.readFileSync(path.join(root,'_data/portfolio.json'),'utf8'));
-  assert.deepEqual(data.publications,publications);
+  assert.deepEqual(data.publications,selectedPublications);
   assert.deepEqual(data.profile,profile);
   assert.deepEqual(data.experience,experience);
   assert.deepEqual(data.journey,journey);
-  for(const id of ['dartree','videococo','detail-targeting','dynamic-pyramid'])assert.ok(publications.some(p=>p.id===id));
+  for(const id of selectedPublications.map(p=>p.id))assert.ok(publications.some(p=>p.id===id));
 });
 test('every portfolio chapter is readable in either language with no progress',()=>{
   for(const lang of ['en','zh'])for(const {id} of locations){
     const html=renderJournal(id,lang,null);assert.ok(html.includes('journal-page'));assert.ok(!html.includes('undefined'));
     assert.ok(!html.includes('[object Object]'));assert.ok(!html.includes('unlock'));
-    if(id==='publications')for(const paper of publications)assert.ok(html.includes(`paper-${paper.id}`));
+    if(id==='publications')for(const paper of selectedPublications)assert.ok(html.includes(`paper-${paper.id}`));
     for(const match of html.matchAll(/target="_blank"[^>]*>/g))assert.ok(match[0].includes('noopener'));
   }
 });
