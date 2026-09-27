@@ -5,7 +5,7 @@
   <div class="cv-hero__inner">
     <div class="cv-hero__left">
       <h1 class="cv-title">{{ portfolio.profile.name[lang] }}</h1>
-      <div class="cv-subtitle">{% if lang == 'zh' %}原生多模态系统 · Agent Harness · 长程多模态任务{% else %}Native Multimodal Systems · Agent Harnesses · Long-Horizon Tasks{% endif %}</div>
+      <div class="cv-subtitle">Artifact Design Post-Training · Long-Horizon Agentic Task Post-Training</div>
       <div class="cv-contact">
         <a href="mailto:Yaxin.Luo@mbzuai.ac.ae" class="cv-chip">Yaxin.Luo@mbzuai.ac.ae</a>
         <span class="cv-chip">+86 150 1025 8639 · +971 58 569 9266</span>
@@ -23,7 +23,7 @@
     </div>
   </div>
   <div class="cv-hero__underline"></div>
-  <div class="cv-hero__note">MBZUAI · {% if lang == 'zh' %}更新于{% else %}Updated{% endif %} 2026-09-08</div>
+  <div class="cv-hero__note">MBZUAI · {% if lang == 'zh' %}更新于{% else %}Updated{% endif %} 2026-09-27</div>
 </section>
 <div class="cv-grid cv-grid--resume">
   <section class="cv-section">
@@ -40,7 +40,7 @@
   <section class="cv-section">
     <h2 class="cv-h2">{% if lang == 'zh' %}研究与实习经历{% else %}Research Experience{% endif %}</h2>
     <div class="cv-timeline">
-      {% for experience in portfolio.experience limit:2 %}<div class="cv-item"><div class="cv-item__title">{{ experience.role[lang] }} · {{ experience.organization[lang] }}</div><div class="cv-item__meta">{{ experience.period[lang] }}</div><p>{{ experience.description[lang] }}</p></div>{% endfor %}
+      {% for experience in portfolio.experience limit:3 %}<div class="cv-item"><div class="cv-item__title">{{ experience.role[lang] }} · {{ experience.organization[lang] }}</div><div class="cv-item__meta">{{ experience.period[lang] }}</div><p>{{ experience.description[lang] }}</p></div>{% endfor %}
     </div>
   </section>
   <section class="cv-section">{% include open-source-projects.html lang=lang %}</section>

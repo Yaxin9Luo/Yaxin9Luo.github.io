@@ -29,7 +29,7 @@ author_profile: true
   </div>
 
   <div class="current-focus">
-    近期聚焦生产力级多模态智能体设计，以及支撑长程任务的 Agent Harness 自动迭代。
+    我的长期目标是构建能在数字世界中完成任意复杂、长程人类专家工作的智能体系统，并逐步探索向真实世界任务扩展。目前重点是让模型可靠完成生产级设计类 Agentic 任务，并构建支撑这些任务的长程 Harness 自动迭代系统。
   </div>
 </div>
 </div>

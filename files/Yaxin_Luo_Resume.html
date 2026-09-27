@@ -223,6 +223,11 @@
 
     .bullets.tight li { margin: .65mm 0; }
 
+    .sheet:first-child .section { margin-top: 3mm; }
+    .sheet:first-child .entry:not(:last-child) { margin-bottom: 2mm; }
+    .sheet:first-child .bullets { line-height: 1.30; }
+    .sheet:first-child .bullets:not(.tight) li { margin: .65mm 0; }
+
     .evidence {
       display: inline-block;
       margin-left: 1.4mm;
@@ -372,7 +377,7 @@
       <header class="header">
         <div>
           <h1 class="name">Yaxin Luo</h1>
-          <p class="focus">Native Multimodal Systems · Agent Harnesses · Long-Horizon Multimodal Tasks</p>
+          <p class="focus">Long-Horizon Agentic Post-Training · Artifact Design · Agent Harness</p>
         </div>
         <div class="contact">
           <span>+86 150 1025 8639</span><span>+971 58 569 9266</span>
@@ -401,13 +406,23 @@
         <h2 class="section-title">Research Experience</h2>
         <article class="entry">
           <div class="entry-head">
-            <div class="entry-title"><strong class="org">Meituan · M17 LongCat</strong><span class="role">Research Intern</span></div>
-            <span class="date">Apr 2026-Present</span>
+            <div class="entry-title"><strong class="org">Meituan · M17 LongCat</strong><span class="role">Research Intern, Northern Dipper Talent Program</span></div>
+            <span class="date">Sep 2026-Present</span>
           </div>
           <ul class="bullets">
             <li>Research and build Agent Harnesses for <strong>long-horizon multimodal design tasks</strong>, producing trajectories for subsequent model training and integrating execution, tool use, trace capture, automated evaluation, and iterative optimization into a reproducible pipeline.</li>
-            <li>Investigate harness self-evolution and meta-optimization: within a fixed model capability boundary, use rollout evidence, evaluator feedback, and component-level updates to improve reliable completion of long-horizon tasks.</li>
-            <li>Use <strong>AutoDesign</strong> as Phase I of the long-term LongCat project to validate an end-to-end research loop spanning long-horizon design agents, reusable DesignHarnesses, evaluation protocols, and real deliverables, establishing a systems foundation for subsequent model-and-harness iteration.</li>
+            <li>Investigate <strong>harness automation and meta-optimization</strong>: within a fixed model capability boundary, use rollout evidence, evaluator feedback, and component-level updates to improve reliable completion of long-horizon tasks.</li>
+            <li>Contribute to the full <strong>LongCat 2.5 post-training workflow for Agentic Design</strong>, from post-training harness design and training-oriented trajectory collection to <strong>Mid-Training and subsequent SFT and RFT</strong>, studying how to internalize behaviors from harness trajectories in the model.</li>
+          </ul>
+        </article>
+
+        <article class="entry">
+          <div class="entry-head">
+            <div class="entry-title"><strong class="org">Meituan · M17 LongCat</strong><span class="role">Research Intern</span></div>
+            <span class="date">Apr 2026-Sep 2026</span>
+          </div>
+          <ul class="bullets">
+            <li>Focused on <strong>AutoDesign</strong> to explore long-horizon design agents and harness methods, validating an end-to-end research loop spanning reusable DesignHarnesses, evaluation protocols, and real deliverables, and establishing a systems foundation for subsequent foundation-model agent and harness iteration.</li>
           </ul>
         </article>
 
@@ -427,7 +442,7 @@
         <h2 class="section-title">Open-Source Agent and Harness Systems</h2>
         <article class="entry">
           <div class="entry-head">
-            <div class="entry-title"><strong class="org">AutoDesign</strong><span class="evidence">197 Stars · 2026.09.09</span></div>
+            <div class="entry-title"><strong class="org">AutoDesign</strong><span class="evidence">227 Stars · 2026.09.27</span></div>
             <span class="date">2026-Present</span>
           </div>
           <ul class="bullets tight">
@@ -440,7 +455,7 @@
 
         <article class="entry">
           <div class="entry-head">
-            <div class="entry-title"><strong class="org">FigMirror</strong><span class="evidence">510 Stars · 2026.09.09</span></div>
+            <div class="entry-title"><strong class="org">FigMirror</strong><span class="evidence">518 Stars · 2026.09.27</span></div>
             <span class="date">2026-Present</span>
           </div>
           <ul class="bullets tight">
@@ -564,7 +579,7 @@
       const fontSelect = document.getElementById('fontSelect');
       const accentInput = document.getElementById('accentInput');
       const status = document.getElementById('toolbarStatus');
-      const storageKey = 'yaxin-luo-resume-foundation-agent-en-20260908';
+      const storageKey = 'yaxin-luo-resume-foundation-agent-en-20260921-v2';
       let saveTimer;
       let savedRange = null;
 

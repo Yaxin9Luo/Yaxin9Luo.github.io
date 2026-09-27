@@ -15,8 +15,8 @@ export const profile = {
   role: bilingual('Machine Learning PhD Student', '机器学习博士生'),
   affiliation: bilingual('MBZUAI · VILA Lab', 'MBZUAI · VILA 实验室'),
   bio: bilingual(
-    'I am a Machine Learning PhD student at MBZUAI, advised by Prof. Zhiqiang Shen. I build native multimodal AI systems that unify understanding, reasoning, generation, and sustained execution over complex tasks. My current focus is production-grade multimodal agentic design and automated iteration of long-horizon agent harnesses. At Meituan M17 LongCat, I connect execution, tool use, rollout traces, evaluation, and harness optimization to produce trajectories for subsequent model training. Welcome to my little world of ideas.',
-    '我是罗亚鑫，在 MBZUAI 攻读机器学习博士，导师是 Zhiqiang Shen 教授。我研究统一理解、推理、生成与长程复杂任务执行的原生多模态 AI 系统，近期聚焦生产力级多模态智能体设计（multimodal agentic design）与长程 Agent Harness 的自动迭代。在美团 M17 龙猫实习期间，我将任务执行、工具调用、rollout 轨迹、评测与 Harness 优化连接起来，为后续模型训练准备轨迹。欢迎来到这个由想法构成的小小世界。',
+    'I am a Machine Learning PhD student at MBZUAI, advised by Prof. Zhiqiang Shen. My long-term goal is to build agentic systems that can carry out arbitrary complex, long-horizon human expert work in digital environments, with a path toward real-world tasks. My current focus is production-grade models for agentic design and automated iteration systems for the long-horizon harnesses that support them.',
+    '我是罗亚鑫，在 MBZUAI 攻读机器学习博士，导师是 Zhiqiang Shen 教授。我的长期目标是构建能够在数字世界中完成任意复杂、长程人类专家工作的智能体系统，并逐步探索扩展到真实世界任务。目前重点是让模型可靠完成生产级设计类 Agentic 任务，并构建支撑这些任务的长程 Harness 自动迭代系统。',
   ),
   portrait: '/images/Yaxin.JPG',
 };
@@ -25,55 +25,23 @@ export const research = [
   {
     id: 'multimodal-agents',
     title: bilingual(
-      'Native Multimodal Systems',
-      '原生多模态系统',
+      'Artifact Design Post-Training',
+      'Artifact Design 后训练',
     ),
     description: bilingual(
-      'I aim to build native multimodal AI systems that unify understanding, reasoning, generation, and sustained execution over complex tasks. My near-term focus is production-grade models for multimodal agentic design, with structured, editable outputs and long-horizon interaction.',
-      '我希望构建统一理解、推理、生成与长程复杂任务执行的原生多模态 AI 系统，近期聚焦能够完成生产力级多模态设计任务的模型，让智能体通过长程交互产出结构化、可编辑的成果。',
+      'I build production-grade models for agentic design and study post-training methods for high-quality, structured, editable artifacts, including scientific figures, posters, presentations, and web experiences. AutoDesign provides a concrete setting for this work.',
+      '我研究面向 Agentic Design 的模型与 post-training 方法，目标是生成高质量、结构化且可编辑的数字制品，包括科研绘图、海报、演示文稿和网页。AutoDesign 为这项工作提供了具体场景。',
     ),
   },
   {
-    id: 'recursive-improvement',
+    id: 'agentic-task-post-training',
     title: bilingual(
-      'Agent Harnesses & Self-improvement',
-      'Agent Harness 与自我改进',
+      'Long-Horizon Agentic Task Post-Training',
+      '长程智能体任务后训练',
     ),
     description: bilingual(
-      'I research automated iteration of the harnesses around long-horizon agents. At a fixed model capability boundary, rollout evidence, evaluator feedback, component-level updates, and acceptance gates improve reusable infrastructure. Execution traces also provide a systems foundation for subsequent model training and model-and-harness iteration.',
-      '我研究长程智能体外围 Harness 的自动迭代：在固定模型能力边界下，利用 rollout 证据、评测反馈、单组件更新与接受门控，改进可复用的智能体基础设施；同时积累可复现轨迹，为后续模型训练与模型—Harness 协同迭代提供系统基础。',
-    ),
-  },
-  {
-    id: 'agentic-design',
-    title: bilingual('Long-Horizon Agentic Design', '长程智能体设计'),
-    description: bilingual(
-      'AutoDesign turns papers into editable posters, slides, webpages, and captioned videos using a model-agnostic DesignHarness. An inner Designer–Critic loop refines artifacts while outer Meta-Harness Optimization improves reusable infrastructure. FigMirror applies reference-driven, multi-round refinement to scientific figures and editable Matplotlib code.',
-      'AutoDesign 通过模型无关的 DesignHarness，将论文转化为可编辑海报、幻灯片、网页与带字幕视频；内层 Designer–Critic 迭代产物，外层 Meta-Harness Optimization 改进可复用系统。FigMirror 则将参考图驱动的多轮 refinement 用于科研绘图与可编辑 Matplotlib 代码。',
-    ),
-  },
-  {
-    id: 'efficient-vision',
-    title: bilingual('Efficient Vision and Language', '高效视觉与语言学习'),
-    description: bilingual(
-      'My earlier work studies visual grounding and efficient multimodal learning: anchor-based prompts in APL, dynamic visual routing in DViN, and mixture-of-depth adaptation in γ-MoD. Collaborative work also explores dynamic pyramid networks and speculative diffusion decoding with DARTree.',
-      '早期工作围绕视觉定位与高效多模态学习展开，包括 APL 的锚点提示、DViN 的动态视觉路由与 γ-MoD 的混合深度适配。合作研究还涉及动态金字塔网络与 DARTree 的扩散推测解码。',
-    ),
-  },
-  {
-    id: 'evaluation-reliability',
-    title: bilingual('Agent Evaluation and Reliable Knowledge', '智能体评估与可靠知识'),
-    description: bilingual(
-      'Open CaptchaWorld examines the abilities and limits of multimodal agents in interactive web tasks. Next-Gen CAPTCHAs studies defenses grounded in human–agent cognitive differences. DRAG explores evidence and knowledge-graph distillation for smaller language models.',
-      'Open CaptchaWorld 通过交互式网页任务考察多模态智能体的能力与局限。Next-Gen CAPTCHAs 研究基于人与智能体认知差异的防御机制。DRAG 则探索面向小型语言模型的证据与知识图谱蒸馏。',
-    ),
-  },
-  {
-    id: 'data-and-transfer',
-    title: bilingual('Training Data and Cross-Modal Transfer', '训练数据与跨模态迁移'),
-    description: bilingual(
-      'Related work investigates language-pretraining priors for vision, the domain composition of LLM training data in LLMSurgeon, and compact training sets through FADRM and committee voting. These projects ask how models can learn effectively from the information already available.',
-      '相关工作研究语言预训练先验向视觉任务的迁移、LLMSurgeon 中的大模型训练数据领域配比，以及 FADRM 和委员会投票中的紧凑训练集。这些项目共同关注：如何让模型更有效地利用已有信息。',
+      'I study post-training for long-horizon agentic tasks and build Agent Harnesses for multimodal design workflows. This includes reproducible execution, tool use, trajectory capture, automated evaluation, iterative optimization, and training pipelines informed by rollout evidence and evaluator feedback.',
+      '我研究长程智能体任务的 post-training，并为多模态设计工作流构建 Agent Harness，将任务执行、工具调用、轨迹采集、自动评测与迭代优化整合为可复现流程；同时利用 rollout 证据与评测反馈改进系统并支持后续模型训练。',
     ),
   },
 ];
@@ -134,7 +102,7 @@ export const publications = [
     authors: 'Yaxin Luo*, Haobin Jiang*, Jialv Zou, Xu Huang, Wenhao Yan, Haodong Li, Zhengrong Yue, Jing Li, Xiaofu Chen, Xiaohan Zhao, Jiacheng Liu, Jiacheng Cui, Zhiqiang Shen, Xiaotong Li',
     summary: bilingual(
       'Meta-Harness Optimization improves a reusable DesignHarness through rollout evidence, evaluation, and acceptance gates. On the 100-paper PosterBench, the reported best score is 78.32, 7.45 points above Claude Design under the matched configuration; gains across seven matched configurations range from 5.01 to 19.56 points.',
-      'Meta-Harness Optimization 通过 rollout 证据、评测与接受门控改进可复用的 DesignHarness。在 100 篇论文的 PosterBench 上，公开结果最高为 78.32 分，较同配置 Claude Design 高 7.45 分；7 组匹配配置的增益为 5.01–19.56 分。',
+      'AutoDesign 使用可复用的 DesignHarness、rollout 证据、评测与接受门控研究长程智能体设计。在 100 篇论文的 PosterBench 上，公开结果最高为 78.32 分，较同配置 Claude Design 高 7.45 分；7 组匹配配置的增益为 5.01–19.56 分。',
     ),
     image: '/images/autodesign.webp',
     links: [paper('https://arxiv.org/abs/2608.13560'), code('https://github.com/Yaxin9Luo/AutoDesign'), project('https://autodesign.designanything.ai/'), demo('https://designanything.ai/')],
@@ -261,18 +229,40 @@ export const publications = [
   },
 ];
 
+// Public-facing publications follow the author's contribution and research-fit criteria.
+// Keep the full source collection above for project detail pages and cross-links.
+export const selectedPublications = publications.filter(({ id }) => [
+  'autodesign',
+  'nextgen-captchas',
+  'llmsurgeon',
+  'language-bias',
+  'opencaptchaworld',
+  'gamma-mod',
+  'apl',
+].includes(id));
+
 export const experience = [
   {
-    id: 'longcat-intern',
-    role: bilingual('Research Intern', '研究实习生'),
+    id: 'longcat-talent-program',
+    role: bilingual('Research Intern · Northern Dipper Talent Program', '北斗计划研究实习生'),
     organization: bilingual(
       'Meituan · M17 LongCat',
       '美团 · M17 龙猫',
     ),
-    period: bilingual('Apr 2026 – Present · Beijing, China', '2026 年 4 月至今 · 中国北京'),
+    period: bilingual('Sep 2026 – Present · Beijing, China', '2026 年 9 月至今 · 中国北京'),
     description: bilingual(
-      'Researching agent harnesses for long-horizon multimodal design, connecting execution, tool use, trace capture, automated evaluation, and iterative optimization into a reproducible pipeline for subsequent model training. Investigating harness self-evolution through rollout evidence and component-level updates at a fixed model boundary. AutoDesign is Phase I of this long-term project, connecting design agents, reusable DesignHarnesses, evaluation protocols, and real deliverables.',
-      '面向多模态长程设计任务研究 Agent Harness，将任务执行、工具调用、轨迹记录、自动评测与迭代优化组织为可复现链路，为后续模型训练准备轨迹。在固定模型能力边界下，利用 rollout 证据和单组件更新探索 Harness 自进化。以 AutoDesign 作为长期项目第一阶段，连接设计智能体、可复用 DesignHarness、评测协议与真实交付物。',
+      'Research and build Agent Harnesses for long-horizon multimodal design tasks, integrating execution, tool use, trace capture, automated evaluation, and iterative optimization into a reproducible pipeline. Investigate harness automation and meta-optimization using rollout evidence, evaluator feedback, and component-level updates. Contribute to the full LongCat 2.5 post-training workflow for Agentic Design, from post-training harness design and training-oriented trajectory collection to Mid-Training, SFT, and RFT, studying how to internalize behaviors from harness trajectories in the model.',
+      '面向多模态长程设计任务研究并构建 Agent Harness，将任务执行、工具调用、轨迹记录、自动评测与迭代优化整合为可复现流程。探索 Harness 自动化与元优化，利用 rollout 证据、评测反馈和组件级更新提升长程任务的稳定交付能力。参与 LongCat 2.5 Agentic Design 任务后训练全流程，涵盖后训练 Harness 设计、面向训练的轨迹采集、Mid-Training、SFT 与 RFT，研究如何将 Harness 轨迹中的行为内化到模型中。',
+    ),
+  },
+  {
+    id: 'longcat-research-intern',
+    role: bilingual('Research Intern', '研究实习生'),
+    organization: bilingual('Meituan · M17 LongCat', '美团 · M17 龙猫'),
+    period: bilingual('Apr 2026 – Sep 2026 · Beijing, China', '2026 年 4 月至 9 月 · 中国北京'),
+    description: bilingual(
+      'Focused on AutoDesign and long-horizon design agents, developing reusable DesignHarnesses, evaluation protocols, and workflows around real deliverables.',
+      '聚焦 AutoDesign 与长程设计智能体，围绕真实交付物构建可复用的 DesignHarness、评测协议与工作流。',
     ),
   },
   {
@@ -317,7 +307,7 @@ export const journey = [
       'Aug 2025 – Present',
       '2025 年 8 月至今',
     ),
-    description: bilingual('Advised by Prof. Zhiqiang Shen. Exploring native multimodal foundation models, agentic systems, and recursive self-improvement.', '导师为 Zhiqiang Shen 教授，探索原生多模态基础模型、智能体系统与递归式自我改进。'),
+    description: bilingual('Advised by Prof. Zhiqiang Shen. Researching post-training for artifact design and long-horizon agentic tasks, with the long-term goal of enabling agents to carry out complex expert work in digital environments.', '导师为 Zhiqiang Shen 教授，主要研究 artifact design 与长程智能体任务的 post-training，长期目标是让智能体能够在数字世界中完成复杂专家工作。'),
   },
   {
     id: 'dtu',

@@ -13,8 +13,8 @@
       "zh": "MBZUAI · VILA 实验室"
     },
     "bio": {
-      "en": "I am a Machine Learning PhD student at MBZUAI, advised by Prof. Zhiqiang Shen. I build native multimodal AI systems that unify understanding, reasoning, generation, and sustained execution over complex tasks. My current focus is production-grade multimodal agentic design and automated iteration of long-horizon agent harnesses. At Meituan M17 LongCat, I connect execution, tool use, rollout traces, evaluation, and harness optimization to produce trajectories for subsequent model training. Welcome to my little world of ideas.",
-      "zh": "我是罗亚鑫，在 MBZUAI 攻读机器学习博士，导师是 Zhiqiang Shen 教授。我研究统一理解、推理、生成与长程复杂任务执行的原生多模态 AI 系统，近期聚焦生产力级多模态智能体设计（multimodal agentic design）与长程 Agent Harness 的自动迭代。在美团 M17 龙猫实习期间，我将任务执行、工具调用、rollout 轨迹、评测与 Harness 优化连接起来，为后续模型训练准备轨迹。欢迎来到这个由想法构成的小小世界。"
+      "en": "I am a Machine Learning PhD student at MBZUAI, advised by Prof. Zhiqiang Shen. My long-term goal is to build agentic systems that can carry out arbitrary complex, long-horizon human expert work in digital environments, with a path toward real-world tasks. My current focus is production-grade models for agentic design and automated iteration systems for the long-horizon harnesses that support them.",
+      "zh": "我是罗亚鑫，在 MBZUAI 攻读机器学习博士，导师是 Zhiqiang Shen 教授。我的长期目标是构建能够在数字世界中完成任意复杂、长程人类专家工作的智能体系统，并逐步探索扩展到真实世界任务。目前重点是让模型可靠完成生产级设计类 Agentic 任务，并构建支撑这些任务的长程 Harness 自动迭代系统。"
     },
     "portrait": "/images/Yaxin.JPG"
   },
@@ -22,73 +22,48 @@
     {
       "id": "multimodal-agents",
       "title": {
-        "en": "Native Multimodal Systems",
-        "zh": "原生多模态系统"
+        "en": "Artifact Design Post-Training",
+        "zh": "Artifact Design 后训练"
       },
       "description": {
-        "en": "I aim to build native multimodal AI systems that unify understanding, reasoning, generation, and sustained execution over complex tasks. My near-term focus is production-grade models for multimodal agentic design, with structured, editable outputs and long-horizon interaction.",
-        "zh": "我希望构建统一理解、推理、生成与长程复杂任务执行的原生多模态 AI 系统，近期聚焦能够完成生产力级多模态设计任务的模型，让智能体通过长程交互产出结构化、可编辑的成果。"
+        "en": "I build production-grade models for agentic design and study post-training methods for high-quality, structured, editable artifacts, including scientific figures, posters, presentations, and web experiences. AutoDesign provides a concrete setting for this work.",
+        "zh": "我研究面向 Agentic Design 的模型与 post-training 方法，目标是生成高质量、结构化且可编辑的数字制品，包括科研绘图、海报、演示文稿和网页。AutoDesign 为这项工作提供了具体场景。"
       }
     },
     {
-      "id": "recursive-improvement",
+      "id": "agentic-task-post-training",
       "title": {
-        "en": "Agent Harnesses & Self-improvement",
-        "zh": "Agent Harness 与自我改进"
+        "en": "Long-Horizon Agentic Task Post-Training",
+        "zh": "长程智能体任务后训练"
       },
       "description": {
-        "en": "I research automated iteration of the harnesses around long-horizon agents. At a fixed model capability boundary, rollout evidence, evaluator feedback, component-level updates, and acceptance gates improve reusable infrastructure. Execution traces also provide a systems foundation for subsequent model training and model-and-harness iteration.",
-        "zh": "我研究长程智能体外围 Harness 的自动迭代：在固定模型能力边界下，利用 rollout 证据、评测反馈、单组件更新与接受门控，改进可复用的智能体基础设施；同时积累可复现轨迹，为后续模型训练与模型—Harness 协同迭代提供系统基础。"
-      }
-    },
-    {
-      "id": "agentic-design",
-      "title": {
-        "en": "Long-Horizon Agentic Design",
-        "zh": "长程智能体设计"
-      },
-      "description": {
-        "en": "AutoDesign turns papers into editable posters, slides, webpages, and captioned videos using a model-agnostic DesignHarness. An inner Designer–Critic loop refines artifacts while outer Meta-Harness Optimization improves reusable infrastructure. FigMirror applies reference-driven, multi-round refinement to scientific figures and editable Matplotlib code.",
-        "zh": "AutoDesign 通过模型无关的 DesignHarness，将论文转化为可编辑海报、幻灯片、网页与带字幕视频；内层 Designer–Critic 迭代产物，外层 Meta-Harness Optimization 改进可复用系统。FigMirror 则将参考图驱动的多轮 refinement 用于科研绘图与可编辑 Matplotlib 代码。"
-      }
-    },
-    {
-      "id": "efficient-vision",
-      "title": {
-        "en": "Efficient Vision and Language",
-        "zh": "高效视觉与语言学习"
-      },
-      "description": {
-        "en": "My earlier work studies visual grounding and efficient multimodal learning: anchor-based prompts in APL, dynamic visual routing in DViN, and mixture-of-depth adaptation in γ-MoD. Collaborative work also explores dynamic pyramid networks and speculative diffusion decoding with DARTree.",
-        "zh": "早期工作围绕视觉定位与高效多模态学习展开，包括 APL 的锚点提示、DViN 的动态视觉路由与 γ-MoD 的混合深度适配。合作研究还涉及动态金字塔网络与 DARTree 的扩散推测解码。"
-      }
-    },
-    {
-      "id": "evaluation-reliability",
-      "title": {
-        "en": "Agent Evaluation and Reliable Knowledge",
-        "zh": "智能体评估与可靠知识"
-      },
-      "description": {
-        "en": "Open CaptchaWorld examines the abilities and limits of multimodal agents in interactive web tasks. Next-Gen CAPTCHAs studies defenses grounded in human–agent cognitive differences. DRAG explores evidence and knowledge-graph distillation for smaller language models.",
-        "zh": "Open CaptchaWorld 通过交互式网页任务考察多模态智能体的能力与局限。Next-Gen CAPTCHAs 研究基于人与智能体认知差异的防御机制。DRAG 则探索面向小型语言模型的证据与知识图谱蒸馏。"
-      }
-    },
-    {
-      "id": "data-and-transfer",
-      "title": {
-        "en": "Training Data and Cross-Modal Transfer",
-        "zh": "训练数据与跨模态迁移"
-      },
-      "description": {
-        "en": "Related work investigates language-pretraining priors for vision, the domain composition of LLM training data in LLMSurgeon, and compact training sets through FADRM and committee voting. These projects ask how models can learn effectively from the information already available.",
-        "zh": "相关工作研究语言预训练先验向视觉任务的迁移、LLMSurgeon 中的大模型训练数据领域配比，以及 FADRM 和委员会投票中的紧凑训练集。这些项目共同关注：如何让模型更有效地利用已有信息。"
+        "en": "I study post-training for long-horizon agentic tasks and build Agent Harnesses for multimodal design workflows. This includes reproducible execution, tool use, trajectory capture, automated evaluation, iterative optimization, and training pipelines informed by rollout evidence and evaluator feedback.",
+        "zh": "我研究长程智能体任务的 post-training，并为多模态设计工作流构建 Agent Harness，将任务执行、工具调用、轨迹采集、自动评测与迭代优化整合为可复现流程；同时利用 rollout 证据与评测反馈改进系统并支持后续模型训练。"
       }
     }
   ],
   "experience": [
     {
-      "id": "longcat-intern",
+      "id": "longcat-talent-program",
+      "role": {
+        "en": "Research Intern · Northern Dipper Talent Program",
+        "zh": "北斗计划研究实习生"
+      },
+      "organization": {
+        "en": "Meituan · M17 LongCat",
+        "zh": "美团 · M17 龙猫"
+      },
+      "period": {
+        "en": "Sep 2026 – Present · Beijing, China",
+        "zh": "2026 年 9 月至今 · 中国北京"
+      },
+      "description": {
+        "en": "Research and build Agent Harnesses for long-horizon multimodal design tasks, integrating execution, tool use, trace capture, automated evaluation, and iterative optimization into a reproducible pipeline. Investigate harness automation and meta-optimization using rollout evidence, evaluator feedback, and component-level updates. Contribute to the full LongCat 2.5 post-training workflow for Agentic Design, from post-training harness design and training-oriented trajectory collection to Mid-Training, SFT, and RFT, studying how to internalize behaviors from harness trajectories in the model.",
+        "zh": "面向多模态长程设计任务研究并构建 Agent Harness，将任务执行、工具调用、轨迹记录、自动评测与迭代优化整合为可复现流程。探索 Harness 自动化与元优化，利用 rollout 证据、评测反馈和组件级更新提升长程任务的稳定交付能力。参与 LongCat 2.5 Agentic Design 任务后训练全流程，涵盖后训练 Harness 设计、面向训练的轨迹采集、Mid-Training、SFT 与 RFT，研究如何将 Harness 轨迹中的行为内化到模型中。"
+      }
+    },
+    {
+      "id": "longcat-research-intern",
       "role": {
         "en": "Research Intern",
         "zh": "研究实习生"
@@ -98,12 +73,12 @@
         "zh": "美团 · M17 龙猫"
       },
       "period": {
-        "en": "Apr 2026 – Present · Beijing, China",
-        "zh": "2026 年 4 月至今 · 中国北京"
+        "en": "Apr 2026 – Sep 2026 · Beijing, China",
+        "zh": "2026 年 4 月至 9 月 · 中国北京"
       },
       "description": {
-        "en": "Researching agent harnesses for long-horizon multimodal design, connecting execution, tool use, trace capture, automated evaluation, and iterative optimization into a reproducible pipeline for subsequent model training. Investigating harness self-evolution through rollout evidence and component-level updates at a fixed model boundary. AutoDesign is Phase I of this long-term project, connecting design agents, reusable DesignHarnesses, evaluation protocols, and real deliverables.",
-        "zh": "面向多模态长程设计任务研究 Agent Harness，将任务执行、工具调用、轨迹记录、自动评测与迭代优化组织为可复现链路，为后续模型训练准备轨迹。在固定模型能力边界下，利用 rollout 证据和单组件更新探索 Harness 自进化。以 AutoDesign 作为长期项目第一阶段，连接设计智能体、可复用 DesignHarness、评测协议与真实交付物。"
+        "en": "Focused on AutoDesign and long-horizon design agents, developing reusable DesignHarnesses, evaluation protocols, and workflows around real deliverables.",
+        "zh": "聚焦 AutoDesign 与长程设计智能体，围绕真实交付物构建可复用的 DesignHarness、评测协议与工作流。"
       }
     },
     {
@@ -199,8 +174,8 @@
         "zh": "2025 年 8 月至今"
       },
       "description": {
-        "en": "Advised by Prof. Zhiqiang Shen. Exploring native multimodal foundation models, agentic systems, and recursive self-improvement.",
-        "zh": "导师为 Zhiqiang Shen 教授，探索原生多模态基础模型、智能体系统与递归式自我改进。"
+        "en": "Advised by Prof. Zhiqiang Shen. Researching post-training for artifact design and long-horizon agentic tasks, with the long-term goal of enabling agents to carry out complex expert work in digital environments.",
+        "zh": "导师为 Zhiqiang Shen 教授，主要研究 artifact design 与长程智能体任务的 post-training，长期目标是让智能体能够在数字世界中完成复杂专家工作。"
       }
     },
     {
@@ -263,102 +238,6 @@
   ],
   "publications": [
     {
-      "id": "dartree",
-      "title": {
-        "en": "DARTree: Speculative Diffusion Decoding with Autoregressive Draft Trees",
-        "zh": "DARTree：使用自回归草稿树的扩散推测解码"
-      },
-      "venue": "arXiv",
-      "year": 2026,
-      "authors": "Tianyi Li, Yaxin Luo, Xinyi Shang, Zhiqiang Shen",
-      "summary": {
-        "en": "A training-free method that combines diffusion drafting with autoregressive correction over candidate trees for efficient language-model inference.",
-        "zh": "将扩散草稿生成与候选树上的自回归校正结合，用于高效语言模型推理，无需额外训练。"
-      },
-      "image": "",
-      "links": [
-        {
-          "label": {
-            "en": "Paper",
-            "zh": "论文"
-          },
-          "url": "https://arxiv.org/abs/2608.13524"
-        }
-      ]
-    },
-    {
-      "id": "videococo",
-      "title": {
-        "en": "VideoCoCo: Code-as-CoT for Physically-Consistent Video Generation via an Agentic Dual-Engine System",
-        "zh": "VideoCoCo：通过智能体双引擎系统与代码思维链生成物理一致视频"
-      },
-      "venue": "arXiv",
-      "year": 2026,
-      "authors": "Haodong Li, Tianfei Ren, Xiaoxiao Ma, Chunmei Qing, Zhen Fang, Sipeng He, Ziyu Guo, Haoyu Wu, Juanxi Tian, Yihang Zou, Ruichuan An, Dongzhi Jiang, Boxue Yang, Ji Xie, Xu Huang, Wenhao Yan, Jialv Zou, Zhengrong Yue, Yaxin Luo, Xiaotong Li, Yuzhu Wang, Junyan Ye, Jinjing Zhao, Zehui Chen, Lin Chen, Renye Yan, Feng Zhao, Pheng-Ann Heng",
-      "summary": {
-        "en": "Uses executable Blender code as an intermediate representation of a scene and its evolution. Simulation drafts guide a generative video engine toward physically consistent output.",
-        "zh": "以可执行 Blender 代码表示场景及其动态过程，通过仿真草稿引导生成视频引擎，提升视频的物理一致性。"
-      },
-      "image": "",
-      "links": [
-        {
-          "label": {
-            "en": "Paper",
-            "zh": "论文"
-          },
-          "url": "https://arxiv.org/abs/2607.27380"
-        }
-      ]
-    },
-    {
-      "id": "detail-targeting",
-      "title": {
-        "en": "Pushing the Frontier of Black-Box LVLM Attacks via Fine-Grained Detail Targeting",
-        "zh": "通过细粒度细节研究黑盒视觉语言模型的鲁棒性边界"
-      },
-      "venue": "arXiv",
-      "year": 2026,
-      "authors": "Xiaohan Zhao, Zhaoyi Li, Yaxin Luo, Jiacheng Cui, Zhiqiang Shen",
-      "summary": {
-        "en": "Collaborative research on the robustness of large vision-language models, examining their sensitivity to fine-grained visual detail under black-box evaluation.",
-        "zh": "围绕大视觉语言模型鲁棒性的合作研究，考察模型在黑盒评估中对细粒度视觉信息的敏感性。"
-      },
-      "image": "",
-      "links": [
-        {
-          "label": {
-            "en": "Paper",
-            "zh": "论文"
-          },
-          "url": "https://arxiv.org/abs/2602.17645"
-        }
-      ]
-    },
-    {
-      "id": "dynamic-pyramid",
-      "title": {
-        "en": "Dynamic Pyramid Network for Efficient Multimodal Large Language Model",
-        "zh": "用于高效多模态大语言模型的动态金字塔网络"
-      },
-      "venue": "arXiv",
-      "year": 2025,
-      "authors": "Hao Ai, Kunyi Wang, Zezhou Wang, Hao Lu, Jin Tian, Yaxin Luo, Peng Xing, Jen-Yuan Huang, Huaxia Li, Gen Luo",
-      "summary": {
-        "en": "Explores dynamic pyramid representations for efficient multimodal large language models, adapting visual processing to reduce unnecessary computation.",
-        "zh": "研究面向高效多模态大语言模型的动态金字塔表征，通过自适应视觉处理减少不必要的计算。"
-      },
-      "image": "",
-      "links": [
-        {
-          "label": {
-            "en": "Paper",
-            "zh": "论文"
-          },
-          "url": "https://arxiv.org/abs/2503.20322"
-        }
-      ]
-    },
-    {
       "id": "autodesign",
       "title": {
         "en": "AutoDesign: Meta-Harness Optimization for Long-Horizon Agentic Design",
@@ -369,7 +248,7 @@
       "authors": "Yaxin Luo*, Haobin Jiang*, Jialv Zou, Xu Huang, Wenhao Yan, Haodong Li, Zhengrong Yue, Jing Li, Xiaofu Chen, Xiaohan Zhao, Jiacheng Liu, Jiacheng Cui, Zhiqiang Shen, Xiaotong Li",
       "summary": {
         "en": "Meta-Harness Optimization improves a reusable DesignHarness through rollout evidence, evaluation, and acceptance gates. On the 100-paper PosterBench, the reported best score is 78.32, 7.45 points above Claude Design under the matched configuration; gains across seven matched configurations range from 5.01 to 19.56 points.",
-        "zh": "Meta-Harness Optimization 通过 rollout 证据、评测与接受门控改进可复用的 DesignHarness。在 100 篇论文的 PosterBench 上，公开结果最高为 78.32 分，较同配置 Claude Design 高 7.45 分；7 组匹配配置的增益为 5.01–19.56 分。"
+        "zh": "AutoDesign 使用可复用的 DesignHarness、rollout 证据、评测与接受门控研究长程智能体设计。在 100 篇论文的 PosterBench 上，公开结果最高为 78.32 分，较同配置 Claude Design 高 7.45 分；7 组匹配配置的增益为 5.01–19.56 分。"
       },
       "image": "/images/autodesign.webp",
       "links": [
@@ -549,99 +428,6 @@
       ]
     },
     {
-      "id": "fadrm",
-      "title": {
-        "en": "FADRM: Fast and Accurate Data Residual Matching for Dataset Distillation",
-        "zh": "FADRM：用于数据集蒸馏的快速、准确的数据残差匹配"
-      },
-      "venue": "NeurIPS",
-      "year": 2025,
-      "authors": "Jiacheng Cui, Xinyue Bi, Yaxin Luo, Xiaohan Zhao, Jiacheng Liu, Zhiqiang Shen",
-      "summary": {
-        "en": "Brings residual connections into dataset distillation at the data level. Data residual matching balances optimized synthetic information with useful structure from original data to build compact training sets efficiently.",
-        "zh": "将残差连接的思想引入数据集蒸馏的数据层面。数据残差匹配平衡合成数据优化与原始数据中的有效结构，以更高效地构建紧凑训练集。"
-      },
-      "image": "",
-      "links": [
-        {
-          "label": {
-            "en": "Paper",
-            "zh": "论文"
-          },
-          "url": "https://papers.neurips.cc/paper_files/paper/2025/hash/5a733c79d35a9738dd52a22610baa2d0-Abstract-Conference.html"
-        },
-        {
-          "label": {
-            "en": "Code",
-            "zh": "代码"
-          },
-          "url": "https://github.com/Jiacheng8/FADRM"
-        }
-      ]
-    },
-    {
-      "id": "drag",
-      "title": {
-        "en": "DRAG: Distilling RAG for SLMs from LLMs to Transfer Knowledge and Mitigate Hallucination via Evidence and Graph-based Distillation",
-        "zh": "DRAG：通过证据与图谱蒸馏，将大模型的检索增强生成知识迁移到小模型并缓解幻觉"
-      },
-      "venue": "ACL",
-      "year": 2025,
-      "authors": "Jennifer Chen, Aidar Myrzakhan, Yaxin Luo, Hassaan Muhammad Khan, Sondos Mahmoud Bsharat, Zhiqiang Shen",
-      "summary": {
-        "en": "Distills retrieval-augmented knowledge from larger to smaller language models using ranked evidence and knowledge graphs. The framework studies factual consistency and practical retrieval-assisted generation with smaller models.",
-        "zh": "借助排序后的证据与知识图谱，把检索增强知识从大语言模型蒸馏到小模型，研究小模型的事实一致性及实用的检索辅助生成。"
-      },
-      "image": "",
-      "links": [
-        {
-          "label": {
-            "en": "Paper",
-            "zh": "论文"
-          },
-          "url": "https://arxiv.org/abs/2506.01954"
-        },
-        {
-          "label": {
-            "en": "Code",
-            "zh": "代码"
-          },
-          "url": "https://github.com/VILA-Lab/DRAG"
-        }
-      ]
-    },
-    {
-      "id": "dvin",
-      "title": {
-        "en": "DViN: Dynamic Visual Routing Network for Weakly Supervised Referring Expression Comprehension",
-        "zh": "DViN：用于弱监督指代表达理解的动态视觉路由网络"
-      },
-      "venue": "CVPR",
-      "year": 2025,
-      "authors": "Xiaofu Chen, Yaxin Luo, Gen Luo, Jiayi Ji, Henghui Ding, Yiyi Zhou",
-      "summary": {
-        "en": "Dynamically combines multiple visual encoders with sparse routing for fine-grained visual grounding. Routing-based feature alignment connects visual features and language under weak supervision.",
-        "zh": "通过稀疏路由动态组合多个视觉编码器，增强细粒度视觉定位能力，并利用基于路由的特征对齐，在弱监督条件下连接视觉特征与语言。"
-      },
-      "image": "/images/DViN.png",
-      "links": [
-        {
-          "label": {
-            "en": "Paper",
-            "zh": "论文"
-          },
-          "url": "https://openaccess.thecvf.com/content/CVPR2025/html/Chen_DViN_Dynamic_Visual_Routing_Network_for_Weakly_Supervised_Referring_Expression_CVPR_2025_paper.html"
-        },
-        {
-          "label": {
-            "en": "Code",
-            "zh": "代码"
-          },
-          "url": "https://github.com/XxFChen/DViN"
-        }
-      ]
-    },
-    {
       "id": "gamma-mod",
       "title": {
         "en": "γ-MoD: Exploring Mixture-of-Depth Adaptation for Multimodal Large Language Models",
@@ -669,37 +455,6 @@
             "zh": "代码"
           },
           "url": "https://github.com/Yaxin9Luo/gamma-MoD"
-        }
-      ]
-    },
-    {
-      "id": "committee-voting",
-      "title": {
-        "en": "Dataset Distillation via Committee Voting",
-        "zh": "通过委员会投票进行数据集蒸馏"
-      },
-      "venue": "arXiv",
-      "year": 2025,
-      "authors": "Jiacheng Cui, Zhaoyi Li, Xiaochen Ma, Xinyue Bi, Yaxin Luo, Zhiqiang Shen",
-      "summary": {
-        "en": "Combines predictions from a committee of models to create compact distilled datasets and soft labels. The approach studies how model diversity can reduce individual-model bias and improve generalization.",
-        "zh": "汇集多个模型组成的委员会的预测，构建紧凑的蒸馏数据集与软标签，研究如何利用模型多样性减轻单一模型的偏差并改善泛化。"
-      },
-      "image": "",
-      "links": [
-        {
-          "label": {
-            "en": "Paper",
-            "zh": "论文"
-          },
-          "url": "https://arxiv.org/abs/2501.07575"
-        },
-        {
-          "label": {
-            "en": "Code",
-            "zh": "代码"
-          },
-          "url": "https://github.com/Jiacheng8/CV-DD"
         }
       ]
     },
@@ -747,7 +502,7 @@
       "authors": "Yaxin Luo*, Haobin Jiang*, Jialv Zou, Xu Huang, Wenhao Yan, Haodong Li, Zhengrong Yue, Jing Li, Xiaofu Chen, Xiaohan Zhao, Jiacheng Liu, Jiacheng Cui, Zhiqiang Shen, Xiaotong Li",
       "summary": {
         "en": "Meta-Harness Optimization improves a reusable DesignHarness through rollout evidence, evaluation, and acceptance gates. On the 100-paper PosterBench, the reported best score is 78.32, 7.45 points above Claude Design under the matched configuration; gains across seven matched configurations range from 5.01 to 19.56 points.",
-        "zh": "Meta-Harness Optimization 通过 rollout 证据、评测与接受门控改进可复用的 DesignHarness。在 100 篇论文的 PosterBench 上，公开结果最高为 78.32 分，较同配置 Claude Design 高 7.45 分；7 组匹配配置的增益为 5.01–19.56 分。"
+        "zh": "AutoDesign 使用可复用的 DesignHarness、rollout 证据、评测与接受门控研究长程智能体设计。在 100 篇论文的 PosterBench 上，公开结果最高为 78.32 分，较同配置 Claude Design 高 7.45 分；7 组匹配配置的增益为 5.01–19.56 分。"
       },
       "image": "/images/autodesign.webp",
       "links": [

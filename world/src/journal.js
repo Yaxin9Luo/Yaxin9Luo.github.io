@@ -1,4 +1,4 @@
-import { profile, research, publications, experience, journey, news, links, cvForLanguage, openSource } from './content.js';
+import { profile, research, publications, selectedPublications, experience, journey, news, links, cvForLanguage, openSource } from './content.js';
 import {selectedProjects, getProject, getProjectMedia, publicationRole} from './exhibition-content.js';
 import {clampMedia} from './exhibition-state.js';
 
@@ -59,7 +59,7 @@ function primaryLinks(lang) {
 
 function about(lang) {
   return `<section class="journal-profile">
-    <div class="journal-profile-main"><p class="journal-eyebrow">${escape(copy(lang, 'A RESEARCHER’S NOTEBOOK', '研究者的笔记'))}</p><h2 class="journal-name">${escape(local(profile.name, lang))}<span class="journal-name-dot" aria-hidden="true">.</span></h2><p class="journal-role">${escape(local(profile.role, lang))}</p><p class="journal-affiliation">${escape(local(profile.affiliation, lang))}</p><div class="journal-profile-rule" aria-hidden="true"></div><p class="journal-profile-tagline">${escape(copy(lang, 'Understanding. Creating. Learning to improve.', '理解世界，创造作品，在探索中持续进步。'))}</p></div>
+    <div class="journal-profile-main"><p class="journal-eyebrow">${escape(copy(lang, 'A RESEARCHER’S NOTEBOOK', '研究者的笔记'))}</p><h2 class="journal-name">${escape(local(profile.name, lang))}<span class="journal-name-dot" aria-hidden="true">.</span></h2><p class="journal-role">${escape(local(profile.role, lang))}</p><p class="journal-affiliation">${escape(local(profile.affiliation, lang))}</p><div class="journal-profile-rule" aria-hidden="true"></div><p class="journal-profile-tagline">${escape(copy(lang, 'Building agents for expert work.', '构建能够胜任专家工作的智能体。'))}</p></div>
     <figure class="journal-portrait"><img src="${escape(profile.portrait)}" alt="${escape(local(profile.name, lang))}" width="180" height="226"><figcaption>${escape(copy(lang, 'Curiosity, across disciplines.', '好奇心，不分学科。'))}</figcaption></figure>
   </section>
   ${primaryLinks(lang)}
@@ -71,10 +71,10 @@ function about(lang) {
 }
 
 function publicationView(lang) {
-  const years = [...new Set(publications.map((item) => item.year))].sort((a, b) => b - a);
-  return `${head(copy(lang, 'THE RESEARCH COLLECTION', '研究作品集'), copy(lang, 'Publications', '论文'), copy(lang, 'Papers on multimodal agents, efficient learning, and the information that shapes intelligent systems.', '关于多模态智能体、高效学习，以及塑造智能系统的信息的研究论文。'), lang)}
-  <div class="journal-reading-tools"><p class="journal-caption">${escape(copy(lang, `${publications.length} works in this collection · * Equal contribution`, `本作品集收录 ${publications.length} 项研究 · * 表示共同一作`))}</p>${anchor(links.scholar, copy(lang, 'View Google Scholar', '查看 Google Scholar'), 'journal-text-link')}</div>
-  ${years.map((year) => `<section class="journal-section paper-year-section"><div class="paper-year-heading"><h3>${year}</h3><span aria-hidden="true"></span></div><div class="paper-list">${publications.filter((item) => item.year === year).map((item) => `<article class="paper-entry${item.image ? ' paper-entry-illustrated' : ''}" id="paper-${escape(item.id)}">${item.image ? `<figure class="paper-thumbnail"><img src="${escape(item.image)}" alt="${escape(copy(lang, `${local(item.title, lang)} — project figure`, `${local(item.title, lang)}——项目配图`))}" loading="lazy" decoding="async"></figure>` : ''}<div class="paper-body">${venue(item,lang)}<h3><button class="paper-title-button" data-action="paper" data-id="${escape(item.id)}">${escape(local(item.title, lang))}</button></h3>${lang === 'zh' ? `<p class="paper-original-title" lang="en">${escape(item.title.en)}</p>` : ''}<p class="paper-summary">${escape(local(item.summary, lang))}</p>${authorList(item, lang)}${sourceLinks(item, lang)}</div></article>`).join('')}</div></section>`).join('')}
+  const years = [...new Set(selectedPublications.map((item) => item.year))].sort((a, b) => b - a);
+  return `${head(copy(lang, 'THE RESEARCH COLLECTION', '研究作品集'), copy(lang, 'Publications', '论文'), copy(lang, 'Selected first-author and co-first-author work, plus agentic-task research.', '精选一作、共同一作论文，以及智能体任务相关研究。'), lang)}
+  <div class="journal-reading-tools"><p class="journal-caption">${escape(copy(lang, `${selectedPublications.length} selected papers · * Equal contribution`, `精选 ${selectedPublications.length} 篇论文 · * 表示共同一作`))}</p>${anchor(links.scholar, copy(lang, 'View Google Scholar', '查看 Google Scholar'), 'journal-text-link')}</div>
+  ${years.map((year) => `<section class="journal-section paper-year-section"><div class="paper-year-heading"><h3>${year}</h3><span aria-hidden="true"></span></div><div class="paper-list">${selectedPublications.filter((item) => item.year === year).map((item) => `<article class="paper-entry${item.image ? ' paper-entry-illustrated' : ''}" id="paper-${escape(item.id)}">${item.image ? `<figure class="paper-thumbnail"><img src="${escape(item.image)}" alt="${escape(copy(lang, `${local(item.title, lang)} — project figure`, `${local(item.title, lang)}——项目配图`))}" loading="lazy" decoding="async"></figure>` : ''}<div class="paper-body">${venue(item,lang)}<h3><button class="paper-title-button" data-action="paper" data-id="${escape(item.id)}">${escape(local(item.title, lang))}</button></h3>${lang === 'zh' ? `<p class="paper-original-title" lang="en">${escape(item.title.en)}</p>` : ''}<p class="paper-summary">${escape(local(item.summary, lang))}</p>${authorList(item, lang)}${sourceLinks(item, lang)}</div></article>`).join('')}</div></section>`).join('')}
   <div class="journal-next"><div><p>${escape(copy(lang, 'Want to see the work in action?', '想看看研究如何变成可用的作品？'))}</p></div>${sectionButton('projects', copy(lang, 'Explore projects', '探索项目'))}</div>`;
 }
 
@@ -85,7 +85,7 @@ function projectView(lang) {
 }
 
 function researchView(lang) {
-  return `${head(copy(lang, 'AT THE EDGE OF WHAT WE KNOW', '在已知与未知之间'), copy(lang, 'Research directions', '研究方向'), copy(lang, 'I am interested in systems that can perceive, create, reason, act, and improve through experience.', '我关注能够感知、创造、推理、行动，并通过经验持续改进的系统。'), lang)}
+  return `${head(copy(lang, 'AT THE EDGE OF WHAT WE KNOW', '在已知与未知之间'), copy(lang, 'Research directions', '研究方向'), copy(lang, 'I build production-grade models for agentic design and automated iteration systems for long-horizon harnesses, toward agents that can complete complex expert work.', '我研究生产级设计 Agent 与长程 Harness 自动迭代系统，目标是让智能体能够完成复杂的专家工作。'), lang)}
   <div class="journal-research-opening"><span aria-hidden="true">${icon('orbit')}</span><p>${escape(copy(lang, 'A model’s intelligence and the infrastructure around it form one evolving research space.', '模型的智能，与它周围的基础设施，共同构成一片持续演化的研究空间。'))}</p></div>
   <div class="journal-research-list">${research.map((item, index) => `<article class="journal-research-item"><span class="journal-research-number" aria-hidden="true">${String(index + 1).padStart(2, '0')}</span><div><p class="journal-eyebrow">${escape(index < 3 ? copy(lang, 'CURRENT DIRECTION', '当前方向') : copy(lang, 'CONNECTED WORK', '相关研究'))}</p><h3>${escape(local(item.title, lang))}</h3><p>${escape(local(item.description, lang))}</p></div></article>`).join('')}</div>
   <div class="journal-next"><div><p>${escape(copy(lang, 'Follow these questions into the published work.', '从这些问题出发，继续阅读相关论文。'))}</p></div>${sectionButton('publications', copy(lang, 'Read publications', '阅读论文'))}</div>`;

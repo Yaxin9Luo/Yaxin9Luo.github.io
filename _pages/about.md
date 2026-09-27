@@ -39,7 +39,7 @@ About Me
   </div>
 
   <div class="current-focus">
-    My current focus is production-grade multimodal agentic design and automated iteration of long-horizon agent harnesses.
+    My long-term goal is to build agentic systems that can carry out arbitrary complex, long-horizon human expert work in digital environments, with a path toward real-world tasks. My current focus is production-grade models for agentic design and automated iteration systems for the long-horizon harnesses that support them.
   </div>
 </div>
 
