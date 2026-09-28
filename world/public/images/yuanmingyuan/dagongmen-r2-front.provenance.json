@@ -1,0 +1,15 @@
+{
+  "kind": "digital-reconstruction",
+  "label": {
+    "zh": "数字复原示意",
+    "en": "Digital reconstruction"
+  },
+  "isHistoricalImage": false,
+  "sourceId": "dagongmen-entrance-reconstruction-r2",
+  "pngSHA256": "cfb9df9f2876833597108e974697b1c1e647f363399641de2533f8f9fdffc649",
+  "nativeResult": "work/yuanmingyuan/dagongmen-roof-refinement-r2/dagongmen-front-native-r2/result.json",
+  "originalCapture": "/mnt/dolphinfs/ssd_pool/docker/user/hadoop-aipnlp/3A/multimodal/yaxinluo/yuanmingyuan-portfolio/academy-living-v8/work/yuanmingyuan/dagongmen-roof-refinement-r2/dagongmen-front-native-r2/captures/yuanmingyuan-dagongmen-r2-dagongmen-front-native-r2-48d858cb17d7-front-day-1789339045760-1.png",
+  "review": "work/yuanmingyuan/dagongmen-roof-refinement-r2/root-entrance-art-review-r2.json",
+  "scope": "Original native front view of the complete R2 source, admitted for museum integration; not a historic image, surveyed placement, full imperial front court or final in-scene acceptance.",
+  "rights": "Project-authored digital reconstruction render; no historical source image is republished."
+}

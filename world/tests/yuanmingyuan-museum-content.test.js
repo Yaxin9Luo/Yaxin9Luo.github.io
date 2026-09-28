@@ -62,6 +62,28 @@ test('historic media retain their actual institution, media type, rights and loc
       assert(image.width*image.height<1000000);
       continue;
     }
+    if(image.kind==='interpretive-model-render'||image.kind==='interpretive-model-plan'){
+      assert(image.src.startsWith('/images/yuanmingyuan/'));assert.equal(image.source,image.src);
+      assert.match(image.license,/© Yaxin Luo/);assert.match(image.originalDate.en,/not a Qing (?:image|drawing)/);
+      const data=await readFile(new URL('../public'+image.src,import.meta.url));assert(data.length>10000);
+      continue;
+    }
+    if(image.role==='digital-reconstruction-not-historical-evidence'){
+      assert.match(image.license,/Project-authored/);assert.match(image.title.en,/reconstruction/i);
+      const data=await readFile(new URL('../public'+image.src,import.meta.url));
+      assert.equal(createHash('sha256').update(data).digest('hex'),image.sha256);
+      const provenance=JSON.parse(await readFile(new URL('../public'+image.source,import.meta.url),'utf8'));
+      assert.equal(provenance.pngSHA256,image.sha256);assert.equal(provenance.isHistoricalImage,false);
+      continue;
+    }
+    if(image.role==='historical-source-image'){
+      assert.match(image.license,/^Public domain/);assert.equal(new URL(image.source).hostname,'upload.wikimedia.org');
+      const data=await readFile(new URL('../public'+image.src,import.meta.url));
+      assert.equal(createHash('sha256').update(data).digest('hex'),image.sha256);
+      const provenance=JSON.parse(await readFile(new URL('../public'+image.src.replace(/\.png$/,'.provenance.json'),import.meta.url),'utf8'));
+      assert.equal(provenance.publicCandidateSHA256,image.sha256);assert.equal(new URL(provenance.rightsSource).hostname,'commons.wikimedia.org');
+      continue;
+    }
     assert(image.src.startsWith('/images/yuanmingyuan/'));assert.ok(['historic-engraving','historic-painting'].includes(image.kind));
     assert.match(image.license,/Public Domain Mark/);assert.equal(new URL(image.source).hostname,'commons.wikimedia.org');
     const data=await readFile(new URL('../public'+image.src,import.meta.url));assert(data.length>10000);

@@ -1,10 +1,10 @@
-// Explicit single-owner Jiuzhou and two/three-site Western routes only.
+// Explicit retained Jiuzhou, Western and front-court composition routes.
 // Automatic caption focus must not retire an
 // already generated guide. Explicit travel resets; leaving releases all owners.
 let serial=0;
 export function createMuseumGuideEnsemble({siteIds,create,language='en'}={}){
-  const routes=['jiuzhou-qingyan','xianfaqiao,xieqiqu','xianfaqiao,xieqiqu,yangquelong'];
-  if(!Array.isArray(siteIds)||!siteIds.length||siteIds.some(id=>typeof id!=='string'||!id)||new Set(siteIds).size!==siteIds.length||!routes.includes([...siteIds].sort().join(','))||typeof create!=='function')throw new TypeError('A guide ensemble requires an explicit Jiuzhou or Western composition site set.');
+  const routes=['jiuzhou-qingyan','xianfaqiao,xieqiqu','xianfaqiao,xieqiqu,yangquelong','front-court-dag,front-court-erg,front-court-hall'];
+  if(!Array.isArray(siteIds)||!siteIds.length||siteIds.some(id=>typeof id!=='string'||!id)||new Set(siteIds).size!==siteIds.length||!routes.includes([...siteIds].sort().join(','))||typeof create!=='function')throw new TypeError('A guide ensemble requires an explicit Jiuzhou, Western or front-court composition site set.');
   const allowed=new Set(siteIds),records=new Map(),actors=new Map(),owner=`museum-guide-ensemble:${++serial}`;
   let disposed=false,paused=false,lang=language==='zh'?'zh':'en';
   const failures=[];

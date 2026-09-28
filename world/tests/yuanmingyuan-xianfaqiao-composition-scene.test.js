@@ -28,6 +28,7 @@ import {createXieqiquCourtGardenR2Layout} from '../src/yuanmingyuan/xieqiqu-cour
 import {createXieqiquCourtGardenR4Study} from '../src/yuanmingyuan/xieqiqu-court-garden-r4-study.js';
 import {compositionOwner,compositionGround} from './helpers/xianfaqiao-composition-fixture.js';
 import {installSceneRedraw} from './helpers/museum-scene-redraw.js';
+import {isFrontCourtRoute} from '../src/yuanmingyuan/front-court-museum.js';
 
 // Run the real page bootstrap and its real load/mount/release/visit/UI/render/
 // cleanup functions. Only full factories, texture/character IO and GPU work are
@@ -36,7 +37,8 @@ import {installSceneRedraw} from './helpers/museum-scene-redraw.js';
 const source=readFileSync(new URL('../src/yuanmingyuan/museum-scene.js',import.meta.url),'utf8');
 const sourceSHA=createHash('sha256').update(source).digest('hex');
 const section=(a,b)=>{const start=source.indexOf(a),end=source.indexOf(b,start+a.length);assert(start>=0&&end>start,a);return source.slice(start,end);};
-const definitions=[source.match(/^const paused=.*;$/m)[0],source.split('\n').find(line=>line.startsWith("$('review-tools').hidden=")),
+const definitions=[source.match(/^const paused=.*;$/m)[0],source.match(/^let frontCourtLandscape=.*;$/m)[0],source.match(/^let cameraClearance=.*;$/m)[0],section('let wanfangMuseumShore=',"\n$('review-tools')"),source.match(/^function clearVisitorMovement\(\).*$/m)[0],
+  source.split('\n').find(line=>line.startsWith("$('review-tools').hidden=")),
   section('async function prepareMuseumRendering(','\nfunction busy('),section('function busy(','\nfunction setLanguage('),
   section('function svgNode(','\nfunction openDialog('),section('function frameVisitor(','\nfunction inspect('),source.match(/^function inspect.*$/m)[0],
   section('function createGuideRegion(','\nfunction evidence('),section('function evidence(','\nfunction tick('),
@@ -53,7 +55,7 @@ function harness({failDecoder=false,failSecondBinder=false,failEnvironment=false
   camera.position.set(350,14,-560);camera.lookAt(350,4,-565);camera.updateMatrixWorld();
   const service=name=>{let disposed=false;const result={group:new THREE.Group(),disposeCalls:0,get disposed(){return disposed;},dispose(){result.disposeCalls++;if(disposed)return;disposed=true;events.push(`service:${name}`);result.group.removeFromParent();if(throwCleanup&&name==='water')throw new Error('Water cleanup sentinel');}};services.set(name,result);return result;};
   let ground=null,waterRange=null,plantingArguments=null,navigationOptions=null;
-  const ctx={performance,THREE,URLSearchParams,AbortController,controller,scene,camera,composition:null,query:new URLSearchParams('composition=xianfaqiao&review=still&planting='+(western?'western':'pilot')+'&shore=r2&bank=r4&batch=2&site=xieqiqu'),sourceTag:'component-scene-test',
+  const ctx={isFrontCourtRoute,performance,THREE,URLSearchParams,AbortController,controller,scene,camera,composition:null,query:new URLSearchParams('composition=xianfaqiao&review=still&planting='+(western?'western':'pilot')+'&shore=r2&bank=r4&batch=2&site=xieqiqu'),sourceTag:'component-scene-test',
     terrain:null,terrainAssets:null,terrainPads:[],terrainCourts:[],terrainPaths:[],terrainReplacements:[],gardenLayout:null,groundTextures:null,water:null,environment:null,visitor:null,pool:null,sites:null,residents:null,preparedGroundSources:null,residentArchitecture:null,architecture:null,currentSite:null,nav:null,guides:null,guideSurface:null,
     residentBindings:new Map(),borrowedOwners:new WeakSet(),plantingPilot:null,plantingCollisions:null,plantingReview:null,westernPlanting:null,westernPlantingLifetime:null,shoreCommunity:null,shoreUnderstory:null,shoreBank:null,sceneFailure:null,
     museumSites,museumSite,museumEntry,museumRegions,museumResidentCatalog,sitePoint,museumTravelHeading,museumVisitorCollider,xianfaqiaoRouteLanding,
@@ -508,7 +510,7 @@ test('actual R4 and generic copy updates both languages, E help and two-site sco
     const nodes=new Map(),labels=['mapTitle','mapIntro','study'].map(key=>({dataset:{copy:key},textContent:''}));
     const get=id=>{if(!nodes.has(id))nodes.set(id,{textContent:'',options:[]});return nodes.get(id);};
     get('time-mode').options=['auto','day','night'].map(value=>({value,textContent:''}));
-    const ctx={query:new URLSearchParams(search),document:{documentElement:{},querySelectorAll:()=>labels},$:get,
+    const ctx={isFrontCourtRoute,query:new URLSearchParams(search),document:{documentElement:{},querySelectorAll:()=>labels},$:get,
       reader:{lang:'en',setLanguage(value){this.lang=value;}},directory:{setLanguage(){}},guides:null,
       renderDestinations(){},locationCaption(){},syncControls(){}};
     vm.createContext(ctx);

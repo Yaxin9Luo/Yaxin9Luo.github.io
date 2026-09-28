@@ -11,6 +11,8 @@ import {prepareFangwaiguanMaterialPixels} from '../src/yuanmingyuan/fangwaiguan-
 import {loadCourtSoilMaterial} from '../src/yuanmingyuan/court-soil-material-r1.js';
 import {loadJiuzhouGravelTextures} from '../src/yuanmingyuan/jiuzhou-landscape-material.js';
 import {loadCourtLowBroadleafSource} from '../src/yuanmingyuan/court-low-broadleaf-source.js';
+import {loadJiuzhouCourtyardMaps} from '../src/yuanmingyuan/jiuzhou-courtyard-materials.js';
+import {loadWillowBarkMaps} from '../src/yuanmingyuan/willow-bark-textures.js';
 
 // Model the deployed storage boundary: moved files do not exist on Pages.
 // Decode is the only browser-only seam; real manifests, bytes and hashes remain.
@@ -45,6 +47,7 @@ test('stone fish prepares all full-resolution channels when large maps are absen
 for(const [name,prepare] of [
  ['court paving',prepareCourtPavingPixels],['Fangwaiguan',prepareFangwaiguanMaterialPixels],
  ['court soil',loadCourtSoilMaterial],['Jiuzhou gravel',loadJiuzhouGravelTextures],
+ ['Jiuzhou courtyard marble',loadJiuzhouCourtyardMaps],['willow bark',loadWillowBarkMaps],
 ]){
  test(name+' default transport delivers verified published bytes to the image decoder',async t=>{
   publishedTransport(t);

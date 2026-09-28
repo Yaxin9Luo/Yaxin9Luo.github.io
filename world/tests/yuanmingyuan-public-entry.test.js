@@ -88,7 +88,10 @@ test('build inputs include museum, reader and Yuanmingyuan studio while retainin
   for(const file of Object.values(input))assert.ok(existsSync(file),file);
   const html=readFileSync(input.museum,'utf8'),fallback=readFileSync(input.museumReader,'utf8'),studio=readFileSync(input.museumStudio,'utf8');
   assert.match(html,/src="\/src\/yuanmingyuan\/museum-scene\.js"/);
-  assert.match(html,/href="\/museum-reader\.html"/);assert.match(html,/尚未公开/);
+  assert.match(html,/href="\/museum-reader\.html"/);
+  // The museum and its exhibit directory are public; review studios stay out of search.
+  for(const page of [html,fallback])assert.doesNotMatch(page,/noindex|尚未公开|预览/);
+  assert.match(studio,/noindex/);
   assert.match(fallback,/src="\/src\/yuanmingyuan\/reader-preview\.js"/);
   assert.match(studio,/src="\/src\/yuanmingyuan\/studio\.js"/);
   assert.equal(dirname(input.main),dirname(input.museum));assert.equal(dirname(input.main),dirname(input.museumReader));assert.equal(dirname(input.main),dirname(input.museumStudio));

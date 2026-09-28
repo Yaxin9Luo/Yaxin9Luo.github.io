@@ -1,3 +1,4 @@
+import {courtBroadleafR3Profile,courtBroadleafR3Review,assertCourtBroadleafR3Record,assertCourtBroadleafR3Geometry} from './court-broadleaf-r3-profile.js';
 import * as THREE from 'three';
 import {gardenLayout,pointInPolygon} from './garden-layout.js';
 import {museumSites,sitePoint} from './museum-sites.js';
@@ -14,9 +15,9 @@ export const westernGardenPlantingSpec=Object.freeze({
     understory:'work/yuanmingyuan/garden-understory-native-r2/review.json',
   }),
   // Recorded full-source costs, not a simplification target or a draw budget.
-  sourceTriangles:Object.freeze({juniper:1251596,willow:7925316,'lake-rock':241908,sedge:59136,fern:1023726,'flower-shrub':1588648}),
+  sourceTriangles:Object.freeze({'low-broadleaf':courtBroadleafR3Profile.triangles,juniper:1251596,willow:7925316,'lake-rock':241908,sedge:59136,fern:1023726,'flower-shrub':1588648}),
 });
-export const westernGardenPlantingSourceReview=id=>id==='juniper'||id==='willow'?'work/yuanmingyuan/vegetation-native-review-r2.json':westernGardenPlantingSpec.sourceReviews[id==='lake-rock'?'vegetation':'understory'];
+export const westernGardenPlantingSourceReview=id=>id==='low-broadleaf'?courtBroadleafR3Review:id==='juniper'||id==='willow'?'work/yuanmingyuan/vegetation-native-review-r2.json':westernGardenPlantingSpec.sourceReviews[id==='lake-rock'?'vegetation':'understory'];
 
 const species={
   juniper:{radius:2.4,height:5.7,rootRadius:.68,root:'juniper-visible-trunk'},
@@ -25,6 +26,7 @@ const species={
   sedge:{radius:.8,height:.6,rootRadius:.12},
   fern:{radius:1,height:.6,rootRadius:.22},
   'flower-shrub':{radius:.9,height:.65,rootRadius:.14},
+  'low-broadleaf':{radius:Math.hypot(Math.max(Math.abs(courtBroadleafR3Profile.min[0]),Math.abs(courtBroadleafR3Profile.max[0])),Math.max(Math.abs(courtBroadleafR3Profile.min[2]),Math.abs(courtBroadleafR3Profile.max[2]))),height:courtBroadleafR3Profile.max[1],rootRadius:courtBroadleafR3Profile.rootRadius,rootBandMaximumY:courtBroadleafR3Profile.rootBandMaximumY},
 };
 const EPS=1e-7;
 const rectangle=(x0,z0,x1,z1)=>[[x0,z0],[x1,z0],[x1,z1],[x0,z1]];
@@ -223,6 +225,7 @@ function sourceProfile(part,id,signal){
   const elements=part.matrixWorld.elements;
   if(elements.some(v=>!Number.isFinite(v))||elements[3]!==0||elements[7]!==0||elements[11]!==0||elements[15]!==1||!(part.matrixWorld.determinant()>0))throw new Error('A positive finite affine source frame is required.');
   const inverse=part.matrixWorld.clone().invert(),point=new THREE.Vector3(),matrix=new THREE.Matrix4(),roots=[],box=new THREE.Box3();let triangles=0;
+  const broadleaf=id==='low-broadleaf',records=[],seenRoots=new Set();
   part.traverse(node=>{
     if(!node.isMesh)return;
     const geometry=node.geometry,p=geometry?.attributes.position;
@@ -234,11 +237,18 @@ function sourceProfile(part,id,signal){
       if(!node.boundingBox)for(let i=0;i<node.count;i++){node.getMatrixAt(i,matrix);bounds.union(base.clone().applyMatrix4(matrix));}
     }
     box.union(bounds.clone().applyMatrix4(local));
+    if(broadleaf)records.push({node});
     triangles+=(geometry.index?.count??p.count)/3*(node.isInstancedMesh?node.count:1);
     if(node.isInstancedMesh||species[id].root&&node.name!==species[id].root)return;
-    for(let i=0;i<p.count;i++){if(i%8192===0)signal?.throwIfAborted();point.fromBufferAttribute(p,i).applyMatrix4(local);if(point.y<=0)roots.push(point.toArray());}
+    for(let i=0;i<p.count;i++){
+      if(i%8192===0)signal?.throwIfAborted();point.fromBufferAttribute(p,i).applyMatrix4(local);
+      if(point.y>(species[id].rootBandMaximumY??0))continue;
+      if(broadleaf){const key=point.toArray().map(v=>Math.round(v*1e6)).join(',');if(seenRoots.has(key))continue;seenRoots.add(key);}
+      roots.push(point.toArray());
+    }
   });
   if(!triangles||!roots.length||box.isEmpty()||[...box.min.toArray(),...box.max.toArray()].some(v=>!Number.isFinite(v)))throw new Error('Missing finite original planting/root geometry '+id);
+  if(broadleaf)assertCourtBroadleafR3Geometry(part,{records,roots:roots.map(v=>new THREE.Vector3(...v)),bounds:box,triangles});
   return {roots,box,triangles};
 }
 
@@ -286,6 +296,7 @@ export async function createWesternGardenPlantingRegion({regionId,terrain,archit
       signal?.throwIfAborted();checkEpoch();
       const source=sources?.[p.species];
       if(!source?.part?.isObject3D||source.owner?.disposed||typeof source.owner?.dispose!=='function'||!source.review)throw new Error('Missing live reviewed source binding '+p.species);
+      if(p.species==='low-broadleaf')assertCourtBroadleafR3Record(source);
       owners.add(source.owner);
       let profile=profiles.get(p.species);if(!profile){profile=sourceProfile(source.part,p.species,signal);profiles.set(p.species,profile);}
       const radius=Math.hypot(Math.max(Math.abs(profile.box.min.x),Math.abs(profile.box.max.x)),Math.max(Math.abs(profile.box.min.z),Math.abs(profile.box.max.z)))*p.scale;

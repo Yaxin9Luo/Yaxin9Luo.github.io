@@ -16,6 +16,7 @@ import {museumSite} from '../src/yuanmingyuan/museum-sites.js';
 import {placeMuseumStaticAsset} from '../src/yuanmingyuan/museum-static-batch.js';
 import {xianfaqiaoArchive} from '../src/yuanmingyuan/xianfaqiao-integration.js';
 import {compositionOwner,compositionGround} from './helpers/xianfaqiao-composition-fixture.js';
+import {isFrontCourtRoute} from '../src/yuanmingyuan/front-court-museum.js';
 
 const source=await readFile(process.env.MUSEUM_SCENE_UNDER_TEST?pathToFileURL(process.env.MUSEUM_SCENE_UNDER_TEST):new URL('../src/yuanmingyuan/museum-scene.js',import.meta.url),'utf8');
 function between(start,end){
@@ -24,6 +25,9 @@ function between(start,end){
   return source.slice(a,b);
 }
 const wiring=[
+  source.match(/^let frontCourtLandscape=.*;$/m)?.[0],
+  between('let wanfangMuseumShore=', "$('review-tools')"),
+  source.match(/^function clearVisitorMovement\(\).*$/m)?.[0],
   between('function isJiuzhouComposition()', 'function renderMap('),
   between('function releaseSceneShoreGrove()', 'function currentPlantingCollision('),
   between('function failComposedScene(', 'function render(dt)'),
@@ -104,7 +108,7 @@ function fixture({composed=true,resident=false,throwPool=false,perSite=1}={}){
     copy:{en:{building:'building',failed:'failed'}},locationCaption(){},syncControls(){},message(){},westernPlanting:null,westernPlantingLifetime:null,
     reviewMotion:null,reviewMotionResult:null,state:{position:{x:0,y:8,z:0}},visitor:{group:new Group(),dispose(){events.push('visitor');}},
     sitePoint:(_site,p)=>({x:p[0],y:p[1],z:p[2]}),museumTravelHeading:()=>0,resetCharacterMotion(){},frameVisitor(){},
-    audio:{setEmitter(){},setSuspended(value){events.push('audio-suspended:'+value);},dispose(){events.push('audio');}},advance(){},redraw:{request(){},cancel(){},dispose(){}},
+    audio:{setEmitter(){},setSuspended(value){events.push('audio-suspended:'+value);},dispose(){events.push('audio');}},advance(){},redraw:{request(){},cancel(){},dispose(){}},isFrontCourtRoute,ensureVisitorCameraClearance(){},
     $:id=>{if(!elements.has(id)){const element=new EventTarget();Object.assign(element,{textContent:'',hidden:true});elements.set(id,element);}return elements.get(id);},evidence:()=>({}),start(){},
     touch:{clear(){}},canvas,location:{reload(){events.push('reload');}},addEventListener:(...args)=>page.addEventListener(...args),
     keys:new Set(),movementCodes:new Set(['KeyW']),raf:0,cancelAnimationFrame(){},observer:{disconnect(){}},document:{body:{dataset:{}},removeEventListener(){}},removeEventListener:(...args)=>page.removeEventListener(...args),keyup(){},clearKeys(){},

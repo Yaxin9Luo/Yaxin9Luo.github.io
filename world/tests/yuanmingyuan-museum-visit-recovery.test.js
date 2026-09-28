@@ -6,6 +6,7 @@ import * as THREE from 'three';
 import {createMuseumResidentBuildings} from '../src/yuanmingyuan/museum-resident-buildings.js';
 import {createMuseumSiteController} from '../src/yuanmingyuan/site-controller.js';
 import {installSceneRedraw} from './helpers/museum-scene-redraw.js';
+import {isFrontCourtRoute} from '../src/yuanmingyuan/front-court-museum.js';
 
 // Execute the actual page functions against real Three scene owners and the
 // actual site/resident controllers. Only browser services and GPU submission
@@ -16,6 +17,10 @@ const pageFunctions=[
   source.match(/^const paused=.*;$/m)?.[0],
   section('function isJiuzhouComposition()', '\nfunction renderMap('),
   section('function ensureSceneShoreGroveCurrent()', '\nfunction currentPlantingCollision('),
+  section('function ensureSceneFrontCourtLandscapeCurrent()', '\n// Regional planting'),
+  source.match(/^function clearVisitorMovement\(\).*$/m)?.[0],
+  source.match(/^let frontCourtLandscape=.*;$/m)?.[0],
+  section('let wanfangMuseumShore=', "\n$('review-tools')"),
   section('function busy(','\nfunction setLanguage('),
   section('async function visit(','\nfunction advance('),
   section('function render(dt)','\nfunction tick('),
@@ -37,13 +42,13 @@ async function harness({initialized=true,load,unmount}={}){
   const residents=createMuseumResidentBuildings({root,descriptors:[descriptor],siteController:sites,loadFull:async()=>resident,baseURL:'http://fixture.test/',fetchImpl(){throw new Error('No archive request is allowed in this fixture');}});
   const camera=new THREE.PerspectiveCamera(40,1,.1,1000);camera.position.set(0,5,20);camera.lookAt(0,0,0);camera.updateMatrixWorld();
   const elements=new Map(),renders=[],messages=[],captions=[];
-  const ctx={query:new URLSearchParams(),composition:null,westernPlanting:null,
+  const ctx={query:new URLSearchParams(),composition:null,westernPlanting:null,isFrontCourtRoute,
     THREE,camera,residents,sites,ready:initialized,currentSite:initialized?site:null,disposed:false,loading:false,contextLost:false,capturing:false,reviewPaused:false,
     document:{hidden:false,body:{dataset:{}}},reader:{isOpen:false},dialogs:[],controls:{target:new THREE.Vector3()},raf:0,last:0,time:23,
     state:{position:{x:1,y:4,z:2},speed:0},keys:new Set(),touch:{clear(){}},lang:'en',copy:{en:{building:'loading',failed:'failed'}},
     museumSite:id=>[site,other].find(s=>s.id===id)??null,
     $:id=>{if(!elements.has(id))elements.set(id,{hidden:false,textContent:'',open:false});return elements.get(id);},
-    locationCaption(){captions.push(ctx.currentSite?.id??null);},message(text){messages.push(text);},syncControls(){},placeGuides(){},advance(){},
+    locationCaption(){captions.push(ctx.currentSite?.id??null);},message(text){messages.push(text);},syncControls(){},placeGuides(){},advance(){},ensureVisitorCameraClearance(){},
     environment:{update:()=>({night:0})},audio:{update(){},setEmitter(){}},water:{update(){},reflectionViews:()=>[]},
     renderer:{getDrawingBufferSize:o=>o.set(1000,1000),shadowMap:{needsUpdate:false},info:{reset(){}}},
     rendering:{render(){const visible=[];root.traverseVisible(node=>{if(node.isMesh)visible.push(node.parent.name);});renders.push(visible.sort());}},

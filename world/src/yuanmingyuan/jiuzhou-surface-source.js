@@ -46,7 +46,14 @@ export async function prepareJiuzhouSurfaceSource({signal,prepareLandscape=prepa
       diagnostics:{...landscape.diagnostics,buildingSurface:surface.diagnostics},
       // The enclosing composition must release guides/support before this
       // owner. Propagate update/guard errors without self-disposal here.
-      update(time){assertBinding();landscape.update?.(time);},
+      update(time){
+        if(disposed)throw new Error('Jiuzhou building surface source was disposed.');
+        surface.assertCurrent();
+        if(landscape.update==null)landscape.assertBinding();else{
+          if(prepareLandscape!==prepareJiuzhouLandscapeSource)landscape.assertBinding();
+          landscape.update(time);
+        }
+      },
       assertBinding,dispose,get disposed(){return disposed;},
       get cleanupErrors(){return [...errors];},
     };

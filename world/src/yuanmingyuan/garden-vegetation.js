@@ -47,8 +47,8 @@ function authoredGrain(kind) {
 }
 
 class VegetationBuilder {
-  constructor(texturePixels) {
-    this.texturePixels = texturePixels;
+  constructor(texturePixels, willowBark) {
+    this.texturePixels = texturePixels; this.willowBark = willowBark;
     this.geometries = new Set(); this.materials = new Set(); this.textures = new Set(); this.instances = new Set(); this.counts = { leaves: 0, needleFascicles: 0, foliageSprays: 0, curvedBranches: 0, livePineShoots: 0, alphaBranchletSprays: 0 };
     const bark = authoredGrain('bark'); this.textures.add(bark);
     const make = (name, options) => { const material = new THREE.MeshStandardMaterial({ name, color: 0xffffff, vertexColors: true, ...options }); this.materials.add(material); return material; };
@@ -62,7 +62,7 @@ class VegetationBuilder {
   mesh(parent, geometry, material, name = geometry.name, data = {}) { this.geometries.add(geometry); const mesh = new THREE.Mesh(geometry, material); mesh.name = name; mesh.castShadow = true; mesh.receiveShadow = true; mesh.userData = data; parent.add(mesh); return mesh; }
   flush(parent, batch, material, data = {}) { if (batch.positions.length) return this.mesh(parent, batch.finish(), material, batch.name, data); return null; }
   instanceFlush(parent, batch, geometry, material, data = {}) { if (!batch.matrices.length) return null; const mesh = batch.finish(geometry, material); this.geometries.add(geometry); this.instances.add(mesh); mesh.castShadow = true; mesh.receiveShadow = true; mesh.userData = { ...data, editableInstanceTransforms: true }; parent.add(mesh); return mesh; }
-  branch(batch, points, radii, options = {}) { const geometry = curvedBranchGeometry({ points: points.map(point => Array.isArray(point) ? point : point.toArray()), radii, ...options }); batch.add(geometry); geometry.dispose(); this.counts.curvedBranches++; }
+  branch(batch, points, radii, options = {}) { const geometry = (batch.willowBark ? this.willowBark.createGeometry : curvedBranchGeometry)({ points: points.map(point => Array.isArray(point) ? point : point.toArray()), radii, ...options }); batch.add(geometry); geometry.dispose(); this.counts.curvedBranches++; }
   dispose() { for (const mesh of this.instances) mesh.dispose(); for (const geometry of this.geometries) geometry.dispose(); for (const material of this.materials) material.dispose(); for (const texture of this.textures) texture.dispose(); }
 }
 
@@ -75,7 +75,7 @@ function roots(b, batch, rng, radius = .48, barkProfile = null) {
 }
 
 function willow(b, root) {
-  const rng = seededGardenRandom(4451), wood = new VegetationGeometryBatch('willow-trunk-and-roots'), boughs = new VegetationGeometryBatch('willow-primary-and-secondary-boughs'), twigs = new VegetationGeometryBatch('willow-hanging-twigs'), foliage = new VegetationInstanceBatch('willow-alternate-lanceolate-foliage');
+  const rng = seededGardenRandom(4451), wood = new (b.willowBark?.GeometryBatch ?? VegetationGeometryBatch)('willow-trunk-and-roots'), boughs = new (b.willowBark?.GeometryBatch ?? VegetationGeometryBatch)('willow-primary-and-secondary-boughs'), twigs = new VegetationGeometryBatch('willow-hanging-twigs'), foliage = new VegetationInstanceBatch('willow-alternate-lanceolate-foliage');
   const detail = b.group(root, 'willow-detail-spray', { body: 'short-attached-willow-spray-with-visible-lamina-faces' }), detailTwig = new VegetationGeometryBatch('willow-detail-twig'), detailLeaves = new VegetationInstanceBatch('willow-detail-leaves');
   const trunk = [[0, -.16, 0], [.10, .62, -.04], [-.12, 1.73, .05], [.09, 2.91, .13], [.23, 4.23, .08], [.57, 5.36, -.05]], trunkCurve = curveOf(trunk);
   b.branch(wood, trunk, [.67, .51, .44, .37, .25, .075], { radialSegments: 25, segments: 86, bark: .07, color: '#807b6a' }); roots(b, wood, rng, .52);
@@ -255,11 +255,12 @@ function lotus(b, root) {
   budPetal.dispose(); b.flush(bud, budBatch, b.m.petals); b.branch(stems, [[-1.32, -.08, .08], [-1.52, .71, .09], [-1.73, 1.45, .10]], [.012, .010, .007], { radialSegments: 8, segments: 22, bark: 0, color: '#77926c' }); b.flush(root, stems, b.m.stem);
 }
 
-export function createGardenVegetationStudy({ specimens = gardenVegetationSpecs.map(spec => spec.id), arrange = true, texturePixels } = {}) {
+export function createGardenVegetationStudy({ specimens = gardenVegetationSpecs.map(spec => spec.id), arrange = true, texturePixels, willowBark } = {}) {
   const selected = new Set(specimens); for (const id of selected) if (!gardenVegetationSpecs.some(spec => spec.id === id)) throw new Error(`Unknown vegetation specimen: ${id}`);
   if (selected.has('pine')) validateVegetationTexturePixels(texturePixels);
   if (selected.has('lake-rock')) validateLakeStonePixels(texturePixels?.stone);
-  const builder = new VegetationBuilder(texturePixels), group = new THREE.Group(); group.name = 'yuanming-garden-vegetation-study'; group.userData = { evidence: 'historically-informed-authored-botanical-studies', fullGardenDistribution: false, referencePhotographyBundled: false, sourceMaterialMaps: [...(selected.has('pine') ? ['polyhaven:pine_bark'] : []), ...(selected.has('lake-rock') ? ['polyhaven:rock_01'] : [])] };
+  if (willowBark && (!selected.has('willow') || typeof willowBark.createGeometry !== 'function' || typeof willowBark.GeometryBatch !== 'function')) throw new Error('Explicit willow bark geometry seam required.');
+  const builder = new VegetationBuilder(texturePixels, willowBark), group = new THREE.Group(); group.name = 'yuanming-garden-vegetation-study'; group.userData = { evidence: 'historically-informed-authored-botanical-studies', fullGardenDistribution: false, referencePhotographyBundled: false, sourceMaterialMaps: [...(selected.has('pine') ? ['polyhaven:pine_bark'] : []), ...(selected.has('lake-rock') ? ['polyhaven:rock_01'] : [])] };
   const factories = { willow, pine, juniper, lotus, 'lake-rock': (b, parent) => b.mesh(parent, lakeStoneGeometry(), b.stoneMaterial(), 'lake-rock-main', { body: 'perforated-garden-limestone' }) }, parts = [];
   try {
     for (const spec of gardenVegetationSpecs.filter(spec => selected.has(spec.id))) { const part = builder.group(group, spec.name, { id: spec.id, label: spec.label, body: spec.form, sourceIds: spec.sourceIds, evidence: spec.evidence }); if (arrange) part.position.set(...spec.position); factories[spec.id](builder, part); parts.push(part); }

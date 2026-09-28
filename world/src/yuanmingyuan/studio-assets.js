@@ -1,3 +1,4 @@
+import {wanfangAnheStudioEntry} from './wanfang-anhe-studio-entry.js';
 import {yangquelongRefinedGardenStudioEntry} from './yangquelong-refined-garden-studio-entry.js';
 import {yangquelongGardenStudioEntry} from './yangquelong-garden-studio-entry.js';
 import {hanjingtangStudyViews} from './hanjingtang-study-views.js';
@@ -32,6 +33,7 @@ const houndViews=Object.fromEntries(Array.from({length:10},(_,index)=>{
 }));
 
 export const studioAssets={
+  'wanfang-anhe':wanfangAnheStudioEntry,
   'yangquelong-refined-garden-r3':yangquelongRefinedGardenStudioEntry,
   'yangquelong-garden-r1':yangquelongGardenStudioEntry,
   'xieqiqu-stone-fish-pool-r4':{

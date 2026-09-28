@@ -1,3 +1,4 @@
+import {createWanfangAnheSiteGround,bindWanfangAnheMuseumWater} from './wanfang-anhe-museum-ground.js';
 import {gardenLayout} from './garden-layout.js';
 import {museumSites,sitePoint} from './museum-sites.js';
 import {HILL,SCREEN_LAYOUT} from './xianfa-landscape-layout.js';
@@ -48,7 +49,7 @@ function xianfashanGround(site,fanghe,layout,ready){
 // This is model/terrain alignment, not newly established historical surveying.
 export function createMuseumLandscape({layout=gardenLayout,sites=museumSites,readyAssetIds=[],xianfaqiaoPatch=null}={}){
   const fanghe=sites.find(site=>site.assetId==='fanghe-xianfahua');
-  let ornamentalWaters=layout.ornamentalWaters,landforms=layout.landforms,islands=layout.islands;
+  let ornamentalWaters=layout.ornamentalWaters,landforms=layout.landforms,islands=layout.islands,waterBodies=layout.waterBodies;
   const pads=[],courts=[],paths=[],replacements=[],ready=new Set(readyAssetIds),assetWallReplacements=[...(layout.assetWallReplacements||[])];
   const xieqi=sites.find(site=>site.assetId==='xieqiqu');
   if(xieqi&&ready.has('xieqiqu')){const prepared=createXieqiquCourtGround(xieqi);pads.push(...prepared.pads);courts.push(...prepared.courts);}
@@ -119,10 +120,18 @@ export function createMuseumLandscape({layout=gardenLayout,sites=museumSites,rea
     // Do not add these to ornamentalWaters: the model owns the narrow banks,
     // pool rims and open bridge, so terrain must not generate its wide shore rails.
   }
-  return applyXianfaqiaoSitePatch({layout:{...layout,ornamentalWaters,landforms,islands,assetWallReplacements},pads,courts,paths,replacements},xianfaqiaoPatch);
+  const wanfang=sites.find(site=>site.assetId==='wanfang-anhe');
+  if(wanfang){
+    const prepared=createWanfangAnheSiteGround(wanfang,layout);
+    waterBodies=waterBodies.map(water=>water.id===prepared.lake.id?prepared.lake:water);
+    islands=islands.map(island=>island.id===prepared.island.id?prepared.island:island);
+    pads.push(...prepared.pads);paths.push(...prepared.paths);
+  }
+  return applyXianfaqiaoSitePatch({layout:{...layout,ornamentalWaters,landforms,islands,waterBodies,assetWallReplacements},pads,courts,paths,replacements},xianfaqiaoPatch);
 }
 
 export function configureMuseumLandscapeAsset(resource,site,{terrain,water}={}){
+  if(site.assetId==='wanfang-anhe')return bindWanfangAnheMuseumWater(resource,site,{terrain,water});
   if(site.assetId==='fangwaiguan')return bindFangwaiguanCourtWater(createFangwaiguanCourtGround(site),{owner:resource,terrain,water});
   if(site.assetId==='yangquelong'){
     const sheets=[];

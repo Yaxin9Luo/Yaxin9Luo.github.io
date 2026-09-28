@@ -1,4 +1,6 @@
+import {patchVegetationWoodShader} from './vegetation-wood-stability.js';
 import * as THREE from 'three';
+import {setWillowSampling} from './willow-distance-sampling.js';
 import {seededGardenRandom,VegetationGeometryBatch,VegetationInstanceBatch} from './vegetation-geometry.js';
 import {pineBarkTextures,pineBarkRelief,validateVegetationTexturePixels,vegetationBarkSource} from './vegetation-textures.js';
 import {V,TAU,curveOf,tubePoint,aim,pose,pineWoodGeometry,pineTerminalSpray} from './spreading-pine-geometry.js';
@@ -22,8 +24,15 @@ export function createSpreadingPineStudy({texturePixels}={}){
  try{
   const maps=pineBarkTextures(texturePixels),surface=pineBarkRelief(texturePixels);Object.values(maps).forEach(t=>textures.add(t));
   const bark=new THREE.MeshStandardMaterial({name:'pine-r3-continuous-photographic-bark',color:0xffffff,vertexColors:true,...maps,normalScale:new THREE.Vector2(.76,.76),roughness:1});materials.add(bark);
+  const barkBeforeCompile=bark.onBeforeCompile,barkBeforeKey=bark.customProgramCacheKey;
+  bark.onBeforeCompile=function(shader,renderer){barkBeforeCompile.call(this,shader,renderer);patchVegetationWoodShader(shader,{bump:false});};
+  bark.customProgramCacheKey=function(){return barkBeforeKey.call(this)+'|vegetation-wood-stability-r1:rgb01';};
   bark.userData={source:vegetationBarkSource,woodOrders:'trunk-roots-primary-secondary-terminal',materialRole:'one-shared-original-PBR-bark-all-orders',originalPixelsUnchanged:true};
   const leaf=new THREE.MeshStandardMaterial({name:'pine-r3-semi-round-live-needles',color:0xffffff,vertexColors:true,roughness:.73,emissive:'#1c2e18',emissiveIntensity:.018});materials.add(leaf);
+  setWillowSampling(leaf,'centroid');
+  const leafBeforeCompile=leaf.onBeforeCompile,leafBeforeKey=leaf.customProgramCacheKey;
+  leaf.onBeforeCompile=function(shader,renderer){leafBeforeCompile.call(this,shader,renderer);patchVegetationWoodShader(shader,{bump:false});};
+  leaf.customProgramCacheKey=function(){return leafBeforeKey.call(this)+'|vegetation-wood-stability-r1:rgb01';};
   // Pin the original R3 canopy state independently of root-shape choices.
   // The initial eight-root construction consumed 32 draws before canopy growth.
   const rng=seededGardenRandom(1340406461),trunkBatch=new VegetationGeometryBatch('pine-r3-trunk-and-roots'),boughBatch=new VegetationGeometryBatch('pine-r3-primary-boughs'),fineBatch=new VegetationGeometryBatch('pine-r3-secondary-and-terminal-boughs'),woodRecords=[],shootSupports=[],pads=[];
