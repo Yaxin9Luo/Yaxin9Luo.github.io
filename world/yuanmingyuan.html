@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="zh"><head>
 <link rel="icon" type="image/svg+xml" href="/crest.svg">
-<meta name="portfolio-release" content="2026.09.14.3"><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex"><title>圆明园 · Yuanmingyuan</title><link rel="stylesheet" href="/src/yuanmingyuan/museum-reader.css"><link rel="stylesheet" href="/src/yuanmingyuan/museum-scene.css"></head>
+<meta name="portfolio-release" content="2026.09.14.3"><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>圆明园 · Yuanmingyuan</title><link rel="stylesheet" href="/src/yuanmingyuan/museum-reader.css"><link rel="stylesheet" href="/src/yuanmingyuan/museum-scene.css"></head>
 <body data-ready="loading">
   <canvas id="museum-canvas" aria-label="圆明园三维游览场景" tabindex="0"></canvas>
   <header class="garden-header">
@@ -9,7 +9,7 @@
     <nav aria-label="游览工具"><button id="map-toggle" data-copy="map">园图</button><button id="directory-toggle" data-copy="directory">展览目录</button><button id="sound-toggle" aria-pressed="false">声音：关</button><button id="language" aria-label="Switch language">EN</button></nav>
   </header>
   <div class="garden-loading" id="loading" role="status"><span class="garden-loader" aria-hidden="true"></span><p id="loading-copy">正在准备园林…</p><button id="reload-scene" data-copy="reloadScene" hidden>重新载入场景</button><a href="/museum-reader.html" data-copy="readInstead">先阅读历史展签</a></div>
-  <section class="garden-location" aria-live="polite"><span id="region-name"></span><h1 id="site-title">圆明三园</h1><p id="scope-note" data-copy="study">建模研究预览 · 尚未公开</p></section>
+  <section class="garden-location" aria-live="polite"><span id="region-name"></span><h1 id="site-title">圆明三园</h1><p id="scope-note" data-copy="study">圆明三园数字展览 · 园区持续扩充</p></section>
   <aside class="garden-settings"><label><span data-copy="light">光照</span><select id="time-mode" aria-label="光照 / Time of day"><option value="auto">时间流逝</option><option value="day">白天</option><option value="dawn">晨光</option><option value="dusk">暮色</option><option value="night">月夜</option></select></label><button id="camera-mode" data-copy="camera">跟随视角</button><button id="flight-toggle" data-copy="land">降落 · B</button></aside>
   <button id="inspect" class="garden-inspect" disabled><kbd>E</kbd><span data-copy="read">阅读展签</span></button>
   <div class="garden-message" id="message" role="status" aria-live="polite"></div>
