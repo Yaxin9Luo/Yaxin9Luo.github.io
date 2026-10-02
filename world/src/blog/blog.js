@@ -1,7 +1,8 @@
-import {collectPosts} from './posts.js';
+import {collectPosts,isDraft} from './posts.js';
 import './blog.css';
 
-const posts=collectPosts(import.meta.glob('./posts/*.md',{query:'?raw',import:'default',eager:true}));
+// Drafts show up while writing locally (`npm run dev`) and are left out of the published site.
+const posts=collectPosts(import.meta.glob('./posts/*.md',{query:'?raw',import:'default',eager:true})).filter(p=>!import.meta.env.PROD||!isDraft(p));
 // The blog keeps its own language choice and opens in English unless asked otherwise.
 const LANG_KEY='yaxin.blog.lang';
 
@@ -11,11 +12,11 @@ const copy={
   intro:['Notes on multimodal models, agent harnesses, and what I learn while doing research.','关于多模态模型、Agent Harness，以及做研究时学到的东西。'],
   read:['min read','分钟阅读'],empty:['No posts match.','没有匹配的文章。'],latest:['Latest','最新'],
   search:['Search posts','搜索文章'],allTopics:['All','全部'],postsCount:['posts','篇文章'],topicsCount:['topics','个主题'],
-  placeholder:['Placeholder','占位'],placeholderNote:['Placeholder post — a layout preview, not a real article.','占位文章：用于预览版式，并非正式内容。'],
+  placeholder:['Placeholder','占位'],draft:['Draft','草稿'],draftNote:['Draft — visible only on your local preview, not on the published site.','草稿：只在本地预览中可见，不会出现在线上网站。'],placeholderNote:['Placeholder post — a layout preview, not a real article.','占位文章：用于预览版式，并非正式内容。'],
   missing:['This post does not exist.','没有找到这篇文章。'],onlyIn:['This post is only available in','这篇文章目前只有'],
   en:['English','英文版'],zh:['Chinese','中文版'],contents:['Contents','目录'],copied:['Link copied','链接已复制'],
   copy:['Copy','复制'],copiedCode:['Copied','已复制'],newer:['Newer','较新'],older:['Older','较早'],top:['Back to top','回到顶部'],
-  scroll:['Scroll','向下'],section:['Link to section','本节链接'],explore:['Hover a constellation · click the moon','把鼠标移到星座上 · 点击月亮'],exploreTouch:['Tap a constellation · tap the moon','轻点星座 · 轻点月亮'],
+  scroll:['Scroll','向下'],section:['Link to section','本节链接'],quote:['Copy quote','复制引用'],quoteCopied:['Quote copied with a link to this section','已复制引用及本节链接'],explore:['Hover a constellation · click the moon','把鼠标移到星座上 · 点击月亮'],exploreTouch:['Tap a constellation · tap the moon','轻点星座 · 轻点月亮'],
 };
 
 function readLang(){
@@ -28,7 +29,14 @@ function readLang(){
 export const state={posts,lang:readLang(),reducedMotion:matchMedia('(prefers-reduced-motion: reduce)').matches};
 export const t=key=>copy[key]?.[state.lang==='zh'?1:0]??key;
 export const escape=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-export const postHref=slug=>`/blog/?post=${encodeURIComponent(slug)}`;
+export const postHref=slug=>`/blog/${encodeURIComponent(slug)}/`;
+// Posts live at /blog/<slug>/; early ?post=<slug> links are moved there.
+function currentSlug(){
+  const legacy=new URLSearchParams(location.search).get('post');
+  if(legacy){const url=new URL(location.href);url.searchParams.delete('post');url.pathname=postHref(legacy);history.replaceState(null,'',url);return legacy;}
+  const m=location.pathname.match(/^\/blog\/([^/]+)\/?$/);
+  return m&&m[1]!=='index.html'?decodeURIComponent(m[1]):null;
+}
 export function formatDate(date){
   const [y,m,d]=date.split('-').map(Number);
   return state.lang==='zh'?`${y} 年 ${m} 月 ${d} 日`:new Date(Date.UTC(y,m-1,d)).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric',timeZone:'UTC'});
@@ -50,7 +58,7 @@ let dispose=()=>{};
 async function render(){
   dispose();
   document.documentElement.lang=state.lang==='zh'?'zh-CN':'en';
-  const slug=new URLSearchParams(location.search).get('post');
+  const slug=currentSlug();
   const root=document.getElementById('blog');
   document.body.className=slug?'blog-article-page':'blog-home-page';
   root.innerHTML=`${header()}<main id="blog-main"></main><div class="blog-toast" role="status" aria-live="polite"></div>`;
@@ -66,6 +74,13 @@ function switchLanguage(){
   const url=new URL(location.href);if(url.searchParams.has('lang')){url.searchParams.set('lang',state.lang);history.replaceState(null,'',url);}
   const y=scrollY;render().then(()=>scrollTo(0,y));
 }
+
+// Name the clicked title so it can morph into the next page's heading; one name per page at a time.
+export function nameTitleForTransition(el){
+  document.querySelectorAll('.vt-title').forEach(n=>{n.classList.remove('vt-title');n.style.viewTransitionName='';});
+  if(el){el.classList.add('vt-title');el.style.viewTransitionName='post-title';}
+}
+addEventListener('pageshow',e=>{if(e.persisted)nameTitleForTransition(null);});
 
 export function toast(message){
   const el=document.querySelector('.blog-toast');if(!el)return;

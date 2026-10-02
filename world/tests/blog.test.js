@@ -3,7 +3,8 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
-import {parsePost,collectPosts,pickVersion} from '../src/blog/posts.js';
+import {parsePost,collectPosts,pickVersion,isDraft} from '../src/blog/posts.js';
+import {postPageHtml} from '../blog-pages-plugin.js';
 import katex from 'katex';
 import {createMarkdown,hasMath,slugify} from '../src/blog/markdown.js';
 import {validateSpec,niceTicks,formatValue} from '../src/blog/chart.js';
@@ -23,6 +24,12 @@ test('posts sort newest first and fall back to the other language',()=>{
   assert.deepEqual(posts.map(p=>p.slug),['new','old']);
   assert.equal(pickVersion(posts[0],'en').lang,'zh');
   assert.deepEqual(posts[1].versions.en.tags,['A','B']);
+});
+
+test('front matter keeps inner quotes and strips one surrounding pair',()=>{
+  const md=title=>`---\ntitle: ${title}\ndate: 2026-01-01\n---\nBody`;
+  assert.equal(parsePost('./posts/a.en.md',md('The "inner loop"')).title,'The "inner loop"');
+  assert.equal(parsePost('./posts/a.en.md',md('"Quoted: with colon"')).title,'Quoted: with colon');
 });
 
 test('malformed post files are rejected',()=>{
@@ -70,4 +77,24 @@ test('constellations are projected without mirroring',()=>{
   const [dubhe,merak,alkaid]=[dipper[0],dipper[1],dipper[6]],a=-Math.atan2(dubhe[1]-alkaid[1],dubhe[0]-alkaid[0]);
   const rot=([x,y])=>x*Math.sin(a)+y*Math.cos(a);
   assert.ok(rot(dubhe)<rot(merak));
+});
+
+test('drafts stay drafts until one language version is published',()=>{
+  const md=(extra)=>`---\ntitle: T\ndate: 2026-01-01\n${extra}---\nBody`;
+  const [both]=collectPosts({'./posts/a.en.md':md('draft: true\n'),'./posts/a.zh.md':md('draft: true\n')});
+  const [mixed]=collectPosts({'./posts/b.en.md':md(''),'./posts/b.zh.md':md('draft: true\n')});
+  assert.equal(isDraft(both),true);assert.equal(isDraft(mixed),false);
+});
+
+test('each post page carries its own title, summary and canonical URL',()=>{
+  const shell=fs.readFileSync(path.resolve(postsDir,'../../../blog/index.html'),'utf8');
+  const [post]=collectPosts({'./posts/x.zh.md':'---\ntitle: 标题 "引号"\ndate: 2026-05-01\nsummary: 摘要 <b>\n---\nBody'});
+  const html=postPageHtml(shell,post);
+  assert.match(html,/<html lang="zh-CN">/);
+  assert.match(html,/<title>标题 &quot;引号&quot; — Yaxin's Blog<\/title>/);
+  assert.match(html,/<meta name="description" content="摘要 &lt;b&gt;" \/>/);
+  assert.match(html,/<link rel="canonical" href="https:\/\/yaxin9luo.github.io\/blog\/x\/" \/>/);
+  assert.match(html,/og:type" content="article"/);
+  assert.doesNotMatch(html,/blog-page-meta/);
+  assert.equal((html.match(/rel="canonical"/g)||[]).length,1);
 });

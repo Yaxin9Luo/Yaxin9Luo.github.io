@@ -115,6 +115,8 @@ export function startSky(host,canvas,{lang='en',reducedMotion=false,tip}={}){
   let w=0,h=0,dpr=1,deep,ridgeBack,ridgeFront,stars=[],groups=[],lanterns=[],meteors=[],sparks=[],moon=null,moonTex=null;
   let raf=0,running=false,visible=true,last=performance.now(),idleSince=performance.now(),tour={index:-1,until:0},nextMeteor=performance.now()+4000;
   const pointer={x:-1e4,y:-1e4,inside:false},par={x:0,y:0};
+  // Offsets of the star and moon layers in the last frame, shared with hit-testing.
+  let constOff=[0,0],moonOff=[0,0],scrollOff=0;
   const today=moonPhase();let phaseAnim=null,moonHover=false,phaseShown=today.angle;
   const T=(en,zh)=>lang==='zh'?zh:en;
 
@@ -198,7 +200,7 @@ export function startSky(host,canvas,{lang='en',reducedMotion=false,tip}={}){
 
   function resize(){
     const box=canvas.getBoundingClientRect();if(!box.width||!box.height)return;
-    dpr=Math.min(2,window.devicePixelRatio||1);w=box.width;h=box.height;
+    w=box.width;h=box.height;dpr=Math.min(w*h>1.4e6?1.5:2,window.devicePixelRatio||1);
     canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);
     layout();buildDeep();buildRidges();
     const size=Math.ceil(moon.R*2*dpr)+2;moonTex=buildMoonTexture(size,3);shadeMoon(moonTex,phaseShown,-.42);
@@ -212,7 +214,7 @@ export function startSky(host,canvas,{lang='en',reducedMotion=false,tip}={}){
   }
 
   function activeGroup(now){
-    if(pointer.inside){for(const g of groups){const [x0,y0,x1,y1]=g.box,pad=34;if(pointer.x>x0-pad+par.x&&pointer.x<x1+pad+par.x&&pointer.y>y0-pad+par.y&&pointer.y<y1+pad+par.y)return g;}}
+    if(pointer.inside){for(const g of groups){const [x0,y0,x1,y1]=g.box,pad=34;if(pointer.x>x0-pad+constOff[0]&&pointer.x<x1+pad+constOff[0]&&pointer.y>y0-pad+constOff[1]&&pointer.y<y1+pad+constOff[1])return g;}}
     if(tour.index>=0&&now<tour.until)return groups[tour.index];
     return null;
   }
@@ -221,11 +223,13 @@ export function startSky(host,canvas,{lang='en',reducedMotion=false,tip}={}){
     ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,w,h);
     const t=now/1000,tx=pointer.inside?(pointer.x/w-.5):0,ty=pointer.inside?(pointer.y/h-.5):0;
     par.x+=((-tx*10)-par.x)*Math.min(1,dt*3);par.y+=((-ty*7)-par.y)*Math.min(1,dt*3);
-    const layer=k=>[par.x*k,par.y*k];
-    let [ox,oy]=layer(.35);ctx.drawImage(deep,-M+ox,-M+oy,w+2*M,h+2*M);
+    // Far layers lag behind the page as it scrolls, so the sky gains depth; the near ridge moves with the page.
+    scrollOff=reducedMotion?0:Math.max(0,Math.min(h,-canvas.getBoundingClientRect().top));
+    const layer=(k,sk=0)=>[par.x*k,par.y*k+scrollOff*sk];
+    let [ox,oy]=layer(.35,.5);ctx.drawImage(deep,-M+ox,-M+oy,w+2*M,h+2*M);
     // Bright twinkling field stars.
     ctx.globalCompositeOperation='lighter';
-    [ox,oy]=layer(1);
+    [ox,oy]=layer(1,.42);constOff=[ox,oy];
     for(const s of stars){const tw=reducedMotion?1:.72+.28*(.6*Math.sin(t*s.f1+s.p1)+.4*Math.sin(t*s.f2+s.p2));drawStar(s.x+ox,s.y+oy,s.b*tw,s.c,true);}
     // Constellations; their labels are drawn last so ridges never cover them.
     const act=activeGroup(now),overlay=[];
@@ -273,7 +277,7 @@ export function startSky(host,canvas,{lang='en',reducedMotion=false,tip}={}){
       }
     }
     // Moon with bloom and a faint 22° halo.
-    [ox,oy]=layer(1.6);
+    [ox,oy]=layer(1.6,.34);moonOff=[ox,oy];
     const mx=moon.x+ox,my=moon.y+oy,R=moon.R,lit=(1-Math.cos(phaseShown))/2,k=(.35+.65*lit)*(moonHover?1.25:1);
     ctx.globalCompositeOperation='lighter';
     const bloom=ctx.createRadialGradient(mx,my,R*.9,mx,my,R*5);bloom.addColorStop(0,`rgba(255,238,205,${.26*k})`);bloom.addColorStop(.18,`rgba(255,232,196,${.1*k})`);bloom.addColorStop(1,'rgba(255,230,190,0)');
@@ -283,8 +287,8 @@ export function startSky(host,canvas,{lang='en',reducedMotion=false,tip}={}){
     ctx.globalCompositeOperation='source-over';
     if(moonTex){const s=moonTex.size/dpr;ctx.drawImage(moonTex.sprite,mx-s/2,my-s/2,s,s);}
     // Ridges, lanterns between them, meteors.
-    [ox,oy]=layer(.6);ctx.drawImage(ridgeBack,-M+ox,-M+oy,w+2*M,h+2*M);
-    [ox,oy]=layer(1.1);
+    [ox,oy]=layer(.6,.2);ctx.drawImage(ridgeBack,-M+ox,-M+oy,w+2*M,h+2*M);
+    [ox,oy]=layer(1.1,.12);
     for(const l of lanterns){
       if(!reducedMotion){l.y-=l.v*dt*60;l.sway+=dt*.6;if(l.y<-50)Object.assign(l,newLantern(false));}
       const x=l.x+Math.sin(l.sway)*7+ox,y=l.y+oy,s=l.s,fl=reducedMotion?1:.85+.15*Math.sin(t*9+l.flick)*Math.sin(t*5.3+l.flick);
@@ -329,12 +333,12 @@ export function startSky(host,canvas,{lang='en',reducedMotion=false,tip}={}){
     tip.innerHTML=phaseAnim
       ?`<small>${T('A lunar month','一个朔望月')} · ${T('day','第')} ${Math.floor(age)+1}${T('',' 天')}</small><strong>${phaseName(age,lang)}</strong><span>${lit}% ${T('illuminated','被照亮')}</span>`
       :`<small>${T('TONIGHT’S MOON','今夜月相')}</small><strong>${phaseName(today.age,lang)}</strong><span>${Math.round(today.lit*100)}% ${T('illuminated','被照亮')} · ${T('click to watch a month pass','点击观看一个月的月相变化')}</span>`;
-    const [ox,oy]=[par.x*1.6,par.y*1.6];
+    const [ox,oy]=moonOff;
     tip.style.left=`${Math.max(12,moon.x+ox-moon.R*1.4-tip.offsetWidth)}px`;tip.style.top=`${moon.y+oy-tip.offsetHeight/2}px`;
   }
 
   const local=e=>{const box=canvas.getBoundingClientRect();return [e.clientX-box.left,e.clientY-box.top];};
-  const overMoon=(x,y)=>Math.hypot(x-moon.x-par.x*1.6,y-moon.y-par.y*1.6)<moon.R*1.25;
+  const overMoon=(x,y)=>Math.hypot(x-moon.x-moonOff[0],y-moon.y-moonOff[1])<moon.R*1.25;
   const onMove=e=>{
     [pointer.x,pointer.y]=local(e);pointer.inside=true;idleSince=performance.now();tour.until=0;
     const hover=overMoon(pointer.x,pointer.y);if(hover!==moonHover){moonHover=hover;updateTip();}
@@ -346,7 +350,7 @@ export function startSky(host,canvas,{lang='en',reducedMotion=false,tip}={}){
     if(e.target.closest('a,button,input,label'))return;
     const [x,y]=local(e);
     if(overMoon(x,y)){if(!phaseAnim){phaseAnim={start:performance.now(),dur:reducedMotion?1:3600,from:today.angle};if(reducedMotion){phaseAnim=null;}updateTip();}return;}
-    if(e.pointerType!=='mouse'){pointer.x=x;pointer.y=y;const g=groups.find(g=>x>g.box[0]-34&&x<g.box[2]+34&&y>g.box[1]-34&&y<g.box[3]+34);if(g){tour={index:groups.indexOf(g),until:performance.now()+5000};idleSince=performance.now();if(reducedMotion)draw(performance.now(),1);return;}}
+    if(e.pointerType!=='mouse'){pointer.x=x;pointer.y=y;const g=groups.find(g=>x>g.box[0]-34+constOff[0]&&x<g.box[2]+34+constOff[0]&&y>g.box[1]-34+constOff[1]&&y<g.box[3]+34+constOff[1]);if(g){tour={index:groups.indexOf(g),until:performance.now()+5000};idleSince=performance.now();if(reducedMotion)draw(performance.now(),1);return;}}
     if(reducedMotion)return;
     for(let i=0;i<26;i++){const a=Math.random()*Math.PI*2,sp=.6+Math.random()*2.6;sparks.push({x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp-.4,life:1,decay:.012+Math.random()*.016,r:.8+Math.random()*1.4});}
     spawnMeteor(x+120,Math.max(10,y-90));

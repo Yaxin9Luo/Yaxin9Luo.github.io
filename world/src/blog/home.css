@@ -6,7 +6,7 @@
 .sky-tip{position:absolute;z-index:3;min-width:190px;padding:12px 16px;border-radius:6px;background:#0f2229e6;border:1px solid #d0b27a40;backdrop-filter:blur(8px);box-shadow:0 14px 40px #02101455;pointer-events:none;display:flex;flex-direction:column;gap:3px;animation:tip-in .25s ease-out}
 .sky-tip[hidden]{display:none}.sky-tip small{font-size:9px;letter-spacing:.2em;color:var(--gold)}.sky-tip strong{font:500 24px/1.15 var(--serif);color:#f3ecd9}html[lang=zh-CN] .sky-tip strong{font-family:var(--serif-zh);font-size:19px}.sky-tip span{font-size:11px;color:#9fb0ab}
 @keyframes tip-in{from{opacity:0;transform:translateX(6px)}}
-.hero-inner{width:min(1180px,100%);margin:0 auto;padding:60px 6vw 120px;pointer-events:none}.hero-inner *{pointer-events:auto}
+.hero-inner{width:min(1180px,100%);margin:0 auto;padding:60px 6vw 120px;pointer-events:none;opacity:calc(1 - var(--sp,0)*1.6);transform:translateY(calc(var(--sp,0)*-70px))}.scroll-cue{opacity:calc(1 - var(--sp,0)*4)}.hero-inner *{pointer-events:auto}
 .hero-eyebrow{display:flex;align-items:center;gap:14px;font-size:10px;letter-spacing:.26em;color:#c9bf9f;font-weight:500}.hero-eyebrow span{width:34px;height:1px;background:var(--gold)}
 .hero-title{font:400 clamp(72px,12vw,176px)/.92 var(--serif);letter-spacing:-.035em;margin:30px 0 30px;color:#f1ead7;text-shadow:0 6px 40px #071a1f}
 .hero-title .w{display:inline-block;opacity:0;transform:translateY(.32em) rotate(2deg);filter:blur(10px);transition:opacity 1s var(--d),transform 1.2s cubic-bezier(.2,.8,.2,1) var(--d),filter 1s var(--d)}

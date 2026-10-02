@@ -33,7 +33,7 @@ export function createMarkdown({katex}={}){
       const only=token.tokens?.filter(t=>!(t.type==='text'&&!t.text.trim()));
       if(only?.length===1&&only[0].type==='image'){
         const img=only[0];
-        return `<figure class="post-figure"><img src="${escapeHtml(img.href)}" alt="${escapeHtml(img.text)}" loading="lazy" decoding="async"/>${img.title?`<figcaption>${escapeHtml(img.title)}</figcaption>`:''}</figure>\n`;
+        return `<figure class="post-figure"><img src="${escapeHtml(img.href)}" alt="${escapeHtml(img.text)}" decoding="async"/>${img.title?`<figcaption>${escapeHtml(img.title)}</figcaption>`:''}</figure>\n`;
       }
       return false;
     },

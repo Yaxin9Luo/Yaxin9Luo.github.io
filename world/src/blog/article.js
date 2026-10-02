@@ -1,4 +1,4 @@
-import {state,t,escape,postHref,formatDate,minutes,toast} from './blog.js';
+import {state,t,escape,postHref,formatDate,minutes,toast,nameTitleForTransition} from './blog.js';
 import {pickVersion} from './posts.js';
 import {createMarkdown,hasMath,slugify} from './markdown.js';
 import {renderChart} from './chart.js';
@@ -37,6 +37,7 @@ export async function mount(main,slug){
         <div class="post-byline"><img src="/crest.svg" alt=""/><span>Yaxin Luo</span><div class="chips">${v.tags.map(tag=>`<span>${escape(tag)}</span>`).join('')}</div></div>
       </header>
       ${v.placeholder?`<p class="post-notice">${t('placeholderNote')}</p>`:''}
+      ${v.draft?`<p class="post-notice">${t('draftNote')}</p>`:''}
       ${v.lang!==state.lang?`<p class="post-notice">${t('onlyIn')} ${t(v.lang)}.</p>`:''}
       <div class="post-body">${html}</div>
       <nav class="neighbours">${neighbour(newer,`← ${t('newer')}`,'newer')}${neighbour(older,`${t('older')} →`,'older')}</nav>
@@ -55,7 +56,7 @@ export async function mount(main,slug){
   enhanceFigures(main,body,cleanups);
   body.querySelectorAll('a[href^="http"]').forEach(a=>{a.target='_blank';a.rel='noopener noreferrer';});
   body.querySelectorAll('.chart-slot').forEach(slot=>renderChart(slot,{lang:state.lang,reducedMotion:state.reducedMotion}));
-  buildToc(main,body,cleanups);
+  const spy=buildToc(main,body,cleanups);
 
   // Reading progress and back-to-top.
   const bar=main.querySelector('.progress i'),top=main.querySelector('.to-top'),article=main.querySelector('.post');
@@ -68,7 +69,15 @@ export async function mount(main,slug){
   cleanups.push(()=>removeEventListener('scroll',onScroll));
   top.addEventListener('click',()=>scrollTo({top:0,behavior:state.reducedMotion?'auto':'smooth'}));
 
-  if(location.hash){const target=document.getElementById(decodeURIComponent(location.hash.slice(1)));target?.scrollIntoView();}
+  // Newer/older: the neighbour's title morphs into the next heading, so this page's heading steps aside.
+  main.querySelectorAll('.neighbour').forEach(a=>a.addEventListener('click',()=>{main.querySelector('.post-header h1').style.viewTransitionName='none';nameTitleForTransition(a.querySelector('span'));}));
+  enableQuotes(main,body,v,cleanups);
+
+  // Jump to a linked section, and again once figures have loaded and settled the layout.
+  if(location.hash){
+    const jump=()=>{document.getElementById(decodeURIComponent(location.hash.slice(1)))?.scrollIntoView();requestAnimationFrame(()=>spy?.());};
+    jump();const settled=scrollY;Promise.all([...body.querySelectorAll('img')].map(img=>img.decode().catch(()=>{}))).then(()=>{if(Math.abs(scrollY-settled)<2)jump();});
+  }
   return ()=>cleanups.forEach(fn=>fn());
 }
 
@@ -150,7 +159,7 @@ function enhanceFigures(main,body,cleanups){
 function buildToc(main,body,cleanups){
   const headings=[...body.querySelectorAll(':scope > h2, :scope > h3')];
   const toc=main.querySelector('.toc'),list=toc.querySelector('ol'),fab=main.querySelector('.toc-fab');
-  if(headings.length<2){toc.remove();fab.remove();main.querySelector('.article-shell').classList.add('no-toc');return;}
+  if(headings.length<2){toc.remove();fab.remove();main.querySelector('.article-shell').classList.add('no-toc');return null;}
   list.innerHTML=headings.map(h=>`<li class="level-${h.tagName.toLowerCase()}"><a href="#${h.id}">${escape(h.textContent.replace(/^#/,''))}</a></li>`).join('');
   const links=[...list.querySelectorAll('a')];
   links.forEach((a,i)=>a.addEventListener('click',e=>{e.preventDefault();history.replaceState(null,'',a.getAttribute('href'));headings[i].scrollIntoView({behavior:state.reducedMotion?'auto':'smooth'});toc.classList.remove('open');fab.setAttribute('aria-expanded','false');}));
@@ -163,4 +172,35 @@ function buildToc(main,body,cleanups){
   addEventListener('scroll',spy,{passive:true});spy();
   cleanups.push(()=>removeEventListener('scroll',spy));
   fab.addEventListener('click',()=>{const open=!toc.classList.contains('open');toc.classList.toggle('open',open);fab.setAttribute('aria-expanded',String(open));});
+  return spy;
+}
+
+// Selecting a passage offers to copy it as a quote that links back to its section (mouse and trackpad only).
+function enableQuotes(main,body,v,cleanups){
+  if(!matchMedia('(hover: hover) and (pointer: fine)').matches)return;
+  const button=document.createElement('button');button.type='button';button.className='quote-pop';button.hidden=true;
+  button.innerHTML=`<span aria-hidden="true">“</span>${t('quote')}`;document.body.append(button);cleanups.push(()=>button.remove());
+  let quote='',anchor='';
+  const hide=()=>{button.hidden=true;button.classList.remove('visible');};
+  const check=()=>{
+    const sel=getSelection();if(!sel||sel.isCollapsed||!sel.rangeCount){hide();return;}
+    const range=sel.getRangeAt(0);if(!body.contains(range.commonAncestorContainer)){hide();return;}
+    quote=sel.toString().replace(/\s+/g,' ').trim();if(quote.length<12){hide();return;}
+    // Link to the section heading above the selection.
+    const headings=[...body.querySelectorAll(':scope > h2, :scope > h3')];
+    const before=headings.filter(h=>h.compareDocumentPosition(range.startContainer)&Node.DOCUMENT_POSITION_FOLLOWING);
+    anchor=before.length?`#${before.at(-1).id}`:'';
+    const r=range.getBoundingClientRect();button.hidden=false;
+    button.style.left=`${Math.min(innerWidth-button.offsetWidth-12,Math.max(12,r.left+r.width/2-button.offsetWidth/2))+scrollX}px`;
+    button.style.top=`${r.top+scrollY-button.offsetHeight-10}px`;requestAnimationFrame(()=>{if(!button.hidden)button.classList.add('visible');});
+  };
+  const onUp=e=>{if(e.target===button||button.contains(e.target))return;setTimeout(check,0);};
+  document.addEventListener('mouseup',onUp);document.addEventListener('keyup',onUp);
+  const onDown=e=>{if(!button.contains(e.target))hide();};document.addEventListener('mousedown',onDown);
+  addEventListener('scroll',hide,{passive:true});
+  cleanups.push(()=>{document.removeEventListener('mouseup',onUp);document.removeEventListener('keyup',onUp);document.removeEventListener('mousedown',onDown);removeEventListener('scroll',hide);});
+  button.addEventListener('click',()=>{
+    const url=`${location.origin}${location.pathname}${anchor}`;
+    navigator.clipboard?.writeText(`“${quote}”\n— Yaxin Luo, ${v.title}\n${url}`).then(()=>{toast(t('quoteCopied'));hide();getSelection()?.removeAllRanges();},()=>{});
+  });
 }

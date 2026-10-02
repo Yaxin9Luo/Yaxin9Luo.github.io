@@ -5,7 +5,7 @@
 .post{min-width:0;max-width:700px;animation:rise .7s cubic-bezier(.2,.8,.2,1) both}@keyframes rise{from{opacity:0;transform:translateY(14px)}}
 .post-back{display:inline-flex;font-size:12px;color:var(--muted);text-decoration:none;margin-bottom:46px;transition:color .2s,transform .3s}.post-back:hover{color:var(--brass);transform:translateX(-4px)}
 .post-eyebrow{display:flex;align-items:center;gap:10px;font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--brass)}.post-eyebrow span{width:26px;height:1px;background:var(--brass)}.post-eyebrow b{font-weight:400;opacity:.6}
-.post-header h1{font:500 clamp(40px,5.6vw,64px)/1.06 var(--serif);letter-spacing:-.02em;margin:22px 0 20px;color:#1f332e;text-wrap:balance}
+.post-header h1{view-transition-name:post-title;font:500 clamp(40px,5.6vw,64px)/1.06 var(--serif);letter-spacing:-.02em;margin:22px 0 20px;color:#1f332e;text-wrap:balance}
 .post-summary{font:400 22px/1.55 var(--serif);color:var(--muted);margin:0 0 26px;text-wrap:pretty}
 .post-byline{display:flex;align-items:center;flex-wrap:wrap;gap:10px 12px;font-size:13px;color:var(--ink)}.post-byline img{width:22px;height:26px}.post-byline .chips{margin-left:auto}
 .post .chips span{color:#5d6a5f;border:1px solid var(--rule)}
@@ -16,7 +16,7 @@
 .post[lang=zh-CN] .post-body{font-size:16.5px;line-height:2;letter-spacing:.01em}
 .post-body>*:first-child{margin-top:0}
 .post-body>p:first-of-type::first-letter{float:left;font:500 4.1em/.82 var(--serif);margin:.08em .1em 0 0;color:var(--brass)}.post[lang=zh-CN] .post-body>p:first-of-type::first-letter{font-family:var(--serif-zh);font-size:3.2em;line-height:.95}
-.post-body h2,.post-body h3{position:relative;color:#1f332e;scroll-margin-top:100px}
+.post-body h2,.post-body h3{position:relative;color:#1f332e}
 .post-body h2{font:600 34px/1.2 var(--serif);margin:64px 0 18px}.post-body h3{font:600 25px/1.3 var(--serif);margin:44px 0 12px}
 .post[lang=zh-CN] .post-body h2{font-family:var(--serif-zh);font-size:27px;line-height:1.45}.post[lang=zh-CN] .post-body h3{font-family:var(--serif-zh);font-size:21px}
 .anchor{position:absolute;left:-1.1em;top:0;padding-right:.3em;color:var(--brass);text-decoration:none;opacity:0;transition:opacity .2s;font-weight:400}h2:hover>.anchor,h3:hover>.anchor,.anchor:focus-visible{opacity:.7}.anchor:hover{opacity:1}
@@ -101,3 +101,7 @@
   .post-figure,.chart-figure{margin-inline:0}.chart-figure{padding:16px 14px 14px}.post-byline .chips{margin-left:0;flex-basis:100%}
   .neighbours{grid-template-columns:1fr}.neighbour.older{text-align:left}.anchor{display:none}
 }
+
+/* Quote popover */
+.quote-pop{position:absolute;z-index:45;display:flex;align-items:center;gap:6px;padding:8px 14px 8px 12px;border-radius:30px;background:#16303a;color:var(--cream);font-size:12px;box-shadow:0 10px 30px #0c1b2050;opacity:0;transform:translateY(6px);transition:opacity .18s,transform .18s}
+.quote-pop.visible{opacity:1;transform:none}.quote-pop span{font:600 22px/0 var(--serif);color:var(--gold);margin-top:8px}.quote-pop:hover{background:#1d3d48}

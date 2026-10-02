@@ -1,4 +1,4 @@
-import {state,t,escape,postHref,formatDate,minutes} from './blog.js';
+import {state,t,escape,postHref,formatDate,minutes,nameTitleForTransition} from './blog.js';
 import {pickVersion} from './posts.js';
 import {startSky} from './sky.js';
 import './home.css';
@@ -29,7 +29,7 @@ export function mount(main){
       <div class="featured-number" aria-hidden="true">${pad(latest.number)}</div>
       <div class="featured-body"><div class="featured-label">✦ ${t('latest')} · <time datetime="${latest.v.date}">${formatDate(latest.v.date)}</time> · ${minutes(latest.v.body)} ${t('read')}</div>
       <h2>${escape(latest.v.title)}</h2><p>${escape(latest.v.summary)}</p>
-      <div class="chips">${tags(latest.v)}${latest.v.placeholder?`<span class="draft">${t('placeholder')}</span>`:''}</div></div>
+      <div class="chips">${tags(latest.v)}${latest.v.placeholder?`<span class="draft">${t('placeholder')}</span>`:''}${latest.v.draft?`<span class="draft">${t('draft')}</span>`:''}</div></div>
       <span class="featured-arrow" aria-hidden="true">→</span></a>`:''}
     <h2 class="list-heading reveal"><span></span>${t('all')}<small>${entries.length}</small></h2>
     <div class="controls reveal">
@@ -39,7 +39,7 @@ export function mount(main){
     <ol class="post-list">${entries.map(({post,v,number})=>`<li class="reveal" data-tags="${escape(v.tags.join('|'))}" data-text="${escape(`${v.title} ${v.summary} ${v.tags.join(' ')}`.toLowerCase())}">
       <a class="post-row spotlight" href="${postHref(post.slug)}">
         <span class="row-number">${pad(number)}</span>
-        <div class="row-main"><h3>${escape(v.title)}</h3><p>${escape(v.summary)}</p><div class="chips">${tags(v)}${v.placeholder?`<span class="draft">${t('placeholder')}</span>`:''}</div></div>
+        <div class="row-main"><h3>${escape(v.title)}</h3><p>${escape(v.summary)}</p><div class="chips">${tags(v)}${v.placeholder?`<span class="draft">${t('placeholder')}</span>`:''}${v.draft?`<span class="draft">${t('draft')}</span>`:''}</div></div>
         <div class="row-meta"><time datetime="${v.date}">${formatDate(v.date)}</time><span>${minutes(v.body)} ${t('read')}</span></div>
         <span class="row-arrow" aria-hidden="true">→</span></a></li>`).join('')}</ol>
     <p class="empty" hidden>${t('empty')}</p>
@@ -77,6 +77,13 @@ export function mount(main){
     if(e.key==='Escape'&&document.activeElement===input){input.value='';apply();input.blur();}};
   document.addEventListener('keydown',slash);
   cleanups.push(()=>document.removeEventListener('keydown',slash));
+
+  main.addEventListener('click',e=>{const link=e.target.closest('.featured,.post-row');if(link&&!e.metaKey&&!e.ctrlKey&&!e.shiftKey)nameTitleForTransition(link.querySelector('h2,h3'));});
+
+  // The hero text drifts up and fades as the page scrolls; the sky handles its own depth.
+  const hero=main.querySelector('.hero');let ticking=false;
+  const onScroll=()=>{if(ticking||state.reducedMotion)return;ticking=true;requestAnimationFrame(()=>{ticking=false;const p=Math.min(1,Math.max(0,scrollY/hero.offsetHeight));hero.style.setProperty('--sp',p.toFixed(3));});};
+  addEventListener('scroll',onScroll,{passive:true});cleanups.push(()=>removeEventListener('scroll',onScroll));
 
   main.querySelector('.scroll-cue').addEventListener('click',e=>{e.preventDefault();main.querySelector('#posts').scrollIntoView({behavior:state.reducedMotion?'auto':'smooth'});});
   return ()=>cleanups.forEach(fn=>fn());
