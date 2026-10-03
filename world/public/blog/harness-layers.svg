@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 420" font-family="Inter, 'PingFang SC', sans-serif">
+  <rect width="880" height="420" rx="10" fill="#f3eee1"/>
+  <g fill="none" stroke-width="1.5">
+    <rect x="40" y="40" width="520" height="340" rx="22" fill="#4f5db512" stroke="#4f5db5"/>
+    <rect x="90" y="88" width="420" height="244" rx="18" fill="#ad6f0014" stroke="#ad6f00"/>
+    <rect x="140" y="136" width="320" height="148" rx="14" fill="#00897b14" stroke="#00897b"/>
+    <rect x="215" y="180" width="170" height="60" rx="10" fill="#16303a" stroke="#16303a"/>
+  </g>
+  <text x="300" y="216" text-anchor="middle" fill="#f3eee1" font-size="17" font-weight="600">Model</text>
+  <g font-size="13" font-weight="600" fill="#26392f">
+    <text x="60" y="68">Memory</text>
+    <text x="110" y="116">Discipline</text>
+    <text x="160" y="164">Judgment</text>
+  </g>
+  <g stroke="#59695e" stroke-width="1" stroke-dasharray="3 4">
+    <line x1="560" y1="64" x2="610" y2="64"/>
+    <line x1="510" y1="112" x2="610" y2="140"/>
+    <line x1="460" y1="160" x2="610" y2="216"/>
+    <line x1="385" y1="210" x2="610" y2="292"/>
+  </g>
+  <g font-size="13" fill="#26392f">
+    <text x="622" y="60" font-weight="600">Memory</text>
+    <text x="622" y="78" fill="#59695e">task lists, scratch files, summaries</text>
+    <text x="622" y="136" font-weight="600">Discipline</text>
+    <text x="622" y="154" fill="#59695e">when to stop, verify, ask</text>
+    <text x="622" y="212" font-weight="600">Judgment</text>
+    <text x="622" y="230" fill="#59695e">routing, "good enough" calls</text>
+    <text x="622" y="288" font-weight="600">Model</text>
+    <text x="622" y="306" fill="#59695e">what the weights already know</text>
+  </g>
+</svg>

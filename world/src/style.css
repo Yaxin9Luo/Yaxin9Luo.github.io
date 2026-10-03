@@ -192,3 +192,7 @@ html[lang=zh-CN] .tour-card h2{font-family:var(--sans);font-size:23px;line-heigh
 
 .world-detail-status{font-size:10px;line-height:1.45;color:#d7cfb3;max-width:220px;margin:0 0 8px}.world-detail-status[hidden]{display:none}
 .world-detail-reload{display:block;min-height:44px;margin:0 0 8px;padding:8px 0;color:var(--gold);font-size:11px;line-height:1.45;text-align:left;text-decoration:underline;text-underline-offset:3px}
+
+/* Blog link: full name on wide screens, short label where the nav row is tight. */
+.header-nav .nav-blog>.nav-blog-short{display:none}
+@media(max-width:600px){.header-nav .nav-blog>.nav-blog-full{display:none}.header-nav .nav-blog>.nav-blog-short{display:inline}}
