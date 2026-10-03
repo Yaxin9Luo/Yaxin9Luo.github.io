@@ -1,8 +1,18 @@
 import {collectPosts,isDraft} from './posts.js';
 import './blog.css';
 
-// Drafts show up while writing locally (`npm run dev`) and are left out of the published site.
-const posts=collectPosts(import.meta.glob('./posts/*.md',{query:'?raw',import:'default',eager:true})).filter(p=>!import.meta.env.PROD||!isDraft(p));
+const published=import.meta.glob('./posts/*.md',{query:'?raw',import:'default',eager:true});
+// Private drafts live in ./drafts (never committed) and load only in the local dev preview;
+// posts marked `draft: true` in ./posts are likewise left out of the published site.
+async function loadPosts(){
+  const files={...published};
+  if(import.meta.env.DEV){
+    const drafts=import.meta.glob('./drafts/*.{en,zh}.md',{query:'?raw',import:'default'});
+    for(const [file,load] of Object.entries(drafts))files[file]=(await load()).replace(/^---\n/,'---\ndraft: true\n');
+  }
+  return collectPosts(files).filter(p=>!import.meta.env.PROD||!isDraft(p));
+}
+const postsReady=loadPosts();
 // The blog keeps its own language choice and opens in English unless asked otherwise.
 const LANG_KEY='yaxin.blog.lang';
 
@@ -26,7 +36,7 @@ function readLang(){
   return 'en';
 }
 
-export const state={posts,lang:readLang(),reducedMotion:matchMedia('(prefers-reduced-motion: reduce)').matches};
+export const state={posts:[],lang:readLang(),reducedMotion:matchMedia('(prefers-reduced-motion: reduce)').matches};
 export const t=key=>copy[key]?.[state.lang==='zh'?1:0]??key;
 export const escape=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 export const postHref=slug=>`/blog/${encodeURIComponent(slug)}/`;
@@ -56,6 +66,7 @@ function header(){
 
 let dispose=()=>{};
 async function render(){
+  state.posts=await postsReady;
   dispose();
   document.documentElement.lang=state.lang==='zh'?'zh-CN':'en';
   const slug=currentSlug();
@@ -81,6 +92,8 @@ export function nameTitleForTransition(el){
   if(el){el.classList.add('vt-title');el.style.viewTransitionName='post-title';}
 }
 addEventListener('pageshow',e=>{if(e.persisted)nameTitleForTransition(null);});
+// A transition the browser skips (hidden tab, fast navigation) is not an error worth reporting.
+for(const type of ['pageswap','pagereveal'])addEventListener(type,e=>{e.viewTransition?.ready.catch(()=>{});e.viewTransition?.finished.catch(()=>{});});
 
 export function toast(message){
   const el=document.querySelector('.blog-toast');if(!el)return;
