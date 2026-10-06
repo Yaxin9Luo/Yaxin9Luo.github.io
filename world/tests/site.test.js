@@ -4,11 +4,11 @@ import fs from 'node:fs';
 import path from 'node:path';
 import vm from 'node:vm';
 import {fileURLToPath} from 'node:url';
-import {legacy, legacyRoutes, filesForPath, redirectStub, notFoundPage, sitemapXml} from '../../scripts/site/pages.mjs';
+import {legacy, legacyRoutes, filesForPath, redirectStub, notFoundPage, sitemapXml, robotsTxt} from '../../scripts/site/pages.mjs';
 import {renderLanding, renderExplore} from '../src/landing/landing.js';
 import {parseContentRoute} from '../src/exhibition-state.js';
-import {readPosts, postPageHtml} from '../blog-pages-plugin.js';
-import {isDraft} from '../src/blog/posts.js';
+import {loadPosts, renderPages} from '../blog-pages-plugin.js';
+import {sitemapEntries} from '../src/blog/build/feeds.js';
 
 const world = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const root = path.resolve(world, '..');
@@ -26,7 +26,7 @@ test('nothing on the site links to the removed /traditional/ site any more', () 
     assert.ok(!STALE.test(renderLanding(lang)), `landing (${lang})`);
     assert.ok(!STALE.test(renderExplore(lang)), `top bar (${lang})`);
   }
-  const files = [...sources(path.join(world, 'src')), path.join(world, 'index.html'), path.join(world, 'blog/index.html'), path.join(world, 'blog-pages-plugin.js')];
+  const files = [...sources(path.join(world, 'src')), path.join(world, 'index.html'), path.join(world, 'blog/index.html'), path.join(world, 'blog-pages-plugin.js')].filter(f => !f.includes(`${path.sep}posts${path.sep}`));
   assert.ok(files.length > 50);
   for (const file of files) assert.ok(!STALE.test(fs.readFileSync(file, 'utf8')), path.relative(root, file));
 });
@@ -102,31 +102,34 @@ test('the 404 page forwards unknown /traditional/ URLs and leaves other misses o
   assert.equal(forward('/blog/no-such-post/'), null);
 });
 
-test('the sitemap lists the homepage, the blog and every published post', () => {
-  const posts = readPosts().filter(post => !isDraft(post)).map(post => ({slug: post.slug, date: (post.versions.en || post.versions.zh).date}));
-  assert.ok(posts.length > 0);
-  const xml = sitemapXml(posts);
-  assert.ok(xml.startsWith('<?xml version="1.0" encoding="UTF-8"?>') && xml.includes('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'));
+test('the sitemap lists the homepage, both blog indexes and every indexable post version, with hreflang pairs', async () => {
+  const posts = await loadPosts();
+  const entries = [{path: '/', lastmod: null}, ...sitemapEntries(posts)];
+  const xml = sitemapXml(entries);
+  assert.ok(xml.startsWith('<?xml version="1.0" encoding="UTF-8"?>') && xml.includes('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">'));
   const locs = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map(m => m[1]);
-  assert.deepEqual(locs, ['https://yaxin9luo.github.io/', 'https://yaxin9luo.github.io/blog/', ...posts.map(p => `https://yaxin9luo.github.io/blog/${p.slug}/`)]);
+  assert.deepEqual(locs.slice(0, 3), ['https://yaxin9luo.github.io/', 'https://yaxin9luo.github.io/blog/', 'https://yaxin9luo.github.io/blog/zh/']);
+  // Placeholder posts are noindex until the first real post replaces them, so they are not in the sitemap.
+  for (const post of posts.filter(p => p.placeholder)) assert.ok(!xml.includes(`/blog/${post.slug}/`), post.slug);
+  assert.ok(xml.includes('<xhtml:link rel="alternate" hreflang="zh-CN" href="https://yaxin9luo.github.io/blog/zh/"/>'));
   assert.ok(!xml.includes('traditional'));
-  for (const post of posts) assert.ok(xml.includes(`/blog/${post.slug}/</loc><lastmod>${post.date}</lastmod>`));
+  assert.equal(robotsTxt(), 'User-agent: *\nAllow: /\n\nSitemap: https://yaxin9luo.github.io/sitemap.xml\n');
 });
 
-test('the homepage, the blog and every post share a 1200×630 card in the Editable Canvas style', () => {
+test('the homepage and the blog indexes use the 1200×630 Editable Canvas cards; posts get their own', async () => {
   const png = name => {
     const bytes = fs.readFileSync(path.join(world, 'public/og', name));
     assert.equal(bytes.toString('latin1', 1, 4), 'PNG', name);
     return [bytes.readUInt32BE(16), bytes.readUInt32BE(20), bytes.length];
   };
   const meta = (html, key) => html.match(new RegExp(`<meta (?:property|name)="${key}" content="([^"]*)"`))?.[1];
-  const shell = fs.readFileSync(path.join(world, 'blog/index.html'), 'utf8');
-  const pages = [['home.png', fs.readFileSync(path.join(world, 'index.html'), 'utf8')], ['blog.png', shell],
-    ...readPosts().filter(post => !isDraft(post)).map(post => ['blog.png', postPageHtml(shell, post)])];
-  for (const [card, html] of pages) {
-    const url = `https://yaxin9luo.github.io/og/${card}`;
-    assert.equal(meta(html, 'og:image'), url);
-    assert.equal(meta(html, 'twitter:image'), url);
+  const posts = await loadPosts();
+  const pages = renderPages(posts, {og: Object.fromEntries(posts.map(p => [p.slug, {en: `https://yaxin9luo.github.io/blog/${p.slug}/og.png`, zh: `https://yaxin9luo.github.io/blog/${p.slug}/zh/og.png`}]))});
+  const checks = [['https://yaxin9luo.github.io/og/home.png', fs.readFileSync(path.join(world, 'index.html'), 'utf8')],
+    ...pages.map(p => [p.kind === 'index' ? 'https://yaxin9luo.github.io/og/blog.png' : null, p.head])];
+  for (const [url, html] of checks) {
+    if (url) assert.equal(meta(html, 'og:image'), url); else assert.match(meta(html, 'og:image'), /^https:\/\/yaxin9luo\.github\.io\/blog\/[a-z0-9-]+\/(zh\/)?og\.png$/);
+    assert.equal(meta(html, 'twitter:image'), meta(html, 'og:image'));
     assert.equal(meta(html, 'twitter:card'), 'summary_large_image');
     assert.deepEqual([meta(html, 'og:image:width'), meta(html, 'og:image:height')], ['1200', '630']);
     assert.ok(meta(html, 'og:image:alt')?.length > 40 && meta(html, 'twitter:image:alt') === meta(html, 'og:image:alt'));

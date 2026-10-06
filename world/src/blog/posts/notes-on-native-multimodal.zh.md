@@ -2,7 +2,8 @@
 title: 关于原生多模态模型的几条笔记
 date: 2026-08-30
 summary: 为什么"一个模型处理多种模态"会改变设计 Agent 的能力边界，三条短笔记。
-tags: [多模态, 笔记]
+type: note
+tags: [multimodal]
 placeholder: true
 ---
 

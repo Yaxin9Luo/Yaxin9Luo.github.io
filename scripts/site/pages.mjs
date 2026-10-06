@@ -46,13 +46,15 @@ export function notFoundPage(pages = legacy.pages) {
   return read('./404.html').replace('/*LEGACY_PAGES*/{}', JSON.stringify(pages));
 }
 
-/** sitemap.xml for the current site: home, the blog and every published post. */
-export function sitemapXml(posts, site = SITE) {
-  const newest = posts.map(p => p.date).sort().at(-1);
-  const urls = [[`${site}/`], [`${site}/blog/`, newest], ...posts.map(p => [`${site}/blog/${p.slug}/`, p.date])];
+/** sitemap.xml: entries [{path, lastmod?, alternates?: {en, zh}}]; paired language versions list each other (hreflang). */
+export function sitemapXml(entries, site = SITE) {
+  const alt = a => a ? ['en', 'zh'].map(l => `<xhtml:link rel="alternate" hreflang="${l === 'zh' ? 'zh-CN' : 'en'}" href="${escapeHtml(site + a[l])}"/>`).join('') + `<xhtml:link rel="alternate" hreflang="x-default" href="${escapeHtml(site + a.en)}"/>` : '';
   return `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${urls.map(([loc, lastmod]) => `  <url><loc>${escapeHtml(loc)}</loc>${lastmod ? `<lastmod>${lastmod}</lastmod>` : ''}</url>`).join('\n')}
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+${entries.map(e => `  <url><loc>${escapeHtml(site + e.path)}</loc>${e.lastmod ? `<lastmod>${e.lastmod}</lastmod>` : ''}${alt(e.alternates)}</url>`).join('\n')}
 </urlset>
 `;
 }
+
+/** robots.txt: everything may be crawled (placeholder pages opt out with a noindex meta); points at the sitemap. */
+export const robotsTxt = (site = SITE) => `User-agent: *\nAllow: /\n\nSitemap: ${site}/sitemap.xml\n`;

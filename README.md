@@ -5,7 +5,7 @@ Source of [yaxin9luo.github.io](https://yaxin9luo.github.io/), a bilingual (Engl
 - **Home**: the Editable Canvas landing, a one-screen design-tool canvas with the research map, the CV Tour guide and the portfolio panels (About, Research, Publications, Projects, Experience, Contact).
 - **3D Academy**: an optional Three.js world that loads only when a visitor asks for it, plus its world map.
 - **Yuanmingyuan**: a separate museum page (`/yuanmingyuan.html`).
-- **Blog**: `/blog/`, with one page per post (`/blog/<slug>/`).
+- **Blog**: `/blog/` (中文 `/blog/zh/`), one static page per post version (`/blog/<slug>/`, `/blog/<slug>/zh/`), Atom feeds at `/blog/feed.xml` and `/blog/feed.zh.xml` (`/feed.xml` is the English one).
 
 Everything is a static Vite app in `world/`. `scripts/build-site.mjs` assembles the published site in `dist/`, and GitHub Actions deploys it to GitHub Pages (`.github/workflows/world-site.yml`).
 
@@ -28,7 +28,8 @@ python3 -m http.server 4173 --bind 127.0.0.1 --directory dist
 | --- | --- |
 | `world/src/content.js` | Bilingual facts: profile, publications, experience, links. Shared by every page. |
 | `world/src/landing/` | The Editable Canvas landing, its research map, the top bar capsules and the panel skin. |
-| `world/src/blog/` | The blog app and its Markdown posts (`posts/<slug>.<en\|zh>.md`). |
+| `world/src/blog/` | The blog: Markdown posts (`posts/<slug>.<en\|zh>.md`, front matter in `posts.js`, vocabulary in `taxonomy.js`), build-time rendering (`markdown.js`, `render.js`, `build/`) run by `world/blog-pages-plugin.js`, and the small client script `blog.js`. Drafts render only on the dev server. |
+| `scripts/fonts/` | Font sources for the blog (`sources.mjs` downloads Noto Sans/Serif SC for the per-page Chinese subsets into `world/.cache/`) and the committed Source Serif 4 body faces (`build-latin.mjs`). |
 | `files/`, `images/`, `Yaxin.JPG` | Public academic files (CV PDFs, editable resumes, paper figures, portrait), served at the same URLs. |
 | `_data/portfolio.json` | Generated from `content.js` by `scripts/sync-portfolio-data.mjs`. The GitHub profile README reads it from this path, so keep it here. |
 | `_data/open-source.json` | Dated GitHub star snapshot used by `content.js`. |

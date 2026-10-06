@@ -1,6 +1,7 @@
 import { profile, research, publications, selectedPublications, experience, journey, news, links, cvForLanguage, openSource } from './content.js';
 import {selectedProjects, getProject, getProjectMedia, publicationRole} from './exhibition-content.js';
 import {clampMedia} from './exhibition-state.js';
+import {explainerFor} from './blog/work-links.js';
 
 const escape = (value = '') => String(value).replace(/[&<>"']/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[character]);
 const local = (value, lang) => typeof value === 'string' ? value : value?.[lang] || value?.en || '';
@@ -38,7 +39,10 @@ function head(eyebrow, title, description, lang) {
 function sourceLinks(item, lang) {
   const repo = openSource.repositories[item.id];
   const stars = repo ? `<span class="project-stars" title="${escape(copy(lang, 'GitHub stars checked on ', 'GitHub Star 核实于 ') + openSource.checked_on)}">${anchor(repo.url, `☆ ${repo.stars} Stars`, 'paper-link')}<small>${escape(openSource.checked_on)}</small></span>` : '';
-  return `<div class="paper-links">${item.links.map((link) => anchor(link.url, local(link.label, lang), 'paper-link')).join('')}${stars}</div>`;
+  // A blog Explainer about this paper or project, when one is published.
+  const explainer = explainerFor(item.id);
+  const blog = explainer ? `<a class="paper-link paper-link-blog" href="${escape(explainer.href[lang === 'zh' ? 'zh' : 'en'])}">${escape(copy(lang, 'Explainer', '解读'))} →</a>` : '';
+  return `<div class="paper-links">${item.links.map((link) => anchor(link.url, local(link.label, lang), 'paper-link')).join('')}${blog}${stars}</div>`;
 }
 
 function venue(item, lang = 'en') {

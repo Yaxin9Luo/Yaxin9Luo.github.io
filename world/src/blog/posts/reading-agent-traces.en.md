@@ -2,7 +2,8 @@
 title: How I read a long agent trace
 date: 2026-09-18
 summary: A six-hour run leaves thousands of steps behind. Four passes that get me from "it failed" to the step where it went wrong.
-tags: [Agents, Notes]
+type: note
+tags: [agents, reading]
 placeholder: true
 ---
 

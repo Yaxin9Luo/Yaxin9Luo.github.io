@@ -5,9 +5,11 @@ import { cp, mkdir, readFile, readdir, rm, stat, writeFile } from 'node:fs/promi
 import { spawnSync } from 'node:child_process';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { legacyRoutes, filesForPath, redirectStub, notFoundPage, sitemapXml } from './site/pages.mjs';
-import { readPosts } from '../world/blog-pages-plugin.js';
-import { isDraft } from '../world/src/blog/posts.js';
+import { legacyRoutes, filesForPath, redirectStub, notFoundPage, sitemapXml, robotsTxt } from './site/pages.mjs';
+import { loadPosts } from '../world/blog-pages-plugin.js';
+import { sitemapEntries } from '../world/src/blog/build/feeds.js';
+import { postPath } from '../world/src/blog/render.js';
+import { fetchSources } from './fonts/sources.mjs';
 import { profile, links, publications } from '../world/src/content.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -34,6 +36,8 @@ async function files(directory, prefix = '') {
 const size = async file => (await stat(path.join(destination, file)).catch(() => null))?.size ?? 0;
 
 if (!skipApp) {
+  // The blog's per-page CJK subsets need the source fonts; without them the build still succeeds (system fonts).
+  await fetchSources(undefined, message => console.log(message));
   run('node', ['scripts/sync-portfolio-data.mjs']);
   run('npm', ['--prefix', 'world', 'run', 'build']);
   run('node', ['scripts/prepare-public-assets.mjs']);
@@ -60,14 +64,19 @@ for (const [urlPath, target] of legacyRoutes()) {
 }
 await writeFile(path.join(destination, '404.html'), notFoundPage());
 
-const posts = readPosts().filter(post => !isDraft(post)).map(post => ({ slug: post.slug, date: (post.versions.en || post.versions.zh).date }));
-await writeFile(path.join(destination, 'sitemap.xml'), sitemapXml(posts, siteUrl));
+// Published posts (drafts never reach the build); placeholders are published but noindex, so not in the sitemap.
+const posts = await loadPosts();
+const entries = [{ path: '/', lastmod: null }, ...sitemapEntries(posts)];
+await writeFile(path.join(destination, 'sitemap.xml'), sitemapXml(entries, siteUrl));
+await writeFile(path.join(destination, 'robots.txt'), robotsTxt(siteUrl));
+// The site-wide feed is the blog's English feed.
+await cp(path.join(destination, 'blog/feed.xml'), path.join(destination, 'feed.xml'));
 await writeFile(path.join(destination, '.nojekyll'), '');
 
 // Every local URL the site links to must resolve in the published output.
 const required = new Set([
-  'index.html', 'blog/index.html', '404.html', 'sitemap.xml', 'og/home.png', 'og/blog.png',
-  ...posts.map(post => `blog/${post.slug}/index.html`),
+  'index.html', 'blog/index.html', 'blog/zh/index.html', '404.html', 'sitemap.xml', 'robots.txt', 'feed.xml', 'blog/feed.xml', 'blog/feed.zh.xml', 'og/home.png', 'og/blog.png',
+  ...posts.flatMap(post => Object.keys(post.versions).map(lang => `${postPath(post, lang).slice(1)}index.html`)),
   ...[profile.portrait, links.cv, links.cvZh, ...publications.map(p => p.image)].filter(Boolean),
   ...legacyRoutes().map(([, target]) => target).filter(target => /^\/(files|images)\//.test(target)),
 ].map(file => file.replace(/^\//, '')));
@@ -78,7 +87,7 @@ for (const file of required) {
 for (const file of (await files(destination)).filter(f => /^(index\.html|blog\/.*\.html|assets\/[^/]+\.js)$/.test(f))) {
   if ((await readFile(path.join(destination, file), 'utf8')).includes('/traditional')) throw new Error(`Stale /traditional link in ${file}`);
 }
-console.log(`Website built at dist/: ${redirects} legacy redirect pages, ${posts.length} posts in the sitemap.`);
+console.log(`Website built at dist/: ${redirects} legacy redirect pages, ${posts.length} posts, ${entries.length} sitemap URLs.`);
 
 const publishedFiles = await files(destination); let publishedBytes = 0;
 for (const file of publishedFiles) publishedBytes += (await stat(path.join(destination, file))).size;

@@ -2,7 +2,8 @@
 title: 我怎么读一条很长的 Agent 轨迹
 date: 2026-09-18
 summary: 一次六小时的运行会留下几千步。四遍读法，帮我从"它失败了"走到"它在哪一步走错了"。
-tags: [Agent, 笔记]
+type: note
+tags: [agents, reading]
 placeholder: true
 ---
 

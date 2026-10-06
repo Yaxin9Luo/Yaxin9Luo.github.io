@@ -7,6 +7,10 @@ import {Interface} from './ui.js';
 import {createLoadingCoordinator} from './loading-coordinator.js';
 import {resourceLoader,redactResourceURL} from './resource-loader.js';
 import {cvForLanguage} from './content.js';
+import {setWorkLinks} from './blog/work-links.js';
+import blogWorkLinks from 'virtual:blog-work-links';
+
+setWorkLinks(blogWorkLinks);
 
 const ui=new Interface(document.querySelector('#app'));
 let attachedGame=null;

@@ -13,3 +13,4 @@ __pycache__/
 /dist/
 /world/dist/
 /work/
+/world/.cache/

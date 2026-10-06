@@ -2,7 +2,8 @@
 title: Harness 知道、模型却不知道的东西
 date: 2026-10-02
 summary: 一个能跑几个小时的 Agent，大部分是脚手架。这些脚手架里，哪些可以让模型自己学会？
-tags: [Agent, Harness, 研究]
+type: essay
+tags: [harness, agents]
 placeholder: true
 ---
 
@@ -14,7 +15,7 @@ placeholder: true
 
 回头看过去一年写过的 Harness，里面的部件大致分三类，像洋葱一样一层层包在模型外面。
 
-![Harness 分层](/blog/harness-layers.svg "图 1：Harness 是包在模型外面的几层。外层弥补上下文窗口的限制，内层编码习惯和品味。")
+![Harness 分层](/blog/harness-layers.zh.svg "图 1：Harness 是包在模型外面的几层。外层弥补上下文窗口的限制，内层编码习惯和品味。")
 
 1. **记忆**：清单、草稿文件、上下文重置后还能留下的摘要。它们弥补的是有限的上下文窗口。
 2. **纪律**：什么时候停、什么时候验证、什么时候问人。它们纠正的是模型在别处学来的习惯。

@@ -75,8 +75,11 @@ art/night-garden/manifest.json and docs/night-garden-art.md in the repository.
 
 Fonts
 =====
-Local font licenses are provided in fonts/OFL-inter.txt and
-fonts/OFL-cormorant.txt.
+Local font licenses are provided in fonts/OFL-inter.txt,
+fonts/OFL-cormorant.txt, fonts/ec/OFL.txt (Noto Sans SC, Noto Serif SC and
+JetBrains Mono subsets) and fonts/blog/OFL.txt (Source Serif 4). The blog's
+per-page Chinese subsets in blog/fonts/ are cut from Noto Sans SC and Noto Serif SC
+(SIL Open Font License 1.1, same text as fonts/ec/OFL.txt).
 
 Three.js
 ========

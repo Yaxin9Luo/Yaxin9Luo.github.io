@@ -29,6 +29,12 @@ jobs:
           cache: npm
           cache-dependency-path: world/package-lock.json
       - run: npm --prefix world ci
+      # Blog build cache: source fonts for the per-page CJK subsets, the subsets themselves and the share cards.
+      - uses: actions/cache@v4
+        with:
+          path: world/.cache
+          key: blog-${{ hashFiles('scripts/fonts/sources.mjs') }}-${{ github.sha }}
+          restore-keys: blog-${{ hashFiles('scripts/fonts/sources.mjs') }}-
       - run: npm --prefix world run test:release
       - run: npm run build:site
       - uses: actions/upload-pages-artifact@v4
