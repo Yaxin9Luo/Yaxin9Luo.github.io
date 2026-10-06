@@ -28,8 +28,8 @@ export const landingCopy = {
 };
 
 const PHASES = {
-  en: [['01', '2024–25', 'Multimodal', 'efficient, grounded', 'multimodal models'], ['02', '2025–26', 'Eval', 'measuring agents on', 'long-horizon GUI tasks'], ['03', '2026 →', 'Post-training', 'post-train the model', 'and its harness']],
-  zh: [['01', '2024–25', '多模态', '高效、可定位的', '多模态模型'], ['02', '2025–26', '评测', '衡量智能体在', '长程 GUI 任务上的能力'], ['03', '2026 →', '后训练', '后训练模型', '与它的 harness']],
+  en: [['01', '2024–25', 'Multimodal', 'efficient, grounded', 'multimodal models'], ['02', '2025–26', 'Eval', 'measuring agents on', 'long-horizon agentic tasks'], ['03', '2026 →', 'Post-training', 'co-evolution of model', 'parameters and harnesses']],
+  zh: [['01', '2024–25', '多模态', '高效、可定位的', '多模态模型'], ['02', '2025–26', '评测', '衡量智能体在', '长程智能体任务上的能力'], ['03', '2026 →', '后训练', '模型参数与 harness', '的协同进化']],
 };
 
 /* Research map nodes: same order and credits as the GitHub profile map. `pub` links into content.js. */
