@@ -38,6 +38,6 @@ python3 -m http.server 4173 --bind 127.0.0.1 --directory dist
 
 ## Old URLs
 
-The site used to include an Academic Pages (Jekyll) version under `/traditional/`. It has been removed. Every page path it had (listed in `scripts/site/legacy-redirects.json`) now redirects to its equivalent: `/publications/` to the Publications panel, `/cv/` to the CV PDF, `/zh/` to the Chinese homepage, and so on. Any other `/traditional/…` link is forwarded by `404.html`.
+The site used to include an Academic Pages (Jekyll) version under `/traditional/`. It has been removed, with the theme's sample pages and files. Its pages that have a real equivalent (listed in `scripts/site/legacy-redirects.json`) redirect to it: `/publications/` to the Publications panel, `/publication/<paper>` to that paper, `/cv/` to the CV PDF, `/zh/` to the Chinese homepage, and the old blog pages to `/blog/`. Any other `/traditional/…` link is forwarded by `404.html`; the theme's sample pages get the 404 page.
 
 Third-party assets keep their own licenses, listed in `world/public/THIRD-PARTY-NOTICES.txt` and `docs/world-asset-sources.md`.

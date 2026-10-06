@@ -9,7 +9,7 @@ const SITE='https://yaxin9luo.github.io';
 const POST_PATH=/^\/blog\/([a-z0-9][a-z0-9-]*)\/?(\?.*)?$/;
 const escapeHtml=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 // The blog's share card (1200×630, rendered by scripts/og/render.mjs); every post page uses it.
-export const BLOG_CARD={url:`${SITE}/og/blog.png`,width:1200,height:630,alt:'Yaxin\'s Blog by Yaxin Luo: notes on multimodal models, agent harnesses, and what I learn while doing research. Shown on a design canvas beside a moonlit cover.'};
+export const BLOG_CARD={url:`${SITE}/og/blog.png`,width:1200,height:630,alt:'Yaxin\'s Blog by Yaxin Luo: notes on multimodal models, agent harnesses, and what I learn while doing research. Shown on a design canvas beside a sketch of an article page.'};
 
 export function readPosts(directory=postsDir){
   const files=Object.fromEntries(fs.readdirSync(directory).filter(f=>f.endsWith('.md')).map(f=>[`./posts/${f}`,fs.readFileSync(path.join(directory,f),'utf8')]));

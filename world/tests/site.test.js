@@ -31,7 +31,7 @@ test('nothing on the site links to the removed /traditional/ site any more', () 
   for (const file of files) assert.ok(!STALE.test(fs.readFileSync(file, 'utf8')), path.relative(root, file));
 });
 
-test('every page of the removed site redirects to its live equivalent', () => {
+test('every real page of the removed site redirects to its live equivalent', () => {
   const pages = legacy.pages;
   for (const [from, to] of Object.entries(pages)) {
     assert.match(from, /^\//, from);
@@ -55,7 +55,9 @@ test('every page of the removed site redirects to its live equivalent', () => {
   const papers = Object.entries(pages).filter(([from]) => from.startsWith('/publication/'));
   assert.equal(papers.length, 6);
   for (const [, to] of papers) assert.match(to, /^\/#paper\//);
-  for (const [from, to] of Object.entries(pages).filter(([from]) => from.startsWith('/posts/'))) assert.equal(to, '/blog/', from);
+  assert.equal(pages['/year-archive/'], '/blog/');
+  // the theme's sample pages are not kept alive as redirects: they get the 404 page
+  for (const sample of ['/talks/', '/teaching/', '/markdown/', '/terms/', '/portfolio/portfolio-1/', '/posts/2012/08/blog-post-1/']) assert.ok(!(sample in pages), sample);
 });
 
 test('redirect stubs cover old root and /traditional/ URLs without touching site files', () => {
