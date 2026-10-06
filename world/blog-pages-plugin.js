@@ -137,6 +137,7 @@ export async function writeBlog(outDir, {assets, log = console.log, directory = 
     fs.mkdirSync(path.dirname(file), {recursive: true});
     fs.writeFileSync(file, pageHtml(page, {assets, fonts: `${fonts.preload}\n${fonts.css}`}));
   }
+  fs.mkdirSync(fontsOut, {recursive: true});
   fs.writeFileSync(path.join(fontsOut, 'manifest.json'), JSON.stringify(Object.fromEntries([...fontsByPath].map(([p, f]) => [p, f.files.map(({file, chars, family, weight}) => ({file, chars, family, weight}))])), null, 1));
   // 4. KaTeX stylesheet and the fonts it references, only when a post has math.
   if (posts.some(p => Object.values(p.versions).some(v => v.render.math))) {
