@@ -43,8 +43,10 @@ const details={
 /** This is an authorship label, never a claim of project leadership. */
 export function publicationRole(paper){
   if(paper.kind==='software')return paper.role;
+  // Listed first (even with an equal-contribution mark) means first author; a later starred name is co-first.
+  if(/^Yaxin Luo\*?,/.test(paper.authors))return bi('First author','第一作者');
   if(paper.authors.includes('Yaxin Luo*'))return bi('Co-first author','共同一作');
-  return paper.authors.startsWith('Yaxin Luo,')?bi('First author','第一作者'):bi('Co-author','共同作者');
+  return bi('Co-author','共同作者');
 }
 export const selectedProjects=projectIds.map(id=>{
   const paper=publications.find(p=>p.id===id)||softwareProjects.find(p=>p.id===id),detail=details[id];

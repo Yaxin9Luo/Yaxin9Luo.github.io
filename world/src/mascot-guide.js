@@ -24,7 +24,7 @@ export function createGuide({root,assetBase='./assets/',lang='en',onVisit=()=>{}
   let appearanceShown=false, autoplayPending=false;
   let drag=null, userPosition=null, suppressClick=false, positionFrame=null;
   root.classList.add('mascot-guide');
-  root.innerHTML=`<div class="guide-actor"><button type="button" class="guide-character" data-guide="actor"><img class="guide-idle" src="${assetBase}mascot-idle.png?v=2" alt=""><img class="guide-point" src="${assetBase}mascot-point.png?v=2" alt=""></button><span class="guide-shadow" aria-hidden="true"></span></div><section class="guide-card" aria-labelledby="guide-heading"><div class="guide-topline"><button type="button" class="guide-drag"><span class="guide-grip" aria-hidden="true">⠿</span><span class="guide-eyebrow"></span></button><button class="guide-close" type="button" data-guide="close">×</button></div><div class="guide-copy" aria-live="polite" aria-atomic="true"><h2 id="guide-heading"></h2><p class="guide-description"></p></div><div class="guide-stops" aria-label="Tour stops"></div><button type="button" class="guide-visit" data-guide="visit"></button><div class="guide-actions"><button class="guide-back" type="button" data-guide="back"></button><button class="guide-primary" type="button" data-guide="next"></button></div></section><p class="guide-audio-status" role="status"></p>`;
+  root.innerHTML=`<div class="guide-actor"><button type="button" class="guide-character" data-guide="actor"><img class="guide-idle" src="${assetBase}mascot-idle.webp?v=3" alt=""><img class="guide-point" src="${assetBase}mascot-point.webp?v=3" alt=""></button><span class="guide-shadow" aria-hidden="true"></span></div><section class="guide-card" aria-labelledby="guide-heading"><div class="guide-topline"><button type="button" class="guide-drag"><span class="guide-dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="guide-eyebrow"></span></button><button class="guide-sound" type="button" data-guide="sound">♪</button><button class="guide-close" type="button" data-guide="close">×</button></div><div class="guide-copy" aria-live="polite" aria-atomic="true"><h2 id="guide-heading"></h2><p class="guide-description"></p></div><div class="guide-stops" aria-label="Tour stops"></div><button type="button" class="guide-visit" data-guide="visit"></button><div class="guide-actions"><button class="guide-back" type="button" data-guide="back"></button><button class="guide-primary" type="button" data-guide="next"></button></div></section><p class="guide-audio-status" role="status"></p>`;
   const q=s=>root.querySelector(s);
   const character=q('.guide-character');
   const focus=(selector)=>q(selector)?.focus({preventScroll:true});
@@ -50,7 +50,8 @@ export function createGuide({root,assetBase='./assets/',lang='en',onVisit=()=>{}
     const c=label(), active=state==='tour', finished=state==='done', reading=state==='reading', stop=stops[index];
     root.dataset.state=state; root.classList.toggle('guide-reduced',reduced);
     root.hidden=state==='dismissed'; q('.guide-close').hidden=false; q('.guide-close').setAttribute('aria-label',c.close);
-    q('.guide-eyebrow').textContent=active?`${c.count} ${String(index+1).padStart(2,'0')} / 06 · ${stop.label[lang]}`:'CV TOUR';
+    q('.guide-eyebrow').innerHTML=active?(lang==='zh'?`<b>第 ${index+1} 站</b> / 6 · ${stop.label[lang]}`:`STOP <b>${String(index+1).padStart(2,'0')}</b> / 06 · ${stop.label[lang]}`):(lang==='zh'?'<b>CV 导览</b> · 6 站':'<b>CV TOUR</b> · 6 stops');
+    q('.guide-sound').setAttribute('aria-pressed',String(sound));q('.guide-sound').setAttribute('aria-label',lang==='zh'?(sound?'关闭导游声音':'开启导游声音'):(sound?'Mute guide':'Unmute guide'));
     q('#guide-heading').textContent=active?stop.title[lang]:finished?c.done:c.welcome;
     q('.guide-description').textContent=active?stop.text[lang]:finished?c.doneText:c.hint;
     q('.guide-stops').hidden=!active;
@@ -153,6 +154,7 @@ export function createGuide({root,assetBase='./assets/',lang='en',onVisit=()=>{}
       case 'back': if(state==='done')close();else if(index>0)step(index-1); break;
       case 'stop': step(Number(control.dataset.index));break;
       case 'close': close();break;
+      case 'sound': sound=!sound;if(!sound){autoplayPending=false;stopAudio();q('.guide-audio-status').textContent='';}render();if(sound)playSound();break;
       case 'visit': state='reading';render();onVisit(stops[index]);animate('point');focus('[data-guide="next"]');break;
     }
   },{signal:abort.signal});

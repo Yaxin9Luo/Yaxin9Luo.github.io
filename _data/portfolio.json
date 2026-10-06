@@ -8,6 +8,14 @@
       "en": "Machine Learning PhD Student",
       "zh": "机器学习博士生"
     },
+    "positioning": {
+      "en": "Post-training agents for long-horizon expert work — the model and the harness around it, improved together.",
+      "zh": "后训练面向长程专家级任务的智能体 —— 模型与它周围的 harness，一起进化。"
+    },
+    "intro": {
+      "en": "I work on one question: how do we get agents to do long, expert work (currently focusing on artifact design tasks), and how do we keep them getting better at it? My answer is to post-train the model and co-evolve its harness together.",
+      "zh": "我只研究一个问题：如何让智能体完成长程的专家级工作（目前聚焦 artifact design 任务），并让它持续变得更好？我的答案是：后训练模型，同时让它的 harness 共同进化。"
+    },
     "affiliation": {
       "en": "MBZUAI · VILA Lab",
       "zh": "MBZUAI · VILA 实验室"
@@ -660,8 +668,8 @@
         }
       ],
       "role": {
-        "en": "Co-first author",
-        "zh": "共同一作"
+        "en": "First author",
+        "zh": "第一作者"
       }
     },
     {
