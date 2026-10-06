@@ -68,7 +68,7 @@ $$('.code-copy[hidden], .tex-copy[hidden], .fig-zoom[hidden], .chart-data[hidden
 function initIndex() {
   const rows = $$('.hi'), panels = new Map($$('.pv').map(p => [p.dataset.slug, p])), name = $('.pv-name');
   const select = li => {
-    if (!li || li.classList.contains('on')) return;
+    if (!li) return;
     rows.forEach(r => r.classList.toggle('on', r === li));
     panels.forEach((p, slug) => { p.hidden = slug !== li.dataset.slug; });
     if (name) name.textContent = `${li.dataset.slug}.md`;
@@ -88,6 +88,7 @@ function initIndex() {
 
   // Filter: words in the box match title, summary and tags (both languages); ?type ?work ?phase ?tag narrow it.
   const form = $('.filter'), input = $('.filter input'), active = $('.filter .active');
+  let names = {}; try { names = JSON.parse(form?.dataset.names || '{}'); } catch { /* labels fall back to ids */ }
   const params = new URLSearchParams(location.search);
   const state = {q: params.get('q') || '', type: params.get('type') || '', work: params.get('work') || '', tag: params.get('tag') || '', phase: params.get('phase') || ''};
   if (input) input.value = state.q;
@@ -101,10 +102,13 @@ function initIndex() {
       li.hidden = !ok; if (ok) shown++;
     }
     $('.ix .empty').hidden = shown > 0;
+    $('.pv-none').hidden = shown > 0;
+    if (!shown) { panels.forEach(p => { p.hidden = true; }); if (name) name.textContent = '—'; }
     $$('.filter .seg button').forEach(b => b.classList.toggle('on', b.dataset.type === state.type));
     const scoped = state.work ? state.work : state.tag ? `#${state.tag}` : state.phase ? state.phase : '';
-    if (active) { active.hidden = !scoped; active.innerHTML = scoped ? `${esc(scoped)}<button type="button" aria-label="${T('Clear', '清除')}">✕</button>` : ''; }
-    const first = rows.find(r => !r.hidden); if (first && $('.hi.on')?.hidden !== false) select(first);
+    if (active) { active.hidden = !scoped; active.innerHTML = scoped ? `${esc(names[scoped] || scoped)}<button type="button" aria-label="${T('Clear', '清除')}">✕</button>` : ''; }
+    const first = rows.find(r => !r.hidden), on = $('.hi.on');
+    if (first) select(!on || on.hidden ? first : on);
     const u = new URL(location.href);
     for (const [k, v] of Object.entries(state)) if (v) u.searchParams.set(k, v); else u.searchParams.delete(k);
     history.replaceState(null, '', u);

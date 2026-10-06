@@ -220,10 +220,10 @@ export function renderIndex(posts, lang) {
 ${topbar(lang, {alt: alternates[zh ? 'en' : 'zh']})}
 <main class="ix" id="main">
 <section class="left">
-<div class="ibar"><span><span class="k">◇</span><b>${esc(t('page'))}</b><span class="k">·</span>${esc(t('blog'))}</span><span><b>${posts.length}</b>${zh ? '' : '&nbsp;'}${esc(t('posts'))}</span><span><span class="k">${esc(t('history'))}</span><span class="ph-dots" aria-hidden="true">${posts.map((_, i) => `<i class="${i === 0 ? 'on' : ''}"></i>`).reverse().join('')}</span></span></div>
+<div class="ibar"><span><span class="k">◇</span><b>${esc(t('page'))}</b><span class="k">·</span>${esc(t('blog'))}</span><span><b>${posts.length}</b>${esc(t('posts'))}</span><span><span class="k">${esc(t('history'))}</span><span class="ph-dots" aria-hidden="true">${posts.map((_, i) => `<i class="${i === 0 ? 'on' : ''}"></i>`).reverse().join('')}</span></span></div>
 <div class="ttl">${sel(`<h1>${esc(NAME[lang])}</h1>`, 'H1')}${cursor('d', 'Designer')}</div>
 <p class="claim">${esc(POSITIONING[lang])}</p>
-<form class="filter" role="search" hidden><label class="q">${IC.search}<span class="sr">${esc(t('filter'))}</span><input type="search" name="q" placeholder="${esc(t('filter'))}" autocomplete="off"><kbd>/</kbd></label>
+<form class="filter" role="search" hidden data-names="${esc(JSON.stringify({...Object.fromEntries(Object.values(WORKS).map(w => [w.id, w.short])), ...Object.fromEntries(Object.entries(TAGS).map(([k, v]) => [`#${k}`, `#${v[lang]}`])), ...Object.fromEntries(Object.entries(PHASES).map(([k, v]) => [k, `${v.n} ${v[lang]}`])), off: OFF_MAP[lang]}))}"><label class="q">${IC.search}<span class="sr">${esc(t('filter'))}</span><input type="search" name="q" placeholder="${esc(t('filter'))}" autocomplete="off"><kbd>/</kbd></label>
 ${types.length > 1 ? `<div class="seg" role="group" aria-label="Type"><button type="button" class="on" data-type="">${esc(t('all'))}</button>${types.map(k => `<button type="button" data-type="${k}">${esc(TYPES[k][lang])}</button>`).join('')}</div>` : ''}
 <span class="active" hidden></span></form>
 <ol class="hist">${rows}</ol>
@@ -231,10 +231,10 @@ ${types.length > 1 ? `<div class="seg" role="group" aria-label="Type"><button ty
 </section>
 <section class="win" aria-label="${esc(t('preview'))}">
 <div class="bar"><span class="wdots bare" aria-hidden="true"><i></i><i></i><i></i></span><span>preview / <b class="pv-name">${esc(newest ? newest.slug : '')}.md</b></span><span class="hint">${esc(t('hint'))} <kbd>↵</kbd></span></div>
-<div class="cv">${posts.map((p, i) => previewPanel(p, lang, i, i === 0)).join('\n')}</div>
+<div class="cv">${posts.map((p, i) => previewPanel(p, lang, i, i === 0)).join('\n')}<p class="pv-none" hidden>${esc(t('none'))}</p></div>
 </section>
 </main>
-<footer class="status"><span class="where"><span class="dot" aria-hidden="true"></span><b>${posts.length}</b>${zh ? '' : '&nbsp;'}${esc(t('posts'))}${newest ? ` · ${esc(t('newest'))} ${esc(fmtDate(newest.date, lang))}` : ''} · ${esc(t('langs'))}</span><span class="grow"></span><span class="right"><a href="/">${esc(t('portfolio'))}</a> · <a href="/#section/publications">${esc(t('pubs'))}</a> · <a href="/blog/${zh ? 'feed.zh.xml' : 'feed.xml'}">${IC.rss}${esc(t('rss'))}</a></span></footer>`;
+<footer class="status"><span class="where"><span class="dot" aria-hidden="true"></span><span><b>${posts.length}</b>${zh ? '' : ' '}${esc(t('posts'))}${newest ? ` · ${esc(t('newest'))} ${esc(fmtDate(newest.date, lang))}` : ''} · ${esc(t('langs'))}</span></span><span class="grow"></span><span class="right"><a href="/">${esc(t('portfolio'))}</a> · <a href="/#section/publications">${esc(t('pubs'))}</a> · <a href="/blog/${zh ? 'feed.zh.xml' : 'feed.xml'}">${IC.rss}${esc(t('rss'))}</a></span></footer>`;
   return {
     path: indexPath(lang), lang, kind: 'index',
     head: head({lang, path: indexPath(lang), titleText: NAME_PLAIN[lang], description: POSITIONING[lang], alternates, ogImage: `${SITE}/og/blog.png`, ogAlt: BLOG_CARD_ALT[lang]}),

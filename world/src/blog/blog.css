@@ -110,7 +110,7 @@ kbd{font:500 10.5px var(--mono);border:1px solid var(--ec-line-2);border-radius:
 
 /* ---------- top bar (the homepage's, with Blog current) ---------- */
 .topbar{position:fixed;left:var(--rul);right:0;top:var(--rul);height:var(--top);display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px;padding:0 var(--gx);z-index:60;border-bottom:1px solid transparent;transition:background .2s,border-color .2s}
-.scrolled .topbar{background:color-mix(in srgb,var(--ec-bg) 90%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom-color:var(--ec-line)}
+.scrolled .topbar{background:color-mix(in srgb,var(--ec-bg) 95%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom-color:var(--ec-line)}
 .crumb{display:flex;align-items:center;gap:12px;font:500 13px var(--mono);color:var(--ec-faint);white-space:nowrap;min-width:0}
 .crumb .wdots{padding:7px 9px;border:1px solid var(--ec-line-2);border-radius:9px;background:var(--ec-card)}
 .crumb .path{overflow:hidden;text-overflow:ellipsis;min-width:0}.crumb .path i{font-style:normal;margin:0 6px;opacity:.8}
@@ -244,7 +244,9 @@ a.tag:hover{color:var(--ec-accent)}
 .win>.bar .hint{margin-left:auto;display:flex;align-items:center;gap:6px}
 :root:lang(zh-CN) .win>.bar .hint{font-family:var(--ui)}
 .win .cv{position:relative;flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:clamp(18px,2.6vh,30px) clamp(18px,2.2vw,40px);border-radius:0 0 16px 16px;overflow:hidden;background-image:radial-gradient(circle at 1.5px 1.5px,var(--ec-dot) 1.1px,transparent 1.6px);background-size:20px 20px}
-.pv{position:relative;width:100%;max-width:640px}
+.pv{position:relative;width:100%;max-width:clamp(600px,36vw,760px)}
+.pv-none{margin:0;font:500 13px var(--mono);color:var(--ec-faint)}
+:root:lang(zh-CN) .pv-none{font-family:var(--ui)}
 .pv .flab{display:flex;justify-content:space-between;gap:12px;margin:0 1px 7px;font:500 11.5px var(--mono);color:var(--ec-accent);white-space:nowrap}
 .pv .flab span{display:inline-flex;align-items:center;gap:6px}.pv .flab svg{width:13px;height:13px}
 :root:lang(zh-CN) .pv .flab span:last-child{font-family:var(--mono),var(--ui)}
@@ -654,6 +656,7 @@ a.tag:hover{color:var(--ec-accent)}
   .dek{font-size:18px}.board[lang=zh-CN] .dek{font-size:16.5px}
   .insp{height:auto;flex-wrap:wrap;row-gap:4px;padding:4px 0}.insp>*{padding:0 9px}
   .h-anchor{display:none}
+  .board[lang=zh-CN] .prose{text-align:start}
   .byline{flex-wrap:wrap}.byline .tags{margin-left:0;flex-basis:100%}
   .pn-grid{grid-template-columns:1fr}.pcard.right{text-align:left}.pcard.right .m{justify-content:flex-start}
   .status{padding:0 12px;gap:10px}.status .where{max-width:56vw}
