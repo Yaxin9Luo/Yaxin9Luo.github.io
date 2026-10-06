@@ -2,7 +2,8 @@
 title: Notes on native multimodal models
 date: 2026-08-30
 summary: Why "one model, many modalities" changes what a design agent can do, in three short notes.
-tags: [Multimodal, Notes]
+type: note
+tags: [multimodal]
 placeholder: true
 ---
 

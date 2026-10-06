@@ -2,7 +2,8 @@
 title: What the harness knows that the model doesn't
 date: 2026-10-02
 summary: A long-running agent is mostly scaffolding. Which parts of that scaffolding could a model learn to carry itself?
-tags: [Agents, Harness, Research]
+type: essay
+tags: [harness, agents]
 placeholder: true
 ---
 

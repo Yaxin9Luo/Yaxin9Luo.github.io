@@ -1,145 +1,99 @@
-// Small SVG charts for posts, written as ```chart blocks holding JSON:
+// Small charts for posts, written as ```chart blocks holding JSON:
 // {"type":"line"|"bar","title":"…","x":[…],"series":[{"name":"…","values":[…]}],"y":{"label":"…","unit":"%","min":0,"max":100},"caption":"…"}
-// Colors are a validated categorical order on the paper surface (#f3eee1); four series at most.
-export const SERIES_COLORS=['#00897b','#ad6f00','#4f5db5','#c23f52'];
-const NS='http://www.w3.org/2000/svg';
+// The build draws a static SVG plus the same numbers as a table; enhance.js adds the hover read-out.
+// Colors are CSS variables (--rd-series-1…4), validated for both themes: light #4F46E5 #E4572E #0E9F6E #B7791F,
+// dark #7B74F2 #E8663D #1FA97A #BB881A. Series keep their slot, so one entity keeps one color.
+import {esc} from './text.js';
 
-export function validateSpec(spec){
-  if(!spec||typeof spec!=='object')throw new Error('Chart spec must be a JSON object');
-  if(!['line','bar'].includes(spec.type))throw new Error('Chart type must be "line" or "bar"');
-  if(!Array.isArray(spec.x)||!spec.x.length)throw new Error('Chart needs a non-empty "x" array');
-  if(!Array.isArray(spec.series)||!spec.series.length)throw new Error('Chart needs at least one series');
-  if(spec.series.length>SERIES_COLORS.length)throw new Error(`Charts show at most ${SERIES_COLORS.length} series`);
-  for(const s of spec.series){
-    if(!s.name)throw new Error('Every series needs a name');
-    if(!Array.isArray(s.values)||s.values.length!==spec.x.length)throw new Error(`Series "${s.name}" needs one value per x label`);
-    if(s.values.some(v=>v!==null&&!Number.isFinite(v)))throw new Error(`Series "${s.name}" has a non-numeric value`);
+export const MAX_SERIES = 4;
+
+export function validateSpec(spec) {
+  if (!spec || typeof spec !== 'object') throw new Error('Chart spec must be a JSON object');
+  if (!['line', 'bar'].includes(spec.type)) throw new Error('Chart type must be "line" or "bar"');
+  if (!Array.isArray(spec.x) || !spec.x.length) throw new Error('Chart needs a non-empty "x" array');
+  if (!Array.isArray(spec.series) || !spec.series.length) throw new Error('Chart needs at least one series');
+  if (spec.series.length > MAX_SERIES) throw new Error(`Charts show at most ${MAX_SERIES} series`);
+  for (const s of spec.series) {
+    if (!s.name) throw new Error('Every series needs a name');
+    if (!Array.isArray(s.values) || s.values.length !== spec.x.length) throw new Error(`Series "${s.name}" needs one value per x label`);
+    if (s.values.some(v => v !== null && !Number.isFinite(v))) throw new Error(`Series "${s.name}" has a non-numeric value`);
   }
   return spec;
 }
 
 // Clean axis ticks: steps of 1, 2, 2.5 or 5 × 10ⁿ covering [min, max].
-export function niceTicks(min,max,count=5){
-  if(min===max){max=min+1;}
-  const raw=(max-min)/Math.max(1,count),power=10**Math.floor(Math.log10(raw)),scaled=raw/power;
-  const step=(scaled<=1?1:scaled<=2?2:scaled<=2.5?2.5:scaled<=5?5:10)*power;
-  const start=Math.floor(min/step)*step,end=Math.ceil(max/step)*step,ticks=[];
-  for(let v=start;v<=end+step/2;v+=step)ticks.push(Number(v.toFixed(10)));
+export function niceTicks(min, max, count = 5) {
+  if (min === max) max = min + 1;
+  const raw = (max - min) / Math.max(1, count), power = 10 ** Math.floor(Math.log10(raw)), scaled = raw / power;
+  const step = (scaled <= 1 ? 1 : scaled <= 2 ? 2 : scaled <= 2.5 ? 2.5 : scaled <= 5 ? 5 : 10) * power;
+  const start = Math.floor(min / step) * step, end = Math.ceil(max / step) * step, ticks = [];
+  for (let v = start; v <= end + step / 2; v += step) ticks.push(Number(v.toFixed(10)));
   return ticks;
 }
 
-export function formatValue(v,unit=''){
-  if(v===null||v===undefined)return '—';
-  const abs=Math.abs(v);
-  const text=abs>=1e6?`${+(v/1e6).toFixed(1)}M`:abs>=1e4?`${+(v/1e3).toFixed(1)}K`:Number.isInteger(v)?v.toLocaleString('en-US'):(+v.toFixed(2)).toLocaleString('en-US');
-  return unit==='%'?`${text}%`:unit?`${text} ${unit}`:text;
+export function formatValue(v, unit = '') {
+  if (v === null || v === undefined) return '—';
+  const abs = Math.abs(v);
+  const text = abs >= 1e6 ? `${+(v / 1e6).toFixed(1)}M` : abs >= 1e4 ? `${+(v / 1e3).toFixed(1)}K` : Number.isInteger(v) ? v.toLocaleString('en-US') : (+v.toFixed(2)).toLocaleString('en-US');
+  return unit === '%' ? `${text}%` : unit ? `${text} ${unit}` : text;
 }
 
-const el=(tag,attrs={},parent)=>{const node=document.createElementNS(NS,tag);for(const [k,v] of Object.entries(attrs))node.setAttribute(k,v);parent?.append(node);return node;};
-const escape=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const f1 = n => +n.toFixed(1);
+const color = i => `var(--rd-series-${i + 1})`;
 
-export function renderChart(slot,{lang='en',reducedMotion=false}={}){
-  let spec;
-  try{spec=validateSpec(JSON.parse(slot.dataset.chart));}
-  catch(error){slot.className='chart-error';slot.textContent=`Chart error: ${error.message}`;return;}
-  const t=(en,zh)=>lang==='zh'?zh:en;
-  const unit=spec.y?.unit||'';
-  const figure=document.createElement('figure');figure.className='chart-figure';
-  const multi=spec.series.length>1;
-  figure.innerHTML=`<header class="chart-head"><div>${spec.title?`<h4>${escape(spec.title)}</h4>`:''}${spec.y?.label?`<p>${escape(spec.y.label)}</p>`:''}</div>
-    <button type="button" class="chart-table-toggle" aria-expanded="false">${t('Data','数据')}</button></header>
-    ${multi?`<ul class="chart-legend">${spec.series.map((s,i)=>`<li><i style="--c:${SERIES_COLORS[i]}" class="${spec.type}"></i>${escape(s.name)}</li>`).join('')}</ul>`:''}
-    <div class="chart-plot"><div class="chart-tooltip" role="status" aria-live="polite" hidden></div></div>
-    <div class="chart-table" hidden><table><thead><tr><th></th>${spec.series.map(s=>`<th>${escape(s.name)}</th>`).join('')}</tr></thead><tbody>${spec.x.map((x,i)=>`<tr><th>${escape(x)}</th>${spec.series.map(s=>`<td>${formatValue(s.values[i],unit)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>
-    ${spec.caption?`<figcaption>${escape(spec.caption)}</figcaption>`:''}`;
-  slot.replaceWith(figure);
-  const plot=figure.querySelector('.chart-plot'),tooltip=figure.querySelector('.chart-tooltip');
-  const toggle=figure.querySelector('.chart-table-toggle'),table=figure.querySelector('.chart-table');
-  toggle.addEventListener('click',()=>{const open=table.hidden;table.hidden=!open;toggle.setAttribute('aria-expanded',String(open));toggle.textContent=open?t('Chart','图表'):t('Data','数据');plot.hidden=open;});
-
-  const values=spec.series.flatMap(s=>s.values).filter(v=>v!==null);
-  const lo=spec.y?.min??Math.min(0,...values),hi=spec.y?.max??Math.max(...values);
-  const ticks=niceTicks(lo,hi,4),y0=ticks[0],y1=ticks.at(-1);
-  let svg,cleanup=()=>{};
-  let animated=reducedMotion;
-
-  function draw(){
-    cleanup();svg?.remove();
-    const width=Math.max(280,plot.clientWidth),narrow=width<520,height=narrow?230:290;
-    const directLabels=spec.type==='line'&&!narrow&&spec.series.length<=4;
-    const labelSpace=directLabels?Math.min(150,12+Math.max(...spec.series.map(s=>s.name.length))*7.2):0;
-    const m={top:14,right:14+labelSpace,bottom:34,left:12+Math.max(...ticks.map(v=>formatValue(v,unit).length))*7};
-    const w=width-m.left-m.right,h=height-m.top-m.bottom;
-    const yScale=v=>m.top+h-(v-y0)/(y1-y0)*h;
-    const n=spec.x.length;
-    const band=w/n,xLine=i=>m.left+(n===1?w/2:i*(w/(n-1))),xBand=i=>m.left+band*i+band/2;
-    const xAt=spec.type==='line'?xLine:xBand;
-    svg=el('svg',{viewBox:`0 0 ${width} ${height}`,width,height,role:'img',tabindex:'0','aria-label':`${spec.title||'Chart'} — ${t('use arrow keys to inspect values','用方向键查看数值')}`});
-    plot.prepend(svg);
-    const grid=el('g',{class:'chart-grid'},svg);
-    for(const v of ticks){
-      const y=yScale(v);el('line',{x1:m.left,x2:m.left+w,y1:y,y2:y,class:v===0||v===y0?'baseline':''},grid);
-      const label=el('text',{x:m.left-8,y:y+4,'text-anchor':'end'},grid);label.textContent=formatValue(v,unit);
+/** Static SVG of a validated spec, in a 640-wide coordinate system that scales with the column. */
+export function chartSVG(spec, {lang = 'en'} = {}) {
+  const unit = spec.y?.unit || '', n = spec.x.length, line = spec.type === 'line';
+  const values = spec.series.flatMap(s => s.values).filter(v => v !== null);
+  const ticks = niceTicks(spec.y?.min ?? Math.min(0, ...values), spec.y?.max ?? Math.max(...values), 4), y0 = ticks[0], y1 = ticks.at(-1);
+  const W = 640, H = line ? 270 : 250;
+  const labW = line ? Math.min(170, 22 + Math.max(...spec.series.map(s => s.name.length)) * (lang === 'zh' ? 13 : 7.1)) : 0;
+  const m = {t: 12, r: 12 + labW, b: 32, l: 14 + Math.max(...ticks.map(v => formatValue(v, unit).length)) * 7.2};
+  const w = W - m.l - m.r, h = H - m.t - m.b, ys = v => m.t + h - (v - y0) / (y1 - y0) * h;
+  const band = w / n, X = i => line ? m.l + (n === 1 ? w / 2 : i * w / (n - 1)) : m.l + band * i + band / 2;
+  let s = `<svg viewBox="0 0 ${W} ${H}" role="img" tabindex="0" aria-label="${esc(spec.title || 'Chart')}. ${lang === 'zh' ? '用方向键读取数值，数据按钮显示表格。' : 'Use the arrow keys to read values; the Data button shows the table.'}"><g class="grid">`;
+  for (const v of ticks) s += `<line x1="${f1(m.l)}" x2="${f1(m.l + w)}" y1="${f1(ys(v))}" y2="${f1(ys(v))}"${v === y0 ? ' class="base"' : ''}/><text x="${f1(m.l - 8)}" y="${f1(ys(v) + 4)}" text-anchor="end">${esc(formatValue(v, unit))}</text>`;
+  const every = Math.ceil(n / 9);
+  spec.x.forEach((x, i) => { if (i % every && i !== n - 1) return; s += `<text class="xl" x="${f1(X(i))}" y="${H - 10}" text-anchor="middle">${esc(x)}</text>`; });
+  s += '</g><g class="marks">';
+  if (line) {
+    spec.series.forEach((ser, si) => {
+      let d = '', pen = false;
+      ser.values.forEach((v, i) => { if (v === null) { pen = false; return; } d += `${pen ? 'L' : 'M'}${f1(X(i))},${f1(ys(v))}`; pen = true; });
+      const last = ser.values.findLastIndex(v => v !== null);
+      s += `<path class="s-line" d="${d}" style="stroke:${color(si)}"/><circle class="s-end" cx="${f1(X(last))}" cy="${f1(ys(ser.values[last]))}" r="4.5" style="fill:${color(si)}"/>`;
+    });
+    // Direct labels at the right end (name + last value), nudged apart when the lines end close together.
+    const ends = spec.series.map((ser, si) => ({ser, si, y: ys(ser.values[ser.values.findLastIndex(v => v !== null)])})).sort((a, b) => a.y - b.y);
+    for (let i = 1; i < ends.length; i++) if (ends[i].y - ends[i - 1].y < 34) ends[i].y = ends[i - 1].y + 34;
+    for (const {ser, y} of ends) {
+      const x = f1(X(n - 1) + 14), v = ser.values[ser.values.findLastIndex(q => q !== null)];
+      s += `<text class="s-lbl" x="${x}" y="${f1(y - 2)}">${esc(ser.name)}<tspan class="v" x="${x}" dy="15">${esc(formatValue(v, unit))}</tspan></text>`;
     }
-    const every=Math.ceil(n/(narrow?5:9));
-    spec.x.forEach((x,i)=>{if(i%every&&i!==n-1)return;const label=el('text',{x:xAt(i),y:height-10,'text-anchor':'middle',class:'x-label'},grid);label.textContent=x;});
-
-    const marks=el('g',{},svg);
-    if(spec.type==='line'){
-      spec.series.forEach((s,si)=>{
-        let d='',pen=false;
-        s.values.forEach((v,i)=>{if(v===null){pen=false;return;}d+=`${pen?'L':'M'}${xAt(i).toFixed(1)},${yScale(v).toFixed(1)}`;pen=true;});
-        const path=el('path',{d,class:'chart-line',stroke:SERIES_COLORS[si]},marks);
-        if(!animated){const len=path.getTotalLength();path.style.strokeDasharray=len;path.style.strokeDashoffset=len;path.style.setProperty('--len',len);path.classList.add('drawing');path.style.animationDelay=`${si*120}ms`;}
-        if(directLabels){
-          const last=s.values.findLastIndex(v=>v!==null);
-          const g=el('g',{class:'direct-label'},marks);
-          el('circle',{cx:xAt(last)+10,cy:yScale(s.values[last]),r:4,fill:SERIES_COLORS[si]},g);
-          const label=el('text',{x:xAt(last)+19,y:yScale(s.values[last])+4},g);label.textContent=s.name;
-        }
-      });
-      // Nudge direct labels apart when two series end close together.
-      const labels=[...marks.querySelectorAll('.direct-label')].map(g=>({g,y:+g.querySelector('circle').getAttribute('cy')})).sort((a,b)=>a.y-b.y);
-      for(let i=1;i<labels.length;i++)if(labels[i].y-labels[i-1].y<16){const shift=16-(labels[i].y-labels[i-1].y);labels[i].y+=shift;labels[i].g.querySelector('text').setAttribute('y',labels[i].y+4);}
-    }else{
-      const k=spec.series.length,gap=2,group=Math.min(band*.72,64*k),barW=Math.max(3,(group-gap*(k-1))/k);
-      spec.series.forEach((s,si)=>s.values.forEach((v,i)=>{
-        if(v===null)return;
-        const x=m.left+band*i+(band-group)/2+si*(barW+gap),top=yScale(Math.max(v,y0)),base=yScale(Math.max(y0,0)),bh=Math.max(0,base-top),r=Math.min(4,barW/2,bh);
-        const d=`M${x},${base}V${top+r}Q${x},${top} ${x+r},${top}H${x+barW-r}Q${x+barW},${top} ${x+barW},${top+r}V${base}Z`;
-        const bar=el('path',{d,fill:SERIES_COLORS[si],class:'chart-bar','data-i':i,'data-s':si},marks);
-        if(!animated){bar.style.transformOrigin=`0 ${base}px`;bar.classList.add('growing');bar.style.animationDelay=`${i*40+si*60}ms`;}
-        if(k===1&&n<=12&&barW>=26){const label=el('text',{x:x+barW/2,y:top-6,'text-anchor':'middle',class:'bar-value'},marks);label.textContent=formatValue(v,unit);}
-      }));
-    }
-
-    // Hover layer: crosshair + one tooltip for the nearest x position.
-    const cross=el('line',{y1:m.top,y2:m.top+h,class:'chart-crosshair',visibility:'hidden'},svg);
-    const dots=spec.type==='line'?spec.series.map((s,si)=>el('circle',{r:5,fill:SERIES_COLORS[si],class:'chart-dot',visibility:'hidden'},svg)):[];
-    let active=-1;
-    const show=i=>{
-      active=i;const x=xAt(i);
-      if(spec.type==='line'){cross.setAttribute('x1',x);cross.setAttribute('x2',x);cross.setAttribute('visibility','visible');
-        dots.forEach((d,si)=>{const v=spec.series[si].values[i];if(v===null){d.setAttribute('visibility','hidden');return;}d.setAttribute('cx',x);d.setAttribute('cy',yScale(v));d.setAttribute('visibility','visible');});}
-      else marks.querySelectorAll('.chart-bar').forEach(b=>b.classList.toggle('dim',+b.dataset.i!==i));
-      tooltip.innerHTML=`<strong>${escape(spec.x[i])}</strong>${spec.series.map((s,si)=>`<span><i style="--c:${SERIES_COLORS[si]}"></i>${multi?`${escape(s.name)}<b>`:'<b>'}${formatValue(s.values[i],unit)}</b></span>`).join('')}`;
-      tooltip.hidden=false;
-      const tw=tooltip.offsetWidth,left=Math.min(Math.max(x-tw/2,0),width-tw);
-      const top=spec.type==='line'?Math.min(...spec.series.map(s=>s.values[i]).filter(v=>v!==null).map(yScale)):yScale(Math.max(...spec.series.map(s=>s.values[i]??y0)));
-      tooltip.style.transform=`translate(${left}px,${Math.max(0,top-tooltip.offsetHeight-14)}px)`;
-    };
-    const hide=()=>{active=-1;cross.setAttribute('visibility','hidden');dots.forEach(d=>d.setAttribute('visibility','hidden'));marks.querySelectorAll('.dim').forEach(b=>b.classList.remove('dim'));tooltip.hidden=true;};
-    const nearest=event=>{const box=svg.getBoundingClientRect(),x=(event.clientX-box.left)*(width/box.width);let best=0;for(let i=1;i<n;i++)if(Math.abs(xAt(i)-x)<Math.abs(xAt(best)-x))best=i;return best;};
-    const move=event=>{const box=svg.getBoundingClientRect(),y=(event.clientY-box.top)*(height/box.height);if(y<m.top-10||y>m.top+h+10){hide();return;}const i=nearest(event);if(i!==active)show(i);};
-    const key=event=>{if(!['ArrowLeft','ArrowRight','Escape','Home','End'].includes(event.key))return;event.preventDefault();
-      if(event.key==='Escape')return hide();const next=event.key==='Home'?0:event.key==='End'?n-1:Math.min(n-1,Math.max(0,(active<0?0:active)+(event.key==='ArrowRight'?1:-1)));show(next);};
-    svg.addEventListener('pointermove',move);svg.addEventListener('pointerdown',move);svg.addEventListener('pointerleave',hide);svg.addEventListener('keydown',key);svg.addEventListener('blur',hide);
-    cleanup=()=>{svg.removeEventListener('pointermove',move);hide();};
+  } else {
+    const k = spec.series.length, bw = Math.min(24, (band * .62 - 2 * (k - 1)) / k), gw = bw * k + 2 * (k - 1);
+    spec.series.forEach((ser, si) => ser.values.forEach((v, i) => {
+      if (v === null) return;
+      const x = m.l + band * i + (band - gw) / 2 + si * (bw + 2), top = ys(Math.max(v, y0)), base = ys(Math.max(y0, 0)), r = Math.min(4, bw / 2, base - top);
+      s += `<path class="bar-r" data-i="${i}" style="fill:${color(si)}" d="M${f1(x)},${f1(base)}V${f1(top + r)}Q${f1(x)},${f1(top)} ${f1(x + r)},${f1(top)}H${f1(x + bw - r)}Q${f1(x + bw)},${f1(top)} ${f1(x + bw)},${f1(top + r)}V${f1(base)}Z"/>`;
+    }));
   }
+  s += `</g><line class="xhair" y1="${m.t}" y2="${f1(m.t + h)}" visibility="hidden"/></svg>`;
+  // What the hover layer needs, in SVG units: x of each category, y of each value, and formatted labels.
+  const hover = {line, w: W, r: W - m.r, xs: spec.x.map((_, i) => f1(X(i))), ys: spec.series.map(ser => ser.values.map(v => v === null ? null : f1(ys(v)))),
+    x: spec.x.map(String), names: spec.series.map(ser => ser.name), vals: spec.series.map(ser => ser.values.map(v => formatValue(v, unit)))};
+  return {svg: s, hover};
+}
 
-  // Draw once the chart scrolls into view so the entrance animation is seen.
-  const io=new IntersectionObserver(entries=>{if(entries.some(e=>e.isIntersecting)){io.disconnect();draw();animated=true;}},{threshold:.25});
-  io.observe(figure);
-  let lastWidth=0;
-  new ResizeObserver(()=>{if(!svg||!plot.clientWidth||Math.abs(plot.clientWidth-lastWidth)<4)return;lastWidth=plot.clientWidth;draw();}).observe(plot);
+/** The chart block: title, Data toggle, legend, the SVG and its data table (shown without JavaScript too). */
+export function chartBlock(spec, {lang = 'en', label, id}) {
+  const t = (en, zh) => lang === 'zh' ? zh : en, unit = spec.y?.unit || '';
+  const {svg, hover} = chartSVG(spec, {lang});
+  const legend = `<ul class="legend">${spec.series.map((s, i) => `<li><i class="${spec.type}" style="--c:${color(i)}"></i>${esc(s.name)}</li>`).join('')}</ul>`;
+  const table = `<div class="chart-table"><table><thead><tr><th></th>${spec.series.map(s => `<th>${esc(s.name)}</th>`).join('')}</tr></thead><tbody>${spec.x.map((x, i) => `<tr><th>${esc(x)}</th>${spec.series.map(s => `<td>${esc(formatValue(s.values[i], unit))}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+  return `<figure class="fig chart" id="${id}" data-label="${esc(label)}" data-hover="${esc(JSON.stringify(hover))}">`
+    + `<div class="fig-head"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 1.5v13M11 1.5v13M1.5 5h13M1.5 11h13"/></svg><b>${esc(label)}</b><span>· ${spec.type}.chart</span><span class="sz">${spec.type} · ${spec.series.length} ${t(spec.series.length === 1 ? 'series' : 'series', '组')}</span></div>`
+    + `<div class="fig-frame"><div class="chart-in"><div class="chart-top"><div><h4>${esc(spec.title || '')}</h4>${spec.y?.label ? `<p>${esc(spec.y.label)}</p>` : ''}</div><button type="button" class="chart-data" aria-pressed="false" hidden>${t('Data', '数据')}</button></div>`
+    + `${legend}<div class="plot">${svg}<div class="tip" hidden></div></div>${table}</div></div>`
+    + `${spec.caption ? `<figcaption><b>${esc(label)}${lang === 'zh' ? '' : '.'}</b>${esc(spec.caption)}</figcaption>` : ''}</figure>`;
 }

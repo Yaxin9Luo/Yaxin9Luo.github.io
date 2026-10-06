@@ -1,31 +1,15 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 420" font-family="Inter, 'PingFang SC', sans-serif">
-  <rect width="880" height="420" rx="10" fill="#f3eee1"/>
-  <g fill="none" stroke-width="1.5">
-    <rect x="40" y="40" width="520" height="340" rx="22" fill="#4f5db512" stroke="#4f5db5"/>
-    <rect x="90" y="88" width="420" height="244" rx="18" fill="#ad6f0014" stroke="#ad6f00"/>
-    <rect x="140" y="136" width="320" height="148" rx="14" fill="#00897b14" stroke="#00897b"/>
-    <rect x="215" y="180" width="170" height="60" rx="10" fill="#16303a" stroke="#16303a"/>
-  </g>
-  <text x="300" y="216" text-anchor="middle" fill="#f3eee1" font-size="17" font-weight="600">Model</text>
-  <g font-size="13" font-weight="600" fill="#26392f">
-    <text x="60" y="68">Memory</text>
-    <text x="110" y="116">Discipline</text>
-    <text x="160" y="164">Judgment</text>
-  </g>
-  <g stroke="#59695e" stroke-width="1" stroke-dasharray="3 4">
-    <line x1="560" y1="64" x2="610" y2="64"/>
-    <line x1="510" y1="112" x2="610" y2="140"/>
-    <line x1="460" y1="160" x2="610" y2="216"/>
-    <line x1="385" y1="210" x2="610" y2="292"/>
-  </g>
-  <g font-size="13" fill="#26392f">
-    <text x="622" y="60" font-weight="600">Memory</text>
-    <text x="622" y="78" fill="#59695e">task lists, scratch files, summaries</text>
-    <text x="622" y="136" font-weight="600">Discipline</text>
-    <text x="622" y="154" fill="#59695e">when to stop, verify, ask</text>
-    <text x="622" y="212" font-weight="600">Judgment</text>
-    <text x="622" y="230" fill="#59695e">routing, "good enough" calls</text>
-    <text x="622" y="288" font-weight="600">Model</text>
-    <text x="622" y="306" fill="#59695e">what the weights already know</text>
-  </g>
+<svg xmlns="http://www.w3.org/2000/svg" class="layers" viewBox="0 0 680 330" font-family="'Source Sans 3','EC Sans',system-ui,sans-serif">
+  <rect width="680" height="330" fill="#FFFFFF" class="ly-bg"/>
+  <rect class="ly-r1" x="16" y="16" width="384" height="298" rx="22" fill="#EEF8F3" stroke="#0E9F6E" stroke-width="1.5"/>
+  <rect class="ly-r2" x="56" y="58" width="304" height="214" rx="17" fill="#E1F3EB" stroke="#0E9F6E" stroke-width="1.5"/>
+  <rect class="ly-r3" x="96" y="100" width="224" height="130" rx="12" fill="#CFEDE0" stroke="#0E9F6E" stroke-width="1.5"/>
+  <rect class="ly-m" x="142" y="139" width="132" height="52" rx="9" fill="#4F46E5"/>
+  <text class="ly-mt" x="208" y="170" text-anchor="middle" font-size="16" font-weight="700" fill="#FFFFFF">Model</text>
+  <text class="ly-l" x="34" y="42" font-size="12" fill="#0B7A55">memory</text>
+  <text class="ly-l" x="74" y="84" font-size="12" fill="#0B7A55">discipline</text>
+  <text class="ly-l" x="114" y="126" font-size="12" fill="#0B7A55">judgment</text>
+  <g class="ly-lead" fill="none" stroke="#8A8FA8" stroke-dasharray="3 3"><path d="M400 46H436"/><path d="M360 88C400 88 400 112 436 112"/><path d="M320 130C380 130 380 178 436 178"/><path d="M274 165C350 165 350 244 436 244"/></g>
+  <g class="ly-dot" fill="#FFFFFF" stroke="#8A8FA8" stroke-width="1.2"><circle cx="400" cy="46" r="3"/><circle cx="360" cy="88" r="3"/><circle cx="320" cy="130" r="3"/><circle cx="274" cy="165" r="3"/></g>
+  <g font-size="15" font-weight="600" fill="#15162E"><text class="ly-n" x="446" y="42">Memory</text><text class="ly-n" x="446" y="108">Discipline</text><text class="ly-n" x="446" y="174">Judgment</text><text class="ly-n" x="446" y="240">Model</text></g>
+  <g font-size="13.5" fill="#565B73"><text class="ly-d" x="446" y="61">task lists, scratch files, summaries</text><text class="ly-d" x="446" y="127">when to stop, verify, ask</text><text class="ly-d" x="446" y="193">routing, “good enough” calls</text><text class="ly-d" x="446" y="259">what the weights already know</text></g>
 </svg>

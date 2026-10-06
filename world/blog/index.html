@@ -1,32 +1,12 @@
 <!doctype html>
+<!-- Vite entry for the blog bundle only. blog-pages-plugin.js renders every blog page at build time and
+     copies this file's asset tags into each one; the dev server renders pages on request. -->
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta name="theme-color" content="#122329" />
-    <meta name="description" content="Notes and essays by Yaxin Luo on multimodal models, agent harnesses and research practice." />
-    <link rel="icon" type="image/svg+xml" href="/crest.svg" />
-    <!-- blog-page-meta -->
-    <link rel="canonical" href="https://yaxin9luo.github.io/blog/" />
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content="Yaxin's Blog" />
-    <meta property="og:description" content="Notes and essays by Yaxin Luo on multimodal models, agent harnesses and research practice." />
-    <meta property="og:url" content="https://yaxin9luo.github.io/blog/" />
-    <meta property="og:site_name" content="Yaxin's Blog" />
-    <meta property="og:image" content="https://yaxin9luo.github.io/og/blog.png" />
-    <meta property="og:image:type" content="image/png" />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="Yaxin's Blog by Yaxin Luo: notes on multimodal models, agent harnesses, and what I learn while doing research. Shown on a design canvas beside a sketch of an article page." />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:image" content="https://yaxin9luo.github.io/og/blog.png" />
-    <meta name="twitter:image:alt" content="Yaxin's Blog by Yaxin Luo: notes on multimodal models, agent harnesses, and what I learn while doing research. Shown on a design canvas beside a sketch of an article page." />
-    <!-- /blog-page-meta -->
     <title>Yaxin's Blog</title>
   </head>
   <body>
-    <div id="blog"></div>
-    <noscript><main style="padding:3rem;background:#eee7d5;color:#263b36;font:18px Georgia;min-height:100vh"><h1>Yaxin Luo · Blog</h1><p>The blog needs JavaScript. 博客需要 JavaScript。</p><a href="/">Back to portfolio / 返回个人主页</a></main></noscript>
     <script type="module" src="/src/blog/blog.js"></script>
   </body>
 </html>

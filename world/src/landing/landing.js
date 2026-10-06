@@ -3,6 +3,7 @@
 // non-destructive canvas affordances (handles spring back, nothing is ever saved or edited).
 import {profile, links, publications, cvForLanguage} from '../content.js';
 import {ec, cursorArrow} from './icons.js';
+import {notesFor, notesHref} from '../blog/work-links.js';
 
 export const MUSEUM_URL = lang => `/yuanmingyuan.html?composition=xianfaqiao&planting=western&court=garden-r4&yangquelong=refined-r1&lang=${lang}`;
 
@@ -49,7 +50,7 @@ export const mapNodes = [
     q: ['Can the cognitive gap between humans and GUI agents become a scalable defense?', '人与 GUI 智能体之间的认知差距，能否变成可扩展的防御？'], dg: 'ngc'},
   {id: 'ad', pub: 'autodesign', name: 'AutoDesign', venue: 'arXiv 26', col: 2, fx: .2, fy: .86, lab: 'br', role: ['first author', '第一作者'], full: ['arXiv 2026', 'arXiv 2026'],
     q: ['Can the model and its harness improve each other on long design tasks?', '在长程设计任务上，模型和它的 harness 能否互相改进？'], dg: 'ad'},
-  {id: 'lc', name: 'LongCat-2.5', venue: ['1.6T · Meituan', '1.6T · 美团'], col: 2, fx: .6, fy: .38, lab: 'loop', green: 1, role: ['post-training contributor', '后训练贡献者'], full: ['Meituan M17', '美团 M17'],
+  {id: 'lc', work: 'longcat-2.5', name: 'LongCat-2.5', venue: ['1.6T · Meituan', '1.6T · 美团'], col: 2, fx: .6, fy: .38, lab: 'loop', green: 1, role: ['post-training contributor', '后训练贡献者'], full: ['Meituan M17', '美团 M17'],
     q: ['How do we post-train a 1.6T model, and the harness around it, for long-horizon agentic design?', '如何为长程 agentic design 后训练一个 1.6T 参数的模型，以及它周围的 harness？'], dg: 'lc'},
 ];
 
@@ -202,7 +203,9 @@ export function cardHTML(id, lang = 'en') {
   const linkList = pub ? pub.links.filter(l => /^(Paper|Code)$/.test(l.label.en)).map(l => [l.label.en === 'Paper' ? 'paper' : 'code', l.url]) : (n.links || []);
   const action = pub ? `data-action="paper" data-id="${pub.id}"` : n.project ? `data-action="project" data-id="${n.project}"` : '';
   const title = action ? `<button class="ttl" ${action}>${esc(n.name)}</button>` : `<span class="ttl">${esc(n.name)}</span>`;
-  const foot = [...linkList.map(([k, url]) => `<a href="${esc(url)}" target="_blank" rel="noopener noreferrer">${t[k]} ↗</a>`), action ? `<button ${action}>${t.open} →</button>` : ''].join('');
+  // Blog notes about this work (only when there are any): /blog/?work=<id>.
+  const workId = n.work || n.pub || n.project || n.id, notes = notesFor(workId).length;
+  const foot = [...linkList.map(([k, url]) => `<a href="${esc(url)}" target="_blank" rel="noopener noreferrer">${t[k]} ↗</a>`), notes ? `<a class="notes" href="${notesHref(workId, lang)}">${lang === 'zh' ? '笔记' : 'notes'} (${notes}) →</a>` : '', action ? `<button ${action}>${t.open} →</button>` : ''].join('');
   return `<div class="meta"><span class="rl${n.green ? ' g' : ''}">${esc(pick(n.role, lang))}</span><span>${esc(pick(n.full, lang))}</span></div><h4>${title}</h4><p class="q">${esc(pick(n.q, lang))}</p><div class="dg" aria-hidden="true"><svg viewBox="0 0 280 80" preserveAspectRatio="xMidYMid meet">${DG[n.dg]}</svg></div>${foot ? `<div class="pf">${foot}</div>` : ''}`;
 }
 
