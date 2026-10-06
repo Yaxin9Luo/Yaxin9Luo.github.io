@@ -294,3 +294,14 @@ test('time settings distinguish a fixed preset from an explicit jump-and-continu
     ui.applyTimeMode('auto');assert.equal(ui.options.timeOfDay,'auto');
   }finally{restore();}
 });
+
+test('CV Tour toggle delegates visibility without navigating or restarting the section',()=>{
+  const {ui,restore}=reader();try{
+    ui.open('publications');const route=location.hash,depth=ui.historyDepth;
+    let visible=true,calls=0;ui.guide={toggle(){visible=!visible;calls++;}};
+    ui.action('mascot-toggle');assert.equal(visible,false);
+    ui.action('mascot-toggle');assert.equal(visible,true);
+    assert.equal(calls,2);assert.equal(ui.view,'publications');
+    assert.equal(location.hash,route);assert.equal(ui.historyDepth,depth);
+  }finally{restore();}
+});

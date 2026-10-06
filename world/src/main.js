@@ -1,6 +1,7 @@
 import './published-three-assets.js';
 import './style.css';
 import './journal.css';
+import './mascot-guide.css';
 import {Interface} from './ui.js';
 import {createLoadingCoordinator} from './loading-coordinator.js';
 import {resourceLoader,redactResourceURL} from './resource-loader.js';
@@ -48,4 +49,4 @@ ui.setLoadingController({
   cancel:()=>coordinator.cancel(),downloadDiagnostics,
 });
 window.portfolioLoading={snapshot:()=>coordinator.snapshot,diagnostics,downloadDiagnostics};
-window.addEventListener('pagehide',event=>{if(!event.persisted){unsubscribe();coordinator.dispose();}});
+window.addEventListener('pagehide',event=>{if(!event.persisted){unsubscribe();coordinator.dispose();ui.guide?.destroy();}});

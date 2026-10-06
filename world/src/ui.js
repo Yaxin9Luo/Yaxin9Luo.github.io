@@ -1,3 +1,4 @@
+import {createGuide} from './mascot-guide.js';
 import {locations,spellDefinitions,crystalPositions,ringPositions,spawn,worldBounds,islands,court,mapPoint} from './locations.js';
 import {links,publications,cvForLanguage} from './content.js';
 import {renderJournal,renderPaperDetail,renderProjectDetail,renderExhibitionHUD} from './journal.js';
@@ -59,7 +60,7 @@ const copy={
   loading:['Preparing the 3D world…','正在准备 3D 世界…'],ready:['YOUR WORLD IS READY','魔法世界已就绪'],error:['The 3D world couldn’t open here. My portfolio is still ready to read.','当前设备未能打开 3D 世界。你仍然可以完整查阅我的个人资料。'],
   journal:['Portfolio','个人资料'],journalSub:['RESEARCH & SELECTED WORK','研究与作品'],close:['Go back','返回'],
   explorationJournal:['Exploration','探索记录'],
-  about:['About me','关于我'],publications:['Publications','学术论文'],research:['Research','研究方向'],journey:['Experience','经历'],contact:['Get in touch','联系我'],
+  about:['About Me','关于我'],publications:['Publications','学术论文'],research:['Research','研究方向'],journey:['Experience','经历'],contact:['Get in touch','联系我'],
   quests:['Side quests','探索小任务'],controls:['How to explore','探索指南'],visit:['Places discovered','已探索的地点'],stardust:['Stardust found','已收集的星尘'],
   ward:['Ward','护盾'],mana:['Magic','魔力'],interact:['Open','打开'],nearest:['Nearby','附近'],
   fly:['Fly','飞行'],boost:['Boost','加速'],cast:['Cast','施法'],ascend:['Ascend','上升'],descend:['Descend','下降'],
@@ -104,8 +105,25 @@ export class Interface {
     this.game=null;this.view=null;this.lastSection='about';this.lastFocus=null;this.ready=false;this.failed=false;this.resetConfirm=false;this.snapshot={progress:freshProgress(),mana:100,health:100,spell:0,position:{...spawn},race:null};
     this.t=key=>copy[key]?.[this.options.lang==='zh'?1:0]??key;
     this.readingMemory=new ReadingMemory();this.entity=null;this.exhibition=null;this.route=null;this.historyDepth=history.state?.portfolio?.depth||0;
-    this.render();this.bind();this.applyLanguage();
+    this.render();this.bind();this.applyLanguage();this.mountGuide();
     const initial=parseContentRoute(location.hash);if(initial)this.showRoute(initial,{history:'replace',origin:history.state?.portfolio?.exhibitionOrigin});
+  }
+  mountGuide(){
+    this.guideRoot=this.root.querySelector('#mascot-guide');
+    this.guide=createGuide({root:this.guideRoot,assetBase:'/mascot/',lang:this.options.lang,
+      onStep:stop=>{if(stop)this.open(stop.id,{focus:false});},
+      onVisit:stop=>this.open(stop.id,{focus:false}),
+      onStateChange:()=>this.syncGuideToggle()
+    });
+    this.guide.setReducedMotion(this.options.reducedMotion);
+    this.syncGuideToggle();
+  }
+  syncGuideToggle(){
+    const visible=!this.guideRoot?.hidden;
+    this.root.querySelectorAll('[data-action="mascot-toggle"]').forEach(button=>{
+      button.setAttribute('aria-pressed',String(visible));
+      button.setAttribute('aria-label',this.options.lang==='zh'?(visible?'关闭 CV Tour':'开启 CV Tour'):(visible?'Close CV Tour':'Open CV Tour'));
+    });
   }
   persist(){try{localStorage.setItem('yaxin.grimoire.preferences',JSON.stringify(this.options));}catch{/* Preferences remain usable without storage. */}}
   render(){const t=this.t;
@@ -113,8 +131,8 @@ export class Interface {
       <div class="cover-art" aria-hidden="true"></div><canvas id="world" tabindex="0" aria-label="${this.options.lang==='zh'?'扫把飞行魔法世界':'Magical broom flight world'}"></canvas><div class="world-vignette" aria-hidden="true"></div><div class="grain" aria-hidden="true"></div>
       <a class="skip-link" href="#portfolio" data-action="section" data-id="about">${t('portfolio')}</a>
       <header class="topbar"><a href="#" class="brand" data-action="home" aria-label="Yaxin Luo"><img src="/crest.svg" alt=""/><span>YAXIN LUO<small>PORTFOLIO</small></span></a>
-      <nav class="header-nav" aria-label="${t('portfolio')}"><a class="nav-link nav-blog" href="/blog/"><span class="nav-blog-full" data-i18n="blog">${t('blog')}</span><span class="nav-blog-short" data-i18n="blogShort">${t('blogShort')}</span></a><button class="nav-link" data-action="section" data-id="projects"><span data-i18n="projects">${t('projects')}</span></button><button class="nav-link" data-action="section" data-id="publications"><span data-i18n="papers">${t('papers')}</span></button><a class="nav-link persistent-cv" href="${cvForLanguage(this.options.lang)}" target="_blank" rel="noopener noreferrer">CV <span class="nav-pdf">PDF ↗</span></a><button class="nav-link persistent-contact" data-action="section" data-id="contact"><span data-i18n="contact">${t('contact')}</span></button></nav>
-      <div class="utilities"><button class="icon-button utility-map" data-action="map" aria-label="${t('map')}">${icon('map')}</button><button class="icon-button sound-button" data-action="sound" aria-label="${t('sound')}">${icon(this.options.sound?'sound':'mute')}</button><button class="language-button" data-action="language" aria-label="Switch language / 切换语言"><span class="lang-en">EN</span><i>/</i><span class="lang-zh">中</span></button><button class="icon-button settings-button" data-action="settings" aria-label="${t('settings')}">${icon('settings')}</button></div></header>
+      <nav class="header-nav" aria-label="${t('portfolio')}"><button class="nav-link" data-action="section" data-id="about"><span data-i18n="about">${t('about')}</span></button><a class="nav-link nav-blog" href="/blog/"><span class="nav-blog-full" data-i18n="blog">${t('blog')}</span><span class="nav-blog-short" data-i18n="blogShort">${t('blogShort')}</span></a><button class="nav-link" data-action="section" data-id="projects"><span data-i18n="projects">${t('projects')}</span></button><button class="nav-link" data-action="section" data-id="publications"><span data-i18n="papers">${t('papers')}</span></button><a class="nav-link persistent-cv" href="${cvForLanguage(this.options.lang)}" target="_blank" rel="noopener noreferrer">CV <span class="nav-pdf">PDF ↗</span></a><button class="nav-link persistent-contact" data-action="section" data-id="contact"><span data-i18n="contact">${t('contact')}</span></button></nav>
+      <div class="utilities"><button class="mascot-toggle" data-action="mascot-toggle" aria-controls="mascot-guide" aria-pressed="true">CV Tour</button><button class="icon-button utility-map" data-action="map" aria-label="${t('map')}">${icon('map')}</button><button class="icon-button sound-button" data-action="sound" aria-label="${t('sound')}">${icon(this.options.sound?'sound':'mute')}</button><button class="language-button" data-action="language" aria-label="Switch language / 切换语言"><span class="lang-en">EN</span><i>/</i><span class="lang-zh">中</span></button><button class="icon-button settings-button" data-action="settings" aria-label="${t('settings')}">${icon('settings')}</button></div></header>
       <section class="welcome"><div class="eyebrow"><span></span><span data-i18n="eyebrow">${t('eyebrow')}</span></div><h1 data-i18n-html="hero">${t('hero')}</h1><div class="hero-person"><small data-i18n="role">${t('role')}</small></div><p class="hero-intro" data-i18n="intro">${t('intro')}</p><div class="welcome-actions"><button class="button primary" data-action="section" data-id="about">${icon('book')}<span data-i18n="primary">${t('primary')}</span>${icon('arrow')}</button><button class="button ghost" id="explore-button" data-action="start">${icon('wand')}<span data-i18n="explore">${t('explore')}</span></button></div><div class="quick-links"><button data-action="section" data-id="publications" data-i18n="papers">${t('papers')}</button><span>·</span><button data-action="section" data-id="projects" data-i18n="projects">${t('projects')}</button><span>·</span><a href="${cvForLanguage(this.options.lang)}" target="_blank" rel="noopener noreferrer" data-i18n="cv">${t('cv')}</a><span>·</span><a data-museum-entry href="/yuanmingyuan.html?composition=xianfaqiao&planting=western&court=garden-r4&yangquelong=refined-r1&lang=${this.options.lang}" data-i18n="garden">${t('garden')}</a></div><p class="no-gate" data-i18n="hint">${t('hint')}</p></section>
       <div class="arrival-card"><span class="arrival-number">I</span><div><span class="small-label" data-i18n="sceneLabel">${t('sceneLabel')}</span><p data-i18n="sceneSub">${t('sceneSub')}</p><button data-action="travel" data-id="about">${icon('portal')}<span data-i18n="travel">${t('travel')}</span>${icon('arrow')}</button></div></div>
       <div id="landmark-labels" class="landmark-labels" aria-hidden="true"></div>
@@ -138,7 +156,8 @@ export class Interface {
       <section class="exhibition-overlay" aria-labelledby="exhibition-title" hidden></section><div class="media-lightbox" role="dialog" aria-modal="true" aria-label="Image viewer / 图片查看器" hidden></div>
       <div class="portal-transition" aria-hidden="true"><div></div><span id="portal-destination"></span></div>
       <div class="toast" role="status" aria-live="polite"></div>
-      <div class="modal-backdrop" id="portfolio" hidden><section class="grimoire" role="dialog" aria-modal="true" aria-labelledby="dialog-title"><aside class="grimoire-rail"><div class="book-mark">${icon('book')}<span data-i18n="journal">${t('journal')}</span><small data-i18n="journalSub">${t('journalSub')}</small></div><nav class="chapter-nav" aria-label="${t('journal')}">${locations.map(l=>`<button data-action="section" data-id="${l.id}"><span class="roman">${l.number}</span><span>${t(l.id)}</span>${icon('chevron')}</button>`).join('')}</nav><div class="rail-tools"><button data-action="map">${icon('map')}${t('map')}</button><button data-action="quests">${icon('spark')}${t('quests')}</button><button data-action="controls">${icon('help')}${t('controls')}</button><button data-action="settings">${icon('settings')}${t('settings')}</button></div><a class="rail-traditional" href="/traditional/">${t('traditional')}${icon('exit')}</a><small class="rail-foot">YAXIN LUO · MMXXVI</small></aside><div class="grimoire-pages"><header class="page-header"><span id="dialog-title"></span><div class="page-tools"><a class="modal-cv" href="${cvForLanguage(this.options.lang)}" target="_blank" rel="noopener noreferrer">CV ↗</a><button class="modal-contact" data-action="section" data-id="contact" data-i18n="contact">${t('contact')}</button><button class="modal-language" data-action="language" aria-label="Switch language / 切换语言">${this.options.lang==='en'?'中文':'EN'}</button><button class="modal-tool" data-action="map" aria-label="${t('map')}">${icon('map')}</button><button class="modal-tool" data-action="settings" aria-label="${t('settings')}">${icon('settings')}</button><button class="modal-tool" data-action="controls" aria-label="${t('controls')}">${icon('help')}</button><button class="close-button" data-action="close" aria-label="${t('close')}"><span>ESC</span>${icon('close')}</button></div></header><div class="page-content" id="page-content"></div></div></section></div>
+      <div class="modal-backdrop" id="portfolio" hidden><section class="grimoire" role="dialog" aria-modal="true" aria-labelledby="dialog-title"><aside class="grimoire-rail"><div class="book-mark">${icon('book')}<span data-i18n="journal">${t('journal')}</span><small data-i18n="journalSub">${t('journalSub')}</small></div><nav class="chapter-nav" aria-label="${t('journal')}">${locations.map(l=>`<button data-action="section" data-id="${l.id}"><span class="roman">${l.number}</span><span>${t(l.id)}</span>${icon('chevron')}</button>`).join('')}</nav><div class="rail-tools"><button data-action="map">${icon('map')}${t('map')}</button><button data-action="quests">${icon('spark')}${t('quests')}</button><button data-action="controls">${icon('help')}${t('controls')}</button><button data-action="settings">${icon('settings')}${t('settings')}</button></div><a class="rail-traditional" href="/traditional/">${t('traditional')}${icon('exit')}</a><small class="rail-foot">YAXIN LUO · MMXXVI</small></aside><div class="grimoire-pages"><header class="page-header"><span id="dialog-title"></span><div class="page-tools"><button class="mascot-toggle" data-action="mascot-toggle" aria-controls="mascot-guide" aria-pressed="true">CV Tour</button><a class="modal-cv" href="${cvForLanguage(this.options.lang)}" target="_blank" rel="noopener noreferrer">CV ↗</a><button class="modal-contact" data-action="section" data-id="contact" data-i18n="contact">${t('contact')}</button><button class="modal-language" data-action="language" aria-label="Switch language / 切换语言">${this.options.lang==='en'?'中文':'EN'}</button><button class="modal-tool" data-action="map" aria-label="${t('map')}">${icon('map')}</button><button class="modal-tool" data-action="settings" aria-label="${t('settings')}">${icon('settings')}</button><button class="modal-tool" data-action="controls" aria-label="${t('controls')}">${icon('help')}</button><button class="close-button" data-action="close" aria-label="${t('close')}"><span>ESC</span>${icon('close')}</button></div></header><div class="page-content" id="page-content"></div></div></section></div>
+      <div id="mascot-guide"></div>
     </main>`;
     this.canvas=this.root.querySelector('#world');
   }
@@ -186,7 +205,7 @@ export class Interface {
   }
   bind(){
     this.root.addEventListener('click',e=>{const b=e.target.closest('[data-action]');if(!b)return;e.preventDefault();this.action(b.dataset.action,b.dataset.id);});
-    this.root.addEventListener('change',e=>{if(e.target.matches('[data-project-select]')){this.openExhibition(e.target.value);return;}const key=e.target.dataset.option;if(!key)return;this.options[key]=e.target.type==='checkbox'?e.target.checked:e.target.type==='range'?Number(e.target.value):e.target.value;this.persist();this.game?.setOption(key,this.options[key]);this.syncOptions();});
+    this.root.addEventListener('change',e=>{if(e.target.matches('[data-project-select]')){this.openExhibition(e.target.value);return;}const key=e.target.dataset.option;if(!key)return;this.options[key]=e.target.type==='checkbox'?e.target.checked:e.target.type==='range'?Number(e.target.value):e.target.value;this.persist();this.game?.setOption(key,this.options[key]);if(key==='sound')this.guide?.setSound(this.options.sound);this.syncOptions();});
     this.root.addEventListener('input',e=>{if(e.target.matches('input[type=range][data-option]')){const key=e.target.dataset.option;this.options[key]=Number(e.target.value);this.game?.setOption(key,this.options[key]);const output=e.target.closest('.volume-control')?.querySelector('output');if(output)output.textContent=`${Math.round(this.options[key]*100)}%`;}});
     this.root.addEventListener('error',e=>{if(e.target.matches?.('.media-image-button img,.media-lightbox img')){e.target.closest('figure')?.classList.add('media-failed');}},true);
     window.addEventListener('popstate',e=>{this.historyDepth=e.state?.portfolio?.depth||0;this.showRoute(parseContentRoute(location.hash),{history:'none',backdrop:e.state?.portfolio?.backdrop,origin:e.state?.portfolio?.exhibitionOrigin});});
@@ -209,6 +228,7 @@ export class Interface {
     this.root.querySelectorAll('[data-control]').forEach(b=>{b.addEventListener('pointerdown',e=>{e.preventDefault();b.setPointerCapture(e.pointerId);this.game?.setControl(b.dataset.control,true);b.classList.add('held');});const reset=()=>{this.game?.setControl(b.dataset.control,false);b.classList.remove('held');};b.addEventListener('pointerup',reset);b.addEventListener('pointercancel',reset);b.addEventListener('lostpointercapture',reset);});
   }
   action(action,id){
+    if(action==='mascot-toggle'){this.guide?.toggle();return;}
     if(action==='section')this.open(id);
     if(action==='paper')this.openPaper(id);
     if(action==='project')this.openProject(id);
@@ -244,7 +264,7 @@ export class Interface {
     if(action==='tour-read')this.open(tourStops[this.snapshot.tour?.index??0].id);
     if(action==='travel')this.travel(id);
     if(action==='language')this.toggleLanguage();
-    if(action==='sound'){this.options.sound=!this.options.sound;this.persist();this.game?.setOption('sound',this.options.sound);this.root.querySelector('.sound-button').innerHTML=icon(this.options.sound?'sound':'mute');}
+    if(action==='sound'){this.options.sound=!this.options.sound;this.guide?.setSound(this.options.sound);this.persist();this.game?.setOption('sound',this.options.sound);this.root.querySelector('.sound-button').innerHTML=icon(this.options.sound?'sound':'mute');}
     if(action==='spell')this.game?.selectSpell(Number(id));
     if(action==='shield')this.game?.activateShield();
     if(action==='interact')this.game?.interact?.();
@@ -291,6 +311,7 @@ export class Interface {
     this.restoreReturnFocus();
   }
   open(view,{history:mode='push',entity=null,focus=true}={}){
+    if(this.guideRoot)this.root.querySelector('.grimoire').append(this.guideRoot);
     this.pendingStart=null;this.pendingExhibition=null;this.saveReading();if(!this.view)this.lastFocus=document.activeElement;
     this.paperId=entity?.kind==='paper'?entity.id:null;this.entity=entity;this.view=view;if(locations.some(l=>l.id===view))this.lastSection=view;
     this.game?.setPaused(true);this.root.querySelector('.modal-backdrop').hidden=false;this.root.querySelector('.exhibition-overlay').hidden=true;this.setIsolation(true);this.root.querySelector('.experience').classList.add('reading');
@@ -353,12 +374,12 @@ export class Interface {
     if(!all&&mode==='back'&&this.exhibition&&!this.view){this.closeExhibition();return;}
     this.pendingStart=null;this.pendingExhibition=null;this.saveReading();
     if(mode==='back'&&this.historyDepth>0){history.back();return;}
-    this.closeMedia();this.view=null;this.entity=null;this.paperId=null;this.root.querySelector('.modal-backdrop').hidden=true;this.root.querySelector('.experience').classList.remove('reading');this.removeExhibition();this.setIsolation(false);this.game?.setPaused(false);
+    this.closeMedia();this.view=null;this.entity=null;this.paperId=null;if(this.guideRoot)this.root.querySelector('.experience').append(this.guideRoot);this.root.querySelector('.modal-backdrop').hidden=true;this.root.querySelector('.experience').classList.remove('reading');this.removeExhibition();this.setIsolation(false);this.game?.setPaused(false);
     if(mode!=='none'){this.historyDepth=0;this.writeRoute(null,'replace');}else this.route=null;
     const focus=this.exhibitionFocus||this.lastFocus;this.exhibitionFocus=null;if(focus?.isConnected&&!focus.closest('[inert],[hidden]'))focus.focus?.({preventScroll:true});else if(this.game?.started)this.canvas.focus({preventScroll:true});
   }
-  setIsolation(active){this.root.querySelectorAll('.topbar,.welcome,.arrival-card,.intro-footer,.game-interface,.world-loading,.skip-link,#world,.exhibition-overlay').forEach(el=>{el.inert=active||(this.game?.started&&el.matches('.welcome,.arrival-card,.intro-footer'));});}
-  syncOptions(){this.root.querySelector('.sound-button').innerHTML=icon(this.options.sound?'sound':'mute');document.documentElement.classList.toggle('reduce-motion',this.options.reducedMotion);this.root.querySelector('.experience').classList.toggle('gameplay-enabled',this.options.gameplay);this.root.querySelector('[data-action="gameplay"]')?.setAttribute('aria-pressed',String(this.options.gameplay));}
+  setIsolation(active){if(this.guideRoot)this.guideRoot.inert=!!this.lightboxOpen;this.root.querySelectorAll('.topbar,.welcome,.arrival-card,.intro-footer,.game-interface,.world-loading,.skip-link,#world,.exhibition-overlay').forEach(el=>{el.inert=active||(this.game?.started&&el.matches('.welcome,.arrival-card,.intro-footer'));});}
+  syncOptions(){this.guide?.setReducedMotion(this.options.reducedMotion);this.root.querySelector('.sound-button').innerHTML=icon(this.options.sound?'sound':'mute');document.documentElement.classList.toggle('reduce-motion',this.options.reducedMotion);this.root.querySelector('.experience').classList.toggle('gameplay-enabled',this.options.gameplay);this.root.querySelector('[data-action="gameplay"]')?.setAttribute('aria-pressed',String(this.options.gameplay));}
   trapFocus(e){const panel=this.root.querySelector(this.lightboxOpen?'.media-lightbox':'.grimoire');const nodes=[...panel.querySelectorAll('a[href],button,input,select,[tabindex="0"]')].filter(el=>!el.disabled&&el.getClientRects().length);const first=nodes[0],last=nodes[nodes.length-1];if(!first)return;if(e.shiftKey&&(document.activeElement===first||!panel.contains(document.activeElement))){e.preventDefault();last.focus();}else if(!e.shiftKey&&(document.activeElement===last||!panel.contains(document.activeElement))){e.preventDefault();first.focus();}}
   toggleLanguage(){
     this.saveReading();const focusAction=document.activeElement?.dataset.action;this.options.lang=this.options.lang==='en'?'zh':'en';this.persist();this.applyLanguage();this.game?.setOption('lang',this.options.lang);
@@ -376,6 +397,7 @@ export class Interface {
   }
   closeMedia(){if(!this.lightboxOpen)return;this.lightboxOpen=false;this.root.querySelector('.media-lightbox').hidden=true;this.root.querySelector('.grimoire').inert=false;this.setIsolation(!!this.view);this.lightboxFocus?.focus?.({preventScroll:true});}
   applyLanguage(){
+    this.guide?.setLanguage(this.options.lang);
     const t=this.t;document.documentElement.lang=this.options.lang==='zh'?'zh-CN':'en';document.title=this.options.lang==='zh'?'Yaxin Luo — 个人网站':'Yaxin Luo — Portfolio';
     this.root.querySelectorAll('[data-i18n]').forEach(el=>el.textContent=t(el.dataset.i18n));this.root.querySelectorAll('[data-i18n-html]').forEach(el=>el.innerHTML=t(el.dataset.i18nHtml));
     this.root.querySelector('.lang-en').classList.toggle('active',this.options.lang==='en');this.root.querySelector('.modal-language').textContent=this.options.lang==='en'?'中文':'EN';this.root.querySelector('.lang-zh').classList.toggle('active',this.options.lang==='zh');
@@ -391,7 +413,7 @@ export class Interface {
     this.root.querySelector('.flight-tools').setAttribute('aria-label',t('camera'));this.root.querySelectorAll('.world-map').forEach(el=>el.setAttribute('aria-label',t('map')));this.root.querySelector('.chapter-nav').setAttribute('aria-label',t('journal'));this.root.querySelectorAll('.header-nav,.location-dock').forEach(el=>el.setAttribute('aria-label',t('portfolio')));
     this.root.querySelectorAll('.persistent-cv,.modal-cv').forEach(link=>{link.setAttribute('aria-label',`${t('cv')} · PDF`);link.setAttribute('href',cvForLanguage(this.options.lang));});
     this.root.querySelectorAll('a[data-i18n="cv"]').forEach(link=>link.setAttribute('href',cvForLanguage(this.options.lang)));
-    this.root.querySelectorAll('a[data-museum-entry]').forEach(link=>link.setAttribute('href',`/yuanmingyuan.html?composition=xianfaqiao&planting=western&court=garden-r4&yangquelong=refined-r1&lang=${this.options.lang}`));
+    this.syncGuideToggle();this.root.querySelectorAll('a[data-museum-entry]').forEach(link=>link.setAttribute('href',`/yuanmingyuan.html?composition=xianfaqiao&planting=western&court=garden-r4&yangquelong=refined-r1&lang=${this.options.lang}`));
     this.canvas.setAttribute('aria-label',this.options.lang==='zh'?'步行与扫帚飞行的魔法学院':'Magical academy · walking and broom flight');this.updateStatus();this.updateWorldHUD(this.snapshot,{force:true});
   }
   updateWorldHUD(s=this.snapshot,{force=false,now=performance.now()}={}){
