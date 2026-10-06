@@ -1,6 +1,6 @@
 # Yaxin Luo · Interactive portfolio
 
-The portfolio is readable immediately in English and Chinese. The optional Three.js world adds broom flight, six instant portals, spell effects, peaceful-until-engaged spirits, stardust and a timed flight course. The enlarged moonlit grounds add a six-stop portfolio tour, three camera presets, sky-lantern releases and interactive paper exhibits. The original academic site remains at `/traditional/` in the combined build.
+The portfolio is readable immediately in English and Chinese. The optional Three.js world adds broom flight, six instant portals, spell effects, peaceful-until-engaged spirits, stardust and a timed flight course. The enlarged moonlit grounds add a six-stop portfolio tour, three camera presets, sky-lantern releases and interactive paper exhibits.
 
 ## Run
 
@@ -11,7 +11,7 @@ npm run build:site
 python3 -m http.server 4188 --bind 127.0.0.1 --directory dist
 ```
 
-The combined build also requires Ruby 3.3 and Bundler. See [build instructions](../docs/world-build.md). `npm --prefix world run dev -- --port 4190` runs the world alone; original academic images, PDFs and traditional pages are provided by the combined build.
+See [build instructions](../docs/world-build.md). `npm --prefix world run dev -- --port 4190` runs the app alone; the academic images and PDFs at the repository root (`files/`, `images/`) are added by the full build.
 
 ## Inspect the assets
 

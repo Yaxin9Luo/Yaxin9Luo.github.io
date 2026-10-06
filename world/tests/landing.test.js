@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {renderLanding, landingCopy, mapNodes, mapSVG, cardHTML, splitClaim} from '../src/landing/landing.js';
+import {renderLanding, renderExplore, MUSEUM_URL, landingCopy, mapNodes, mapSVG, cardHTML, splitClaim} from '../src/landing/landing.js';
 import {profile, publications} from '../src/content.js';
 import {publicationRole} from '../src/exhibition-content.js';
 
@@ -16,8 +16,25 @@ test('landing copy is complete in both languages and the facts come from content
     assert.ok(html.includes(splitClaim(profile.positioning[lang])[0].replace(/&/g, '&amp;')));
     assert.ok(!/undefined|\[object Object\]/.test(html));
     for (const [, action] of html.matchAll(/data-action="([^"]+)"/g)) assert.ok(ACTIONS.has(action), action);
-    assert.match(html, /data-museum-entry href="\/yuanmingyuan\.html\?[^"]*lang=/);
     assert.ok(!/world-concept|castle|academy/i.test(html.replace(/data-l="[^"]*"/g, '')), 'no castle art or academy copy on the landing');
+    const footer = html.slice(html.indexOf('<footer'));
+    assert.ok(footer.includes('class="now"') && !/data-action|<a |elsewhere|其他入口/.test(footer), 'the status bar keeps only the Now line');
+  }
+});
+
+test('the top bar explore capsule offers the 3D academy, its world map and Yuanmingyuan in both languages', () => {
+  const labels = {en: ['3D Academy', 'World map', 'Yuanmingyuan'], zh: ['3D 学院', '世界地图', '圆明园']};
+  for (const lang of ['en', 'zh']) {
+    const html = renderExplore(lang);
+    const caps = [...html.matchAll(/<(button|a) class="ec-cap[^"]*"([^>]*)>(<svg[\s\S]*?<\/svg>)<span data-i18n="(\w+)">([^<]+)<\/span>/g)];
+    assert.deepEqual(caps.map(c => c[5]), labels[lang]);
+    assert.deepEqual(caps.map(c => c[4]), ['academy', 'map', 'garden'], 'labels follow the Interface copy keys on language changes');
+    assert.match(caps[0][2], /id="explore-button" data-action="start"/);
+    assert.match(caps[1][2], /data-action="map"/);
+    assert.equal(caps[2][1], 'a');
+    assert.ok(caps[2][2].includes(`data-museum-entry href="${MUSEUM_URL(lang)}"`) && MUSEUM_URL(lang).endsWith(`lang=${lang}`));
+    assert.ok(caps.every(c => /stroke="currentColor"/.test(c[3])), 'each capsule has its own line icon');
+    for (const [, action] of html.matchAll(/data-action="([^"]+)"/g)) assert.ok(ACTIONS.has(action), action);
   }
 });
 

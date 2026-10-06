@@ -23,8 +23,6 @@ html[lang=zh-CN] .experience .chapter-nav::before{content:"页面"}
 .experience .rail-tools button{font:500 12.5px var(--ec-sans-l);color:var(--ec-muted);gap:10px;padding:5px 0}
 .experience .rail-tools .icon{color:var(--ec-faint);width:15px;height:15px}
 .experience .rail-tools button:hover{color:var(--ec-ink)}
-.experience .rail-traditional{font:500 12px var(--ec-mono);color:var(--ec-muted)}
-.experience .rail-traditional:hover{color:var(--ec-accent)}
 .experience .rail-foot{font:500 10px var(--ec-mono);letter-spacing:.04em;color:var(--ec-faint)}
 /* pages */
 .experience .grimoire-pages{background:var(--ec-card);background-image:none;color:var(--ec-ink);color-scheme:inherit}

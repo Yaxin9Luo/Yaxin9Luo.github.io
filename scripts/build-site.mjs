@@ -1,12 +1,20 @@
+// Assemble the published website in dist/: the Vite app (world/dist), the public academic files at the
+// repository root (files/, images/, Yaxin.JPG), redirects for every page of the removed Academic Pages
+// site, a 404 page and a fresh sitemap.
 import { cp, mkdir, readFile, readdir, rm, stat, writeFile } from 'node:fs/promises';
 import { spawnSync } from 'node:child_process';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { legacyRoutes, filesForPath, redirectStub, notFoundPage, sitemapXml } from './site/pages.mjs';
+import { readPosts } from '../world/blog-pages-plugin.js';
+import { isDraft } from '../world/src/blog/posts.js';
+import { profile, links, publications } from '../world/src/content.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const destination = path.join(root, 'dist');
-const traditional = path.join(root, 'work/traditional-site');
 const siteUrl = (process.env.SITE_URL || 'https://yaxin9luo.github.io').replace(/\/+$/, '');
+// Local checks only: reassemble dist/ from an existing world/dist without rebuilding the app.
+const skipApp = process.argv.includes('--skip-app');
 
 function run(command, args) {
   const result = spawnSync(command, args, { cwd: root, stdio: 'inherit', env: process.env });
@@ -23,59 +31,56 @@ async function files(directory, prefix = '') {
   }
   return result;
 }
+const size = async file => (await stat(path.join(destination, file)).catch(() => null))?.size ?? 0;
 
-const escapeHtml = (value) => value.replaceAll('&', '&amp;').replaceAll('"', '&quot;').replaceAll('<', '&lt;');
-
-run('node', ['scripts/sync-portfolio-data.mjs']);
-run('npm', ['--prefix', 'world', 'run', 'build']);
-run('node', ['scripts/prepare-public-assets.mjs']);
-run('bash', ['scripts/build-traditional.sh']);
+if (!skipApp) {
+  run('node', ['scripts/sync-portfolio-data.mjs']);
+  run('npm', ['--prefix', 'world', 'run', 'build']);
+  run('node', ['scripts/prepare-public-assets.mjs']);
+}
 
 // Only this known generated destination is removed; source content is untouched.
 await rm(destination, { recursive: true, force: true });
 await cp(path.join(root, 'world/dist'), destination, { recursive: true });
-await cp(traditional, path.join(destination, 'traditional'), { recursive: true });
 
-// Keep public image/PDF URLs and old stylesheet/font URLs functional. Vite uses
-// hashed filenames directly inside assets/, so the legacy subfolders coexist.
-for (const name of ['images', 'files', 'assets', 'Yaxin.JPG']) {
-  await cp(path.join(traditional, name), path.join(destination, name), { recursive: true });
+// Public academic URLs (CV PDFs, paper figures, portrait) are served straight from the repository root.
+for (const name of ['files', 'images', 'Yaxin.JPG']) {
+  await cp(path.join(root, name), path.join(destination, name), { recursive: true });
 }
 
+// Every page of the removed Academic Pages site forwards to its equivalent (scripts/site/legacy-redirects.json).
 let redirects = 0;
-for (const file of await files(traditional)) {
-  if (!file.endsWith('.html') || file === 'index.html') continue;
-  if (/^(assets|images|files)\//.test(file)) continue;
-  if (file === '404.html') {
-    await cp(path.join(traditional, file), path.join(destination, file));
-    continue;
+for (const [urlPath, target] of legacyRoutes()) {
+  for (const file of filesForPath(urlPath)) {
+    if (await size(file)) throw new Error(`Legacy redirect would overwrite a site file: ${file}`);
+    await mkdir(path.dirname(path.join(destination, file)), { recursive: true });
+    await writeFile(path.join(destination, file), redirectStub(target, siteUrl));
+    redirects += 1;
   }
-  const target = `/traditional/${file.replace(/index\.html$/, '')}`;
-  const output = path.join(destination, file);
-  await mkdir(path.dirname(output), { recursive: true });
-  await writeFile(output, `<!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Yaxin Luo — Traditional website</title>
-<link rel="canonical" href="${escapeHtml(siteUrl + target)}">
-<meta http-equiv="refresh" content="0;url=${escapeHtml(target)}">
-<script>location.replace(${JSON.stringify(target)} + location.search + location.hash)</script>
-</head><body><p><a href="${escapeHtml(target)}">Continue to the traditional website · 进入传统主页</a></p>
-<p><a href="/">Enter the enchanted world · 进入魔法世界</a></p></body></html>\n`);
-  redirects += 1;
 }
+await writeFile(path.join(destination, '404.html'), notFoundPage());
 
-// Existing feed consumers keep working; its entries point at the preserved site.
-await cp(path.join(traditional, 'feed.xml'), path.join(destination, 'feed.xml'));
-const sitemap = await readFile(path.join(traditional, 'sitemap.xml'), 'utf8');
-await writeFile(path.join(destination, 'sitemap.xml'), sitemap.replace('</urlset>', `<url><loc>${escapeHtml(siteUrl)}/</loc></url></urlset>`));
+const posts = readPosts().filter(post => !isDraft(post)).map(post => ({ slug: post.slug, date: (post.versions.en || post.versions.zh).date }));
+await writeFile(path.join(destination, 'sitemap.xml'), sitemapXml(posts, siteUrl));
 await writeFile(path.join(destination, '.nojekyll'), '');
 
-for (const file of ['index.html', 'traditional/index.html', 'traditional/zh/index.html', 'traditional/cv/index.html', 'files/CV_YaxinLuo.pdf']) {
-  if (!(await stat(path.join(destination, file))).size) throw new Error(`Empty build output: ${file}`);
+// Every local URL the site links to must resolve in the published output.
+const required = new Set([
+  'index.html', 'blog/index.html', '404.html', 'sitemap.xml', 'og/home.png', 'og/blog.png',
+  ...posts.map(post => `blog/${post.slug}/index.html`),
+  ...[profile.portrait, links.cv, links.cvZh, ...publications.map(p => p.image)].filter(Boolean),
+  ...legacyRoutes().map(([, target]) => target).filter(target => /^\/(files|images)\//.test(target)),
+].map(file => file.replace(/^\//, '')));
+for (const file of required) {
+  if (!(await size(file))) throw new Error(`Missing or empty build output: ${file}`);
 }
-console.log(`Combined website built at dist/: game /, traditional /traditional/, ${redirects} legacy page redirects.`);
+// The removed site must not be linked from the app or the blog (its redirect pages and 404 may name it).
+for (const file of (await files(destination)).filter(f => /^(index\.html|blog\/.*\.html|assets\/[^/]+\.js)$/.test(f))) {
+  if ((await readFile(path.join(destination, file), 'utf8')).includes('/traditional')) throw new Error(`Stale /traditional link in ${file}`);
+}
+console.log(`Website built at dist/: ${redirects} legacy redirect pages, ${posts.length} posts in the sitemap.`);
 
-const publishedFiles=await files(destination);let publishedBytes=0;
-for(const file of publishedFiles)publishedBytes+=(await stat(path.join(destination,file))).size;
-if(publishedBytes>1000000000)throw new Error('GitHub Pages output exceeds 1 GB: '+publishedBytes);
-console.log('Published site bytes:',publishedBytes);
+const publishedFiles = await files(destination); let publishedBytes = 0;
+for (const file of publishedFiles) publishedBytes += (await stat(path.join(destination, file))).size;
+if (publishedBytes > 1000000000) throw new Error('GitHub Pages output exceeds 1 GB: ' + publishedBytes);
+console.log('Published site bytes:', publishedBytes);

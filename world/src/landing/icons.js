@@ -9,6 +9,10 @@ export const ec = {
   blog: s('<path d="M4 4h12l4 4v12H4z"/><path d="M8 10h8M8 14h8M8 18h5"/>'),
   cv: s('<path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/>'),
   cube: s('<path d="M12 2l9 5v10l-9 5-9-5V7z"/><path d="M3 7l9 5 9-5M12 12v10"/>'),
+  /* folded paper map: the 3D academy's travel map */
+  map: s('<path d="M9 4.5 3.5 6.8v12.7L9 17.2l6 2.3 5.5-2.3V4.5L15 6.8z"/><path d="M9 4.5v12.7M15 6.8v12.7"/>'),
+  /* garden pavilion with upturned eaves: the Yuanmingyuan museum */
+  pavilion: s('<path d="M12 2.4v2M2.4 7.6c.9 1.5 2.6 2 4.4 1.3 1.9-.8 3.6-2.6 5.2-4.5 1.6 1.9 3.3 3.7 5.2 4.5 1.8.7 3.5.2 4.4-1.3"/><path d="M5.4 11h13.2M7.5 11v8.2M16.5 11v8.2M4.5 19.6h15"/>'),
   sun: s('<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>'),
   moon: s('<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>'),
   mail: s('<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>'),

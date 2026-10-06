@@ -8,6 +8,8 @@ const SITE='https://yaxin9luo.github.io';
 // /blog/<slug>/ with an optional query; files such as /blog/figure.svg are left alone.
 const POST_PATH=/^\/blog\/([a-z0-9][a-z0-9-]*)\/?(\?.*)?$/;
 const escapeHtml=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+// The blog's share card (1200×630, rendered by scripts/og/render.mjs); every post page uses it.
+export const BLOG_CARD={url:`${SITE}/og/blog.png`,width:1200,height:630,alt:'Yaxin\'s Blog by Yaxin Luo: notes on multimodal models, agent harnesses, and what I learn while doing research. Shown on a design canvas beside a moonlit cover.'};
 
 export function readPosts(directory=postsDir){
   const files=Object.fromEntries(fs.readdirSync(directory).filter(f=>f.endsWith('.md')).map(f=>[`./posts/${f}`,fs.readFileSync(path.join(directory,f),'utf8')]));
@@ -23,9 +25,16 @@ export function postPageHtml(shell,post){
     `<meta property="og:title" content="${escapeHtml(v.title)}" />`,
     `<meta property="og:description" content="${escapeHtml(v.summary)}" />`,
     `<meta property="og:url" content="${url}" />`,
-    `<meta property="og:image" content="${SITE}/art/world-concept.webp" />`,
+    `<meta property="og:site_name" content="Yaxin's Blog" />`,
+    `<meta property="og:image" content="${BLOG_CARD.url}" />`,
+    `<meta property="og:image:type" content="image/png" />`,
+    `<meta property="og:image:width" content="${BLOG_CARD.width}" />`,
+    `<meta property="og:image:height" content="${BLOG_CARD.height}" />`,
+    `<meta property="og:image:alt" content="${escapeHtml(BLOG_CARD.alt)}" />`,
     `<meta property="article:published_time" content="${v.date}" />`,
     `<meta name="twitter:card" content="summary_large_image" />`,
+    `<meta name="twitter:image" content="${BLOG_CARD.url}" />`,
+    `<meta name="twitter:image:alt" content="${escapeHtml(BLOG_CARD.alt)}" />`,
   ].join('\n    ');
   return shell
     .replace(/<html lang="[^"]*">/,`<html lang="${v.lang==='zh'?'zh-CN':'en'}">`)

@@ -1,85 +1,43 @@
 # Yaxin Luo · Personal website
 
-A bilingual research portfolio with a Three.js broom-flight world, physical project exhibits, optional exploration, and the preserved Academic Pages site at `/traditional/` (`/traditional/zh/` in Chinese).
+Source of [yaxin9luo.github.io](https://yaxin9luo.github.io/), a bilingual (English / 中文) research homepage.
 
-Run `npm --prefix world ci` and `npm --prefix world run dev` for the interactive site. Run `npm --prefix world test` for its checks and `npm run build:site` to assemble the full website, including the Ruby/Jekyll traditional site, in `dist/`.
+- **Home**: the Editable Canvas landing, a one-screen design-tool canvas with the research map, the CV Tour guide and the portfolio panels (About, Research, Publications, Projects, Experience, Contact).
+- **3D Academy**: an optional Three.js world that loads only when a visitor asks for it, plus its world map.
+- **Yuanmingyuan**: a separate museum page (`/yuanmingyuan.html`).
+- **Blog**: `/blog/`, with one page per post (`/blog/<slug>/`).
 
-The [production v3 review](docs/production-v3-review.md) records the character, environment, interaction and sound changes, actual browser evidence, measured costs and source licenses. [Original screenshots and recordings](docs/evidence/production-v3/) accompany the report.
+Everything is a static Vite app in `world/`. `scripts/build-site.mjs` assembles the published site in `dist/`, and GitHub Actions deploys it to GitHub Pages (`.github/workflows/world-site.yml`).
 
-## Original Academic Pages template documentation
-**Academic Pages is a Github Pages template for academic websites.**
+## Run and test
 
-![Academic Pages template example](images/homepage.png "Academic Pages template example")
+Use Node.js 22.12 or newer.
 
-# Getting Started
-
-1. Register a GitHub account if you don't have one and confirm your e-mail (required!)
-1. Click the "Use this template" button in the top right.
-1. On the "New repository" page, enter your repository name as "[your GitHub username].github.io", which will also be your website's URL.
-1. Set site-wide configuration and add your content.
-1. Upload any files (like PDFs, .zip files, etc.) to the `files/` directory. They will appear at https://[your GitHub username].github.io/files/example.pdf.
-1. Check status by going to the repository settings, in the "GitHub pages" section
-1. (Optional) Use the Jupyter notebooks or python scripts in the `markdown_generator` folder to generate markdown files for publications and talks from a TSV file.
-
-See more info at https://academicpages.github.io/
-
-## Running locally
-
-When you are initially working your website, it is very useful to be able to preview the changes locally before pushing them to GitHub. To work locally you will need to:
-
-1. Clone the repository and made updates as detailed above.
-1. Make sure you have ruby-dev, bundler, and nodejs installed
-    
-    On most Linux distribution and [Windows Subsystem Linux](https://learn.microsoft.com/en-us/windows/wsl/about) the command is:
-    ```bash
-    sudo apt install ruby-dev ruby-bundler nodejs
-    ```
-    On MacOS the commands are:
-    ```bash
-    brew install ruby
-    brew install node
-    gem install bundler
-    ```
-1. Run `bundle install` to install ruby dependencies. If you get errors, delete Gemfile.lock and try again.
-1. Run `jekyll serve -l -H localhost` to generate the HTML and serve it from `localhost:4000` the local server will automatically rebuild and refresh the pages on change.
-
-If you are running on Linux it may be necessary to install some additional dependencies prior to being able to run locally: `sudo apt install build-essential gcc make`
-
-## Using Docker
-
-Working from a different OS, or just want to avoid installing dependencies? You can use the provided `Dockerfile` to build a container that will run the site for you if you have [Docker](https://www.docker.com/) installed.
-
-Start by build the container:
-
-```bash
-docker build -t jekyll-site .
+```sh
+npm --prefix world ci
+npm --prefix world run dev            # http://127.0.0.1:5173/
+npm --prefix world test               # all checks
+npm --prefix world run test:release   # the subset CI runs
+npm run build:site                    # full site in dist/
+python3 -m http.server 4173 --bind 127.0.0.1 --directory dist
 ```
 
-Next, run the container:
-```bash
-docker run -p 4000:4000 --rm -v $(pwd):/usr/src/app jekyll-site
-```
+## Where things live
 
-# Maintenance
+| Path | What it is |
+| --- | --- |
+| `world/src/content.js` | Bilingual facts: profile, publications, experience, links. Shared by every page. |
+| `world/src/landing/` | The Editable Canvas landing, its research map, the top bar capsules and the panel skin. |
+| `world/src/blog/` | The blog app and its Markdown posts (`posts/<slug>.<en\|zh>.md`). |
+| `files/`, `images/`, `Yaxin.JPG` | Public academic files (CV PDFs, editable resumes, paper figures, portrait), served at the same URLs. |
+| `_data/portfolio.json` | Generated from `content.js` by `scripts/sync-portfolio-data.mjs`. The GitHub profile README reads it from this path, so keep it here. |
+| `_data/open-source.json` | Dated GitHub star snapshot used by `content.js`. |
+| `world/public/og/` | Share preview cards. Regenerate them with `npm run og` (see `scripts/og/`). |
+| `scripts/site/` | Redirects for the removed Academic Pages site, the 404 page and the sitemap. |
+| `docs/` | Production notes and evidence for the 3D world. |
 
-Bug reports and feature requests to the template should be [submitted via GitHub](https://github.com/academicpages/academicpages.github.io/issues/new/choose). For questions concerning how to style the template, please feel free to start a [new discussion on GitHub](https://github.com/academicpages/academicpages.github.io/discussions).
+## Old URLs
 
-This repository was forked (then detached) by [Stuart Geiger](https://github.com/staeiou) from the [Minimal Mistakes Jekyll Theme](https://mmistakes.github.io/minimal-mistakes/), which is © 2016 Michael Rose and released under the MIT License (see LICENSE.md). It is currently being maintained by [Robert Zupko](https://github.com/rjzupkoii) and additional maintainers would be welcomed.
+The site used to include an Academic Pages (Jekyll) version under `/traditional/`. It has been removed. Every page path it had (listed in `scripts/site/legacy-redirects.json`) now redirects to its equivalent: `/publications/` to the Publications panel, `/cv/` to the CV PDF, `/zh/` to the Chinese homepage, and so on. Any other `/traditional/…` link is forwarded by `404.html`.
 
-## Bugfixes and enhancements
-
-If you have bugfixes and enhancements that you would like to submit as a pull request, you will need to [fork](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo) this repository as opposed to using it as a template. This will also allow you to [synchronize your copy](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/syncing-a-fork) of template to your fork as well.
-
-Unfortunately, one logistical issue with a template theme like Academic Pages that makes it a little tricky to get bug fixes and updates to the core theme. If you use this template and customize it, you will probably get merge conflicts if you attempt to synchronize. If you want to save your various .yml configuration files and markdown files, you can delete the repository and fork it again. Or you can manually patch.
-
----
-<div align="center">
-    
-![pages-build-deployment](https://github.com/academicpages/academicpages.github.io/actions/workflows/pages/pages-build-deployment/badge.svg)
-[![GitHub contributors](https://img.shields.io/github/contributors/academicpages/academicpages.github.io.svg)](https://github.com/academicpages/academicpages.github.io/graphs/contributors)
-[![GitHub release](https://img.shields.io/github/v/release/academicpages/academicpages.github.io)](https://github.com/academicpages/academicpages.github.io/releases/latest)
-[![GitHub license](https://img.shields.io/github/license/academicpages/academicpages.github.io?color=blue)](https://github.com/academicpages/academicpages.github.io/blob/master/LICENSE)
-
-[![GitHub stars](https://img.shields.io/github/stars/academicpages/academicpages.github.io)](https://github.com/academicpages/academicpages.github.io)
-[![GitHub forks](https://img.shields.io/github/forks/academicpages/academicpages.github.io)](https://github.com/academicpages/academicpages.github.io/fork)
-</div>
+Third-party assets keep their own licenses, listed in `world/public/THIRD-PARTY-NOTICES.txt` and `docs/world-asset-sources.md`.
