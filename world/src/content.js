@@ -13,6 +13,15 @@ export const profile = {
     '罗亚鑫 · Yaxin Luo',
   ),
   role: bilingual('Machine Learning PhD Student', '机器学习博士生'),
+  // One-line positioning and the author's own research statement (shared by the landing, About and /traditional/).
+  positioning: bilingual(
+    'Post-training agents for long-horizon expert work — the model and the harness around it, improved together.',
+    '后训练面向长程专家级任务的智能体 —— 模型与它周围的 harness，一起进化。',
+  ),
+  intro: bilingual(
+    'I work on one question: how do we get agents to do long, expert work (currently focusing on artifact design tasks), and how do we keep them getting better at it? My answer is to post-train the model and co-evolve its harness together.',
+    '我只研究一个问题：如何让智能体完成长程的专家级工作（目前聚焦 artifact design 任务），并让它持续变得更好？我的答案是：后训练模型，同时让它的 harness 共同进化。',
+  ),
   affiliation: bilingual('MBZUAI · VILA Lab', 'MBZUAI · VILA 实验室'),
   bio: bilingual(
     'I am a Machine Learning PhD student at MBZUAI, advised by Prof. Zhiqiang Shen. My long-term goal is to build agentic systems that can carry out arbitrary complex, long-horizon human expert work in digital environments, with a path toward real-world tasks. My current focus is production-grade models for agentic design and automated iteration systems for the long-horizon harnesses that support them.',

@@ -1,3 +1,4 @@
+import './published-three-assets.js';
 import * as THREE from 'three';
 import { createWorld, createNavigationWorld, registerWorldLighting, terrainHeight } from './world.js';
 import { createWizard, createWisp, loadWizardAsset, loadWraithAsset, upgradeWizardMaterials, updateCharacter, requestCharacterCast, cancelCharacterCast, resetCharacterMotion, CHARACTER_GROUND_MOTION } from './characters.js';

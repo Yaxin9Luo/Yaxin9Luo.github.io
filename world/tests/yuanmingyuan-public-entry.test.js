@@ -56,7 +56,7 @@ test('cold welcome links to all three Western stations, R4 court and outer plant
   const {ui,entry,html}=page(t);
   assert.equal(entry.textContent,'Yuanmingyuan');assert.equal(destination(entry).searchParams.get('lang'),'en');
   assert.equal(entry.getAttribute('target'),null);assert.equal(entry.hasAttribute('data-action'),false);
-  assert.match(html,/<div class="quick-links">[\s\S]*data-museum-entry[\s\S]*<\/div><p class="no-gate"/);
+  assert.match(html,/<footer class="intro-footer ec-status">[\s\S]*<span class="else">[\s\S]*data-museum-entry[\s\S]*<\/footer>/);
   assert.equal(ui.game,null);assert.equal(ui.ready,false);assert.equal(ui.pendingStart,undefined);
 });
 test('both language switches preserve all three Western stations and the ordinary visitor URL',t=>{

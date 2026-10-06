@@ -72,27 +72,11 @@
   .mascot-guide[data-state=idle] .guide-copy h2 { font-size:20px; }
 }
 
-/* Fit the existing site navigation and reading toolbar. */
+
 .mascot-toggle[aria-pressed=true] { color:var(--gold); }
 .page-tools .mascot-toggle { white-space:nowrap; font-size:11px; min-height:36px; }
-@media(min-width:761px) and (max-width:1280px) {
-  .header-nav { gap:14px; }
-  .topbar { gap:18px; padding-inline:22px; }
-  .header-nav .nav-link { font-size:12px; }
-  .utilities { gap:10px; padding-left:13px; }
-}
 @media(max-width:760px) {
-  .header-nav { overflow-x:auto; justify-content:flex-start; gap:12px; scrollbar-width:thin; }
-  .header-nav .nav-link,.header-nav .nav-link:nth-child(2) { flex:0 0 auto; padding-inline:2px; }
   .page-tools { gap:10px; }
   .page-tools .mascot-toggle { font-size:10px; }
   .page-header { padding-inline:12px; }
-}
-
-.utilities .mascot-toggle { font-size:11px; white-space:nowrap; min-height:36px; }
-@media(max-width:760px) { .header-nav { gap:8px; } .header-nav .nav-link,.header-nav .nav-link:nth-child(2) { font-size:11px; } }
-@media(min-width:761px) and (max-width:960px) {
-  .topbar .brand>span { display:none; }
-  .header-nav .nav-blog>.nav-blog-full { display:none; }
-  .header-nav .nav-blog>.nav-blog-short { display:inline; }
 }

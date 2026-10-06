@@ -1,0 +1,132 @@
+/* Portfolio panels (About, Publications, Projects, Research, Experience, Contact, map, settings) restyled
+   in the Editable Canvas language: a design-tool window with a layers rail. Structure and routing are
+   untouched; only tokens, type and surfaces change. Light and dark follow --ec-* tokens. */
+.experience .modal-backdrop{background:color-mix(in srgb,var(--ec-bg) 62%,transparent);backdrop-filter:blur(6px)}
+.experience .grimoire{border-radius:16px;outline:0;border:1px solid var(--ec-line-2);box-shadow:var(--ec-shadow-lg);background:var(--ec-card);font-family:var(--ec-sans-l);color:var(--ec-ink)}
+.experience .grimoire :focus-visible{outline:2px solid var(--ec-accent);outline-offset:3px}
+/* rail = layers panel */
+.experience .grimoire-rail{background:var(--ec-bg);background-image:radial-gradient(circle at 1.5px 1.5px,var(--ec-dot) 1.1px,transparent 1.6px);background-size:20px 20px;color:var(--ec-muted);border-right:1px solid var(--ec-line);padding:20px 16px 18px}
+.experience .grimoire-rail::after{display:none}
+.experience .book-mark{flex-direction:row;align-items:center;gap:10px;margin:0 4px 22px;color:var(--ec-ink)}
+.experience .book-mark>.icon{width:18px;height:18px;margin:0;color:var(--ec-accent)}
+.experience .book-mark>span{font:700 19px var(--ec-serif-l);color:var(--ec-ink)}
+.experience .book-mark small{display:none}
+.experience .chapter-nav{gap:2px}
+.experience .chapter-nav::before{content:"PAGES";display:block;margin:0 8px 6px;font:500 10.5px var(--ec-mono);letter-spacing:.08em;color:var(--ec-faint)}
+html[lang=zh-CN] .experience .chapter-nav::before{content:"页面"}
+.experience .chapter-nav button{gap:10px;padding:9px 10px;border:0;border-radius:9px;color:var(--ec-muted);font:500 14px var(--ec-sans-l)}
+.experience .chapter-nav button .roman{font:500 11px var(--ec-mono);color:var(--ec-faint);width:20px}
+.experience .chapter-nav button:hover{background:var(--ec-bg-2);color:var(--ec-ink)}
+.experience .chapter-nav button.active{background:var(--ec-accent-soft);color:var(--ec-accent);border:0}
+.experience .chapter-nav button.active .roman{color:var(--ec-accent)}
+.experience .rail-tools{border-top:1px solid var(--ec-line);margin:18px 8px 0;padding-top:14px;gap:4px}
+.experience .rail-tools button{font:500 12.5px var(--ec-sans-l);color:var(--ec-muted);gap:10px;padding:5px 0}
+.experience .rail-tools .icon{color:var(--ec-faint);width:15px;height:15px}
+.experience .rail-tools button:hover{color:var(--ec-ink)}
+.experience .rail-traditional{font:500 12px var(--ec-mono);color:var(--ec-muted)}
+.experience .rail-traditional:hover{color:var(--ec-accent)}
+.experience .rail-foot{font:500 10px var(--ec-mono);letter-spacing:.04em;color:var(--ec-faint)}
+/* pages */
+.experience .grimoire-pages{background:var(--ec-card);background-image:none;color:var(--ec-ink);color-scheme:inherit}
+.experience .page-header{height:56px;margin:0 28px;border-bottom:1px solid var(--ec-line);color:var(--ec-faint)}
+.experience .page-header>span{font:500 12px var(--ec-mono);letter-spacing:.04em;text-transform:none;color:var(--ec-ink)}
+.experience .page-header>span::before{content:"portfolio / ";color:var(--ec-faint)}
+.experience .page-tools{display:flex;align-items:center;gap:4px}
+.experience .page-tools>*{font:500 12.5px var(--ec-sans-l);color:var(--ec-muted);border-radius:8px;padding:6px 8px;min-height:32px;display:inline-flex;align-items:center}
+.experience .page-tools .mascot-toggle{font:500 12px var(--ec-mono)}
+.experience .page-tools .mascot-toggle[aria-pressed=true]{color:var(--ec-accent)}
+.experience .page-tools .modal-tool .icon{width:17px;height:17px}
+.experience .page-tools .theme-button svg{width:17px;height:17px}
+.experience .grimoire-pages button:hover,.experience .grimoire-pages a:hover{color:var(--ec-ink)}
+.experience .page-tools>*:hover{background:var(--ec-bg-2)}
+.experience .close-button{color:var(--ec-muted);gap:6px;padding:6px 8px}
+.experience .close-button>span{font:500 10.5px var(--ec-mono);letter-spacing:0;border:1px solid var(--ec-line-2);border-radius:4px;padding:1px 5px}
+.experience .page-content{scrollbar-color:var(--ec-line-2) transparent}
+.experience .page-content::-webkit-scrollbar-thumb{background:var(--ec-line-2)}
+.experience .page-eyebrow{font:500 11px var(--ec-mono);letter-spacing:.06em;color:var(--ec-accent)}
+.experience .page-lede{font-size:14px;color:var(--ec-muted)}
+.experience .setting-row{border-bottom:1px solid var(--ec-line)}
+.experience .setting-row h3,.experience .reset-section h3{font:700 20px var(--ec-serif-l)}
+.experience .grimoire-pages h2,.experience .grimoire-pages h3{color:var(--ec-ink)}
+
+/* journal content */
+.experience .journal-page{--journal-paper:var(--ec-card);--journal-ink:var(--ec-ink);--journal-muted:var(--ec-muted);--journal-brass:var(--ec-accent);--journal-line:var(--ec-line);font-family:var(--ec-sans-l);font-size:14.5px;line-height:1.7}
+.experience .journal-page h2,.experience .journal-page h3{font-family:var(--ec-serif-l);font-weight:700;letter-spacing:-.01em}
+.experience .journal-page h2{font-size:30px}.experience .journal-page h3{font-size:20px}
+.experience .journal-heading h2{font-size:40px}
+.experience .journal-page .journal-eyebrow{font:500 11px var(--ec-mono);letter-spacing:.06em;color:var(--ec-accent);text-transform:uppercase}
+.experience .journal-intro{font-size:16px!important;color:var(--ec-muted)!important}
+.experience .journal-page a:focus-visible,.experience .journal-page button:focus-visible,.experience .journal-page summary:focus-visible{outline:2px solid var(--ec-accent);border-radius:4px}
+.experience .journal-page .journal-button{border-radius:20px;border-color:var(--ec-line-2);background:var(--ec-card);color:var(--ec-ink);font:500 13.5px var(--ec-sans-l);min-height:38px;padding:8px 16px}
+.experience .journal-page .journal-button:hover{background:var(--ec-card);border-color:var(--ec-accent);color:var(--ec-ink)}
+.experience .journal-page .journal-button-primary,.experience .journal-page .journal-button-primary:hover{background:var(--ec-accent);border-color:var(--ec-accent);color:var(--ec-accent-ink)}
+.experience .journal-page .journal-button-outline{border-color:var(--ec-line-2)}
+.experience .journal-name-dot{color:var(--ec-accent)}
+.experience .journal-statement{font:500 18px/1.55 var(--ec-sans-l);color:var(--ec-ink);margin-bottom:14px!important;max-width:44em}
+.experience .journal-profile-tagline{color:var(--ec-ink)!important}
+.experience .journal-portrait{background:var(--ec-card);border-color:var(--ec-line-2);transform:none;box-shadow:var(--ec-shadow);border-radius:10px}
+.experience .journal-portrait::before{display:none}
+.experience .journal-portrait figcaption{font:500 11px var(--ec-mono);font-style:normal;color:var(--ec-faint)}
+.experience .journal-organization{color:var(--ec-muted)!important}
+.experience .journal-next{background:var(--ec-bg);border:1px solid var(--ec-line);border-radius:12px}
+.experience .journal-highlight,.experience .journal-contact-card{border-radius:12px;border-color:var(--ec-line);background:var(--ec-bg)}
+.experience .journal-contact-card:hover{background:var(--ec-bg-2)}
+.experience .journal-highlight-symbol,.experience .journal-research-number{color:var(--ec-accent)}
+.experience .journal-research-number{font:500 22px var(--ec-mono)}
+.experience .journal-journey-note{background:var(--ec-bg);border:1px solid var(--ec-line);border-radius:12px}
+.experience .journal-timeline-full .journal-timeline-marker,.experience .journal-timeline-marker{background:var(--ec-accent);border-color:var(--ec-accent)}
+.experience .journal-date{font-family:var(--ec-mono);color:var(--ec-faint)}
+.experience .journal-contact-letter{background:var(--ec-bg);border:1px solid var(--ec-line-2);border-radius:14px;box-shadow:none}
+.experience .journal-email{color:var(--ec-accent)!important;border-color:var(--ec-accent)}
+.experience .journal-email:hover{color:var(--ec-ink)!important;border-color:var(--ec-ink)}
+.experience .journal-letter-seal{border-color:var(--ec-accent);color:var(--ec-accent)}
+.experience .journal-news time{font-family:var(--ec-mono);color:var(--ec-faint)}
+/* papers */
+.experience .paper-year-heading h3{font:500 22px var(--ec-mono);color:var(--ec-accent)}
+.experience .paper-year-heading span{background:var(--ec-line)}
+.experience .paper-thumbnail{border:1px solid var(--ec-line);background:var(--ec-bg);border-radius:8px;overflow:hidden}
+.experience .paper-venue,.experience .paper-venue-preprint{font:500 11px var(--ec-mono);letter-spacing:0;border:0;border-radius:5px;background:var(--ec-accent-soft);color:var(--ec-accent);padding:2px 7px}
+.experience .paper-venue-preprint{background:var(--ec-bg-2);color:var(--ec-muted)}
+.experience .paper-summary{color:var(--ec-muted)!important;font-size:13.5px}
+.experience .paper-link{color:var(--ec-accent)!important;border-bottom-color:color-mix(in srgb,var(--ec-accent) 35%,transparent);font:500 12px var(--ec-mono)}
+.experience .paper-link:hover{border-color:var(--ec-accent)}
+.experience .paper-authors summary,.experience .journal-caption{font-family:var(--ec-mono);font-size:11.5px;color:var(--ec-faint)}
+.experience .paper-authors strong{color:var(--ec-ink)}
+/* projects */
+.experience .folio-project{border:1px solid var(--ec-line-2);background:var(--ec-card);border-radius:14px;box-shadow:var(--ec-shadow)}
+.experience .journal-page .folio-image{background:var(--ec-bg)}
+.experience .folio-image{border-bottom:1px solid var(--ec-line)}
+.experience .folio-project-featured .folio-image{border-right:1px solid var(--ec-line)}
+.experience .folio-image-label{color:var(--ec-muted);background:var(--ec-card);border:1px solid var(--ec-line-2);border-radius:5px;font:500 10.5px var(--ec-mono)}
+.experience .folio-body>p.project-role{font:500 12px var(--ec-mono);color:var(--ec-accent)}
+.experience .folio-type-cover{background:var(--ec-accent-soft);color:var(--ec-accent);font:700 26px var(--ec-serif-l)}
+.experience .folio-type-cover i{color:var(--ec-green)}
+.experience .entity-heading h2:focus-visible{outline:2px solid var(--ec-accent)}
+.experience .entity-facts{font-family:var(--ec-mono);color:var(--ec-faint)}
+.experience .entity-facts>span+span{border-left-color:var(--ec-line-2)}
+.experience .paper-detail-figure,.experience .project-media{border:1px solid var(--ec-line);background:var(--ec-bg);border-radius:12px}
+.experience .paper-detail-figure figcaption,.experience .project-media figcaption>p{color:var(--ec-muted)}
+.experience .entity-authors small{color:var(--ec-faint)}
+.experience .project-question{color:var(--ec-ink)!important}
+.experience .project-media-top{background:var(--ec-card);color:var(--ec-faint);border-bottom:1px solid var(--ec-line);font-family:var(--ec-mono);letter-spacing:.04em}
+.experience .journal-page .media-image-button{background:var(--ec-bg)}
+.experience .media-enlarge-label{background:var(--ec-card);border-color:var(--ec-line-2);color:var(--ec-muted);border-radius:6px}
+.experience .project-media figcaption{border-top-color:var(--ec-line)}
+.experience .media-controls{background:var(--ec-card);border-top:1px solid var(--ec-line)}
+.experience .media-controls>button{border:1px solid var(--ec-line-2);border-radius:9px;background:var(--ec-card);color:var(--ec-ink)}
+.experience .media-dots button{color:var(--ec-faint)}
+.experience .media-dots button[aria-pressed=true]{border-bottom-color:var(--ec-accent);color:var(--ec-accent)}
+.experience .project-text-edition{border:1px solid var(--ec-line);background:var(--ec-bg);border-radius:12px}
+.experience .media-failed::after{color:var(--ec-muted)}
+/* map / settings pages keep their structure */
+.experience .grimoire .world-map{color:var(--ec-muted)}
+.experience .grimoire .world-map .map-land{fill:var(--ec-accent-soft);stroke:var(--ec-line-2)}
+.experience .grimoire .world-map .map-waterline{stroke:var(--ec-line-2)}
+.experience .grimoire .world-map .map-paths{stroke:var(--ec-accent)}
+.experience .grimoire .world-map g circle{fill:var(--ec-card);stroke:var(--ec-accent)}
+.experience .grimoire .world-map g text,.experience .grimoire .map-north{fill:var(--ec-ink);font-family:var(--ec-sans-l)}
+.experience .grimoire .world-map .player-dot{fill:var(--ec-critic);stroke:var(--ec-card)}
+.experience .map-legend,.experience .map-caption{color:var(--ec-faint);font-family:var(--ec-mono)}
+.experience .map-legend i{background:var(--ec-accent)}
+.experience .project-stars{display:inline-flex;align-items:center;gap:8px}.experience .project-stars small{font:500 11px var(--ec-mono);color:var(--ec-faint)}
+.experience .journal-profile-tagline{font:500 20px/1.5 var(--ec-sans-l)!important;font-style:normal!important;letter-spacing:-.003em}

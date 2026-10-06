@@ -208,7 +208,7 @@ export function createExhibitionStage(scene,heightAt,{lang='en',loadMedia,loadSu
   for(const x of [-2.18,2.18]){beam([x,-.59,.18],[x,0,-.12],.04,materials.brass,role);beam([x,-.59,-.15],[x,0,-.12],.04,materials.brass,role);}
   const namePlateFrame=box([5.63,.92,.15],[0,0,0],materials.brass,.08,role);namePlateFrame.name='exhibition-role-plaque';
   box([5.43,.74,.06],[0,0,.082],materials.ink,.04,role);
-  const namePlate=face([5.12,.64],[0,0,.119],['Yaxin Luo','Co-first author'],{width:1280,height:192,dark:true},role);
+  const namePlate=face([5.12,.64],[0,0,.119],['Yaxin Luo','First author'],{width:1280,height:192,dark:true},role);
   for(const x of [-2.62,2.62])screw([x,0,.12],role,.048);targetObject(role,'detail','role');
   const deskObjects=group.children.slice(deskStart);
   const desk=new THREE.Group();desk.name='exhibition-workbench';group.add(desk);deskObjects.forEach(object=>desk.add(object));

@@ -41,7 +41,8 @@ test('late media and failed media never replace the current completed selection'
 test('every selected project has honest author roles and traceable, existing media', () => {
   assert.equal(selectedProjects.length,8);
   assert.equal(getProject('figmirror').kind,'software');
-  assert.equal(publicationRole(publications.find(p=>p.id==='autodesign')).en,'Co-first author');
+  for(const id of ['autodesign','opencaptchaworld','llmsurgeon'])assert.equal(publicationRole(publications.find(p=>p.id===id)).en,'First author');
+  assert.equal(publicationRole(publications.find(p=>p.id==='nextgen-captchas')).en,'Co-first author');
   assert.equal(publicationRole(publications.find(p=>p.id==='dvin')).en,'Co-author');
   for(const project of selectedProjects)for(const media of project.media){
     assert.ok(media.caption.en&&media.caption.zh);assert.ok(media.source.startsWith('https://'));
@@ -76,7 +77,7 @@ test('paper objects open one exact work and projects expose independent media co
   assert.ok(html.includes('data-action="media-next"'));
   assert.ok(html.includes('data-action="exhibition"'));
   assert.ok(html.includes(getProject('autodesign').media[2].src));
-  assert.ok(html.includes('共同一作'));
+  assert.ok(html.includes('第一作者'));
 });
 
 test('the physical stage has named controls, a usable camera and honest project selection', async () => {
