@@ -29,6 +29,7 @@ import {createXieqiquCourtGardenR4Study} from '../src/yuanmingyuan/xieqiqu-court
 import {compositionOwner,compositionGround} from './helpers/xianfaqiao-composition-fixture.js';
 import {installSceneRedraw} from './helpers/museum-scene-redraw.js';
 import {isFrontCourtRoute} from '../src/yuanmingyuan/front-court-museum.js';
+import {resolveMuseumCameraPose} from '../src/yuanmingyuan/museum-camera-clearance.js';
 
 // Run the real page bootstrap and its real load/mount/release/visit/UI/render/
 // cleanup functions. Only full factories, texture/character IO and GPU work are
@@ -37,7 +38,7 @@ import {isFrontCourtRoute} from '../src/yuanmingyuan/front-court-museum.js';
 const source=readFileSync(new URL('../src/yuanmingyuan/museum-scene.js',import.meta.url),'utf8');
 const sourceSHA=createHash('sha256').update(source).digest('hex');
 const section=(a,b)=>{const start=source.indexOf(a),end=source.indexOf(b,start+a.length);assert(start>=0&&end>start,a);return source.slice(start,end);};
-const definitions=[source.match(/^const paused=.*;$/m)[0],source.match(/^let frontCourtLandscape=.*;$/m)[0],source.match(/^let cameraClearance=.*;$/m)[0],section('let wanfangMuseumShore=',"\n$('review-tools')"),source.match(/^function clearVisitorMovement\(\).*$/m)[0],
+const definitions=[source.match(/^const paused=.*;$/m)[0],source.match(/^let frontCourtLandscape=.*;$/m)[0],source.match(/^let shoreGrove=.*;$/m)[0],source.match(/^let cameraClearance=.*;$/m)[0],section('let wanfangMuseumShore=',"\n$('review-tools')"),source.match(/^const groundedInputForward=.*;$/m)[0],section('function visitorMovementAxes(','\nfunction frameVisitor('),
   source.split('\n').find(line=>line.startsWith("$('review-tools').hidden=")),
   section('async function prepareMuseumRendering(','\nfunction busy('),section('function busy(','\nfunction setLanguage('),
   section('function svgNode(','\nfunction openDialog('),section('function frameVisitor(','\nfunction inspect('),source.match(/^function inspect.*$/m)[0],
@@ -55,7 +56,7 @@ function harness({failDecoder=false,failSecondBinder=false,failEnvironment=false
   camera.position.set(350,14,-560);camera.lookAt(350,4,-565);camera.updateMatrixWorld();
   const service=name=>{let disposed=false;const result={group:new THREE.Group(),disposeCalls:0,get disposed(){return disposed;},dispose(){result.disposeCalls++;if(disposed)return;disposed=true;events.push(`service:${name}`);result.group.removeFromParent();if(throwCleanup&&name==='water')throw new Error('Water cleanup sentinel');}};services.set(name,result);return result;};
   let ground=null,waterRange=null,plantingArguments=null,navigationOptions=null;
-  const ctx={isFrontCourtRoute,performance,THREE,URLSearchParams,AbortController,controller,scene,camera,composition:null,query:new URLSearchParams('composition=xianfaqiao&review=still&planting='+(western?'western':'pilot')+'&shore=r2&bank=r4&batch=2&site=xieqiqu'),sourceTag:'component-scene-test',
+  const ctx={isFrontCourtRoute,resolveMuseumCameraPose,performance,THREE,URLSearchParams,AbortController,controller,scene,camera,composition:null,query:new URLSearchParams('composition=xianfaqiao&review=still&planting='+(western?'western':'pilot')+'&shore=r2&bank=r4&batch=2&site=xieqiqu'),sourceTag:'component-scene-test',
     terrain:null,terrainAssets:null,terrainPads:[],terrainCourts:[],terrainPaths:[],terrainReplacements:[],gardenLayout:null,groundTextures:null,water:null,environment:null,visitor:null,pool:null,sites:null,residents:null,preparedGroundSources:null,residentArchitecture:null,architecture:null,currentSite:null,nav:null,guides:null,guideSurface:null,
     residentBindings:new Map(),borrowedOwners:new WeakSet(),plantingPilot:null,plantingCollisions:null,plantingReview:null,westernPlanting:null,westernPlantingLifetime:null,shoreCommunity:null,shoreUnderstory:null,shoreBank:null,sceneFailure:null,
     museumSites,museumSite,museumEntry,museumRegions,museumResidentCatalog,sitePoint,museumTravelHeading,museumVisitorCollider,xianfaqiaoRouteLanding,
@@ -438,7 +439,10 @@ for(const aspect of [1.6,9/16])test('R4 north retreat uses actual follow, naviga
   const terrainHit=ctx.terrain.surfaceAt(ctx.state.position.x,ctx.state.position.z);
   assert.equal(terrainHit.kind,'land');assert.equal(terrainHit.supportSource,'terrain-triangle');
   assert.equal(ctx.architecture.surfaceAt(ctx.state.position.x,ctx.state.position.z),null,'retreated arrival is outside the source paving');
-  const floor=ctx.nav.landing(ctx.state.position);assert.equal(floor.valid,true);near(floor.y,terrainHit.height);
+  // findSafeLanding settles on the highest validated footprint contact, so a
+  // sloped fixture triangle may lift the landing slightly above the centre hit.
+  const footprint=[terrainHit.height,...Array.from({length:8},(_,i)=>{const a=i*Math.PI/4;return ctx.terrain.surfaceAt(ctx.state.position.x+Math.cos(a)*GROUND_MOTION.radius,ctx.state.position.z+Math.sin(a)*GROUND_MOTION.radius).height;})];
+  const floor=ctx.nav.landing(ctx.state.position);assert.equal(floor.valid,true);near(floor.y,Math.max(...footprint));assert(floor.y>=terrainHit.height);
   assert(ctx.state.position.y>=terrainHit.height+6,'normal flight clearance still uses the actual fixture triangles');
   t.diagnostic(JSON.stringify({fixtureOnly:true,aspect,arrival:ctx.state.position,terrainY:terrainHit.height,landingY:floor.y,supportSource:terrainHit.supportSource}));
   const look=ctx.camera.getWorldDirection(new THREE.Vector3());near(look.x,0);assert(look.z>.95);
