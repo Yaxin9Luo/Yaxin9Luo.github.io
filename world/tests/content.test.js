@@ -41,7 +41,7 @@ test('both resume HTML files and the website share the dated GitHub star snapsho
   }
 });
 
-test('traditional pages receive the same current facts and selected publications',()=>{
+test('_data/portfolio.json, which the GitHub profile README reads, carries the current facts and selected publications',()=>{
   const data=JSON.parse(fs.readFileSync(path.join(root,'_data/portfolio.json'),'utf8'));
   assert.deepEqual(data.publications,selectedPublications);
   assert.deepEqual(data.profile,profile);

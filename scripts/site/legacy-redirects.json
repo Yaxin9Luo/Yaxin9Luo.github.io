@@ -1,0 +1,19 @@
+{
+  "about": "The Academic Pages (Jekyll) site was removed. Until then it lived under /traditional/<path>, and each <path> at the root was a stub pointing there. These are the pages of that site with a real equivalent now (taken from https://yaxin9luo.github.io/sitemap.xml on 2026-10-06): home, the Chinese home, the CVs, publications, projects and the blog. The build writes a redirect stub at /traditional/<path> and at <path> (except /, which is the site itself). The theme's sample pages (talks, teaching, sample posts, archives, guides) are not forwarded: at the root they get the 404 page, and any other /traditional/... URL, including old /traditional/files/ and /traditional/images/ links, is forwarded by 404.html.",
+  "pages": {
+    "/": "/",
+    "/zh/": "/?lang=zh",
+    "/cv/": "/files/CV_YaxinLuo.pdf",
+    "/zh/cv/": "/files/CV_YaxinLuo_zh.pdf",
+    "/publications/": "/#section/publications",
+    "/publication/APL": "/#paper/apl",
+    "/publication/gamma-MoD": "/#paper/gamma-mod",
+    "/publication/DViN": "/#paper/dvin",
+    "/publication/OpenCaptchaWorld": "/#paper/opencaptchaworld",
+    "/publication/DRAG": "/#paper/drag",
+    "/publication/NextGen-CAPTCHAs": "/#paper/nextgen-captchas",
+    "/portfolio/": "/#section/projects",
+    "/long-horizon-research-thoughts/": "/blog/",
+    "/year-archive/": "/blog/"
+  }
+}

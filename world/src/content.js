@@ -13,7 +13,7 @@ export const profile = {
     '罗亚鑫 · Yaxin Luo',
   ),
   role: bilingual('Machine Learning PhD Student', '机器学习博士生'),
-  // One-line positioning and the author's own research statement (shared by the landing, About and /traditional/).
+  // One-line positioning and the author's own research statement (shared by the landing, About and _data/portfolio.json).
   positioning: bilingual(
     'Post-training agents for long-horizon expert work — the model and the harness around it, improved together.',
     '后训练面向长程专家级任务的智能体 —— 模型与它周围的 harness，一起进化。',

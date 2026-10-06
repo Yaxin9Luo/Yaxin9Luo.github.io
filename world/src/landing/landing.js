@@ -13,7 +13,7 @@ export const landingCopy = {
     email: 'Email', cv: 'CV', tour: 'CV Tour ↗',
     mapTitle: 'one question · three phases', mapHint: 'hover a node', lgPaper: 'paper / project', lgLoop: 'model ⟲ harness loop', lgAll: 'all publications →',
     now: 'Now', nowT: 'research intern at Meituan M17 LongCat · open to research collaboration', demo: 'demo canvas · handles spring back, nothing is saved',
-    else: 'elsewhere', world: 'World map', ymy: 'Yuanmingyuan', trad: 'Traditional site',
+    explore: 'Explore', academy: '3D Academy', world: 'World map', ymy: 'Yuanmingyuan',
     paper: 'paper', code: 'code', open: 'details', snap: 'demo · springs back', map: 'Research map', name: 'Yaxin Luo',
   },
   zh: {
@@ -22,7 +22,7 @@ export const landingCopy = {
     email: '邮件', cv: '简历', tour: 'CV 导览 ↗',
     mapTitle: '一个问题 · 三个阶段', mapHint: '悬停节点', lgPaper: '论文 / 项目', lgLoop: '模型 ⟲ harness 循环', lgAll: '全部论文 →',
     now: '现在', nowT: '美团 M17 LongCat 研究实习 · 欢迎研究合作', demo: '演示画布 · 手柄会弹回，不会保存任何改动',
-    else: '其他入口', world: '世界地图', ymy: '圆明园', trad: '经典版主页',
+    explore: '探索', academy: '3D 学院', world: '世界地图', ymy: '圆明园',
     paper: '论文', code: '代码', open: '详情', snap: '演示 · 松手弹回', map: '研究地图', name: 'Yaxin Luo',
   },
 };
@@ -130,8 +130,21 @@ export function renderLanding(lang = 'en') {
     <span class="now"><span class="dot" aria-hidden="true"></span><b ${L('now')}>${t.now}</b> · <span ${L('nowT')}>${t.nowT}</span></span>
     <span class="demo" ${L('demo')}>${t.demo}</span>
     <span id="load-status" class="ec-sr" aria-live="polite"></span>
-    <span class="else"><span ${L('else')}>${t.else}</span> · <button data-action="map" ${L('world')}>${t.world}</button> · <a data-museum-entry href="${MUSEUM_URL(lang)}" data-i18n="garden">${t.ymy}</a> · <a href="${lang === 'zh' ? '/traditional/zh/' : '/traditional/'}" ${L('trad')}>${t.trad}</a></span>
   </footer>`;
+}
+
+/**
+ * The three places to explore, as dashed capsules for the top bar: the 3D academy (lazy world),
+ * its travel map, and the Yuanmingyuan museum (a separate page). Labels use the Interface copy keys
+ * (academy / map / garden), so the Interface's language switch keeps them current.
+ */
+export function renderExplore(lang = 'en') {
+  const t = landingCopy[lang === 'zh' ? 'zh' : 'en'];
+  return `<span class="ec-explore" role="group" aria-label="${esc(t.explore)}">`
+    + `<button class="ec-cap academy-button" id="explore-button" data-action="start">${ec.cube}<span data-i18n="academy">${t.academy}</span></button>`
+    + `<button class="ec-cap" data-action="map">${ec.map}<span data-i18n="map">${t.world}</span></button>`
+    + `<a class="ec-cap" data-museum-entry href="${MUSEUM_URL(lang)}">${ec.pavilion}<span data-i18n="garden">${t.ymy}</span></a>`
+    + `</span>`;
 }
 
 function catmull(pts) {
@@ -378,6 +391,7 @@ export function mountLanding(host, {lang = 'en', reducedMotion = false, getGuide
     land.parentElement.querySelectorAll('[data-l]').forEach(e => { const v = t[e.dataset.l]; if (v != null) e.innerHTML = v; });
     land.setAttribute('aria-label', t.name);
     $('.ec-win')?.setAttribute('aria-label', t.map);
+    host.querySelector('.ec-explore')?.setAttribute('aria-label', t.explore);
     host.querySelectorAll('.ec-cv').forEach(a => a.setAttribute('href', cvForLanguage(LANG)));
   }
   function layoutAll() { if (disposed || paused || !land.offsetWidth) return; fit(); buildMap(); paintInsp(); rulers(); home(); }

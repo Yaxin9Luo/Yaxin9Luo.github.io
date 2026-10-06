@@ -1,0 +1,195 @@
+<!doctype html>
+<!-- Share preview cards (1200×630) in the Editable Canvas language. Rendered by render.mjs:
+     ?card=home → world/public/og/home.png, ?card=blog → world/public/og/blog.png.
+     Copy and the research map come from the site's own modules, so a re-render picks up edits. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<style>
+@font-face{font-family:"EC Serif";font-weight:700;src:url(/fonts/ec/serif-700.woff2) format("woff2")}
+@font-face{font-family:"EC Sans";font-weight:400;src:url(/fonts/ec/sans-400.woff2) format("woff2")}
+@font-face{font-family:"EC Sans";font-weight:500;src:url(/fonts/ec/sans-500.woff2) format("woff2")}
+@font-face{font-family:"EC Sans";font-weight:700;src:url(/fonts/ec/sans-700.woff2) format("woff2")}
+@font-face{font-family:"EC Mono";font-weight:500;src:url(/fonts/ec/mono-500.woff2) format("woff2")}
+:root{--bg:#F7F7FB;--bg-2:#EFF0F7;--dot:#D3D5E3;--card:#FFFFFF;--line:#E1E3EE;--line-2:#D9DCE8;--ink:#15162E;--muted:#565B73;--faint:#8A8FA8;
+  --accent:#4F46E5;--accent-soft:#ECEBFE;--accent-ink:#FFFFFF;--green:#0E9F6E;--green-soft:#E3F6EE;--critic:#E4572E;--critic-ink:#FFFFFF;
+  --shadow:0 1px 2px rgba(21,22,46,.06),0 10px 28px -10px rgba(21,22,46,.16);--shadow-lg:0 2px 4px rgba(21,22,46,.05),0 26px 60px -20px rgba(21,22,46,.28);
+  --serif:"EC Serif",Georgia,serif;--sans:"EC Sans",system-ui,sans-serif;--mono:"EC Mono",ui-monospace,monospace}
+*{box-sizing:border-box}
+html,body{margin:0;width:1200px;height:630px;overflow:hidden;background:var(--bg)}
+body{font-family:var(--sans);color:var(--ink);-webkit-font-smoothing:antialiased}
+.card{position:relative;width:1200px;height:630px;overflow:hidden;background-color:var(--bg);background-image:radial-gradient(circle at 1.5px 1.5px,var(--dot) 1.15px,transparent 1.7px);background-size:22px 22px;background-position:13px 13px}
+[data-card="home"] .blog,[data-card="blog"] .home{display:none}
+
+/* rulers */
+.corner,.rx,.ry{position:absolute;background-color:var(--bg);z-index:5}
+.corner{left:0;top:0;width:26px;height:26px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);z-index:6}
+.corner::after{content:"";position:absolute;inset:8px;border:1.5px solid var(--faint);border-radius:2px;opacity:.6}
+.rx{left:26px;right:0;top:0;height:26px;border-bottom:1px solid var(--line);background-image:repeating-linear-gradient(90deg,var(--line-2) 0 1px,transparent 1px 10px),repeating-linear-gradient(90deg,var(--faint) 0 1px,transparent 1px 100px);background-size:100% 6px,100% 11px;background-position:0 100%;background-repeat:repeat-x}
+.ry{top:26px;bottom:0;left:0;width:26px;border-right:1px solid var(--line);background-image:repeating-linear-gradient(0deg,var(--line-2) 0 1px,transparent 1px 10px),repeating-linear-gradient(0deg,var(--faint) 0 1px,transparent 1px 100px);background-size:6px 100%,11px 100%;background-position:100% 0;background-repeat:repeat-y}
+.rx span{position:absolute;top:4px;font:500 10px var(--mono);color:var(--faint);transform:translateX(4px)}
+.rx .hl,.ry .hl{position:absolute;background:color-mix(in srgb,var(--accent) 14%,transparent)}
+.rx .hl{top:0;bottom:0;border-left:1px solid var(--accent);border-right:1px solid var(--accent)}
+.ry .hl{left:0;right:0;border-top:1px solid var(--accent);border-bottom:1px solid var(--accent)}
+
+/* selection box with handles (the name / the blog title) */
+.sel{position:absolute;display:inline-block}
+.sel .frame{position:absolute;inset:-9px -16px -7px -16px;background:color-mix(in srgb,var(--accent-soft) 60%,transparent);border:2.5px dashed var(--accent);border-radius:1px}
+.sel i{position:absolute;width:13px;height:13px;border:2.2px solid var(--accent);background:var(--bg);border-radius:2.5px}
+.sel .tl{left:-22.5px;top:-15.5px}.sel .tm{left:calc(50% - 6.5px);top:-15.5px}.sel .tr{right:-22.5px;top:-15.5px}
+.sel .ml{left:-22.5px;top:calc(50% - 6.5px)}.sel .mr{right:-22.5px;top:calc(50% - 6.5px)}
+.sel .bl{left:-22.5px;bottom:-13.5px}.sel .bm{left:calc(50% - 6.5px);bottom:-13.5px}.sel .br{right:-22.5px;bottom:-13.5px}
+.sel h1{position:relative;margin:0;padding:2px 2px 8px;font:700 var(--title,98px)/1 var(--serif);letter-spacing:-.01em;white-space:nowrap;color:var(--ink)}
+
+/* collaborator cursors */
+.cur{position:absolute;z-index:8}
+.cur svg{display:block;width:27px;height:37px;filter:drop-shadow(0 1px 1.5px rgba(0,0,0,.18))}
+.cur path{stroke:var(--bg);stroke-width:1.8;stroke-linejoin:round}
+.cur .lbl{position:absolute;left:19px;top:27px;height:30px;padding:0 12px;border-radius:15px;font:700 16.5px/30px var(--sans);white-space:nowrap}
+.cur.d path{fill:var(--accent)}.cur.d .lbl{background:var(--accent);color:var(--accent-ink)}
+.cur.c path{fill:var(--critic)}.cur.c .lbl{background:var(--critic);color:var(--critic-ink)}
+
+/* text */
+.claim{position:absolute;margin:0;font:400 35px/1.22 var(--sans);letter-spacing:-.006em;color:var(--muted);text-wrap:balance}
+.claim b{font-weight:500;color:var(--ink)}
+.chips{position:absolute;display:flex;gap:12px}
+.chip{display:inline-flex;align-items:center;gap:11px;height:44px;padding:0 20px 0 17px;border-radius:22px;font:500 21.5px var(--sans);white-space:nowrap;background:var(--accent-soft);color:var(--accent)}
+.chip::before{content:"";width:9px;height:9px;border-radius:50%;background:currentColor}
+.chip.g{background:var(--green-soft);color:var(--green)}
+.chips.stack{flex-direction:column;align-items:flex-start;gap:12px}
+/* status bar: identity and address, as in the landing's footer */
+.status{position:absolute;left:26px;right:0;bottom:0;height:56px;display:flex;align-items:center;gap:24px;padding:0 42px 0 58px;border-top:1px solid var(--line);background:color-mix(in srgb,var(--bg) 92%,transparent);font:500 19px var(--mono);color:var(--muted);white-space:nowrap;z-index:4}
+.status b{color:var(--ink);font-weight:500}
+.status .now{display:flex;align-items:center;gap:12px}
+.status .dot{width:9px;height:9px;border-radius:50%;background:var(--green);box-shadow:0 0 0 4px var(--green-soft)}
+.status .url{margin-left:auto;display:flex;align-items:center;gap:10px;font-size:21px;color:var(--ink)}
+.status .url svg{width:21px;height:21px;fill:none;stroke:var(--accent);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+
+/* window (design-tool panel) */
+.win{position:absolute;display:flex;flex-direction:column;border-radius:18px;background:var(--bg);border:1px solid var(--line-2);box-shadow:var(--shadow-lg);overflow:hidden}
+.win .bar{display:flex;align-items:center;gap:12px;height:44px;flex:none;padding:0 16px;border-bottom:1px solid var(--line);background:var(--card);font:500 14px var(--mono);color:var(--faint);white-space:nowrap}
+.win .bar b{color:var(--ink);font-weight:500}
+.dots{display:inline-flex;gap:7px}.dots i{width:11px;height:11px;border-radius:50%;background:#E4572E}.dots i:nth-child(2){background:#E8B339}.dots i:nth-child(3){background:#0E9F6E}
+.win .body{position:relative;flex:1;background-image:radial-gradient(circle at 1.5px 1.5px,var(--dot) 1.1px,transparent 1.6px);background-size:18px 18px}
+
+/* research map (mapSVG from world/src/landing/landing.js), tuned to read at thumbnail size */
+.mapbox{position:absolute;inset:14px 14px 14px 14px}
+.mapbox>svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.mapbox .phase{fill:var(--card);fill-opacity:.8;stroke:var(--line-2)}
+.mapbox .num{font:500 15px var(--mono);fill:var(--accent)}
+.mapbox .yr{display:none}
+.mapbox .ph{font:700 19.5px var(--serif);fill:var(--ink)}
+.mapbox .phs{font:400 13px var(--sans);fill:var(--muted)}
+.mapbox .nm,.mapbox .vn{display:none}
+.mapbox .trk{fill:none;stroke:var(--dot);stroke-width:12;stroke-linecap:round;stroke-linejoin:round}
+.mapbox .crv{fill:none;stroke:var(--accent);stroke-width:3.6;stroke-linecap:round;stroke-dasharray:8 6}
+.mapbox .node .o{fill:var(--card);stroke:var(--accent);stroke-width:3.6;r:9.5px}
+.mapbox .node .r{display:none}
+.mapbox .node[data-id="ad"] .o{fill:var(--accent)}
+.mapbox .loopm{fill:var(--accent-soft);stroke:var(--accent);stroke-width:3}
+.mapbox .looph{fill:var(--green-soft);stroke:var(--green);stroke-width:3}
+.mapbox .loopt{font:500 11px var(--sans)}
+.mapbox .orbit{fill:none;stroke:var(--faint);stroke-width:1.8;stroke-dasharray:3 5}
+.mapbox .tok{fill:var(--critic);r:6px}
+
+/* blog: a sketch of an article page as an artboard on the canvas (title, tags, text, a figure) */
+.board-label{position:absolute;font:500 14px var(--mono);color:var(--faint);white-space:nowrap}
+.board-label b{color:var(--ink);font-weight:500}
+.board{position:absolute;border-radius:10px;overflow:hidden;background:var(--card);border:1px solid var(--line-2);box-shadow:var(--shadow-lg)}
+.pg{position:absolute;inset:0;padding:28px 28px 0}
+.pg i{display:block;border-radius:3px}
+.pg-k{display:flex;gap:8px;margin-bottom:16px}.pg-k i{width:58px;height:9px;background:color-mix(in srgb,var(--accent) 34%,transparent)}.pg-k i+i{width:36px;background:var(--line-2)}
+.pg-t i{height:15px;margin-bottom:10px;background:var(--ink);opacity:.88}
+.pg-tags{display:flex;gap:8px;margin:14px 0 18px}
+.pg-tags span{display:inline-flex;align-items:center;gap:6px;height:20px;padding:0 10px 0 8px;border-radius:10px;background:var(--accent-soft)}
+.pg-tags span::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--accent)}
+.pg-tags span::after{content:"";width:var(--w,38px);height:6px;border-radius:3px;background:color-mix(in srgb,var(--accent) 40%,transparent)}
+.pg-tags span.g{background:var(--green-soft)}.pg-tags span.g::before{background:var(--green)}.pg-tags span.g::after{background:color-mix(in srgb,var(--green) 40%,transparent)}
+.pg-p i{width:100%;height:7px;margin-bottom:10px;background:var(--line-2)}
+.pg-fig{position:relative;margin:18px 0 10px;height:106px;border:1px solid var(--line);border-radius:8px;background:color-mix(in srgb,var(--bg) 60%,var(--card))}
+.pg-fig svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.pg-cap i{width:42%;height:6px;margin:0 auto 18px;background:var(--line)}
+</style>
+</head>
+<body data-card="home">
+<div class="card">
+  <div class="corner"></div>
+  <div class="rx"><i class="hl"></i></div>
+  <div class="ry"><i class="hl"></i></div>
+
+  <!-- home -->
+  <div class="sel home" style="left:86px;top:70px"><div class="frame"></div><i class="tl"></i><i class="tm"></i><i class="tr"></i><i class="ml"></i><i class="mr"></i><i class="bl"></i><i class="bm"></i><i class="br"></i><h1>Yaxin Luo</h1></div>
+  <p class="claim home" style="left:84px;top:224px;width:530px"></p>
+  <div class="chips home stack" style="left:84px;top:418px"></div>
+  <div class="win home" style="left:650px;top:136px;width:508px;height:412px">
+    <div class="bar"><span class="dots"><i></i><i></i><i></i></span><span>research-map / <b>three phases</b></span></div>
+    <div class="body"><div class="mapbox"></div></div>
+  </div>
+  <div class="status home"><span class="now"><span class="dot"></span><span class="role"></span></span><span class="url"></span></div>
+
+  <!-- blog: the tagline mirrors copy.intro in world/src/blog/blog.js (that module mounts the app, so it is not imported) -->
+  <div class="sel blog" style="left:86px;top:70px;--title:92px"><div class="frame"></div><i class="tl"></i><i class="tm"></i><i class="tr"></i><i class="ml"></i><i class="mr"></i><i class="bl"></i><i class="bm"></i><i class="br"></i><h1>Yaxin’s Blog</h1></div>
+  <p class="claim blog" style="left:84px;top:224px;width:600px"><b>Notes on multimodal models, agent harnesses,</b> and what I learn while doing research.</p>
+  <div class="chips blog" style="left:84px;top:414px"><span class="chip">Multimodal</span><span class="chip g">Agent harnesses</span><span class="chip">Research notes</span></div>
+  <div class="board-label blog" style="left:818px;top:110px">▢ blog / <b>post</b></div>
+  <div class="board blog" style="left:818px;top:136px;width:340px;height:412px" aria-hidden="true">
+    <div class="pg">
+      <div class="pg-k"><i></i><i></i></div>
+      <div class="pg-t"><i style="width:88%"></i><i style="width:62%"></i></div>
+      <div class="pg-tags"><span style="--w:40px"></span><span class="g" style="--w:52px"></span></div>
+      <div class="pg-p"><i></i><i style="width:95%"></i><i style="width:72%"></i></div>
+      <div class="pg-fig">
+        <svg viewBox="0 0 282 106" preserveAspectRatio="none">
+          <g stroke="var(--line)" stroke-width="1" stroke-dasharray="2 4"><path d="M16 28H266M16 52H266M16 76H266"/></g>
+          <path d="M16 92H266" stroke="var(--line-2)" stroke-width="1.4"/>
+          <path d="M18 86 C 70 83, 112 77, 152 72 S 226 63, 264 60" fill="none" stroke="var(--green)" stroke-width="2.6" stroke-linecap="round"/>
+          <path d="M18 88 C 52 84, 70 70, 96 63 S 150 43, 182 36 S 238 18, 264 16" fill="none" stroke="var(--accent)" stroke-width="2.8" stroke-linecap="round" stroke-dasharray="7 5"/>
+          <g fill="var(--card)" stroke="var(--accent)" stroke-width="2.6"><circle cx="96" cy="63" r="5.2"/><circle cx="182" cy="36" r="5.2" class="aim"/></g>
+          <circle cx="264" cy="16" r="5.6" fill="var(--accent)"/>
+        </svg>
+      </div>
+      <div class="pg-cap"><i></i></div>
+      <div class="pg-p"><i></i><i style="width:58%"></i></div>
+    </div>
+  </div>
+  <div class="status blog"><span class="now"><span class="dot"></span><span>by <b>Yaxin Luo</b> · notes and essays</span></span><span class="url"></span></div>
+</div>
+<script type="module">
+  import {landingCopy, splitClaim, mapSVG} from '/src/landing/landing.js';
+  import {profile} from '/src/content.js';
+  const card = new URLSearchParams(location.search).get('card') === 'blog' ? 'blog' : 'home';
+  document.body.dataset.card = card;
+  const $ = s => document.querySelector(s), esc = v => String(v).replace(/[&<>]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;'})[c]);
+  const arrow = '<svg viewBox="0 0 22 30" aria-hidden="true"><path d="M2 2 L2 25.3 L8.9 18.4 L14.1 29.3 L18.7 27 L13.5 16.4 L23.3 15.5 Z"/></svg>';
+  const link = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.7 3.9 5.7 3.9 9s-1.3 6.3-3.9 9c-2.6-2.7-3.9-5.7-3.9-9s1.3-6.3 3.9-9z"/></svg>';
+  const en = landingCopy.en, [claimA, claimB] = splitClaim(profile.positioning.en);
+  $('.status.home .role').innerHTML = en.role;
+  $('.claim.home').innerHTML = `<b>${esc(claimA)}</b> ${esc(claimB)}`;
+  $('.chips.home').innerHTML = `<span class="chip">${esc(en.chipA)}</span><span class="chip g">${esc(en.chipB)}</span>`;
+  $('.status.home .url').innerHTML = `${link}yaxin9luo.github.io`;
+  $('.status.blog .url').innerHTML = `${link}yaxin9luo.github.io/blog`;
+  await document.fonts.ready;
+  if (card === 'home') {
+    const box = $('.mapbox'), {svg, mk} = mapSVG(box.clientWidth, box.clientHeight, 'en', {motion: false});
+    box.style.setProperty('--mk', mk); box.innerHTML = svg;
+  }
+  // rulers: numbers every 100px and the highlight bands of the selected element
+  const rx = $('.rx'), sel = $(`.sel.${card} h1`).parentElement.getBoundingClientRect();
+  for (let x = 100; x < 1200; x += 100) rx.insertAdjacentHTML('beforeend', `<span style="left:${x - 26}px">${x}</span>`);
+  rx.querySelector('.hl').style.cssText = `left:${sel.left - 26}px;width:${sel.width}px`;
+  $('.ry .hl').style.cssText = `top:${sel.top - 26}px;height:${sel.height}px`;
+  // cursors: the Designer at the selection's corner handle, the Critic on the map's loop / the article's figure
+  const place = (kind, label, x, y) => document.querySelector('.card').insertAdjacentHTML('beforeend', `<div class="cur ${kind}" style="left:${x}px;top:${y}px">${arrow}<span class="lbl">${label}</span></div>`);
+  const tr = document.querySelector(`.sel.${card} .tr`).getBoundingClientRect();
+  place('d', 'Designer', tr.right + 6, tr.top + 12);
+  if (card === 'home') {
+    const loop = document.querySelector('.mapbox .node.loop .orbit').getBoundingClientRect();
+    place('c', 'Critic', loop.left + loop.width * .3 - 14, loop.bottom + 2);
+  } else {
+    const aim = document.querySelector('.pg-fig .aim').getBoundingClientRect();
+    place('c', 'Critic', aim.right - 1, aim.bottom - 1);
+  }
+  document.body.classList.add('ready');
+</script>
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Not found · Yaxin Luo</title>
+<link rel="icon" type="image/svg+xml" href="/crest.svg">
+<script>
+// Old /traditional/... links forward to their new home; unknown ones land on the homepage.
+(function () {
+  var pages = /*LEGACY_PAGES*/{};
+  var m = location.pathname.match(/^\/traditional(\/.*)?$/);
+  if (m) {
+    var rest = m[1] || '/', has = Object.prototype.hasOwnProperty, to = null;
+    var keys = [rest, rest + '/', rest.replace(/\/+$/, ''), rest.replace(/\.html$/, ''), rest.replace(/index\.html$/, '')];
+    for (var i = 0; i < keys.length && !to; i++) if (has.call(pages, keys[i])) to = pages[keys[i]];
+    location.replace(to || (/^\/(files|images)\//.test(rest) ? rest : '/'));
+  }
+  try { var t = JSON.parse(localStorage.getItem('yaxin.grimoire.preferences') || '{}').theme; if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; } catch (e) {}
+})();
+</script>
+<style>
+@font-face{font-family:"EC Serif";font-weight:700;font-display:swap;src:url(/fonts/ec/serif-700.woff2) format("woff2")}
+@font-face{font-family:"EC Sans";font-weight:400;font-display:swap;src:url(/fonts/ec/sans-400.woff2) format("woff2")}
+@font-face{font-family:"EC Sans";font-weight:500;font-display:swap;src:url(/fonts/ec/sans-500.woff2) format("woff2")}
+@font-face{font-family:"EC Mono";font-weight:500;font-display:swap;src:url(/fonts/ec/mono-500.woff2) format("woff2")}
+:root{--bg:#F7F7FB;--dot:#D3D5E3;--card:#FFFFFF;--line:#E1E3EE;--line-2:#D9DCE8;--ink:#15162E;--muted:#565B73;--faint:#8A8FA8;--accent:#4F46E5;--accent-soft:#ECEBFE;--accent-ink:#FFFFFF;--critic:#E4572E;--critic-ink:#FFFFFF;
+  --shadow:0 1px 2px rgba(21,22,46,.06),0 8px 24px -8px rgba(21,22,46,.14);color-scheme:light;
+  --serif:"EC Serif","Source Serif 4",Georgia,"Songti SC","Noto Serif CJK SC",serif;--sans:"EC Sans","Source Sans 3",system-ui,"PingFang SC","Microsoft YaHei","Noto Sans CJK SC",sans-serif;--mono:"EC Mono","JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0F1020;--dot:#2E3150;--card:#171831;--line:#272944;--line-2:#2B2D48;--ink:#F2F2FA;--muted:#A9ACC6;--faint:#7C809E;--accent:#8B85FF;--accent-soft:#24224D;--accent-ink:#0F1020;--critic:#FF8A65;--critic-ink:#1A0E0A;--shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px -8px rgba(0,0,0,.55);color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0F1020;--dot:#2E3150;--card:#171831;--line:#272944;--line-2:#2B2D48;--ink:#F2F2FA;--muted:#A9ACC6;--faint:#7C809E;--accent:#8B85FF;--accent-soft:#24224D;--accent-ink:#0F1020;--critic:#FF8A65;--critic-ink:#1A0E0A;--shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px -8px rgba(0,0,0,.55);color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--bg);color:var(--ink)}
+body{min-height:100vh;font-family:var(--sans);background-image:radial-gradient(circle at 1.5px 1.5px,var(--dot) 1.1px,transparent 1.6px);background-size:20px 20px;overflow-x:hidden}
+.rx,.ry,.corner{position:fixed;background-color:var(--bg);z-index:2}
+.corner{left:0;top:0;width:24px;height:24px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);z-index:3}
+.corner::after{content:"";position:absolute;inset:7px;border:1.5px solid var(--faint);border-radius:2px;opacity:.6}
+.rx{left:24px;right:0;top:0;height:24px;border-bottom:1px solid var(--line);background-image:repeating-linear-gradient(90deg,var(--line-2) 0 1px,transparent 1px 10px),repeating-linear-gradient(90deg,var(--faint) 0 1px,transparent 1px 100px);background-size:100% 5px,100% 10px;background-position:0 100%;background-repeat:repeat-x}
+.ry{top:24px;bottom:0;left:0;width:24px;border-right:1px solid var(--line);background-image:repeating-linear-gradient(0deg,var(--line-2) 0 1px,transparent 1px 10px),repeating-linear-gradient(0deg,var(--faint) 0 1px,transparent 1px 100px);background-size:5px 100%,10px 100%;background-position:100% 0;background-repeat:repeat-y}
+main{position:relative;min-height:100vh;padding:clamp(72px,14vh,150px) clamp(28px,4.2vw,88px) 64px calc(24px + clamp(28px,8vw,160px));max-width:1100px}
+.insp{display:flex;width:max-content;align-items:stretch;height:30px;border-radius:9px;background:var(--card);border:1px solid var(--line-2);box-shadow:var(--shadow);font:500 12px var(--mono);color:var(--muted);white-space:nowrap;max-width:100%;overflow:hidden}
+.insp>span{display:flex;align-items:center;gap:6px;padding:0 10px;min-width:0}.insp>span+span{border-left:1px solid var(--line)}
+.insp .k{color:var(--faint)}.insp b{color:var(--ink);font-weight:500}.insp .path{overflow:hidden;text-overflow:ellipsis;color:var(--critic)}
+.sel{position:relative;display:block;width:max-content;margin:46px 0 0 16px}
+.sel .frame{position:absolute;inset:-8px -16px -6px -16px;background:color-mix(in srgb,var(--accent-soft) 55%,transparent);border:2px dashed var(--accent);border-radius:1px}
+.sel i{position:absolute;width:11px;height:11px;border:1.8px solid var(--accent);background:var(--bg);border-radius:2px}
+.sel .tl{left:-21.5px;top:-13.5px}.sel .tr{right:-21.5px;top:-13.5px}.sel .bl{left:-21.5px;bottom:-11.5px}.sel .br{right:-21.5px;bottom:-11.5px}
+.sel .tm{left:calc(50% - 5.5px);top:-13.5px}.sel .bm{left:calc(50% - 5.5px);bottom:-11.5px}.sel .ml{left:-21.5px;top:calc(50% - 5.5px)}.sel .mr{right:-21.5px;top:calc(50% - 5.5px)}
+.sel h1{position:relative;margin:0;padding:2px 4px 6px;font:700 clamp(84px,13vw,168px)/1 var(--serif);letter-spacing:-.01em;color:var(--ink)}
+.sel .dim{position:absolute;left:50%;bottom:-11px;transform:translateX(-50%);height:21px;padding:0 8px;border-radius:4px;background:var(--accent);color:var(--accent-ink);font:500 11.5px/21px var(--mono);white-space:nowrap}
+.cur{position:absolute;left:calc(100% + 26px);top:18%;pointer-events:none}
+.cur svg{display:block;width:22px;height:30px;filter:drop-shadow(0 1px 1px rgba(0,0,0,.15))}.cur path{fill:var(--critic);stroke:var(--bg);stroke-width:1.6;stroke-linejoin:round}
+.cur .lbl{position:absolute;left:15px;top:22px;height:24px;padding:0 9px;border-radius:12px;background:var(--critic);color:var(--critic-ink);font:700 13px/24px var(--sans);white-space:nowrap}
+.bubble{position:absolute;left:calc(100% + 64px);top:calc(18% + 54px);display:flex;align-items:center;gap:8px;padding:6px 12px 6px 7px;border-radius:14px;background:var(--card);border:2px solid var(--critic);box-shadow:var(--shadow);font:500 14.5px/1.2 var(--sans);color:var(--ink);white-space:nowrap}
+.bubble b{width:20px;height:20px;border-radius:50%;background:var(--critic);color:var(--critic-ink);font:700 12px/20px var(--sans);text-align:center;flex:none}
+h2{margin:46px 0 0;font:500 clamp(22px,2.4vw,30px)/1.25 var(--sans);letter-spacing:-.004em;max-width:22em}
+.zh{margin:8px 0 0;font:400 clamp(16px,1.5vw,19px)/1.5 var(--sans);color:var(--muted)}
+.note{margin:14px 0 0;max-width:36em;font:400 16px/1.6 var(--sans);color:var(--muted)}
+nav{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px}
+nav a{display:inline-flex;align-items:center;gap:8px;height:42px;padding:0 17px;border-radius:21px;border:1px solid var(--line-2);background:var(--card);color:var(--ink);font:500 15px var(--sans);text-decoration:none;transition:transform .15s,border-color .15s,box-shadow .15s}
+nav a:hover{border-color:var(--accent);transform:translateY(-1px);box-shadow:var(--shadow)}
+nav a.p{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+nav a .ar{opacity:.6;font-size:13px}
+nav svg{width:16px;height:16px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+a:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+footer{position:fixed;left:24px;right:0;bottom:0;height:38px;display:flex;align-items:center;gap:8px;padding:0 clamp(28px,4.2vw,88px);border-top:1px solid var(--line);background:color-mix(in srgb,var(--bg) 90%,transparent);font:500 12px var(--mono);color:var(--faint);z-index:2}
+footer b{color:var(--ink);font-weight:500}
+footer .dot{width:7px;height:7px;border-radius:50%;background:var(--critic);box-shadow:0 0 0 3px color-mix(in srgb,var(--critic) 18%,transparent)}
+@media (max-width:760px){.cur,.bubble{display:none}main{padding-left:calc(24px + 28px)}}
+@media (prefers-reduced-motion:reduce){nav a{transition:none}}
+</style>
+</head>
+<body>
+<div class="corner" aria-hidden="true"></div><div class="rx" aria-hidden="true"></div><div class="ry" aria-hidden="true"></div>
+<main>
+  <div class="insp" aria-hidden="true"><span><span class="k">◇</span><b>Page</b></span><span class="path">/</span><span>404</span></div>
+  <div class="sel">
+    <div class="frame" aria-hidden="true"></div>
+    <i class="tl"></i><i class="tm"></i><i class="tr"></i><i class="ml"></i><i class="mr"></i><i class="bl"></i><i class="bm"></i><i class="br"></i>
+    <h1>404</h1>
+    <span class="dim" aria-hidden="true">empty frame</span>
+    <div class="cur" aria-hidden="true"><svg viewBox="0 0 22 30"><path d="M2 2 L2 25.3 L8.9 18.4 L14.1 29.3 L18.7 27 L13.5 16.4 L23.3 15.5 Z"/></svg><span class="lbl">Critic</span></div>
+    <div class="bubble" aria-hidden="true"><b>C</b>nothing on this frame</div>
+  </div>
+  <h2>This page isn’t on the canvas.</h2>
+  <p class="zh" lang="zh-CN">这个页面不在画布上。</p>
+  <p class="note">It may have moved when the site was redesigned. These still work:</p>
+  <nav aria-label="Yaxin Luo">
+    <a class="p" href="/"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Home · 首页</a>
+    <a href="/#section/publications"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 6V4h14v2M12 4v16M9 20h6"/></svg>Publications</a>
+    <a href="/blog/"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h12l4 4v12H4z"/><path d="M8 10h8M8 14h8M8 18h5"/></svg>Blog</a>
+    <a href="/files/CV_YaxinLuo.pdf"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>CV<span class="ar">↗</span></a>
+  </nav>
+</main>
+<footer><span class="dot" aria-hidden="true"></span><b>404</b> · yaxin9luo.github.io</footer>
+<script>var path = location.pathname; try { path = decodeURIComponent(path); } catch (e) {} document.querySelector('.insp .path').textContent = path;</script>
+</body>
+</html>
