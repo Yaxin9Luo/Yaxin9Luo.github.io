@@ -38,7 +38,7 @@ test('posts sort newest first, fall back to the other language and share their f
   assert.equal(posts[0].phase, 'post-training', 'the phase follows from the work');
   assert.equal(posts[1].phase, null, 'no paper: off the map');
   assert.equal(phaseOf(['apl', 'opencaptchaworld']), 'eval');
-  assert.ok(WORKS['longcat-2.5'] && WORKS.figmirror && WORKS.llmsurgeon);
+  assert.ok(WORKS['longcat-2.5'] && WORKS.figmirror && WORKS.dvin);
 });
 
 test('front matter is validated: quotes, tags, types, works, shared fields, updates', () => {
@@ -232,9 +232,9 @@ test('placeholder posts stay published but carry noindex and stay out of feeds a
   assert.match(read('blog/index.html'), /data-slug="layout-sample"/, 'still listed on the index');
   for (const feed of ['blog/feed.xml', 'blog/feed.zh.xml']) assert.ok(!read(feed).includes('layout-sample'), feed);
   assert.ok(!sitemapEntries(result.posts).some(e => e.path.includes('layout-sample')));
-  // The site's three placeholder posts: every language version is noindex.
+  // The site's placeholder posts (the outline of the post in progress): every language version is noindex.
   const pages = renderPages(await loadPosts()).filter(p => p.post?.placeholder);
-  assert.equal(new Set(pages.map(p => p.post.slug)).size, 3);
+  assert.equal(new Set(pages.map(p => p.post.slug)).size, 1);
   for (const page of pages) assert.match(page.head, /<meta name="robots" content="noindex">/, page.path);
 });
 
