@@ -1,5 +1,5 @@
 ---
-title: "Two Harnesses: Optimizing Inference vs. Internalizing Behavior"
+title: "Harness, and How to Internalize Harness into Model's Own Behaviors"
 date: 2026-10-09
 summary: What a harness is, why the harness built for inference-time performance and the harness built for post-training are completely different, and how harness behavior gets internalized into the model.
 type: essay
