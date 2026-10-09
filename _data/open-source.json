@@ -1,18 +1,18 @@
 {
-  "checked_on": "2026-09-27",
-  "checked_at": "2026-09-27T07:45:26Z",
+  "checked_on": "2026-10-09",
+  "checked_at": "2026-10-09T00:00:00Z",
   "repositories": {
     "autodesign": {
       "name": "AutoDesign",
       "repository": "Yaxin9Luo/AutoDesign",
       "url": "https://github.com/Yaxin9Luo/AutoDesign",
-      "stars": 227
+      "stars": 238
     },
     "figmirror": {
       "name": "FigMirror",
       "repository": "VILA-Lab/FigMirror",
       "url": "https://github.com/VILA-Lab/FigMirror",
-      "stars": 518
+      "stars": 523
     }
   }
 }

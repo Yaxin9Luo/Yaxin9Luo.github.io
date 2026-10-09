@@ -167,11 +167,11 @@ test('an exhibition restores its original flight pose, camera, tour and cleared 
   assert.equal(game.wizard.visible, true);
 });
 
-test('a direct exhibition from the landing page returns to the landing state and handles absent media safely', t => {
+test('a direct exhibition from the landing page returns to the landing state and clamps out-of-range media safely', t => {
   const game = exhibitionSimulation(t, false);
   assert.equal(game.enterExhibit('invalid-project'), false);
   assert.equal(game.started, false);
-  game.enterExhibit('llmsurgeon', { mediaIndex: 999 });
+  game.enterExhibit('dvin', { mediaIndex: 999 });
   assert.equal(game.exhibition.mediaIndex, 0);
   assert.equal(game.setExhibitMedia(NaN), false);
   game.setExhibitMedia(5); assert.equal(game.exhibition.mediaIndex, 0);

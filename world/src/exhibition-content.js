@@ -1,7 +1,7 @@
 import {publications} from './content.js';
 
 const bi=(en,zh)=>({en,zh});
-export const projectIds=['autodesign','figmirror','opencaptchaworld','nextgen-captchas','gamma-mod','apl','dvin','llmsurgeon'];
+export const projectIds=['autodesign','figmirror','opencaptchaworld','nextgen-captchas','gamma-mod','apl','dvin'];
 const softwareProjects=[{
   id:'figmirror',kind:'software',title:bi('FigMirror: Reference-Driven Scientific Figure Agent','FigMirror：参考图驱动的科研绘图智能体'),
   venue:'Open source',year:2026,authors:'',role:bi('Project contributor','项目贡献者'),
@@ -37,7 +37,6 @@ const details={
   'gamma-mod':{shortTitle:bi('γ-MoD','γ-MoD'),category:bi('Efficient multimodal models','高效多模态模型'),question:bi('Can a multimodal model decide which computation each token needs?','多模态模型能否选择每个 token 真正需要的计算？'),approach:bi('Attention-map rank, shared vision–language routing and masked routing learning adapt dense models to selective depth.','通过注意力图的秩、视觉语言共享路由与掩码路由学习，把稠密模型适配为选择性深度计算。'),output:bi('A mixture-of-depth adaptation method and an open implementation.','混合深度适配方法与开源实现。')},
   apl:{shortTitle:bi('APL','APL'),category:bi('Visual grounding','视觉定位'),question:bi('How can referring expressions locate objects without instance-level grounding labels?','没有实例级定位标签时，如何通过指代表达定位目标？'),approach:bi('Position, color and category prompts enrich anchor features, with text reconstruction and visual alignment objectives.','用位置、颜色与类别提示增强锚点特征，并结合文本重建与视觉对齐目标。'),output:bi('An anchor-based prompt-learning method for weakly supervised referring expression comprehension.','面向弱监督指代表达理解的锚点提示学习方法。')},
   dvin:{shortTitle:bi('DViN','DViN'),category:bi('Dynamic visual routing','动态视觉路由'),question:bi('How can multiple visual encoders be combined for fine-grained grounding?','如何组合多个视觉编码器以实现细粒度视觉定位？'),approach:bi('Sparse dynamic routing combines visual encoders and aligns visual features with language under weak supervision.','通过稀疏动态路由组合视觉编码器，并在弱监督条件下对齐视觉特征与语言。'),output:bi('A dynamic visual routing network, with a CVPR paper and public code.','动态视觉路由网络，以及 CVPR 论文和公开代码。')},
-  llmsurgeon:{shortTitle:bi('LLMSurgeon','LLMSurgeon'),category:bi('Training-data diagnosis','训练数据诊断'),question:bi('What can generated text reveal about a model’s pretraining-domain mixture?','生成文本能揭示多少模型预训练数据的领域配比信息？'),approach:bi('A calibrated inverse problem estimates the mixture under a predefined domain taxonomy and label-shift assumption.','在预定义领域分类与标签偏移假设下，通过校准后的逆问题估计数据配比。'),output:bi('The LLMSurgeon method and LLMScan evaluation suite. The source paper provides the full evidence and limitations.','LLMSurgeon 方法与 LLMScan 评估套件。完整证据与限制见来源论文。')},
 };
 
 /** This is an authorship label, never a claim of project leadership. */

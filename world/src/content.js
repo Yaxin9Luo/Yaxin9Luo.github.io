@@ -57,18 +57,6 @@ export const research = [
 
 export const publications = [
   {
-    id: 'dartree',
-    title: bilingual('DARTree: Speculative Diffusion Decoding with Autoregressive Draft Trees', 'DARTree：使用自回归草稿树的扩散推测解码'),
-    venue: 'arXiv', year: 2026,
-    authors: 'Tianyi Li, Yaxin Luo, Xinyi Shang, Zhiqiang Shen',
-    summary: bilingual(
-      'A training-free method that combines diffusion drafting with autoregressive correction over candidate trees for efficient language-model inference.',
-      '将扩散草稿生成与候选树上的自回归校正结合，用于高效语言模型推理，无需额外训练。',
-    ),
-    image: '',
-    links: [paper('https://arxiv.org/abs/2608.13524')],
-  },
-  {
     id: 'videococo',
     title: bilingual('VideoCoCo: Code-as-CoT for Physically-Consistent Video Generation via an Agentic Dual-Engine System', 'VideoCoCo：通过智能体双引擎系统与代码思维链生成物理一致视频'),
     venue: 'arXiv', year: 2026,
@@ -79,30 +67,6 @@ export const publications = [
     ),
     image: '',
     links: [paper('https://arxiv.org/abs/2607.27380')],
-  },
-  {
-    id: 'detail-targeting',
-    title: bilingual('Pushing the Frontier of Black-Box LVLM Attacks via Fine-Grained Detail Targeting', '通过细粒度细节研究黑盒视觉语言模型的鲁棒性边界'),
-    venue: 'arXiv', year: 2026,
-    authors: 'Xiaohan Zhao, Zhaoyi Li, Yaxin Luo, Jiacheng Cui, Zhiqiang Shen',
-    summary: bilingual(
-      'Collaborative research on the robustness of large vision-language models, examining their sensitivity to fine-grained visual detail under black-box evaluation.',
-      '围绕大视觉语言模型鲁棒性的合作研究，考察模型在黑盒评估中对细粒度视觉信息的敏感性。',
-    ),
-    image: '',
-    links: [paper('https://arxiv.org/abs/2602.17645')],
-  },
-  {
-    id: 'dynamic-pyramid',
-    title: bilingual('Dynamic Pyramid Network for Efficient Multimodal Large Language Model', '用于高效多模态大语言模型的动态金字塔网络'),
-    venue: 'arXiv', year: 2025,
-    authors: 'Hao Ai, Kunyi Wang, Zezhou Wang, Hao Lu, Jin Tian, Yaxin Luo, Peng Xing, Jen-Yuan Huang, Huaxia Li, Gen Luo',
-    summary: bilingual(
-      'Explores dynamic pyramid representations for efficient multimodal large language models, adapting visual processing to reduce unnecessary computation.',
-      '研究面向高效多模态大语言模型的动态金字塔表征，通过自适应视觉处理减少不必要的计算。',
-    ),
-    image: '',
-    links: [paper('https://arxiv.org/abs/2503.20322')],
   },
   {
     id: 'autodesign',
@@ -129,30 +93,6 @@ export const publications = [
     links: [paper('https://arxiv.org/abs/2602.09012'), code('https://github.com/MetaAgentX/NextGen-CAPTCHAs'), project('https://greenoso.github.io/NextGen-CAPTCHAs_webpage/'), demo('https://huggingface.co/spaces/zcahjl3/NextGen-CAPTCHAs')],
   },
   {
-    id: 'llmsurgeon',
-    title: bilingual('LLMSurgeon: Diagnosing Data Mixture of Large Language Models', 'LLMSurgeon：诊断大语言模型的训练数据配比'),
-    venue: 'ACL', year: 2026,
-    authors: 'Yaxin Luo*, Jiacheng Cui*, Xiaohan Zhao, Xinyi Shang, Jiacheng Liu, Xinyue Bi, Zhaoyi Li, Zhiqiang Shen',
-    summary: bilingual(
-      'Studies how generated text can help estimate an LLM’s pretraining-domain mixture under a predefined taxonomy and label-shift assumption. LLMSurgeon formulates a calibrated inverse problem and introduces the LLMScan evaluation suite.',
-      '研究在预定义领域分类与标签偏移假设下，如何利用生成文本估计大模型预训练数据的领域配比。LLMSurgeon 将其建模为校准后的逆问题，并提出 LLMScan 评估套件。',
-    ),
-    image: '',
-    links: [paper('https://aclanthology.org/2026.acl-long.1964/'), code('https://github.com/Yaxin9Luo/LLMSurgeon')],
-  },
-  {
-    id: 'language-bias',
-    title: bilingual('Language-Pretraining-Induced Bias: A Strong Foundation for General Vision Tasks', '语言预训练诱导的偏置：通用视觉任务的有力基础'),
-    venue: 'TMLR', year: 2026,
-    authors: 'Yaxin Luo, Zhiqiang Shen',
-    summary: bilingual(
-      'Random-label bridge training adapts language-pretrained parameters to vision without manual labels during the bridge stage. The reported language-induced prior accelerates convergence and improves CIFAR-100 test accuracy by 2.4 percentage points.',
-      '通过无需人工标注的随机标签桥接训练，将语言预训练参数适配到视觉任务。论文报告语言诱导偏置可加速视觉任务收敛，并在 CIFAR-100 上带来 2.4 个百分点的测试准确率提升。',
-    ),
-    image: '',
-    links: [paper('https://arxiv.org/abs/2604.01833'), { label: bilingual('OpenReview', '评审与论文'), url: 'https://openreview.net/forum?id=N7DSUbnzYo' }],
-  },
-  {
     id: 'opencaptchaworld',
     title: bilingual('Open CaptchaWorld: A Comprehensive Web-based Platform for Testing and Benchmarking Multimodal LLM Agents', 'Open CaptchaWorld：用于测试与评估多模态大模型智能体的综合网页平台'),
     venue: 'NeurIPS', year: 2025,
@@ -163,18 +103,6 @@ export const publications = [
     ),
     image: '/images/opencaptchaworld.png',
     links: [paper('https://arxiv.org/abs/2505.24878'), code('https://github.com/MetaAgentX/OpenCaptchaWorld'), demo('https://huggingface.co/spaces/YaxinLuo/Open_CaptchaWorld')],
-  },
-  {
-    id: 'fadrm',
-    title: bilingual('FADRM: Fast and Accurate Data Residual Matching for Dataset Distillation', 'FADRM：用于数据集蒸馏的快速、准确的数据残差匹配'),
-    venue: 'NeurIPS', year: 2025,
-    authors: 'Jiacheng Cui, Xinyue Bi, Yaxin Luo, Xiaohan Zhao, Jiacheng Liu, Zhiqiang Shen',
-    summary: bilingual(
-      'Brings residual connections into dataset distillation at the data level. Data residual matching balances optimized synthetic information with useful structure from original data to build compact training sets efficiently.',
-      '将残差连接的思想引入数据集蒸馏的数据层面。数据残差匹配平衡合成数据优化与原始数据中的有效结构，以更高效地构建紧凑训练集。',
-    ),
-    image: '',
-    links: [paper('https://papers.neurips.cc/paper_files/paper/2025/hash/5a733c79d35a9738dd52a22610baa2d0-Abstract-Conference.html'), code('https://github.com/Jiacheng8/FADRM')],
   },
   {
     id: 'drag',
@@ -213,18 +141,6 @@ export const publications = [
     links: [paper('https://arxiv.org/abs/2410.13859'), code('https://github.com/Yaxin9Luo/gamma-MoD')],
   },
   {
-    id: 'committee-voting',
-    title: bilingual('Dataset Distillation via Committee Voting', '通过委员会投票进行数据集蒸馏'),
-    venue: 'arXiv', year: 2025,
-    authors: 'Jiacheng Cui, Zhaoyi Li, Xiaochen Ma, Xinyue Bi, Yaxin Luo, Zhiqiang Shen',
-    summary: bilingual(
-      'Combines predictions from a committee of models to create compact distilled datasets and soft labels. The approach studies how model diversity can reduce individual-model bias and improve generalization.',
-      '汇集多个模型组成的委员会的预测，构建紧凑的蒸馏数据集与软标签，研究如何利用模型多样性减轻单一模型的偏差并改善泛化。',
-    ),
-    image: '',
-    links: [paper('https://arxiv.org/abs/2501.07575'), code('https://github.com/Jiacheng8/CV-DD')],
-  },
-  {
     id: 'apl',
     title: bilingual('APL: Anchor-Based Prompt Learning for One-Stage Weakly Supervised Referring Expression Comprehension', 'APL：用于单阶段弱监督指代表达理解的锚点提示学习'),
     venue: 'ECCV', year: 2024,
@@ -243,8 +159,6 @@ export const publications = [
 export const selectedPublications = publications.filter(({ id }) => [
   'autodesign',
   'nextgen-captchas',
-  'llmsurgeon',
-  'language-bias',
   'opencaptchaworld',
   'gamma-mod',
   'apl',
@@ -280,8 +194,8 @@ export const experience = [
     organization: bilingual('MBZUAI · VILA Lab', 'MBZUAI · VILA 实验室'),
     period: bilingual('Jan 2025 – Aug 2025 · Abu Dhabi, UAE', '2025 年 1 月至 8 月 · 阿联酋阿布扎比'),
     description: bilingual(
-      'Advised by Prof. Zhiqiang Shen. Studied transfer of language-pretrained parameters to vision using label-free random-label bridge training, published at TMLR 2026. Built Open CaptchaWorld, an interactive multimodal browser-agent benchmark with 20 categories and 225 dynamic CAPTCHAs, accepted at NeurIPS 2025.',
-      '由 Zhiqiang Shen 教授指导，研究语言预训练参数向纯视觉任务的迁移，提出无需人工标注的随机标签桥接训练，相关工作发表于 TMLR 2026。构建 Open CaptchaWorld 多模态浏览器智能体交互基准，覆盖 20 类、225 个动态 CAPTCHA，被 NeurIPS 2025 接收。',
+      'Advised by Prof. Zhiqiang Shen. Studied transfer of language-pretrained parameters to vision using label-free random-label bridge training. Built Open CaptchaWorld, an interactive multimodal browser-agent benchmark with 20 categories and 225 dynamic CAPTCHAs, accepted at NeurIPS 2025.',
+      '由 Zhiqiang Shen 教授指导，研究语言预训练参数向纯视觉任务的迁移，提出无需人工标注的随机标签桥接训练。构建 Open CaptchaWorld 多模态浏览器智能体交互基准，覆盖 20 类、225 个动态 CAPTCHA，被 NeurIPS 2025 接收。',
     ),
   },
   {

@@ -39,9 +39,9 @@ test('late media and failed media never replace the current completed selection'
 });
 
 test('every selected project has honest author roles and traceable, existing media', () => {
-  assert.equal(selectedProjects.length,8);
+  assert.equal(selectedProjects.length,7);
   assert.equal(getProject('figmirror').kind,'software');
-  for(const id of ['autodesign','opencaptchaworld','llmsurgeon'])assert.equal(publicationRole(publications.find(p=>p.id===id)).en,'First author');
+  for(const id of ['autodesign','opencaptchaworld','gamma-mod'])assert.equal(publicationRole(publications.find(p=>p.id===id)).en,'First author');
   assert.equal(publicationRole(publications.find(p=>p.id==='nextgen-captchas')).en,'Co-first author');
   assert.equal(publicationRole(publications.find(p=>p.id==='dvin')).en,'Co-author');
   for(const project of selectedProjects)for(const media of project.media){

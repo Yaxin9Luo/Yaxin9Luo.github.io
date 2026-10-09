@@ -104,8 +104,8 @@
         "zh": "2025 年 1 月至 8 月 · 阿联酋阿布扎比"
       },
       "description": {
-        "en": "Advised by Prof. Zhiqiang Shen. Studied transfer of language-pretrained parameters to vision using label-free random-label bridge training, published at TMLR 2026. Built Open CaptchaWorld, an interactive multimodal browser-agent benchmark with 20 categories and 225 dynamic CAPTCHAs, accepted at NeurIPS 2025.",
-        "zh": "由 Zhiqiang Shen 教授指导，研究语言预训练参数向纯视觉任务的迁移，提出无需人工标注的随机标签桥接训练，相关工作发表于 TMLR 2026。构建 Open CaptchaWorld 多模态浏览器智能体交互基准，覆盖 20 类、225 个动态 CAPTCHA，被 NeurIPS 2025 接收。"
+        "en": "Advised by Prof. Zhiqiang Shen. Studied transfer of language-pretrained parameters to vision using label-free random-label bridge training. Built Open CaptchaWorld, an interactive multimodal browser-agent benchmark with 20 categories and 225 dynamic CAPTCHAs, accepted at NeurIPS 2025.",
+        "zh": "由 Zhiqiang Shen 教授指导，研究语言预训练参数向纯视觉任务的迁移，提出无需人工标注的随机标签桥接训练。构建 Open CaptchaWorld 多模态浏览器智能体交互基准，覆盖 20 类、225 个动态 CAPTCHA，被 NeurIPS 2025 接收。"
       }
     },
     {
@@ -332,68 +332,6 @@
             "zh": "演示"
           },
           "url": "https://huggingface.co/spaces/zcahjl3/NextGen-CAPTCHAs"
-        }
-      ]
-    },
-    {
-      "id": "llmsurgeon",
-      "title": {
-        "en": "LLMSurgeon: Diagnosing Data Mixture of Large Language Models",
-        "zh": "LLMSurgeon：诊断大语言模型的训练数据配比"
-      },
-      "venue": "ACL",
-      "year": 2026,
-      "authors": "Yaxin Luo*, Jiacheng Cui*, Xiaohan Zhao, Xinyi Shang, Jiacheng Liu, Xinyue Bi, Zhaoyi Li, Zhiqiang Shen",
-      "summary": {
-        "en": "Studies how generated text can help estimate an LLM’s pretraining-domain mixture under a predefined taxonomy and label-shift assumption. LLMSurgeon formulates a calibrated inverse problem and introduces the LLMScan evaluation suite.",
-        "zh": "研究在预定义领域分类与标签偏移假设下，如何利用生成文本估计大模型预训练数据的领域配比。LLMSurgeon 将其建模为校准后的逆问题，并提出 LLMScan 评估套件。"
-      },
-      "image": "",
-      "links": [
-        {
-          "label": {
-            "en": "Paper",
-            "zh": "论文"
-          },
-          "url": "https://aclanthology.org/2026.acl-long.1964/"
-        },
-        {
-          "label": {
-            "en": "Code",
-            "zh": "代码"
-          },
-          "url": "https://github.com/Yaxin9Luo/LLMSurgeon"
-        }
-      ]
-    },
-    {
-      "id": "language-bias",
-      "title": {
-        "en": "Language-Pretraining-Induced Bias: A Strong Foundation for General Vision Tasks",
-        "zh": "语言预训练诱导的偏置：通用视觉任务的有力基础"
-      },
-      "venue": "TMLR",
-      "year": 2026,
-      "authors": "Yaxin Luo, Zhiqiang Shen",
-      "summary": {
-        "en": "Random-label bridge training adapts language-pretrained parameters to vision without manual labels during the bridge stage. The reported language-induced prior accelerates convergence and improves CIFAR-100 test accuracy by 2.4 percentage points.",
-        "zh": "通过无需人工标注的随机标签桥接训练，将语言预训练参数适配到视觉任务。论文报告语言诱导偏置可加速视觉任务收敛，并在 CIFAR-100 上带来 2.4 个百分点的测试准确率提升。"
-      },
-      "image": "",
-      "links": [
-        {
-          "label": {
-            "en": "Paper",
-            "zh": "论文"
-          },
-          "url": "https://arxiv.org/abs/2604.01833"
-        },
-        {
-          "label": {
-            "en": "OpenReview",
-            "zh": "评审与论文"
-          },
-          "url": "https://openreview.net/forum?id=N7DSUbnzYo"
         }
       ]
     },
