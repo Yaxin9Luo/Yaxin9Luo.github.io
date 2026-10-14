@@ -136,7 +136,14 @@
 .journal-research-number { padding-top: 3px; color: #a69262; font-family: "Cormorant Garamond", Georgia, serif; font-size: 32px; line-height: 1; }
 .journal-research-item .journal-eyebrow { margin-bottom: 8px; font-size: 9px; }
 .journal-research-item h3 { font-size: 29px; }
-.journal-research-item p:last-child { margin-top: 14px; color: var(--journal-muted); font-size: 13px; line-height: 1.9; }
+.journal-research-item h3 + p { margin-top: 14px; color: var(--journal-muted); font-size: 13px; line-height: 1.9; }
+.journal-research-questions { margin: 18px 0 0; padding: 0; list-style: none; border-top: 1px solid var(--journal-line); }
+.journal-research-questions li { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 15px; padding: 12px 0; border-bottom: 1px solid var(--journal-line); font-size: 13px; line-height: 1.7; }
+.journal-research-questions b { font-weight: 600; }
+.journal-research-questions span { color: var(--journal-muted); }
+.journal-research-next { margin-top: 14px; color: var(--journal-muted); font-size: 13px; font-style: italic; }
+.journal-highlights-single { grid-template-columns: 1fr; }
+.journal-highlight .journal-research-questions li { font-size: 12px; }
 .journal-journey-note { display: flex; align-items: flex-start; gap: 20px; margin: 27px 0 36px; padding: 22px 24px; background: #e4ddc9; }
 .journal-journey-note .journal-icon { width: 25px; height: 25px; margin-top: 3px; color: var(--journal-brass); }
 .journal-journey-note p { font-family: "Cormorant Garamond", "Songti SC", Georgia, serif; font-size: 23px; line-height: 1.4; }

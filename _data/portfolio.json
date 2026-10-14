@@ -28,25 +28,50 @@
   },
   "research": [
     {
-      "id": "multimodal-agents",
+      "id": "capability-placement",
       "title": {
-        "en": "Artifact Design Post-Training",
-        "zh": "Artifact Design 后训练"
+        "en": "Where Capability Lives, and How the Layers Co-Evolve",
+        "zh": "能力放在哪一层，以及各层如何共同进化"
       },
       "description": {
-        "en": "I build production-grade models for agentic design and study post-training methods for high-quality, structured, editable artifacts, including scientific figures, posters, presentations, and web experiences. AutoDesign provides a concrete setting for this work.",
-        "zh": "我研究面向 Agentic Design 的模型与 post-training 方法，目标是生成高质量、结构化且可编辑的数字制品，包括科研绘图、海报、演示文稿和网页。AutoDesign 为这项工作提供了具体场景。"
-      }
-    },
-    {
-      "id": "agentic-task-post-training",
-      "title": {
-        "en": "Long-Horizon Agentic Task Post-Training",
-        "zh": "长程智能体任务后训练"
+        "en": "An agent is a model plus its harness; a swarm is many agents plus the structure that connects them. I study which capabilities belong in the weights, which in the harness, and which across agents, and how these layers co-evolve rather than being tuned one at a time. My testbed is long-horizon artifact design.",
+        "zh": "agent 是模型加上它的 harness；swarm 是多个 agent 加上连接它们的结构。我研究哪些能力该放进权重，哪些该留在 harness 里，哪些该分散到多个 agent 上，以及这几层如何共同进化，而不是一次只调一层。试验场是长程 artifact design 任务。"
       },
-      "description": {
-        "en": "I study post-training for long-horizon agentic tasks and build Agent Harnesses for multimodal design workflows. This includes reproducible execution, tool use, trajectory capture, automated evaluation, iterative optimization, and training pipelines informed by rollout evidence and evaluator feedback.",
-        "zh": "我研究长程智能体任务的 post-training，并为多模态设计工作流构建 Agent Harness，将任务执行、工具调用、轨迹采集、自动评测与迭代优化整合为可复现流程；同时利用 rollout 证据与评测反馈改进系统并支持后续模型训练。"
+      "questions": [
+        {
+          "title": {
+            "en": "Measure",
+            "zh": "测量"
+          },
+          "text": {
+            "en": "How much does each layer contribute?",
+            "zh": "每一层贡献了多少能力？"
+          }
+        },
+        {
+          "title": {
+            "en": "Move",
+            "zh": "转移"
+          },
+          "text": {
+            "en": "Internalize harness behavior into the weights.",
+            "zh": "把 harness 的行为内化进权重。"
+          }
+        },
+        {
+          "title": {
+            "en": "Co-evolve",
+            "zh": "共同进化"
+          },
+          "text": {
+            "en": "Optimize the weights, the harness and the structure between agents together, so each layer adapts as the others change.",
+            "zh": "让权重、harness 和 agent 之间的结构一起优化，每一层随着其他层的变化而调整。"
+          }
+        }
+      ],
+      "next": {
+        "en": "Next: the same questions, from a single agent to agent swarms.",
+        "zh": "下一步：把同样的问题从单个 agent 推广到 agent swarm。"
       }
     }
   ],
