@@ -9,12 +9,12 @@
       "zh": "机器学习博士生"
     },
     "positioning": {
-      "en": "Post-training agents for long-horizon expert work — the model and the harness around it, improved together.",
-      "zh": "后训练面向长程专家级任务的智能体 —— 模型与它周围的 harness，一起进化。"
+      "en": "Agents for long-horizon expert work — what belongs in the weights, what belongs in the harness, and when to use many agents instead of one.",
+      "zh": "面向长程专家级任务的智能体 —— 哪些能力该放进权重，哪些该留在 harness 里，什么时候该从一个 agent 变成多个。"
     },
     "intro": {
-      "en": "I work on one question: how do we get agents to do long, expert work (currently focusing on artifact design tasks), and how do we keep them getting better at it? My answer is to post-train the model and co-evolve its harness together.",
-      "zh": "我只研究一个问题：如何让智能体完成长程的专家级工作（目前聚焦 artifact design 任务），并让它持续变得更好？我的答案是：后训练模型，同时让它的 harness 共同进化。"
+      "en": "I work on one question: in an agent system, where should a capability live — in the model's weights, in the harness around it, or across many agents working together? For each choice I ask three things: how to measure what each layer contributes, how to move a capability from one layer to another (for example, internalizing harness behavior into the weights), and how to improve the layers together instead of one at a time. My testbed is long-horizon artifact design. Next, I am extending the same questions from a single agent to agent swarms.",
+      "zh": "我只研究一个问题：在智能体系统里，一项能力应该放在哪里？是模型权重、模型外面的 harness，还是由多个 agent 协作完成？针对每一种选择，我研究三件事：怎么测量每一层的贡献；怎么把能力从一层转移到另一层（比如把 harness 的行为内化进权重）；怎么让各层一起优化，而不是一次只改一层。我的试验场是长程 artifact design 任务。下一步，我把同样的问题从单个 agent 推广到 agent swarm。"
     },
     "affiliation": {
       "en": "MBZUAI · VILA Lab",
