@@ -95,7 +95,7 @@ function researchQuestions(item, lang) {
 
 function researchView(lang) {
   return `${head(copy(lang, 'AT THE EDGE OF WHAT WE KNOW', '在已知与未知之间'), copy(lang, 'Research direction', '研究方向'), local(profile.positioning, lang), lang)}
-  <div class="journal-research-opening"><span aria-hidden="true">${icon('orbit')}</span><p>${escape(copy(lang, 'A model sits inside an agent, and an agent sits inside a swarm. Between each pair of layers is the same question: which layer should hold this capability?', '模型在 agent 里面，agent 又在 swarm 里面。每两层之间，都是同一个问题：这项能力该放在哪一层？'))}</p></div>
+  <div class="journal-research-opening"><span aria-hidden="true">${icon('orbit')}</span><p>${escape(copy(lang, 'Today, much of what an agent can do over a long task comes from the harness around it. Post-training decides how much of that the model can carry on its own.', '现在，agent 在长程任务上的很多能力来自它外面的 harness。后训练决定了其中有多少能由模型自己承担。'))}</p></div>
   <div class="journal-research-list">${research.map((item, index) => `<article class="journal-research-item"><span class="journal-research-number" aria-hidden="true">${String(index + 1).padStart(2, '0')}</span><div><p class="journal-eyebrow">${escape(copy(lang, 'RESEARCH DIRECTION', '研究方向'))}</p><h3>${escape(local(item.title, lang))}</h3><p>${escape(local(item.description, lang))}</p>${researchQuestions(item, lang)}</div></article>`).join('')}</div>
   <div class="journal-next"><div><p>${escape(copy(lang, 'Follow these questions into the published work.', '从这些问题出发，继续阅读相关论文。'))}</p></div>${sectionButton('publications', copy(lang, 'Read publications', '阅读论文'))}</div>`;
 }

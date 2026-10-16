@@ -15,17 +15,17 @@ export const profile = {
   role: bilingual('Machine Learning PhD Student', '机器学习博士生'),
   // One-line positioning and the author's own research statement (shared by the landing, About and _data/portfolio.json).
   positioning: bilingual(
-    'Agents for long-horizon expert work — what belongs in the weights, what belongs in the harness, and when to use many agents instead of one.',
-    '面向长程专家级任务的智能体 —— 哪些能力该放进权重，哪些该留在 harness 里，什么时候该从一个 agent 变成多个。',
+    'Post-training agents for long-horizon expert work — turning what the harness does into what the model can do.',
+    '面向长程专家级任务的智能体后训练 —— 把 harness 能做到的，变成模型自己能做到的。',
   ),
   intro: bilingual(
-    'I work on one question: in an agent system, where should a capability live — in the model\'s weights, in the harness around it, or across many agents working together? For each choice I ask three things: how to measure what each layer contributes, how to move a capability from one layer to another (for example, internalizing harness behavior into the weights), and how to improve the layers together instead of one at a time. My testbed is long-horizon artifact design. Next, I am extending the same questions from a single agent to agent swarms.',
-    '我只研究一个问题：在智能体系统里，一项能力应该放在哪里？是模型权重、模型外面的 harness，还是由多个 agent 协作完成？针对每一种选择，我研究三件事：怎么测量每一层的贡献；怎么把能力从一层转移到另一层（比如把 harness 的行为内化进权重）；怎么让各层一起优化，而不是一次只改一层。我的试验场是长程 artifact design 任务。下一步，我把同样的问题从单个 agent 推广到 agent swarm。',
+    'My work is post-training for agents. Today, a harness can make a model carry out long-horizon work; I study how to move that ability into the weights. This takes three steps: measuring what the weights and the harness each contribute; building harnesses that produce training-grade trajectories and rewards; and training on them with mid-training, SFT and reinforcement learning, where the harness\'s evaluators supply the rewards, so the model needs less scaffolding. My testbed is long-horizon artifact design, where I contribute to the LongCat 2.5 post-training pipeline for agentic design. Next, I am taking the same questions from a single agent to agent swarms.',
+    '我研究智能体的后训练。现在，靠 harness 可以让模型完成长程任务；我研究的是怎么把这种能力转移到权重里。具体分三步：测量权重和 harness 各自贡献了多少；构建能产出训练级轨迹和奖励的 harness；用这些数据做 Mid-Training、SFT 和强化学习（RL），由 harness 里的评测器提供奖励，让模型对外部脚手架的依赖越来越少。我的试验场是长程 artifact design，并参与 LongCat 2.5 Agentic Design 的后训练流程。下一步，我把同样的问题从单个 agent 推广到 agent swarm。',
   ),
   affiliation: bilingual('MBZUAI · VILA Lab', 'MBZUAI · VILA 实验室'),
   bio: bilingual(
-    'I am a Machine Learning PhD student at MBZUAI, advised by Prof. Zhiqiang Shen. My long-term goal is to build agentic systems that can carry out arbitrary complex, long-horizon human expert work in digital environments, with a path toward real-world tasks. My current focus is production-grade models for agentic design and automated iteration systems for the long-horizon harnesses that support them.',
-    '我是罗亚鑫，在 MBZUAI 攻读机器学习博士，导师是 Zhiqiang Shen 教授。我的长期目标是构建能够在数字世界中完成任意复杂、长程人类专家工作的智能体系统，并逐步探索扩展到真实世界任务。目前重点是让模型可靠完成生产级设计类 Agentic 任务，并构建支撑这些任务的长程 Harness 自动迭代系统。',
+    'I am a Machine Learning PhD student at MBZUAI, advised by Prof. Zhiqiang Shen. My long-term goal is to build agentic systems that can carry out arbitrary complex, long-horizon human expert work in digital environments, with a path toward real-world tasks. My current focus is post-training production-grade models for agentic design, with SFT and RL, together with the harnesses that serve as their environments and reward sources.',
+    '我是罗亚鑫，在 MBZUAI 攻读机器学习博士，导师是 Zhiqiang Shen 教授。我的长期目标是构建能够在数字世界中完成任意复杂、长程人类专家工作的智能体系统，并逐步探索扩展到真实世界任务。目前重点是通过 SFT 和 RL 后训练生产级设计类 Agentic 模型，并构建为训练提供环境和奖励的 harness。',
   ),
   portrait: '/images/Yaxin.JPG',
 };
@@ -34,17 +34,17 @@ export const research = [
   {
     id: 'capability-placement',
     title: bilingual(
-      'Where Capability Lives, and How the Layers Co-Evolve',
-      '能力放在哪一层，以及各层如何共同进化',
+      'Post-Training Long-Horizon Agents: From the Harness into the Weights',
+      '长程智能体的后训练：从 harness 到权重',
     ),
     description: bilingual(
-      'An agent is a model plus its harness; a swarm is many agents plus the structure that connects them. I study which capabilities belong in the weights, which in the harness, and which across agents, and how these layers co-evolve rather than being tuned one at a time. My testbed is long-horizon artifact design.',
-      'agent 是模型加上它的 harness；swarm 是多个 agent 加上连接它们的结构。我研究哪些能力该放进权重，哪些该留在 harness 里，哪些该分散到多个 agent 上，以及这几层如何共同进化，而不是一次只调一层。试验场是长程 artifact design 任务。',
+      'An agent is a model plus its harness. Today much of an agent\'s long-horizon ability comes from the harness; I study how to post-train that ability into the weights with mid-training, SFT and RL, using the harness itself as the environment and reward source. My testbed is long-horizon artifact design.',
+      'agent 是模型加上它的 harness。现在 agent 的很多长程能力来自 harness；我研究怎么用 Mid-Training、SFT 和 RL 把这些能力后训练进权重，并把 harness 本身用作环境和奖励来源。试验场是长程 artifact design 任务。',
     ),
     questions: [
-      {title: bilingual('Measure', '测量'), text: bilingual('How much does each layer contribute?', '每一层贡献了多少能力？')},
-      {title: bilingual('Move', '转移'), text: bilingual('Internalize harness behavior into the weights.', '把 harness 的行为内化进权重。')},
-      {title: bilingual('Co-evolve', '共同进化'), text: bilingual('Optimize the weights, the harness and the structure between agents together, so each layer adapts as the others change.', '让权重、harness 和 agent 之间的结构一起优化，每一层随着其他层的变化而调整。')},
+      {title: bilingual('Measure', '测量'), text: bilingual('How much do the weights and the harness each contribute?', '权重和 harness 各贡献多少？')},
+      {title: bilingual('Internalize', '内化'), text: bilingual('Use the harness as an RL environment: collect training-grade trajectories, let its evaluators supply rewards, and train through mid-training, SFT and RL so the weights learn what the harness did.', '把 harness 当作 RL 环境，采集面向训练的轨迹，由评测器提供奖励；再经过 Mid-Training、SFT 和 RL，把 harness 的行为学进权重。')},
+      {title: bilingual('Co-evolve', '共同进化'), text: bilingual('As RL makes the model stronger, the environments and rewards the harness must provide change too, so the two are iterated together.', '模型经过 RL 变强以后，harness 需要提供的环境和奖励也要跟着变，所以两者要一起迭代。')},
     ],
     next: bilingual(
       'Next: the same questions, from a single agent to agent swarms.',
