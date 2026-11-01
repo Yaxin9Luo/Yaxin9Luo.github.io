@@ -436,9 +436,15 @@
     );
   }
 
+  // A dev rule that leaves Agent failures out never compares them, so a dev mean leaves them out too and
+  // counts them as unscored, as the exported scores do; search runs are what the Meta Agent saw.
+  const failuresOut = Boolean(rule && rule.agent_failures === "excluded");
+
   function stageMean(revisionId, stage, metric) {
     const own = runsFor(revisionId, stage);
-    const values = own.map((run) => numeric(run.metrics[metric]));
+    const values = own.map((run) =>
+      failuresOut && stage === "dev" && run.agent_failure ? null : numeric(run.metrics[metric])
+    );
     return {
       mean: mean(values),
       scored: values.filter((value) => value !== null).length,
