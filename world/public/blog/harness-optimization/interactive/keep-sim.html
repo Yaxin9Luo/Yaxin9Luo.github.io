@@ -1,0 +1,15 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>How often is a real gain kept?</title><link rel="stylesheet" href="kit.css"><script src="kit.js"></script></head><body>
+<div class="w">
+<div class="eyebrow">Try it: the keep rule <span class="badge illustrative">illustrative model</span></div>
+<h3>How often is a <em>real</em> improvement kept?</h3>
+<p class="lede">An edit truly lifts every task by the true gain. Each task score is measured once, with run-to-run noise. The rule keeps the edit if the mean difference over the dev tasks clears the bar. The defaults are this study's measured values: a per-task standard deviation of about 0.06, 6 dev tasks, a bar of 0.0514.</p>
+<div class="stage"><div id="ctl" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px 20px;margin-bottom:12px"></div>
+<div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap"><span class="big" id="p"></span><span id="ptext" style="color:var(--muted);font-size:13px"></span></div>
+<svg id="curve" viewBox="0 0 560 200" style="margin-top:6px"></svg></div>
+<div class="ctrl"><button class="btn" id="run">Run 40 evaluations of this edit</button><span class="label" id="tally"></span></div>
+<div id="dots" style="display:flex;flex-wrap:wrap;gap:5px;margin-top:10px;min-height:16px"></div>
+<p class="note">A simplified model (normal noise, independent tasks); the study's own rule also prices cost and unstable runs.</p>
+</div>
+<script>const D={};</script>
+<script src="keep-sim.js"></script></body></html>

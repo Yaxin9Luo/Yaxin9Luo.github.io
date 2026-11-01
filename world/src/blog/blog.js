@@ -358,3 +358,11 @@ rulerStrip(); syncRuler();
 addEventListener('scroll', () => { root.classList.toggle('scrolled', scrollY > 8); syncRuler(); }, {passive: true});
 if (root.classList.contains('page-index')) initIndex();
 if (root.classList.contains('page-post')) initArticle();
+
+// An interactive figure framed in a post reports its content height; its frame follows it.
+addEventListener('message', event => {
+  if (event.origin !== location.origin || event.data?.type !== 'embed-height') return;
+  for (const frame of document.querySelectorAll('iframe[data-autosize]')) {
+    if (frame.contentWindow === event.source) frame.style.height = `${Math.ceil(Number(event.data.height) || 0)}px`;
+  }
+});

@@ -122,11 +122,13 @@ export function renderPost(body, {lang = 'en', images = () => null} = {}) {
         const caption = (img.title || '').replace(/^(?:Figure|Fig\.)\s*\d+[.:]\s*|^图\s*\d+\s*[：:.．]\s*/, '');
         const file = img.href.split('/').pop().replace(/\.(en|zh)\.svg$/, '.svg');
         const size = info.width ? `${info.width} × ${info.height}` : '';
+        // A markedly portrait image would fill more than a screen at column width, so it is shown narrower.
+        const tall = info.width && info.height > 1.15 * info.width;
         kid({kind: 'fig', label, id}); blocks.push({kind: 'figure', label, id, src: img.href, svg: info.svg || null});
         const art = info.svg
           ? info.svg.replace(/^<svg\b/, `<svg role="img" aria-label="${esc(img.text)}"`)
           : `<img src="${esc(img.href)}" alt="${esc(img.text)}"${info.width ? ` width="${info.width}" height="${info.height}"` : ''} loading="lazy" decoding="async">`;
-        return `<figure class="fig" id="${id}" data-label="${esc(label)}" data-file="${esc(file)}" data-zoom><div class="fig-head">${ICON.frame}<b>${esc(label)}</b><span>· ${esc(file)}</span>${size ? `<span class="sz">${size}</span>` : ''}</div>`
+        return `<figure class="fig${tall ? ' tall' : ''}" id="${id}" data-label="${esc(label)}" data-file="${esc(file)}" data-zoom><div class="fig-head">${ICON.frame}<b>${esc(label)}</b><span>· ${esc(file)}</span>${size ? `<span class="sz">${size}</span>` : ''}</div>`
           + `<div class="fig-frame"><div class="fig-art" tabindex="0" role="button" aria-label="${L('Zoom', '放大')} ${esc(label)}">${art}</div><button class="fig-zoom" type="button" tabindex="-1" hidden>${ICON.zoom}<span>${L('Zoom', '放大')}</span></button></div>`
           + `${caption ? `<figcaption><b>${esc(label)}${zh ? '' : '.'}</b>${marked.parseInline(zh ? stripCjkSpaces(caption) : caption)}</figcaption>` : ''}</figure>\n`;
       },
@@ -138,6 +140,19 @@ export function renderPost(body, {lang = 'en', images = () => null} = {}) {
           const n = ++fig, label = `${L('Figure', '图')} ${n}`, id = `fig-${n}`;
           kid({kind: 'chart', label, id}); blocks.push({kind: 'chart', label, id, spec});
           return chartBlock(spec, {lang, label, id}) + '\n';
+        }
+        if (langName === 'embed') {
+          // A live page of this site (an interactive figure or a dashboard) in a frame, numbered like a figure.
+          let spec;
+          try { spec = JSON.parse(token.text); } catch (error) { throw new Error(`Embed block: ${error.message}`); }
+          if (!/^\/[^/]/.test(spec.src || '')) throw new Error('Embed block: src must be a local page of this site');
+          const n = ++fig, label = `${L('Figure', '图')} ${n}`, id = `fig-${n}`, title = spec.title || label;
+          kid({kind: 'embed', label, id}); blocks.push({kind: 'embed', label, id, src: spec.src});
+          const caption = spec.caption ? (zh ? stripCjkSpaces(spec.caption) : spec.caption) : '';
+          return `<figure class="fig embed" id="${id}" data-label="${esc(label)}"><div class="fig-head">${ICON.frame}<b>${esc(label)}</b><span>· ${esc(title)}</span>`
+            + `<a class="fig-open" href="${esc(spec.src)}" target="_blank" rel="noopener">${L('Open full page', '在新页面打开')} ↗</a></div>`
+            + `<div class="fig-frame"><iframe src="${esc(spec.src)}" title="${esc(title)}" loading="lazy"${spec.autosize ? ' data-autosize' : ''} style="height:${Number(spec.height) || 560}px"></iframe></div>`
+            + `${caption ? `<figcaption><b>${esc(label)}${zh ? '' : '.'}</b>${this.parser.parseInline(marked.Lexer.lexInline(caption))}</figcaption>` : ''}</figure>\n`;
         }
         const opts = Object.fromEntries(meta.map(m => m.split('=')).filter(p => p.length === 2));
         const language = hljs.getLanguage(langName) ? langName : 'plaintext';

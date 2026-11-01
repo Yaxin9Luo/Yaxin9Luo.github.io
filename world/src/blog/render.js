@@ -56,6 +56,7 @@ const IC = {
   sigma: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M12 3H4l4.5 5L4 13h8"/></svg>',
   code: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5.5 4.5 2 8l3.5 3.5M10.5 4.5 14 8l-3.5 3.5"/></svg>',
   table: '<svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2" y="3" width="12" height="10" rx="1.5"/><path d="M2 6.5h12M6.5 6.5V13"/></svg>',
+  live: '<svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2" y="3" width="12" height="10" rx="1.5"/><path d="M7 6.3v3.4L9.8 8z"/></svg>',
   copy: '<svg viewBox="0 0 16 16" aria-hidden="true"><rect x="5" y="5" width="8.5" height="8.5" rx="1.5"/><path d="M3 10.5V3.8C3 3.1 3.6 2.5 4.3 2.5H10.5"/></svg>',
   rss: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 3.5a9.5 9.5 0 0 1 9.5 9.5M3 7.5A5.5 5.5 0 0 1 8.5 13"/><circle cx="3.8" cy="12.2" r="1.1"/></svg>',
   search: '<svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="4.5"/><path d="m10.5 10.5 3 3"/></svg>',
@@ -63,7 +64,7 @@ const IC = {
   list: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 4h11M2.5 8h11M2.5 12h7"/></svg>',
   cursor: '<svg viewBox="0 0 22 30" aria-hidden="true"><path d="M2 2 L2 25.3 L8.9 18.4 L14.1 29.3 L18.7 27 L13.5 16.4 L23.3 15.5 Z"/></svg>',
 };
-const KID_ICON = {fig: IC.img, chart: IC.chart, eq: IC.sigma, code: IC.code, table: IC.table};
+const KID_ICON = {fig: IC.img, chart: IC.chart, eq: IC.sigma, code: IC.code, table: IC.table, embed: IC.live};
 
 /* ---------------- URLs ---------------- */
 export const primaryLang = post => post.versions.en ? 'en' : 'zh';

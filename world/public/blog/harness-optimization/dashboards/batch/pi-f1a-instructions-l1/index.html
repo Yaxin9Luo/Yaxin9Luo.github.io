@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:">
+<title>Study dashboard</title>
+<link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar-title">
+    <h1 id="study-title">Study dashboard</h1>
+    <span id="study-state" class="badge"></span>
+  </div>
+  <p id="study-meta" class="meta"></p>
+  <div class="change-chips" id="study-condition"></div>
+  <div class="topbar-actions">
+    <button type="button" id="theme-toggle" class="ghost" aria-label="Color theme">Auto</button>
+  </div>
+</header>
+<div class="layout">
+  <nav class="sidenav" aria-label="Sections">
+    <a href="#experiment" id="experiment-link" hidden>Experiment</a>
+    <a href="#overview">Overview</a>
+    <a href="#scores">Scores</a>
+    <a href="#canary" id="canary-link" hidden>Canary</a>
+    <a href="#iterations">Iterations</a>
+    <a href="#components">Components</a>
+    <a href="#tasks">Tasks</a>
+    <a href="#traces">Traces</a>
+    <a href="#gallery">Gallery</a>
+    <a href="#reasoning">Reasoning</a>
+  </nav>
+  <main>
+    <form class="filters" id="filters" aria-label="Filters">
+      <label>Stage <select id="filter-stage"></select></label>
+      <label>Metric <select id="filter-metric"></select></label>
+      <label>Backend <select id="filter-backend"></select></label>
+      <span class="filters-note" id="filters-note"></span>
+    </form>
+    <div id="warnings"></div>
+    <section id="experiment" aria-labelledby="experiment-title" hidden>
+      <h2 id="experiment-title">Experiment</h2>
+      <p class="section-note" id="experiment-note"></p>
+      <div class="segment-tabs" id="segment-tabs" role="navigation" aria-label="Segments"></div>
+      <div class="card" id="experiment-card"></div>
+      <div id="experiment-changes"></div>
+    </section>
+    <section id="overview" aria-labelledby="overview-title">
+      <h2 id="overview-title">Overview</h2>
+      <div class="tiles" id="tiles"></div>
+    </section>
+    <section id="scores" aria-labelledby="scores-title">
+      <h2 id="scores-title">Scores by iteration</h2>
+      <p class="section-note" id="scores-note"></p>
+      <div class="card" id="score-card"></div>
+      <div class="card" id="score-time-card"></div>
+    </section>
+    <section id="canary" aria-labelledby="canary-title" hidden>
+      <h2 id="canary-title">Canary</h2>
+      <p class="section-note" id="canary-note"></p>
+      <div class="card" id="canary-card"></div>
+    </section>
+    <section id="iterations" aria-labelledby="iterations-title">
+      <h2 id="iterations-title">Iterations</h2>
+      <p class="section-note">Click a row for its component diff, runs and notes.</p>
+      <div class="card scroll-x" id="iterations-table"></div>
+    </section>
+    <section id="components" aria-labelledby="components-title">
+      <h2 id="components-title">Component changes</h2>
+      <p class="section-note">Each column is a candidate; a cell marks a component it added, modified or removed, tinted by the candidate's outcome. Click a cell for the before/after diff.</p>
+      <div class="card scroll-x" id="component-timeline"></div>
+    </section>
+    <section id="tasks" aria-labelledby="tasks-title">
+      <h2 id="tasks-title">Task × iteration</h2>
+      <p class="section-note" id="tasks-note"></p>
+      <div class="chips" id="heat-metrics" role="group" aria-label="Heatmap metrics"></div>
+      <div id="heatmaps"></div>
+    </section>
+    <section id="traces" aria-labelledby="traces-title">
+      <h2 id="traces-title">Run time, tokens and component calls</h2>
+      <p class="section-note" id="traces-note"></p>
+      <div class="card" id="latency-card"></div>
+      <div class="card scroll-x" id="trace-table"></div>
+      <div class="card scroll-x" id="component-calls"></div>
+      <div class="card scroll-x" id="tool-calls"></div>
+    </section>
+    <section id="gallery" aria-labelledby="gallery-title">
+      <h2 id="gallery-title">Output gallery</h2>
+      <p class="section-note" id="gallery-note"></p>
+      <div class="card scroll-x" id="gallery-grid"></div>
+    </section>
+    <section id="reasoning" aria-labelledby="reasoning-title">
+      <h2 id="reasoning-title">Meta Agent reasoning</h2>
+      <p class="section-note" id="reasoning-note"></p>
+      <div id="reasoning-log"></div>
+    </section>
+  </main>
+</div>
+<aside id="drawer" class="drawer" aria-hidden="true" aria-labelledby="drawer-title">
+  <div class="drawer-head">
+    <h2 id="drawer-title"></h2>
+    <button type="button" class="ghost" id="drawer-close" aria-label="Close details">Close</button>
+  </div>
+  <div id="drawer-body"></div>
+</aside>
+<div id="lightbox" class="lightbox" hidden role="dialog" aria-modal="true" aria-label="Output viewer">
+  <div class="lightbox-bar">
+    <button type="button" class="ghost" id="lightbox-prev" aria-label="Previous revision">&#8592; Previous</button>
+    <span id="lightbox-position" class="lightbox-position"></span>
+    <button type="button" class="ghost" id="lightbox-next" aria-label="Next revision">Next &#8594;</button>
+    <span id="lightbox-repeats" class="lightbox-repeats" role="group" aria-label="Repeat"></span>
+    <button type="button" class="ghost" id="lightbox-close">Close</button>
+  </div>
+  <figure>
+    <img id="lightbox-image" alt="">
+    <p id="lightbox-empty" class="lightbox-empty" hidden></p>
+    <figcaption id="lightbox-caption"></figcaption>
+  </figure>
+</div>
+<div id="tooltip" class="tooltip" role="status" hidden></div>
+<script src="snapshot.js"></script>
+<script src="dashboard.js"></script>
+</body>
+</html>

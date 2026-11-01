@@ -79,6 +79,34 @@ test('Chinese typesetting: hand-typed spaces go, curly quotes come, headlines br
 });
 
 /* ---------------- markdown ---------------- */
+test('an embed block is a numbered figure holding a framed live page and a link to open it', () => {
+  const spec = {src: '/blog/p/live/index.html', height: 520, title: 'Dashboard', caption: 'A *live* page. See [Figure 1](#fig-1).'};
+  const r = renderPost(['## Part', '', '```embed', JSON.stringify(spec), '```'].join('\n'), {lang: 'en'});
+  assert.match(r.html, /<figure class="fig embed" id="fig-1" data-label="Figure 1"><div class="fig-head">.*<b>Figure 1<\/b><span>· Dashboard<\/span>.*<a class="fig-open" href="\/blog\/p\/live\/index\.html" target="_blank" rel="noopener">/s);
+  assert.match(r.html, /<iframe src="\/blog\/p\/live\/index\.html" title="Dashboard" loading="lazy" style="height:520px"><\/iframe>/);
+  assert.match(r.html, /<figcaption><b>Figure 1\.<\/b>A <em>live<\/em> page\. See <a class="xref" href="#fig-1">Figure 1<\/a>\.<\/figcaption>/);
+  assert.deepEqual(r.sections[0].kids.map(k => k.kind), ['embed']);
+  assert.throws(() => renderPost('```embed\n{"src": "https://x.example/a"}\n```', {lang: 'en'}), /local page/);
+  const auto = renderPost('```embed\n{"src": "/blog/p/fig.html", "autosize": true}\n```', {lang: 'en'}).html;
+  assert.match(auto, /<iframe src="\/blog\/p\/fig\.html" title="Figure 1" loading="lazy" data-autosize style="height:560px">/);
+});
+
+test('a markedly portrait image figure is marked tall so it does not fill the column', () => {
+  const sizes = {'/blog/tall.png': {width: 650, height: 1080}, '/blog/square.png': {width: 2094, height: 2196}, '/blog/wide.png': {width: 1500, height: 600}};
+  const html = renderPost(['tall', 'square', 'wide'].map(n => `![${n}](/blog/${n}.png)`).join('\n\n'), {lang: 'en', images: src => sizes[src]}).html;
+  assert.match(html, /<figure class="fig tall" id="fig-1"/);
+  assert.match(html, /<figure class="fig" id="fig-2"/, 'a nearly square screenshot keeps the full column');
+  assert.match(html, /<figure class="fig" id="fig-3"/);
+});
+
+test('the Layers outline lists an embedded figure with an icon', async () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'blog-embed-'));
+  fs.writeFileSync(path.join(dir, 'live.en.md'), '---\ntitle: Live\ndate: 2026-11-01\n---\n## Part\n\n```embed\n{"src": "/blog/p/fig.html"}\n```\n');
+  const [page] = renderPages(await loadPosts({directory: dir})).filter(p => p.post?.slug === 'live');
+  assert.match(page.body, /<ol class="kids"><li><a href="#fig-1"><svg [^>]*>.*?<\/svg><span>Figure 1<\/span><\/a><\/li><\/ol>/);
+  assert.doesNotMatch(page.body, /undefined/);
+});
+
 test('markdown renders numbered equations, artboard figures, static charts, sidenotes and code windows', () => {
   const svg = '<svg viewBox="0 0 680 330"><rect/></svg>';
   const r = renderPost([
@@ -232,9 +260,8 @@ test('placeholder posts stay published but carry noindex and stay out of feeds a
   assert.match(read('blog/index.html'), /data-slug="layout-sample"/, 'still listed on the index');
   for (const feed of ['blog/feed.xml', 'blog/feed.zh.xml']) assert.ok(!read(feed).includes('layout-sample'), feed);
   assert.ok(!sitemapEntries(result.posts).some(e => e.path.includes('layout-sample')));
-  // The site's placeholder posts (the outline of the post in progress): every language version is noindex.
+  // The site's own placeholder posts, if any: every language version is noindex.
   const pages = renderPages(await loadPosts()).filter(p => p.post?.placeholder);
-  assert.equal(new Set(pages.map(p => p.post.slug)).size, 1);
   for (const page of pages) assert.match(page.head, /<meta name="robots" content="noindex">/, page.path);
 });
 

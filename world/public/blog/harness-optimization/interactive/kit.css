@@ -1,0 +1,62 @@
+/* Widget kit for the harness-optimization post: one look for every interactive figure.
+   Colour carries meaning only: ink = strict grader, grey = lenient grader / baseline, indigo = kept,
+   orange = reverted, the indigo ramp = how much grader feedback the optimizer saw. Palettes validated with the
+   dataviz validator (light: categorical kept/reverted, ordinal ramp; dark: same). */
+@font-face{font-family:"EC Sans";src:url(/fonts/ec/sans-400.woff2) format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:"EC Sans";src:url(/fonts/ec/sans-500.woff2) format("woff2");font-weight:500;font-display:swap}
+@font-face{font-family:"EC Sans";src:url(/fonts/ec/sans-700.woff2) format("woff2");font-weight:700;font-display:swap}
+@font-face{font-family:"EC Mono";src:url(/fonts/ec/mono-500.woff2) format("woff2");font-weight:500;font-display:swap}
+@font-face{font-family:"Blog Serif";src:url(/fonts/blog/source-serif-600.woff2) format("woff2");font-weight:600;font-display:swap}
+@font-face{font-family:"Blog Serif";src:url(/fonts/blog/source-serif-400i.woff2) format("woff2");font-weight:400;font-style:italic;font-display:swap}
+:root{
+  --bg:#FFFFFF;--surface:#F7F7FB;--surface-2:#EFF0F7;--line:#E1E3EE;--line-2:#D9DCE8;
+  --ink:#15162E;--muted:#565B73;--faint:#8A8FA8;
+  --strict:#15162E;--lenient:#8A8FA8;--kept:#4F46E5;--rev:#E4572E;--good:#0E9F6E;
+  --f0:#A5A0F4;--f1:#6C63EC;--f2:#3A2FC2;
+  --sans:"EC Sans",-apple-system,"Helvetica Neue",Arial,sans-serif;--mono:"EC Mono",ui-monospace,Menlo,monospace;--serif:"Blog Serif",Georgia,serif;
+  --ease:cubic-bezier(.22,1,.36,1);--d1:200ms;--d2:320ms;--d3:480ms;
+}
+:root[data-theme=dark]{
+  --bg:#171831;--surface:#141529;--surface-2:#1E2040;--line:#272944;--line-2:#2B2D48;
+  --ink:#F2F2FA;--muted:#A9ACC6;--faint:#7C809E;
+  --strict:#F2F2FA;--lenient:#7C809E;--kept:#7069EE;--rev:#D9643C;--good:#34D399;
+  --f0:#5E58B8;--f1:#8B85FF;--f2:#C8C5FF;
+}
+@media (prefers-reduced-motion:reduce){:root{--d1:0ms;--d2:0ms;--d3:0ms}}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.5 var(--sans);-webkit-font-smoothing:antialiased}
+.w{padding:16px 18px 18px}
+.eyebrow{font:500 10.5px/1.4 var(--mono);letter-spacing:.09em;text-transform:uppercase;color:var(--faint);display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;margin-bottom:8px}
+h3{font:600 20px/1.2 var(--serif);margin:0 0 4px;letter-spacing:-.01em}h3 em{font-weight:400;font-style:italic}
+.lede{margin:0 0 14px;color:var(--muted);font-size:13px;max-width:62ch}
+.badge{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line-2);border-radius:999px;padding:3px 8px;font:500 10px/1 var(--mono);letter-spacing:.08em;color:var(--muted);text-transform:uppercase}
+.badge::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--good)}
+.badge.illustrative::before{background:var(--rev)}
+.stage{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.ctrl{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:12px}
+.play{width:38px;height:38px;border-radius:50%;border:0;background:var(--ink);color:var(--bg);display:grid;place-items:center;cursor:pointer;flex:none;transition:transform var(--d1) var(--ease)}
+.play:hover{transform:scale(1.06)}.play svg{width:14px;height:14px;fill:currentColor}
+.reset{width:30px;height:30px;border-radius:50%;border:1px solid var(--line-2);background:var(--bg);color:var(--muted);cursor:pointer;display:grid;place-items:center}
+.reset svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:1.6}
+.scrub{flex:1;min-width:160px;display:flex;align-items:center;gap:10px;font:500 11px var(--mono);color:var(--muted)}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:4px;border-radius:2px;background:var(--line-2);outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--bg);border:2px solid var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.2)}
+input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--bg);border:2px solid var(--ink)}
+input[type=range].ramp{background:linear-gradient(90deg,var(--lenient),var(--strict))}
+input[type=range]:focus-visible::-webkit-slider-thumb{outline:2px solid var(--kept);outline-offset:2px}
+.readout{font:500 22px/1 var(--mono);letter-spacing:-.02em;min-width:5.5ch;text-align:right}
+.chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line-2);background:var(--bg);color:var(--ink);border-radius:999px;padding:4px 10px;font:500 12px var(--sans);cursor:pointer;transition:opacity var(--d1) var(--ease),border-color var(--d1)}
+.chip[aria-pressed=false]{opacity:.42}.chip i{width:9px;height:9px;border-radius:50%;display:inline-block}.chip i.d{border-radius:1.5px;transform:rotate(45deg)}
+select{font:500 12px var(--sans);color:var(--ink);background:var(--bg);border:1px solid var(--line-2);border-radius:8px;padding:5px 8px}
+.btn{font:500 12px var(--sans);color:var(--ink);background:var(--bg);border:1px solid var(--line-2);border-radius:8px;padding:6px 12px;cursor:pointer}
+.btn:hover{border-color:var(--ink)}
+.label{font:500 11px var(--mono);color:var(--muted)}
+svg{display:block;width:100%;height:auto;overflow:visible}
+svg text{font-family:var(--mono);font-size:10.5px;fill:var(--muted)}
+svg .grid{stroke:var(--line);stroke-width:1}svg .axis{stroke:var(--line-2);stroke-width:1}
+.tip{position:fixed;pointer-events:none;z-index:9;background:var(--ink);color:var(--bg);padding:7px 9px;border-radius:7px;font:12px/1.4 var(--sans);opacity:0;transition:opacity var(--d1);max-width:260px}
+.reveal{opacity:0;transform:translateY(12px);transition:opacity var(--d3) var(--ease),transform var(--d3) var(--ease)}
+.reveal.on{opacity:1;transform:none}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}@media (max-width:620px){.grid2{grid-template-columns:1fr}}
+.big{font:600 30px/1 var(--serif);letter-spacing:-.02em}
+.note{font-size:11.5px;color:var(--faint);margin-top:10px}
