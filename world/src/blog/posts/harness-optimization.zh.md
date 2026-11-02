@@ -21,6 +21,9 @@ tags: [harness, agents, evaluation]
 <div class="stat"><b>9 / 11</b><span>被接受的改进，是直接在起始 harness 上做的修改</span></div>
 </div>
 
+> [!TIP]
+> **看着优化过程发生。** 这篇文章里的每一次运行，都可以在 dashboard 上直接打开：Meta Agent 试过的每一次修改、它的假设、它做出的页面，以及保留规则的裁决。[打开一条谱系 ↗](/blog/harness-optimization/dashboards/stage2/pi-f2-loop-l1/index.html)，或者浏览全部十二条：[第一、二批](/blog/harness-optimization/dashboards/batch/index.html)和[第二阶段](/blog/harness-optimization/dashboards/stage2/index.html)。怎么读一个页面，见[后文](#看着循环跑-dashboard)。
+
 这不只关乎网页。如果你的团队靠 AI 裁判的分数来挑 prompt、skill 或工作流，同样的效应都会出现：按品牌细则打分的营销文案，按质检清单打分的客服回复，按病历书写规范打分的临床记录。你测到的提升有一部分属于裁判，小幅提升大多是噪声，而你给优化器看的任何评分细则，都会被它抄走。
 
 ## 这个循环是怎么运转的

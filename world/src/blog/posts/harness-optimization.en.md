@@ -21,6 +21,9 @@ Which number is right? We can't tell, and that is the finding: neither grader ha
 <div class="stat"><b>9 of 11</b><span>accepted improvements were edits of the starting harness</span></div>
 </div>
 
+> [!TIP]
+> **Watch the optimization happen.** Every run in this post is open as a live dashboard: each edit the Meta Agent tried, its hypothesis, the pages it built, and the keep rule's verdict. [Open one lineage ↗](/blog/harness-optimization/dashboards/stage2/pi-f2-loop-l1/index.html), or browse all twelve: [batch 1–2](/blog/harness-optimization/dashboards/batch/index.html) and [stage 2](/blog/harness-optimization/dashboards/stage2/index.html). How to read one is [further down](#watch-the-loop-the-dashboard).
+
 This is not only about web pages. If your team picks prompts, skills or workflows by an AI judge's score, the same effects apply. That could be campaign copy scored against a brand rubric, support answers against a QA checklist, or clinical notes against a documentation standard. The gain you measure belongs partly to the judge, small wins are mostly noise, and anything you show the optimizer about the rubric will be copied.
 
 ## How the loop works
