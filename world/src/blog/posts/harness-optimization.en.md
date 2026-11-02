@@ -109,6 +109,12 @@ Reward hacking still happened, as **grader fitting**:
 
 Each of these passes a check without the property the check stands for.
 
+Here is the first kind as it happened in stage 2:
+
+```embed
+{"src": "/blog/harness-optimization/interactive/stage/rubric-demo.html", "height": 540, "autosize": true, "title": "The grader's words in the harness", "caption": "A re-enactment from the run records: the strict grader's failed design item, and the lines the next candidate (stage-2 iter-001, kept) added to its page-design skill. The highlighted phrases match word for word."}
+```
+
 ![Rubric copied into a harness, and the cheating counts](/blog/harness-optimization/figs/rubric-copy.png "Top: a kept harness's instructions repeat a rubric item of the grader word for word (highlighted). Bottom: rubric copying by feedback level, and the two cheating traps under the strict grader, both at zero.")
 
 There is an uncomfortable twist: deciding whether an edit is hacking or skill needs a grader too. A contrast check written into the harness is skill if readers care about contrast, and hacking if only this grader does. In this study, at the pressure of harness search, the grader's blind spots and its calibration errors moved the results far more than cheating did. We expect cheating risk to grow as optimization pressure grows.
@@ -142,6 +148,12 @@ None of this was visible from a final number. We saw it on a dashboard: one stat
 - its cost and the integrity monitors.
 
 Stage 2 uses its bar on the logit scale (0.2241). At this lineage's scores that is 0.022 to 0.035 on the 0–1 scale, shrinking as the parent's score rises.
+
+Here is that page as two of its decisions land:
+
+```embed
+{"src": "/blog/harness-optimization/interactive/stage/dashboard-demo.html", "height": 560, "autosize": true, "title": "Two decisions on the dashboard", "caption": "A re-enactment of stage-2 iterations 2 and 3 from the run records: each candidate's dev mean, its adjusted gain under the keep rule against the 0.224 bar, and the verdict. iter-002 sits slightly above its parent yet is reverted: its gain is tiny, and its higher cost turns the adjusted gain negative."}
+```
 
 Below are the pages behind the scores. Drag the handle to compare the starting harness's page with a later one.
 
