@@ -66,6 +66,11 @@ export async function loadPosts({dev = false, feed = false, directory = postsDir
       v.updates = v.updates.map(u => ({...u, text: typeset(u.text, v.lang)}));
       try {
         v.render = renderPost(v.body, {lang: v.lang, images: src => info.get(src)});
+        // A live figure's poster (`npm run posters`), for the index preview's "Inside" strip.
+        for (const block of v.render.blocks.filter(b => b.kind === 'embed')) {
+          const poster = suffix => block.src.replace(/\.html$/, suffix), has = file => fs.existsSync(path.join(images, file));
+          if (has(poster('.poster.webp'))) block.poster = {light: poster('.poster.webp'), dark: has(poster('.poster-dark.webp')) ? poster('.poster-dark.webp') : null};
+        }
         if (feed) v.feedHtml = renderPost(v.body, {lang: v.lang, images: src => { const i = info.get(src); return i && {width: i.width, height: i.height}; }}).html;
       } catch (error) { throw new Error(`${error.message} (${v.file})`); }
       v.minutes = minutes(v.body); v.length = length(v.body, v.lang);

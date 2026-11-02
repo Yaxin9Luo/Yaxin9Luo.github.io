@@ -177,11 +177,14 @@ function miniChart(spec) {
   return `<svg class="mini" viewBox="0 0 ${W} ${H}" aria-hidden="true">${spec.series.map((s, si) => `<path class="ln ${si === spec.series.length - 1 ? 'a' : 'b'}" d="${s.values.map((v, i) => v === null ? '' : `${i ? 'L' : 'M'}${X(i).toFixed(1)} ${Y(v).toFixed(1)}`).join(' ')}"/>`).join('')}</svg>`;
 }
 const TABLE_GLYPH = '<svg viewBox="0 0 160 64" aria-hidden="true"><rect x="20" y="8" width="120" height="48" rx="5" class="tg-card"/><path d="M20 20h120M20 32h120M20 44h120M62 8v48M102 8v48" class="tg-hair"/></svg>';
+/** A live figure shows its poster (light and dark, see `npm run posters`); without one, a framed page with a play mark. */
+const LIVE_GLYPH = '<svg viewBox="0 0 160 64" aria-hidden="true"><rect x="20" y="8" width="120" height="48" rx="5" class="tg-card"/><path d="M20 18h120" class="tg-hair"/><path d="M74 26v20l17-10z" class="tg-hair"/></svg>';
+const liveThumb = p => p ? `<img class="lt" src="${esc(p.light)}" alt="" loading="lazy">${p.dark ? `<img class="dk" src="${esc(p.dark)}" alt="" loading="lazy">` : ''}` : LIVE_GLYPH;
 
 function thumbs(v, lang) {
   const items = v.render.blocks.slice(0, 3).map(b => {
-    const im = b.kind === 'figure' ? (b.svg || `<img src="${esc(b.src)}" alt="" loading="lazy">`) : b.kind === 'chart' ? miniChart(b.spec) : TABLE_GLYPH;
-    const kind = b.kind === 'chart' ? (lang === 'zh' ? '图表' : 'chart') : b.kind === 'table' ? b.size : '';
+    const im = b.kind === 'figure' ? (b.svg || `<img src="${esc(b.src)}" alt="" loading="lazy">`) : b.kind === 'chart' ? miniChart(b.spec) : b.kind === 'embed' ? liveThumb(b.poster) : TABLE_GLYPH;
+    const kind = b.kind === 'chart' ? (lang === 'zh' ? '图表' : 'chart') : b.kind === 'table' ? b.size : b.kind === 'embed' ? (lang === 'zh' ? '交互' : 'live') : '';
     return `<div class="th"><div class="im">${im}</div><div class="cap">${esc(b.label)}<span>${esc(kind)}</span></div></div>`;
   });
   const h2 = v.render.sections.filter(s => s.level === 2).length;
@@ -221,7 +224,7 @@ export function renderIndex(posts, lang) {
 ${topbar(lang, {alt: alternates[zh ? 'en' : 'zh']})}
 <main class="ix" id="main">
 <section class="left">
-<div class="ibar"><span><span class="k">◇</span><b>${esc(t('page'))}</b><span class="k">·</span>${esc(t('blog'))}</span><span><b>${posts.length}</b>${esc(t('posts'))}</span><span><span class="k">${esc(t('history'))}</span><span class="ph-dots" aria-hidden="true">${posts.map((_, i) => `<i class="${i === 0 ? 'on' : ''}"></i>`).reverse().join('')}</span></span></div>
+<div class="ibar"><span><span class="k">◇</span><b>${esc(t('page'))}</b><span class="k">·</span>${esc(t('blog'))}</span><span><b>${posts.length}</b>${esc(t(posts.length === 1 ? 'post' : 'posts'))}</span><span><span class="k">${esc(t('history'))}</span><span class="ph-dots" aria-hidden="true">${posts.map((_, i) => `<i class="${i === 0 ? 'on' : ''}"></i>`).reverse().join('')}</span></span></div>
 <div class="ttl">${sel(`<h1>${esc(NAME[lang])}</h1>`, 'H1')}${cursor('d', 'Designer')}</div>
 <p class="claim">${esc(POSITIONING[lang])}</p>
 <form class="filter" role="search" hidden data-names="${esc(JSON.stringify({...Object.fromEntries(Object.values(WORKS).map(w => [w.id, w.short])), ...Object.fromEntries(Object.entries(TAGS).map(([k, v]) => [`#${k}`, `#${v[lang]}`])), ...Object.fromEntries(Object.entries(PHASES).map(([k, v]) => [k, `${v.n} ${v[lang]}`])), off: OFF_MAP[lang]}))}"><label class="q">${IC.search}<span class="sr">${esc(t('filter'))}</span><input type="search" name="q" placeholder="${esc(t('filter'))}" autocomplete="off"><kbd>/</kbd></label>
@@ -235,7 +238,7 @@ ${types.length > 1 ? `<div class="seg" role="group" aria-label="Type"><button ty
 <div class="cv">${posts.map((p, i) => previewPanel(p, lang, i, i === 0)).join('\n')}<p class="pv-none" hidden>${esc(t('none'))}</p></div>
 </section>
 </main>
-<footer class="status"><span class="where"><span class="dot" aria-hidden="true"></span><span><b>${posts.length}</b>${zh ? '' : ' '}${esc(t('posts'))}${newest ? ` · ${esc(t('newest'))} ${esc(fmtDate(newest.date, lang))}` : ''} · ${esc(t('langs'))}</span></span><span class="grow"></span><span class="right"><a href="/">${esc(t('portfolio'))}</a> · <a href="/#section/publications">${esc(t('pubs'))}</a> · <a href="/blog/${zh ? 'feed.zh.xml' : 'feed.xml'}">${IC.rss}${esc(t('rss'))}</a></span></footer>`;
+<footer class="status"><span class="where"><span class="dot" aria-hidden="true"></span><span><b>${posts.length}</b>${zh ? '' : ' '}${esc(t(posts.length === 1 ? 'post' : 'posts'))}${newest ? ` · ${esc(t('newest'))} ${esc(fmtDate(newest.date, lang))}` : ''} · ${esc(t('langs'))}</span></span><span class="grow"></span><span class="right"><a href="/">${esc(t('portfolio'))}</a> · <a href="/#section/publications">${esc(t('pubs'))}</a> · <a href="/blog/${zh ? 'feed.zh.xml' : 'feed.xml'}">${IC.rss}${esc(t('rss'))}</a></span></footer>`;
   return {
     path: indexPath(lang), lang, kind: 'index',
     head: head({lang, path: indexPath(lang), titleText: NAME_PLAIN[lang], description: POSITIONING[lang], alternates, ogImage: `${SITE}/og/blog.png`, ogAlt: BLOG_CARD_ALT[lang]}),

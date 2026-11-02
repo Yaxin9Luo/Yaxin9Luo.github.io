@@ -107,6 +107,18 @@ test('the Layers outline lists an embedded figure with an icon', async () => {
   assert.doesNotMatch(page.body, /undefined/);
 });
 
+test('the index preview shows a live figure by its posters, and counts one post in the singular', async () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'blog-poster-')), images = fs.mkdtempSync(path.join(os.tmpdir(), 'blog-poster-public-'));
+  fs.writeFileSync(path.join(dir, 'live.en.md'), '---\ntitle: Live\ndate: 2026-11-01\n---\n## Part\n\n```embed\n{"src": "/blog/p/fig.html"}\n```\n\n```embed\n{"src": "/blog/p/bare.html"}\n```\n');
+  fs.mkdirSync(path.join(images, 'blog/p'), {recursive: true});
+  for (const f of ['fig.poster.webp', 'fig.poster-dark.webp']) fs.writeFileSync(path.join(images, 'blog/p', f), '');
+  const [index] = renderPages(await loadPosts({directory: dir, images}));
+  assert.match(index.body, /<div class="im"><img class="lt" src="\/blog\/p\/fig\.poster\.webp" alt="" loading="lazy"><img class="dk" src="\/blog\/p\/fig\.poster-dark\.webp" alt="" loading="lazy"><\/div><div class="cap">Figure 1<span>live<\/span>/);
+  assert.match(index.body, /<div class="im"><svg viewBox="0 0 160 64"[^>]*>.*?<\/svg><\/div><div class="cap">Figure 2<span>live<\/span>/, 'no poster: the live glyph, not a table');
+  assert.match(index.body, /<b>1<\/b>post</);
+  assert.doesNotMatch(index.body, /1<\/b>\s?posts/);
+});
+
 test('markdown renders numbered equations, artboard figures, static charts, sidenotes and code windows', () => {
   const svg = '<svg viewBox="0 0 680 330"><rect/></svg>';
   const r = renderPost([

@@ -266,6 +266,9 @@ a.tag:hover{color:var(--ec-accent)}
 .th .im{height:clamp(56px,8.4vh,92px);display:flex;align-items:center;justify-content:center;padding:6px 8px}
 .th .im svg,.th .im img{width:100%;height:100%;object-fit:contain}
 .th .im svg text{display:none}
+.th .im .dk{display:none}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]) .th .im .lt{display:none}:root:not([data-theme=light]) .th .im .dk{display:block}}
+:root[data-theme=dark] .th .im .lt{display:none}:root[data-theme=dark] .th .im .dk{display:block}
 .th .cap{display:flex;justify-content:space-between;gap:6px;padding:5px 8px;border-top:1px solid var(--ec-line);font:500 10.5px var(--mono);color:var(--ec-muted);white-space:nowrap;background:var(--ec-card)}
 :root:lang(zh-CN) .th .cap{font-family:var(--mono),var(--ui)}
 .th .cap span{color:var(--ec-faint)}

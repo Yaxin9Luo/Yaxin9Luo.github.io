@@ -34,6 +34,7 @@ python3 -m http.server 4173 --bind 127.0.0.1 --directory dist
 | `_data/portfolio.json` | Generated from `content.js` by `scripts/sync-portfolio-data.mjs`. The GitHub profile README reads it from this path, so keep it here. |
 | `_data/open-source.json` | Dated GitHub star snapshot used by `content.js`. |
 | `world/public/og/` | Share preview cards. Regenerate them with `npm run og` (see `scripts/og/`). |
+| `world/public/blog/**/*.poster*.webp` | Posters (light and dark) of the live figures the blog index previews. Regenerate them with `npm run posters` after changing one. |
 | `scripts/site/` | Redirects for the removed Academic Pages site, the 404 page and the sitemap. |
 | `docs/` | Production notes and evidence for the 3D world. |
 
