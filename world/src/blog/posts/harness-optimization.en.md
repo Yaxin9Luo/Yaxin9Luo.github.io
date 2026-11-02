@@ -181,6 +181,6 @@ Ask for three things:
 
 On dev, one good edit beat brute-force resampling, and the result is cheap to run. In our study, what limited harness optimization on an open-ended task was neither the optimizer's cleverness nor its honesty. It was the grader. Engineer that first.
 
-*Yaxin Luo, with Zhiqiang Shen and Xiaotong Li. Work done during an internship at Meituan. The models: the Meta Agent is Claude Code driving kimi-k3, the coding agent is the Pi agent on kimi-k3, and the judges are AI models. The full report, with methods, intervals and every caveat, is coming soon.*
+*The models: the Meta Agent is Claude Code driving kimi-k3, the coding agent is the Pi agent on kimi-k3, and the judges are AI models. The full report, with methods, intervals and every caveat, is coming soon.*
 
 [^rerun]: Six held-out runs had timed out. They were rerun for the strict regrade, so those six pages are new; the other 72 are identical.
