@@ -9,7 +9,7 @@ export const MUSEUM_URL = lang => `/yuanmingyuan.html?composition=xianfaqiao&pla
 
 export const landingCopy = {
   en: {
-    hist: 'History', role: 'ML PhD · MBZUAI VILA Lab&nbsp; /&nbsp; Research Intern · Meituan LongCat',
+    hist: 'History', role: '<span>ML PhD · MBZUAI VILA Lab</span>&nbsp; /&nbsp; <span>Research Intern · Meituan LongCat</span>',
     chipA: 'Artifact design post-training', chipB: 'Long-horizon agent harnesses',
     email: 'Email', cv: 'CV', tour: 'CV Tour ↗',
     mapTitle: 'one question · three phases', mapHint: 'hover a node', lgPaper: 'paper / project', lgLoop: 'model ⟲ harness loop', lgAll: 'all publications →',
@@ -18,7 +18,7 @@ export const landingCopy = {
     paper: 'paper', code: 'code', open: 'details', snap: 'demo · springs back', map: 'Research map', name: 'Yaxin Luo',
   },
   zh: {
-    hist: '历史', role: 'ML 博士生 · MBZUAI VILA Lab&nbsp; /&nbsp; 研究实习生 · 美团 LongCat',
+    hist: '历史', role: '<span>ML 博士生 · MBZUAI VILA Lab</span>&nbsp; /&nbsp; <span>研究实习生 · 美团 LongCat</span>',
     chipA: 'Artifact design 后训练', chipB: '长程智能体 harness',
     email: '邮件', cv: '简历', tour: 'CV 导览 ↗',
     mapTitle: '一个问题 · 三个阶段', mapHint: '悬停节点', lgPaper: '论文 / 项目', lgLoop: '模型 ⟲ harness 循环', lgAll: '全部论文 →',
@@ -119,7 +119,7 @@ export function renderLanding(lang = 'en') {
         <button class="ec-tour-chip" data-action="mascot-toggle" aria-controls="mascot-guide"><span ${L('tour')}>${t.tour}</span></button>
       </div>
       <section class="ec-win" aria-label="${esc(t.map)}">
-        <div class="bar"><span class="ec-wdots" aria-hidden="true"><i></i><i></i><i></i></span><span>research-map / <b ${L('mapTitle')}>${t.mapTitle}</b></span><span class="hint"><span ${L('mapHint')}>${t.mapHint}</span> <kbd>tab</kbd></span></div>
+        <div class="bar"><span class="ec-wdots" aria-hidden="true"><i></i><i></i><i></i></span><span><span class="crumb">research-map / </span><b ${L('mapTitle')}>${t.mapTitle}</b></span><span class="hint"><span ${L('mapHint')}>${t.mapHint}</span> <kbd>tab</kbd></span></div>
         <div class="cv ec-dots"><div class="ec-mapbox"></div>
           <div class="legend"><span><i></i><span ${L('lgPaper')}>${t.lgPaper}</span></span><span><i class="l"></i><span ${L('lgLoop')}>${t.lgLoop}</span></span><button data-action="section" data-id="publications" ${L('lgAll')}>${t.lgAll}</button></div>
         </div>
@@ -157,8 +157,17 @@ function catmull(pts) {
   return d;
 }
 
-/** Research map SVG for a box of W×H px. Pure: returns markup and the scale factor. */
+/** Below this map width the three columns no longer hold their words (the widest line clears its column by 8px at 546): the map switches to its compact layout. */
+export const COMPACT_MAP = 546;
+/** Below this width the hero and the map stack in one column; it matches the stacked block in landing.css. */
+const STACKED = '(max-width: 900px)';
+
+/**
+ * Research map SVG for a box of W×H px. Pure: returns markup and the scale factor. Under COMPACT_MAP it returns
+ * the compact layout instead, which sets its own height (`h`).
+ */
 export function mapSVG(W, H, lang = 'en', {motion = true} = {}) {
+  if (W < COMPACT_MAP) return compactMapSVG(W, lang, {motion});
   const zh = lang === 'zh';
   const gap = 12, colW = (W - gap * 2) / 3, mk = Math.max(.82, Math.min(1.12, colW / 230, H / 560));
   const head = 128 * mk, bottom = 64 * mk;
@@ -194,6 +203,44 @@ export function mapSVG(W, H, lang = 'en', {motion = true} = {}) {
     s += `<circle cx="${x}" cy="${y}" r="22" fill="transparent"/></g>`;
   });
   return {svg: s + '</svg>', mk};
+}
+
+/**
+ * The phone column's map: the phases stack as bands and the curve runs down a lane on the left, the peaks swinging
+ * right, so it never crosses a word; names and phase headers share one column beside the lane. Rows are whole-width
+ * tap targets. Same classes as the wide map, at one scale.
+ */
+function compactMapSVG(W, lang, {motion}) {
+  const zh = lang === 'zh', mk = .9, gap = 10, col = 126, top = 104, rowH = 42, R = 52, venue = n => pick(n.venue, lang);
+  const L = mapNodes.find(n => n.lab === 'loop'), nodes = mapNodes.filter(n => n !== L);
+  const laneX = n => Math.round(24 + 60 * (1 - (n.fy - .2) / .68));
+  let s = '', y0 = 0, lx = 62, ly = 0;
+  const pts = [];
+  PHASES[zh ? 'zh' : 'en'].forEach((p, c) => {
+    const own = nodes.filter(n => n.col === c), h = top + own.length * rowH + (c === 2 ? 2 * R + 12 : 0) + 8;
+    s += `<rect class="phase" x=".5" y="${y0 + .5}" width="${W - 1}" height="${h - 1}" rx="13"/>`;
+    s += `<text class="num" x="${col}" y="${y0 + 24}">${p[0]}</text><text class="yr" x="${col + 27}" y="${y0 + 24}">${p[1]}</text>`;
+    s += `<text class="ph" x="${col}" y="${y0 + 52}">${p[2]}</text><text class="phs" x="${col}" y="${y0 + 72}">${p[3]}</text><text class="phs" x="${col}" y="${y0 + 89}">${p[4]}</text>`;
+    own.forEach((n, i) => pts.push({n, x: laneX(n), y: y0 + top + rowH * i + rowH / 2}));
+    if (c === 2) ly = y0 + top + own.length * rowH + 6 + R;
+    y0 += h + gap;
+  });
+  const H = y0 - gap, first = pts[0];
+  const d = `M${first.x} ${first.y - 104} L${first.x} ${first.y}${catmull([...pts.map(q => [q.x, q.y]), [Math.round(lx - R * .7), Math.round(ly - R * .72)]])}`;
+  let out = `<svg class="compact" viewBox="0 0 ${W} ${H}" role="group" aria-label="${zh ? '研究地图：多模态、评测、后训练' : 'Research map: Multimodal, Eval, Post-training'}">${s}`;
+  out += `<path class="trk" d="${d}"/><path class="crv" d="${d}"/>`;
+  pts.forEach(({n, x, y}, i) => {
+    out += `<g class="node" data-id="${n.id}" tabindex="0" role="button" aria-label="${esc(n.name)} · ${esc(venue(n))}"><rect x="0" y="${y - rowH / 2}" width="${W}" height="${rowH}" fill="transparent"/>`;
+    out += `<circle class="r" cx="${x}" cy="${y}" r="8" style="animation-delay:-${(i * .8).toFixed(1)}s"/><circle class="o" cx="${x}" cy="${y}" r="8"/>`;
+    out += `<text class="nm" x="${col}" y="${y - 1}">${esc(n.name)}</text><text class="vn" x="${col}" y="${y + 14}">${esc(venue(n))}</text></g>`;
+  });
+  const r = R * .5;
+  out += `<g class="node loop" data-id="${L.id}" tabindex="0" role="button" aria-label="${L.name} · ${esc(venue(L))}"><rect x="0" y="${ly - R - 6}" width="${W}" height="${2 * R + 12}" fill="transparent"/><circle class="orbit" cx="${lx}" cy="${ly}" r="${R}"/>`;
+  out += `<circle class="loopm" cx="${lx - r * .86}" cy="${ly}" r="${r}"/><circle class="looph" cx="${lx + r * .86}" cy="${ly}" r="${r}"/>`;
+  out += `<text class="loopt" x="${lx - r * .95}" y="${ly + 4}" text-anchor="middle" fill="var(--ec-accent)">${zh ? '模型' : 'model'}</text><text class="loopt" x="${lx + r * .95}" y="${ly + 4}" text-anchor="middle" fill="var(--ec-green)">harness</text>`;
+  out += `<circle class="tok" r="4" cx="${lx + R}" cy="${ly}">${motion ? `<animateMotion dur="9s" repeatCount="indefinite" path="M0 0 a${R} ${R} 0 1 1 -${2 * R} 0 a${R} ${R} 0 1 1 ${2 * R} 0"/>` : ''}</circle>`;
+  out += `<text class="nm lp" x="${col}" y="${ly - 1}">${L.name}</text><text class="vn" x="${col}" y="${ly + 14}">${esc(venue(L))}</text></g>`;
+  return {svg: out + '</svg>', mk, h: H};
 }
 
 /** Hover-card markup for one map node. Links are real; the title opens the paper / project panel. */
@@ -243,19 +290,24 @@ export function mountLanding(host, {lang = 'en', reducedMotion = false, getGuide
   let LANG = lang === 'zh' ? 'zh' : 'en', paused = false, disposed = false;
   let motion = !reducedMotion && !matchMedia('(prefers-reduced-motion: reduce)').matches && new URLSearchParams(location.search).get('motion') !== '0';
   land.classList.toggle('ec-motion', motion);
-  const mb = $('.ec-mapbox'), layer = $('.ec-layer'), sel = $('.ec-sel'), nameEl = $('.ec-name');
+  const mb = $('.ec-mapbox'), win = $('.ec-win'), main = $('.ec-main'), layer = $('.ec-layer'), sel = $('.ec-sel'), nameEl = $('.ec-name');
   const card = document.createElement('div'); card.className = 'ec-pcard'; card.setAttribute('role', 'dialog');
 
   /* ---------- research map + hover card ---------- */
   let pinned = null, user = false, hideTimer = 0;
   function buildMap() {
-    const W = Math.round(mb.clientWidth), H = Math.round(mb.clientHeight); if (!W || !H) return;
-    const {svg, mk} = mapSVG(W, H, LANG, {motion});
+    const W = Math.round(mb.clientWidth); if (!W) return;
+    // The compact map sets its own height; the wide one fills the window.
+    const compact = W < COMPACT_MAP; win.classList.toggle('compact', compact); if (!compact) mb.style.height = '';
+    const H = compact ? 0 : Math.round(mb.clientHeight); if (!compact && !H) return;
+    const {svg, mk, h} = mapSVG(W, H, LANG, {motion});
+    if (compact) mb.style.height = h + 'px';
     mb.style.setProperty('--mk', mk.toFixed(3)); mb.innerHTML = svg; mb.appendChild(card);
     mb.querySelectorAll('.node').forEach(g => {
       g.addEventListener('pointerenter', () => { user = true; layer.classList.add('quiet'); showCard(g.dataset.id); });
       g.addEventListener('focus', () => showCard(g.dataset.id));
-      g.addEventListener('pointerleave', () => { user = false; layer.classList.remove('quiet'); hideSoon(); });
+      // A tap ends in pointerleave: the card stays until the next tap elsewhere.
+      g.addEventListener('pointerleave', e => { user = false; layer.classList.remove('quiet'); if (e.pointerType !== 'touch') hideSoon(); });
       g.addEventListener('blur', () => hideSoon());
       g.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); card.querySelector('[data-action]')?.click(); } });
     });
@@ -269,14 +321,20 @@ export function mountLanding(host, {lang = 'en', reducedMotion = false, getGuide
     const gr = g.getBoundingClientRect(), b = mb.getBoundingClientRect(), cw = card.offsetWidth || 316, ch = card.offsetHeight || 250;
     let x = gr.right - b.left + 16, y = gr.top - b.top + gr.height / 2 - ch / 2;
     if (x + cw > b.width + 6) x = gr.left - b.left - cw - 16;
+    if (x < -6) {
+      // Neither side has room (the compact map): the card opens under its node, or over it near the foot.
+      x = Math.max(0, Math.min(b.width - cw, gr.left - b.left + gr.width / 2 - cw / 2));
+      y = gr.bottom - b.top + 12; if (y + ch > b.height - 4) y = gr.top - b.top - ch - 12;
+    }
     y = Math.max(4, Math.min(b.height - ch - 4, y));
     card.style.left = x + 'px'; card.style.top = y + 'px'; card.classList.add('show');
   }
   function hideCard() { pinned = null; card.classList.remove('show'); mb.querySelectorAll('.node').forEach(g => g.classList.remove('on')); }
   function hideSoon() { clearTimeout(hideTimer); hideTimer = setTimeout(() => { if (!card.matches(':hover') && !card.contains(document.activeElement)) hideCard(); }, 160); }
   on(card, 'pointerenter', () => { clearTimeout(hideTimer); user = true; });
-  on(card, 'pointerleave', () => { user = false; layer.classList.remove('quiet'); hideSoon(); });
+  on(card, 'pointerleave', e => { user = false; layer.classList.remove('quiet'); if (e.pointerType !== 'touch') hideSoon(); });
   on(card, 'focusout', () => hideSoon());
+  on(document, 'pointerdown', e => { if (e.pointerType === 'touch' && pinned && !card.contains(e.target) && !e.target.closest?.('.ec-mapbox .node')) hideCard(); });
 
   /* ---------- name: playful handles that always spring back ---------- */
   const frame = document.createElement('div'); frame.className = 'frame'; frame.innerHTML = '<svg aria-hidden="true"><rect/></svg>'; sel.prepend(frame);
@@ -317,7 +375,7 @@ export function mountLanding(host, {lang = 'en', reducedMotion = false, getGuide
     const h = HIST[LANG][i];
     hpop.innerHTML = `<div class="hm"><b>${h[0] === 'now' ? (LANG === 'zh' ? '当前' : 'now') : (LANG === 'zh' ? '第 ' + h[0].slice(1) + ' 轮' : 'round ' + h[0].slice(1))}</b></div><h5>${esc(h[1])}</h5><div>${esc(h[2])}</div>${h[3].map(n => `<div class="note${n[2] ? ' ok' : ''}"><b>${n[0]}</b><span>${esc(n[1])}</span></div>`).join('')}<div class="cred">${CRED[LANG]}</div>`;
     const li = histOl.children[i], ib = $('.ec-insp').getBoundingClientRect(), lb = li.getBoundingClientRect();
-    hpop.style.left = Math.max(0, lb.left - ib.left - 150) + 'px';
+    hpop.style.left = Math.max(0, Math.min(lb.left - ib.left - 150, innerWidth - 16 - ib.left - hpop.offsetWidth)) + 'px';
     histOl.querySelectorAll('li').forEach((l, k) => l.classList.toggle('on', k === i));
     hpop.classList.add('show'); layer.classList.add('quiet');
   }
@@ -327,19 +385,34 @@ export function mountLanding(host, {lang = 'en', reducedMotion = false, getGuide
     const rx = $('.ec-rx'); rx.querySelectorAll('span').forEach(s => s.remove());
     let html = ''; for (let x = 100; x < innerWidth; x += 100) html += `<span style="left:${x - 24}px">${x}</span>`;
     rx.insertAdjacentHTML('beforeend', html);
+    markRulers();
+  }
+  function markRulers() {
     const n = nameEl.getBoundingClientRect(), o = land.getBoundingClientRect();
-    rx.querySelector('.hl').style.cssText = `left:${n.left - o.left - 24}px;width:${n.width}px`;
+    $('.ec-rx .hl').style.cssText = `left:${n.left - o.left - 24}px;width:${n.width}px`;
     $('.ec-ry .hl').style.cssText = `top:${n.top - o.top - 24}px;height:${n.height}px`;
   }
 
-  /* ---------- fit: shrink hero type until it clears the tour guide (never overlaps) ---------- */
+  /* ---------- fit: shrink hero type until it clears the tour guide (never overlaps) ----------
+     The idle card sits in the left column's lower corner. Where the hero cannot clear it even at the smallest
+     type (short laptop screens), and in the stacked layouts, the idle guide docks in the status bar instead. */
+  let guideH = 0;
   function fit() {
-    const left = $('.ec-left'), hero = $('.ec-hero'), zn = $('.ec-zhname');
-    let f = 1; root.style.setProperty('--ec-fit', 1);
-    const guide = getGuide(), gh = Math.max(guide && !guide.hidden && guide.dataset.state !== 'reading' ? guide.offsetHeight : 0, innerHeight < 860 ? 168 : 196);
-    const limit = left.getBoundingClientRect().bottom - gh - 14;
-    const over = () => (LANG === 'zh' && zn.getBoundingClientRect().right > left.getBoundingClientRect().right - 8) || hero.getBoundingClientRect().bottom > limit;
-    while (over() && f > .66) { f -= .02; root.style.setProperty('--ec-fit', f.toFixed(2)); }
+    const left = $('.ec-left'), hero = $('.ec-hero'), zn = $('.ec-zhname'), guide = getGuide(), status = host.querySelector('.ec-status');
+    const setFit = f => root.style.setProperty('--ec-fit', f.toFixed(2));
+    const dock = v => { guide?.classList.toggle('ec-docked', v); status?.classList.toggle('docked', v); };
+    const zhOver = () => LANG === 'zh' && zn.getBoundingClientRect().right > left.getBoundingClientRect().right - 8;
+    const shrink = over => { let f = 1; setFit(f); while (over() && f > .66) { f -= .02; setFit(f); } return !over(); };
+    if (matchMedia(STACKED).matches) { dock(true); shrink(zhOver); return; }
+    dock(false);
+    // The idle card's height, measured while it shows, so the hero keeps one size whatever the guide's state.
+    if (guide && !guide.hidden && guide.dataset.state === 'idle' && guide.offsetHeight) guideH = guide.offsetHeight;
+    // The card is fixed to the canvas's foot, not the column's (a tall compact map stretches the column and scrolls).
+    const foot = main.getBoundingClientRect().bottom - parseFloat(getComputedStyle(main).paddingBottom) - main.scrollTop;
+    const over = gh => () => zhOver() || hero.getBoundingClientRect().bottom > foot - gh - 14;
+    if (shrink(over(guideH || (innerHeight < 860 ? 168 : 196)))) return;
+    // Docked, the hero has the whole column; if it still runs past the foot, the canvas scrolls and the type stays full size.
+    dock(true); if (!shrink(over(0))) setFit(1);
   }
 
   /* ---------- collaborator cursors ---------- */
@@ -348,7 +421,10 @@ export function mountLanding(host, {lang = 'en', reducedMotion = false, getGuide
   const bc = new Bubble(layer, 'c'), bd = new Bubble(layer, 'd');
   function home() {
     const tr = sel.querySelector('.h.tr'); if (!tr) return;
-    const t = rel(tr, 1, 0), lim = rel($('.ec-win')).x - 110; D.place(Math.min(t.x + 4, lim), t.y + 10);
+    // Beside the name, short of the map; stacked, the map is below and the label only has to stay on screen.
+    // With 罗亚鑫 at the name's foot, the cursor rests at the top of the row so its label stays off the characters.
+    const t = rel(tr, 1, 0), w = rel(win), lim = w.y > t.y ? layer.clientWidth - 140 : w.x - 110, zh = LANG === 'zh' && $('.ec-zhname').offsetWidth;
+    D.place(Math.min(t.x + 4, lim), t.y + (zh ? -18 : 10));
     const a = mb.querySelector('.node.loop .orbit'); if (a) { const p = rel(a, .5, 1); C.place(p.x - 14, p.y + 4); }
   }
   const F = {active: false, last: 0, tx: 0, ty: 0};
@@ -379,7 +455,8 @@ export function mountLanding(host, {lang = 'en', reducedMotion = false, getGuide
     ];
     let i = 0;
     while (!disposed) {
-      if (F.active || user || paused || document.hidden) { await sleep(600); continue; }
+      // The phone column has no collaborators (their layer is hidden): nothing pops the map's cards on its own.
+      if (F.active || user || paused || document.hidden || !layer.offsetWidth) { await sleep(600); continue; }
       bc.hide(); bd.hide();
       const r = await steps[i++ % steps.length]();
       if (F.active || disposed) continue;
@@ -397,7 +474,14 @@ export function mountLanding(host, {lang = 'en', reducedMotion = false, getGuide
     host.querySelector('.ec-explore')?.setAttribute('aria-label', t.explore);
     host.querySelectorAll('.ec-cv').forEach(a => a.setAttribute('href', cvForLanguage(LANG)));
   }
-  function layoutAll() { if (disposed || paused || !land.offsetWidth) return; fit(); buildMap(); paintInsp(); rulers(); home(); }
+  function layoutAll() { if (disposed || paused || !land.offsetWidth) return; fit(); buildMap(); paintInsp(); rulers(); home(); follow(); }
+  // When the canvas scrolls (stacked layouts, short screens), the collaborators and the ruler marks scroll with it.
+  function follow() {
+    const st = main.scrollTop;
+    layer.style.transform = st ? `translateY(${-st}px)` : ''; layer.style.bottom = st ? `${-st}px` : '';
+    markRulers();
+  }
+  on(main, 'scroll', follow, {passive: true});
   const ro = new ResizeObserver(() => layoutAll()); ro.observe(mb); ro.observe(land);
   const guide = getGuide(); if (guide) ro.observe(guide);
   renderHist(); applyText();

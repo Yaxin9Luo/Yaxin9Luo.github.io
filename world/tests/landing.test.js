@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {renderLanding, renderExplore, MUSEUM_URL, landingCopy, mapNodes, mapSVG, cardHTML, splitClaim} from '../src/landing/landing.js';
+import {renderLanding, renderExplore, MUSEUM_URL, landingCopy, mapNodes, mapSVG, COMPACT_MAP, cardHTML, splitClaim} from '../src/landing/landing.js';
 import {profile, publications} from '../src/content.js';
 import {publicationRole} from '../src/exhibition-content.js';
 
@@ -55,6 +55,22 @@ test('research map follows the profile map: three phases, AutoDesign on the curv
     assert.ok(+start[2] <= H && +start[1] >= 0, 'curve lead-in stays inside the first column');
     assert.ok(!svg.includes('animateMotion'));
   }
+});
+
+test('a narrow map stacks the phases and runs the curve down a lane clear of every word', () => {
+  for (const W of [308, 338, 450, COMPACT_MAP - 1]) for (const lang of ['en', 'zh']) {
+    const {svg, h} = mapSVG(W, 0, lang, {motion: false});
+    assert.ok(svg.includes('class="compact"') && h > 600 && svg.includes(`viewBox="0 0 ${W} ${h}"`), 'the compact map sets its own height');
+    assert.equal((svg.match(/class="node/g) || []).length, 8);
+    assert.equal((svg.match(/class="phase"/g) || []).length, 3);
+    const words = [...svg.matchAll(/<text class="(?:num|yr|ph|phs|nm[^"]*|vn)" x="([\d.]+)"/g)].map(m => +m[1]);
+    const lane = [...svg.matchAll(/<circle class="(?:o|orbit)" cx="([\d.]+)" cy="[\d.]+" r="([\d.]+)"/g)].map(m => +m[1] + +m[2]);
+    assert.ok(Math.min(...words) >= Math.max(...lane) + 8, 'names and headers start past the lane');
+    const curve = svg.match(/class="crv" d="M([\d.]+) ([\d.]+)/);
+    assert.ok(+curve[2] > 0 && +curve[1] < Math.min(...words), 'the curve starts inside the first band, in the lane');
+    assert.ok(!svg.includes('animateMotion'));
+  }
+  assert.ok(!mapSVG(COMPACT_MAP, 600, 'en').svg.includes('class="compact"'), 'from COMPACT_MAP up, the three columns');
 });
 
 test('hover cards carry truthful credits and real links', () => {

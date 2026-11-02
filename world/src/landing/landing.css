@@ -23,7 +23,7 @@
   --ec-green:#0E9F6E;--ec-green-soft:#E3F6EE;--ec-critic:#E4572E;--ec-critic-soft:#FDECE6;--ec-critic-ink:#FFFFFF;--ec-amber:#E8B339;--ec-comp:#9B5DE5;
   --ec-shadow:0 1px 2px rgba(21,22,46,.06),0 8px 24px -8px rgba(21,22,46,.14);
   --ec-shadow-lg:0 2px 4px rgba(21,22,46,.05),0 24px 60px -18px rgba(21,22,46,.25);
-  --ec-rul:24px;--ec-gx:clamp(28px,4.2vw,88px);--ec-fit:1;--ec-u:calc(min(1vw,1.6vh)*var(--ec-fit));
+  --ec-rul:24px;--ec-top:64px;--ec-sb:38px;--ec-gx:clamp(28px,4.2vw,88px);--ec-fit:1;--ec-u:calc(min(1vw,1.6vh)*var(--ec-fit));
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --ec-bg:#0F1020;--ec-bg-2:#141529;--ec-dot:#2E3150;--ec-card:#171831;--ec-line:#272944;--ec-line-2:#2B2D48;
@@ -52,7 +52,7 @@ html body{background:var(--ec-bg);color:var(--ec-ink)}
 .ec-wdots i{width:9px;height:9px;border-radius:50%;background:#E4572E}.ec-wdots i:nth-child(2){background:#E8B339}.ec-wdots i:nth-child(3){background:#0E9F6E}
 
 /* ---------- top bar (landing + panels; the 3D HUD reuses it with a card background) ---------- */
-.experience .topbar{position:absolute;left:var(--ec-rul);right:0;top:var(--ec-rul);height:64px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px;padding:0 var(--ec-gx);background:none;backdrop-filter:none;z-index:20;font-family:var(--ec-sans);color:var(--ec-ink);transition:opacity .2s}
+.experience .topbar{position:absolute;left:var(--ec-rul);right:0;top:var(--ec-rul);height:var(--ec-top);display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px;padding:0 var(--ec-gx);background:none;backdrop-filter:none;z-index:20;font-family:var(--ec-sans);color:var(--ec-ink);transition:opacity .2s}
 .experience .topbar::after{display:none}
 .experience .topbar button:hover,.experience .topbar a:hover{color:var(--ec-ink)}
 .experience .topbar :focus-visible{outline:2px solid var(--ec-accent);outline-offset:2px}
@@ -108,14 +108,16 @@ html body{background:var(--ec-bg);color:var(--ec-ink)}
 .ec-rx .hl,.ec-ry .hl{position:absolute;background:color-mix(in srgb,var(--ec-accent) 14%,transparent);transition:all .25s}
 .ec-rx .hl{top:0;bottom:0;border-left:1px solid var(--ec-accent);border-right:1px solid var(--ec-accent)}
 .ec-ry .hl{left:0;right:0;border-top:1px solid var(--ec-accent);border-bottom:1px solid var(--ec-accent)}
-.ec-main{position:absolute;left:var(--ec-rul);right:0;top:calc(var(--ec-rul) + 64px);bottom:38px;display:grid;grid-template-columns:minmax(0,.94fr) minmax(0,1.06fr);gap:clamp(28px,3vw,60px);padding:clamp(10px,1.6vh,22px) var(--ec-gx) clamp(16px,2.4vh,30px)}
-.ec-left{position:relative;display:flex;flex-direction:column;min-height:0;padding-left:14px}
+.ec-main{position:absolute;left:var(--ec-rul);right:0;top:calc(var(--ec-rul) + var(--ec-top));bottom:var(--ec-sb);overflow-y:auto;scrollbar-width:thin;display:grid;grid-template-columns:minmax(0,.94fr) minmax(0,1.06fr);gap:clamp(28px,3vw,60px);padding:clamp(10px,1.6vh,22px) var(--ec-gx) clamp(16px,2.4vh,30px)}
+.ec-left{position:relative;display:flex;flex-direction:column;min-height:0;padding-left:14px;container-type:inline-size}
 .ec-hero{padding-top:clamp(4px,1.2vh,18px)}
 /* inspector */
 .ec-insp{position:relative;display:inline-flex;align-items:stretch;height:32px;border-radius:9px;background:var(--ec-card);border:1px solid var(--ec-line-2);box-shadow:var(--ec-shadow);font:500 12px var(--ec-mono);color:var(--ec-muted);margin-left:-14px;white-space:nowrap;max-width:calc(100% + 14px)}
 .ec-insp>span{display:flex;align-items:center;gap:6px;padding:0 10px}
 .ec-insp>span+span{border-left:1px solid var(--ec-line)}
 .ec-insp .k{color:var(--ec-faint)}.ec-insp .ttl{color:var(--ec-ink)}
+/* a narrow column keeps the inspector's element, size and history; the face and fill give way */
+@container (max-width:580px){.ec-insp>span:nth-child(2),.ec-insp>span:nth-child(4){display:none}}
 .ec-insp .sw{width:10px;height:10px;border-radius:3px;background:var(--ec-ink);border:1px solid var(--ec-line-2)}
 .ec-insp .hist{gap:0;padding:0 8px 0 10px}.ec-insp .hist .k{margin-right:8px}
 .ec-insp .hist ol{display:flex;align-items:center;list-style:none}
@@ -152,6 +154,7 @@ html body{background:var(--ec-bg);color:var(--ec-ink)}
 .ec-zhname{display:none;flex:none;white-space:nowrap;font:700 clamp(18px,calc(var(--ec-u)*1.7),30px) var(--ec-serif);color:var(--ec-faint);padding-bottom:calc(var(--ec-u)*1.2);letter-spacing:.06em}
 html[lang=zh-CN] .ec-zhname{display:block}
 .ec-role{margin-top:clamp(18px,2.6vh,30px);font:500 clamp(13px,calc(var(--ec-u)*1.08),18px) var(--ec-mono);color:var(--ec-muted)}
+.ec-role span{white-space:nowrap}
 .ec-claim{margin-top:clamp(12px,1.8vh,22px);font-size:clamp(18px,calc(var(--ec-u)*1.95),36px);line-height:1.28;letter-spacing:-.004em;max-width:21em;text-wrap:balance;color:var(--ec-ink)}
 .ec-claim b{font-weight:500}.ec-claim span{color:var(--ec-muted)}
 html[lang=zh-CN] .ec-claim{letter-spacing:.01em;max-width:19em}
@@ -211,7 +214,7 @@ html[lang=zh-CN] .ec-claim{letter-spacing:.01em;max-width:19em}
 .ec-mapbox .node.loop.on .orbit,.ec-mapbox .node.loop:hover .orbit{stroke:var(--ec-accent)}
 .ec-mapbox .tok{fill:var(--ec-critic)}
 /* paper card */
-.ec-pcard{position:absolute;z-index:40;width:316px;padding:14px 16px;border-radius:14px;background:var(--ec-card);border:1px solid var(--ec-line-2);box-shadow:var(--ec-shadow-lg);opacity:0;transform:translateY(6px);transition:opacity .18s,transform .18s;pointer-events:none;text-align:left}
+.ec-pcard{position:absolute;z-index:40;width:min(316px,100%);padding:14px 16px;border-radius:14px;background:var(--ec-card);border:1px solid var(--ec-line-2);box-shadow:var(--ec-shadow-lg);opacity:0;transform:translateY(6px);transition:opacity .18s,transform .18s;pointer-events:none;text-align:left}
 .ec-pcard.show{opacity:1;transform:none;pointer-events:auto}
 .ec-pcard .meta{display:flex;gap:8px;align-items:center;font:500 11.5px var(--ec-mono);color:var(--ec-faint)}
 .ec-pcard .meta .rl{color:var(--ec-accent);background:var(--ec-accent-soft);padding:2px 7px;border-radius:5px}
@@ -234,7 +237,7 @@ html[lang=zh-CN] .ec-claim{letter-spacing:.01em;max-width:19em}
 .dg .m{fill:var(--ec-line-2)}.dg .ms{fill:none;stroke:var(--ec-line-2);stroke-width:1.5;stroke-dasharray:3 3}
 .dg text{font:500 10px var(--ec-mono);fill:var(--ec-faint)}.dg text.k{fill:var(--ec-ink)}
 /* status bar */
-.ec-status{position:absolute;left:var(--ec-rul);right:0;bottom:0;height:38px;display:flex;align-items:center;gap:20px;padding:0 var(--ec-gx);border-top:1px solid var(--ec-line);font:500 12px var(--ec-mono);color:var(--ec-faint);background:color-mix(in srgb,var(--ec-bg) 90%,transparent);z-index:6;white-space:nowrap;letter-spacing:0;transition:opacity .45s}
+.ec-status{position:absolute;left:var(--ec-rul);right:0;bottom:0;height:var(--ec-sb);display:flex;align-items:center;gap:20px;padding:0 var(--ec-gx);border-top:1px solid var(--ec-line);font:500 12px var(--ec-mono);color:var(--ec-faint);background:color-mix(in srgb,var(--ec-bg) 90%,transparent);z-index:6;white-space:nowrap;letter-spacing:0;transition:opacity .45s}
 .ec-status b{color:var(--ec-ink);font-weight:500}
 .ec-status .now{overflow:hidden;text-overflow:ellipsis;min-width:0}
 .ec-status .demo{margin-left:auto}
@@ -255,7 +258,7 @@ html[lang=zh-CN] .ec-claim{letter-spacing:.01em;max-width:19em}
 
 /* ---------- CV Tour guide: the existing mascot, restyled as a canvas component ---------- */
 .mascot-guide{--guide-ink:var(--ec-ink);font-family:var(--ec-sans);color:var(--ec-ink);gap:0}
-.experience>.mascot-guide{left:calc(var(--ec-rul) + var(--ec-gx) + 14px);right:auto;bottom:calc(38px + clamp(16px,2.4vh,30px));z-index:35}
+.experience>.mascot-guide{left:calc(var(--ec-rul) + var(--ec-gx) + 14px);right:auto;bottom:calc(var(--ec-sb) + clamp(16px,2.4vh,30px));z-index:35}
 .experience.playing>.mascot-guide{left:auto;right:26px;bottom:24px}
 .mascot-guide .guide-actor,.mascot-guide[data-state] .guide-actor{flex:0 0 clamp(64px,calc(var(--ec-u)*7),104px);width:clamp(64px,calc(var(--ec-u)*7),104px);margin-right:-6px;z-index:2}
 .mascot-guide .guide-character{filter:drop-shadow(0 6px 10px rgba(21,22,46,.18))}
@@ -291,6 +294,18 @@ html[lang=zh-CN] .ec-claim{letter-spacing:.01em;max-width:19em}
 .mascot-guide[data-state=reading] .guide-actions{padding:8px 10px}
 .mascot-guide .guide-audio-status{color:var(--ec-faint);font:500 10.5px var(--ec-mono);bottom:-16px;left:0;right:auto}
 @media (max-height:860px){.experience>.mascot-guide .guide-description{display:none}.experience>.mascot-guide .guide-copy{padding-top:7px}}
+/* docked: where the card would cover the hero (short screens, the stacked layouts), the idle guide rests in the
+   status bar as one row: the mascot standing on the bar, the tour label and its button */
+.experience>.mascot-guide.ec-docked[data-state=idle]{left:auto;right:calc(var(--ec-gx) - 4px);bottom:0;height:var(--ec-sb);align-items:center}
+.mascot-guide.ec-docked[data-state=idle] .guide-actor{flex:0 0 42px;width:42px;margin:0 8px 2px 0;align-self:flex-end}
+.mascot-guide.ec-docked[data-state=idle] .guide-character{filter:drop-shadow(0 2px 3px rgba(21,22,46,.16))}
+.mascot-guide.ec-docked[data-state=idle] .guide-card{width:auto;display:flex;align-items:center;gap:12px;background:none;border:0;border-radius:0;box-shadow:none;overflow:visible}
+.mascot-guide.ec-docked[data-state=idle] .guide-topline{height:auto;padding:0;border:0}
+.mascot-guide.ec-docked[data-state=idle] :is(.guide-dots,.guide-sound,.guide-close,.guide-copy,.guide-stops),.mascot-guide.ec-docked .guide-audio-status{display:none}
+.mascot-guide.ec-docked[data-state=idle] .guide-actions{padding:0}
+.mascot-guide.ec-docked[data-state=idle] .guide-primary{height:26px;padding:0 12px;border-radius:13px;font-size:12.5px}
+.ec-status.docked{padding-right:calc(var(--ec-gx) + 330px)}
+.ec-status.docked .demo{display:none}
 .grimoire .mascot-guide{right:22px;bottom:18px}
 
 /* skip link in the canvas language */
@@ -310,10 +325,47 @@ html[lang=zh-CN] .ec-claim{letter-spacing:.01em;max-width:19em}
 @media (max-width:1100px){.experience:not(.playing) .topbar .persistent-cv,.experience:not(.playing) .topbar .nav-sep{display:none}}
 @media (max-width:980px){.topbar .ec-cap span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}.topbar .ec-explore .ec-cap{padding:0 10px}}
 @media (max-height:860px){.ec-bio{line-height:1.52}}
+/* The compact map (a narrow window) sets its own height and the canvas scrolls to it. */
+.ec-win.compact{height:auto;min-height:auto}.ec-win.compact .ec-mapbox{flex:none}
+.ec-mapbox svg.compact .ph{font-size:23px}.ec-mapbox svg.compact .loopt{font-size:10.5px}
+/* Stacked (portrait tablets): the canvas scrolls as one column, the hero over the map (STACKED in landing.js). */
 @media (max-width:900px){
-  .ec-main{grid-template-columns:1fr;overflow-y:auto}.ec-win{min-height:520px}
-  .topbar .brand .crumb{display:none}
-  .ec-status .now{display:none}
+  .ec-main{display:block}
+  .ec-left{min-height:auto}
+  .ec-tour-chip{margin-top:18px}
+  .ec-win{margin-top:clamp(28px,4vh,40px);height:clamp(540px,62vw,720px)}
+}
+/* Phone column: the blog's phone chrome (no rulers or collaborators, a slimmer bar), the nav as a tool palette,
+   the three places in the status bar beside the docked guide, and the map in its compact layout. */
+@media (max-width:760px){
+  :root{--ec-rul:0px;--ec-gx:16px;--ec-top:56px;--ec-sb:46px}
+  .ec-corner,.ec-rx,.ec-ry,.ec-layer{display:none}
+  .experience .topbar{grid-template-columns:minmax(0,1fr) auto;gap:8px;padding:0 12px}
+  .topbar .brand{display:none}
+  .topbar .header-nav{justify-self:start;padding:3px}
+  .topbar .header-nav .nav-link{width:34px;padding:0;justify-content:center}
+  .topbar .utilities{gap:2px}.topbar .language-button{padding:0 5px}
+  .experience:not(.playing) .topbar .ec-explore{position:fixed;right:12px;bottom:7px;height:32px;margin:0}
+  .ec-main{padding:10px var(--ec-gx) 32px}
+  .ec-insp .hpop{width:min(330px,calc(100vw - 32px))}
+  .ec-namerow{margin-top:28px;gap:6px 18px;flex-wrap:wrap}
+  .ec-name{font-size:52px}
+  .ec-zhname{font-size:20px;padding-bottom:6px}
+  .ec-role{margin-top:18px;font-size:12.5px;line-height:1.55}
+  .ec-claim{margin-top:14px;font-size:20px;line-height:1.32}
+  .ec-chips{margin-top:16px;gap:8px}.ec-chip{height:32px;padding:0 14px 0 12px;font-size:14px}
+  .ec-bio{margin-top:16px;font-size:15.5px;line-height:1.62}
+  .ec-cta{margin-top:20px;display:grid;grid-template-columns:1fr 1fr;gap:8px}.ec-btn{justify-content:center;height:42px}
+  .ec-win{margin-top:32px}
+  .ec-win .bar .crumb,.ec-win .bar .hint{display:none}
+  .ec-win .cv{padding:12px 10px 10px}
+  .ec-win .legend{flex-wrap:wrap;gap:6px 14px}
+  .ec-status .now,.ec-status .demo{display:none}
+  .ec-status.docked{padding-right:var(--ec-gx)}
+  .experience>.mascot-guide.ec-docked[data-state=idle]{left:12px;right:auto}
+  .mascot-guide.ec-docked[data-state=idle] .guide-topline{display:none}
+  .mascot-guide.ec-docked[data-state=idle] .guide-primary{height:32px;padding:0 14px;border-radius:16px;font-size:13.5px}
+  .mascot-guide .guide-card,.mascot-guide[data-state] .guide-card{width:min(330px,calc(100vw - 104px))}
 }
 @media (prefers-reduced-motion:reduce){.landing *,.mascot-guide *{animation:none!important;transition:none!important}}
 .reduce-motion .landing *{animation:none!important;transition:none!important}
