@@ -1,0 +1,40 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>One task, two graders</title><link rel="stylesheet" href="kit.css"><script src="kit.js"></script>
+<style>
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.win{display:block;border-radius:10px;background:var(--bg);border:1px solid var(--line-2);box-shadow:0 1px 2px rgba(21,22,46,.06),0 10px 28px -14px rgba(21,22,46,.28);overflow:hidden;color:inherit;text-decoration:none}
+.win .bar{display:flex;align-items:center;gap:8px;height:34px;padding:0 10px 0 12px;border-bottom:1px solid var(--line)}
+.win .bar i{width:8px;height:8px;border-radius:50%;background:var(--line-2);flex:none}
+.win .bar .nm{font:500 11px var(--mono);color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.win .bar .sc{margin-left:auto;font:500 12.5px var(--mono);color:var(--ink);background:var(--surface-2);border-radius:6px;padding:3px 7px;flex:none;font-variant-numeric:tabular-nums}
+/* the page, from its top, fading out at the foot over the rest of the scroll */
+.win .pg{display:block;width:100%;height:auto;aspect-ratio:4/5;object-fit:cover;object-position:top;-webkit-mask:linear-gradient(#000 62%,transparent);mask:linear-gradient(#000 62%,transparent)}
+.win:hover{border-color:var(--faint)}.win:focus-visible{outline:2px solid var(--kept);outline-offset:2px}
+.row{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:12px}
+.seg{display:inline-flex;padding:3px;border-radius:10px;background:var(--surface-2);gap:2px}
+.seg button{font:500 12.5px var(--sans);border:0;background:none;color:var(--muted);padding:6px 12px;border-radius:7px;cursor:pointer;display:inline-flex;align-items:center;gap:7px;transition:background var(--d1),color var(--d1)}
+.seg button[aria-pressed=true]{background:var(--bg);color:var(--ink);box-shadow:0 1px 2px rgba(21,22,46,.12)}
+.seg i{width:9px;height:9px;border-radius:50%;border:2px solid var(--lenient)}.seg i.s{border:0;background:var(--strict)}
+.gap{margin-left:auto;display:flex;align-items:baseline;gap:10px}
+.gap .readout{font:600 30px/1 var(--serif);letter-spacing:-.02em;font-variant-numeric:tabular-nums;min-width:0;transition:color var(--d2)}
+.gap .readout.down{color:var(--rev)}
+.gap .was{font:500 11px var(--mono);color:var(--faint);white-space:nowrap}
+@media (max-width:480px){.pair{gap:10px}.win .bar{padding:0 6px 0 10px}.win .bar i{display:none}.win .bar .nm{font-size:0}.win .bar .nm::after{content:attr(data-short);font-size:11px}.gap{margin-left:0}.gap .readout{font-size:26px}}
+</style></head><body>
+<div class="w">
+<div class="eyebrow">One dev task <span class="badge">exact</span></div>
+<h3>Same two pages, <em>two</em> graders</h3>
+<p class="lede">The page from the starting harness and the page from a kept harness. Switch the grader: the pages stay the same; the gap between their scores does not.</p>
+<div class="stage">
+<div class="pair">
+<a class="win" href="/blog/harness-optimization/figs/example-baseline.webp" target="_blank" rel="noopener" aria-label="Open the starting harness's full page"><div class="bar"><i></i><i></i><i></i><span class="nm" data-short="baseline">baseline harness</span><span class="sc" id="sa"></span></div><img class="pg" src="/blog/harness-optimization/figs/example-baseline.webp" alt="The page the starting harness built for this task" width="720" height="1589"></a>
+<a class="win" href="/blog/harness-optimization/figs/example-kept.webp" target="_blank" rel="noopener" aria-label="Open the kept harness's full page"><div class="bar"><i></i><i></i><i></i><span class="nm" data-short="kept">kept harness</span><span class="sc" id="sb"></span></div><img class="pg" src="/blog/harness-optimization/figs/example-kept.webp" alt="The page a kept harness built for the same task" width="720" height="1589"></a>
+</div>
+<div class="row">
+<div class="seg" role="group" aria-label="grader"><button data-g="lenient"><i></i>lenient grader</button><button data-g="strict"><i class="s"></i>strict grader</button></div>
+<div class="gap"><span class="was" id="was"></span><span class="label">kept − baseline</span><span class="readout" id="gap"></span></div>
+</div>
+</div>
+<p class="note">Click a page to open it in full.</p>
+</div>
+<script src="example.js"></script></body></html>

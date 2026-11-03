@@ -1,13 +1,38 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>How the loop works</title><link rel="stylesheet" href="kit.css"><script src="kit.js"></script></head><body>
+<title>How the loop works</title><link rel="stylesheet" href="kit.css"><script src="kit.js"></script>
+<style>
+#loop{overflow:visible}
+#loop .e{stroke:var(--line-2);stroke-width:1.4;fill:none}
+#loop .e.on{stroke:var(--kept);stroke-width:2.4;opacity:0;transition:opacity var(--d2) var(--ease)}#loop .e.on.show{opacity:1}
+#loop .flow{stroke-dasharray:6 4;animation:dash .9s linear infinite}@keyframes dash{to{stroke-dashoffset:-20}}
+#loop .n{cursor:pointer;outline:none}
+#loop .n rect{fill:var(--surface);stroke:var(--line-2);stroke-width:1;transition:fill var(--d2) var(--ease),stroke var(--d2) var(--ease),stroke-width var(--d2) var(--ease)}
+#loop .n .t{font:600 14px var(--sans);fill:var(--ink);transition:fill var(--d2)}
+#loop .n .s{font-size:10px;fill:var(--faint);transition:fill var(--d2)}
+#loop .n.lit rect{fill:var(--bg);stroke:var(--kept);stroke-width:2}#loop .n.lit .s{fill:var(--muted)}
+#loop .n:hover rect{stroke:var(--kept)}#loop .n:focus-visible rect{stroke:var(--kept);stroke-width:3}
+#loop .hole{font:600 17px var(--serif);fill:var(--ink)}#loop .hole-sub{font-size:10.5px;fill:var(--faint)}
+/* every step in one cell: the card is as tall as its tallest step, and steps cross-fade in place */
+#card{display:grid;margin-top:14px}
+#card .st{grid-area:1/1;opacity:0;transition:opacity var(--d2) var(--ease);pointer-events:none}#card .st.cur{opacity:1;pointer-events:auto}
+#card .st-h{display:none;font-size:18px;margin-bottom:6px}#card.narrow .st-h{display:block}
+#card p{margin:0;font-size:14px;line-height:1.55}
+#card .fbs{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}#card .fbt{margin-top:8px;font-size:13.5px;color:var(--muted)}
+.nav{display:flex;align-items:center;gap:12px;margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}
+#dots{display:flex;gap:4px}.dot{width:18px;height:18px;padding:0;border:0;background:none;cursor:pointer;display:grid;place-items:center}
+.dot::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--line-2);transition:background var(--d1),transform var(--d1) var(--ease)}
+.dot[aria-current=true]::before{background:var(--kept);transform:scale(1.15)}.dot:hover::before{background:var(--faint)}
+.nav .btns{margin-left:auto;display:flex;gap:8px}.btn:disabled{opacity:.4;cursor:default}.btn:disabled:hover{border-color:var(--line-2)}
+.btn.primary{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.nav .btn{white-space:nowrap}@media (max-width:480px){#count{display:none}}
+</style></head><body>
 <div class="w">
 <div class="eyebrow">How it works <span class="badge">study design</span></div>
 <h3>The loop, in <em>seven</em> steps</h3>
 <p class="lede">Every term the rest of this post uses, in the order the loop runs. Click Next, a step dot, or a box.</p>
-<div class="stage"><svg id="loop" viewBox="0 0 640 280" role="img" aria-label="The optimization loop: Meta Agent, harness, coding agent, grader, keep rule, feedback"></svg></div>
-<div id="card" style="margin-top:12px;min-height:150px"></div>
-<div class="ctrl" style="justify-content:space-between"><button class="btn" id="prev">← Back</button><div id="dots" style="display:flex;gap:7px"></div><button class="btn" id="next">Next →</button></div>
-<style>@keyframes dash{to{stroke-dashoffset:-20}}.flow{stroke-dasharray:6 4;animation:dash .9s linear infinite}</style>
+<div class="stage"><svg id="loop" viewBox="0 0 640 236" role="img" aria-label="The optimization loop: Meta Agent, harness, coding agent, grader, keep rule, feedback"></svg></div>
+<div id="card" aria-live="polite"></div>
+<div class="nav"><div id="dots"></div><span class="label" id="count"></span><div class="btns"><button class="btn" id="prev">← Back</button><button class="btn primary" id="next">Next →</button></div></div>
 </div>
 <script>const D={};</script>
 <script src="loop.js"></script></body></html>

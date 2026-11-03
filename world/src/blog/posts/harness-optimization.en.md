@@ -48,7 +48,9 @@ At the end we took the first kept version of four lineages, one per feedback set
 
 Gate deductions change the ranking too. Count them, and under the strict grader the outcome-only harness ranks first, at +0.090 against +0.070 for the best full-feedback harness. It did not build better pages. The starting harness lost points to gates in 4 of 16 runs, and the outcome-only harness lost none.
 
-![One task, two graders](/blog/harness-optimization/figs/example-page.png "One dev task: the page from the starting harness (left) and from a kept harness (right). Compared with the lenient grader, the strict grader scores the starting page higher (0.74 vs 0.70) and the kept page lower (0.88 vs 0.99). The kept page is 0.14 ahead instead of 0.30.")
+```embed
+{"src": "/blog/harness-optimization/interactive/example.html", "height": 690, "autosize": true, "title": "One task, two graders", "caption": "One dev task: the page from the starting harness (left) and from a kept harness (right). Compared with the lenient grader, the strict grader scores the starting page higher (0.74 vs 0.70) and the kept page lower (0.88 vs 0.99). The kept page is 0.14 ahead instead of 0.30."}
+```
 
 So which grader is right? We checked an earlier version of our grader against a separate AI labeler that followed a written protocol; we have no human agreement data. On page pairs that differed clearly, they agreed 6 times out of 6. On pairs that differed slightly, they agreed 16 times out of 32, a coin flip, though from a small sample. This study's held-out gains of 0.03 to 0.18 appear to sit in that slight regime, where no grader we tested is validated. Explore it below. The pages built by harnesses that saw failed rubric items lose the most under the stricter grader.
 
