@@ -25,10 +25,8 @@ const callbacks={
 const coordinator=createLoadingCoordinator({
   onChange:state=>{lifecycle.push({...state});if(lifecycle.length>150)lifecycle.shift();ui.applyLoadingState(state);},
   createCore:async context=>{
-    // The only game imports: no renderer, model or landscape traffic before intent.
-    // The lean Academy is the default; ?academy=classic loads the original high-detail world.
-    const classic=new URLSearchParams(location.search).get('academy')==='classic';
-    const Game=classic?(await import('./game.js')).Game:(await import('./academy/academy-game.js')).AcademyGame;
+    // This is the only game import: no renderer, model or landscape traffic before intent.
+    const {Game}=await import('./game.js');
     context.signal.throwIfAborted();
     return Game.createAsync(ui.canvas,callbacks,ui.options,{...context,onProgress:event=>{
       if(['assembly','assembling','first-frame','enhancements'].includes(event.phase)){stages.push({...event,attemptId:context.attemptId,elapsedMs:performance.now()-(context.deadline-20000)});if(stages.length>100)stages.shift();}

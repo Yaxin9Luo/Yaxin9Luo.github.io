@@ -28,11 +28,9 @@ Open `/asset-studio.html` for independently orbitable terrain, six buildings, th
 
 ## Controls
 
-The "3D Academy" entry loads **Moonlit Trials**, a lean arcade broom-flight game on the Academy map (`src/academy/`); see [performance and design notes](../docs/academy-performance.md). The broom always flies forward: W / S (or ↑ / ↓) climb and dive, A / D (or ← / →) turn, Shift boosts, Q / E barrel-roll to dodge, Space or a click casts an auto-aimed bolt, F reads a nearby landmark's chapter, T opens the trial list and R restarts a trial. Right-drag looks around; the wheel zooms. Escape opens the portfolio and M the travel map. Touch devices use the thumbstick and boost button plus roll and cast buttons; gamepads are supported. Fly through a golden gate to start a trial; a medal unlocks the next one. Trial bests, star shards and discoveries are saved locally (`yaxin.academy.v2`).
+WASD / arrow keys fly; R / F change height; visible buttons move 12 metres at a time; V or the camera buttons select follow, bird’s eye or low-angle views; Shift accelerates; right-drag orbits the camera; the wheel zooms. Clicking the world flies toward that point at the current altitude. Space casts the selected spell, 1–3 select spells, Q shields, E reads a nearby chapter or research book. Clicking a visible research book opens its publication directly. M opens the instant travel map and Escape opens/closes the portfolio. Touch devices have a thumbstick, altitude, cast and boost buttons. Reading a chapter pauses the simulation and any active race. On narrow phones, Flight tools expands the lantern, tour and trial actions; the camera presets and touch altitude controls remain accessible. The six-stop tour offers direct chapter reading, and manual movement or camera selection exits it.
 
-The original high-detail world below is unchanged and still loads with `?academy=classic`.
-
-Original world: WASD / arrow keys fly; R / F change height; V or the camera buttons select follow, bird’s eye or low-angle views; Shift accelerates; Space casts the selected spell, 1–3 select spells, Q shields, E reads a nearby chapter or research book. Graphics quality, reduced motion and optional synthesized sound are in Settings. Progress is local to the browser; malformed or unavailable storage does not block the portfolio.
+Graphics quality, reduced motion and optional synthesized sound are in Settings. Progress is local to the browser; malformed or unavailable storage does not block the portfolio. Resetting progress requires confirmation in Settings. The expanded course uses record identifier `moonlit-2`; earlier lap times are cleared while discoveries, collected crystals and banishments are preserved.
 
 ## Source layout
 
