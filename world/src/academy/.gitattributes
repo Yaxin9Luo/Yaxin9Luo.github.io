@@ -1,0 +1,2 @@
+# Baked height data: never apply text/EOL conversion.
+*.bin binary
