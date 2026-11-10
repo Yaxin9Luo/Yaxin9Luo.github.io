@@ -10,7 +10,7 @@ export const MUSEUM_URL = lang => `/yuanmingyuan.html?composition=xianfaqiao&pla
 export const landingCopy = {
   en: {
     hist: 'History', role: '<span>ML PhD · MBZUAI VILA Lab</span>&nbsp; /&nbsp; <span>Research Intern · Meituan LongCat</span>',
-    chipA: 'Artifact design post-training', chipB: 'Long-horizon agent harnesses',
+    chipA: 'Post-training & RL', chipB: 'Long-horizon agents',
     email: 'Email', cv: 'CV', tour: 'CV Tour ↗',
     mapTitle: 'one question · three phases', mapHint: 'hover a node', lgPaper: 'paper / project', lgLoop: 'model ⟲ harness loop', lgAll: 'all publications →',
     now: 'Now', nowT: 'research intern at Meituan M17 LongCat · open to research collaboration', demo: 'demo canvas · handles spring back, nothing is saved',
@@ -19,7 +19,7 @@ export const landingCopy = {
   },
   zh: {
     hist: '历史', role: '<span>ML 博士生 · MBZUAI VILA Lab</span>&nbsp; /&nbsp; <span>研究实习生 · 美团 LongCat</span>',
-    chipA: 'Artifact design 后训练', chipB: '长程智能体 harness',
+    chipA: '后训练与强化学习', chipB: '长程智能体',
     email: '邮件', cv: '简历', tour: 'CV 导览 ↗',
     mapTitle: '一个问题 · 三个阶段', mapHint: '悬停节点', lgPaper: '论文 / 项目', lgLoop: '模型 ⟲ harness 循环', lgAll: '全部论文 →',
     now: '现在', nowT: '美团 M17 LongCat 研究实习 · 欢迎研究合作', demo: '演示画布 · 手柄会弹回，不会保存任何改动',

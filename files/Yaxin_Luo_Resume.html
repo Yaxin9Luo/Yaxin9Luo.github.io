@@ -246,6 +246,10 @@
       font-size: 7.9pt;
     }
 
+    .lead { margin: 0 0 .6mm; color: #26333c; text-align: justify; }
+    .sub { margin: 1.5mm 0 0; color: var(--accent); font-size: 8.6pt; font-weight: 700; letter-spacing: .02em; }
+    .sub + .bullets li:first-child { margin-top: .5mm; }
+    .section-title .en a { color: inherit; text-decoration: underline; }
     .edu-grid {
       display: grid;
       grid-template-columns: 1fr;
@@ -310,7 +314,7 @@
     .pub-list {
       margin: 0;
       padding-left: 5.2mm;
-      font-size: 8.25pt;
+      font-size: 7.9pt;
       line-height: 1.28;
     }
 
@@ -377,7 +381,7 @@
       <header class="header">
         <div>
           <h1 class="name">Yaxin Luo</h1>
-          <p class="focus">Long-Horizon Agentic Post-Training · Artifact Design · Agent Harness</p>
+          <p class="focus">Post-Training · Reinforcement Learning · Long-Horizon Agents</p>
         </div>
         <div class="contact">
           <span>+86 150 1025 8639</span><span>+971 58 569 9266</span>
@@ -399,138 +403,85 @@
 
       <section class="section compact">
         <h2 class="section-title">Research Interest</h2>
-        <p class="summary">I work on post-training agents for long, expert work: how to get agents to do it, and how to keep them getting better at it. My answer is to post-train the model and co-evolve the harness around it. My long-term goal is agentic systems that can carry out arbitrarily complex, long-horizon human expert work in digital environments, with a path toward real-world tasks. My current focus is artifact design: production-grade models for agentic design, and automated iteration systems for the long-horizon harnesses that support them.</p>
+        <p class="summary">I work on <strong>post-training</strong> and <strong>reinforcement learning</strong> for agents that do long, expert work. A harness can make a model carry out long-horizon tasks today; I move that ability into the weights, building the whole pipeline: harnesses that produce training-grade trajectories, RL environments, evaluation benchmarks and reward design, then mid-training, SFT and RL. My long-term goal is agents that carry out arbitrarily complex, long-horizon expert work in digital environments, with a path toward real-world tasks; my current testbeds are agentic design and game development.</p>
       </section>
 
       <section class="section">
-        <h2 class="section-title">Research Experience</h2>
+        <h2 class="section-title">Experience</h2>
         <article class="entry">
           <div class="entry-head">
             <div class="entry-title"><strong class="org">Meituan · M17 LongCat</strong><span class="role">Research Intern, Northern Dipper Talent Program</span></div>
             <span class="date">Sep 2026-Present</span>
           </div>
+          <p class="lead">Built the harness base that <strong>LongCat 2.5</strong>'s Agentic Design post-training runs on, and lead its harness-optimization and harness-internalization research: evolve the harness on a task, then train what it teaches into the weights.</p>
+          <div class="sub">Evolvarium: the harness base for post-training</div>
           <ul class="bullets">
-            <li>Research and build Agent Harnesses for <strong>long-horizon multimodal design tasks</strong>, producing trajectories for subsequent model training and integrating execution, tool use, trace capture, automated evaluation, and iterative optimization into a reproducible pipeline.</li>
-            <li>Investigate <strong>harness automation and meta-optimization</strong>: within a fixed model capability boundary, use rollout evidence, evaluator feedback, and component-level updates to improve reliable completion of long-horizon tasks.</li>
-            <li>Contribute to the full <strong>LongCat 2.5 post-training workflow for Agentic Design</strong>, from post-training harness design and training-oriented trajectory collection to <strong>Mid-Training and subsequent SFT and RFT</strong>, studying how to internalize harness behaviors and trajectories into model parameters; explored <strong>direct rewriting, hint-based control, teacher continuation from student steps, and RL</strong>, with hands-on insights into each.</li>
+            <li>Designed and built <a href="https://evolvarium.designanything.ai/"><strong>Evolvarium</strong></a> (open source), the base the team's post-training iterates on across <strong>3D modeling, slides, web and poster design</strong>, lifting LongCat 2.5's aesthetic and design ability substantially. Every run is sandboxed and recorded (inputs, harness revision, trace, grade) and exported as LongCat SFT data.</li>
+            <li><strong>Meta-optimized harness (MoH)</strong>: a Meta Agent edits instructions, skills, hooks and tools; a keep rule calibrated to measured noise keeps or reverts each edit. On our slides benchmark, the evolved harness lifts Kimi K3 from <strong>57.6 to 74.7</strong> (design +9.2, motion +9.5) and Qwen3.8-27B from <strong>52.6 to 65.0</strong>, with no weight change.</li>
+            <li>Showed the grader is what the optimizer learns: a stricter grader cut every gain by a third to 70%; 8 of 9 harnesses kept after seeing failed rubric items copied it (0 of 11 with outcome-only feedback); <a href="https://yaxin9luo.github.io/blog/harness-optimization/">write-up and 12 lineages</a>.</li>
+          </ul>
+          <div class="sub">Internalizing the harness: SFT, then RL</div>
+          <ul class="bullets">
+            <li>Goal: a student model in a plain harness (Claude Code, Pi) matching a teacher in the evolved one, with the harness's preferences, design principles and reusable scripts in its weights. Compared SFT recipes from a 20k synthesized slides pool: naive distillation, evolved-harness trajectories, offline turn-by-turn <strong>rewriting</strong>, online <strong>teacher intervention</strong> on student turns (to internalize tools and middleware), and <strong>runbook + hint</strong> distillation with leak audits.</li>
+            <li>Co-designed the <strong>tiered RL reward</strong>: validity, pixel-level usability, content against frozen per-query checklists, then a blind agentic aesthetics judge. Tier first, taste within tier, so a broken deck never outranks a usable one; the judge orders 59 of 60 calibration pairs. Fixed a GRPO zero-advantage failure by scoring broken tiers on bad pages.</li>
+          </ul>
+          <div class="sub">Now and next</div>
+          <ul class="bullets">
+            <li>Running SFT on Qwen3.8-27B for each recipe, then RL with the tiered reward. Next, building the full post-training pipeline for <strong>game development</strong>: the harness, RL environments, evaluation benchmarks and RL reward design.</li>
           </ul>
         </article>
-
         <article class="entry">
           <div class="entry-head">
             <div class="entry-title"><strong class="org">Meituan · M17 LongCat</strong><span class="role">Research Intern</span></div>
             <span class="date">Apr 2026-Sep 2026</span>
           </div>
           <ul class="bullets">
-            <li>Focused on <strong>AutoDesign</strong> to explore long-horizon design agents and harness methods, validating an end-to-end research loop spanning reusable DesignHarnesses, evaluation protocols, and real deliverables, and establishing a systems foundation for subsequent foundation-model agent and harness iteration.</li>
+            <li>Led <strong>AutoDesign</strong> to explore long-horizon design agents and harness methods, validating an end-to-end loop of reusable DesignHarnesses, Designer-Critic iteration, evaluation protocols and real deliverables (posters, slides, webpages and videos from a single paper), the systems foundation for the post-training work above.</li>
           </ul>
         </article>
-
         <article class="entry">
           <div class="entry-head">
-            <div class="entry-title"><strong class="org">Mohamed bin Zayed University of Artificial Intelligence (MBZUAI)</strong><span class="role">Research Assistant</span></div>
+            <div class="entry-title"><strong class="org">MBZUAI · VILA Lab</strong><span class="role">Research Assistant</span></div>
             <span class="date">Jan-Aug 2025</span>
           </div>
           <ul class="bullets">
-            <li>Studied how language-pretrained parameters transfer and generalize to vision-only tasks; developed label-free random-label bridge training for cross-modal parameter adaptation and foundation-capability analysis.</li>
-            <li>Built Open CaptchaWorld, an interactive benchmark for multimodal browser agents spanning 20 categories and 225 dynamic CAPTCHAs, quantifying the long-horizon interaction gap between humans and frontier agents.</li>
+            <li>Studied how language-pretrained parameters transfer to vision-only tasks through label-free random-label bridge training; built Open CaptchaWorld, an interactive benchmark for multimodal browser agents (NeurIPS 2025).</li>
           </ul>
         </article>
       </section>
-
-      <section class="section">
-        <h2 class="section-title">Open-Source Agent and Harness Systems</h2>
+    </section>
+    <section class="sheet" aria-label="Resume page 2">
+      <section class="section compact">
+        <h2 class="section-title">Open-Source GitHub Projects</h2>
         <article class="entry">
           <div class="entry-head">
             <div class="entry-title"><strong class="org">AutoDesign</strong><span class="evidence">238 Stars · 2026.10.09</span></div>
             <span class="date">2026-Present</span>
           </div>
-          <ul class="bullets tight">
-            <li>Built an open-source Design Agent and model-agnostic harness for academic communication artifacts, transforming a paper into an editable poster, slide deck, webpage, and subtitled video; supports coding harnesses including Codex, Claude Code, and Kimi Code.</li>
-            <li>Proposed <strong>Meta-Harness Optimization</strong>: an inner Designer-Critic loop iterates native artifacts, while an outer loop updates reusable DesignHarnesses from traces, evaluators, and persistent optimization records, with acceptance gates preventing regressions.</li>
-            <li>Built PosterBench over 100 papers. In public results, AutoDesign reached <strong>78.32</strong>, outperforming Claude Design by <strong>7.45</strong> points and delivering <strong>+5.01 to +19.56</strong> point gains across seven matched configurations.</li>
-          </ul>
+          <p class="summary">An open-source, model-agnostic Design Agent that turns a paper into an editable poster, slide deck, webpage and subtitled video on Codex, Claude Code or Kimi Code. Its <strong>Meta-Harness Optimization</strong> improves reusable DesignHarnesses from traces and evaluators behind acceptance gates; on the 100-paper PosterBench it scores <strong>78.32</strong>, <strong>7.45</strong> points above Claude Design, and gains <strong>+5.01 to +19.56</strong> across seven matched configurations.</p>
           <div class="project-link"><a href="https://github.com/Yaxin9Luo/AutoDesign">github.com/Yaxin9Luo/AutoDesign</a></div>
         </article>
-
         <article class="entry">
           <div class="entry-head">
             <div class="entry-title"><strong class="org">FigMirror</strong><span class="evidence">523 Stars · 2026.10.09</span></div>
             <span class="date">2026-Present</span>
           </div>
-          <ul class="bullets tight">
-            <li>Contributed to a reference-image-driven scientific figure agent that combines Orchestrator-Drawer-Reviewer roles with Grounded Measurement to turn user data into editable Matplotlib code and camera-ready PDFs.</li>
-            <li>Authored early specifications for the method, Web UI, and multi-round refinement; added Codex and Claude runners, event-bus and session-state coverage, and refinement integration tests to establish a verifiable baseline for subsequent agent iterations.</li>
-          </ul>
+          <p class="summary">A reference-image-driven scientific figure agent (Orchestrator-Drawer-Reviewer with Grounded Measurement) that turns user data into editable Matplotlib code and camera-ready PDFs; I wrote the early method, Web UI and refinement specifications and the Codex / Claude runners and integration tests.</p>
           <div class="project-link"><a href="https://github.com/VILA-Lab/FigMirror">github.com/VILA-Lab/FigMirror</a></div>
         </article>
       </section>
-
-    </section>
-
-    <section class="sheet" aria-label="Resume page 2">
       <section class="section compact">
-        <h2 class="section-title">First- and Co-First-Author Publications</h2>
-
-        <article class="paper">
-          <div class="paper-index">01</div>
-          <div>
-            <h3 class="paper-title">AutoDesign: Meta-Harness Optimization for Long-Horizon Agentic Design</h3>
-            <div class="paper-meta"><strong>First author</strong> · arXiv 2026 · Long-Horizon Agentic Design</div>
-            <p class="paper-copy">Introduced Meta-Harness Optimization, which recursively improves reusable DesignHarnesses using rollouts, evaluation, and acceptance gates. AutoDesign scored 78.32 on PosterBench, 7.45 points above Claude Design under the same configuration, and was featured by Synced.</p>
-            <div class="paper-link"><a href="https://arxiv.org/abs/2608.13560">arxiv.org/abs/2608.13560</a> · <a href="https://h5.ifeng.com/c/vivoArticle/v002--AN0LymzrvycvWldG-_ZImmNRtmKwkcuZ3lQV0zWQgHk__?isNews=1&amp;showComments=0">Synced feature</a></div>
-          </div>
-        </article>
-
-        <article class="paper">
-          <div class="paper-index">02</div>
-          <div>
-            <h3 class="paper-title">Next-Gen CAPTCHAs: Leveraging the Cognitive Gap for Scalable and Diverse GUI-Agent Defense</h3>
-            <div class="paper-meta"><strong>Co-first author</strong> · ICML 2026 · GUI-Agent Defense</div>
-            <p class="paper-copy">Developed a scalable GUI-agent defense framework around the human-agent cognitive gap, designing dynamic tasks that probe differences in interactive perception, memory, decision-making, and action. A data-generation pipeline and backend-supported task types continuously produce diverse CAPTCHA instances at scale.</p>
-            <div class="paper-link"><a href="https://arxiv.org/abs/2602.09012">arxiv.org/abs/2602.09012</a></div>
-          </div>
-        </article>
-
-        <article class="paper">
-          <div class="paper-index">03</div>
-          <div>
-            <h3 class="paper-title">Open CaptchaWorld: A Comprehensive Web-based Platform for Testing and Benchmarking Multimodal LLM Agents</h3>
-            <div class="paper-meta"><strong>First author</strong> · NeurIPS 2025 · Multimodal Agents</div>
-            <p class="paper-copy">Introduced the first dynamic web CAPTCHA benchmark for multimodal LLM agents, covering 20 categories, 225 tasks, and the CAPTCHA Reasoning Depth metric. Humans achieved a 93.3% success rate, compared with 40.0% for the strongest evaluated agent.</p>
-            <div class="paper-link"><a href="https://arxiv.org/abs/2505.24878">arxiv.org/abs/2505.24878</a></div>
-          </div>
-        </article>
-
-        <article class="paper">
-          <div class="paper-index">04</div>
-          <div>
-            <h3 class="paper-title">γ-MoD: Exploring Mixture-of-Depth Adaptation for Multimodal Large Language Models</h3>
-            <div class="paper-meta"><strong>First author</strong> · ICLR 2025 · Efficient Multimodal Foundation Models</div>
-            <p class="paper-copy">Introduced a Mixture-of-Depth adaptation strategy for existing MLLMs that reduces serving cost through selective token and layer activation while avoiding the substantial degradation caused by directly converting dense layers to MoD.</p>
-            <div class="paper-link"><a href="https://openreview.net/forum?id=1EnpStvBU8">openreview.net/forum?id=1EnpStvBU8</a></div>
-          </div>
-        </article>
-
-        <article class="paper">
-          <div class="paper-index">05</div>
-          <div>
-            <h3 class="paper-title">APL: Anchor-based Prompt Learning for One-stage Weakly Supervised Referring Expression Comprehension</h3>
-            <div class="paper-meta"><strong>First author</strong> · ECCV 2024 · Vision-Language Alignment</div>
-            <p class="paper-copy">Designed an Anchor-based Prompt Encoder driven by position, color, and category prompts, together with text-reconstruction and visual-alignment objectives. The method achieved state-of-the-art results on four REC benchmarks, improving over RefCLIP by <strong>6.44%</strong> on RefCOCO.</p>
-            <div class="paper-link"><a href="https://www.ecva.net/papers/eccv_2024/papers_ECCV/papers/02055.pdf">ecva.net · ECCV 2024 / APL</a></div>
-          </div>
-        </article>
-      </section>
-
-      <section class="section compact">
-        <h2 class="section-title">Collaborative Publications</h2>
+        <h2 class="section-title">Publications <span class="en">* equal contribution · full list on <a href="https://scholar.google.com/citations?user=tEaSCzYAAAAJ&amp;hl=en">Google Scholar</a></span></h2>
         <ol class="pub-list">
-          <li><strong>arXiv 2026</strong> · <a href="https://arxiv.org/abs/2607.27380">VideoCoCo: Code-as-CoT for Physically-Consistent Video Generation via an Agentic Dual-Engine System</a></li>
-          <li><strong>ACL 2025</strong> · <a href="https://aclanthology.org/2025.acl-long.358/">DRAG: Distilling RAG for SLMs from LLMs via Evidence and Graph-based Distillation</a></li>
-          <li><strong>CVPR 2025</strong> · <a href="https://openaccess.thecvf.com/content/CVPR2025/html/Chen_Dynamic_Visual_Routing_Network_for_Weakly_Supervised_Referring_Expression_Comprehension_CVPR_2025_paper.html">DViN: Dynamic Visual Routing Network for Weakly Supervised Referring Expression Comprehension</a></li>
+          <li><strong>ICML 2026</strong> · <a href="https://arxiv.org/abs/2602.09012">Next-Gen CAPTCHAs: Leveraging the Cognitive Gap for Scalable and Diverse GUI-Agent Defense</a> · co-first author</li>
+          <li><strong>arXiv 2026</strong> · <a href="https://arxiv.org/abs/2608.13560">AutoDesign: Meta-Harness Optimization for Long-Horizon Agentic Design</a> · first author</li>
+          <li><strong>ACL 2026 Main</strong> · <a href="https://aclanthology.org/2026.acl-long.1964/">LLMSurgeon: Diagnosing Data Mixture of Large Language Models</a> · first author</li>
+          <li><strong>NeurIPS 2025</strong> · <a href="https://arxiv.org/abs/2505.24878">Open CaptchaWorld: A Comprehensive Web-based Platform for Testing and Benchmarking Multimodal LLM Agents</a> · first author</li>
+          <li><strong>ICLR 2025</strong> · <a href="https://openreview.net/forum?id=1EnpStvBU8">γ-MoD: Exploring Mixture-of-Depth Adaptation for Multimodal Large Language Models</a> · first author</li>
+          <li><strong>ECCV 2024</strong> · <a href="https://www.ecva.net/papers/eccv_2024/papers_ECCV/papers/02055.pdf">APL: Anchor-based Prompt Learning for One-stage Weakly Supervised Referring Expression Comprehension</a> · first author</li>
         </ol>
       </section>
+
 
       <section class="section compact">
         <h2 class="section-title">Additional Experience</h2>
@@ -554,7 +505,7 @@
       const fontSelect = document.getElementById('fontSelect');
       const accentInput = document.getElementById('accentInput');
       const status = document.getElementById('toolbarStatus');
-      const storageKey = 'yaxin-luo-resume-foundation-agent-en-20260921-v2';
+      const storageKey = 'yaxin-luo-resume-en-20261110-v3';
       let saveTimer;
       let savedRange = null;
 

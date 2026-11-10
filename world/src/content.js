@@ -19,8 +19,8 @@ export const profile = {
     '面向长程专家级任务的智能体后训练 —— 把 harness 能做到的，变成模型自己能做到的。',
   ),
   intro: bilingual(
-    'My work is post-training for agents. Today, a harness can make a model carry out long-horizon work; I study how to move that ability into the weights. This takes three steps: measuring what the weights and the harness each contribute; building harnesses that produce training-grade trajectories and rewards; and training on them with mid-training, SFT and reinforcement learning, where the harness\'s evaluators supply the rewards, so the model needs less scaffolding. My testbed is long-horizon artifact design, where I contribute to the LongCat 2.5 post-training pipeline for agentic design. Next, I am taking the same questions from a single agent to agent swarms.',
-    '我研究智能体的后训练。现在，靠 harness 可以让模型完成长程任务；我研究的是怎么把这种能力转移到权重里。具体分三步：测量权重和 harness 各自贡献了多少；构建能产出训练级轨迹和奖励的 harness；用这些数据做 Mid-Training、SFT 和强化学习（RL），由 harness 里的评测器提供奖励，让模型对外部脚手架的依赖越来越少。我的试验场是长程 artifact design，并参与 LongCat 2.5 Agentic Design 的后训练流程。下一步，我把同样的问题从单个 agent 推广到 agent swarm。',
+    'My work is post-training for agents. Today, a harness can make a model carry out long-horizon work; I study how to move that ability into the weights. This takes three steps: measuring what the weights and the harness each contribute; building harnesses that produce training-grade trajectories and rewards; and training on them with mid-training, SFT and reinforcement learning, where the harness\'s evaluators supply the rewards, so the model needs less scaffolding. My testbed is long-horizon artifact design, where I contribute to the LongCat 2.5 post-training pipeline for agentic design. Next, I am building the full post-training pipeline for game development: the harness, RL environments, evaluation benchmarks and RL reward design.',
+    '我研究智能体的后训练。现在，靠 harness 可以让模型完成长程任务；我研究的是怎么把这种能力转移到权重里。具体分三步：测量权重和 harness 各自贡献了多少；构建能产出训练级轨迹和奖励的 harness；用这些数据做 Mid-Training、SFT 和强化学习（RL），由 harness 里的评测器提供奖励，让模型对外部脚手架的依赖越来越少。我的试验场是长程 artifact design，并参与 LongCat 2.5 Agentic Design 的后训练流程。下一步，我在搭建面向游戏开发的后训练全流程：Harness、RL 环境、评测基准与 RL 奖励设计。',
   ),
   affiliation: bilingual('MBZUAI · VILA Lab', 'MBZUAI · VILA 实验室'),
   bio: bilingual(
@@ -55,18 +55,6 @@ export const research = [
 
 export const publications = [
   {
-    id: 'videococo',
-    title: bilingual('VideoCoCo: Code-as-CoT for Physically-Consistent Video Generation via an Agentic Dual-Engine System', 'VideoCoCo：通过智能体双引擎系统与代码思维链生成物理一致视频'),
-    venue: 'arXiv', year: 2026,
-    authors: 'Haodong Li, Tianfei Ren, Xiaoxiao Ma, Chunmei Qing, Zhen Fang, Sipeng He, Ziyu Guo, Haoyu Wu, Juanxi Tian, Yihang Zou, Ruichuan An, Dongzhi Jiang, Boxue Yang, Ji Xie, Xu Huang, Wenhao Yan, Jialv Zou, Zhengrong Yue, Yaxin Luo, Xiaotong Li, Yuzhu Wang, Junyan Ye, Jinjing Zhao, Zehui Chen, Lin Chen, Renye Yan, Feng Zhao, Pheng-Ann Heng',
-    summary: bilingual(
-      'Uses executable Blender code as an intermediate representation of a scene and its evolution. Simulation drafts guide a generative video engine toward physically consistent output.',
-      '以可执行 Blender 代码表示场景及其动态过程，通过仿真草稿引导生成视频引擎，提升视频的物理一致性。',
-    ),
-    image: '',
-    links: [paper('https://arxiv.org/abs/2607.27380')],
-  },
-  {
     id: 'autodesign',
     title: bilingual('AutoDesign: Meta-Harness Optimization for Long-Horizon Agentic Design', 'AutoDesign：面向长程智能体设计的 Meta-Harness 优化'),
     venue: 'arXiv', year: 2026,
@@ -77,6 +65,18 @@ export const publications = [
     ),
     image: '/images/autodesign.webp',
     links: [paper('https://arxiv.org/abs/2608.13560'), code('https://github.com/Yaxin9Luo/AutoDesign'), project('https://autodesign.designanything.ai/'), demo('https://designanything.ai/')],
+  },
+  {
+    id: 'llmsurgeon',
+    title: bilingual('LLMSurgeon: Diagnosing Data Mixture of Large Language Models', 'LLMSurgeon：诊断大语言模型的训练数据配比'),
+    venue: 'ACL', year: 2026,
+    authors: 'Yaxin Luo*, Jiacheng Cui*, Xiaohan Zhao, Xinyi Shang, Jiacheng Liu, Xinyue Bi, Zhaoyi Li, Zhiqiang Shen',
+    summary: bilingual(
+      'Estimates an LLM’s pretraining-domain mixture from the text it generates, under a predefined taxonomy and a label-shift assumption. LLMSurgeon frames this as a calibrated inverse problem and introduces the LLMScan evaluation suite.',
+      '在预定义领域分类与标签偏移假设下，从模型生成的文本估计大模型预训练数据的领域配比。LLMSurgeon 将其建模为校准后的逆问题，并提出 LLMScan 评估套件。',
+    ),
+    image: '',
+    links: [paper('https://aclanthology.org/2026.acl-long.1964/'), code('https://github.com/Yaxin9Luo/LLMSurgeon')],
   },
   {
     id: 'nextgen-captchas',
@@ -101,18 +101,6 @@ export const publications = [
     ),
     image: '/images/opencaptchaworld.png',
     links: [paper('https://arxiv.org/abs/2505.24878'), code('https://github.com/MetaAgentX/OpenCaptchaWorld'), demo('https://huggingface.co/spaces/YaxinLuo/Open_CaptchaWorld')],
-  },
-  {
-    id: 'drag',
-    title: bilingual('DRAG: Distilling RAG for SLMs from LLMs to Transfer Knowledge and Mitigate Hallucination via Evidence and Graph-based Distillation', 'DRAG：通过证据与图谱蒸馏，将大模型的检索增强生成知识迁移到小模型并缓解幻觉'),
-    venue: 'ACL', year: 2025,
-    authors: 'Jennifer Chen, Aidar Myrzakhan, Yaxin Luo, Hassaan Muhammad Khan, Sondos Mahmoud Bsharat, Zhiqiang Shen',
-    summary: bilingual(
-      'Distills retrieval-augmented knowledge from larger to smaller language models using ranked evidence and knowledge graphs. The framework studies factual consistency and practical retrieval-assisted generation with smaller models.',
-      '借助排序后的证据与知识图谱，把检索增强知识从大语言模型蒸馏到小模型，研究小模型的事实一致性及实用的检索辅助生成。',
-    ),
-    image: '',
-    links: [paper('https://arxiv.org/abs/2506.01954'), code('https://github.com/VILA-Lab/DRAG')],
   },
   {
     id: 'dvin',
@@ -156,6 +144,7 @@ export const publications = [
 // Keep the full source collection above for project detail pages and cross-links.
 export const selectedPublications = publications.filter(({ id }) => [
   'autodesign',
+  'llmsurgeon',
   'nextgen-captchas',
   'opencaptchaworld',
   'gamma-mod',
@@ -172,8 +161,8 @@ export const experience = [
     ),
     period: bilingual('Sep 2026 – Present · Beijing, China', '2026 年 9 月至今 · 中国北京'),
     description: bilingual(
-      'Research and build Agent Harnesses for long-horizon multimodal design tasks, integrating execution, tool use, trace capture, automated evaluation, and iterative optimization into a reproducible pipeline. Investigate harness automation and meta-optimization using rollout evidence, evaluator feedback, and component-level updates. Contribute to the full LongCat 2.5 post-training workflow for Agentic Design, from post-training harness design and training-oriented trajectory collection to Mid-Training, SFT, and RFT, studying how to internalize behaviors from harness trajectories in the model.',
-      '面向多模态长程设计任务研究并构建 Agent Harness，将任务执行、工具调用、轨迹记录、自动评测与迭代优化整合为可复现流程。探索 Harness 自动化与元优化，利用 rollout 证据、评测反馈和组件级更新提升长程任务的稳定交付能力。参与 LongCat 2.5 Agentic Design 任务后训练全流程，涵盖后训练 Harness 设计、面向训练的轨迹采集、Mid-Training、SFT 与 RFT，研究如何将 Harness 轨迹中的行为内化到模型中。',
+      'Built the harness base that LongCat 2.5’s Agentic Design post-training runs on, and lead its harness-optimization and harness-internalization research: evolve the harness on a task, then train what it teaches into the weights. I designed and built Evolvarium (open source), the base the team’s post-training iterates on across 3D modeling, slides, web and poster design, lifting LongCat 2.5’s aesthetic and design ability substantially. Its meta-optimized harness, with no weight change, lifts Kimi K3 from 57.6 to 74.7 and Qwen3.8-27B from 52.6 to 65.0 on our slides benchmark; the study behind it showed the grader is what the optimizer learns. To move that into the weights, we compare SFT recipes (naive distillation, offline rewriting, online teacher intervention, runbook + hint) and train with a tiered RL reward I co-designed, where usability gates come before a blind aesthetics judge. Now: SFT and RL on Qwen3.8-27B. Next: the full post-training pipeline for game development, from the harness and RL environments to evaluation benchmarks and RL reward design.',
+      '搭建 LongCat 2.5 Agentic Design 后训练所基于的 Harness 底座，并主导其中的 Harness 优化与 Harness 内化研究：先在任务上进化 Harness，再把它教会的东西训进权重。我主导设计并搭建了开源的 Evolvarium，团队在 3D 建模、幻灯片、网页、海报设计等任务上的后训练迭代都基于它，大幅提升了 LongCat 2.5 的审美与设计能力。其元优化 Harness 在不改权重的情况下，把 Kimi K3 在幻灯片评测上从 57.6 提到 74.7、Qwen3.8-27B 从 52.6 提到 65.0；背后的研究发现优化器学到的其实是评分器。为了把这些训进权重，我们比较多种 SFT 数据构造（朴素蒸馏、离线改写、在线教师介入、runbook + hint），并用我参与设计的分级 RL 奖励训练：先过可用性门槛，再由盲评审美评委打分。现在：在 Qwen3.8-27B 上做 SFT 与 RL；下一步：搭建面向游戏开发的后训练全流程，从 Harness、RL 环境到评测基准与 RL 奖励设计。',
     ),
   },
   {

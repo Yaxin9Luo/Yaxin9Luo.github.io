@@ -245,6 +245,10 @@
       font-size: 7.9pt;
     }
 
+    .lead { margin: 0 0 .6mm; color: #26333c; text-align: justify; }
+    .sub { margin: 1.5mm 0 0; color: var(--accent); font-size: 8.6pt; font-weight: 700; letter-spacing: .02em; }
+    .sub + .bullets li:first-child { margin-top: .5mm; }
+    .section-title .en a { color: inherit; text-decoration: underline; }
     .edu-grid {
       display: grid;
       grid-template-columns: 1fr;
@@ -309,7 +313,8 @@
     .pub-list {
       margin: 0;
       padding-left: 5.2mm;
-      font-size: 8.25pt;
+      font-size: 7.7pt;
+      letter-spacing: -.01em;
       line-height: 1.28;
     }
 
@@ -376,7 +381,7 @@
       <header class="header">
         <div>
           <h1 class="name">罗亚鑫</h1>
-          <p class="focus">长程 Agentic 后训练 · Artifact Design · Agent Harness</p>
+          <p class="focus">后训练 · 强化学习 · 长程智能体</p>
         </div>
         <div class="contact">
           <span>+86 150 1025 8639</span><span>+971 58 569 9266</span>
@@ -397,164 +402,86 @@
       </section>
 
       <section class="section compact">
-        <h2 class="section-title">研究方向 <span class="en">Profile</span></h2>
-        <p class="summary">研究出能具备统一理解、推理、生成及长程复杂任务能力的原生多模态 AI 系统。目前的短期目标是让模型能做好生产力级别的设计相关的 Agentic 任务的模型，以及伴随模型的长程任务的更好的 Harness 的自动迭代系统。</p>
+        <h2 class="section-title">研究方向 <span class="en">Research Interest</span></h2>
+        <p class="summary">我研究面向长程专家级任务的智能体<strong>后训练</strong>与<strong>强化学习</strong>。今天靠 Harness 已能让模型完成长程任务，我要做的是把这种能力训进权重，并搭建完整的流程：产出训练级轨迹的 Harness、RL 环境、评测基准与奖励设计，再到 Mid-Training、SFT 与 RL。长期目标是能在数字环境中完成任意复杂、长程专家工作的智能体，并延伸到真实世界任务；当前的试验场是 Agentic Design 与游戏开发这两类长程、产物可自动评测的创作任务。</p>
       </section>
 
       <section class="section">
-        <h2 class="section-title">研究与实习经历 <span class="en">Research Experience</span></h2>
+        <h2 class="section-title">经历 <span class="en">Experience</span></h2>
         <article class="entry">
           <div class="entry-head">
             <div class="entry-title"><strong class="org">美团 · M17 龙猫</strong><span class="role">北斗计划研究实习生</span></div>
             <span class="date">2026.09–至今</span>
           </div>
+          <p class="lead">搭建 <strong>LongCat 2.5</strong> Agentic Design 后训练所基于的 Harness 底座，并主导其中的 Harness 优化与 Harness 内化研究：先在任务上进化 Harness，再把它教会的东西训进权重。</p>
+          <div class="sub">Evolvarium：后训练的 Harness 底座</div>
           <ul class="bullets">
-            <li>面向<strong>多模态长程设计任务</strong>，研究并构建 Agent Harness，将任务执行、工具调用、轨迹记录、自动评测与迭代优化组织为可复现链路，为后续模型训练积累轨迹。</li>
-            <li>探索 <strong>Harness 自动化与元优化方法</strong>：在固定模型能力边界下，利用 rollout 证据、评测反馈和单组件更新提升长程任务的稳定交付能力。</li>
-            <li>全流程参与 <strong>LongCat 2.5 的 Agentic Design 任务后训练</strong>：从后训练 Harness 设计与适用于模型训练的轨迹采集，到 <strong>Mid-Training 及后续 SFT、RFT</strong>，研究如何将 Harness 轨迹中的行为内化到模型中。</li>
+            <li>主导设计并搭建开源的 <a href="https://evolvarium.designanything.ai/"><strong>Evolvarium</strong></a>，团队后续在 <strong>3D 建模、幻灯片、网页、海报设计</strong>等任务上的后训练迭代都基于这一底座，大幅提升了 LongCat 2.5 的审美与设计能力。每次运行都在沙箱中执行并完整记录（输入、Harness 版本、轨迹、评分），可直接导出为 LongCat SFT 数据。</li>
+            <li><strong>MoH（元优化 Harness）</strong>：由 Meta Agent 修改系统提示、skills、hooks 与工具，按实测噪声设定的保留门槛决定保留或回退每次修改。在我们的幻灯片评测上，进化后的 Harness 把 Kimi K3 从 <strong>57.6 提到 74.7</strong>（设计 +9.2，动效 +9.5），把 Qwen3.8-27B 从 <strong>52.6 提到 65.0</strong>，不改任何权重。</li>
+            <li>发现优化器学到的其实是评分器：换成更严格的评分器后，每个实测增益缩水三分之一到 70%；看到失败评分项的 9 个保留版本中有 8 个照抄了评分标准原文（只看结果的 11 个中为 0）。<a href="https://yaxin9luo.github.io/blog/harness-optimization/zh/">文章与 12 条公开 lineage</a>。</li>
+          </ul>
+          <div class="sub">Harness 内化：先 SFT，再 RL</div>
+          <ul class="bullets">
+            <li>目标：学生模型在朴素 Harness（Claude Code、Pi）中达到教师模型在进化 Harness 中的水平，把 Harness 里的偏好、设计原则与可复用脚本训进权重。基于 2 万条合成幻灯片任务比较多种 SFT 数据构造：朴素蒸馏、进化 Harness 轨迹、离线逐 turn <strong>改写</strong>、在线<strong>教师介入</strong>学生每一轮（内化工具与 middleware）、<strong>runbook + hint</strong> 蒸馏加泄漏审计。</li>
+            <li>参与设计<strong>分级 RL 奖励</strong>：有效性 → 像素级可用性检查 → 按每题冻结清单检查内容 → 盲评 Agent 审美打分。先定档、档内再比审美，坏掉的 deck 永远排在能用的之后；审美评委在 60 对校准样本中排对 59 对。发现并修复 GRPO 的零优势问题：坏档按坏页数而非失败条目计分。</li>
+          </ul>
+          <div class="sub">现在与下一步</div>
+          <ul class="bullets">
+            <li>正在用各套 SFT 数据训练 Qwen3.8-27B，随后用分级奖励做 RL。下一步搭建面向<strong>游戏开发</strong>的后训练全流程：Harness、RL 环境、评测基准与 RL 奖励设计。</li>
           </ul>
         </article>
-
         <article class="entry">
           <div class="entry-head">
             <div class="entry-title"><strong class="org">美团 · M17 龙猫</strong><span class="role">研究实习生</span></div>
             <span class="date">2026.04–2026.09</span>
           </div>
           <ul class="bullets">
-            <li>以 <strong>AutoDesign</strong> 为主要项目，开展长程设计 Agent 与 Harness 的研究探索，验证可复用 DesignHarness、评测协议与真实交付物的研究闭环，为后续基础模型 Agent 与 Harness 迭代提供系统基础。</li>
+            <li>主导 <strong>AutoDesign</strong>，探索长程设计 Agent 与 Harness 方法，验证可复用 DesignHarness、Designer–Critic 迭代、评测协议与真实交付物（从一篇论文生成海报、幻灯片、网页与视频）的研究闭环，为上面的后训练工作打下系统基础。</li>
           </ul>
         </article>
-
         <article class="entry">
           <div class="entry-head">
-            <div class="entry-title"><strong class="org">Mohamed bin Zayed University of Artificial Intelligence (MBZUAI)</strong><span class="role">科研助理</span></div>
+            <div class="entry-title"><strong class="org">MBZUAI · VILA 实验室</strong><span class="role">科研助理</span></div>
             <span class="date">2025.01–2025.08</span>
           </div>
           <ul class="bullets">
-            <li>研究语言预训练参数在纯视觉任务中的迁移与泛化，提出无需人工标注的随机标签桥接训练，用于跨模态参数适配与基础能力分析。</li>
-            <li>构建多模态浏览器 Agent 交互评测 Open CaptchaWorld，覆盖 20 类、225 个动态 CAPTCHA，量化人类与前沿 Agent 的长程交互差距。</li>
+            <li>研究语言预训练参数通过无标注随机标签桥接训练向纯视觉任务的迁移；构建多模态浏览器 Agent 交互评测 Open CaptchaWorld（NeurIPS 2025）。</li>
           </ul>
         </article>
       </section>
-
-      <section class="section">
-        <h2 class="section-title">开源项目 <span class="en">Agent / Harness Systems</span></h2>
+    </section>
+    <section class="sheet" aria-label="简历第 2 页">
+      <section class="section compact">
+        <h2 class="section-title">开源 GitHub 项目 <span class="en">Open-Source GitHub Projects</span></h2>
         <article class="entry">
           <div class="entry-head">
             <div class="entry-title"><strong class="org">AutoDesign</strong><span class="evidence">238 Stars · 2026.10.09</span></div>
             <span class="date">2026–至今</span>
           </div>
-          <ul class="bullets tight">
-            <li>构建面向学术传播制品的开源 Design Agent 与模型无关 Harness，将一篇论文转化为可编辑海报、幻灯片、网页与带字幕视频；兼容 Codex、Claude Code、Kimi Code 等多种 coding harness。</li>
-            <li>提出 <strong>Meta-Harness Optimization</strong>：内层 Designer–Critic 迭代原生制品，外层基于轨迹、评测器与持久优化记录更新可复用 DesignHarness，并通过接受门控约束回退。</li>
-            <li>构建 100 篇论文规模的 PosterBench；公开结果中 AutoDesign 最高得分 <strong>78.32</strong>，较 Claude Design 高 <strong>7.45</strong> 分，并在 7 组匹配配置上带来 <strong>+5.01–19.56</strong> 分增益。</li>
-          </ul>
+          <p class="summary">开源、模型无关的 Design Agent，在 Codex、Claude Code 或 Kimi Code 上把一篇论文转成可编辑的海报、幻灯片、网页和带字幕视频。其 <strong>Meta-Harness Optimization</strong> 基于轨迹与评测器、在接受门控下迭代可复用的 DesignHarness；在 100 篇论文的 PosterBench 上得分 <strong>78.32</strong>，比 Claude Design 高 <strong>7.45</strong> 分。</p>
           <div class="project-link"><a href="https://github.com/Yaxin9Luo/AutoDesign">github.com/Yaxin9Luo/AutoDesign</a></div>
         </article>
-
         <article class="entry">
           <div class="entry-head">
             <div class="entry-title"><strong class="org">FigMirror</strong><span class="evidence">523 Stars · 2026.10.09</span></div>
             <span class="date">2026–至今</span>
           </div>
-          <ul class="bullets tight">
-            <li>参与构建参考图驱动的科研绘图 Agent：通过 Orchestrator–Drawer–Reviewer 角色分工和 Grounded Measurement，将用户数据生成可编辑 Matplotlib 代码与 camera-ready PDF。</li>
-            <li>负责早期方法、Web UI 与多轮 refinement 的项目规格，并补充 Codex / Claude runner、事件总线、会话状态和 refine 集成测试，为后续 Agent 迭代提供可验证基线。</li>
-          </ul>
+          <p class="summary">参考图驱动的科研绘图 Agent（Orchestrator–Drawer–Reviewer + Grounded Measurement），把用户数据生成可编辑的 Matplotlib 代码与 camera-ready PDF；我负责早期方法、Web UI 与多轮 refinement 规格，以及 Codex / Claude runner、事件总线与 refine 集成测试。</p>
           <div class="project-link"><a href="https://github.com/VILA-Lab/FigMirror">github.com/VILA-Lab/FigMirror</a></div>
         </article>
       </section>
-
-    </section>
-
-    <section class="sheet" aria-label="简历第 2 页">
       <section class="section compact">
-        <h2 class="section-title">第一作者 / 共同第一作者论文 <span class="en">Lead-author Research</span></h2>
-
-        <article class="paper">
-          <div class="paper-index">01</div>
-          <div>
-            <h3 class="paper-title">AutoDesign: Meta-Harness Optimization for Long-Horizon Agentic Design</h3>
-            <div class="paper-meta"><strong>第一作者</strong> · arXiv 2026 · Long-Horizon Agentic Design</div>
-            <p class="paper-copy">提出 Meta-Harness Optimization，以 rollout、评测与接受门控递归优化可复用 DesignHarness；在 PosterBench 上取得 78.32 分，较同配置 Claude Design 高 7.45 分，并获机器之心专题报道。</p>
-            <div class="paper-link"><a href="https://arxiv.org/abs/2608.13560">arxiv.org/abs/2608.13560</a> · <a href="https://h5.ifeng.com/c/vivoArticle/v002--AN0LymzrvycvWldG-_ZImmNRtmKwkcuZ3lQV0zWQgHk__?isNews=1&amp;showComments=0">机器之心报道</a></div>
-          </div>
-        </article>
-
-        <article class="paper">
-          <div class="paper-index">02</div>
-          <div>
-            <h3 class="paper-title">LLMSurgeon: Diagnosing Data Mixture of Large Language Models</h3>
-            <div class="paper-meta"><strong>第一作者</strong> · ACL 2026 Main · Foundation Model Data Auditing</div>
-            <p class="paper-copy">将预训练数据混合诊断形式化为 Data Mixture Surgery；通过校准软混淆矩阵与约束逆问题，在无需访问训练数据的情况下恢复 LLM 潜在领域分布，并构建可核验训练配方的 LLMScan 评测套件。</p>
-            <div class="paper-link"><a href="https://aclanthology.org/2026.acl-long.1964/">aclanthology.org/2026.acl-long.1964</a></div>
-          </div>
-        </article>
-
-        <article class="paper">
-          <div class="paper-index">03</div>
-          <div>
-            <h3 class="paper-title">Next-Gen CAPTCHAs: Leveraging the Cognitive Gap for Scalable and Diverse GUI-Agent Defense</h3>
-            <div class="paper-meta"><strong>共同第一作者</strong> · ICML 2026 · GUI-Agent Defense</div>
-            <p class="paper-copy">提出基于人机 Cognitive Gap 的可扩展 GUI-Agent 防御框架，围绕交互感知、记忆、决策与动作差异设计动态任务；通过数据生成流水线与后端支持的任务类型，持续生成大规模、多样化 CAPTCHA 实例。</p>
-            <div class="paper-link"><a href="https://arxiv.org/abs/2602.09012">arxiv.org/abs/2602.09012</a></div>
-          </div>
-        </article>
-
-        <article class="paper">
-          <div class="paper-index">04</div>
-          <div>
-            <h3 class="paper-title">Language-Pretraining-Induced Bias: A Strong Foundation for General Vision Tasks</h3>
-            <div class="paper-meta"><strong>第一作者</strong> · TMLR 2026 · Cross-modality Foundation Models</div>
-            <p class="paper-copy">提出无需人工标注的随机标签桥接训练，使语言预训练参数适配视觉基础任务；实验显示语言诱导偏置可加速视觉任务收敛，并在 CIFAR-100 上带来 <strong>+2.4%</strong> 测试准确率提升。</p>
-            <div class="paper-link"><a href="https://openreview.net/forum?id=N7DSUbnzYo">openreview.net/forum?id=N7DSUbnzYo</a></div>
-          </div>
-        </article>
-
-        <article class="paper">
-          <div class="paper-index">05</div>
-          <div>
-            <h3 class="paper-title">Open CaptchaWorld: A Comprehensive Web-based Platform for Testing and Benchmarking Multimodal LLM Agents</h3>
-            <div class="paper-meta"><strong>第一作者</strong> · NeurIPS 2025 · Multimodal Agents</div>
-            <p class="paper-copy">提出首个面向多模态 LLM Agent 的动态网页 CAPTCHA 基准，覆盖 20 类、225 个任务及 CAPTCHA Reasoning Depth 指标；人类成功率 93.3%，最佳评测 Agent 为 40.0%。</p>
-            <div class="paper-link"><a href="https://arxiv.org/abs/2505.24878">arxiv.org/abs/2505.24878</a></div>
-          </div>
-        </article>
-
-        <article class="paper">
-          <div class="paper-index">06</div>
-          <div>
-            <h3 class="paper-title">γ-MoD: Exploring Mixture-of-Depth Adaptation for Multimodal Large Language Models</h3>
-            <div class="paper-meta"><strong>第一作者</strong> · ICLR 2025 · Efficient Multimodal Foundation Models</div>
-            <p class="paper-copy">提出面向现有 MLLM 的 Mixture-of-Depth 适配策略，通过选择性激活 token 与层计算降低部署开销，避免将稠密层直接转换为 MoD 所导致的显著性能退化。</p>
-            <div class="paper-link"><a href="https://openreview.net/forum?id=1EnpStvBU8">openreview.net/forum?id=1EnpStvBU8</a></div>
-          </div>
-        </article>
-
-        <article class="paper">
-          <div class="paper-index">07</div>
-          <div>
-            <h3 class="paper-title">APL: Anchor-based Prompt Learning for One-stage Weakly Supervised Referring Expression Comprehension</h3>
-            <div class="paper-meta"><strong>第一作者</strong> · ECCV 2024 · Vision-Language Alignment</div>
-            <p class="paper-copy">设计位置、颜色与类别提示驱动的 Anchor-based Prompt Encoder，并结合文本重建与视觉对齐目标，在四个 REC 基准上达到 SOTA；RefCOCO 相对 RefCLIP 提升 <strong>6.44%</strong>。</p>
-            <div class="paper-link"><a href="https://www.ecva.net/papers/eccv_2024/papers_ECCV/papers/02055.pdf">ecva.net · ECCV 2024 / APL</a></div>
-          </div>
-        </article>
-      </section>
-
-      <section class="section compact">
-        <h2 class="section-title">合作论文 <span class="en">Collaborative Research</span></h2>
+        <h2 class="section-title">论文 <span class="en">Publications · * 共同一作 · 完整列表见 <a href="https://scholar.google.com/citations?user=tEaSCzYAAAAJ&amp;hl=en">Google Scholar</a></span></h2>
         <ol class="pub-list">
-          <li><strong>arXiv 2026</strong> · <a href="https://arxiv.org/abs/2608.13524">DARTree: Speculative Diffusion Decoding with Autoregressive Draft Trees</a></li>
-          <li><strong>arXiv 2026</strong> · <a href="https://arxiv.org/abs/2607.27380">VideoCoCo: Code-as-CoT for Physically-Consistent Video Generation via an Agentic Dual-Engine System</a></li>
-          <li><strong>arXiv 2026</strong> · <a href="https://arxiv.org/abs/2602.17645">Pushing the Frontier of Black-Box LVLM Attacks via Fine-Grained Detail Targeting</a></li>
-          <li><strong>NeurIPS 2025</strong> · <a href="https://proceedings.neurips.cc/paper_files/paper/2025/hash/5a733c79d35a9738dd52a22610baa2d0-Abstract-Conference.html">FADRM: Fast and Accurate Data Residual Matching for Dataset Distillation</a></li>
-          <li><strong>ACL 2025</strong> · <a href="https://aclanthology.org/2025.acl-long.358/">DRAG: Distilling RAG for SLMs from LLMs via Evidence and Graph-based Distillation</a></li>
-          <li><strong>CVPR 2025</strong> · <a href="https://openaccess.thecvf.com/content/CVPR2025/html/Chen_Dynamic_Visual_Routing_Network_for_Weakly_Supervised_Referring_Expression_Comprehension_CVPR_2025_paper.html">DViN: Dynamic Visual Routing Network for Weakly Supervised Referring Expression Comprehension</a></li>
-          <li><strong>arXiv 2025</strong> · <a href="https://arxiv.org/abs/2503.20322">Dynamic Pyramid Network for Efficient Multimodal Large Language Model</a></li>
-          <li><strong>arXiv 2025</strong> · <a href="https://arxiv.org/abs/2501.07575">Dataset Distillation via Committee Voting</a></li>
+          <li><strong>ICML 2026</strong> · <a href="https://arxiv.org/abs/2602.09012">Next-Gen CAPTCHAs: Leveraging the Cognitive Gap for Scalable and Diverse GUI-Agent Defense</a> · 共同一作</li>
+          <li><strong>arXiv 2026</strong> · <a href="https://arxiv.org/abs/2608.13560">AutoDesign: Meta-Harness Optimization for Long-Horizon Agentic Design</a> · 第一作者</li>
+          <li><strong>ACL 2026 Main</strong> · <a href="https://aclanthology.org/2026.acl-long.1964/">LLMSurgeon: Diagnosing Data Mixture of Large Language Models</a> · 第一作者</li>
+          <li><strong>NeurIPS 2025</strong> · <a href="https://arxiv.org/abs/2505.24878">Open CaptchaWorld: A Comprehensive Web-based Platform for Testing and Benchmarking Multimodal LLM Agents</a> · 第一作者</li>
+          <li><strong>ICLR 2025</strong> · <a href="https://openreview.net/forum?id=1EnpStvBU8">γ-MoD: Exploring Mixture-of-Depth Adaptation for Multimodal Large Language Models</a> · 第一作者</li>
+          <li><strong>ECCV 2024</strong> · <a href="https://www.ecva.net/papers/eccv_2024/papers_ECCV/papers/02055.pdf">APL: Anchor-based Prompt Learning for One-stage Weakly Supervised Referring Expression Comprehension</a> · 第一作者</li>
         </ol>
       </section>
+
 
       <section class="section compact">
         <h2 class="section-title">补充经历 <span class="en">Additional Experience</span></h2>
@@ -578,7 +505,7 @@
       const fontSelect = document.getElementById('fontSelect');
       const accentInput = document.getElementById('accentInput');
       const status = document.getElementById('toolbarStatus');
-      const storageKey = 'yaxin-luo-resume-foundation-agent-zh-20260921-v2';
+      const storageKey = 'yaxin-luo-resume-zh-20261110-v3';
       let saveTimer;
       let savedRange = null;
 
