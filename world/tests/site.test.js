@@ -54,7 +54,9 @@ test('every real page of the removed site redirects to its live equivalent', () 
   assert.equal(pages['/long-horizon-research-thoughts/'], '/blog/');
   const papers = Object.entries(pages).filter(([from]) => from.startsWith('/publication/'));
   assert.equal(papers.length, 6);
-  for (const [, to] of papers) assert.match(to, /^\/#paper\//);
+  // a paper no longer listed on the site lands on the publications section instead of a panel that is gone
+  for (const [, to] of papers) assert.match(to, /^\/#(paper\/|section\/publications$)/);
+  assert.equal(pages['/publication/DRAG'], '/#section/publications');
   assert.equal(pages['/year-archive/'], '/blog/');
   // the theme's sample pages are not kept alive as redirects: they get the 404 page
   for (const sample of ['/talks/', '/teaching/', '/markdown/', '/terms/', '/portfolio/portfolio-1/', '/posts/2012/08/blog-post-1/']) assert.ok(!(sample in pages), sample);
