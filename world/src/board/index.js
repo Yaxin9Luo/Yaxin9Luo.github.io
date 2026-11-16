@@ -8,11 +8,13 @@
  */
 let sheetPaint = null;
 
-export async function startBoard({site, min, lang = 'en', still = false, onMode} = {}) {
+export async function startBoard({site, min, lang = 'en', still = false, intro = false, copy, onMode} = {}) {
   window.SITE = site;
   window.__boardLang = lang;
   window.__boardStill = still;
   window.__boardMin = min;
+  if (window.__boardIntro === undefined) window.__boardIntro = intro;      // only the first start of a visit can open as the stack
+  Object.defineProperty(window, '__boardCopy', {get: () => copy ? copy() : null, configurable: true});
   // The section, paper and project panels are the site's own (ui.js fills, routes and closes them). The board takes
   // the panel element as one more sheet: a sheet of paper laid over the board, drawn and lit like the others.
   const panel = document.querySelector('.grimoire');

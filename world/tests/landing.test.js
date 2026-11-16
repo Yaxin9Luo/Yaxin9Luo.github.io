@@ -7,7 +7,7 @@ import {PHASES as phases} from '../src/blog/taxonomy.js';
 import {profile, publications} from '../src/content.js';
 import {publicationRole} from '../src/exhibition-content.js';
 import {renderJournal, renderPaperDetail} from '../src/journal.js';
-import {mapPhases} from '../src/landing/landing.js';
+import {mapPhases, opensExploded, enterHintHTML} from '../src/landing/landing.js';
 import {selectedPublications} from '../src/content.js';
 import {WORKS} from '../src/blog/taxonomy.js';
 
@@ -177,5 +177,59 @@ test('the sheets get their painted pieces as extra, class-scoped markup the 3D p
     // Projects: the prints use the real project images; the first one is the wide one
     const projects = renderJournal('projects', lang);
     assert.match(projects, /class="folio-project folio-project-featured"><button type="button" class="folio-image" data-action="project" data-id="autodesign"[^>]*><img src="[^"]+"/);
+  }
+});
+
+test('the board opens as its stack of sheets only on a fresh, unrouted, moving page', () => {
+  assert.equal(opensExploded(), true);
+  assert.equal(opensExploded({navigation: 'reload', entered: true}), true);           // a fresh load replays it
+  assert.equal(opensExploded({navigation: 'navigate', entered: true}), true);
+  assert.equal(opensExploded({navigation: 'back_forward', entered: true}), false);    // history back to an entered page does not
+  assert.equal(opensExploded({navigation: 'back_forward', entered: false}), true);
+  assert.equal(opensExploded({effects: false}), false);                               // ?fx=off, or no HTML-in-Canvas
+  assert.equal(opensExploded({reducedMotion: true}), false);
+  assert.equal(opensExploded({reading: true}), false);
+  for (const hash of ['#section/research', '#paper/autodesign', '#project/figmirror', '#map']) assert.equal(opensExploded({hash}), false, hash);
+  for (const hash of ['', '#', '#stats', '#still']) assert.equal(opensExploded({hash}), true, hash || '(none)');
+});
+
+test('the opening hint, the layers label and the scrape control are in the page in both languages', () => {
+  for (const lang of ['en', 'zh']) {
+    const t = landingCopy[lang], html = renderLanding(lang);
+    const hint = enterHintHTML(lang);
+    assert.ok(html.includes(hint));
+    assert.match(hint, /^<button class="enter-hint" type="button" tabindex="-1">/);
+    for (const key of ['enterHold', 'enterKey', 'enterOr', 'enterDo', 'layersHint']) assert.ok(hint.includes(t[key]), key);
+    assert.match(html, new RegExp(`<button class="xbtn" type="button" aria-pressed="false" data-tip="${t.layersTip}">`));
+    assert.match(html, /<button class="xbtn scrape" type="button" title="[^"]+">/);
+    assert.match(html, /<button class="xbtn save" type="button"/);
+  }
+  assert.equal(landingCopy.zh.enterHold + landingCopy.zh.enterKey, '按住空格');
+});
+
+test('the top bar carries the peony crest as its mark, linked home, and the nav stays real links', () => {
+  for (const lang of ['en', 'zh']) {
+    const html = renderLanding(lang);
+    assert.match(html, /<a class="brand" href="#" data-action="home" aria-label="[^"]+"><svg class="crest" viewBox="0 0 100 100" aria-hidden="true">/);
+    assert.equal((html.match(/class="crest"/g) || []).length, 1);
+    assert.ok(!/class="seal"/.test(html));
+    assert.match(html, /<nav class="nav" aria-label="[^"]+"><a href="#section\/about" data-action="section" data-id="about">/);
+  }
+});
+
+test('the study sheet carries its pencil apparatus: baseline, year ticks, construction lines, thumbnails and a note', () => {
+  for (const lang of ['en', 'zh']) {
+    const svg = mapSVG(640, 640, lang, {motion: false}), html = typeof svg === 'string' ? svg : svg.html || svg.svg || JSON.stringify(svg);
+    assert.match(html, /<g class="study" aria-hidden="true"><path class="rule"/);
+    assert.equal((html.match(/class="cons"/g) || []).length, 2);
+    for (const year of ['2024', '2025', '2026 →']) assert.ok(html.includes(`>${year}</text>`), year);
+    assert.match(html, /<text class="note"[^>]*>[^<]{8,}<\/text>/);
+    // a thumbnail is drawn only where it touches nothing, so not every node has one
+    const thumbs = [...html.matchAll(/<svg class="thumb" aria-hidden="true" x="([\d.]+)" y="([\d.]+)" width="([\d.]+)" height="([\d.]+)"/g)].map(m => m.slice(1).map(Number));
+    assert.ok(thumbs.length >= 3, 'some thumbnails');
+    for (const [x, y, w, h] of thumbs) for (const [px, py] of svg.pts) assert.ok(px < x - 4 || px > x + w + 4 || py < y - 4 || py > y + h + 4, 'no thumbnail lies on a node of the curve');
+    assert.match(html, /<path class="ext" d="M[^"]+"\/>/, 'the dotted continuation past the loop');
+    assert.ok(html.includes(lang === 'zh' ? '>进行中</text>' : '>in progress</text>'), 'its note');
+    assert.equal((html.match(/class="node"/g) || []).length, mapNodes.length - 1);      // every node is still there (the loop has its own class)
   }
 });

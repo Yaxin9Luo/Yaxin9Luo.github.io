@@ -262,21 +262,27 @@ html.gl.lightname .board #notes .sel{border-color:var(--accent)}
 .board .tool .body svg.sh.s2 path{fill:rgba(20,23,47,.12)}
 .board .tool .tag{position:absolute;left:26px;top:-40px;font:500 10.5px/1 var(--mono);color:var(--pencil);white-space:nowrap;letter-spacing:.02em}
 .board .tool.d.idle{display:none}
-.board .tool.c .tag{left:30px;top:34px}
-.board .tool.c.up .tag{left:18px;top:-20px}
-@keyframes d-move{0%,2%{translate:var(--rx) var(--ry)}7%{translate:var(--ax) var(--ay)}13%{translate:var(--bx) var(--by)}20%,100%{translate:var(--rx) var(--ry)}}
-@keyframes d-mark{0%,7%{stroke-dashoffset:1;opacity:1}13%,72%{stroke-dashoffset:0;opacity:1}92%{stroke-dashoffset:0;opacity:0}100%{stroke-dashoffset:1;opacity:0}}
-@keyframes c-move{0%,2%{translate:var(--rx) var(--ry)}7%{translate:19px 0}9%{translate:8px 15px}11%{translate:-12px 13px}13%{translate:-19px -3px}15%{translate:-5px -16px}17%{translate:16px -9px}18%{translate:21px 4px}25%,100%{translate:var(--rx) var(--ry)}}
-@keyframes c-mark{0%,7%{stroke-dashoffset:1;opacity:1}18%,70%{stroke-dashoffset:0;opacity:1}90%{stroke-dashoffset:0;opacity:0}100%{stroke-dashoffset:1;opacity:0}}
-html.gl:not(.still) .board .tool.d .body{animation:d-move 15s cubic-bezier(.45,0,.3,1) infinite}
-html.gl:not(.still) .board .tool.d .mark path{animation:d-mark 15s linear infinite}
-html.gl:not(.still) .board .tool.c .body{animation:c-move 17s cubic-bezier(.45,0,.3,1) -6s infinite}
-html.gl:not(.still) .board .tool.c .mark path{animation:c-mark 17s linear -6s infinite}
+.board .tool.c .tag{left:calc(64px*var(--s,1));top:-3px}
+.board .tool.c .mark{scale:.74}      /* the circle stays inside the node's own space, off its label */
+/* The tools work in short bursts (scene.js starts one with .go, then holds the mark with .kept and fades it by
+   --mo). Between bursts nothing on the annotations sheet animates, so the sheet keeps its picture and is not
+   uploaded again. */
+@keyframes d-go{0%{translate:var(--rx) var(--ry)}27.8%{translate:var(--ax) var(--ay)}61.1%{translate:var(--bx) var(--by)}100%{translate:var(--rx) var(--ry)}}
+@keyframes d-draw{0%,27.8%{stroke-dashoffset:1}61.1%,100%{stroke-dashoffset:0}}
+@keyframes c-go{0%{translate:var(--rx) var(--ry)}21.7%{translate:14px 0}30.4%{translate:6px 11px}39.1%{translate:-9px 10px}47.8%{translate:-14px -2px}56.5%{translate:-4px -12px}65.2%{translate:12px -7px}69.6%{translate:15.5px 3px}100%{translate:var(--rx) var(--ry)}}
+@keyframes c-draw{0%,21.7%{stroke-dashoffset:1}69.6%,100%{stroke-dashoffset:0}}
+html.gl:not(.still) .board .tool .mark path{opacity:0}
+html.gl:not(.still) .board .tool.go .mark path{opacity:1}
+html.gl:not(.still) .board .tool.kept .mark path{opacity:var(--mo,1)}
+html.gl:not(.still) .board .tool.d.go .body{animation:d-go 2.7s cubic-bezier(.45,0,.3,1) 1 both}
+html.gl:not(.still) .board .tool.d.go .mark path{animation:d-draw 2.7s linear 1 both}
+html.gl:not(.still) .board .tool.c.go .body{animation:c-go 3.91s cubic-bezier(.45,0,.3,1) 1 both}
+html.gl:not(.still) .board .tool.c.go .mark path{animation:c-draw 3.91s linear 1 both}
 /* while the pencil circles the node it stands up and its tag steps aside, so neither lies on the node's label */
-@keyframes c-turn{0%,3%{rotate:108deg}7%,18%{rotate:34deg}24%,100%{rotate:108deg}}
-@keyframes c-tag{0%,2%{opacity:1}5%,21%{opacity:0}25%,100%{opacity:1}}
-html.gl:not(.still) .board .tool.c .body svg{animation:c-turn 17s cubic-bezier(.45,0,.3,1) -6s infinite}
-html.gl:not(.still) .board .tool.c .tag{animation:c-tag 17s linear -6s infinite}
+@keyframes c-turn{0%,4.3%{rotate:108deg}21.7%,69.6%{rotate:34deg}95.7%,100%{rotate:108deg}}
+@keyframes c-tag{0%{opacity:1}13%,82.6%{opacity:0}100%{opacity:1}}
+html.gl:not(.still) .board .tool.c.go .body svg{animation:c-turn 3.91s cubic-bezier(.45,0,.3,1) 1 both}
+html.gl:not(.still) .board .tool.c.go .tag{animation:c-tag 3.91s linear 1 both}
 .board .xbtn{position:fixed;right:292px;bottom:12px;z-index:40;display:flex;align-items:center;gap:9px;height:30px;padding:0 6px 0 13px;border-radius:999px;background:rgba(18,18,28,.82);color:#e9e9f2;font:500 11.5px/1 var(--mono);box-shadow:0 6px 20px -8px rgba(0,0,0,.5);cursor:pointer}
 .board .xbtn svg{width:14px;height:14px}
 .board .xbtn kbd{font:inherit;padding:4px 8px;border-radius:999px;background:#3a3b52}
@@ -575,3 +581,75 @@ html.board-dark .experience:not(.playing) .sheet-phase-year{color:#B5BAD6}
 html.board-dark .experience:not(.playing) .sheet-phase-year b{color:#AEB9FF}
 html.board-dark .experience:not(.playing) .sheet-phase-1 .sheet-phase-year b{color:#F7A66B}
 html.board-dark .experience:not(.playing) .sheet-phase-2 .sheet-phase-year b{color:#6FE0B7}
+
+/* ---- the opening: the board starts as its stack of sheets; a pill at the foot invites the visitor in ---- */
+.board .xbtn.scrape{right:16px;bottom:134px;padding:0}
+html.painting .board{user-select:none;-webkit-user-select:none}
+.board .xbtn[data-tip]::after{content:attr(data-tip);position:absolute;right:calc(100% + 10px);top:50%;translate:6px -50%;padding:6px 10px;border-radius:999px;background:rgba(18,18,28,.86);color:#ECEDF7;font:500 11.5px/1 var(--mono);white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .16s,translate .16s}
+.board .xbtn[data-tip]:is(:hover,:focus-visible)::after{opacity:1;translate:0 -50%}
+.board .enter-hint{position:fixed;left:50%;bottom:22px;z-index:41;display:none;align-items:center;height:44px;padding:0 20px 0 14px;border-radius:999px;translate:-50% 14px;opacity:0;pointer-events:none;
+  background:#FFFFFF;color:#2B2F4A;font:500 14px/1 var(--sans);letter-spacing:.005em;white-space:nowrap;cursor:pointer;
+  box-shadow:0 0 0 1px rgba(27,42,158,.16),0 1px 2px rgba(20,23,47,.08),0 14px 34px -12px rgba(27,42,158,.42);visibility:hidden;transition:opacity .45s,translate .45s cubic-bezier(.2,.8,.2,1),visibility 0s .45s}
+html.gl .board .enter-hint{display:flex}
+.board .enter-hint.on{opacity:1;translate:-50% 0;visibility:visible;transition-delay:0s}
+.board .enter-hint[data-kind=enter]{pointer-events:auto}
+.board .enter-hint>span{display:none;align-items:center;gap:9px}
+.board .enter-hint[data-kind=enter] .eh-enter,.board .enter-hint[data-kind=layers] .eh-layers{display:flex}
+.board .enter-hint b{font-weight:400;color:#A3A8C2}
+.board .enter-hint kbd{position:relative;display:inline-flex;align-items:center;gap:7px;height:26px;padding:0 10px 2px 9px;border-radius:7px;background:linear-gradient(#FFFFFF,#EEF0FA);color:#1B2A9E;font:600 12px/1 var(--mono);
+  box-shadow:0 0 0 1px rgba(27,42,158,.22),0 2.5px 0 rgba(27,42,158,.26),inset 0 1px 0 #fff}
+.board .enter-hint kbd i{width:15px;height:5px;border:1.6px solid currentColor;border-top:0;border-radius:0 0 2.5px 2.5px;translate:0 1px}
+.board .enter-hint[data-kind=enter]:is(:hover,:focus-visible){box-shadow:0 0 0 1.5px #1B2A9E,0 14px 34px -12px rgba(27,42,158,.55)}
+.board .enter-hint[data-kind=layers]{left:auto;right:62px;bottom:48px;translate:10px 0;height:38px;padding:0 16px 0 10px;font-size:13px}
+.board .enter-hint.on[data-kind=layers]{translate:0 0}
+@keyframes eh-pulse{0%,74%,100%{box-shadow:0 0 0 1px rgba(27,42,158,.16),0 1px 2px rgba(20,23,47,.08),0 14px 34px -12px rgba(27,42,158,.42),0 0 0 0 rgba(63,59,214,.34)}86%{box-shadow:0 0 0 1px rgba(27,42,158,.16),0 1px 2px rgba(20,23,47,.08),0 14px 34px -12px rgba(27,42,158,.42),0 0 0 13px rgba(63,59,214,0)}}
+@keyframes eh-key{0%,74%,100%{translate:0 0;box-shadow:0 0 0 1px rgba(27,42,158,.22),0 2.5px 0 rgba(27,42,158,.26),inset 0 1px 0 #fff}80%{translate:0 2px;box-shadow:0 0 0 1px rgba(27,42,158,.22),0 .5px 0 rgba(27,42,158,.26),inset 0 1px 0 #fff}}
+html:not(.still) .board .enter-hint.on[data-kind=enter]{animation:eh-pulse 3.6s ease-out 1.2s infinite}
+html:not(.still) .board .enter-hint.on[data-kind=enter] kbd{animation:eh-key 3.6s ease-out 1.2s infinite}
+.board.dark .enter-hint{background:#1E2354;color:#E7E9FA;box-shadow:0 0 0 1px rgba(139,150,255,.3),0 14px 34px -12px rgba(0,0,0,.8)}
+.board.dark .enter-hint b{color:#7F86B4}
+.board.dark .enter-hint kbd{background:linear-gradient(#3A4390,#2C3474);color:#F3EFE4;box-shadow:0 0 0 1px rgba(160,170,255,.35),0 2.5px 0 rgba(8,10,40,.7),inset 0 1px 0 rgba(255,255,255,.14)}
+@keyframes eh-pulse-d{0%,74%,100%{box-shadow:0 0 0 1px rgba(139,150,255,.3),0 14px 34px -12px rgba(0,0,0,.8),0 0 0 0 rgba(139,150,255,.4)}86%{box-shadow:0 0 0 1px rgba(139,150,255,.3),0 14px 34px -12px rgba(0,0,0,.8),0 0 0 13px rgba(139,150,255,0)}}
+html:not(.still) .board.dark .enter-hint.on[data-kind=enter]{animation-name:eh-pulse-d}
+html:not(.still) .board.dark .enter-hint.on[data-kind=enter] kbd{animation:none}
+.playing .board .enter-hint,.reading .board .enter-hint{display:none}
+/* while the stack is open the idle CV Tour guide steps aside for the hint */
+html.board-intro .experience>.mascot-guide.ec-docked[data-state=idle]{opacity:0;pointer-events:none}
+.experience>.mascot-guide.ec-docked{transition:opacity .4s}
+
+/* ---- the top bar: the peony crest, and the nav labels stitched into the canvas ---- */
+.board .brand .crest{flex:none;width:36px;height:36px;color:var(--ultra);filter:drop-shadow(0 .5px 0 rgba(12,18,80,.2))}
+.board .brand .crumb{font:500 12.5px var(--mono);letter-spacing:.01em;color:var(--pencil)}
+@keyframes crest-press{0%{opacity:0;scale:1.45;rotate:-9deg}45%{opacity:1;scale:.9;rotate:1deg}62%{scale:.95}100%{opacity:1;scale:1;rotate:0deg}}
+@keyframes crest-again{0%{scale:1}40%{scale:.88;rotate:2deg}100%{scale:1;rotate:0deg}}
+html:not(.still) .board .brand .crest{animation:crest-press .42s cubic-bezier(.3,.9,.3,1) .5s backwards}
+html:not(.still) .board .brand:is(:hover,:focus-visible) .crest{animation:crest-again .32s cubic-bezier(.3,.9,.3,1)}
+.board .nav a{font-size:16.5px;font-weight:600;letter-spacing:.006em;padding:8px 12px 10px;color:var(--ink)}
+/* plain rendering: a brush stroke drawn in under the word (with the effect on, the board lays real paint there) */
+.board .nav a::after{left:9px;right:9px;bottom:1px;height:8px;border-radius:0;transform:none;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 8' preserveAspectRatio='none'%3E%3Cpath d='M1 4.6C1.4 2.2 4 1.6 8 2.2c20 1.6 46-.6 70 .4 14 .5 28-.4 39 1.2 1.6.4 1.2 1.6-.6 1.9-9 .9-17 .2-26 1.1-24 .9-52-.3-78 .6C6 7.6 1 7.2 1 4.6Z' fill='%231B2A9E'/%3E%3C/svg%3E") left center/0 100% no-repeat;transition:background-size .22s cubic-bezier(.3,.7,.2,1)}
+.board .nav a:is(:hover,:focus-visible,.on)::after{background-size:100% 100%}
+.board .nav a.on::after{filter:hue-rotate(150deg) saturate(2.4) brightness(1.5)}
+html.board-dark .board .nav a::after{filter:brightness(1.9) saturate(.9)}
+html.board-dark .board .nav a.on::after{filter:hue-rotate(150deg) saturate(2.4) brightness(1.7)}
+
+/* ---- the study sheet's pencil apparatus: baseline and year ticks, construction lines, thumbnails, a note ---- */
+.board .mapbox .study .rule{fill:none;stroke:var(--pencil);stroke-width:1;opacity:.55}
+.board .mapbox .study .cons{fill:none;stroke:var(--pencil);stroke-width:.8;stroke-dasharray:2 6;opacity:.42}
+.board .mapbox .study .tick{font:500 10px var(--mono);fill:var(--pencil);opacity:.8}
+.board .mapbox .study .note{font:italic 400 11.5px var(--sans);fill:var(--pencil);opacity:.85}
+/* Room for the peony (canvas rendering only; scene.js reserveBloom sets the sizes): the bio's last lines stop short
+   of the bloom at the hero's lower right, the buttons stand a little closer, and the hero stands a few px higher with
+   two of its gaps a little tighter, for the strip under the buttons where the branch runs. The plain page keeps its text width. */
+html.gl .board .bio::before{content:"";float:right;width:var(--keep-w,0px);height:var(--keep-all,0px);shape-outside:inset(calc(100% - var(--keep-h,0px)) 0 0 0)}
+html.gl .board .cta{gap:var(--cta-gap,clamp(24px,2.1vw,32px));margin-top:calc(clamp(14px,2.2vh,26px) - var(--sq,0px)*.4)}
+html.gl .board .bio{margin-top:calc(clamp(12px,1.8vh,22px) - var(--sq,0px)*.3)}
+html.gl .board .hero{position:relative;top:calc(var(--sq,0px)*-.65)}
+/* venue lines sit on the mountain paint: nearer the ink than the pencil (still lighter and smaller than the name) */
+.board .mapbox .vn{fill:#2B304B;font-weight:600}
+:root[data-theme=dark] .board .mapbox .vn{fill:#DDE1F6}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]) .board .mapbox .vn{fill:#DDE1F6}}
+.board .mapbox .study .ext{fill:none;stroke:var(--pencil);stroke-width:1.8;stroke-linecap:round;stroke-dasharray:.1 5.4;opacity:1}
+.board .mapbox .study .prog{font-size:10.5px}
+.board .mapbox svg.thumb{position:static;overflow:visible;opacity:.62;pointer-events:none}
+.board .mapbox svg.thumb *{fill:none!important;stroke:var(--pencil)!important;stroke-width:2.6px!important;vector-effect:none}
+.board .mapbox svg.thumb text{display:none}

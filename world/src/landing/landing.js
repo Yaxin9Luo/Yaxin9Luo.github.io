@@ -13,7 +13,7 @@ export const MUSEUM_URL = lang => `/yuanmingyuan.html?composition=xianfaqiao&pla
 export const landingCopy = {
   en: {
     nav: {about: 'About Me', research: 'Research', publications: 'Publications', projects: 'Projects', blog: 'Blog', cv: 'CV'}, heroName: 'Yaxin Luo',
-    explode: 'explode layers', collapse: 'collapse layers', hold: 'hold space', save: 'save this board', saveTitle: 'Download this board as a PNG', themeToggle: 'Switch theme', langSwitch: 'Language',
+    explode: 'explode layers', collapse: 'collapse layers', hold: 'hold space', layersTip: 'layers · Space', enterKey: 'Space', enterHold: 'hold', enterOr: 'or click', enterDo: 'to enter the page', layersHint: 'hold Space to see the layers', scrape: 'scrape the board clean', scrapeTitle: 'Scrape the paint off the board', save: 'save this board', saveTitle: 'Download this board as a PNG', themeToggle: 'Switch theme', langSwitch: 'Language',
     role: '<span>ML PhD · MBZUAI VILA Lab</span>&nbsp; /&nbsp; <span>Research Intern · Meituan LongCat</span>',
     chipA: 'Post-training & RL', chipB: 'Long-horizon agents',
     email: 'Email', cv: 'CV', tour: 'CV Tour',
@@ -24,7 +24,7 @@ export const landingCopy = {
   },
   zh: {
     nav: {about: '关于我', research: '研究方向', publications: '学术论文', projects: '研究作品', blog: '博客', cv: '简历'}, heroName: '罗亚鑫',
-    explode: '拆解图层', collapse: '合上图层', hold: '按住空格', save: '保存这块画板', saveTitle: '把这块画板下载为 PNG', themeToggle: '切换主题', langSwitch: '语言',
+    explode: '拆解图层', collapse: '合上图层', hold: '按住空格', layersTip: '图层 · 空格', enterKey: '空格', enterHold: '按住', enterOr: '或点击', enterDo: '进入页面', layersHint: '按住空格，查看图层', scrape: '刮净画板', scrapeTitle: '把画板上的颜料刮干净', save: '保存这块画板', saveTitle: '把这块画板下载为 PNG', themeToggle: '切换主题', langSwitch: '语言',
     role: '<span>ML 博士生 · MBZUAI VILA Lab</span>&nbsp; /&nbsp; <span>研究实习生 · 美团 LongCat</span>',
     chipA: '后训练与强化学习', chipB: '长程智能体',
     email: '邮件', cv: '简历', tour: 'CV 导览',
@@ -89,13 +89,17 @@ function strings(lang) {
 
 const EXT = 'target="_blank" rel="noopener noreferrer"';
 const dabs = '<span class="wdots" aria-hidden="true"><i></i><i></i><i></i></span>';
+// The mark at the top left: a peony crest, a roundel in the manner of a family crest (a ring, three tiers of broad
+// notched petals: eight, eight and five, and a seed pod with its stamens), printed in one colour with a worn edge.
+// The paths come from a small generator (petals as curves in polar form); this is its output.
+const CREST = `<svg class="crest" viewBox="0 0 100 100" aria-hidden="true"><defs><mask id="crest-wear"><circle cx="50" cy="50" r="50" fill="#fff"/><g fill="#000"><circle cx="3.4" cy="38" r="2.6"/><circle cx="96.4" cy="63" r="3"/><circle cx="66" cy="97.6" r="2.3"/><circle cx="27" cy="5.6" r="2"/><circle cx="88.6" cy="17.4" r="2.5"/><circle cx="12.4" cy="85" r="2"/></g><g fill="#000" opacity=".16"><ellipse cx="70" cy="30" rx="17" ry="11"/><ellipse cx="27" cy="67" rx="14" ry="17"/><ellipse cx="60" cy="80" rx="18" ry="7"/></g></mask></defs><g mask="url(#crest-wear)"><circle cx="50" cy="50" r="48" fill="currentColor"/><circle cx="50" cy="50" r="43.2" fill="none" stroke="#FFF9EE" stroke-width="1.5"/><path d="M50.00 35.00 Q40.30 30.87 38.76 21.47 Q40.83 11.29 50.00 18.25 Q59.17 11.29 61.24 21.47 Q59.70 30.87 50.00 35.00Z" fill="#FFF9EE" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M60.61 39.39 Q56.67 29.61 62.23 21.88 Q70.89 16.14 72.45 27.55 Q83.86 29.11 78.12 37.77 Q70.39 43.33 60.61 39.39Z" fill="#FFF9EE" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M65.00 50.00 Q69.13 40.30 78.53 38.76 Q88.71 40.83 81.75 50.00 Q88.71 59.17 78.53 61.24 Q69.13 59.70 65.00 50.00Z" fill="#FFF9EE" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M60.61 60.61 Q70.39 56.67 78.12 62.23 Q83.86 70.89 72.45 72.45 Q70.89 83.86 62.23 78.12 Q56.67 70.39 60.61 60.61Z" fill="#FFF9EE" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M50.00 65.00 Q59.70 69.13 61.24 78.53 Q59.17 88.71 50.00 81.75 Q40.83 88.71 38.76 78.53 Q40.30 69.13 50.00 65.00Z" fill="#FFF9EE" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M39.39 60.61 Q43.33 70.39 37.77 78.12 Q29.11 83.86 27.55 72.45 Q16.14 70.89 21.88 62.23 Q29.61 56.67 39.39 60.61Z" fill="#FFF9EE" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M35.00 50.00 Q30.87 59.70 21.47 61.24 Q11.29 59.17 18.25 50.00 Q11.29 40.83 21.47 38.76 Q30.87 40.30 35.00 50.00Z" fill="#FFF9EE" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M39.39 39.39 Q29.61 43.33 21.88 37.77 Q16.14 29.11 27.55 27.55 Q29.11 16.14 37.77 21.88 Q43.33 29.61 39.39 39.39Z" fill="#FFF9EE" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M53.44 41.69 Q48.46 35.98 49.81 28.16 Q54.06 21.95 58.76 28.86 Q66.96 27.30 65.58 34.69 Q61.00 41.17 53.44 41.69Z" fill="#FFF9EE" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M58.31 46.56 Q59.05 38.72 66.01 33.70 Q73.75 32.26 72.11 40.84 Q79.34 45.75 72.85 50.20 Q64.37 51.57 58.31 46.56Z" fill="#FFF9EE" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M58.31 53.44 Q64.02 48.46 71.84 49.81 Q78.05 54.06 71.14 58.76 Q72.70 66.96 65.31 65.58 Q58.83 61.00 58.31 53.44Z" fill="#FFF9EE" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M53.44 58.31 Q61.28 59.05 66.30 66.01 Q67.74 73.75 59.16 72.11 Q54.25 79.34 49.80 72.85 Q48.43 64.37 53.44 58.31Z" fill="#FFF9EE" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M46.56 58.31 Q51.54 64.02 50.19 71.84 Q45.94 78.05 41.24 71.14 Q33.04 72.70 34.42 65.31 Q39.00 58.83 46.56 58.31Z" fill="#FFF9EE" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M41.69 53.44 Q40.95 61.28 33.99 66.30 Q26.25 67.74 27.89 59.16 Q20.66 54.25 27.15 49.80 Q35.63 48.43 41.69 53.44Z" fill="#FFF9EE" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M41.69 46.56 Q35.98 51.54 28.16 50.19 Q21.95 45.94 28.86 41.24 Q27.30 33.04 34.69 34.42 Q41.17 39.00 41.69 46.56Z" fill="#FFF9EE" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M46.56 41.69 Q38.72 40.95 33.70 33.99 Q32.26 26.25 40.84 27.89 Q45.75 20.66 50.20 27.15 Q51.57 35.63 46.56 41.69Z" fill="#FFF9EE" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M50.56 46.04 Q46.04 43.34 44.58 37.24 Q46.50 32.36 52.07 35.29 Q58.23 34.01 58.72 39.23 Q55.64 44.69 50.56 46.04Z" fill="#FFF9EE" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M53.94 49.31 Q55.11 44.17 60.46 40.91 Q65.70 41.22 64.62 47.42 Q67.75 52.88 62.94 54.97 Q56.79 53.73 53.94 49.31Z" fill="#FFF9EE" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M51.88 53.53 Q57.12 53.06 61.88 57.14 Q63.20 62.22 56.97 63.11 Q52.75 67.77 49.27 63.84 Q48.55 57.61 51.88 53.53Z" fill="#FFF9EE" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M47.22 52.88 Q49.29 57.72 46.88 63.50 Q42.46 66.33 39.68 60.68 Q33.94 58.10 36.61 53.59 Q42.31 50.98 47.22 52.88Z" fill="#FFF9EE" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M46.40 48.25 Q42.44 51.71 36.19 51.21 Q32.14 47.88 36.65 43.49 Q37.33 37.23 42.45 38.38 Q46.69 42.99 46.40 48.25Z" fill="#FFF9EE" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><circle cx="50" cy="50" r="5.6" fill="#FFF9EE" stroke="currentColor" stroke-width="1.7"/><circle cx="50.00" cy="47.10" r="0.95" fill="currentColor"/><circle cx="52.51" cy="48.55" r="0.95" fill="currentColor"/><circle cx="52.51" cy="51.45" r="0.95" fill="currentColor"/><circle cx="50.00" cy="52.90" r="0.95" fill="currentColor"/><circle cx="47.49" cy="51.45" r="0.95" fill="currentColor"/><circle cx="47.49" cy="48.55" r="0.95" fill="currentColor"/><circle cx="50.00" cy="50.00" r="1" fill="currentColor"/></g></svg>`;
 const themeIcon = () => typeof document !== 'undefined' && (document.documentElement?.dataset?.theme || (typeof matchMedia === 'function' && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')) === 'dark' ? ec.sun : ec.moon;
 
 /* The page, piece by piece. The board (./board/scene.js) lays the same pieces out on its sheets. */
 function top(lang = 'en') {
   const t = landingCopy[lang === 'zh' ? 'zh' : 'en'], section = id => `<a href="#section/${id}" data-action="section" data-id="${id}">${t.nav[id]}</a>`;
   return `<header class="top">
-    <a class="brand" href="#" data-action="home" aria-label="${esc(t.name)}">${dabs}<span class="crumb">yaxin-luo <i>/</i> <b>home</b></span></a>
+    <a class="brand" href="#" data-action="home" aria-label="${esc(t.name)}">${CREST}<span class="crumb">yaxin-luo <i>/</i> <b>home</b></span></a>
     <nav class="nav" aria-label="${esc(t.map)}">${['about', 'research', 'publications', 'projects'].map(section).join('')}<a href="/blog/${lang === 'zh' ? '?lang=zh' : ''}">${t.nav.blog}</a><a href="${cvForLanguage(lang)}" ${EXT}>${t.nav.cv}</a></nav>
     <div class="tools">
       <span class="lang" role="group" aria-label="${t.langSwitch}"><button type="button" data-action="language" aria-pressed="${lang !== 'zh'}" lang="en">EN</button><button type="button" data-action="language" aria-pressed="${lang === 'zh'}" lang="zh-CN">中</button></span>
@@ -145,6 +149,20 @@ const sheetHTML = {
 };
 
 /** Static landing markup. Root keeps the `.welcome` class: Interface hides it while the 3D world plays. */
+/** The pill at the foot of the opening stack ("hold Space · or click · to enter the page"), and what it says after. */
+export function enterHintHTML(lang = 'en') {
+  const t = landingCopy[lang === 'zh' ? 'zh' : 'en'];
+  return `<button class="enter-hint" type="button" tabindex="-1"><span class="eh-enter"><span>${esc(t.enterHold)}</span><kbd><i aria-hidden="true"></i>${esc(t.enterKey)}</kbd><b aria-hidden="true">·</b><span>${esc(t.enterOr)}</span><b aria-hidden="true">·</b><span>${esc(t.enterDo)}</span></span><span class="eh-layers"><kbd><i aria-hidden="true"></i>${esc(t.enterKey)}</kbd><span>${esc(t.layersHint)}</span></span></button>`;
+}
+/**
+ * Whether the board opens as its exploded stack of sheets. Not when the effect is off, motion is reduced, the
+ * address opens a panel, or the visitor comes back to a page they have already entered (history back / forward).
+ */
+export function opensExploded({effects = true, reducedMotion = false, hash = '', reading = false, navigation = 'navigate', entered = false} = {}) {
+  if (!effects || reducedMotion || reading) return false;
+  if (hash.replace(/^#/, '').split(/[&,]/).some(part => part && !/^(stats|still)$/.test(part))) return false;
+  return !(navigation === 'back_forward' && entered);
+}
 export function renderLanding(lang = 'en') {
   const t = landingCopy[lang === 'zh' ? 'zh' : 'en'];
   return `<section class="welcome landing board" aria-label="${esc(t.name)}"><div id="stage">
@@ -154,8 +172,10 @@ export function renderLanding(lang = 'en') {
     ${notesHTML}
   </div>
   <div class="pveil"></div>
-  <button class="xbtn" type="button" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 3 8l9 5 9-5zM3 12.5l9 5 9-5M3 17l9 5 9-5"/></svg><span>${t.explode}</span><kbd>${t.hold}</kbd></button>
+  <button class="xbtn" type="button" aria-pressed="false" data-tip="${esc(t.layersTip)}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 3 8l9 5 9-5zM3 12.5l9 5 9-5M3 17l9 5 9-5"/></svg><span>${t.explode}</span><kbd>${t.hold}</kbd></button>
   <button class="xbtn save" type="button" title="${esc(t.saveTitle)}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></svg><span>${t.save}</span></button>
+  <button class="xbtn scrape" type="button" title="${esc(t.scrapeTitle)}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 19.5 9 15M9 15l2.2 2.2M9 15l-1.8-1.8M7.2 13.2 15.6 4.8c1.5-1.5 4.1.6 3 2.6-1.6 3-4.4 6.2-7.4 9.8"/></svg><span>${t.scrape}</span></button>
+  ${enterHintHTML(lang)}
   <div class="tags" aria-hidden="true"><div><b>01</b>ground</div><div><b>02</b>text</div><div><b>03</b>research-map</div><div><b>04</b>annotations</div><div><b>05</b><span>sheet</span></div></div>
   </section>`;
 }
@@ -183,6 +203,17 @@ function catmull(pts) {
   return d;
 }
 
+// points along catmull()'s curve, for tests of what the curve passes through
+function bezierPoints(pts, per = 14) {
+  const out = [];
+  for (let i = 0; i < pts.length - 1; i++) {
+    const p0 = pts[i - 1] || pts[i], p1 = pts[i], p2 = pts[i + 1], p3 = pts[i + 2] || p2, k = 1 / 6;
+    const c1 = [p1[0] + (p2[0] - p0[0]) * k, p1[1] + (p2[1] - p0[1]) * k], c2 = [p2[0] - (p3[0] - p1[0]) * k, p2[1] - (p3[1] - p1[1]) * k];
+    for (let j = 0; j <= per; j++) { const t = j / per, u = 1 - t; out.push([u * u * u * p1[0] + 3 * u * u * t * c1[0] + 3 * u * t * t * c2[0] + t * t * t * p2[0], u * u * u * p1[1] + 3 * u * u * t * c1[1] + 3 * u * t * t * c2[1] + t * t * t * p2[1]]); }
+  }
+  return out;
+}
+
 /** Below this map width the three columns no longer hold their words (the widest line clears its column by 8px at 546): the map switches to its compact layout. */
 export const COMPACT_MAP = 546;
 /** Below this width the hero and the map stack in one column; it matches the stacked block in landing.css. */
@@ -205,6 +236,12 @@ export function mapSVG(W, H, lang = 'en', {motion = true} = {}) {
     s += `<text class="num" x="${ix}" y="${34 * mk}">${p[0]}</text><text class="yr" x="${ix + 30 * mk}" y="${34 * mk}">${p[1]}</text>`;
     s += `<text class="ph" x="${ix}" y="${72 * mk}">${p[2]}</text><text class="phs" x="${ix}" y="${98 * mk}">${p[3]}</text><text class="phs" x="${ix}" y="${118 * mk}">${p[4]}</text>`;
   });
+  // the quiet apparatus of a study, in pencil: a baseline with year ticks, construction lines at the phase
+  // boundaries, and the question the sheet asks
+  const base = H - 30 * mk, edges = [colW + gap / 2, 2 * colW + gap * 1.5], years = ['2024', '2025', '2026 →'];
+  s += `<g class="study" aria-hidden="true"><path class="rule" d="M8 ${base}H${W - 8}"/>${edges.map(x => `<path class="cons" d="M${x} ${head - 4}V${base + 5}"/>`).join('')}`;
+  s += [8, ...edges].map((x, i) => `<path class="rule" d="M${x} ${base - 4}V${base + 4}"/><text class="tick" x="${x + 6}" y="${base + 15 * mk}">${years[i]}</text>`).join('');
+  s += `<text class="note" x="${16 * mk}" y="${head + 22 * mk}">${zh ? 'harness 做的事，模型能自己做多少？' : 'how much can the model carry on its own?'}</text></g>`;
   const L = mapNodes.find(n => n.lab === 'loop'), lx = cx(2, L.fx), ly = cy(L.fy), R = Math.min(colW * .34, 72 * mk);
   const nodes = mapNodes.filter(n => n !== L), pts = [...nodes.map(n => [Math.round(cx(n.col, n.fx)), Math.round(cy(n.fy))]), [Math.round(lx - R * .7), Math.round(ly + R * .72)]];
   // Straight lead-in, tangent to the first segment and clipped to the first column card (never below it).
@@ -213,6 +250,16 @@ export function mapSVG(W, H, lang = 'en', {motion = true} = {}) {
   const start = [+(a[0] - dx * k).toFixed(1), +(a[1] - dy * k).toFixed(1)];
   const d = `M${start[0]} ${start[1]} L${a[0]} ${a[1]}${catmull(pts)}`;
   s += `<path class="trk" d="${d}"/><path class="crv" d="${d}"/>`;
+  // Past the loop the ridge is not drawn yet: a dotted pencil line goes on up to the sheet's right edge, with an
+  // arrow and a note. It starts clear of the loop and of the loop's two names. ext: the undrawn slope from the
+  // curve's end, for whatever is painted under it.
+  const ext = [[lx - R * .7, ly + R * .72], [lx + R * .04, ly - R * .53], [lx + R + 3, ly - R * 1.24], [W, ly - R * 1.67]];
+  { // it leaves the curve's end, passes under the loop (well clear of the orbit) and rises to the sheet's right edge
+    const f = v => v.toFixed(1), cxq = lx + R * .75, cyq = ly + R * 1.5, x1 = W - 9, y1 = ly + R * .45;
+    const ang = Math.atan2(y1 - cyq, x1 - cxq), tip = a => `${f(x1 - 7 * Math.cos(ang + a))} ${f(y1 - 7 * Math.sin(ang + a))}`;
+    s += `<g class="study" aria-hidden="true"><path class="ext" d="M${f(lx - R * .45)} ${f(ly + R * .95 + 7)} Q${f(cxq)} ${f(cyq)} ${f(x1)} ${f(y1)}"/><path class="rule" d="M${tip(.45)}L${f(x1)} ${f(y1)}L${tip(-.45)}"/>`;
+    s += `<text class="note prog" x="${f(W - 8)}" y="${f(ly + R * 1.5 + 8 * mk)}" text-anchor="end">${zh ? '进行中' : 'in progress'}</text></g>`;
+  }
   const r = R * .5, venue = n => pick(n.venue, lang);
   s += `<g class="node loop" data-id="${L.id}" tabindex="0" role="button" aria-label="${L.name} · ${esc(venue(L))}"><circle class="orbit" cx="${lx}" cy="${ly}" r="${R}"/>`;
   s += `<circle class="loopm" cx="${lx - r * .86}" cy="${ly}" r="${r}"/><circle class="looph" cx="${lx + r * .86}" cy="${ly}" r="${r}"/>`;
@@ -220,16 +267,46 @@ export function mapSVG(W, H, lang = 'en', {motion = true} = {}) {
   s += `<circle class="tok" r="4" cx="${lx + R}" cy="${ly}">${motion ? `<animateMotion dur="9s" repeatCount="indefinite" path="M0 0 a${R} ${R} 0 1 1 -${2 * R} 0 a${R} ${R} 0 1 1 ${2 * R} 0"/>` : ''}</circle>`;
   s += `<text class="nm lp" x="${lx}" y="${ly - R - 26 * mk}" text-anchor="middle">${L.name}</text><text class="vn" x="${lx}" y="${ly - R - 10 * mk}" text-anchor="middle">${esc(venue(L))}</text>`;
   s += `<rect x="${lx - R}" y="${ly - R - 40 * mk}" width="${2 * R}" height="${2 * R + 40 * mk}" fill="transparent"/></g>`;
+  // Where a node's pencil thumbnail goes: bare sky (above the ridge) near the node, 6 px clear of the curve, of every
+  // label, of the loop, of the dotted line and of the other thumbnails. No such place, no thumbnail.
+  const ridge = [start, ...bezierPoints(pts), ...ext], taken = [[0, 0, W, head + 30 * mk], [lx - R - 6, ly - R - 44 * mk, W, ly + R * 1.5 + 14 * mk]];
+  const labelOf = n => {
+    const x = Math.round(cx(n.col, n.fx)), y = Math.round(cy(n.fy)), up = n.lab === 'above', side = n.lab === 'br' ? 1 : n.lab === 'bl' ? -1 : 0, tx = x + side * 8 * mk;
+    const w = Math.max(n.name.length * 8.6, String(pick(n.venue, lang)).length * 7) * mk, x0 = side > 0 ? tx : side < 0 ? tx - w : tx - w / 2;
+    return [x0 - 4, (up ? y - 50 * mk : y + (side ? 14 : 19) * mk), x0 + w + 4, (up ? y - 12 * mk : y + (side ? 50 : 55) * mk)];
+  };
+  nodes.forEach(n => taken.push(labelOf(n)));
+  const thumbAt = i => {
+    const n = nodes[i], x = pts[i][0], y = pts[i][1], up = n.lab === 'above', side = n.lab === 'br' ? 1 : n.lab === 'bl' ? -1 : 0, tw = 56 * mk, th = 16 * mk;
+    const tries = [];
+    // beside a summit; above a valley or a slope, on the side away from the label first, then higher and further
+    if (up) for (const d of [16, 26, 38]) for (const sx of [1, -1]) for (const dy of [-8, -22, 6]) tries.push([sx > 0 ? x + d * mk : x - d * mk - tw, y + dy * mk - th / 2]);
+    else for (const dy of [16, 28, 42, 58, 76]) for (const sx of side > 0 ? [-1, 1, 0] : [1, -1, 0]) for (const d of [12, 26]) tries.push([sx > 0 ? x + d * mk : sx < 0 ? x - d * mk - tw : x - tw / 2, y - th - dy * mk]);
+    for (const [bx, by] of tries) {
+      const box = [bx - 6, by - 6, bx + tw + 6, by + th + 6];
+      if (bx < 6 || bx + tw > W - 6 || by < head) continue;
+      if (taken.some(t => box[0] < t[2] && box[2] > t[0] && box[1] < t[3] && box[3] > t[1])) continue;
+      if (ridge.some(q => q[0] > box[0] && q[0] < box[2] && q[1] < box[3])) continue;      // the curve crosses it, or it is under the ridge (on the paint)
+      if (pts.some(q => Math.hypot(q[0] - Math.max(box[0], Math.min(q[0], box[2])), q[1] - Math.max(box[1], Math.min(q[1], box[3]))) < 12 * mk)) continue;
+      taken.push(box);
+      return [bx, by, tw, th];
+    }
+    return null;
+  };
   nodes.forEach((n, i) => {
     const x = Math.round(cx(n.col, n.fx)), y = Math.round(cy(n.fy)), up = n.lab === 'above';
     const side = n.lab === 'br' ? 1 : n.lab === 'bl' ? -1 : 0, anc = side > 0 ? 'start' : side < 0 ? 'end' : 'middle', tx = x + side * 8 * mk;
     const ny = up ? y - 36 * mk : y + (side ? 28 : 33) * mk, vy = up ? y - 19 * mk : y + (side ? 44 : 49) * mk;
+    { // the thumbnail sits in the sky beside its node, on the side away from the label, wherever it touches nothing
+      const at = thumbAt(i);
+      if (DG[n.dg] && at) s += `<svg class="thumb" aria-hidden="true" x="${at[0].toFixed(1)}" y="${at[1].toFixed(1)}" width="${at[2].toFixed(1)}" height="${at[3].toFixed(1)}" viewBox="0 0 280 80" preserveAspectRatio="xMidYMid meet">${DG[n.dg]}</svg>`;
+    }
     s += `<g class="node" data-id="${n.id}" tabindex="0" role="button" aria-label="${esc(n.name)} · ${esc(venue(n))}"><circle class="o" cx="${x}" cy="${y}" r="8"/>`;
     s += `<text class="nm" x="${tx}" y="${ny}" text-anchor="${anc}">${esc(n.name)}</text><text class="vn" x="${tx}" y="${vy}" text-anchor="${anc}">${esc(venue(n))}</text>`;
     s += `<circle cx="${x}" cy="${y}" r="22" fill="transparent"/></g>`;
   });
   // pts: node centres [x, y, id] in curve order, the loop's centre last; curve: the points the path runs through
-  return {svg: s + '</svg>', mk, path: d, pts: [...nodes.map((n, i) => [pts[i][0], pts[i][1], n.id]), [lx, ly, L.id]], curve: [start, ...pts], loop: {x: lx, y: ly, R}};
+  return {svg: s + '</svg>', mk, path: d, ext, pts: [...nodes.map((n, i) => [pts[i][0], pts[i][1], n.id]), [lx, ly, L.id]], curve: [start, ...pts], loop: {x: lx, y: ly, R}};
 }
 
 /**
@@ -409,7 +486,7 @@ export function mountLanding(host, {lang = 'en', reducedMotion = false, getGuide
   const canDraw = (probe.content === 'drawable' || 'layoutSubtree' in HTMLCanvasElement.prototype) && typeof probe.requestPaint === 'function';
   // The board (and the paint simulator) is fetched only when the window can show the effect: a phone never pays for it.
   const big = () => innerWidth >= BOARD_MIN.width && innerHeight >= BOARD_MIN.height;
-  const start = () => import('../board/index.js').then(m => m.startBoard({site, min: BOARD_MIN, lang: LANG, still, onMode: () => { land.classList.toggle('fx', !!board?.app?.effects?.()); dock(); }})).then(started => {
+  const start = () => import('../board/index.js').then(m => m.startBoard({site, min: BOARD_MIN, lang: LANG, still, intro: opening(), copy: () => landingCopy[LANG], onMode: () => { land.classList.toggle('fx', !!board?.app?.effects?.()); dock(); }})).then(started => {
     board = started;
     if (disposed) { board.app?.setEffects?.(false); return; }
     if (board.lang() !== LANG) board.setLanguage(LANG);
@@ -417,6 +494,10 @@ export function mountLanding(host, {lang = 'en', reducedMotion = false, getGuide
   }).catch(error => { console.warn('board', error); if (!land.querySelector('.hero')) { root.classList.add('flat'); plain(); } });
   land.classList.toggle('dark', dark());
   root.classList.toggle('board-dark', dark());
+  const opening = () => {
+    let entered = false; try { entered = sessionStorage.getItem('board-entered') === '1'; } catch (error) { /* private mode */ }
+    return opensExploded({effects: !paused, reducedMotion: still, hash: location.hash, reading: !!experience?.matches('.reading, .playing, .exhibiting'), navigation: performance.getEntriesByType?.('navigation')[0]?.type || 'navigate', entered});
+  };
   let started = false;
   const grow = () => { if (started || disposed || !big()) return; started = true; removeEventListener('resize', grow); start(); };
   if (!canDraw || new URLSearchParams(location.search).get('fx') === 'off') { root.classList.add('flat'); plain(); }
@@ -432,7 +513,9 @@ export function mountLanding(host, {lang = 'en', reducedMotion = false, getGuide
       LANG = value === 'zh' ? 'zh' : 'en';
       if (board) board.setLanguage(LANG); else if (sheets) for (const sheet of Object.values(sheets)) sheet.setLanguage(LANG);
       land.setAttribute('aria-label', landingCopy[LANG].name);
-      for (const [selector, key] of [['.xbtn:not(.save) span', land.querySelector('.xbtn')?.getAttribute('aria-pressed') === 'true' ? 'collapse' : 'explode'], ['.xbtn kbd', 'hold'], ['.xbtn.save span', 'save']]) { const el = land.querySelector(selector); if (el) el.textContent = landingCopy[LANG][key]; }
+      for (const [selector, key] of [['.xbtn:not(.save):not(.scrape) span', land.querySelector('.xbtn')?.getAttribute('aria-pressed') === 'true' ? 'collapse' : 'explode'], ['.xbtn kbd', 'hold'], ['.xbtn.save span', 'save'], ['.xbtn.scrape span', 'scrape']]) { const el = land.querySelector(selector); if (el) el.textContent = landingCopy[LANG][key]; }
+      land.querySelector('.xbtn')?.setAttribute('data-tip', landingCopy[LANG].layersTip);
+      { const hint = land.querySelector('.enter-hint'); if (hint) { const fresh = document.createElement('div'); fresh.innerHTML = enterHintHTML(LANG); hint.innerHTML = fresh.firstChild.innerHTML; } }
       dock();
     },
     setReducedMotion(value) { still = !!value || matchMedia('(prefers-reduced-motion: reduce)').matches; root.classList.toggle('still', still); sheets?.map.setMotion(!still); },

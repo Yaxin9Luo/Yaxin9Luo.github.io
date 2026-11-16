@@ -382,9 +382,15 @@ HIC.start = function (options) {
     }
   }
 
-  function applyState(state) {
+  // g.clip = [x0, y0, x1, y1] (window px, from the top left) keeps draws onto the screen inside that box, for a scene
+  // that redraws only the part of the picture that changed (the context then needs options.preserve)
+  function applyState(state, onScreen) {
     const s = state || {};
-    gl.disable(gl.SCISSOR_TEST);
+    if (onScreen && g.clip) {
+      const k = view.k, c = g.clip, x = Math.max(0, Math.floor(c[0] * k)), y = Math.max(0, Math.floor(view.ph - c[3] * k));
+      gl.enable(gl.SCISSOR_TEST);
+      gl.scissor(x, y, Math.max(0, Math.ceil(c[2] * k) - x), Math.max(0, Math.ceil(view.ph - c[1] * k) - y));
+    } else gl.disable(gl.SCISSOR_TEST);
     if (s.blend === 'add') { gl.enable(gl.BLEND); gl.blendFunc(gl.ONE, gl.ONE); }
     else if (s.blend) { gl.enable(gl.BLEND); gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA); }   // premultiplied
     else gl.disable(gl.BLEND);
@@ -482,7 +488,7 @@ HIC.start = function (options) {
     /* full-window pass onto the screen. state: {blend} */
     screen(P, values, state) {
       bindTarget(null);
-      applyState(state);
+      applyState(state, true);
       g.uniforms(P, values);
       gl.bindVertexArray(g.vao0);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
@@ -491,7 +497,7 @@ HIC.start = function (options) {
     /* geometry into a target (null = the screen). what: {vao, mode, count, instances, indexed}; state: {blend, depth, cull} */
     draw(P, target, what, values, state) {
       bindTarget(target);
-      applyState(state);
+      applyState(state, !target);
       g.uniforms(P, values);
       gl.bindVertexArray(what.vao);
       const mode = what.mode === undefined ? gl.TRIANGLES : what.mode;
@@ -622,7 +628,10 @@ void main() {
   const uploads = { sizeOption: null, signature: 3 };
 
   function finishUpload(layer, w, h) {
-    if (layer.mips) {
+    // a layer with lazyMips set (by the scene) keeps a plain picture while it is drawn 1:1; app.freshMips builds
+    // the mip chain when the scene is about to draw it smaller
+    layer.staleMips = !!(layer.mips && layer.lazyMips);
+    if (layer.mips && !layer.staleMips) {
       gl.generateMipmap(gl.TEXTURE_2D);
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
       if (aniso) gl.texParameterf(gl.TEXTURE_2D, aniso.TEXTURE_MAX_ANISOTROPY_EXT, 8);
@@ -636,6 +645,16 @@ void main() {
     layer.need = false;
     diag.uploads++;
   }
+
+  app.freshMips = function (layer) {
+    if (!layer.staleMips || !layer.tex) return;
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D, layer.tex);
+    gl.generateMipmap(gl.TEXTURE_2D);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
+    if (aniso) gl.texParameterf(gl.TEXTURE_2D, aniso.TEXTURE_MAX_ANISOTROPY_EXT, 8);
+    layer.staleMips = false;
+  };
 
   function allocate(layer, w, h) {
     const key = w + 'x' + h;
@@ -733,6 +752,14 @@ void main() {
       if (!diag.geometryError) { diag.geometryError = String(error); note('geometry: ' + error); }
     }
   }
+
+  /* Run fn with every layer's HTML laid flat where its own layout has it, so that client rects taken inside fn are
+     the layout's (a scene that tilts its layers otherwise hands back their boxes in the tilted fit). The next frame
+     puts the HTML back under the picture. */
+  app.plainGeometry = function (fn) {
+    if (diag.mode === 'live') for (const layer of layers) setMatrix(layer, [1, 0, 0, 1, layer.el.offsetLeft || 0, layer.el.offsetTop || 0]);
+    return fn();
+  };
 
   function unprojectSafe(layer, x, y) {
     let point = null;
@@ -856,6 +883,7 @@ void main() {
     const oldX = ptr.sx, oldY = ptr.sy;
     ptr.sx += (ptr.x - ptr.sx) * follow;
     ptr.sy += (ptr.y - ptr.sy) * follow;
+    if (Math.abs(ptr.x - ptr.sx) < .02 && Math.abs(ptr.y - ptr.sy) < .02) { ptr.sx = ptr.x; ptr.sy = ptr.y; }   // it arrives, so a scene can come to rest
     ptr.vx = mix(ptr.vx, (ptr.sx - oldX) / dt, .3);
     ptr.vy = mix(ptr.vy, (ptr.sy - oldY) / dt, .3);
     base.uView = [view.W, view.H];
