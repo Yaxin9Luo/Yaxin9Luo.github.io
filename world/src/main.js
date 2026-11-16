@@ -2,6 +2,7 @@ import './style.css';
 import './journal.css';
 import './mascot-guide.css';
 import './landing/landing.css';
+import './board/board.css';
 import './landing/panels.css';
 import {Interface} from './ui.js';
 import {createLoadingCoordinator} from './loading-coordinator.js';

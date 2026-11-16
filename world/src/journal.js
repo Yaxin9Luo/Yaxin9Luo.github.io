@@ -2,11 +2,34 @@ import { profile, research, publications, selectedPublications, experience, jour
 import {selectedProjects, getProject, getProjectMedia, publicationRole} from './exhibition-content.js';
 import {clampMedia} from './exhibition-state.js';
 import {explainerFor} from './blog/work-links.js';
+import {PHASES, OFF_MAP, WORKS} from './blog/taxonomy.js';
+import {mapNodes, mapPhases} from './landing/landing.js';
 
 const escape = (value = '') => String(value).replace(/[&<>"']/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[character]);
 const local = (value, lang) => typeof value === 'string' ? value : value?.[lang] || value?.en || '';
 const copy = (lang, en, zh) => lang === 'zh' ? zh : en;
 const safeURL = (url) => /^(https?:\/\/|mailto:|\/(?!\/))/.test(String(url)) ? url : '#';
+
+// Pieces only the landing's painted sheets show (board.css); the 3D world's panels keep them hidden.
+const DAB = { multimodal: 'mm', eval: 'ev', 'post-training': 'pt' };
+/** A dab of paint in the colour of the paper's phase on the research map. */
+function phaseDab(id, lang) {
+  const phase = WORKS[id]?.phase || null;
+  return `<i class="sheet-dab sheet-dab-${phase ? DAB[phase] : 'off'}" title="${escape((phase ? PHASES[phase] : OFF_MAP)[lang])}" aria-hidden="true"></i>`;
+}
+const isPresent = (period) => /Present|至今/.test(period);
+/** The research map as three washes, each with its works and the question each one asks. */
+function phaseWashes(lang) {
+  const k = lang === 'zh' ? 1 : 0, pick = (value) => Array.isArray(value) ? value[k] : value;
+  return `<ol class="sheet-phases">${mapPhases[lang].map((phase, index) => `<li class="sheet-phase sheet-phase-${index}"><div class="sheet-wash"><p class="sheet-phase-year"><b>${escape(phase[0])}</b>${escape(phase[1])}</p><h3>${escape(phase[2])}</h3></div><p class="sheet-phase-about">${escape(phase[3])}${lang === 'zh' ? '' : ' '}${escape(phase[4])}</p><ul>${mapNodes.filter((node) => node.col === index).map((node) => {
+    const action = node.pub ? `data-action="paper" data-id="${escape(node.pub)}"` : node.project ? `data-action="project" data-id="${escape(node.project)}"` : '';
+    return `<li><p class="sheet-node">${action ? `<button type="button" class="sheet-node-link" ${action}>${escape(node.name)}</button>` : `<span class="sheet-node-link">${escape(node.name)}</span>`}<span>${escape(pick(node.venue))}</span></p><p class="sheet-node-question">${escape(pick(node.q))}</p></li>`;
+  }).join('')}</ul></li>`).join('')}</ol>`;
+}
+/** Model and harness as two dabs pulled into each other while wet. */
+function loopMix(lang) {
+  return `<div class="sheet-mix" role="img" aria-label="${escape(copy(lang, 'The model and its harness improve each other in a loop', '模型与 harness 在循环中互相改进'))}"><svg viewBox="0 0 300 190" aria-hidden="true"><path d="M150 14 C226 14 286 52 286 96 C286 142 226 178 150 178 C74 178 14 142 14 96 C14 52 74 14 150 14"/><path class="sheet-mix-arrow" d="M141 7 L152 14 L141 21"/><path class="sheet-mix-arrow" d="M159 171 L148 178 L159 185"/></svg><span class="sheet-mix-model">${escape(copy(lang, 'model', '模型'))}</span><span class="sheet-mix-harness">harness</span></div>`;
+}
 
 function icon(name) {
   const paths = {
@@ -54,7 +77,7 @@ function authorList(item, lang) {
 }
 
 function timeline(items, lang, full = false) {
-  return `<ol class="journal-timeline${full ? ' journal-timeline-full' : ''}">${items.map((item) => `<li class="journal-timeline-item"><div class="journal-timeline-marker" aria-hidden="true"></div><p class="journal-date">${escape(local(item.period, lang))}</p><h3>${escape(local(item.role, lang))}</h3><p class="journal-organization">${escape(local(item.organization, lang))}</p><p class="journal-description">${escape(local(item.description, lang))}</p></li>`).join('')}</ol>`;
+  return `<ol class="journal-timeline${full ? ' journal-timeline-full' : ''}">${items.map((item) => `<li class="journal-timeline-item${isPresent(local(item.period, lang)) ? ' journal-timeline-now' : ''}"><div class="journal-timeline-marker" aria-hidden="true"></div><p class="journal-date">${escape(local(item.period, lang))}</p><h3>${escape(local(item.role, lang))}</h3><p class="journal-organization">${escape(local(item.organization, lang))}</p><p class="journal-description">${escape(local(item.description, lang))}</p></li>`).join('')}</ol>`;
 }
 
 function primaryLinks(lang) {
@@ -78,7 +101,7 @@ function publicationView(lang) {
   const years = [...new Set(selectedPublications.map((item) => item.year))].sort((a, b) => b - a);
   return `${head(copy(lang, 'THE RESEARCH COLLECTION', '研究作品集'), copy(lang, 'Publications', '论文'), copy(lang, 'Selected first-author and co-first-author work, plus agentic-task research.', '精选一作、共同一作论文，以及智能体任务相关研究。'), lang)}
   <div class="journal-reading-tools"><p class="journal-caption">${escape(copy(lang, `${selectedPublications.length} selected papers · * Equal contribution`, `精选 ${selectedPublications.length} 篇论文 · * 表示共同一作`))}</p>${anchor(links.scholar, copy(lang, 'View Google Scholar', '查看 Google Scholar'), 'journal-text-link')}</div>
-  ${years.map((year) => `<section class="journal-section paper-year-section"><div class="paper-year-heading"><h3>${year}</h3><span aria-hidden="true"></span></div><div class="paper-list">${selectedPublications.filter((item) => item.year === year).map((item) => `<article class="paper-entry${item.image ? ' paper-entry-illustrated' : ''}" id="paper-${escape(item.id)}">${item.image ? `<figure class="paper-thumbnail"><img src="${escape(item.image)}" alt="${escape(copy(lang, `${local(item.title, lang)} — project figure`, `${local(item.title, lang)}——项目配图`))}" loading="lazy" decoding="async"></figure>` : ''}<div class="paper-body">${venue(item,lang)}<h3><button class="paper-title-button" data-action="paper" data-id="${escape(item.id)}">${escape(local(item.title, lang))}</button></h3>${lang === 'zh' ? `<p class="paper-original-title" lang="en">${escape(item.title.en)}</p>` : ''}<p class="paper-summary">${escape(local(item.summary, lang))}</p>${authorList(item, lang)}${sourceLinks(item, lang)}</div></article>`).join('')}</div></section>`).join('')}
+  ${years.map((year) => `<section class="journal-section paper-year-section"><div class="paper-year-heading"><h3>${year}</h3><span aria-hidden="true"></span></div><div class="paper-list">${selectedPublications.filter((item) => item.year === year).map((item) => `<article class="paper-entry${item.image ? ' paper-entry-illustrated' : ''}" id="paper-${escape(item.id)}">${phaseDab(item.id, lang)}${item.image ? `<figure class="paper-thumbnail"><img src="${escape(item.image)}" alt="${escape(copy(lang, `${local(item.title, lang)} — project figure`, `${local(item.title, lang)}——项目配图`))}" loading="lazy" decoding="async"></figure>` : ''}<div class="paper-body">${venue(item,lang)}<h3><button class="paper-title-button" data-action="paper" data-id="${escape(item.id)}">${escape(local(item.title, lang))}</button></h3>${lang === 'zh' ? `<p class="paper-original-title" lang="en">${escape(item.title.en)}</p>` : ''}<p class="paper-summary">${escape(local(item.summary, lang))}</p>${authorList(item, lang)}${sourceLinks(item, lang)}</div></article>`).join('')}</div></section>`).join('')}
   <div class="journal-next"><div><p>${escape(copy(lang, 'Want to see the work in action?', '想看看研究如何变成可用的作品？'))}</p></div>${sectionButton('projects', copy(lang, 'Explore projects', '探索项目'))}</div>`;
 }
 
@@ -95,7 +118,8 @@ function researchQuestions(item, lang) {
 
 function researchView(lang) {
   return `${head(copy(lang, 'AT THE EDGE OF WHAT WE KNOW', '在已知与未知之间'), copy(lang, 'Research direction', '研究方向'), local(profile.positioning, lang), lang)}
-  <div class="journal-research-opening"><span aria-hidden="true">${icon('orbit')}</span><p>${escape(copy(lang, 'Today, much of what an agent can do over a long task comes from the harness around it. Post-training decides how much of that the model can carry on its own.', '现在，agent 在长程任务上的很多能力来自它外面的 harness。后训练决定了其中有多少能由模型自己承担。'))}</p></div>
+  ${phaseWashes(lang)}
+  <div class="journal-research-opening">${loopMix(lang)}<span aria-hidden="true">${icon('orbit')}</span><p>${escape(copy(lang, 'Today, much of what an agent can do over a long task comes from the harness around it. Post-training decides how much of that the model can carry on its own.', '现在，agent 在长程任务上的很多能力来自它外面的 harness。后训练决定了其中有多少能由模型自己承担。'))}</p></div>
   <div class="journal-research-list">${research.map((item, index) => `<article class="journal-research-item"><span class="journal-research-number" aria-hidden="true">${String(index + 1).padStart(2, '0')}</span><div><p class="journal-eyebrow">${escape(copy(lang, 'RESEARCH DIRECTION', '研究方向'))}</p><h3>${escape(local(item.title, lang))}</h3><p>${escape(local(item.description, lang))}</p>${researchQuestions(item, lang)}</div></article>`).join('')}</div>
   <div class="journal-next"><div><p>${escape(copy(lang, 'Follow these questions into the published work.', '从这些问题出发，继续阅读相关论文。'))}</p></div>${sectionButton('publications', copy(lang, 'Read publications', '阅读论文'))}</div>`;
 }

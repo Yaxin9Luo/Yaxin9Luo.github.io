@@ -25,8 +25,8 @@ export const TAGS = {
 // The three phases of the homepage research map. A post's phase comes only from the work it is about.
 export const PHASES = {
   multimodal: {n: '01', years: '2024–25', en: 'Multimodal', zh: '多模态'},
-  eval: {n: '02', years: '2025–26', en: 'Eval', zh: '评测'},
-  'post-training': {n: '03', years: '2026 →', en: 'Post-training', zh: '后训练'},
+  eval: {n: '02', years: '2025 → present', yearsZh: '2025 → 至今', en: 'Eval', zh: '评测'},
+  'post-training': {n: '03', years: '2026 → present', yearsZh: '2026 → 至今', en: 'Post-training', zh: '后训练'},
 };
 export const OFF_MAP = {n: '—', en: 'Off the map', zh: '地图之外'};
 

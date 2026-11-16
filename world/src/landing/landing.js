@@ -1,36 +1,43 @@
-// Editable Canvas landing: the one-screen home that sits above the (lazy) 3D academy.
-// Facts come from content.js; this module owns layout, the research map and the playful,
-// non-destructive canvas affordances (handles spring back, nothing is ever saved or edited).
+// The painter's board: the one-screen home that sits above the (lazy) 3D academy.
+// Facts come from content.js; this module owns the page's HTML (top bar, hero, the study sheet with the research map,
+// status line) and its plain behaviour. Where the browser can draw HTML into a canvas, ./board/ takes the same
+// elements and paints them (oil-paint name, pigment in water, layers); everywhere else this HTML is the page.
 import {profile, links, publications, cvForLanguage} from '../content.js';
 import {ec, cursorArrow} from './icons.js';
 import {notesFor, notesHref} from '../blog/work-links.js';
+import {notesHTML} from '../board/notes.js';
 
 export const MUSEUM_URL = lang => `/yuanmingyuan.html?composition=xianfaqiao&planting=western&court=garden-r4&yangquelong=refined-r1&lang=${lang}`;
 
+
 export const landingCopy = {
   en: {
-    hist: 'History', role: '<span>ML PhD · MBZUAI VILA Lab</span>&nbsp; /&nbsp; <span>Research Intern · Meituan LongCat</span>',
+    nav: {about: 'About Me', research: 'Research', publications: 'Publications', projects: 'Projects', blog: 'Blog', cv: 'CV'}, heroName: 'Yaxin Luo',
+    explode: 'explode layers', collapse: 'collapse layers', hold: 'hold space', save: 'save this board', saveTitle: 'Download this board as a PNG', themeToggle: 'Switch theme', langSwitch: 'Language',
+    role: '<span>ML PhD · MBZUAI VILA Lab</span>&nbsp; /&nbsp; <span>Research Intern · Meituan LongCat</span>',
     chipA: 'Post-training & RL', chipB: 'Long-horizon agents',
-    email: 'Email', cv: 'CV', tour: 'CV Tour ↗',
+    email: 'Email', cv: 'CV', tour: 'CV Tour',
     mapTitle: 'one question · three phases', mapHint: 'hover a node', lgPaper: 'paper / project', lgLoop: 'model ⟲ harness loop', lgAll: 'all publications →',
-    now: 'Now', nowT: 'research intern at Meituan M17 LongCat · open to research collaboration', demo: 'demo canvas · handles spring back, nothing is saved',
+    now: 'Now', nowT: 'research intern at Meituan M17 LongCat · open to research collaboration',
     explore: 'Explore', academy: '3D Academy', world: 'World map', ymy: 'Yuanmingyuan',
-    paper: 'paper', code: 'code', open: 'details', snap: 'demo · springs back', map: 'Research map', name: 'Yaxin Luo',
+    paper: 'paper', code: 'code', open: 'details', map: 'Research map', name: 'Yaxin Luo',
   },
   zh: {
-    hist: '历史', role: '<span>ML 博士生 · MBZUAI VILA Lab</span>&nbsp; /&nbsp; <span>研究实习生 · 美团 LongCat</span>',
+    nav: {about: '关于我', research: '研究方向', publications: '学术论文', projects: '研究作品', blog: '博客', cv: '简历'}, heroName: '罗亚鑫',
+    explode: '拆解图层', collapse: '合上图层', hold: '按住空格', save: '保存这块画板', saveTitle: '把这块画板下载为 PNG', themeToggle: '切换主题', langSwitch: '语言',
+    role: '<span>ML 博士生 · MBZUAI VILA Lab</span>&nbsp; /&nbsp; <span>研究实习生 · 美团 LongCat</span>',
     chipA: '后训练与强化学习', chipB: '长程智能体',
-    email: '邮件', cv: '简历', tour: 'CV 导览 ↗',
+    email: '邮件', cv: '简历', tour: 'CV 导览',
     mapTitle: '一个问题 · 三个阶段', mapHint: '悬停节点', lgPaper: '论文 / 项目', lgLoop: '模型 ⟲ harness 循环', lgAll: '全部论文 →',
-    now: '现在', nowT: '美团 M17 LongCat 研究实习 · 欢迎研究合作', demo: '演示画布 · 手柄会弹回，不会保存任何改动',
+    now: '现在', nowT: '美团 M17 LongCat 研究实习 · 欢迎研究合作',
     explore: '探索', academy: '3D 学院', world: '世界地图', ymy: '圆明园',
-    paper: '论文', code: '代码', open: '详情', snap: '演示 · 松手弹回', map: '研究地图', name: 'Yaxin Luo',
+    paper: '论文', code: '代码', open: '详情', map: '研究地图', name: 'Yaxin Luo',
   },
 };
 
-const PHASES = {
-  en: [['01', '2024–25', 'Multimodal', 'efficient, grounded', 'multimodal models'], ['02', '2025–26', 'Eval', 'measuring agents on', 'long-horizon agentic tasks'], ['03', '2026 →', 'Post-training', 'co-evolution of model', 'parameters and harnesses']],
-  zh: [['01', '2024–25', '多模态', '高效、可定位的', '多模态模型'], ['02', '2025–26', '评测', '衡量智能体在', '长程智能体任务上的能力'], ['03', '2026 →', '后训练', '模型参数与 harness', '的协同进化']],
+export const mapPhases = {
+  en: [['01', '2024–25', 'Multimodal', 'efficient, grounded', 'multimodal models'], ['02', '2025 → present', 'Eval', 'measuring agents on', 'long-horizon agentic tasks'], ['03', '2026 → present', 'Post-training', 'co-evolution of model', 'parameters and harnesses']],
+  zh: [['01', '2024–25', '多模态', '高效、可定位的', '多模态模型'], ['02', '2025 → 至今', '评测', '衡量智能体在', '长程智能体任务上的能力'], ['03', '2026 → 至今', '后训练', '模型参数与 harness', '的协同进化']],
 };
 
 /* Research map nodes: same order and credits as the GitHub profile map. `pub` links into content.js. */
@@ -66,20 +73,6 @@ const DG = {
   lc: `${[['harness', 56], ['traj.', 42], ['Mid-T', 42], ['SFT', 42], ['RL', 42]].map(([t, w], i, a) => { const x = 8 + a.slice(0, i).reduce((n, [, v]) => n + v + 8, 0); return `<rect class="${i < 2 ? 'g' : 'as'}" x="${x}" y="16" width="${w}" height="28" rx="6"/><text x="${x + w / 2}" y="34" text-anchor="middle" class="k">${t}</text>${i < 4 ? `<path class="a" d="M${x + w} 30h8"/>` : ''}`; }).join('')}<text x="8" y="66">1.6T params · long-horizon agentic design</text>`,
 };
 
-/* Inspector history: a truthful, compact record of how this page was made. */
-const HIST = {
-  en: [['r1', '4 directions', 'Canvas, split map, artboards and a critique loop, drafted as clickable prototypes.', [['C', 'too many ideas on one screen']]],
-    ['r2', 'Interview', 'Picked from round 1: the critique loop, the canvas shell and the split research map.', [['C', 'the map must never be hidden']]],
-    ['r3', 'Critique', 'Screenshots at three sizes, light and dark, reviewed and fixed.', [['C', 'nothing may look like it edits the page'], ['C', 'credits must be truthful']]],
-    ['now', 'This page', 'Rulers, toolbar, map on the right, tour in the corner.', [['✓', 'ships when every size is clean', 1]]]],
-  zh: [['r1', '四个方向', '画布、分屏地图、画板、批评循环，各做成可点击原型。', [['C', '一屏塞了太多想法']]],
-    ['r2', '访谈', '选定：批评循环 + 画布外壳 + 分屏研究地图。', [['C', '地图必须常驻，不能藏起来']]],
-    ['r3', '批评', '三种尺寸、深浅两套截图，逐张审阅并修正。', [['C', '任何交互都不能看起来像在改页面内容'], ['C', '署名与来源必须属实']]],
-    ['now', '当前页面', '标尺、工具栏、右侧地图、角落导览。', [['✓', '每个尺寸都干净才交付', 1]]]],
-};
-const CRED = {en: 'Built with Claude Opus 5.5 as a coding agent, reviewed from rendered screenshots each round.', zh: '由 Claude Opus 5.5 作为编码智能体搭建，每轮基于渲染截图审阅。'};
-const NOTES = {en: {claim: 'leads with the claim ✓', chips: 'one accent ✓', loop: 'model ⟲ harness'}, zh: {claim: '先说结论 ✓', chips: '只用一个强调色 ✓', loop: '模型 ⟲ harness'}};
-
 const esc = v => String(v).replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'})[c]);
 const pick = (v, lang) => Array.isArray(v) ? v[lang === 'zh' ? 1 : 0] : v && typeof v === 'object' ? v[lang] : v;
 
@@ -94,44 +87,77 @@ function strings(lang) {
   return {...t, claimA: esc(claimA), claimB: esc(claimB), bio: esc(profile.intro[lang])};
 }
 
+const EXT = 'target="_blank" rel="noopener noreferrer"';
+const dabs = '<span class="wdots" aria-hidden="true"><i></i><i></i><i></i></span>';
+const themeIcon = () => typeof document !== 'undefined' && (document.documentElement?.dataset?.theme || (typeof matchMedia === 'function' && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')) === 'dark' ? ec.sun : ec.moon;
+
+/* The page, piece by piece. The board (./board/scene.js) lays the same pieces out on its sheets. */
+function top(lang = 'en') {
+  const t = landingCopy[lang === 'zh' ? 'zh' : 'en'], section = id => `<a href="#section/${id}" data-action="section" data-id="${id}">${t.nav[id]}</a>`;
+  return `<header class="top">
+    <a class="brand" href="#" data-action="home" aria-label="${esc(t.name)}">${dabs}<span class="crumb">yaxin-luo <i>/</i> <b>home</b></span></a>
+    <nav class="nav" aria-label="${esc(t.map)}">${['about', 'research', 'publications', 'projects'].map(section).join('')}<a href="/blog/${lang === 'zh' ? '?lang=zh' : ''}">${t.nav.blog}</a><a href="${cvForLanguage(lang)}" ${EXT}>${t.nav.cv}</a></nav>
+    <div class="tools">
+      <span class="lang" role="group" aria-label="${t.langSwitch}"><button type="button" data-action="language" aria-pressed="${lang !== 'zh'}" lang="en">EN</button><button type="button" data-action="language" aria-pressed="${lang === 'zh'}" lang="zh-CN">中</button></span>
+      <button type="button" class="theme-button" data-action="theme" aria-label="${t.themeToggle}">${themeIcon()}</button>
+      <button type="button" class="tour-chip" data-action="mascot-toggle" aria-controls="mascot-guide">${t.tour}</button>
+      <span class="explore" role="group" aria-label="${esc(t.explore)}"><a href="#" data-action="start">${ec.cube}<span>${t.academy}</span></a><a href="#" data-action="map">${ec.map}<span>${t.world}</span></a><a data-museum-entry href="${MUSEUM_URL(lang)}">${ec.pavilion}<span>${t.ymy}</span></a></span>
+    </div>
+  </header>`;
+}
+function hero(lang = 'en') {
+  const t = strings(lang), zh = lang === 'zh';
+  return `<section class="hero">
+    <div class="namerow"><h1 class="name"${zh ? ' lang="zh-CN"' : ''}>${t.heroName}</h1></div>
+    <div class="role">${t.role}</div>
+    <p class="claim"><b>${t.claimA}</b> <span>${t.claimB}</span></p>
+    <div class="chips"><span class="chip">${esc(t.chipA)}</span><span class="chip g">${esc(t.chipB)}</span></div>
+    <p class="bio">${t.bio}</p>
+    <div class="cta">
+      <a class="btn p" href="${links.email}">${ec.mail}<span>${t.email}</span></a>
+      <a class="btn" href="${links.scholar}" ${EXT}>${ec.scholar}<span>Scholar</span><span class="ar">↗</span></a>
+      <a class="btn" href="${cvForLanguage(lang)}" ${EXT}>${ec.cv}<span>${t.cv}</span><span class="ar">↗</span></a>
+      <a class="btn" href="${links.github}" ${EXT}>${ec.gh}<span>GitHub</span><span class="ar">↗</span></a>
+    </div>
+  </section>`;
+}
+function mapWindow(lang = 'en') {
+  const t = landingCopy[lang === 'zh' ? 'zh' : 'en'];
+  return `<section class="mapwin" aria-label="${esc(t.map)}">
+    <div class="bar"><span><span class="crumb">research-map / </span><b>${t.mapTitle}</b></span><span class="hint">${t.mapHint}</span></div>
+    <div class="cv"><div class="mapbox"></div>
+      <div class="legend"><span><i></i>${t.lgPaper}</span><span><i class="l"></i>${t.lgLoop}</span><a href="#section/publications" data-action="section" data-id="publications">${t.lgAll}</a></div>
+    </div>
+  </section>`;
+}
+/* The status line: only the Now line (and the 3D loading status for screen readers). */
+function status(lang = 'en') {
+  const t = landingCopy[lang === 'zh' ? 'zh' : 'en'];
+  return `<footer class="intro-footer status"><span class="now"><span class="dot" aria-hidden="true"></span><b>${t.now}</b> · ${t.nowT}</span><span id="load-status" class="ec-sr" aria-live="polite"></span></footer>`;
+}
+const blank = '<div></div>';
+/* Four sheets, bottom to top in space: ground (status line), text (top bar and hero), the study sheet, annotations.
+   Each fills the window and is empty where another sheet has its content, so the plain page composes exactly. */
+const sheetHTML = {
+  text: lang => top(lang) + `<main class="main">${hero(lang)}${blank}</main>` + blank,
+  map: lang => blank + `<div class="main">${blank}${mapWindow(lang)}</div>` + blank,
+  ground: lang => blank + blank + status(lang),
+};
+
 /** Static landing markup. Root keeps the `.welcome` class: Interface hides it while the 3D world plays. */
 export function renderLanding(lang = 'en') {
-  const t = strings(lang);
-  const L = k => `data-l="${k}"`;
-  return `<section class="welcome landing ec-dots" aria-label="${esc(t.name)}">
-    <div class="ec-corner" aria-hidden="true"></div><div class="ec-rx" aria-hidden="true"><i class="hl"></i></div><div class="ec-ry" aria-hidden="true"><i class="hl"></i></div>
-    <div class="ec-main">
-      <div class="ec-left">
-        <div class="ec-hero">
-          <div class="ec-insp"><span><span class="k">◇</span><span class="ttl">Text · H1</span></span><span>Noto Serif · 700</span><span class="isz">— px</span><span><i class="sw"></i><span class="ifill">#15162E</span></span><span class="hist"><span class="k" ${L('hist')}>${t.hist}</span><ol></ol></span><div class="hpop" role="tooltip"></div></div>
-          <div class="ec-namerow"><div class="ec-sel"><h1 class="ec-name">Yaxin Luo</h1></div><span class="ec-zhname" lang="zh-CN">罗亚鑫</span></div>
-          <div class="ec-role" ${L('role')}>${t.role}</div>
-          <p class="ec-claim"><b ${L('claimA')}>${t.claimA}</b> <span ${L('claimB')}>${t.claimB}</span></p>
-          <div class="ec-chips"><span class="ec-chip" ${L('chipA')}>${t.chipA}</span><span class="ec-chip g" ${L('chipB')}>${t.chipB}</span></div>
-          <p class="ec-bio" ${L('bio')}>${t.bio}</p>
-          <div class="ec-cta">
-            <a class="ec-btn p" href="${links.email}">${ec.mail}<span ${L('email')}>${t.email}</span></a>
-            <a class="ec-btn" href="${links.scholar}" target="_blank" rel="noopener noreferrer">${ec.scholar}<span>Scholar</span><span class="ar">↗</span></a>
-            <a class="ec-btn ec-cv" href="${cvForLanguage(lang)}" target="_blank" rel="noopener noreferrer">${ec.cv}<span ${L('cv')}>${t.cv}</span><span class="ar">↗</span></a>
-            <a class="ec-btn" href="${links.github}" target="_blank" rel="noopener noreferrer">${ec.gh}<span>GitHub</span><span class="ar">↗</span></a>
-          </div>
-        </div>
-        <button class="ec-tour-chip" data-action="mascot-toggle" aria-controls="mascot-guide"><span ${L('tour')}>${t.tour}</span></button>
-      </div>
-      <section class="ec-win" aria-label="${esc(t.map)}">
-        <div class="bar"><span class="ec-wdots" aria-hidden="true"><i></i><i></i><i></i></span><span><span class="crumb">research-map / </span><b ${L('mapTitle')}>${t.mapTitle}</b></span><span class="hint"><span ${L('mapHint')}>${t.mapHint}</span> <kbd>tab</kbd></span></div>
-        <div class="cv ec-dots"><div class="ec-mapbox"></div>
-          <div class="legend"><span><i></i><span ${L('lgPaper')}>${t.lgPaper}</span></span><span><i class="l"></i><span ${L('lgLoop')}>${t.lgLoop}</span></span><button data-action="section" data-id="publications" ${L('lgAll')}>${t.lgAll}</button></div>
-        </div>
-      </section>
-    </div>
-    <div class="ec-layer" aria-hidden="true"></div>
-  </section>
-  <footer class="intro-footer ec-status">
-    <span class="now"><span class="dot" aria-hidden="true"></span><b ${L('now')}>${t.now}</b> · <span ${L('nowT')}>${t.nowT}</span></span>
-    <span class="demo" ${L('demo')}>${t.demo}</span>
-    <span id="load-status" class="ec-sr" aria-live="polite"></span>
-  </footer>`;
+  const t = landingCopy[lang === 'zh' ? 'zh' : 'en'];
+  return `<section class="welcome landing board" aria-label="${esc(t.name)}"><div id="stage">
+    <div class="layer page" id="text">${sheetHTML.text(lang)}</div>
+    <div class="layer page" id="mapl">${sheetHTML.map(lang)}</div>
+    <div class="layer page" id="ground">${sheetHTML.ground(lang)}</div>
+    ${notesHTML}
+  </div>
+  <div class="pveil"></div>
+  <button class="xbtn" type="button" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 3 8l9 5 9-5zM3 12.5l9 5 9-5M3 17l9 5 9-5"/></svg><span>${t.explode}</span><kbd>${t.hold}</kbd></button>
+  <button class="xbtn save" type="button" title="${esc(t.saveTitle)}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></svg><span>${t.save}</span></button>
+  <div class="tags" aria-hidden="true"><div><b>01</b>ground</div><div><b>02</b>text</div><div><b>03</b>research-map</div><div><b>04</b>annotations</div><div><b>05</b><span>sheet</span></div></div>
+  </section>`;
 }
 
 /**
@@ -173,7 +199,7 @@ export function mapSVG(W, H, lang = 'en', {motion = true} = {}) {
   const head = 128 * mk, bottom = 64 * mk;
   const cx = (c, f) => c * (colW + gap) + colW * f, cy = f => head + (H - head - bottom) * f;
   let s = `<svg viewBox="0 0 ${W} ${H}" role="group" aria-label="${zh ? '研究地图：多模态、评测、后训练' : 'Research map: Multimodal, Eval, Post-training'}">`;
-  PHASES[zh ? 'zh' : 'en'].forEach((p, i) => {
+  mapPhases[zh ? 'zh' : 'en'].forEach((p, i) => {
     const x = i * (colW + gap), ix = x + 18 * mk;
     s += `<rect class="phase" x="${x + .5}" y=".5" width="${colW - 1}" height="${H - 1}" rx="13"/>`;
     s += `<text class="num" x="${ix}" y="${34 * mk}">${p[0]}</text><text class="yr" x="${ix + 30 * mk}" y="${34 * mk}">${p[1]}</text>`;
@@ -198,11 +224,12 @@ export function mapSVG(W, H, lang = 'en', {motion = true} = {}) {
     const x = Math.round(cx(n.col, n.fx)), y = Math.round(cy(n.fy)), up = n.lab === 'above';
     const side = n.lab === 'br' ? 1 : n.lab === 'bl' ? -1 : 0, anc = side > 0 ? 'start' : side < 0 ? 'end' : 'middle', tx = x + side * 8 * mk;
     const ny = up ? y - 36 * mk : y + (side ? 28 : 33) * mk, vy = up ? y - 19 * mk : y + (side ? 44 : 49) * mk;
-    s += `<g class="node" data-id="${n.id}" tabindex="0" role="button" aria-label="${esc(n.name)} · ${esc(venue(n))}"><circle class="r" cx="${x}" cy="${y}" r="8" style="animation-delay:-${(i * .8).toFixed(1)}s"/><circle class="o" cx="${x}" cy="${y}" r="8"/>`;
+    s += `<g class="node" data-id="${n.id}" tabindex="0" role="button" aria-label="${esc(n.name)} · ${esc(venue(n))}"><circle class="o" cx="${x}" cy="${y}" r="8"/>`;
     s += `<text class="nm" x="${tx}" y="${ny}" text-anchor="${anc}">${esc(n.name)}</text><text class="vn" x="${tx}" y="${vy}" text-anchor="${anc}">${esc(venue(n))}</text>`;
     s += `<circle cx="${x}" cy="${y}" r="22" fill="transparent"/></g>`;
   });
-  return {svg: s + '</svg>', mk};
+  // pts: node centres [x, y, id] in curve order, the loop's centre last; curve: the points the path runs through
+  return {svg: s + '</svg>', mk, path: d, pts: [...nodes.map((n, i) => [pts[i][0], pts[i][1], n.id]), [lx, ly, L.id]], curve: [start, ...pts], loop: {x: lx, y: ly, R}};
 }
 
 /**
@@ -216,7 +243,7 @@ function compactMapSVG(W, lang, {motion}) {
   const laneX = n => Math.round(24 + 60 * (1 - (n.fy - .2) / .68));
   let s = '', y0 = 0, lx = 62, ly = 0;
   const pts = [];
-  PHASES[zh ? 'zh' : 'en'].forEach((p, c) => {
+  mapPhases[zh ? 'zh' : 'en'].forEach((p, c) => {
     const own = nodes.filter(n => n.col === c), h = top + own.length * rowH + (c === 2 ? 2 * R + 12 : 0) + 8;
     s += `<rect class="phase" x=".5" y="${y0 + .5}" width="${W - 1}" height="${h - 1}" rx="13"/>`;
     s += `<text class="num" x="${col}" y="${y0 + 24}">${p[0]}</text><text class="yr" x="${col + 27}" y="${y0 + 24}">${p[1]}</text>`;
@@ -231,7 +258,7 @@ function compactMapSVG(W, lang, {motion}) {
   out += `<path class="trk" d="${d}"/><path class="crv" d="${d}"/>`;
   pts.forEach(({n, x, y}, i) => {
     out += `<g class="node" data-id="${n.id}" tabindex="0" role="button" aria-label="${esc(n.name)} · ${esc(venue(n))}"><rect x="0" y="${y - rowH / 2}" width="${W}" height="${rowH}" fill="transparent"/>`;
-    out += `<circle class="r" cx="${x}" cy="${y}" r="8" style="animation-delay:-${(i * .8).toFixed(1)}s"/><circle class="o" cx="${x}" cy="${y}" r="8"/>`;
+    out += `<circle class="o" cx="${x}" cy="${y}" r="8"/>`;
     out += `<text class="nm" x="${col}" y="${y - 1}">${esc(n.name)}</text><text class="vn" x="${col}" y="${y + 14}">${esc(venue(n))}</text></g>`;
   });
   const r = R * .5;
@@ -240,7 +267,7 @@ function compactMapSVG(W, lang, {motion}) {
   out += `<text class="loopt" x="${lx - r * .95}" y="${ly + 4}" text-anchor="middle" fill="var(--ec-accent)">${zh ? '模型' : 'model'}</text><text class="loopt" x="${lx + r * .95}" y="${ly + 4}" text-anchor="middle" fill="var(--ec-green)">harness</text>`;
   out += `<circle class="tok" r="4" cx="${lx + R}" cy="${ly}">${motion ? `<animateMotion dur="9s" repeatCount="indefinite" path="M0 0 a${R} ${R} 0 1 1 -${2 * R} 0 a${R} ${R} 0 1 1 ${2 * R} 0"/>` : ''}</circle>`;
   out += `<text class="nm lp" x="${col}" y="${ly - 1}">${L.name}</text><text class="vn" x="${col}" y="${ly + 14}">${esc(venue(L))}</text></g>`;
-  return {svg: out + '</svg>', mk, h: H};
+  return {svg: out + '</svg>', mk, h: H, path: d, pts: [...pts.map(q => [q.x, q.y, q.n.id]), [lx, ly, L.id]], curve: pts.map(q => [q.x, q.y]), loop: {x: lx, y: ly, R}};
 }
 
 /** Hover-card markup for one map node. Links are real; the title opens the paper / project panel. */
@@ -256,250 +283,162 @@ export function cardHTML(id, lang = 'en') {
   return `<div class="meta"><span class="rl${n.green ? ' g' : ''}">${esc(pick(n.role, lang))}</span><span>${esc(pick(n.full, lang))}</span></div><h4>${title}</h4><p class="q">${esc(pick(n.q, lang))}</p><div class="dg" aria-hidden="true"><svg viewBox="0 0 280 80" preserveAspectRatio="xMidYMid meet">${DG[n.dg]}</svg></div>${foot ? `<div class="pf">${foot}</div>` : ''}`;
 }
 
-class Cursor {
-  constructor(kind, label, layer, motion) { this.layer = layer; this.motion = motion; this.e = document.createElement('div'); this.e.className = 'ec-cur ' + kind; this.e.innerHTML = cursorArrow + `<span class="lbl">${label}</span>`; layer.appendChild(this.e); this.x = 0; this.y = 0; this.anim = null; }
-  place(x, y) { this.x = x; this.y = y; this.e.style.transform = `translate(${x.toFixed(1)}px,${y.toFixed(1)}px)`; }
-  moveTo(x, y, dur = 1300) {
-    if (!this.motion || !this.e.animate) { this.place(x, y); return Promise.resolve(); }
-    const from = `translate(${this.x}px,${this.y}px)`, to = `translate(${x}px,${y}px)`;
-    this.x = x; this.y = y; this.e.style.transform = to; this.anim?.cancel();
-    this.anim = this.e.animate([{transform: from}, {transform: to}], {duration: dur, easing: 'cubic-bezier(.45,0,.25,1)'});
-    return this.anim.finished.catch(() => {});
-  }
-}
-class Bubble {
-  constructor(layer, kind) { this.e = document.createElement('div'); this.e.className = 'ec-bubble hide ' + kind; layer.appendChild(this.e); }
-  show(text, x, y, who) { this.e.innerHTML = `<b>${who}</b>${esc(text)}`; this.e.style.left = x + 'px'; this.e.style.top = y + 'px'; this.e.classList.remove('hide'); }
-  hide() { this.e.classList.add('hide'); }
-}
-
-const isDark = () => {
-  const t = document.documentElement.dataset.theme;
-  return t ? t === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
-};
-
 /**
- * Wire the interactive layer. `host` is the Interface root; `getGuide()` returns the mascot root so the
- * hero can be fitted above it. Returns {setLanguage, refresh, pause, resume, destroy}.
+ * One sheet of the page: fills `root` with `page(lang)`, builds the research map into its .mapbox (if it has one),
+ * shows the hover cards, and rebuilds the map when its box changes size. onChange runs after anything that moves
+ * the words. Returns {lang, map, setLanguage, nodes(), box()} with positions in the sheet's own px.
  */
-export function mountLanding(host, {lang = 'en', reducedMotion = false, getGuide = () => null} = {}) {
-  const $ = s => host.querySelector(s);
-  const land = $('.landing'); if (!land || typeof ResizeObserver !== 'function') return null;
-  const ac = new AbortController(), on = (el, type, fn, opt = {}) => el?.addEventListener(type, fn, {...opt, signal: ac.signal});
-  const root = document.documentElement;
-  let LANG = lang === 'zh' ? 'zh' : 'en', paused = false, disposed = false;
-  let motion = !reducedMotion && !matchMedia('(prefers-reduced-motion: reduce)').matches && new URLSearchParams(location.search).get('motion') !== '0';
-  land.classList.toggle('ec-motion', motion);
-  const mb = $('.ec-mapbox'), win = $('.ec-win'), main = $('.ec-main'), layer = $('.ec-layer'), sel = $('.ec-sel'), nameEl = $('.ec-name');
-  const card = document.createElement('div'); card.className = 'ec-pcard'; card.setAttribute('role', 'dialog');
-
-  /* ---------- research map + hover card ---------- */
-  let pinned = null, user = false, hideTimer = 0;
+function mountSheet(root, {lang = 'en', page, onChange, motion = true} = {}) {
+  lang = lang === 'zh' ? 'zh' : 'en';
+  let map = null, pinned = null, hideTimer = 0, observer = null, built = [0, 0];
+  const changed = why => onChange?.(why);
+  const card = document.createElement('div'); card.className = 'pcard'; card.setAttribute('role', 'dialog');
+  const offset = node => { let x = 0, y = 0; for (let n = node; n && n !== root; n = n.offsetParent) { x += n.offsetLeft; y += n.offsetTop; } return [x, y]; };
   function buildMap() {
-    const W = Math.round(mb.clientWidth); if (!W) return;
-    // The compact map sets its own height; the wide one fills the window.
-    const compact = W < COMPACT_MAP; win.classList.toggle('compact', compact); if (!compact) mb.style.height = '';
-    const H = compact ? 0 : Math.round(mb.clientHeight); if (!compact && !H) return;
-    const {svg, mk, h} = mapSVG(W, H, LANG, {motion});
-    if (compact) mb.style.height = h + 'px';
-    mb.style.setProperty('--mk', mk.toFixed(3)); mb.innerHTML = svg; mb.appendChild(card);
-    mb.querySelectorAll('.node').forEach(g => {
-      g.addEventListener('pointerenter', () => { user = true; layer.classList.add('quiet'); showCard(g.dataset.id); });
-      g.addEventListener('focus', () => showCard(g.dataset.id));
-      // A tap ends in pointerleave: the card stays until the next tap elsewhere.
-      g.addEventListener('pointerleave', e => { user = false; layer.classList.remove('quiet'); if (e.pointerType !== 'touch') hideSoon(); });
-      g.addEventListener('blur', () => hideSoon());
-      g.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); card.querySelector('[data-action]')?.click(); } });
-    });
+    const box = root.querySelector('.mapbox'); if (!box) return;
+    box.style.height = '';
+    const W = Math.round(box.clientWidth), compact = W < COMPACT_MAP;
+    root.querySelector('.mapwin')?.classList.toggle('compact', compact);   // before measuring: the compact window has no height of its own
+    const H = compact ? 0 : Math.round(box.clientHeight);
+    if (!W || (!compact && !H)) return;
+    built = [W, H];
+    map = mapSVG(W, H, lang, {motion});
+    if (compact) box.style.height = map.h + 'px';
+    box.style.setProperty('--mk', map.mk.toFixed(3)); box.innerHTML = map.svg; box.appendChild(card);
     if (pinned) showCard(pinned);
+    changed('map');
   }
   function showCard(id) {
+    const box = root.querySelector('.mapbox'); if (!box || !map) return;
     clearTimeout(hideTimer); pinned = id;
-    mb.querySelectorAll('.node').forEach(g => g.classList.toggle('on', g.dataset.id === id));
-    card.innerHTML = cardHTML(id, LANG);
-    const g = mb.querySelector(`.node[data-id="${id}"] .o, .node[data-id="${id}"] .orbit`); if (!g) return;
-    const gr = g.getBoundingClientRect(), b = mb.getBoundingClientRect(), cw = card.offsetWidth || 316, ch = card.offsetHeight || 250;
-    let x = gr.right - b.left + 16, y = gr.top - b.top + gr.height / 2 - ch / 2;
-    if (x + cw > b.width + 6) x = gr.left - b.left - cw - 16;
-    if (x < -6) {
-      // Neither side has room (the compact map): the card opens under its node, or over it near the foot.
-      x = Math.max(0, Math.min(b.width - cw, gr.left - b.left + gr.width / 2 - cw / 2));
-      y = gr.bottom - b.top + 12; if (y + ch > b.height - 4) y = gr.top - b.top - ch - 12;
-    }
-    y = Math.max(4, Math.min(b.height - ch - 4, y));
-    card.style.left = x + 'px'; card.style.top = y + 'px'; card.classList.add('show');
+    box.querySelectorAll('.node').forEach(g => g.classList.toggle('on', g.dataset.id === id));
+    card.innerHTML = cardHTML(id, lang); card.classList.add('show');
+    const point = map.pts.find(p => p[2] === id), r = id === 'lc' ? map.loop.R : 8;
+    const cw = card.offsetWidth || 316, ch = card.offsetHeight || 250, bw = box.clientWidth, bh = box.clientHeight;
+    let x = point[0] + r + 16, y = point[1] - ch / 2;
+    if (x + cw > bw + 6) x = point[0] - r - cw - 16;
+    if (x < -6) { x = Math.max(0, Math.min(bw - cw, point[0] - cw / 2)); y = point[1] + r + 12; if (y + ch > bh - 4) y = point[1] - r - ch - 12; }
+    card.style.left = x + 'px'; card.style.top = Math.max(4, Math.min(bh - ch - 4, y)) + 'px';
+    changed('card');
   }
-  function hideCard() { pinned = null; card.classList.remove('show'); mb.querySelectorAll('.node').forEach(g => g.classList.remove('on')); }
-  function hideSoon() { clearTimeout(hideTimer); hideTimer = setTimeout(() => { if (!card.matches(':hover') && !card.contains(document.activeElement)) hideCard(); }, 160); }
-  on(card, 'pointerenter', () => { clearTimeout(hideTimer); user = true; });
-  on(card, 'pointerleave', e => { user = false; layer.classList.remove('quiet'); if (e.pointerType !== 'touch') hideSoon(); });
-  on(card, 'focusout', () => hideSoon());
-  on(document, 'pointerdown', e => { if (e.pointerType === 'touch' && pinned && !card.contains(e.target) && !e.target.closest?.('.ec-mapbox .node')) hideCard(); });
-
-  /* ---------- name: playful handles that always spring back ---------- */
-  const frame = document.createElement('div'); frame.className = 'frame'; frame.innerHTML = '<svg aria-hidden="true"><rect/></svg>'; sel.prepend(frame);
-  ['tl', 'tm', 'tr', 'ml', 'mr', 'bl', 'bm', 'br'].forEach(k => { const h = document.createElement('i'); h.className = 'h ' + k; h.dataset.h = k; sel.appendChild(h); });
-  const dim = document.createElement('span'); dim.className = 'dim'; sel.appendChild(dim);
-  let st = null;
-  on(sel, 'pointerdown', e => {
-    const h = e.target.dataset?.h; if (!h) return;
-    e.preventDefault(); e.target.setPointerCapture?.(e.pointerId);
-    st = {x: e.clientX, y: e.clientY, w: nameEl.offsetWidth, h}; nameEl.classList.remove('spring'); sel.classList.add('dragging'); dim.textContent = landingCopy[LANG].snap;
-  });
-  on(sel, 'pointermove', e => {
-    if (!st) return;
-    const sx = st.h.includes('l') ? -1 : st.h.includes('r') ? 1 : 0, sy = st.h.includes('t') ? -1 : st.h.includes('b') ? 1 : 0;
-    const d = sx ? (e.clientX - st.x) * sx / st.w : (e.clientY - st.y) * sy / 120, k = 1 + Math.tanh(d * 1.4) * .12;
-    nameEl.style.transform = `scale(${k.toFixed(3)})`; dim.textContent = `${landingCopy[LANG].snap} · ${Math.round(k * 100)}%`;
-  });
-  const end = () => { if (!st) return; st = null; nameEl.classList.add('spring'); nameEl.style.transform = ''; setTimeout(() => sel.classList.remove('dragging'), 350); };
-  on(sel, 'pointerup', end); on(sel, 'pointercancel', end);
-
-  function paintInsp() {
-    $('.isz').textContent = Math.round(parseFloat(getComputedStyle(nameEl).fontSize)) + ' px';
-    $('.ifill').textContent = isDark() ? '#F2F2FA' : '#15162E';
+  function hideCard() { if (!pinned) return; pinned = null; card.classList.remove('show'); root.querySelectorAll('.mapbox .node').forEach(g => g.classList.remove('on')); changed('card'); }
+  function hideSoon() { clearTimeout(hideTimer); hideTimer = setTimeout(() => { if (!card.matches(':hover') && !card.contains(document.activeElement)) hideCard(); }, 180); }
+  // one set of listeners on the root: the sheet's HTML is replaced when the language changes
+  root.addEventListener('pointerover', e => { const node = e.target.closest('.mapbox .node'); if (node) showCard(node.dataset.id); else if (e.target.closest('.pcard')) clearTimeout(hideTimer); });
+  root.addEventListener('pointerout', e => { if (e.pointerType !== 'touch' && e.target.closest('.mapbox .node, .pcard')) hideSoon(); });
+  root.addEventListener('focusin', e => { const node = e.target.closest('.mapbox .node'); if (node) showCard(node.dataset.id); });
+  root.addEventListener('focusout', e => { if (e.target.closest('.mapbox .node, .pcard')) hideSoon(); });
+  root.addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && e.target.closest?.('.mapbox .node')) { e.preventDefault(); e.stopPropagation(); card.querySelector('[data-action]')?.click(); } });
+  root.ownerDocument.addEventListener('pointerdown', e => { if (e.pointerType === 'touch' && pinned && !card.contains(e.target) && !e.target.closest?.('.mapbox .node')) hideCard(); });
+  function render() {
+    root.innerHTML = page(lang);
+    buildMap();
+    observer?.disconnect();
+    const box = root.querySelector('.mapbox');
+    // rebuild when the box really changed (the compact map sets its own height: that alone is no reason)
+    if (box && typeof ResizeObserver === 'function') { observer = new ResizeObserver(() => { const W = Math.round(box.clientWidth), H = Math.round(box.clientHeight); if (W !== built[0] || (W >= COMPACT_MAP && H !== built[1])) buildMap(); }); observer.observe(box); }
+    changed('language');
   }
-
-  /* ---------- inspector history ---------- */
-  const hpop = $('.hpop'), histOl = $('.hist ol');
-  function renderHist() {
-    const H = HIST[LANG];
-    histOl.innerHTML = H.map((h, i) => `<li class="${i === H.length - 1 ? 'now' : ''}"><button data-k="${i}" aria-label="${esc(h[1])}"><i></i></button></li>`).join('');
-    histOl.querySelectorAll('button').forEach(b => {
-      const show = () => showHist(+b.dataset.k), off = () => { layer.classList.remove('quiet'); hpop.classList.remove('show'); histOl.querySelectorAll('li').forEach(l => l.classList.remove('on')); };
-      b.addEventListener('pointerenter', show); b.addEventListener('focus', show); b.addEventListener('click', show);
-      b.addEventListener('pointerleave', off); b.addEventListener('blur', off);
-    });
-  }
-  function showHist(i) {
-    const h = HIST[LANG][i];
-    hpop.innerHTML = `<div class="hm"><b>${h[0] === 'now' ? (LANG === 'zh' ? '当前' : 'now') : (LANG === 'zh' ? '第 ' + h[0].slice(1) + ' 轮' : 'round ' + h[0].slice(1))}</b></div><h5>${esc(h[1])}</h5><div>${esc(h[2])}</div>${h[3].map(n => `<div class="note${n[2] ? ' ok' : ''}"><b>${n[0]}</b><span>${esc(n[1])}</span></div>`).join('')}<div class="cred">${CRED[LANG]}</div>`;
-    const li = histOl.children[i], ib = $('.ec-insp').getBoundingClientRect(), lb = li.getBoundingClientRect();
-    hpop.style.left = Math.max(0, Math.min(lb.left - ib.left - 150, innerWidth - 16 - ib.left - hpop.offsetWidth)) + 'px';
-    histOl.querySelectorAll('li').forEach((l, k) => l.classList.toggle('on', k === i));
-    hpop.classList.add('show'); layer.classList.add('quiet');
-  }
-
-  /* ---------- rulers ---------- */
-  function rulers() {
-    const rx = $('.ec-rx'); rx.querySelectorAll('span').forEach(s => s.remove());
-    let html = ''; for (let x = 100; x < innerWidth; x += 100) html += `<span style="left:${x - 24}px">${x}</span>`;
-    rx.insertAdjacentHTML('beforeend', html);
-    markRulers();
-  }
-  function markRulers() {
-    const n = nameEl.getBoundingClientRect(), o = land.getBoundingClientRect();
-    $('.ec-rx .hl').style.cssText = `left:${n.left - o.left - 24}px;width:${n.width}px`;
-    $('.ec-ry .hl').style.cssText = `top:${n.top - o.top - 24}px;height:${n.height}px`;
-  }
-
-  /* ---------- fit: shrink hero type until it clears the tour guide (never overlaps) ----------
-     The idle card sits in the left column's lower corner. Where the hero cannot clear it even at the smallest
-     type (short laptop screens), and in the stacked layouts, the idle guide docks in the status bar instead. */
-  let guideH = 0;
-  function fit() {
-    const left = $('.ec-left'), hero = $('.ec-hero'), zn = $('.ec-zhname'), guide = getGuide(), status = host.querySelector('.ec-status');
-    const setFit = f => root.style.setProperty('--ec-fit', f.toFixed(2));
-    const dock = v => { guide?.classList.toggle('ec-docked', v); status?.classList.toggle('docked', v); };
-    const zhOver = () => LANG === 'zh' && zn.getBoundingClientRect().right > left.getBoundingClientRect().right - 8;
-    const shrink = over => { let f = 1; setFit(f); while (over() && f > .66) { f -= .02; setFit(f); } return !over(); };
-    if (matchMedia(STACKED).matches) { dock(true); shrink(zhOver); return; }
-    dock(false);
-    // The idle card's height, measured while it shows, so the hero keeps one size whatever the guide's state.
-    if (guide && !guide.hidden && guide.dataset.state === 'idle' && guide.offsetHeight) guideH = guide.offsetHeight;
-    // The card is fixed to the canvas's foot, not the column's (a tall compact map stretches the column and scrolls).
-    const foot = main.getBoundingClientRect().bottom - parseFloat(getComputedStyle(main).paddingBottom) - main.scrollTop;
-    const over = gh => () => zhOver() || hero.getBoundingClientRect().bottom > foot - gh - 14;
-    if (shrink(over(guideH || (innerHeight < 860 ? 168 : 196)))) return;
-    // Docked, the hero has the whole column; if it still runs past the foot, the canvas scrolls and the type stays full size.
-    dock(true); if (!shrink(over(0))) setFit(1);
-  }
-
-  /* ---------- collaborator cursors ---------- */
-  const rel = (target, ax = 0, ay = 0) => { const a = target.getBoundingClientRect(), b = layer.getBoundingClientRect(); return {x: a.left - b.left + a.width * ax, y: a.top - b.top + a.height * ay}; };
-  const D = new Cursor('d', 'Designer', layer, motion), C = new Cursor('c', 'Critic', layer, motion);
-  const bc = new Bubble(layer, 'c'), bd = new Bubble(layer, 'd');
-  function home() {
-    const tr = sel.querySelector('.h.tr'); if (!tr) return;
-    // Beside the name, short of the map; stacked, the map is below and the label only has to stay on screen.
-    // With 罗亚鑫 at the name's foot, the cursor rests at the top of the row so its label stays off the characters.
-    const t = rel(tr, 1, 0), w = rel(win), lim = w.y > t.y ? layer.clientWidth - 140 : w.x - 110, zh = LANG === 'zh' && $('.ec-zhname').offsetWidth;
-    D.place(Math.min(t.x + 4, lim), t.y + (zh ? -18 : 10));
-    const a = mb.querySelector('.node.loop .orbit'); if (a) { const p = rel(a, .5, 1); C.place(p.x - 14, p.y + 4); }
-  }
-  const F = {active: false, last: 0, tx: 0, ty: 0};
-  on(land, 'pointermove', e => {
-    if (!motion || paused) return;
-    const b = layer.getBoundingClientRect();
-    if (!F.active) { C.anim?.cancel(); D.anim?.cancel(); bc.hide(); bd.hide(); }
-    F.active = true; F.last = performance.now(); F.tx = e.clientX - b.left; F.ty = e.clientY - b.top;
-  });
-  let raf = 0;
-  const drift = () => {
-    raf = 0; if (disposed || paused || !motion) return;
-    if (F.active) {
-      C.place(C.x + (F.tx + 46 - C.x) * .06, C.y + (F.ty + 34 - C.y) * .06);
-      D.place(D.x + (F.tx - 120 - D.x) * .035, D.y + (F.ty + 70 - D.y) * .035);
-      if (performance.now() - F.last > 2600) F.active = false;
-    }
-    raf = requestAnimationFrame(drift);
-  };
-  const sleep = ms => new Promise(r => setTimeout(r, ms));
-  async function script() {
-    const claim = () => $('.ec-claim b'), chip = () => $('.ec-chips').lastElementChild;
-    const steps = [
-      async () => { await D.moveTo(rel(claim(), 1, .5).x + 6, rel(claim(), 1, .5).y - 6, 1400); const p = rel(claim(), 1, 0); return ['d', NOTES[LANG].claim, p.x - 40, p.y - 44]; },
-      async () => { const n = mb.querySelector('.node[data-id=ngc] .o'); if (n) { const p = rel(n, .5, .5); await C.moveTo(p.x + 4, p.y + 6, 1500); if (!user) showCard('ngc'); } return null; },
-      async () => { if (!user) hideCard(); const p0 = rel(chip(), 1, .5); await D.moveTo(p0.x + 8, p0.y, 1400); const p = rel(chip(), 1, 0); return ['d', NOTES[LANG].chips, p.x - 40, p.y - 46]; },
-      async () => { const n = mb.querySelector('.node.loop .orbit'); if (!n) return null; const p0 = rel(n, .5, 1); await C.moveTo(p0.x - 14, p0.y + 4, 1500); const p = rel(n, 0, 1); return ['c', NOTES[LANG].loop, p.x - 80, p.y + 34]; },
-    ];
-    let i = 0;
-    while (!disposed) {
-      // The phone column has no collaborators (their layer is hidden): nothing pops the map's cards on its own.
-      if (F.active || user || paused || document.hidden || !layer.offsetWidth) { await sleep(600); continue; }
-      bc.hide(); bd.hide();
-      const r = await steps[i++ % steps.length]();
-      if (F.active || disposed) continue;
-      if (r) { const [w, t, x, y] = r; (w === 'c' ? bc : bd).show(t, x, y, w === 'c' ? 'C' : 'D'); }
-      await sleep(3200);
-    }
-  }
-
-  /* ---------- language + layout ---------- */
-  function applyText() {
-    const t = strings(LANG);
-    land.parentElement.querySelectorAll('[data-l]').forEach(e => { const v = t[e.dataset.l]; if (v != null) e.innerHTML = v; });
-    land.setAttribute('aria-label', t.name);
-    $('.ec-win')?.setAttribute('aria-label', t.map);
-    host.querySelector('.ec-explore')?.setAttribute('aria-label', t.explore);
-    host.querySelectorAll('.ec-cv').forEach(a => a.setAttribute('href', cvForLanguage(LANG)));
-  }
-  function layoutAll() { if (disposed || paused || !land.offsetWidth) return; fit(); buildMap(); paintInsp(); rulers(); home(); follow(); }
-  // When the canvas scrolls (stacked layouts, short screens), the collaborators and the ruler marks scroll with it.
-  function follow() {
-    const st = main.scrollTop;
-    layer.style.transform = st ? `translateY(${-st}px)` : ''; layer.style.bottom = st ? `${-st}px` : '';
-    markRulers();
-  }
-  on(main, 'scroll', follow, {passive: true});
-  const ro = new ResizeObserver(() => layoutAll()); ro.observe(mb); ro.observe(land);
-  const guide = getGuide(); if (guide) ro.observe(guide);
-  renderHist(); applyText();
-  const ready = document.fonts?.ready || Promise.resolve();
-  ready.then(() => requestAnimationFrame(() => {
-    layoutAll();
-    const P = new URLSearchParams(location.search);
-    if (P.get('card')) { layer.classList.add('quiet'); showCard(P.get('card')); }
-    if (P.get('hist')) showHist(+P.get('hist'));
-    if (motion) { raf = requestAnimationFrame(drift); setTimeout(script, 2200); }
-  }));
-  const themeObserver = new MutationObserver(() => paintInsp()); themeObserver.observe(root, {attributes: true, attributeFilter: ['data-theme']});
+  render();
   return {
-    setLanguage(value) { LANG = value === 'zh' ? 'zh' : 'en'; applyText(); renderHist(); requestAnimationFrame(layoutAll); },
-    setReducedMotion(value) { motion = !value && !matchMedia('(prefers-reduced-motion: reduce)').matches; land.classList.toggle('ec-motion', motion); D.motion = C.motion = motion; buildMap(); },
-    refresh: () => requestAnimationFrame(layoutAll),
-    pause() { paused = true; cancelAnimationFrame(raf); raf = 0; },
-    resume() { if (!paused) return; paused = false; requestAnimationFrame(layoutAll); if (motion && !raf) raf = requestAnimationFrame(drift); },
-    destroy() { disposed = true; ac.abort(); ro.disconnect(); themeObserver.disconnect(); cancelAnimationFrame(raf); },
+    root, buildMap, showCard, hideCard,
+    get lang() { return lang; }, get map() { return map; },
+    setLanguage(value) { lang = value === 'zh' ? 'zh' : 'en'; pinned = null; render(); },
+    setMotion(value) { motion = value; buildMap(); },
+    nodes() { const box = root.querySelector('.mapbox'); if (!box || !map) return []; const [ox, oy] = offset(box); return map.pts.map(([x, y, id]) => ({id, x: x + ox, y: y + oy, r: id === 'lc' ? map.loop.R : 8})); },
+    box(target) { const node = typeof target === 'string' ? root.querySelector(target) : target; if (!node) return null; const [x, y] = offset(node); return [x, y, node.offsetWidth, node.offsetHeight]; },
+  };
+}
+
+/** What the board's scene needs of the page (it reads it as window.SITE): the pieces and the sheet mounter. */
+export const site = {top, hero, mapWindow, status, mount: mountSheet};
+
+/** Below either, the page is one scrolling column and the board's effect stays off (it matches board.css). */
+export const BOARD_MIN = {width: 1260, height: 600};
+
+/**
+ * Wire the landing. `host` is the Interface root. The page works as plain HTML at once; the board (HTML-in-Canvas)
+ * is loaded after it and takes over where the browser supports it, the window is large enough and the theme is
+ * light. Returns {setLanguage, setReducedMotion, refresh, pause, resume, destroy}.
+ */
+export function mountLanding(host, {lang = 'en', reducedMotion = false, getGuide = () => null} = {}) {
+  const land = host.querySelector('.landing'); if (!land || typeof ResizeObserver !== 'function') return null;
+  const root = document.documentElement, $ = id => land.querySelector('#' + id);
+  let LANG = lang === 'zh' ? 'zh' : 'en', paused = false, disposed = false, board = null, sheets = null;
+  let still = reducedMotion || matchMedia('(prefers-reduced-motion: reduce)').matches || new URLSearchParams(location.search).get('motion') === '0';
+  const dark = () => (root.dataset.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')) === 'dark';
+  // the idle CV Tour guide rests in the status line, clear of the hero
+  const dock = () => { const guide = getGuide(); guide?.classList.add('ec-docked'); host.querySelector('.status')?.classList.add('docked'); };
+  const applyMode = () => { land.classList.toggle('dark', dark()); root.classList.toggle('board-dark', dark()); if (board?.app) { board.app.dark = dark(); board.app.setEffects?.(!paused); board.app.dirty?.(); } land.classList.toggle('fx', !!board?.app?.effects?.()); syncPanel(); };
+  // The site's panel (a section, a paper, a project, the map, settings) is the board's fifth sheet while the effect
+  // runs: ui.js opens and fills it (.experience.reading); here the board is told to lift it or put it away.
+  const experience = host.querySelector('.experience'), pageContent = host.querySelector('#page-content');
+  let panelKey = '';
+  function syncPanel() {
+    const open = experience.classList.contains('reading') && !experience.classList.contains('playing');
+    const route = /^#(section|paper|project)\/([\w-]+)/.exec(location.hash), id = route ? route[2] : '';
+    const key = route ? route[1] + '/' + id : 'panel', turned = open && panelKey && key !== panelKey;
+    panelKey = open ? key : '';
+    if (!board?.app?.effects?.()) {      // the plain sheet: one element, so it settles again as the next page
+      const sheet = turned && host.querySelector('.grimoire');
+      if (sheet) { sheet.classList.remove('turn'); void sheet.offsetWidth; sheet.classList.add('turn'); }
+      return;
+    }
+    land.querySelectorAll('.nav a[data-id]').forEach(a => { const on = open && route?.[1] === 'section' && a.dataset.id === id; a.classList.toggle('on', on); if (on) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current'); });
+    board.markNav();
+    board.sheet(open, id || 'panel', key);
+    if (open && land.inert) land.inert = false;   // the canvas holds the open sheet: the board guards its own parts
+  }
+  const panelObserver = new MutationObserver(() => syncPanel());
+  if (experience) panelObserver.observe(experience, {attributes: true, attributeFilter: ['class']});
+  if (pageContent) panelObserver.observe(pageContent, {childList: true});
+  panelObserver.observe(land, {attributes: true, attributeFilter: ['inert']});
+
+  // Until the board has loaded (and for good where it cannot run) the sheets are mounted here.
+  function plain() {
+    if (sheets) return;
+    sheets = {
+      ground: mountSheet($('ground'), {lang: LANG, page: sheetHTML.ground}),
+      map: mountSheet($('mapl'), {lang: LANG, page: sheetHTML.map, motion: !still}),
+      text: mountSheet($('text'), {lang: LANG, page: sheetHTML.text}),
+    };
+    dock();
+  }
+  // Probe for HTML-in-Canvas before fetching anything (the feature itself, never the browser's name); ?fx=off forces the plain page.
+  const probe = document.createElement('canvas'); probe.setAttribute('content', 'drawable');
+  const canDraw = (probe.content === 'drawable' || 'layoutSubtree' in HTMLCanvasElement.prototype) && typeof probe.requestPaint === 'function';
+  // The board (and the paint simulator) is fetched only when the window can show the effect: a phone never pays for it.
+  const big = () => innerWidth >= BOARD_MIN.width && innerHeight >= BOARD_MIN.height;
+  const start = () => import('../board/index.js').then(m => m.startBoard({site, min: BOARD_MIN, lang: LANG, still, onMode: () => { land.classList.toggle('fx', !!board?.app?.effects?.()); dock(); }})).then(started => {
+    board = started;
+    if (disposed) { board.app?.setEffects?.(false); return; }
+    if (board.lang() !== LANG) board.setLanguage(LANG);
+    applyMode(); dock();
+  }).catch(error => { console.warn('board', error); if (!land.querySelector('.hero')) { root.classList.add('flat'); plain(); } });
+  land.classList.toggle('dark', dark());
+  root.classList.toggle('board-dark', dark());
+  let started = false;
+  const grow = () => { if (started || disposed || !big()) return; started = true; removeEventListener('resize', grow); start(); };
+  if (!canDraw || new URLSearchParams(location.search).get('fx') === 'off') { root.classList.add('flat'); plain(); }
+  else if (big()) { started = true; start(); }
+  else { root.classList.add('flat'); plain(); addEventListener('resize', grow); }
+
+  const themeObserver = new MutationObserver(() => { applyMode(); land.querySelectorAll('.theme-button').forEach(b => { b.innerHTML = themeIcon(); }); });
+  themeObserver.observe(root, {attributes: true, attributeFilter: ['data-theme']});
+  const schemeQuery = matchMedia('(prefers-color-scheme: dark)'), onScheme = () => applyMode();
+  schemeQuery.addEventListener?.('change', onScheme);
+  return {
+    setLanguage(value) {
+      LANG = value === 'zh' ? 'zh' : 'en';
+      if (board) board.setLanguage(LANG); else if (sheets) for (const sheet of Object.values(sheets)) sheet.setLanguage(LANG);
+      land.setAttribute('aria-label', landingCopy[LANG].name);
+      for (const [selector, key] of [['.xbtn:not(.save) span', land.querySelector('.xbtn')?.getAttribute('aria-pressed') === 'true' ? 'collapse' : 'explode'], ['.xbtn kbd', 'hold'], ['.xbtn.save span', 'save']]) { const el = land.querySelector(selector); if (el) el.textContent = landingCopy[LANG][key]; }
+      dock();
+    },
+    setReducedMotion(value) { still = !!value || matchMedia('(prefers-reduced-motion: reduce)').matches; root.classList.toggle('still', still); sheets?.map.setMotion(!still); },
+    refresh() { window.__board?.measure?.(); sheets?.map.buildMap(); dock(); },
+    pause() { paused = true; applyMode(); },
+    resume() { if (!paused) return; paused = false; applyMode(); requestAnimationFrame(() => { window.__board?.measure?.(); dock(); }); },
+    destroy() { disposed = true; panelObserver.disconnect(); themeObserver.disconnect(); schemeQuery.removeEventListener?.('change', onScheme); board?.app?.setEffects?.(false); },
   };
 }
