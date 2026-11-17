@@ -19,8 +19,8 @@ export const profile = {
     '面向长程专家级任务的智能体后训练 —— 把 harness 能做到的，变成模型自己能做到的。',
   ),
   intro: bilingual(
-    'My work is post-training for agents. Today, a harness can make a model carry out long-horizon work; I study how to move that ability into the weights. This takes three steps: measuring what the weights and the harness each contribute; building harnesses that produce training-grade trajectories and rewards; and training on them with mid-training, SFT and reinforcement learning, where the harness\'s evaluators supply the rewards, so the model needs less scaffolding. My testbed is long-horizon artifact design, where I contribute to the LongCat 2.5 post-training pipeline for agentic design. Next, I am building the full post-training pipeline for game development: the harness, RL environments, evaluation benchmarks and RL reward design.',
-    '我研究智能体的后训练。现在，靠 harness 可以让模型完成长程任务；我研究的是怎么把这种能力转移到权重里。具体分三步：测量权重和 harness 各自贡献了多少；构建能产出训练级轨迹和奖励的 harness；用这些数据做 Mid-Training、SFT 和强化学习（RL），由 harness 里的评测器提供奖励，让模型对外部脚手架的依赖越来越少。我的试验场是长程 artifact design，并参与 LongCat 2.5 Agentic Design 的后训练流程。下一步，我在搭建面向游戏开发的后训练全流程：Harness、RL 环境、评测基准与 RL 奖励设计。',
+    'I work on post-training for agents. I optimize the harness so that the model produces better trajectories and the behaviour we want. I design evaluations and RL rewards, and use them to choose between harnesses and to select training data. Then I train with SFT and RL to reinforce what works and correct the mistakes, so the model needs less scaffolding. Today I do this for long-horizon design in the LongCat 2.5 post-training pipeline. Next: harder, open-ended tasks.',
+    '我做智能体的后训练。先优化 harness，约束模型产出更好的轨迹和我们想要的行为；再设计评测与 RL 奖励，用它们来挑选 harness、筛选训练数据；然后用 SFT 和 RL 训练，强化好的行为、纠正错误，让模型越来越不依赖外部脚手架。目前这套流程用在 LongCat 2.5 的长程设计后训练上，下一步是更难的开放式任务。',
   ),
   affiliation: bilingual('MBZUAI · VILA Lab', 'MBZUAI · VILA 实验室'),
   bio: bilingual(
@@ -47,8 +47,8 @@ export const research = [
       {title: bilingual('Co-evolve', '共同进化'), text: bilingual('As RL makes the model stronger, the environments and rewards the harness must provide change too, so the two are iterated together.', '模型经过 RL 变强以后，harness 需要提供的环境和奖励也要跟着变，所以两者要一起迭代。')},
     ],
     next: bilingual(
-      'Next: the same questions, from a single agent to agent swarms.',
-      '下一步：把同样的问题从单个 agent 推广到 agent swarm。',
+      'Next: the same questions on harder, open-ended tasks.',
+      '下一步：在更难的开放式任务上回答同样的问题。',
     ),
   },
 ];

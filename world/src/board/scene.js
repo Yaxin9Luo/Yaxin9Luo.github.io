@@ -148,7 +148,7 @@ function spin(x, y, angle = SPIN) {
 function reserveBloom(tighter = 0) {
   const root = textSite.root, st = root.style, q = sel => root.querySelector(sel);
   const bioEl = q('.bio'), ctaEl = q('.cta'), win = mapSite.box('.mapwin'), status = groundSite && groundSite.box('.status .now');
-  for (const v of ['--keep-w', '--keep-h', '--keep-all', '--cta-gap', '--sq']) st.removeProperty(v);
+  for (const v of ['--keep-w', '--keep-r', '--keep-cx', '--keep-cy', '--keep-all', '--cta-gap', '--sq']) st.removeProperty(v);
   lay.bloomWant = 0;
   if (!bioEl || !ctaEl || !win || !document.documentElement.classList.contains('gl')) return;
   let D = HIC.clamp(innerWidth * .111, 120, 200), sq = 0;
@@ -165,13 +165,17 @@ function reserveBloom(tighter = 0) {
     else if (short > 0 && pass > 2) D = Math.max(120, D - short * 2.6);
     st.setProperty('--sq', sq.toFixed(1) + 'px');
     const s = D / 200, r = D / 2, cx = win[0] - 20 - r, cy = yTop + 8 * s - 140 * s;      // the bloom: against the study sheet, its stem into the strip
-    st.setProperty('--keep-w', Math.max(0, bio[0] + bio[2] - (cx - r - 14) + 8 * tighter).toFixed(1) + 'px');
-    st.setProperty('--keep-h', HIC.clamp(bio[1] + bio[3] - (cy - r - 14), 0, bio[3]).toFixed(1) + 'px');
+    // the bio's lines run round the bloom: a float at its right edge whose shape is the bloom's circle
+    const keepW = Math.max(0, bio[0] + bio[2] - (cx - r - 14) + 8 * tighter);
+    st.setProperty('--keep-w', keepW.toFixed(1) + 'px');
     st.setProperty('--keep-all', bio[3].toFixed(1) + 'px');
+    st.setProperty('--keep-r', (r + 11 + 6 * tighter).toFixed(1) + 'px');
+    st.setProperty('--keep-cx', (cx - (bio[0] + bio[2] - keepW)).toFixed(1) + 'px');
+    st.setProperty('--keep-cy', (cy - bio[1]).toFixed(1) + 'px');
     // the buttons: the row must end left of the bloom where the two are level
     const d = Math.max(0, btnTop - 3 - cy), half = d < r + 14 ? Math.sqrt((r + 14) * (r + 14) - d * d) : 0;
-    const gapNow = parseFloat(getComputedStyle(ctaEl).columnGap) || gap0, over = rowRight + 5 + 4 * tighter - (cx - half);
-    if (over > 0) st.setProperty('--cta-gap', Math.max(8, gapNow - over / (btns.length - 1)).toFixed(1) + 'px');
+    const gapNow = parseFloat(getComputedStyle(ctaEl).columnGap) || gap0, over = rowRight + 5 + 14 + 4 * tighter - (cx - half);      // 14: the last button's tail
+    if (over > 0) st.setProperty('--cta-gap', Math.max(innerWidth < 1400 ? 24 : 16, gapNow - over / (btns.length - 1)).toFixed(1) + 'px');
     lay.bloomWant = D;
   }
 }
@@ -210,16 +214,7 @@ function measureOnce(tighter) {
   const nodes = mapSite.nodes();
   const loop = nodes.find(n => n.id === 'lc');
 
-  // annotations: frame and inspector on the name, the two tools where they work
-  const sel = els.notes.querySelector('.sel'), insp = els.notes.querySelector('.insp');
-  const pad = 6;
-  sel.style.cssText = `left:${name[0] - pad}px;top:${name[1] - 2}px;width:${name[2] + pad * 2}px;height:${name[3] + 2}px`;
-  insp.style.left = name[0] - pad + 'px';
-  insp.style.top = Math.max(top[1] + top[3] - 2, lay.swatch[1] - 36) + 'px';
-  if (document.documentElement.classList.contains('flat')) {      // the plain page: the name is type, so say so
-    const h1 = els.text.querySelector('.name'), cs = getComputedStyle(h1);
-    insp.innerHTML = `<span><em>◇</em><b>Text · H1</b></span><span>${cs.fontFamily.split(',')[0].replace(/["']/g, '')} · ${cs.fontWeight}</span><span>${Math.round(parseFloat(cs.fontSize))} px</span>`;
-  } else insp.innerHTML = `<span><em>◇</em><b>Brush</b></span><span>hand-lettered</span><span>${hand.count} strokes</span>`;
+  // annotations: the two tools where they work
   const status = groundSite.box('.status .now');
   const swRight = lay.swatch[0] + lay.swatch[2];
   const d = els.notes.querySelector('.tool.d'), c = els.notes.querySelector('.tool.c');
@@ -279,6 +274,15 @@ function measureOnce(tighter) {
   // the painted strokes: four buttons, two chips
   const kinds = ['orange', 'ultra', 'cobalt', 'viridian', 'pale blue', 'pale mint'];
   lay.slots = [...all('.cta .btn').slice(0, 4), q('.chip'), q('.chip.g')].map((el, i) => { const b = el ? textSite.box(el) : [0, 0, 1, 1]; return { box: b, w: Math.round(b[2]), h: Math.round(b[3]), kind: kinds[i] }; });
+  { // a button's stroke runs on past its label, but never close to the next one: in a narrow window (a tight row) at
+    // least 22 px of bare ground stay between two strokes, so the tails and the leads are short there
+    const tight = innerWidth < 1400, btnBoxes = lay.slots.slice(0, 4).map(sl => sl.box);
+    lay.slots.slice(0, 4).forEach((sl, i) => {
+      const next = i < 3 && Math.abs(btnBoxes[i + 1][1] - sl.box[1]) < 8 ? btnBoxes[i + 1][0] - sl.box[0] - sl.box[2] : tight ? 30 : 40;
+      sl.tail = Math.round(tight ? HIC.clamp(next - 24, 0, 14) : HIC.clamp(next - 14, 2, 18));
+      sl.lead = tight ? 2 : 12;
+    });
+  }
   { // all of the text sheet's paint: the top bar, and the name with its buttons and chips (with room for a loose edge)
     let b = [lay.name[0], lay.name[1], lay.name[0] + lay.name[2], lay.name[1] + lay.name[3]];
     for (const sl of lay.slots) b = [Math.min(b[0], sl.box[0]), Math.min(b[1], sl.box[1]), Math.max(b[2], sl.box[0] + sl.box[2]), Math.max(b[3], sl.box[1] + sl.box[3])];
@@ -300,9 +304,14 @@ function measureOnce(tighter) {
   lay.wells.fill(-1e4);
   all('.explore a').slice(0, 3).forEach((a, i) => { const b = textSite.box(a); lay.wells.set([b[0] + 8 + 9, b[1] + b[3] / 2, 9.5], i * 3); });
   const mk = mapSite.map ? mapSite.map.mk : 1, colW = (lay.mapbox[2] - 24) / 3;
+  lay.foot = lay.mapbox[1] + lay.mapbox[3] - 30 * mk;      // mapSVG's baseline
   for (let i = 0; i < 3; i++) lay.phases.set([lay.mapbox[0] + i * (colW + 12) + 4, lay.mapbox[1] + 6, colW - 8, 124 * mk], i * 4);
   if (status) lay.pal = [status[0] + status[2] + 46, status[1] + status[3] / 2, 27];
-  if (status && lay.pal[0] + 4 * 27 + 16 > innerWidth - 540) lay.pal[0] = -1e4;   // no room beside the lab's pills
+  if (status) {      // it needs the row to itself: up to the CV Tour's bar docked at the right, closer to the words if it must
+    const guide = document.querySelector('.mascot-guide.ec-docked'), gr = guide && guide.getBoundingClientRect(), limit = (gr && gr.width && gr.left > innerWidth * .4 ? gr.left : innerWidth - 330) - 20;
+    if (lay.pal[0] + 4 * 27 + 14 > limit) lay.pal[0] = Math.max(status[0] + status[2] + 24, limit - 4 * 27 - 14);
+    if (lay.pal[0] + 4 * 27 + 14 > limit) lay.pal[0] = -1e4;
+  }
   lay.guides = [name[1] + name[3] * (zhPage ? .12 : .17), name[1] + name[3] * (zhPage ? .88 : .80), 8, lay.swatch[0] - 12];
   lay.nodes.fill(-1e4);
   lay.ids = [];
@@ -316,7 +325,7 @@ function measureOnce(tighter) {
     [...(box ? box.querySelectorAll('g.node text.nm, g.node text.vn, .study text.prog') : [])].slice(0, 24).forEach((t, i) => { const q = t.getBBox(); if (q.width) lay.labels.set([lay.mapbox[0] + q.x - 3, lay.mapbox[1] + q.y, q.width + 6, q.height], i * 4); });
   }
   placeBaked();
-  const key = [Array.from(lay.labels, Math.round), Object.values(lay.baked).map(b => b.map(Math.round)), lay.name, lay.mapbox, Array.from(lay.btns), lay.slots.map(sl => sl.w + 'x' + sl.h), Array.from(lay.nodes), langNow()].join();
+  const key = [Array.from(lay.labels, Math.round), Object.values(lay.baked).map(b => b.map(Math.round)), lay.name, lay.mapbox, Array.from(lay.btns), lay.slots.map(sl => sl.w + 'x' + sl.h + (sl.tail !== undefined ? 't' + sl.tail + 'l' + sl.lead : '')), Array.from(lay.nodes), langNow()].join();
   if (key !== lay.key) {
     lay.key = key;
     lay.ver++;
@@ -653,12 +662,15 @@ void work() {
     vec2 gx = vec2(uSpace.x / (uRes.x * uBox.z), 0.), gy = vec2(0., uSpace.y / (uRes.y * uBox.w));      // one target px, in the painting
     vec4 c = textureGrad(uBaked, q, gx, gy);
     vec3 r = textureGrad(uBakedR, q, gx, gy).rgb;
-    float cover = c.a * smoothstep(uA.x, uA.x + 14., p.x);      // uA.x: where a shortened painting begins
+    float cover = c.a * smoothstep(uA.x, uA.x + 44., p.x);      // uA.x: where a shortened painting begins
+    // while it is being painted in: only up to x = uKnife (a branch, drawn from its tip), or within uTravel px of uB (a bloom, from its heart)
+    if (uKnife > 0.) cover *= 1. - smoothstep(uKnife - 22., uKnife, p.x + 7. * (vnoise(vec2(p.y * .35, 2.)) - .5));
+    if (uTravel > 0.) cover *= 1. - smoothstep(uTravel - 12., uTravel, length(p - uB) + 9. * (vnoise(p * .11) - .5));
     if (cover < .004) return;
     float h = (.07 + 2.3 * r.r) * uGain;                                 // thin paint still covers; the impasto stands up
-    vec3 col = mix(dec(old), c.rgb / cover, max(cover, 1. - smoothstep(0., .02, old.a)));
+    vec3 col = mix(dec(old), c.rgb / max(c.a, .004), max(cover, 1. - smoothstep(0., .02, old.a)));      // the painting's own colour: cover may be less than its alpha (a faded end, a front)
     o = enc(col, mix(old.a, h, cover));
-    m = mix(oldM, vec4(0., clamp(r.b / cover, 0., 1.), 0., 0.), cover);
+    m = mix(oldM, vec4(0., clamp(r.b / max(c.a, .004), 0., 1.), 0., 0.), cover);
     return;
   }
   if (uMode > 3.5) {               // one strip scraped: the knife runs along it from the left
@@ -779,6 +791,9 @@ uniform float uSpin;               // this sheet's content is turned by this ang
 uniform vec3 uSpinAbove;           // and the sheets above by these
 uniform vec2 uSpinC;
 uniform vec3 uPal;
+uniform vec4 uBakedBox[2];  // where the peony's bloom and branch lie on the ground
+uniform float uBakedHide;   // 1 while the stack is apart: the peony is off the ground (the text sheet would cross it)
+uniform vec3 uBloom;      // the peony's bloom (centre, radius): paint at full strength, though it reaches into the hero's column
 uniform vec4 uGuides;
 uniform vec4 uPhases[3];
 // map
@@ -786,6 +801,7 @@ uniform sampler2D uStroke;
 uniform vec4 uMapBox;
 uniform vec3 uNodes[8];
 uniform vec3 uLoop;
+uniform float uFoot;      // the pencil baseline with the years: the paint stops some 14 px above it
 uniform float uLen, uProgress, uHover, uOrbit, uRidgeEnd;      // uRidgeEnd: where the drawn ridge stops (0..1 across the map box)
 uniform sampler2D uMount, uMountR;      // the baked mountains over the map box (colour; r thickness, g gloss)
 uniform float uMountOn;
@@ -959,7 +975,7 @@ float pencil(vec2 p, float dist, float weight) { return dist > 1.2 ? 0. : (1. - 
 // a node on the ridge: the loaded dot a brush leaves when it presses down to end a stroke. Pressed in, dragged a
 // little, lifted: a heavy body with a lip on its leading edge and a short dry flick where the brush left. wet: 1 on
 // the hovered node, which is pressed heavier and wetter.
-vec4 pressDab(vec2 p, vec2 c, float r, float seed, float wet) {
+vec4 pressDabC(vec2 p, vec2 c, float r, vec3 ink, float seed, float wet) {
   vec2 d = p - c;
   if (dot(d, d) > r * r * 7.5) return vec4(0.);
   float ang = -.9 + 1.5 * hash11(seed * 3.7 + 1.), ca = cos(ang), sa = sin(ang);
@@ -973,10 +989,10 @@ vec4 pressDab(vec2 p, vec2 c, float r, float seed, float wet) {
   float h = body * (.55 + .5 * sqrt(max(1. - dot(q, q), 0.)) + .42 * exp(-pow((q.x - .58) / .2, 2.)) * (1. - smoothstep(.5, .95, abs(q.y)))) + .22 * tail + .14 * (n.b - .5) * cover;
   h *= 1. + .35 * wet;
   vec2 sl = vec2(dFdx(h), dFdy(h)) * (3. + wet);
-  vec3 ink = mix(mix(vec3(.045, .075, .40), vec3(.03, .05, .30), body), mix(vec3(.50, .62, 1.), vec3(.36, .47, .96), body), uDark);      // on the dark sheet the mark is the light one
-  vec3 col = lit(ink * (1. - .18 * wet), sl, .7 + .3 * wet, 1.);
+  vec3 col = lit(min(ink * mix(1.36, 1., body), 1.) * (1. - .18 * wet), sl, .7 + .3 * wet, 1.);      // the flick is thinner paint: lighter
   return vec4(col, 1.) * cover;
 }
+vec4 pressDab(vec2 p, vec2 c, float r, float seed, float wet) { return pressDabC(p, c, r, mix(vec3(.03, .05, .30), vec3(.36, .47, .96), uDark), seed, wet); }      // on the dark sheet the mark is the light one
 // The mountains under the ridge: brushwork painted once with PaintSim (baked/), stretched over the map box and lit
 // here from its thickness. px: the size of a screen pixel on the sheet, for the lookups' level.
 vec4 mountains(vec2 p, float px) {
@@ -1002,7 +1018,8 @@ vec4 mountains(vec2 p, float px) {
   float gloss = textureGrad(uMountR, uv, gx, gy).g;
   vec3 col = lit(c.rgb / max(c.a, .004), vec2(hx, hy) * 5.5 * veil, .45 * gloss * veil, 1.);
   float shown = smoothstep(0., .1, uProgress * 1.12 - uv.x);              // they come up behind the ridge as it is drawn
-  return vec4(col, 1.) * (c.a * shown * mix(.40, 1., veil) * (1. - .8 * halo));
+  float lift = 1. - smoothstep(uFoot - 34., uFoot - 14., p.y + 9. * (tn(vec2(p.x * .09, 3.)).r - .5));      // the brush lifts before the baseline: a ragged foot
+  return vec4(col, 1.) * (c.a * shown * lift * mix(.40, 1., veil) * (1. - .8 * halo));
 }
 vec4 strokeLayer(vec2 p) {
   vec2 uv = (p - uMapBox.xy) / uMapBox.zw;
@@ -1050,27 +1067,33 @@ void main() {
     vec3 ground = mix(vec3(.965, .969, .984), vec3(.046, .054, .128), uDark) * tone;
     // the paint: lit as impasto by the board's lamp, from its height field
     vec2 puv = p / uView;
-    vec4 pv = texture(uPaint, puv) * onSheet;
+    float keep = 1.;
+    if (uBakedHide > 0.) keep = 1. - uBakedHide * (1. - min(smoothstep(0., 8., sdRound(p, uBakedBox[0], 4.)), smoothstep(0., 8., sdRound(p, uBakedBox[1], 4.))));
+    vec4 pv = texture(uPaint, puv) * (onSheet * keep);
     float ph = pv.a;
     // calm under the words and inside the map window
     float quiet = max(1. - smoothstep(-6., 10., sdRound(p, uHero, 12.)), 1. - smoothstep(-10., 8., sdRound(p, uWin, 10.)));
+    quiet *= smoothstep(uBloom.z - 4., uBloom.z + 14., length(p - uBloom.xy));
     float wv = .5 + .5 * weave;
     float thin = 1. - smoothstep(.05, .30, ph);
     float cover = smoothstep(.012, .075, ph - .07 * wv * thin);                       // scraped thin, the weave shows through
     vec2 toLamp = normalize(uLamp.xy + 1e-4);
-    float near = texture(uPaint, puv + toLamp * 4.5 / uView).a * onSheet, far = texture(uPaint, puv + toLamp * 11. / uView).a * onSheet;      // past the sheet's edge there is no paint to shade the board
+    float near = texture(uPaint, puv + toLamp * 4.5 / uView).a * onSheet * keep, far = texture(uPaint, puv + toLamp * 11. / uView).a * onSheet * keep;      // past the sheet's edge there is no paint to shade the board
     float flat_ = 1. - .75 * quiet;
     vec2 ex = vec2(1.1 / uView.x, 0.), ey = vec2(0., 1.1 / uView.y);
-    vec2 slope = vec2(texture(uPaint, puv + ex).a - texture(uPaint, puv - ex).a, texture(uPaint, puv + ey).a - texture(uPaint, puv - ey).a);
+    vec2 slope = vec2(texture(uPaint, puv + ex).a - texture(uPaint, puv - ex).a, texture(uPaint, puv + ey).a - texture(uPaint, puv - ey).a) * keep;
     vec3 body = pv.rgb / max(clamp(ph * 8., 0., 1.), .001);
     body = pow(max(body, 0.), vec3(1. + .34 * smoothstep(.35, 1.2, ph)));             // thick paint is deeper and richer
     body *= mix(1., 1.16, uDark);
     float occ = max(0., near - ph) + .6 * max(0., far - ph);
     float shade = 1. - .5 * smoothstep(.02, .5, occ);                                 // furrows fall into soft shadow
-    vec3 paintC = lit(body, slope * 3.4 * flat_, .9 * flat_, shade);
+    float inBloom = 1. - smoothstep(uBloom.z + 2., uBloom.z + 12., length(p - uBloom.xy));
+    float dim = uDark * inBloom;                                                       // on the dark board the bloom's cream would glare: it is lit lower and cooler, under the name's letters
+    body = mix(body, body * vec3(.66, .74, .92), dim);
+    vec3 paintC = lit(body, slope * 3.4 * flat_ * (1. - .25 * dim), .9 * flat_ * (1. - .55 * dim), shade);
     vec3 nP = normalize(vec3(-slope * 3.4 * flat_, 1.)), hP = normalize(normalize(vec3(toPtr, 150.)) + vec3(0., 0., 1.));
     paintC += vec3(1., .985, .95) * pow(max(dot(nP, hP), 0.), 40.) * .7 * nearPtr * flat_ + body * .16 * nearPtr;
-    vec2 mat = texture(uMatTex, puv).rg * onSheet;
+    vec2 mat = texture(uMatTex, puv).rg * onSheet * keep;
     if (mat.r + mat.g > .02) {
       vec3 nM = normalize(vec3(-slope * 3.4 * flat_, 1.));
       float relief = clamp(length(slope) * 5., 0., 1.);
@@ -1092,9 +1115,8 @@ void main() {
     vec4 base = vec4(ground, 1.);
     for (int i = 0; i < 5; i++) {
       vec3 pc = i == 0 ? ULTRA * 1.1 : i == 1 ? vec3(.13, .24, .80) : i == 2 ? ORANGE : i == 3 ? vec3(.04, .46, .34) : vec3(.97, .94, .85);
-      vec2 at = uPal.xy + vec2(uPal.z * float(i), 1.5 * sin(float(i) * 2.3));
-      vec4 soft = vec4(.05, .06, .2, 1.) * (.16 * (1. - smoothstep(6., 13., length(p - at - vec2(2., 3.)))));
-      base = over(dab(p, at, 9.5 + 1.5 * hash11(float(i) + 2.), pc, float(i) * 3.1 + 1., 0.), over(soft, base));
+      vec2 at = uPal.xy + vec2(uPal.z * float(i), 2.2 * sin(float(i) * 2.3));
+      base = over(pressDabC(p, at, 8.2 + 2.4 * hash11(float(i) + 2.), pc, float(i) * 3.1 + 1.4, 0.), base);      // the brush pressed down once in each
     }
     base *= mix(1., inside, smoothstep(0., .3, uOpen));
     c = over(tex, base);
@@ -1133,7 +1155,7 @@ void main() {
     paint = over(dab(p, uLangA.xy, uLangA.z * (1. + .16 * uSwell.w), ULTRA * (1.15 + .2 * uSwell.w), 3., 0.), over(dab(p, uLangB.xy, uLangB.z - 1., mix(vec3(.80, .83, .96), vec3(.16, .19, .44), uDark), 6., 0.), paint));
     for (int i = 0; i < 3; i++) {
       vec3 wc = i == 0 ? vec3(.13, .22, .80) : i == 1 ? ORANGE : vec3(.04, .46, .34);
-      paint = over(dab(p, uWells[i].xy, uWells[i].z * (1. + .34 * uSwell[i]), wc * (1. + .22 * uSwell[i]), float(i) * 4.3 + 2., 0.), paint);
+      paint = over(pressDabC(p, uWells[i].xy, uWells[i].z * (.86 + .26 * uSwell[i]), wc * (1. + .22 * uSwell[i]), float(i) * 4.3 + 2.6, uSwell[i]), paint);
       vec3 dc = i == 0 ? ORANGE : i == 1 ? vec3(.13, .22, .80) : vec3(.04, .46, .34);
       paint = over(dab(p, uDots.xy + vec2(uDots.z * float(i), 0.), 6.2, dc, float(i) * 2.9 + 7., 0.), paint);
     }
@@ -1157,7 +1179,7 @@ void main() {
     if (all(greaterThan(p, uWin.xy - 30.)) && all(lessThan(p, uWin.xy + uWin.zw + 30.))) {       // all of the paint lies on the sheet
     vec4 washes = vec4(0.);
     // each passage falls from the ridge to the foot of the sheet as a wash that pools and fades: the curve has mass
-    float rx = (p.x - uMapBox.x) / uMapBox.z, foot = uMapBox.y + uMapBox.w - 30.;
+    float rx = (p.x - uMapBox.x) / uMapBox.z, foot = uFoot - 13.;
     if (rx > 0. && rx < 1. && p.y < foot + 4.) {
       float f = rx * 47.;
       int k = int(floor(f));
@@ -1166,7 +1188,7 @@ void main() {
         float ry = mix(ya, yb, fract(f)), depth = p.y - ry;
         if (depth > 0.) {
           float t = depth / max(foot - ry, 40.), nz = .6 * tn(vec2(p.x * .016, p.y * .026 + 3.)).r + .4 * tn(vec2(p.x * .05 + 7., p.y * .07)).g;
-          float fall = (1. - smoothstep(.0, 1., t + .34 * (nz - .5))) * smoothstep(0., 12., depth) * (1. - smoothstep(foot - 16., foot + 2., p.y));
+          float fall = (1. - smoothstep(.0, 1., t + .34 * (nz - .5))) * smoothstep(0., 12., depth) * (1. - smoothstep(foot - 22., foot, p.y));
           float pool = smoothstep(.05, 0., abs(t - (.5 + .5 * (nz - .5)))) * .5 + smoothstep(.035, 0., abs(t - (.86 + .2 * (nz - .5)))) * .35;
           float grain = .8 + .4 * tn(vec2(p.x * .9, p.y * .12)).b;
           vec3 wc = mix(mix(vec3(.20, .30, .92), vec3(.98, .52, .18), smoothstep(.315, .365, rx)), vec3(.07, .62, .45), smoothstep(.65, .70, rx));
@@ -1238,7 +1260,8 @@ const covers = [null, null, null, null];
 const dirty = [true, true, true, true];
 // what the last drawn frame showed (see frame): its key, the token's angle, and counts of what changes pictures
 const drawn = { key: '', orbit: 0, stamps: 0, covers: 0, frames: 0, small: 0 };
-let bakedVer = 0;
+let bakedVer = 0, bakedHide = 0;
+const bakedBoxes = () => { const out = new Float32Array(8).fill(-1e4); ['bloom', 'branch'].forEach((name, i) => { const b = lay.baked && lay.baked[name]; out.set(b ? b : [-1e4, -1e4, 1, 1], i * 4); }); return out; };
 const paintJob = { key: '', name: null, atlas: null, tex: {}, slotBox: new Float32Array(24), slotUV: new Float32Array(24), box: [0, 0, 1, 1], start: 0, ms: 0 };
 const stroke = { rt: null, geo: null, count: 0, len: 1, layVer: -1, start: -1 };
 const swell = [0, 0, 0, 0];
@@ -1350,6 +1373,7 @@ function paintAll(app) {
       paintJob.slotBox.set([b[0] - A.mx, b[1] - A.my, r[2], r[3]], i * 4);
       paintJob.slotUV.set([r[0] / A.W, r[1] / A.H, r[2] / A.W, r[3] / A.H], i * 4);
     });
+    paintJob.mx = A.mx; paintJob.my = A.my;
   }
   paintJob.key = lay.key;
   paintJob.lang = lang;
@@ -1358,7 +1382,7 @@ function paintAll(app) {
 }
 // the boxes move with the layout even when nothing has to be repainted
 function placeSlots() {
-  lay.slots.forEach((slot, i) => { paintJob.slotBox[i * 4] = slot.box[0] - 16; paintJob.slotBox[i * 4 + 1] = slot.box[1] - 7; });
+  lay.slots.forEach((slot, i) => { paintJob.slotBox[i * 4] = slot.box[0] - (paintJob.mx || 16); paintJob.slotBox[i * 4 + 1] = slot.box[1] - (paintJob.my || 7); });
   paintJob.box[0] = lay.name[0]; paintJob.box[1] = lay.name[1];
 }
 
@@ -1509,8 +1533,7 @@ function qStroke(points, { pigment, R, seed, knife = 0, gain = 1, load = 1, reac
 // dark one first on its shadow side, the petal itself, then thick cream where the light falls; a dark accent sits
 // between a petal and the one it overlaps. Outer petals are large and open, inner ones small and upright round a
 // cupped centre, and the seed pod is a small broken piece of gold.
-// The opening marks: a knife stroke low in the left margin and a cobalt one off the right edge. The paintings
-// themselves (the peony, the mountains) are baked: see "baked paintings" below.
+// The board's paintings (the peony, the mountains) are baked: see "baked paintings" below.
 /* ---------------------------------------------------------------- baked paintings
  * The board's paintings are not stroked on the GPU: they are painted once with PaintSim in Node (baked/*.gen.mjs,
  * see baked/README.md) and kept as two pictures each:
@@ -1574,13 +1597,12 @@ function placeBaked() {
     const lineH = parseFloat(getComputedStyle(el).lineHeight) || 30;
     for (const q of range.getClientRects()) if (q.height < lineH * 1.7) add([b[0] + (q.left - r.left) * (b[2] / r.width), b[1] + (q.top - r.top) * (b[3] / r.height), q.width * (b[2] / r.width), q.height * (b[3] / r.height)]);      // lines only, not the block
   }
-  for (const sl of lay.slots) add(sl.box, 3);                             // the painted buttons and chips, with their loose ends
+  for (const sl of lay.slots) add([sl.box[0], sl.box[1], sl.box[2] + (sl.tail || 0), sl.box[3]], 3);      // the painted buttons and chips, with their loose ends and tails
   add(lay.swatch, 4);
   add(lay.win, 8);                                                        // the study sheet, its tape and the shadow at its edge
   walls.push([lay.win[0] - 8, lay.win[1] + lay.win[3], lay.win[0] + lay.win[2] + 22, lay.win[1] + lay.win[3] + 22]);      // the shadow under it
   if (lay.pal[0] > 0) add([lay.pal[0] - 14, lay.pal[1] - 14, 4 * lay.pal[2] + 28, 28]);
   if (lay.brush) add([lay.brush[0] - 12, lay.brush[1] - 196, 176, 214]);  // the Designer's brush, its stroke and its tag
-  { const left = Math.max(18, lay.hero[0]), r0 = Math.min(22, left * .5); add([0, H * .46, r0 * 1.6 + 6, H * .26]); }       // the knife stroke in the left margin
   const room = (x, y) => { let d = 1e9; for (const w of walls) { const dx = Math.max(w[0] - x, 0, x - w[2]), dy = Math.max(w[1] - y, 0, y - w[3]); d = Math.min(d, Math.hypot(dx, dy)); if (d <= CLEAR) return 0; } return d - CLEAR; };
   const hits = (box, grow) => walls.some(w => box[0] < w[2] + grow && box[2] > w[0] - grow && box[1] < w[3] + grow && box[3] > w[1] - grow);
   // the branch for a bloom of radius r at (x, y): its join, and the box its paint fills (x from 29 of 960, y 9 to 83 of 90)
@@ -1628,27 +1650,42 @@ function placeBaked() {
   lay.baked.bloom = [jx - 60 * s, jy - 270 * s, 260 * s, 270 * s];
   if (branch) lay.baked.branch = [jx - 960 * s, jy - 15 * s, 960 * s, 90 * s];
 }
-// set the ground's baked paintings down where the layout has them now; what lay in their old places is lifted first
+// set the ground's baked paintings down where the layout has them now; what lay in their old places is lifted first.
+// The first time (and after "scrape clean") they are painted in over about 0.7 s: the branch from its tip to the
+// stem, then the bloom outwards from its heart. Not in the opening stack: there the text sheet floats to one side of
+// the ground and would cross the flower, so the peony is painted once the visitor has entered the page.
+const setBaked = (app, name, more) => stamp(app, Object.assign({ uMode: 5, uBox: lay.baked[name], uA: [name === 'branch' ? lay.bakedFrom : -1e4, 0], uBaked: baked.tex[name].c, uBakedR: baked.tex[name].r, uGain: 1 }, more));
 function stepBaked(app) {
   const want = Object.keys(lay.baked || {}).filter(name => baked.tex[name]), key = want.map(name => name + lay.baked[name].map(v => v.toFixed(1))).join() + (lay.bakedFrom > 0 ? Math.round(lay.bakedFrom) : '');
+  const rev = paint.reveal;
+  if (rev) {
+    if (rev.key !== key || paint.scrape >= 0) {      // the layout moved under it: off with what is there, and begin again
+      for (const box of rev.boxes) stamp(app, { uMode: 6, uBox: box });
+      paint.reveal = null; paint.bakedAt = []; paint.bakedKey = '';
+      return;
+    }
+    rev.t = Math.min(1, rev.t + Math.min(app.dt, 1 / 30) / .72);
+    const ease = t => 1 - Math.pow(1 - HIC.clamp(t, 0, 1), 2);
+    if (rev.t >= 1) { for (const name of want) setBaked(app, name); paint.reveal = null; paint.bakedKey = key; return; }
+    if (lay.baked.branch && baked.tex.branch) { const b = lay.baked.branch, x0 = Math.max(b[0], lay.bakedFrom); setBaked(app, 'branch', { uKnife: x0 + (b[0] + b[2] - x0 + 30) * ease(rev.t / .62) }); }
+    if (lay.baked.bloom && baked.tex.bloom && lay.bloom && rev.t > .3) setBaked(app, 'bloom', { uB: [lay.bloom.x, lay.bloom.y], uTravel: 4 + lay.bloom.d * .95 * ease((rev.t - .3) / .7) });
+    return;
+  }
   if (key === paint.bakedKey || paint.jobs.length || paint.scrape >= 0 || paint.down || performance.now() - lay.changedAt < 260) return;
+  const fresh = !(paint.bakedAt || []).length;
+  if (fresh && (intro || pose.e > .22)) return;
   for (const box of paint.bakedAt || []) stamp(app, { uMode: 6, uBox: box });
   paint.bakedAt = want.map(name => lay.baked[name]);
-  for (const name of want) stamp(app, { uMode: 5, uBox: lay.baked[name], uA: [name === 'branch' ? lay.bakedFrom : -1e4, 0], uBaked: baked.tex[name].c, uBakedR: baked.tex[name].r, uGain: 1 });
+  if (fresh && want.length && !STILL && !app.reduced) { paint.reveal = { t: 0, key, boxes: paint.bakedAt }; return; }
+  for (const name of want) setBaked(app, name);
   paint.bakedKey = key;
 }
 function seedPaint(app) {
-  const { W, H } = app.view, win = lay.win;
+  // The board opens with no strokes of its own in the margins: they stay bare. Its opening paint is the peony (baked,
+  // set down by stepBaked); a job queued here (queue, qDab, qStroke) would be laid before it, a few stamps a frame.
   paint.jobs = [];
   paint.bakedKey = '';      // the baked paintings go down again after these (stepPaint)
   paint.bakedAt = [];
-  const left = Math.max(18, lay.hero[0]), r0 = Math.min(22, left * .5);
-  qDab(r0 * .3, H * .50, 0, r0, 2.1, 1.05);
-  qStroke(curve(r0 * .3, H * .505, r0 * .45, H * .70, .035, 12), { pigment: 0, R: r0, seed: 4.2, knife: 1, gain: 1.05, reach: 420 });
-  qStroke(curve(-6, H * .655, left * .7, H * .61, -.12, 5), { pigment: 5, R: Math.min(9, left * .22), seed: 7.7, gain: .95, reach: 90 });
-  const rr = Math.min(20, Math.max(12, (W - win[0] - win[2]) * .5));
-  qDab(W - rr * .3, H * .30, 1, rr * .95, 5.3, 1);
-  qStroke(curve(W - rr * .3, H * .305, W - rr * .1, H * .50, -.05, 10), { pigment: 1, R: rr * .86, seed: 9.4, gain: 1, reach: 150 });
   paint.seeded = true;
   paint.layVer = lay.ver;
 }
@@ -1840,6 +1877,10 @@ const scene = {
     const navHover = navOn ? textSite.box(navOn) : [-1e4, 0, 0, 0];
     (lay.swellEls || []).forEach((el, k) => { const want = el && el.matches(':hover, :focus-within') ? 1 : 0; swell[k] += (want - swell[k]) * (app.reduced ? 1 : 1 - Math.exp(-app.dt * 14)); if (Math.abs(want - swell[k]) < .002) swell[k] = want; });
     stepSheets(app);
+    { // the peony is off the ground while the stack is apart, and fades back (a quarter second) when it has closed
+      const want = !intro && (pose.target > 0 || pose.e > .1) ? 1 : 0, step = app.reduced || STILL ? 1 : Math.min(app.dt, 1 / 30) / (want ? .12 : .25);
+      bakedHide = HIC.clamp(bakedHide + HIC.clamp(want - bakedHide, -step, step), 0, 1);
+    }
     const lifted = Math.max(HIC.clamp(ghost.t, 0, 1), ...sheets.map(sheet => HIC.clamp(sheet.t, 0, 1)));
     // A frame is drawn only when something it shows has changed: everything the picture depends on is in this key.
     // When the key stands, the last picture stands too (the canvas keeps it), and only the token on the loop's
@@ -1848,7 +1889,7 @@ const scene = {
     const key = [view.pw, view.ph, app.dark, pose.e, pose.px, pose.py, ptr.sx, ptr.sy, ptr.in, ptr.down,
       layers.map(layer => layer.ver), write, eased, hover, btnHover, navHover, Array.from(swell, v => v.toFixed(3)), drawn.stamps, drawn.covers, paint.scrape,
       sheets.map(sheet => [sheet.t.toFixed(4), sheet.c, sheet.angle.toFixed(5), sheet.open]), ghost.t.toFixed(4), ghost.tex ? 1 : 0, lay.ver, lay.key, lay.card, paintJob.key, stroke.layVer,
-      current && current.id, bakedVer].join('|');
+      current && current.id, bakedVer, bakedHide.toFixed(3)].join('|');
     let clip = null;
     if (!force && key === drawn.key) {
       if (STILL || !stroke.rt || !lay.loop || orbit === drawn.orbit) return;
@@ -1877,9 +1918,9 @@ const scene = {
         uNoise: noiseTex, uRadius: SHEET_RADIUS, uLamp: [lx / ll, ly / ll, lz / ll],
         uSpin: i === 2 ? SPIN : 0, uSpinAbove: above.map(k => k === 2 ? SPIN : 0), uSpinC: lay.spinC, uWin: lay.win,
       };
-      if (i === 0) Object.assign(uniforms, { uPaint: paint.rt, uMatTex: paint.mat, uHero: lay.quiet || lay.hero, uPal: lay.pal, uGuides: lay.guides });
+      if (i === 0) Object.assign(uniforms, { uPaint: paint.rt, uMatTex: paint.mat, uHero: lay.quiet || lay.hero, uPal: lay.pal, uGuides: lay.guides, uBloom: lay.bloom ? [lay.bloom.x, lay.bloom.y, lay.bloom.d / 2] : [-1e4, 0, 1], uBakedHide: bakedHide, uBakedBox: bakedBoxes() });
       if (i === 1) Object.assign(uniforms, { uInk: lay.ink, uCrest: lay.crest || [-1e4, 0, 1, 1], uSwell: swell,  uNameC: paintJob.tex.nameC, uNameG: paintJob.tex.nameG, uNameD: paintJob.tex.nameD, uAtlasC: paintJob.tex.atlasC || paintJob.tex.nameC, uAtlasD: paintJob.tex.atlasD || paintJob.tex.nameD, uSlotBox: paintJob.slotBox, uSlotUV: paintJob.slotUV, uWrite: write, uName: paintJob.box, uBtns: lay.btns, uBtnHover: btnHover, uNavHover: navHover, uChipA: lay.chipA, uChipB: lay.chipB, uWells: lay.wells, uDots: lay.dots, uLangA: lay.langA, uLangB: lay.langB });
-      if (i === 2 && stroke.rt) Object.assign(uniforms, { uStroke: stroke.rt, uMapBox: lay.mapbox, uRidge: lay.ridge, uRidgeEnd: lay.ridgeEnd || 2, uNodes: lay.nodes, uPhases: lay.phases, uLoop: lay.loop, uLen: stroke.len, uProgress: eased, uCard: lay.card, uHover: hover, uOrbit: orbit, uMount: baked.tex.mountains ? baked.tex.mountains.c : noiseTex, uMountR: baked.tex.mountains ? baked.tex.mountains.r : noiseTex, uMountOn: baked.tex.mountains ? 1 : 0, uLabels: lay.labels, uSelf: covers[2] });
+      if (i === 2 && stroke.rt) Object.assign(uniforms, { uStroke: stroke.rt, uMapBox: lay.mapbox, uRidge: lay.ridge, uRidgeEnd: lay.ridgeEnd || 2, uFoot: lay.foot || 1e4, uNodes: lay.nodes, uPhases: lay.phases, uLoop: lay.loop, uLen: stroke.len, uProgress: eased, uCard: lay.card, uHover: hover, uOrbit: orbit, uMount: baked.tex.mountains ? baked.tex.mountains.c : noiseTex, uMountR: baked.tex.mountains ? baked.tex.mountains.r : noiseTex, uMountOn: baked.tex.mountains ? 1 : 0, uLabels: lay.labels, uSelf: covers[2] });
       g.draw(sheetProgram, null, { vao: quad.vao, mode: gl.TRIANGLE_STRIP, count: 4 }, uniforms, { blend: true });
     }
     if (lifted > .003) {

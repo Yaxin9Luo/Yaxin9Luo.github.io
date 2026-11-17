@@ -231,24 +231,6 @@ html.gl .board .mapbox .crv,html.gl .board .mapbox .trk,html.gl .board .mapbox .
 .board .pcard .pf{color:var(--ultra)}
 .board .status{border-top:0;color:var(--pencil)}
 .board #notes{pointer-events:none}
-.board #notes .sel{position:absolute;border:1.5px dashed var(--accent);background:color-mix(in srgb,var(--accent) 5%,transparent);border-radius:2px}
-.board #notes .sel i{position:absolute;width:9px;height:9px;margin:-5px;background:var(--card);border:1.5px solid var(--accent);border-radius:2px}
-.board #notes .sel i:nth-child(1){left:0;top:0}
-.board #notes .sel i:nth-child(2){left:50%;top:0}
-.board #notes .sel i:nth-child(3){left:100%;top:0}
-.board #notes .sel i:nth-child(4){left:0;top:50%}
-.board #notes .sel i:nth-child(5){left:100%;top:50%}
-.board #notes .sel i:nth-child(6){left:0;top:100%}
-.board #notes .sel i:nth-child(7){left:50%;top:100%}
-.board #notes .sel i:nth-child(8){left:100%;top:100%}
-html.gl .board #notes .sel{border-color:var(--cream);background:none}
-html.gl .board #notes .sel i{border-color:var(--ultra)}
-html.gl.lightname .board #notes .sel{border-color:var(--accent)}
-.board #notes .insp{position:absolute;display:flex;align-items:center;height:28px;border:1px solid var(--line-2);background:var(--card);border-radius:3px;font:500 11.5px var(--mono);color:var(--muted);white-space:nowrap}
-.board #notes .insp span{padding:0 10px}
-.board #notes .insp span+span{border-left:1px solid var(--line)}
-.board #notes .insp b{font-weight:500;color:var(--ink)}
-.board #notes .insp em{font-style:normal;color:var(--ultra);margin-right:6px}
 .board .tool{position:absolute;left:0;top:0;width:0;height:0}
 .board .tool svg{position:absolute;overflow:visible}
 .board .tool .mark{left:0;top:0;width:1px;height:1px}
@@ -465,7 +447,6 @@ html.gl .board .btn.p{color:#14172F}
 .experience:not(.playing) .grimoire .mascot-guide.ec-docked[data-state=idle]{display:none}
 /* ---- the dark board with the effect on: the paints keep their own labels ---- */
 html.gl .board.dark .lang button[aria-pressed=false]{color:#D9DEFF}
-html.gl .board.dark #notes .sel{border-color:var(--cream)}
 html.gl .board.dark .mapbox .loopt{fill:#FFF7EA}
 
 /* dark board: a hover card is a lighter slip of dark paper with an edge, so it reads over the study sheet */
@@ -632,7 +613,7 @@ html:not(.still) .board .brand:is(:hover,:focus-visible) .crest{animation:crest-
 html.board-dark .board .nav a::after{filter:brightness(1.9) saturate(.9)}
 html.board-dark .board .nav a.on::after{filter:hue-rotate(150deg) saturate(2.4) brightness(1.7)}
 
-/* ---- the study sheet's pencil apparatus: baseline and year ticks, construction lines, thumbnails, a note ---- */
+/* ---- the study sheet's pencil apparatus: baseline and year ticks, construction lines, a note ---- */
 .board .mapbox .study .rule{fill:none;stroke:var(--pencil);stroke-width:1;opacity:.55}
 .board .mapbox .study .cons{fill:none;stroke:var(--pencil);stroke-width:.8;stroke-dasharray:2 6;opacity:.42}
 .board .mapbox .study .tick{font:500 10px var(--mono);fill:var(--pencil);opacity:.8}
@@ -640,7 +621,9 @@ html.board-dark .board .nav a.on::after{filter:hue-rotate(150deg) saturate(2.4) 
 /* Room for the peony (canvas rendering only; scene.js reserveBloom sets the sizes): the bio's last lines stop short
    of the bloom at the hero's lower right, the buttons stand a little closer, and the hero stands a few px higher with
    two of its gaps a little tighter, for the strip under the buttons where the branch runs. The plain page keeps its text width. */
-html.gl .board .bio::before{content:"";float:right;width:var(--keep-w,0px);height:var(--keep-all,0px);shape-outside:inset(calc(100% - var(--keep-h,0px)) 0 0 0)}
+html.gl .board .bio::before{content:"";float:right;width:var(--keep-w,0px);height:var(--keep-all,0px);shape-outside:circle(var(--keep-r,0px) at var(--keep-cx,0px) var(--keep-cy,-999px))}
+@media (max-width:1399px){html.gl .board .btn{padding:0 8px}}      /* a narrow window: the strokes keep bare ground between them and the peony its size */
+html.gl .board .btn .ar{display:none}      /* the painted buttons carry no arrow: the row keeps its gaps beside the peony */
 html.gl .board .cta{gap:var(--cta-gap,clamp(24px,2.1vw,32px));margin-top:calc(clamp(14px,2.2vh,26px) - var(--sq,0px)*.4)}
 html.gl .board .bio{margin-top:calc(clamp(12px,1.8vh,22px) - var(--sq,0px)*.3)}
 html.gl .board .hero{position:relative;top:calc(var(--sq,0px)*-.65)}
@@ -650,6 +633,3 @@ html.gl .board .hero{position:relative;top:calc(var(--sq,0px)*-.65)}
 @media (prefers-color-scheme:dark){:root:not([data-theme=light]) .board .mapbox .vn{fill:#DDE1F6}}
 .board .mapbox .study .ext{fill:none;stroke:var(--pencil);stroke-width:1.8;stroke-linecap:round;stroke-dasharray:.1 5.4;opacity:1}
 .board .mapbox .study .prog{font-size:10.5px}
-.board .mapbox svg.thumb{position:static;overflow:visible;opacity:.62;pointer-events:none}
-.board .mapbox svg.thumb *{fill:none!important;stroke:var(--pencil)!important;stroke-width:2.6px!important;vector-effect:none}
-.board .mapbox svg.thumb text{display:none}

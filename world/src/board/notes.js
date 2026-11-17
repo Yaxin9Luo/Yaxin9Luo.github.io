@@ -1,8 +1,6 @@
-// The board's annotations layer: the selection frame and inspector on the name, and the two tools at work:
+// The board's annotations layer: the two tools at work:
 // the Designer's long-handled filbert and the Critic's hexagonal pencil (drawn as SVG; scene.js places them).
 export const notesHTML = `<div class="layer" id="notes" aria-hidden="true">
-    <div class="sel"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-    <div class="insp"></div>
     <div class="tool d">
       <svg class="mark" viewBox="0 0 1 1"><path pathLength="1" d="M0 0 C18 -9 40 5 74 -7" stroke="#1B2A9E" stroke-width="10"/><path pathLength="1" d="M1 -2.6 C19 -11.5 41 2.5 73 -9.6" stroke="#4E66E0" stroke-width="1.6"/><path pathLength="1" d="M2 2.6 C20 -6.5 42 7.5 72 -4.6" stroke="#121C70" stroke-width="1.3"/></svg>
       <div class="body"><svg class="sh" viewBox="0 0 40 200"><path d="M18 8 Q20 3.5 22 8 L24.6 140 Q24.9 147 24.4 150 L25.4 172 C27.2 180 25.5 191 20 198 C14.5 191 12.8 180 14.6 172 L15.6 150 Q15.1 147 15.4 140 Z"/></svg><svg class="sh s2" viewBox="0 0 40 200"><path d="M18 8 Q20 3.5 22 8 L24.6 140 Q24.9 147 24.4 150 L25.4 172 C27.2 180 25.5 191 20 198 C14.5 191 12.8 180 14.6 172 L15.6 150 Q15.1 147 15.4 140 Z"/></svg>

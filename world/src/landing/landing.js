@@ -203,17 +203,6 @@ function catmull(pts) {
   return d;
 }
 
-// points along catmull()'s curve, for tests of what the curve passes through
-function bezierPoints(pts, per = 14) {
-  const out = [];
-  for (let i = 0; i < pts.length - 1; i++) {
-    const p0 = pts[i - 1] || pts[i], p1 = pts[i], p2 = pts[i + 1], p3 = pts[i + 2] || p2, k = 1 / 6;
-    const c1 = [p1[0] + (p2[0] - p0[0]) * k, p1[1] + (p2[1] - p0[1]) * k], c2 = [p2[0] - (p3[0] - p1[0]) * k, p2[1] - (p3[1] - p1[1]) * k];
-    for (let j = 0; j <= per; j++) { const t = j / per, u = 1 - t; out.push([u * u * u * p1[0] + 3 * u * u * t * c1[0] + 3 * u * t * t * c2[0] + t * t * t * p2[0], u * u * u * p1[1] + 3 * u * u * t * c1[1] + 3 * u * t * t * c2[1] + t * t * t * p2[1]]); }
-  }
-  return out;
-}
-
 /** Below this map width the three columns no longer hold their words (the widest line clears its column by 8px at 546): the map switches to its compact layout. */
 export const COMPACT_MAP = 546;
 /** Below this width the hero and the map stack in one column; it matches the stacked block in landing.css. */
@@ -267,40 +256,10 @@ export function mapSVG(W, H, lang = 'en', {motion = true} = {}) {
   s += `<circle class="tok" r="4" cx="${lx + R}" cy="${ly}">${motion ? `<animateMotion dur="9s" repeatCount="indefinite" path="M0 0 a${R} ${R} 0 1 1 -${2 * R} 0 a${R} ${R} 0 1 1 ${2 * R} 0"/>` : ''}</circle>`;
   s += `<text class="nm lp" x="${lx}" y="${ly - R - 26 * mk}" text-anchor="middle">${L.name}</text><text class="vn" x="${lx}" y="${ly - R - 10 * mk}" text-anchor="middle">${esc(venue(L))}</text>`;
   s += `<rect x="${lx - R}" y="${ly - R - 40 * mk}" width="${2 * R}" height="${2 * R + 40 * mk}" fill="transparent"/></g>`;
-  // Where a node's pencil thumbnail goes: bare sky (above the ridge) near the node, 6 px clear of the curve, of every
-  // label, of the loop, of the dotted line and of the other thumbnails. No such place, no thumbnail.
-  const ridge = [start, ...bezierPoints(pts), ...ext], taken = [[0, 0, W, head + 30 * mk], [lx - R - 6, ly - R - 44 * mk, W, ly + R * 1.5 + 14 * mk]];
-  const labelOf = n => {
-    const x = Math.round(cx(n.col, n.fx)), y = Math.round(cy(n.fy)), up = n.lab === 'above', side = n.lab === 'br' ? 1 : n.lab === 'bl' ? -1 : 0, tx = x + side * 8 * mk;
-    const w = Math.max(n.name.length * 8.6, String(pick(n.venue, lang)).length * 7) * mk, x0 = side > 0 ? tx : side < 0 ? tx - w : tx - w / 2;
-    return [x0 - 4, (up ? y - 50 * mk : y + (side ? 14 : 19) * mk), x0 + w + 4, (up ? y - 12 * mk : y + (side ? 50 : 55) * mk)];
-  };
-  nodes.forEach(n => taken.push(labelOf(n)));
-  const thumbAt = i => {
-    const n = nodes[i], x = pts[i][0], y = pts[i][1], up = n.lab === 'above', side = n.lab === 'br' ? 1 : n.lab === 'bl' ? -1 : 0, tw = 56 * mk, th = 16 * mk;
-    const tries = [];
-    // beside a summit; above a valley or a slope, on the side away from the label first, then higher and further
-    if (up) for (const d of [16, 26, 38]) for (const sx of [1, -1]) for (const dy of [-8, -22, 6]) tries.push([sx > 0 ? x + d * mk : x - d * mk - tw, y + dy * mk - th / 2]);
-    else for (const dy of [16, 28, 42, 58, 76]) for (const sx of side > 0 ? [-1, 1, 0] : [1, -1, 0]) for (const d of [12, 26]) tries.push([sx > 0 ? x + d * mk : sx < 0 ? x - d * mk - tw : x - tw / 2, y - th - dy * mk]);
-    for (const [bx, by] of tries) {
-      const box = [bx - 6, by - 6, bx + tw + 6, by + th + 6];
-      if (bx < 6 || bx + tw > W - 6 || by < head) continue;
-      if (taken.some(t => box[0] < t[2] && box[2] > t[0] && box[1] < t[3] && box[3] > t[1])) continue;
-      if (ridge.some(q => q[0] > box[0] && q[0] < box[2] && q[1] < box[3])) continue;      // the curve crosses it, or it is under the ridge (on the paint)
-      if (pts.some(q => Math.hypot(q[0] - Math.max(box[0], Math.min(q[0], box[2])), q[1] - Math.max(box[1], Math.min(q[1], box[3]))) < 12 * mk)) continue;
-      taken.push(box);
-      return [bx, by, tw, th];
-    }
-    return null;
-  };
   nodes.forEach((n, i) => {
     const x = Math.round(cx(n.col, n.fx)), y = Math.round(cy(n.fy)), up = n.lab === 'above';
     const side = n.lab === 'br' ? 1 : n.lab === 'bl' ? -1 : 0, anc = side > 0 ? 'start' : side < 0 ? 'end' : 'middle', tx = x + side * 8 * mk;
     const ny = up ? y - 36 * mk : y + (side ? 28 : 33) * mk, vy = up ? y - 19 * mk : y + (side ? 44 : 49) * mk;
-    { // the thumbnail sits in the sky beside its node, on the side away from the label, wherever it touches nothing
-      const at = thumbAt(i);
-      if (DG[n.dg] && at) s += `<svg class="thumb" aria-hidden="true" x="${at[0].toFixed(1)}" y="${at[1].toFixed(1)}" width="${at[2].toFixed(1)}" height="${at[3].toFixed(1)}" viewBox="0 0 280 80" preserveAspectRatio="xMidYMid meet">${DG[n.dg]}</svg>`;
-    }
     s += `<g class="node" data-id="${n.id}" tabindex="0" role="button" aria-label="${esc(n.name)} · ${esc(venue(n))}"><circle class="o" cx="${x}" cy="${y}" r="8"/>`;
     s += `<text class="nm" x="${tx}" y="${ny}" text-anchor="${anc}">${esc(n.name)}</text><text class="vn" x="${tx}" y="${vy}" text-anchor="${anc}">${esc(venue(n))}</text>`;
     s += `<circle cx="${x}" cy="${y}" r="22" fill="transparent"/></g>`;

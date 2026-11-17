@@ -97,10 +97,10 @@ function paint(P, lang, size, scale, seed = 11) {
 /*
  * The small strokes of the page (four buttons, two chips), painted on one sheet. slots: [{w, h, kind}] in px;
  * returns the sheet's buffers and where each stroke lies on it. kind: 'orange', 'ultra', 'cobalt', 'viridian',
- * 'pale blue', 'pale mint'.
+ * 'pale blue', 'pale mint'. A button's slot may say how much room its tail and its lead have (tail, lead, px).
  */
 function strokes(P, slots, scale, seed = 5) {
-  const mx = 16, my = 7, gap = 6;
+  const mx = 30, my = 9, gap = 6;
   const W = Math.ceil(Math.max(...slots.map(s => s.w)) + mx * 2 + 4);
   let y = 2;
   const rects = slots.map(s => { const r = [2, y, s.w + mx * 2, s.h + my * 2]; y += r[3] + gap; return r; });
@@ -118,11 +118,23 @@ function strokes(P, slots, scale, seed = 5) {
   const r = () => hash(seed * 104729 + n++);
   slots.forEach((slot, i) => {
     const [x, yy, w, h] = rects[i], primary = slot.kind === 'orange', pale = slot.kind.startsWith('pale');
-    const cy = yy + h / 2, a = x + mx - (primary ? 7 : 4), b = x + w - mx + (primary ? 7 : 4);
-    const bw = slot.h * (primary ? 1.04 : pale ? .86 : .80);
-    // one pass, loaded at the start and running drier towards the end; the orange gets a second, shorter pass on top
-    s.paint({ material: slot.kind, brush: { base: 'flat', width: bw, rag: 7, wobble: .5, dry: pale ? .2 : .05, edge: .2 }, path: [[a, cy + (r() - .5) * 2], [(a + b) / 2, cy + (r() - .5) * 2.4], [b, cy + (r() - .5) * 2]], tone2: pale ? 0 : .05 });
-    if (primary) s.paint({ material: { base: 'orange', body: 1.2 }, brush: { base: 'flat', width: bw * .55, rag: 5, dry: .25 }, path: [[a + 10, cy - bw * .12], [b - 22, cy - bw * .08]], spline: false, opacity: .9 });
+    const cy = yy + h / 2;
+    if (pale) {      // a chip: one thin, even pass
+      const a = x + mx - 4, b = x + w - mx + 4;
+      s.paint({ material: slot.kind, brush: { base: 'flat', width: slot.h * .86, rag: 7, wobble: .5, dry: .2, edge: .2 }, path: [[a, cy + (r() - .5) * 2], [(a + b) / 2, cy + (r() - .5) * 2.4], [b, cy + (r() - .5) * 2]], tone2: 0 });
+      return;
+    }
+    // A button is one pull of a loaded flat brush, each a little different: it lands a few px before the label and
+    // leaves a lip there, runs under the label at full load, and past it the hand lifts while the brush runs dry, so
+    // the stroke ends in a thin broken tail (as long as the room before the next button: slot.tail). It leans a
+    // degree or two, up or down.
+    const tail = Math.min(slot.tail === undefined ? 14 : slot.tail, 9 + r() * 11), lead = Math.min(5 + r() * 7, slot.lead === undefined ? 12 : slot.lead);      // a crowded row: short at both ends
+    const a = x + mx - lead, b = x + w - mx + tail, len = b - a, lean = (r() - .5) * .075, bw = slot.h * (primary ? .98 : .74 + .1 * r());
+    const at = t => [a + len * t, cy + (t - .5) * len * lean];      // a straight pull: a bend near its end would hook the tail
+    const under = (w - mx * 2 + lead) / len;      // how far along the label ends
+    s.paint({ material: slot.kind, brush: { base: 'flat', width: bw, rag: 12, wobble: .6, dry: 0 }, path: [at(0), at(under * .5), at(under), at(1)], spline: false, pressure: [1, 1, .88, .34], load: len * 1.3, tone2: .05 });
+    s.paint({ material: { base: slot.kind, body: primary ? 2.1 : 1.8 }, brush: { base: 'flat', width: bw * .9, rag: 4 }, path: [[a - 1, at(0)[1]], [a + 9 + r() * 9, at(.08)[1]]], spline: false });
+    if (primary) s.paint({ material: { base: 'orange', body: 1.2 }, brush: { base: 'flat', width: bw * .5, rag: 6, dry: .3 }, path: [[a + 12, cy - bw * .13], [a + len * under * (.6 + .2 * r()), cy - bw * .08]], spline: false, opacity: .9 });
   });
   s.dry();
   return { W, H, pw: s.pxWidth, ph: s.pxHeight, rects, mx, my, surface: s, buffers: s.buffers };

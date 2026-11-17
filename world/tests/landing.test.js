@@ -217,17 +217,14 @@ test('the top bar carries the peony crest as its mark, linked home, and the nav 
   }
 });
 
-test('the study sheet carries its pencil apparatus: baseline, year ticks, construction lines, thumbnails and a note', () => {
+test('the study sheet carries its pencil apparatus: baseline, year ticks, construction lines and a note', () => {
   for (const lang of ['en', 'zh']) {
     const svg = mapSVG(640, 640, lang, {motion: false}), html = typeof svg === 'string' ? svg : svg.html || svg.svg || JSON.stringify(svg);
     assert.match(html, /<g class="study" aria-hidden="true"><path class="rule"/);
     assert.equal((html.match(/class="cons"/g) || []).length, 2);
     for (const year of ['2024', '2025', '2026 →']) assert.ok(html.includes(`>${year}</text>`), year);
     assert.match(html, /<text class="note"[^>]*>[^<]{8,}<\/text>/);
-    // a thumbnail is drawn only where it touches nothing, so not every node has one
-    const thumbs = [...html.matchAll(/<svg class="thumb" aria-hidden="true" x="([\d.]+)" y="([\d.]+)" width="([\d.]+)" height="([\d.]+)"/g)].map(m => m.slice(1).map(Number));
-    assert.ok(thumbs.length >= 3, 'some thumbnails');
-    for (const [x, y, w, h] of thumbs) for (const [px, py] of svg.pts) assert.ok(px < x - 4 || px > x + w + 4 || py < y - 4 || py > y + h + 4, 'no thumbnail lies on a node of the curve');
+    assert.ok(!/class="thumb"/.test(html), 'no pencil thumbnails on the sheet: the diagrams are in the hover cards');
     assert.match(html, /<path class="ext" d="M[^"]+"\/>/, 'the dotted continuation past the loop');
     assert.ok(html.includes(lang === 'zh' ? '>进行中</text>' : '>in progress</text>'), 'its note');
     assert.equal((html.match(/class="node"/g) || []).length, mapNodes.length - 1);      // every node is still there (the loop has its own class)
