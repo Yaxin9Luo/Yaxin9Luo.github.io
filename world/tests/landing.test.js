@@ -11,7 +11,7 @@ import {mapPhases, opensExploded, enterHintHTML} from '../src/landing/landing.js
 import {selectedPublications} from '../src/content.js';
 import {WORKS} from '../src/blog/taxonomy.js';
 
-const ACTIONS = new Set(['section', 'paper', 'project', 'map', 'mascot-toggle', 'start', 'travel', 'language', 'theme', 'home']);
+const ACTIONS = new Set(['section', 'paper', 'project', 'games', 'mascot-toggle', 'start', 'travel', 'language', 'theme', 'home']);
 
 test('landing copy is complete in both languages and the facts come from content.js', () => {
   assert.deepEqual(Object.keys(landingCopy.en).sort(), Object.keys(landingCopy.zh).sort());
@@ -29,15 +29,15 @@ test('landing copy is complete in both languages and the facts come from content
   }
 });
 
-test('the top bar explore capsule offers the 3D academy, its world map and Yuanmingyuan in both languages', () => {
-  const labels = {en: ['3D Academy', 'World map', 'Yuanmingyuan'], zh: ['3D 学院', '世界地图', '圆明园']};
+test('the top bar explore capsule offers the 3D academy, the games and Yuanmingyuan in both languages', () => {
+  const labels = {en: ['3D Academy', 'Games', 'Yuanmingyuan'], zh: ['3D 学院', '游戏作品集', '圆明园']};
   for (const lang of ['en', 'zh']) {
     const html = renderExplore(lang);
     const caps = [...html.matchAll(/<(button|a) class="ec-cap[^"]*"([^>]*)>(<svg[\s\S]*?<\/svg>)<span data-i18n="(\w+)">([^<]+)<\/span>/g)];
     assert.deepEqual(caps.map(c => c[5]), labels[lang]);
-    assert.deepEqual(caps.map(c => c[4]), ['academy', 'map', 'garden'], 'labels follow the Interface copy keys on language changes');
+    assert.deepEqual(caps.map(c => c[4]), ['academy', 'games', 'garden'], 'labels follow the Interface copy keys on language changes');
     assert.match(caps[0][2], /id="explore-button" data-action="start"/);
-    assert.match(caps[1][2], /data-action="map"/);
+    assert.match(caps[1][2], /data-action="games"/);
     assert.equal(caps[2][1], 'a');
     assert.ok(caps[2][2].includes(`data-museum-entry href="${MUSEUM_URL(lang)}"`) && MUSEUM_URL(lang).endsWith(`lang=${lang}`));
     assert.ok(caps.every(c => /stroke="currentColor"/.test(c[3])), 'each capsule has its own line icon');
@@ -131,7 +131,7 @@ test('the board\'s top bar opens the site\'s own sections, places and switches',
     assert.equal((top.match(/data-action="language"/g) || []).length, 2);
     assert.ok(top.includes(`aria-pressed="${lang === 'zh'}" lang="zh-CN"`));
     assert.ok(top.includes('data-action="theme"') && top.includes('data-action="mascot-toggle"'));
-    assert.ok(top.includes('data-action="start"') && top.includes('data-action="map"') && top.includes(`data-museum-entry href="${MUSEUM_URL(lang)}"`));
+    assert.ok(top.includes('data-action="start"') && top.includes('data-action="games"') && top.includes(`data-museum-entry href="${MUSEUM_URL(lang)}"`));
   }
 });
 
@@ -228,5 +228,18 @@ test('the study sheet carries its pencil apparatus: baseline, year ticks, constr
     assert.match(html, /<path class="ext" d="M[^"]+"\/>/, 'the dotted continuation past the loop');
     assert.ok(html.includes(lang === 'zh' ? '>进行中</text>' : '>in progress</text>'), 'its note');
     assert.equal((html.match(/class="node"/g) || []).length, mapNodes.length - 1);      // every node is still there (the loop has its own class)
+  }
+});
+
+test('the Games sheet lists each game and offers a play link only once a game has a url', async () => {
+  const {renderGames} = await import('../src/journal.js');
+  const {games} = await import('../src/content.js');
+  const {parseContentRoute} = await import('../src/exhibition-state.js');
+  assert.deepEqual(parseContentRoute('#section/games'), {kind: 'section', id: 'games'});
+  for (const lang of ['en', 'zh']) {
+    const html = renderGames(lang);
+    for (const game of games) assert.ok(html.includes(game.title[lang]) && html.includes(game.blurb[lang]));
+    assert.equal((html.match(/journal-button-primary/g) || []).length, games.filter(game => game.url).length);
+    assert.ok(games.some(game => game.url) || html.includes(lang === 'zh' ? '制作中' : 'In progress'));
   }
 });

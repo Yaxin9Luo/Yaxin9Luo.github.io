@@ -3,7 +3,7 @@ import {renderLanding,renderExplore,mountLanding,MUSEUM_URL} from './landing/lan
 import {ec} from './landing/icons.js';
 import {locations,spellDefinitions,crystalPositions,ringPositions,spawn,worldBounds,islands,court,mapPoint} from './locations.js';
 import {links,publications,cvForLanguage} from './content.js';
-import {renderJournal,renderPaperDetail,renderProjectDetail,renderExhibitionHUD} from './journal.js';
+import {renderJournal,renderGames,renderPaperDetail,renderProjectDetail,renderExhibitionHUD} from './journal.js';
 import {getProject,getProjectMedia,selectedProjects} from './exhibition-content.js';
 import {parseContentRoute,contentHash,ReadingMemory,clampMedia} from './exhibition-state.js';
 import {freshProgress,achievements} from './logic.js';
@@ -62,7 +62,7 @@ const copy={
   journal:['Portfolio','个人资料'],journalSub:['RESEARCH & SELECTED WORK','研究与作品'],close:['Go back','返回'],
   explorationJournal:['Exploration','探索记录'],
   about:['About Me','关于我'],publications:['Publications','学术论文'],research:['Research','研究方向'],journey:['Experience','经历'],contact:['Get in touch','联系我'],
-  quests:['Side quests','探索小任务'],controls:['How to explore','探索指南'],visit:['Places discovered','已探索的地点'],stardust:['Stardust found','已收集的星尘'],
+  games:['Games','游戏作品集'],quests:['Side quests','探索小任务'],controls:['How to explore','探索指南'],visit:['Places discovered','已探索的地点'],stardust:['Stardust found','已收集的星尘'],
   ward:['Ward','护盾'],mana:['Magic','魔力'],interact:['Open','打开'],nearest:['Nearby','附近'],
   fly:['Fly','飞行'],boost:['Boost','加速'],cast:['Cast','施法'],ascend:['Ascend','上升'],descend:['Descend','下降'],
   rotate:['Right-drag to orbit · Scroll to zoom','右键拖动环绕 · 滚轮缩放'],
@@ -248,7 +248,7 @@ export class Interface {
     if(action==='copy-email')this.copyText(links.email.replace(/^mailto:/,''),{en:'Email address copied',zh:'邮箱地址已复制'});
     if(action==='share-content')this.copyText(location.href,{en:'Link copied',zh:'链接已复制'});
     if(action==='gameplay'){this.options.gameplay=!this.options.gameplay;this.persist();this.game?.setOption('gameplay',this.options.gameplay);this.syncOptions();}
-    if(['map','settings','quests','controls'].includes(action))this.open(action);
+    if(['map','settings','quests','controls','games'].includes(action))this.open(action);
     if(action==='close')this.close();
     if(action==='home'){this.close({history:'replace',all:true});this.game?.returnHome?.();this.syncStarted(false);}
     if(action==='audio-retry'){this.options.sound=true;this.persist();this.game?.setOption('sound',true);this.syncOptions();}
@@ -325,7 +325,7 @@ export class Interface {
     this.root.querySelectorAll('.chapter-nav button').forEach(b=>{b.classList.toggle('active',b.dataset.id===view);b.setAttribute('aria-current',b.dataset.id===view?'page':'false');});
     this.root.querySelector('#dialog-title').textContent=this.t(view);
     const body=this.root.querySelector('#page-content'),saved=this.readingMemory.read(entity?.kind||'section',entity?.id||view);
-    body.innerHTML=entity?.kind==='paper'?renderPaperDetail(entity.id,this.options.lang):entity?.kind==='project'?renderProjectDetail(entity.id,this.options.lang,saved.mediaIndex):locations.some(l=>l.id===view)?renderJournal(view,this.options.lang,this.snapshot.progress):view==='map'?this.mapContent():view==='quests'?this.questsContent():view==='settings'?this.settingsContent():this.controlsContent();body.scrollTop=saved.scrollTop;
+    body.innerHTML=entity?.kind==='paper'?renderPaperDetail(entity.id,this.options.lang):entity?.kind==='project'?renderProjectDetail(entity.id,this.options.lang,saved.mediaIndex):locations.some(l=>l.id===view)?renderJournal(view,this.options.lang,this.snapshot.progress):view==='games'?renderGames(this.options.lang):view==='map'?this.mapContent():view==='quests'?this.questsContent():view==='settings'?this.settingsContent():this.controlsContent();body.scrollTop=saved.scrollTop;
     if(focus)(body.querySelector('#entity-title')||this.root.querySelector('.close-button')).focus({preventScroll:true});
     this.writeRoute(entity?{...entity,...(entity.kind==='project'?{mediaIndex:saved.mediaIndex,spatial:false}:{})}:{kind:'section',id:view},mode);
   }

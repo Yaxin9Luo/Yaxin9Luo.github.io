@@ -19,7 +19,7 @@ export const landingCopy = {
     email: 'Email', cv: 'CV', tour: 'CV Tour',
     mapTitle: 'one question · three phases', mapHint: 'hover a node', lgPaper: 'paper / project', lgLoop: 'model ⟲ harness loop', lgAll: 'all publications →',
     now: 'Now', nowT: 'research intern at Meituan M17 LongCat · open to research collaboration',
-    explore: 'Explore', academy: '3D Academy', world: 'World map', ymy: 'Yuanmingyuan',
+    explore: 'Explore', academy: '3D Academy', games: 'Games', ymy: 'Yuanmingyuan',
     paper: 'paper', code: 'code', open: 'details', map: 'Research map', name: 'Yaxin Luo',
   },
   zh: {
@@ -30,7 +30,7 @@ export const landingCopy = {
     email: '邮件', cv: '简历', tour: 'CV 导览',
     mapTitle: '一个问题 · 三个阶段', mapHint: '悬停节点', lgPaper: '论文 / 项目', lgLoop: '模型 ⟲ harness 循环', lgAll: '全部论文 →',
     now: '现在', nowT: '美团 M17 LongCat 研究实习 · 欢迎研究合作',
-    explore: '探索', academy: '3D 学院', world: '世界地图', ymy: '圆明园',
+    explore: '探索', academy: '3D 学院', games: '游戏作品集', ymy: '圆明园',
     paper: '论文', code: '代码', open: '详情', map: '研究地图', name: 'Yaxin Luo',
   },
 };
@@ -105,7 +105,7 @@ function top(lang = 'en') {
       <span class="lang" role="group" aria-label="${t.langSwitch}"><button type="button" data-action="language" aria-pressed="${lang !== 'zh'}" lang="en">EN</button><button type="button" data-action="language" aria-pressed="${lang === 'zh'}" lang="zh-CN">中</button></span>
       <button type="button" class="theme-button" data-action="theme" aria-label="${t.themeToggle}">${themeIcon()}</button>
       <button type="button" class="tour-chip" data-action="mascot-toggle" aria-controls="mascot-guide">${t.tour}</button>
-      <span class="explore" role="group" aria-label="${esc(t.explore)}"><a href="#" data-action="start">${ec.cube}<span>${t.academy}</span></a><a href="#" data-action="map">${ec.map}<span>${t.world}</span></a><a data-museum-entry href="${MUSEUM_URL(lang)}">${ec.pavilion}<span>${t.ymy}</span></a></span>
+      <span class="explore" role="group" aria-label="${esc(t.explore)}"><a href="#" data-action="start">${ec.cube}<span>${t.academy}</span></a><a href="#section/games" data-action="games">${ec.game}<span>${t.games}</span></a><a data-museum-entry href="${MUSEUM_URL(lang)}">${ec.pavilion}<span>${t.ymy}</span></a></span>
     </div>
   </header>`;
 }
@@ -182,14 +182,14 @@ export function renderLanding(lang = 'en') {
 
 /**
  * The three places to explore, as dashed capsules for the top bar: the 3D academy (lazy world),
- * its travel map, and the Yuanmingyuan museum (a separate page). Labels use the Interface copy keys
- * (academy / map / garden), so the Interface's language switch keeps them current.
+ * the Games sheet, and the Yuanmingyuan museum (a separate page). Labels use the Interface copy keys
+ * (academy / games / garden), so the Interface's language switch keeps them current.
  */
 export function renderExplore(lang = 'en') {
   const t = landingCopy[lang === 'zh' ? 'zh' : 'en'];
   return `<span class="ec-explore" role="group" aria-label="${esc(t.explore)}">`
     + `<button class="ec-cap academy-button" id="explore-button" data-action="start">${ec.cube}<span data-i18n="academy">${t.academy}</span></button>`
-    + `<button class="ec-cap" data-action="map">${ec.map}<span data-i18n="map">${t.world}</span></button>`
+    + `<button class="ec-cap" data-action="games">${ec.game}<span data-i18n="games">${t.games}</span></button>`
     + `<a class="ec-cap" data-museum-entry href="${MUSEUM_URL(lang)}">${ec.pavilion}<span data-i18n="garden">${t.ymy}</span></a>`
     + `</span>`;
 }

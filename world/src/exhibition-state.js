@@ -1,7 +1,7 @@
 import {publications} from './content.js';
 import {getProject} from './exhibition-content.js';
 
-const sections=['about','projects','publications','research','journey','contact','map','settings','quests','controls'];
+const sections=['about','projects','publications','research','journey','contact','map','settings','quests','controls','games'];
 export const clampMedia=(id,index)=>Math.max(0,Math.min((getProject(id)?.media.length||1)-1,Math.trunc(Number(index)||0)));
 export function parseContentRoute(hash=''){
   const raw=hash.replace(/^#\/?/,'');if(!raw)return null;

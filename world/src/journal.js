@@ -1,4 +1,4 @@
-import { profile, research, publications, selectedPublications, experience, journey, news, links, cvForLanguage, openSource } from './content.js';
+import { profile, research, publications, selectedPublications, experience, journey, news, links, cvForLanguage, openSource, games } from './content.js';
 import {selectedProjects, getProject, getProjectMedia, publicationRole} from './exhibition-content.js';
 import {clampMedia} from './exhibition-state.js';
 import {explainerFor} from './blog/work-links.js';
@@ -109,6 +109,13 @@ function projectView(lang) {
   return `${head(copy(lang, 'SELECTED RESEARCH', '精选研究'), copy(lang, 'Ideas, made tangible.', '让想法成为作品。'), copy(lang, 'Explore a project in the atelier, or read it here. The complete collection is always open.', '在工坊的展台里观看项目，或在这里直接阅读。全部作品始终开放。'), lang)}
   <div class="folio-grid">${selectedProjects.map((item, index) => `<article class="folio-project${index === 0 ? ' folio-project-featured' : ''}">${item.media.length ? `<button type="button" class="folio-image" data-action="project" data-id="${escape(item.id)}" aria-label="${escape(copy(lang, `Read ${item.shortTitle.en}`, `阅读 ${item.shortTitle.zh}`))}"><img src="${escape(item.media[0].src)}" alt="${escape(local(item.media[0].title, lang))}" loading="lazy" decoding="async"><span class="folio-image-label">${escape(local(item.media[0].kind==='output'?{en:'Actual output',zh:'真实产物'}:{en:'Research figure',zh:'研究图'},lang))}</span></button>` : `<div class="folio-type-cover" aria-hidden="true"><span>LLM</span><i>→</i><span>DATA</span></div>`}<div class="folio-body"><div class="folio-meta"><span class="journal-eyebrow">${escape(local(item.category, lang))}</span>${venue(item,lang)}</div><h3><button class="paper-title-button" data-action="project" data-id="${escape(item.id)}">${escape(local(item.shortTitle, lang))}</button></h3><p class="project-role">${escape(local(item.role,lang))}</p><p>${escape(local(item.question, lang))}</p><div class="folio-open-actions"><button class="journal-button journal-button-primary" data-action="exhibition" data-id="${item.id}">${escape(copy(lang,'View in the atelier','前往展台'))}${icon('compass')}</button><button class="journal-text-button" data-action="project" data-id="${item.id}">${escape(copy(lang,'Read project','阅读项目'))}${icon('arrow')}</button></div>${sourceLinks(item, lang)}</div></article>`).join('')}</div>
   <div class="journal-next"><div><p>${escape(copy(lang, 'The complete publication collection.', '完整的论文作品集。'))}</p></div>${sectionButton('publications',copy(lang,'All publications','全部论文'))}</div>`;
+}
+
+/** The Games sheet: one card per game. A game without a url is shown as in progress and offers no link. */
+export function renderGames(lang = 'en') {
+  const language = lang === 'zh' ? 'zh' : 'en';
+  return `<div class="journal-page journal-page-games" lang="${language === 'zh' ? 'zh-CN' : 'en'}">${head(copy(language, 'GAME DEVELOPMENT', '游戏开发'), copy(language, 'Games', '游戏作品集'), copy(language, 'Small games I design and build. Each one opens here when it is ready to play.', '我自己设计和开发的小游戏。做好一个，就在这里开放一个。'), language)}
+  <div class="folio-grid">${games.map(item => `<article class="folio-project"><div class="folio-type-cover" aria-hidden="true"><span>${escape(local(item.title, language))}</span></div><div class="folio-body"><div class="folio-meta"><span class="journal-eyebrow">${escape(local(item.kind, language))}</span><span class="game-status">${escape(item.url ? copy(language, 'Playable', '可以玩') : copy(language, 'In progress', '制作中'))}</span></div><h3>${escape(local(item.title, language))}</h3><p>${escape(local(item.blurb, language))}</p>${item.url ? `<div class="folio-open-actions"><a class="journal-button journal-button-primary" href="${escape(item.url)}">${escape(copy(language, 'Play', '开始游戏'))}${icon('arrow')}</a></div>` : ''}</div></article>`).join('')}</div></div>`;
 }
 
 function researchQuestions(item, lang) {

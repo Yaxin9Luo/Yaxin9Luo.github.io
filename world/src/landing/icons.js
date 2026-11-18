@@ -11,6 +11,8 @@ export const ec = {
   cube: s('<path d="M12 2l9 5v10l-9 5-9-5V7z"/><path d="M3 7l9 5 9-5M12 12v10"/>'),
   /* folded paper map: the 3D academy's travel map */
   map: s('<path d="M9 4.5 3.5 6.8v12.7L9 17.2l6 2.3 5.5-2.3V4.5L15 6.8z"/><path d="M9 4.5v12.7M15 6.8v12.7"/>'),
+  /* game controller: the Games sheet */
+  game: s('<path d="M7.5 7h9a5 5 0 0 1 4.9 4l.9 4.6a2.6 2.6 0 0 1-4.5 2.2L15.5 15h-7l-2.3 2.8a2.6 2.6 0 0 1-4.5-2.2L2.6 11a5 5 0 0 1 4.9-4z"/><path d="M7.5 9.6v3M6 11.1h3M15.6 10.2h.01M17.6 12h.01"/>'),
   /* garden pavilion with upturned eaves: the Yuanmingyuan museum */
   pavilion: s('<path d="M12 2.4v2M2.4 7.6c.9 1.5 2.6 2 4.4 1.3 1.9-.8 3.6-2.6 5.2-4.5 1.6 1.9 3.3 3.7 5.2 4.5 1.8.7 3.5.2 4.4-1.3"/><path d="M5.4 11h13.2M7.5 11v8.2M16.5 11v8.2M4.5 19.6h15"/>'),
   sun: s('<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>'),

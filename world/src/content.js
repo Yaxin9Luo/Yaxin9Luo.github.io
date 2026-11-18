@@ -257,6 +257,20 @@ export const journey = [
   },
 ];
 
+// Games shown on the Games sheet. `url` stays empty until a game is ready to play; the sheet then shows it as in progress.
+export const games = [
+  {
+    id: 'brushfield',
+    title: { en: 'Brushfield', zh: 'Brushfield' },
+    kind: { en: 'Action · painted in oil', zh: '动作 · 油画颜料绘制' },
+    blurb: {
+      en: 'A small game of riding, striking and commanding a warband, painted in oil. Every blow stays on the sheet as paint.',
+      zh: '一个骑马、挥砍、统率部队的小游戏，用油画颜料画成。每一击都作为颜料留在画面上。',
+    },
+    url: '',
+  },
+];
+
 export const news = [
   {
     date: '2026-08-13',
