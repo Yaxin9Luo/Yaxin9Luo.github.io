@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>fengshen art preview</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #2a2622; overflow: hidden; }
+  body.sheet { overflow: auto; height: auto; }
+  canvas { display: block; }
+  #hud { position: fixed; left: 10px; top: 8px; font: 12px/1.5 ui-monospace, Menlo, monospace; color: #14110F; background: rgba(239, 231, 214, .78); padding: 4px 8px; white-space: pre; pointer-events: none; }
+  body.clean #hud { display: none; }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="hud"></div>
+<!--
+  A scripted stand-in for the simulation, to look at the art module by itself.
+    dev-preview.html                 the scripted battle: the hero rides the whole world, every kind goes through every state
+    ?mode=states[&sil=1]             every kind in every state, labelled (sil: as black silhouettes)
+    ?mode=bench                      30 figures in view, the camera scrolling; the frame cost is written to the HUD and window.__bench
+    ?mode=scroll&x=2400              a still view of the world at camera x (no figures unless &figs=1)
+  Also: &time=0..1 (fixed time of day), &auto=0 (no animation loop; step it with window.preview.step(n)), &clean=1 (no HUD),
+  &slow=4 (slow motion), &at=1700 (start the hero there). Keys in the battle: space pauses, . steps one frame, [ ] slow / fast.
+-->
+<script type="module" src="./dev-preview.js"></script>
+</body>
+</html>

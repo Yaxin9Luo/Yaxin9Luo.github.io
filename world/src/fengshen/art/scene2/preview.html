@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>scene2 preview</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #2a2622; overflow: hidden; font: 12px/1.5 ui-monospace, Menlo, monospace; }
+  canvas { display: block; }
+  #bar { position: fixed; left: 10px; top: 8px; color: #14110F; background: rgba(239, 231, 214, .82); padding: 6px 10px; display: flex; gap: 12px; align-items: center; }
+  #bar input[type=range] { width: 260px; }
+  body.clean #bar { display: none; }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="bar">
+  <label>camera <input id="x" type="range" min="273" max="4527" value="560"></label>
+  <label>time <input id="t" type="range" min="0" max="1" step="0.01" value="0.5"></label>
+  <label><input id="ride" type="checkbox" checked> ride</label>
+  <label><input id="auto" type="checkbox" checked> time follows the road</label>
+  <label><input id="figs" type="checkbox" checked> figures</label>
+  <span id="hud"></span>
+</div>
+<!--
+  The second scene by itself, framed as the game frames it (zoom 0.74 on a 16:10 window, ground line at 78% of the height).
+    preview.html                          rides the camera along the road; the time of day follows it unless unticked
+    ?x=2400&t=0.5&auto=0&clean=1          a still view (window.preview.set(x, t), .step(seconds), .ready)
+    ?figs=0                               without the game's figures (they are imported read-only from ../index.js)
+    ?mode=bench[&n=600]                   frame cost, written to window.__bench
+    ?place=3                              the camera at place 1..5
+  Keys: 1..5 jump to a place, space toggles the ride.
+-->
+<script type="module" src="./preview.js"></script>
+</body>
+</html>

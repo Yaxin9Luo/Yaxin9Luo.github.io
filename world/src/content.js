@@ -257,17 +257,17 @@ export const journey = [
   },
 ];
 
-// Games shown on the Games sheet. `url` stays empty until a game is ready to play; the sheet then shows it as in progress.
+// Games shown on the Games sheet. A game with an empty `url` is shown as in progress.
 export const games = [
   {
-    id: 'brushfield',
-    title: { en: 'Brushfield', zh: 'Brushfield' },
-    kind: { en: 'Action · painted in oil', zh: '动作 · 油画颜料绘制' },
+    id: 'muye',
+    title: { en: 'Muye', zh: '牧野' },
+    kind: { en: 'Side-view battle · ink, shadow puppets and paint', zh: '横版战斗 · 水墨、皮影与颜料' },
     blurb: {
-      en: 'A small game of riding, striking and commanding a warband, painted in oil. Every blow stays on the sheet as paint.',
-      zh: '一个骑马、挥砍、统率部队的小游戏，用油画颜料画成。每一击都作为颜料留在画面上。',
+      en: 'Ride the divine horse Jiliang at the head of a Zhou warband and break the Shang line. Six waves, five-element boons, every blow a stroke of paint. Keyboard and mouse.',
+      zh: '骑上神驹吉量，率领周军冲破商军的阵线。六波敌军，五行加护，每一击都是一笔颜料。需要键盘和鼠标。',
     },
-    url: '',
+    url: '/muye.html',
   },
 ];
 
