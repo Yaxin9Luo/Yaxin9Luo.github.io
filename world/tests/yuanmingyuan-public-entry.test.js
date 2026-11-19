@@ -96,7 +96,7 @@ test('actual delegated click leaves garden navigation native without starting th
 });
 test('build inputs include museum, reader and Yuanmingyuan studio while retaining every old entry',()=>{
   const input=config.build.rolldownOptions.input;
-  const expected={main:'index.html',blog:'index.html',studio:'asset-studio.html',review:'quality-review.html',exhibit:'exhibit-studio.html',companions:'companion-studio.html',herbarium:'herbarium-studio.html',fauna:'fauna-studio.html',museum:'yuanmingyuan.html',museumReader:'museum-reader.html',museumStudio:'yuanmingyuan-studio.html'};
+  const expected={main:'index.html',blog:'index.html',studio:'asset-studio.html',review:'quality-review.html',exhibit:'exhibit-studio.html',companions:'companion-studio.html',herbarium:'herbarium-studio.html',fauna:'fauna-studio.html',museum:'yuanmingyuan.html',museumReader:'museum-reader.html',museumStudio:'yuanmingyuan-studio.html',muye:'muye.html'};
   assert.deepEqual(Object.fromEntries(Object.entries(input).map(([k,v])=>[k,basename(v)])),expected);
   for(const file of Object.values(input))assert.ok(existsSync(file),file);
   const html=readFileSync(input.museum,'utf8'),fallback=readFileSync(input.museumReader,'utf8'),studio=readFileSync(input.museumStudio,'utf8');
