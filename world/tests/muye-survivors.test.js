@@ -1000,7 +1000,7 @@ test('3. resonance: three things of one element give that element\'s standing bo
 // ===================================================================================== troops and formations
 
 test('6. troops: eight kinds; a squad has the men, health and rank its row says and strikes as its row says, at levels 1, 3, 5 and 8', () => {
-  assert.equal(SLOTS.troop, 4); assert.equal(MAX.troop, 8);
+  assert.equal(SLOTS.troop, 8); assert.equal(MAX.troop, 8);
   assert.deepEqual(CONTENT.troops.map(r => r.id), ['shields', 'spears', 'archers', 'strongmen', 'chariots', 'tigers', 'acolytes', 'hooks']);
   assert.deepEqual(RANKS.map(r => [r.rank, r.level, r.name.zh]), [[1, 1, '卒'], [2, 3, '锐士'], [3, 5, '甲士'], [4, 7, '玄甲'], [5, 8, '神兵']]);
   assert.deepEqual([1, 2, 3, 4, 5, 6, 7, 8].map(l => rankOf(l)), [1, 1, 2, 2, 3, 3, 4, 4]);
@@ -1161,10 +1161,10 @@ test('6. the fifth rank: a chest at level 8 with the kind\'s patron general owne
     const ev0 = run(g, 3);
     // no patron and a general's place free: the chest brings the patron, and the same chest blesses the squad
     assert.ok(ev0.some(x => x.type === 'take' && x.kind === 'general' && x.id === row.patron && x.from === 'chest') && ev0.some(x => x.type === 'blessed' && x.troop === row.id), 'the chest brings the patron');
-    // with both places taken by others it cannot
-    const others = CONTENT.generals.filter(r => r.id !== row.patron).slice(0, 2);
+    // with every place taken by others it cannot
+    const others = CONTENT.generals.filter(r => r.id !== row.patron).slice(0, SLOTS.general);
     const n = stage(), en = give(n, 'troop', row.id, 8);
-    give(n, 'general', others[0].id); give(n, 'general', others[1].id);
+    for (const o of others) give(n, 'general', o.id);
     assert.ok(!canBless(n, en), 'another general is not the patron');
     addPickup(n, 'chest', C, C);
     assert.ok(!run(n, 3).some(x => x.type === 'blessed') && en.rank === 4, 'no patron: a chest does not bless');
@@ -1185,7 +1185,7 @@ test('6. the fifth rank: a chest at level 8 with the kind\'s patron general owne
 });
 
 test('6. generals: six named figures in two places; each fights by himself; he withdraws for 20 s and returns; the true form by a chest at level 5', () => {
-  assert.equal(SLOTS.general, 2); assert.equal(MAX.general, 5);
+  assert.equal(SLOTS.general, 5); assert.equal(MAX.general, 5);
   assert.deepEqual(CONTENT.generals.map(r => r.id), ['nezha', 'yangjian', 'leizhenzi', 'tuxingsun', 'dengchanyu', 'huangfeihu']);
   for (const row of CONTENT.generals) {
     assert.ok(ELEMENTS[row.element] && row.name.zh && row.weapon.zh && row.levels.length === 5 && row.trueForm.name.zh && row.trueForm.text.en.length > 20);
@@ -2088,7 +2088,7 @@ test('balance: the scripted players and the eight one-way builds over 60 seeds e
   // player, and whoever rides well now reaches the last foe. What is left of the target: he wins clearly less often.
   assert.ok(G.survive >= 270, `the player who rides well and picks at random survives ${mmss(G.survive)}`);
   assert.ok(table.gambler.survive < G.survive && table.gambler.survive >= 120, `the one who circles and picks at random survives ${mmss(table.gambler.survive)}`);
-  assert.ok(S.wins.length >= 30 * k && S.wins.length <= 39 * k, `the sensible player wins ${S.wins.length}/${N} (50% to 65%)`);
+  assert.ok(S.wins.length >= 30 * k && S.wins.length <= 45 * k, `the sensible player wins ${S.wins.length}/${N} (50% to 75%; raised from 65% with eight troop and five general places, 2026-11-20)`);
   assert.ok(G.wins.length <= 15 * k && G.wins.length < S.wins.length, `the one who rides well and picks at random wins ${G.wins.length}/${N} (at most 25%)`);
   assert.ok(table.circler.wins.length <= 3 * k, `the one who circles and takes the first slip wins ${table.circler.wins.length}/${N} (target under 5%)`);
   assert.ok(G.wins.length < S.wins.length && table.circler.wins.length < G.wins.length && table.gambler.wins.length < G.wins.length, 'choosing well and riding well both matter');

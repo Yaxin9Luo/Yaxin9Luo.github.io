@@ -46,7 +46,7 @@ export const ALLY = {
   shot: .3,            // and a shield-bearer this share of an arrow he stops
   speed: 1.15,         // soldiers keep up: this many times the hero's speed in full cry
 };
-export const SLOTS = {treasure: 6, art: 6, troop: 4, formation: 1, general: 2};
+export const SLOTS = {treasure: 6, art: 6, troop: 8, formation: 1, general: 5};
 export const MAX = {treasure: 6, art: 5, troop: 8, formation: 3, general: 5};
 export const OFFER = {rerolls: 2, banishes: 2, weight: {treasure: 1, art: 1, troop: .75, formation: .4, general: .3}, mend: 30,
   generalFrom: 4,      // no general is offered before the hero is this level
@@ -306,9 +306,9 @@ const troops = [
   }),
   troop({
     id: 'archers', element: 'wood', name: T('Archers', '射士'), stand: 'behind', patron: 'leizhenzi', men: [3, 4, 4, 5, 6, 6, 6, 7],
-    base: {hp: 45, r: 12, muster: 4, per: 'squad', shape: 'throw', cd: 2, dmg: 24, count: 1, speed: 560, shotR: 9, range: 520, life: 1.3, pierce: 0, bounces: 0, hop: 0, target: 'cluster'},
+    base: {hp: 45, r: 12, muster: 4, per: 'squad', shape: 'throw', cd: 1.6, dmg: 34, count: 1, speed: 560, shotR: 9, range: 520, life: 1.3, pierce: 2, bounces: 0, hop: 0, target: 'cluster'},
     text: T('Three archers keep behind you and loose a volley at the densest group.', '三名射士跟在你身后，向最密的敌群齐射。'),
-    skill: {id: 'arrowRain', name: T('Rain of Arrows', '箭雨'), shape: 'drop', pick: 'cluster', zone: 'rain', cd: 8, dmg: 40, count: 1, radius: 120, delay: .9, range: 560,
+    skill: {id: 'arrowRain', name: T('Rain of Arrows', '箭雨'), shape: 'drop', pick: 'cluster', zone: 'rain', cd: 6.5, dmg: 56, count: 1, radius: 120, delay: .9, range: 560,
       text: T('a volley rises and falls on the densest group, darkening a circle of ground first.', '箭矢升空后落向最密的敌群，落下前地上先暗出一个圆。'),
       at3: {radius: 155, text: T('the rain covers a wider circle.', '箭雨覆盖更大的圆。')}},
     blessed: {id: 'skyOfArrows', name: T('A Sky of Arrows', '遮天箭雨'), shape: 'drop', pick: 'cluster', zone: 'rain', dmg: 80, count: 3, radius: 150, delay: .9, range: 620, stun: .8,
@@ -326,9 +326,9 @@ const troops = [
   }),
   troop({
     id: 'chariots', element: 'metal', name: T('War chariots', '戎车'), stand: 'orbit', patron: 'huangfeihu', men: [1, 1, 1, 2, 2, 2, 2, 3],
-    base: {hp: 260, r: 24, muster: 8, per: 'man', shape: 'arc', cd: .9, dmg: 26, angle: 360, radius: 50, push: 50, range: 40, stun: 0, orbit: 230, turn: .9},
+    base: {hp: 260, r: 24, muster: 8, per: 'man', shape: 'arc', cd: .8, dmg: 38, angle: 360, radius: 58, push: 50, range: 40, stun: 0, orbit: 230, turn: .9},
     text: T('One war chariot circles you wide and runs down whatever it meets.', '一辆戎车在你外围绕行，碾过遇到的敌人。'),
-    skill: {id: 'chariotCharge', name: T('Breaking Charge', '冲阵'), shape: 'charge', cd: 8, dmg: 78, length: 420, width: 64, push: 90, time: .6,
+    skill: {id: 'chariotCharge', name: T('Breaking Charge', '冲阵'), shape: 'charge', cd: 6.5, dmg: 104, length: 420, width: 64, push: 90, time: .6,
       text: T('each chariot charges down a lane through the densest group, throws everything aside, then wheels back.', '每辆战车沿一条道冲过最密的敌群，把一切撞开，再掉头回来。'),
       at3: {length: 520, width: 80, text: T('a longer and wider lane.', '冲锋道更长更宽。')}},
     blessed: {id: 'ironTide', name: T('Iron Tide', '铁流'), shape: 'charge', dmg: 130, length: 620, width: 96, push: 140, time: .7, back: true,
@@ -376,7 +376,7 @@ const troops = [
 // (显圣) comes by a chest at level 5.
 // What a payoff is worth: every blow of an evolved treasure, and of a blessed host, is this much harder.
 export const PAYOFF = {evolve: 1.8, blessed: 2.8, trueForm: 1.6, from: 150};   // `from`: no payoff comes before this time (on a bare stage it does)   // and a general in his true form strikes `trueForm` times as hard as at level 5
-export const GENERAL = {away: 20, speed: 330, grow: .17, hpGrow: .25, leash: 460, echo: .4, power: 1.4};
+export const GENERAL = {away: 20, speed: 330, grow: .17, hpGrow: .25, leash: 460, echo: .4, power: 1.7};
 const general = o => ({...o, levels: o.levels.map((text, i) => ({text, ...(o.steps[i] || {})}))});
 const generals = [
   general({
