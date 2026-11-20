@@ -1,0 +1,41 @@
+{
+ "camp": {
+  "driver": "rules",
+  "loadMs": 788,
+  "foes": 0,
+  "allies": 6,
+  "sprites": {
+   "ms": 388.3,
+   "frames": 99,
+   "megabytes": 20.3,
+   "atlas": [
+    1088,
+    1182
+   ],
+   "heroSheet": [
+    1792,
+    1815
+   ],
+   "resolution": 1,
+   "kbByKind": {
+    "shang:spear": 337,
+    "shang:axe": 324,
+    "shang:shield": 268,
+    "shang:archer": 236,
+    "shang:shaman": 432,
+    "shang:chariot": 2170,
+    "hero": 11124
+   },
+   "dpr": 1,
+   "budgetMB": 40,
+   "passes": 1,
+   "estimateMB": 15,
+   "lazyCuts": 2,
+   "lazyMs": 24.8,
+   "lazyMaxMs": 41.2,
+   "lazyMB": 0.4
+  },
+  "puppets": "art/puppets",
+  "fx": true
+ }
+}

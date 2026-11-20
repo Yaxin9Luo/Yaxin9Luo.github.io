@@ -262,10 +262,10 @@ export const games = [
   {
     id: 'muye',
     title: { en: 'Muye', zh: '牧野' },
-    kind: { en: 'Side-view battle · ink, shadow puppets and paint', zh: '横版战斗 · 水墨、皮影与颜料' },
+    kind: { en: 'Survival battle · ink, shadow puppets and paint', zh: '割草生存 · 水墨、皮影与颜料' },
     blurb: {
-      en: 'Ride the divine horse Jiliang at the head of a Zhou warband and break the Shang line. Six waves, five-element boons, every blow a stroke of paint. Keyboard and mouse.',
-      zh: '骑上神驹吉量，率领周军冲破商军的阵线。六波敌军，五行加护，每一击都是一笔颜料。需要键盘和鼠标。',
+      en: 'Ride the divine horse Jiliang across the field of Muye. You only steer: treasures, troops and generals of the Investiture of the Gods fight by themselves, and every run builds differently. Keyboard.',
+      zh: '骑上神驹吉量驰骋牧野。你只管走位，封神演义里的法宝、兵阵与神将自行出手，每一局的搭配都不一样。需要键盘。',
     },
     url: '/muye.html',
   },

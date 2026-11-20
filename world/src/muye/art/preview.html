@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex">
+<title>Muye art: preview</title>
+<!--
+  The art module alone, driven by the real rules (world/src/muye/sim.js) with no spawning, or by a scripted fake (?fake=1,
+  and by itself if the rules fail to load). For review; the game's own page is world/muye-next.html.
+    ?n=120            foes (default 120)          ?allies=14        men of the warband (default 14; up to about 40)
+    ?at=camp|wood|village|altar|ford|x,y          where the hero is (default: open ground)
+    ?time=0.5         time of day, 0 dawn .. 1 dusk          ?zoom=1     camera zoom
+    ?still=1          run the opening seconds, then hold one frame (window.__preview.ready becomes true)
+    ?warm=2.5         seconds of battle before a still       ?seed=3
+    ?ride=1,0         the direction the hero rides (default 1,0; 0,0 stands)
+    ?bench=4          draw the art 4 times a frame and report the frame gap (see window.__preview.stats())
+    ?puppets=fallback cut the frames from the fallback puppets instead of art/puppets
+    ?pocket=0         without the hero's pocket of paper, darker shadow and muted mass (the state before tester S-1.3)
+    ?boss=0           without the named foe (its slam covers a third of the screen in cinnabar)
+    ?fx=0             without art/fx          ?dpr=2          ?budget=40 (MB of sprite frames)
+-->
+<style>html,body{margin:0;height:100%;background:#EFE7D6;overflow:hidden}canvas{display:block;width:100vw;height:100vh}
+#info{position:fixed;left:10px;bottom:8px;font:12px/1.5 ui-monospace,Menlo,monospace;color:#14110F;background:rgba(239,231,214,.8);padding:4px 8px;white-space:pre;pointer-events:none}</style>
+</head><body><canvas id="c"></canvas><div id="info">loading</div><script type="module" src="./preview.js"></script></body></html>

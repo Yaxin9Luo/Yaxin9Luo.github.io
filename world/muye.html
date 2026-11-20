@@ -4,50 +4,47 @@
 <meta name="portfolio-release" content="2026.09.14.3"><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#EFE7D6">
 <title>牧野 · Muye</title>
-<meta name="description" content="Muye (牧野): a small battle game in ink. Ride the divine horse Jiliang, lead a warband, break the Shang line. Keyboard needed. 骑神马吉量，率一支周军，冲破商军的阵线。">
+<meta name="description" content="Muye (牧野): ride the divine horse Jiliang across the field while your treasures, troops and generals fight by themselves. Keyboard needed. 骑神马吉量纵横战场，法宝、兵阵与神将自行出手。">
 <meta property="og:title" content="牧野 · Muye">
-<meta property="og:description" content="A small battle game in ink: ride the divine horse Jiliang, lead a warband, break the Shang line.">
+<meta property="og:description" content="A survival battle in ink: ride the divine horse Jiliang while your treasures, troops and generals fight by themselves.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Yaxin Luo">
-<meta name="twitter:card" content="summary">
 <style>.cannot{position:fixed;inset:0;z-index:9;display:grid;place-content:center;gap:10px;padding:24px;background:#EFE7D6;color:#14110F;font:16px/1.6 system-ui,"PingFang SC","Microsoft YaHei",sans-serif;text-align:center}.cannot b{font-size:26px}</style>
 </head>
 <body>
   <canvas id="field" tabindex="0" aria-label="Muye: the battlefield"></canvas>
+  <div id="veil" aria-hidden="true"></div>
   <div id="hurt" aria-hidden="true"></div>
-  <header class="bar">
-    <a id="back" href="/">← Yaxin Luo</a>
-    <span id="wave" role="status" aria-live="polite"></span>
-    <span class="tools"><button id="sound"></button><button id="lang">中文</button></span>
+
+  <header id="top">
+    <i id="xp" aria-hidden="true"><i id="xp-fill"></i></i>
+    <div class="side left">
+      <a id="back" href="/">← Yaxin Luo</a>
+      <div class="vital" id="hp" hidden><span class="label" id="hp-label"></span><i class="track"><i class="fill" id="hp-fill"></i></i><span class="num" id="hp-num"></span></div>
+      <div class="vital" id="spirit" hidden><strong id="level"></strong><span class="label" id="xp-label"></span><span class="num" id="xp-num"></span></div>
+    </div>
+    <strong id="timer" role="timer" hidden></strong>
+    <div class="side right">
+      <div class="vital" id="dash" hidden><kbd id="dash-key">Space</kbd><span class="label" id="dash-label"></span><i class="track"><i class="fill" id="dash-fill"></i></i></div>
+      <div class="vital" id="kills" hidden><span class="label" id="kills-label"></span><span class="num" id="kills-num"></span></div>
+      <span class="tools"><button id="sound"></button><button id="lang">中文</button></span>
+    </div>
   </header>
-  <section id="vitals" hidden>
-    <div class="gauge" id="hp">
-      <span class="label" id="hp-label"></span><span class="num" id="hp-num"></span>
-      <i class="track"><i class="fill" id="hp-fill"></i></i>
+  <section id="build" aria-label="Build" hidden></section>
+
+  <div id="banner" role="status" aria-live="polite"></div>
+  <section id="offer" role="dialog" aria-modal="false" hidden>
+    <p id="offer-title"></p>
+    <div id="slips" role="group"></div>
+    <div id="offer-tools">
+      <button id="reroll" data-do="reroll"><kbd>R</kbd><span></span><b></b></button>
+      <button id="banish" data-do="banish"><kbd>B</kbd><span></span><b></b></button>
     </div>
-    <div class="gauge" id="charge">
-      <span class="label" id="charge-label"></span><span class="multbox"><i id="hold" aria-hidden="true"><i id="hold-fill"></i></i><strong id="mult">×1.0</strong></span>
-      <i class="track"><i class="fill" id="speed-fill"></i><i class="tick" id="heavy-tick"></i></i>
-      <span id="blow" aria-live="off"></span>
-    </div>
-    <div id="command">
-      <span class="label" id="band"></span>
-      <span id="orders" role="group" aria-label="Orders">
-        <button data-order="follow"><kbd>1</kbd><span></span></button><button data-order="charge"><kbd>2</kbd><span></span></button><button data-order="hold"><kbd>3</kbd><span></span></button>
-      </span>
-      <span id="skills" hidden>
-        <span class="skill" id="skill-gallop"><kbd>K</kbd><span></span><i class="cd"><i class="fill"></i></i></span>
-        <span class="skill" id="skill-rally"><kbd>L</kbd><span></span><i class="cd"><i class="fill"></i></i></span>
-      </span>
-    </div>
-    <div id="boons" role="list" hidden></div>
   </section>
-  <div id="banner" aria-hidden="true"></div>
-  <div id="hint" role="status"></div>
-  <div id="slips" role="group" hidden></div>
+
   <pre id="perf" hidden></pre>
   <section id="sheet" class="sheet show" aria-live="polite"><div id="sheet-body"><p class="note">grinding ink… 正在研墨…</p></div></section>
   <noscript><div class="cannot"><b>牧野 · Muye</b><span>This game needs JavaScript. Please turn it on and reload.</span><span>这个游戏需要 JavaScript，请开启后刷新。</span><a href="/">← Yaxin Luo</a></div></noscript>
   <script nomodule>document.body.insertAdjacentHTML('beforeend','<div class="cannot"><b>牧野 · Muye</b><span>This browser is too old to run the game. A recent Chrome, Edge, Firefox or Safari will do.</span><span>这个浏览器版本太旧，无法运行游戏。请使用较新的 Chrome、Edge、Firefox 或 Safari。</span><a href="/">← Yaxin Luo</a></div>');</script>
-  <script type="module" src="/src/fengshen/main.js"></script>
+  <script type="module" src="/src/muye/main.js"></script>
 </body></html>

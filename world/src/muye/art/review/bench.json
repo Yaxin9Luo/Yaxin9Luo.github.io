@@ -1,0 +1,251 @@
+{
+ "when": "2026-11-19T21:28:40.634Z",
+ "note": "headless Chrome, 1440 x 900; 300 foes kept topped up, 40 allies, five treasures",
+ "runs": [
+  {
+   "label": "dpr1",
+   "frames": 402,
+   "mean": 1.4604477608085271,
+   "median": 1.300000011920929,
+   "p95": 2.4000000059604645,
+   "ground": 0.5778606958798508,
+   "world": 0.7487562186089322,
+   "over": 0.13383084631974423,
+   "gap": 16.66592039800995,
+   "gapMedian": 16.699999999999818,
+   "foes": 300,
+   "allies": 40,
+   "shots": 7,
+   "zones": 0,
+   "bench": 1,
+   "sprites": {
+    "ms": 858.4,
+    "frames": 99,
+    "megabytes": 30.9,
+    "atlas": [
+     960,
+     1006
+    ],
+    "heroSheet": [
+     2048,
+     2253
+    ],
+    "resolution": 0.885,
+    "kbByKind": {
+     "shang:spear": 283,
+     "shang:axe": 263,
+     "shang:shield": 204,
+     "shang:archer": 207,
+     "shang:shaman": 349,
+     "shang:chariot": 1777,
+     "hero": 14282
+    },
+    "dpr": 1,
+    "budgetMB": 40,
+    "passes": 2,
+    "estimateMB": 19.1,
+    "lazyCuts": 6,
+    "lazyMs": 64.2,
+    "lazyMaxMs": 150.6,
+    "lazyMB": 4.5
+   },
+   "loadMs": 1887
+  },
+  {
+   "label": "dpr1 x4",
+   "frames": 403,
+   "mean": 1.5602977668529112,
+   "median": 1.4000000059604645,
+   "p95": 2.9000000059604645,
+   "ground": 0.6205955334839691,
+   "world": 0.7962779159433493,
+   "over": 0.14342431742559295,
+   "gap": 16.66600496277916,
+   "gapMedian": 16.699999999999818,
+   "foes": 300,
+   "allies": 40,
+   "shots": 5,
+   "zones": 0,
+   "bench": 4,
+   "sprites": {
+    "ms": 957.3,
+    "frames": 99,
+    "megabytes": 30.9,
+    "atlas": [
+     960,
+     1006
+    ],
+    "heroSheet": [
+     2048,
+     2253
+    ],
+    "resolution": 0.885,
+    "kbByKind": {
+     "shang:spear": 283,
+     "shang:axe": 263,
+     "shang:shield": 204,
+     "shang:archer": 207,
+     "shang:shaman": 349,
+     "shang:chariot": 1777,
+     "hero": 14282
+    },
+    "dpr": 1,
+    "budgetMB": 40,
+    "passes": 2,
+    "estimateMB": 19.1,
+    "lazyCuts": 6,
+    "lazyMs": 53,
+    "lazyMaxMs": 131.5,
+    "lazyMB": 4.5
+   },
+   "loadMs": 2023
+  },
+  {
+   "label": "dpr2",
+   "frames": 401,
+   "mean": 1.7201995019454908,
+   "median": 1.5,
+   "p95": 3,
+   "ground": 0.6685785549388562,
+   "world": 0.8925187029594792,
+   "over": 0.1591022440471554,
+   "gap": 16.665835411471324,
+   "gapMedian": 16.699999999999818,
+   "foes": 300,
+   "allies": 40,
+   "shots": 9,
+   "zones": 0,
+   "bench": 1,
+   "sprites": {
+    "ms": 839.8,
+    "frames": 99,
+    "megabytes": 31.2,
+    "atlas": [
+     960,
+     1007
+    ],
+    "heroSheet": [
+     2048,
+     2265
+    ],
+    "resolution": 0.885,
+    "kbByKind": {
+     "shang:spear": 283,
+     "shang:axe": 267,
+     "shang:shield": 217,
+     "shang:archer": 207,
+     "shang:shaman": 349,
+     "shang:chariot": 1778,
+     "hero": 14362
+    },
+    "dpr": 2,
+    "budgetMB": 40,
+    "passes": 2,
+    "estimateMB": 19.2,
+    "lazyCuts": 6,
+    "lazyMs": 48.2,
+    "lazyMaxMs": 101,
+    "lazyMB": 4.5
+   },
+   "loadMs": 1815
+  },
+  {
+   "label": "dpr1, 120 foes",
+   "frames": 401,
+   "mean": 0.9334164588082758,
+   "median": 0.800000011920929,
+   "p95": 1.699999988079071,
+   "ground": 0.45660847774764846,
+   "world": 0.3857855370960331,
+   "over": 0.09102244396459432,
+   "gap": 16.666084788029927,
+   "gapMedian": 16.699999999999818,
+   "foes": 120,
+   "allies": 17,
+   "shots": 4,
+   "zones": 0,
+   "bench": 1,
+   "sprites": {
+    "ms": 668,
+    "frames": 99,
+    "megabytes": 30,
+    "atlas": [
+     960,
+     1006
+    ],
+    "heroSheet": [
+     2048,
+     2253
+    ],
+    "resolution": 0.885,
+    "kbByKind": {
+     "shang:spear": 283,
+     "shang:axe": 263,
+     "shang:shield": 204,
+     "shang:archer": 207,
+     "shang:shaman": 349,
+     "shang:chariot": 1777,
+     "hero": 14282
+    },
+    "dpr": 1,
+    "budgetMB": 40,
+    "passes": 2,
+    "estimateMB": 19.1,
+    "lazyCuts": 5,
+    "lazyMs": 34.5,
+    "lazyMaxMs": 88,
+    "lazyMB": 0.6
+   },
+   "loadMs": 1103
+  },
+  {
+   "label": "dpr1, no fx",
+   "frames": 401,
+   "mean": 1.2453865334577394,
+   "median": 1.0999999940395355,
+   "p95": 2.300000011920929,
+   "ground": 0.4117206986111001,
+   "world": 0.8326683286716813,
+   "over": 0.0009975061749579602,
+   "gap": 16.66583541147132,
+   "gapMedian": 16.699999999999818,
+   "foes": 300,
+   "allies": 40,
+   "shots": 9,
+   "zones": 0,
+   "bench": 1,
+   "sprites": {
+    "ms": 760.8,
+    "frames": 99,
+    "megabytes": 30.9,
+    "atlas": [
+     960,
+     1006
+    ],
+    "heroSheet": [
+     2048,
+     2253
+    ],
+    "resolution": 0.885,
+    "kbByKind": {
+     "shang:spear": 283,
+     "shang:axe": 263,
+     "shang:shield": 204,
+     "shang:archer": 207,
+     "shang:shaman": 349,
+     "shang:chariot": 1777,
+     "hero": 14282
+    },
+    "dpr": 1,
+    "budgetMB": 40,
+    "passes": 2,
+    "estimateMB": 19.1,
+    "lazyCuts": 6,
+    "lazyMs": 52.5,
+    "lazyMaxMs": 138.5,
+    "lazyMB": 4.5
+   },
+   "loadMs": 1400
+  }
+ ]
+}
