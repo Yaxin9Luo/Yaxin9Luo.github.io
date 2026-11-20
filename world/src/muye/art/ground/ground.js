@@ -83,6 +83,7 @@ export async function loadGround(step = () => {}, seed = 7) {
     paperAt(k) { const p = at2(TIME.paper, clamp(k)), t = at2(TIME.temper, clamp(k)); return p.map((v, i) => Math.round(255 - (255 - Math.min(v, DAY[i])) * (255 - t[i]) / 255)); },
     /** paper, the river, the patches in view. V: {W, H (device px), z, dpr, cx, cy, sx(x), sy(y), hw, hh (half the view in world units)} */
     drawBase(ctx, V) {
+      if (!(V.W > 0 && V.H > 0)) return;   /* a window with no size yet (a tab opened in the background): nothing to draw on */
       sheetOfPaper(V.W, V.H, V.dpr); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over'; ctx.drawImage(paper, 0, 0);
       for (const t of tiles) { if (t.x > V.cx + V.hw || t.x + t.w < V.cx - V.hw || t.y / KY > V.cy + V.hh || (t.y + t.h) / KY < V.cy - V.hh) continue; ctx.setTransform(V.z, 0, 0, V.z, V.sx(t.x), V.sy(t.y / KY)); ctx.drawImage(t.img, 0, 0); }
       for (const p of patches) { const q = field.ground.cells[p.cell]; if (!q || Math.abs(p.x - V.cx) > V.hw + q[2] / 2 || Math.abs(p.y - V.cy) > V.hh + q[3] / KY) continue; piece(ctx, field.ground, groundImg, p.cell, V.sx(p.x), V.sy(p.y), V.z, p.flip); }
