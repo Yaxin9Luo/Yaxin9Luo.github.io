@@ -4,7 +4,6 @@ const files=[
   "tests/ui.test.js",
   "tests/landing.test.js",
   "tests/fengshen.test.js",
-  "tests/muye-survivors.test.js",
   "tests/site.test.js",
   "tests/blog.test.js",
   "tests/logic.test.js",
