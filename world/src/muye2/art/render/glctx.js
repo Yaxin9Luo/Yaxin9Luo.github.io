@@ -98,7 +98,7 @@ export function createGL2D(canvas, { antialias = false, units = UNITS, software 
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
     if (src === scratch) { scratch.width = scratch.height = 1; }
     const bytes = Math.round(w * h * 4 * (mip ? 4 / 3 : 1)); stats.textureBytes += bytes - (rec.bytes || 0); rec.bytes = bytes; rec.w = w; rec.h = h; rec.iw = 1 / w; rec.ih = 1 / h;
-    stats.uploads++; stats.uploadMs += performance.now() - t0; (stats.list || (stats.list = [])).push([img.constructor.name, w, h]);
+    const ms = performance.now() - t0; stats.uploads++; stats.uploadMs += ms; (stats.list || (stats.list = [])).push([img.constructor.name, w, h, Math.round(t0), +ms.toFixed(1)]);      // (when and how long: the first-use stall hunt, round 17)
   }
   function texture(img) {
     let rec = texOf.get(img);
@@ -282,7 +282,7 @@ export function createGL2D(canvas, { antialias = false, units = UNITS, software 
     flush() { flush('end'); },
     /** upload an image now (when a loader has it, between frames), not on its first draw in the middle of a fight: a large
      *  ImageBitmap's first upload measured 26 to 265 ms in the real page (render spike, Round 7). No-op when lost. */
-    prewarm(img) { if (lost || !img || !img.width) return; flush('prewarm'); texture(img); },
+    prewarm(img) { if (lost || !img || !img.width) return; flush('prewarm'); texture(img); if (globalThis.__glStats) globalThis.__glPrewarm = (im) => { const t0 = performance.now(); flush('prewarm'); texture(im); gl.finish(); return performance.now() - t0; }; },      // (__glPrewarm: bench runs only, the upload timing in the game's own context)
     /** run f once this frame's drawing has been flushed (offscreen passes: the ink's simulation) */
     afterFrame(f) { afterQ.push(f); if (!scheduled) frameStart(); },
     /** draw into a framebuffer (null: the canvas). The y axis is flipped for a framebuffer so its texture reads upright. */

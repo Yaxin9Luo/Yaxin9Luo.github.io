@@ -145,6 +145,99 @@ export function gods({cell, PAINT, pts, off, part, spline}) {
     for (let k = 0; k < 7; k++) { const a = p[1 + Math.floor(R(0, 9))], s = k % 2 ? 1 : -1; st('chalk', 'drag', [[a[0], a[1] + s * 14], [a[0] + R(-20, 20), a[1] + s * R(40, 60)]], {w: R(14, 22), c: PAINT.ochre, a: .7, pr: [1, .4, .05]}); }
     for (const k of [2, 5, 8]) { const a = p[k], s = (k % 2 ? 1 : -1); st('heavy', 'big', jag([a, [a[0] + R(10, 26), a[1] + s * R(24, 40)], [a[0] + R(24, 50), a[1] + s * R(44, 58)]], 3), {w: 4, c: PAINT.ink, pr: [1, .5, .05]}); }
   }, 'gods');
+  /* ------------------------------------------------ 杨戬's seventy-two changes: beasts and birds in a few wet strokes (写意), facing +x,
+     the pivot at the belly; ink pulled wet for the mass, dry hair for fur and feather, one touch of colour each */
+  cell('gtiger', [-190, -130, 170, 50], '', (st, {R}) => {
+    // the tiger: a long ochre body crouched to spring, the black stripes struck across its back in heavy dry strokes, a great
+    // head with round ears and white jowls, and the long striped tail curling up behind
+    const body = spline([[-110, -40], [-60, -58], [0, -60], [60, -52], [92, -44]], 14);
+    st('wet', 'big', body, {w: 58, c: PAINT.ochre, pr: [.7, 1, 1, 1, .9]});
+    st('wash', 'big', off(body, 20), {w: 22, c: PAINT.white, a: .7, pr: [.3, .8, 1, .6]});
+    for (let k = 0; k < 9; k++) { const q = body[1 + Math.round(k * 1.4)]; st('heavy', 'big', [[q[0] + 6, q[1] - 28], [q[0] - 2, q[1] - 8], [q[0] + 4, q[1] + 10]], {w: R(6, 9), c: PAINT.ink, pr: [1, .9, .1]}); }
+    st('wet', 'big', pts(t => [96 + 26 * Math.cos(t * 6), -58 + 22 * Math.sin(t * 6)], 10), {w: 34, c: PAINT.ochre, pr: [1, 1, 1, 1]});
+    st('thick', 'big', [[106, -46], [124, -40]], {w: 14, c: PAINT.white, pr: [1, .6]});
+    for (const x of [80, 96]) st('heavy', 'big', [[x - 4, -78], [x, -88], [x + 4, -78]], {w: 4, c: PAINT.ink, pr: [1, 1, 1]});
+    st('heavy', 'big', [[112, -64], [120, -62]], {w: 5, c: PAINT.ink, pr: [1, 1]}); st('thick', 'big', pts(t => [104 + 2 * Math.cos(t * 7), -64 + 2 * Math.sin(t * 7)], 5), {w: 5, c: PAINT.goldHi, pr: [1, 1]});
+    for (const [a, b, c] of [[[66, -36], [96, -6], [130, 16]], [[44, -34], [66, -2], [92, 20]], [[-90, -30], [-120, 0], [-150, 20]], [[-74, -28], [-94, 4], [-108, 24]]]) st('pigment', 'big', spline([a, b, c], 6), {w: 15, c: PAINT.ochre, pr: [1, .8, .5]});
+    const tail = spline([[-110, -44], [-150, -60], [-168, -96], [-150, -120]], 10); st('pigment', 'big', tail, {w: 11, c: PAINT.ochre, pr: [1, .8, .6, .4]});
+    for (let k = 2; k < 10; k += 2) { const q = tail[k]; st('heavy', 'big', [[q[0] - 6, q[1]], [q[0] + 6, q[1] + 2]], {w: 4, c: PAINT.ink, pr: [1, 1]}); }
+  }, 'gods');
+  cell('ghawk', [-200, -110, 200, 70], '', (st, {R}) => {
+    // the hawk seen spread above the field: two broad wings out flat, each a loaded stroke whose end breaks into five dry
+    // fingered primaries, the tail fanned, the head small with a hooked gold beak
+    for (const sd of [-1, 1]) { const w = spline([[sd * 14, -20], [sd * 70, -34], [sd * 130, -30], [sd * 170, -16]], 12);
+      st('wet', 'big', w, {w: 46, c: PAINT.ink, pr: [1, 1, .9, .7]});
+      st('wash', 'big', off(w, sd * -18), {w: 20, c: PAINT.inkMid, a: .6, pr: [1, .9, .6]});
+      for (let k = 0; k < 5; k++) { const q = [sd * (150 + k * 6), -24 + k * 8]; st('chalk', 'drag', [q, [q[0] + sd * R(28, 40), q[1] + R(-6, 10) + k * 4]], {w: 8, c: PAINT.ink, a: .9, pr: [1, .5, .05]}); } }
+    st('wet', 'big', [[0, -40], [0, -10], [0, 26]], {w: 30, c: PAINT.inkMid, pr: [.7, 1, .8]});
+    for (let k = -2; k <= 2; k++) st('chalk', 'drag', [[0, 24], [k * 14, 60]], {w: 10, c: PAINT.ink, a: .85, pr: [1, .6, .1]});
+    st('heavy', 'big', pts(t => [8 * Math.cos(t * 7), -52 + 8 * Math.sin(t * 7)], 6), {w: 12, c: PAINT.ink, pr: [1, 1]});
+    st('pigment', 'big', [[0, -62], [6, -74], [-2, -70]], {w: 5, c: PAINT.gold, pr: [1, .8, .2]});
+  }, 'gods');
+  cell('gmarten', [-150, -70, 150, 30], '', (st, {R}) => {
+    // 花狐貂: a long low body poured in one pull, a great brushed tail, white at the throat
+    const b = spline([[-80, -26], [-30, -38], [30, -36], [80, -28]], 12);
+    st('wet', 'big', b, {w: 30, c: PAINT.ink, pr: [.6, 1, 1, .9]});
+    st('wash', 'big', off(b, 10), {w: 16, c: PAINT.ochre, a: .7, pr: [.4, 1, 1, .4]});
+    st('wet', 'big', spline([[78, -32], [102, -40], [122, -34]], 6), {w: 22, c: PAINT.ink, pr: [1, 1, .6]});
+    st('thick', 'big', [[106, -28], [120, -26]], {w: 7, c: PAINT.white, pr: [1, .5]});
+    st('heavy', 'big', [[104, -48], [100, -58]], {w: 5, c: PAINT.ink, pr: [1, .3]});
+    for (let k = 0; k < 6; k++) st('chalk', 'drag', spline([[-78, -30], [-110, -44 + k * 4], [-146, -52 + k * 7]], 6), {w: 12, c: PAINT[k % 2 ? 'ink' : 'inkMid'], a: .8, pr: [1, .8, .3]});
+    for (const [x, d] of [[50, 1], [-50, -1]]) st('pigment', 'big', [[x, -22], [x + d * 14, -6], [x + d * 22, 6]], {w: 7, c: PAINT.ink, pr: [1, .7, .3]});
+  }, 'gods');
+  cell('gcrane', [-200, -150, 200, 40], '', (st, {R}) => {
+    // the crane in flight: white wings raised with black flight feathers, the long neck stretched straight ahead with a
+    // cinnabar crown, the long legs trailing straight behind
+    for (const sd of [-1, 1]) { const w = spline([[0, -58], [-20, -58 + sd * 40], [-40, -58 + sd * 80], [-50, -58 + sd * 100]], 10);
+      st('thick', 'big', w, {w: 38, c: PAINT.white, pr: [1, 1, .9, .6]});
+      st('pigment', 'line', off(w, 18), {w: 1.6, c: PAINT.inkMid, pr: [.3, 1, .6]});
+      st('chalk', 'drag', part(w, .6, 1), {w: 26, c: PAINT.ink, a: .95, pr: [.6, 1, .6]}); }
+    st('thick', 'big', [[-70, -58], [-20, -60], [20, -62]], {w: 30, c: PAINT.white, pr: [.6, 1, .8]});
+    st('pigment', 'line', [[-70, -46], [-20, -48], [20, -50]], {w: 1.6, c: PAINT.inkMid, pr: [.3, 1, .5]});
+    st('heavy', 'big', [[18, -64], [80, -70], [140, -72]], {w: 7, c: PAINT.ink, pr: [1, .9, .8]});
+    st('thick', 'big', pts(t => [142 + 6 * Math.cos(t * 7), -74 + 5 * Math.sin(t * 7)], 6), {w: 9, c: PAINT.white, pr: [1, 1]});
+    st('thick', 'big', pts(t => [140 + 3 * Math.cos(t * 7), -80 + 3 * Math.sin(t * 7)], 5), {w: 7, c: PAINT.red, pr: [1, 1]});
+    st('pigment', 'big', [[148, -74], [184, -72]], {w: 4, c: PAINT.goldHi, pr: [1, .2]});
+    for (const dy of [-4, 4]) st('pigment', 'line', [[-70, -56 + dy], [-140, -52 + dy], [-196, -50 + dy]], {w: 2.4, c: PAINT.ink, pr: [1, 1, .6]});
+  }, 'gods');
+  cell('gserpent', [-130, -110, 130, 60], '', (st, {R}) => {
+    // the serpent coiled to strike: two coils of malachite laid round and round, scales ticked dry, the neck rearing up out of
+    // the coils into a raised head with a forked red tongue
+    const coil = pts(t => { const a = t * Math.PI * 4, r = 90 - 44 * t; return [Math.cos(a) * r, 20 + Math.sin(a) * r * .45]; }, 40);
+    st('wet', 'big', coil, {w: 26, c: PAINT.green, pr: [.2, .7, 1, 1, 1, 1]});
+    st('wet', 'big', off(coil, -8), {w: 8, c: PAINT.ink, a: .75, pr: [.2, .8, 1, 1, .9]});
+    for (let k = 4; k < 40; k += 3) { const q = coil[k]; st('chalk', 'drag', [[q[0] - 4, q[1] - 5], [q[0] + 4, q[1] + 4]], {w: 4, c: PAINT.ink, a: .55, pr: [1, .2]}); }
+    const neck = spline([coil[40], [10, -20], [20, -60], [44, -84]], 10);
+    st('wet', 'big', neck, {w: 22, c: PAINT.green, pr: [1, 1, .9, .8]});
+    st('wet', 'big', pts(t => [52 + 16 * Math.cos(t * 6), -88 + 10 * Math.sin(t * 6)], 8), {w: 20, c: PAINT.green, pr: [1, 1, 1]});
+    st('pigment', 'line', [[66, -86], [86, -82], [92, -88]], {w: 1.6, c: PAINT.red, pr: [1, 1, .5]}); st('pigment', 'line', [[86, -82], [92, -78]], {w: 1.4, c: PAINT.red, pr: [1, .5]});
+    st('thick', 'big', pts(t => [56 + 2 * Math.cos(t * 7), -94 + 2 * Math.sin(t * 7)], 5), {w: 5, c: PAINT.goldHi, pr: [1, 1]});
+  }, 'gods');
+  /* ------------------------------------------------ 黄天化's 华光: one hard lance of light along +x (the pivot at its root): a white-hot core
+     laid thick, matte gold edges ruled hard, a cinnabar fringe of flame dragged back, the point pressed in gold and ink */
+  cell('glance', [-20, -60, 980, 60], 'x', (st, {R}) => {
+    const p = pts(t => [940 * t, 0], 24);
+    st('pigment', 'big', p, {w: 64, c: PAINT.red, pr: [.5, .8, 1, 1, 1, .9, .7]});
+    for (let k = 0; k < 8; k++) st('chalk', 'drag', off(p, (k - 3.5) * 8).map(([x, y]) => [x, y + R(-2, 2)]), {w: 6, c: PAINT[k % 2 ? 'redDeep' : 'redHot'], a: .8, pr: [.3, .7, 1, .8, .4, .1]});
+    st('pigment', 'big', p, {w: 34, c: PAINT.goldHi, pr: [.6, .9, 1, 1, 1, .9]});
+    st('thick', 'big', p, {w: 16, c: PAINT.white, pr: [.4, .8, 1, 1, 1, .8]});
+    for (const sd of [-1, 1]) st('pigment', 'rule', off(p, sd * 18), {w: 2.6, c: PAINT.gold, pr: [.3, 1, 1, 1, .8]});
+    st('pigment', 'big', [[900, -14], [972, 0], [900, 14]], {w: 14, c: PAINT.gold, pr: [.6, 1, .6]});
+    st('heavy', 'big', [[950, 0], [980, 0]], {w: 6, c: PAINT.ink, pr: [1, .1]});
+  }, 'gods');
+  /* ------------------------------------------------ 邓婵玉's five lights: a broad band of one mineral pigment, laid opaque and strong from a
+     narrow root to a wide end (along +x), its edges dragged dry, a hair of gold through it */
+  for (const [k, col, hi] of [[0, 'blue', 'blueHi'], [1, 'red', 'redHot'], [2, 'gold', 'goldHi'], [3, 'white', 'white'], [4, 'green', 'greenHi']]) cell(`gband_${k}`, [-10, -40, 620, 40], 'x', (st, {R}) => {
+    // a beam of light, not cloth: a soft glow of the pigment let down wide and thin, the beam itself narrow and tapering to
+    // a point, a bright core laid thick, flying white along both edges where the light breaks up
+    const p = pts(t => [600 * t, 2 * Math.sin(t * 7 + k)], 18);
+    st('wash', 'big', p, {w: 60, c: PAINT[col === 'white' ? 'bluePale' : col], a: .35, pr: [.1, .5, .8, .9, .7, .4, .1]});
+    st('pigment', 'big', p, {w: 26, c: PAINT[col], pr: [.25, .7, 1, 1, .85, .55, .25, .05]});
+    st('thick', 'big', part(p, 0, .85), {w: 8, c: PAINT[col === 'gold' || col === 'white' ? 'white' : hi], pr: [.4, 1, 1, .8, .4, .1]});
+    for (const sd of [-1, 1]) st('chalk', 'drag', off(part(p, .15, 1), sd * 15), {w: 6, c: PAINT[col === 'white' ? 'inkPale' : col], a: .8, pr: [.3, .9, 1, .6, .2]});
+    st('pigment', 'line', off(part(p, .05, .8), -4), {w: 1.2, c: PAINT[col === 'gold' ? 'redDeep' : 'goldHi'], pr: [.2, 1, .7, .1]});
+    if (col === 'white') for (const sd of [-1, 1]) st('pigment', 'line', off(part(p, 0, .8), sd * 13), {w: 1.2, c: PAINT.inkMid, pr: [.2, 1, .6, .1]});
+  }, 'gods');
   for (let v = 0; v < 2; v++) cell(`gclod_${v}`, [-40, -46, 40, 10], '', (st, {R}) => {
     st('thick', 'blunt', [[-22, -6], [-10, -30], [16, -34], [24, -10]], {w: 24, c: PAINT[v ? 'ochre' : 'ochreHi'], pr: [1, 1, 1, 1]});
     st('heavy', 'big', [[-24, -4], [-12, -32], [18, -38]], {w: 3.4, c: PAINT.ink, pr: [1, 1, .4]});
@@ -238,7 +331,7 @@ export function gods({cell, PAINT, pts, off, part, spline}) {
     // one great curl, after 北斋's wave told in ink and azurite: the body a broad stroke rising from the left and rolling
     // over to the right, darker at its back; the inside of the curl paper; the lip in ink line; claws of foam white
     const m = v ? -1 : 1, X = ([x, y]) => [x * m, y];
-    const body = spline([[-300, 0], [-220, -90], [-120, -230], [0, -330], [130, -350], [230, -300], [260, -220], [200, -170], [150, -200]], 40).map(X);
+    const body = spline([[-200, 0], [-170, -90], [-120, -230], [0, -330], [130, -350], [230, -300], [260, -220], [200, -170], [150, -200]], 40).map(X);
     st('wet', 'big', part(body, 0, .8), {w: 120, c: PAINT.blue, pr: [.6, .9, 1, 1, .9, .7, .5]});
     st('wet', 'big', off(part(body, .05, .7), 40), {w: 60, c: PAINT.blueHi, a: .9, pr: [.5, 1, .8, .5]});
     st('wash', 'big', off(part(body, 0, .6), -70), {w: 70, c: PAINT.bluePale, a: .5, pr: [.4, 1, .6, .2]});
