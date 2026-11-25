@@ -456,4 +456,72 @@ export function wonders({cell, PAINT, pts, off, part, strokeAt, spline}) {
     const C5 = ['blue', 'red', 'ochre', 'white', 'ink'];
     for (let k = 0; k < 5; k++) { const r = 96 - k * 13; st('pigment', 'big', pts(t => { const a = Math.PI * (1.05 + 0.9 * t); return [Math.cos(a) * r * 0.8, -100 + Math.sin(a) * r * 1.2]; }, 20), {w: 9, c: PAINT[C5[k]], a: .85, pr: [.2, 1, 1, 1, .2]}); }
   }, 'wonders');
+  /* ------------------------------------------------ 显圣: the gods' feats (the lead, 2026-11-25: "既然都显圣成神了，尽量做好一点") */
+  // 哮天犬 in ink: a lean hound at full stretch in a few wet strokes, the far legs paler, a dry trail of hair behind (faces +x)
+  for (let v = 0; v < 2; v++) cell(`whound_${v}`, [-90, -54, 76, 14], '', (st, {R}) => {
+    const leg = (a, b, c, w, col, al) => st('pigment', 'big', spline([a, b, c], 6), {w, c: PAINT[col], a: al, pr: [1, .8, .4]});
+    st('wet', 'big', spline([[-54, -26], [-20, -34 - v * 3], [18, -32], [44, -26]], 10), {w: 20, c: PAINT.ink, pr: [.5, 1, 1, .85, .6]});        // the body: one pull
+    st('wet', 'big', spline([[40, -28], [56, -40], [70, -38]], 6), {w: 12, c: PAINT.ink, pr: [1, 1, .6]});                                    // neck and head
+    st('pigment', 'big', [[62, -46], [70, -52]], {w: 5, c: PAINT.ink, pr: [1, .3]});                                                         // the ear laid back
+    leg([30, -22], [52, -8], [72, -2], 6, 'inkMid', .6); leg([24, -20], [46, -4], [62, 4], 7, 'ink', 1);                                    // forelegs reaching
+    leg([-44, -22], [-66, -8], [-86, -4], 6, 'inkMid', .6); leg([-40, -20], [-58, -2], [-78, 6], 7, 'ink', 1);                               // hind legs thrown back
+    st('chalk', 'drag', spline([[-54, -30], [-72, -40], [-90, -42]], 6), {w: 6, c: PAINT.ink, a: .8, pr: [1, .5, .1]});                    // the tail
+    st('chalk', 'drag', [[-30, -12], [-70, -10]], {w: 14, c: PAINT.inkPale, a: .5, pr: [.6, .3, .05]});                                    // dust of the run
+  }, 'wonders');
+  // lightning in brush: a jagged ink stroke, a matte gold hair along it, forks; falls from y = -300 to 0 (pivot at the foot)
+  for (let v = 0; v < 2; v++) cell(`wbolt_${v}`, [-70, -310, 70, 10], '', (st, {R}) => {
+    const p = [[R(-10, 10), -300]]; for (let i = 1; i <= 7; i++) p.push([(i % 2 ? 1 : -1) * R(14, 30) * (v ? -1 : 1), -300 + i * 42 + R(-6, 6)]); p.push([0, 0]);
+    for (let i = 0; i < p.length - 1; i++) { const a = p[i], b = p[i + 1], w = 6 + 6 * (i / p.length);
+      st('heavy', 'big', [a, [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2], b], {w, c: PAINT.ink, pr: [1, .8, 1]});
+      st('pigment', 'line', [[a[0] + 3, a[1]], [b[0] + 3, b[1]]], {w: 1.8, c: PAINT.goldHi, pr: [1, 1]}); }
+    for (const k of [2, 4]) { const a = p[k], b = [a[0] + R(-40, 40), a[1] + 36], c = [b[0] + R(-30, 30), b[1] + 34];
+      st('pigment', 'big', [a, b], {w: 4, c: PAINT.ink, pr: [1, .7]}); st('pigment', 'big', [b, c], {w: 3, c: PAINT.ink, pr: [.7, .1]}); }
+  }, 'wonders');
+  // the earth opened: a slab of ground standing up (ochre, axe-cut ink edges, clods) and a crack running out (along +x)
+  for (let v = 0; v < 2; v++) cell(`wslab_${v}`, [-46, -96, 46, 8], '', (st, {R}) => {
+    const lean = v ? 8 : -8, top = [[-30 + lean, -84], [-12 + lean, -96], [4 + lean, -86], [18 + lean, -94], [30 + lean, -80]];
+    for (let k = 0; k < 5; k++) { const x = -24 + k * 12; st('wet', 'big', [[x, -2], [x + lean * .5, -46], [x + lean, -84 - (k % 2) * 8]], {w: 18, c: PAINT[k > 2 ? 'ochre' : 'ochreHi'], pr: [1, 1, .9]}); }
+    st('wet', 'big', [[18, -4], [18 + lean, -82]], {w: 16, c: PAINT.inkMid, a: .6, pr: [1, 1, .8]});                                       // its shadowed face
+    for (let i = 0; i < top.length - 1; i++) st('heavy', 'big', [top[i], top[i + 1]], {w: 4, c: PAINT.ink, pr: [1, 1]});              // the broken top
+    st('pigment', 'line', [[-30, 0], [-30 + lean, -84]], {w: 2, c: PAINT.ink, pr: [1, 1]}); st('pigment', 'line', [[30, 0], [30 + lean, -80]], {w: 2, c: PAINT.ink, pr: [1, 1]});
+    for (let k = 0; k < 4; k++) { const x = R(-36, 36); st('heavy', 'big', [[x, 4], [x + 3, 5]], {w: R(5, 8), c: PAINT.inkMid, pr: [1, 1]}); }
+  }, 'wonders');
+  for (let v = 0; v < 2; v++) cell(`wcrack_${v}`, [-6, -24, 260, 24], 'x', (st, {R}) => {
+    const p = [[0, 0]]; for (let i = 1; i <= 9; i++) p.push([i * 28, R(-12, 12)]);
+    for (let i = 0; i < p.length - 1; i++) st('heavy', 'big', [p[i], [(p[i][0] + p[i + 1][0]) / 2, (p[i][1] + p[i + 1][1]) / 2], p[i + 1]], {w: 8 * (1 - i / p.length) + 1, c: PAINT.ink, pr: [1, .9, 1]});
+    for (const k of [3, 6]) st('pigment', 'big', [p[k], [p[k][0] + 26, p[k][1] + R(-20, 20)]], {w: 3, c: PAINT.ink, pr: [1, .1]});
+  }, 'wonders');
+  // 五光: a ray of one mineral pigment, pressed at the stone and lifted as it goes out, its edge a dry hair (along +x)
+  for (const [k, col] of [['blue', 'blue'], ['red', 'red'], ['gold', 'gold'], ['white', 'white'], ['green', 'green']].entries()) cell(`wlight5_${k}`, [-4, -20, 460, 20], 'x', (st, {R}) => {
+    const p = pts(t => [450 * t, 3 * Math.sin(t * 5 + k)], 14);
+    st('pigment', 'big', p, {w: 26, c: PAINT[col[1]], a: col[1] === 'white' ? 1 : .9, pr: [1, .95, .85, .7, .5, .32, .16, .05]});
+    st('chalk', 'drag', off(p, 8), {w: 5, c: PAINT[col[1] === 'white' ? 'inkPale' : col[1]], a: .7, pr: [.8, .6, .4, .2, .05]});
+    if (col[1] === 'white') st('pigment', 'line', off(p, -11), {w: 1.2, c: PAINT.inkPale, pr: [1, .8, .4, .1]});
+  }, 'wonders');
+  // 郑伦's white light: two broad pale strokes leaving paper bright, an ink hair on each edge (along +x)
+  for (let v = 0; v < 2; v++) cell(`wwhite_${v}`, [-4, -34, 520, 34], 'x', (st, {R}) => {
+    const p = pts(t => [510 * t, (v ? -1 : 1) * 6 * Math.sin(t * 3.2)], 16);
+    st('thick', 'big', p, {w: 48, c: PAINT.white, pr: [1, 1, .95, .85, .7, .5, .3, .1]});
+    st('pigment', 'line', off(p, 25), {w: 1.6, c: PAINT.inkMid, pr: [1, .9, .6, .3, .05]}); st('pigment', 'line', off(p, -25), {w: 1.6, c: PAINT.inkMid, pr: [1, .9, .6, .3, .05]});
+    st('scumble', 'drag', off(p, 10), {w: 10, c: PAINT.bluePale, a: .4, pr: [.6, .5, .3, .1]});
+  }, 'wonders');
+  // 四海瓶: a vase of celadon, ink outline, a gold mouth rim, a wave on its belly
+  cell('wvase', [-50, -130, 50, 8], '', (st) => {
+    st('wet', 'big', [[0, -6], [0, -50], [0, -92]], {w: 74, c: PAINT.green, pr: [.75, 1, .55]});
+    st('pigment', 'big', [[0, -92], [0, -118]], {w: 26, c: PAINT.greenHi, pr: [1, 1]});
+    st('pigment', 'big', [[-18, -120], [18, -120]], {w: 7, c: PAINT.gold, pr: [1, 1]});
+    for (const sg of [-1, 1]) st('pigment', 'line', spline([[sg * 22, -4], [sg * 38, -40], [sg * 30, -84], [sg * 13, -94], [sg * 13, -118]], 14), {w: 1.6, c: PAINT.ink, pr: [1, 1, 1]});
+    st('pigment', 'line', pts(t => [-30 + 60 * t, -48 + 6 * Math.sin(t * 12)], 16), {w: 2, c: PAINT.blue, pr: [1, 1, 1]});
+  }, 'wonders');
+  // 攒心钉: a slim nail of matte gold, its point dark, a tail of cinnabar fire flaring behind it (points +x)
+  for (let v = 0; v < 2; v++) cell(`wnail_${v}`, [-220, -26, 40, 26], 'x', (st, {R}) => {
+    st('pigment', 'big', [[-40, 0], [10, 0], [36, 0]], {w: 9, c: PAINT.gold, pr: [1, 1, .1]});
+    st('heavy', 'big', [[22, 0], [38, 0]], {w: 5, c: PAINT.ink, pr: [1, .1]});
+    for (let k = 0; k < 5; k++) { const a = (k - 2) * .16, L = R(120, 180), sp = pts(t => [-40 - L * t, Math.sin(a) * L * t + 6 * Math.sin(t * 7 + k)], 8);
+      st('pigment', 'big', sp, {w: R(8, 12), c: PAINT[k % 2 ? 'redDeep' : 'red'], pr: [1, .8, .5, .25, .05]}); st('chalk', 'drag', part(sp, .4, 1), {w: 4, c: PAINT.redDeep, a: .8, pr: [.7, .4, .1]}); }
+  }, 'wonders');
+  // dust thrown by a charge: a low dry swirl of ochre and ink (flat on the ground)
+  for (let v = 0; v < 2; v++) cell(`wdust_${v}`, [-70, -40, 70, 10], '', (st, {R}) => {
+    for (let k = 0; k < 4; k++) st('chalk', 'drag', pts(t => { const a = t * Math.PI * 1.2 + k; return [Math.cos(a) * (30 + 30 * t) * (v ? -1 : 1), -12 - 16 * t + Math.sin(a) * 10]; }, 10), {w: R(10, 16), c: PAINT[k % 2 ? 'ochre' : 'inkPale'], a: .7, pr: [.2, .9, 1, .5, .1]});
+  }, 'wonders');
 }

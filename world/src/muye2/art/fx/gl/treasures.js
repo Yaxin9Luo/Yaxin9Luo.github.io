@@ -52,8 +52,8 @@ export function createTreasures(ctx, ink, W = createWonders(), onKick = () => {}
     if (e.type === 'held') heldHow = e.how || 'seize';
     if (e.type === 'land' && e.side === 'shang' && BOSS_SIG[e.id]) sigs.push({ id: e.id, at: clock, x: e.x, y: e.y, d: e.dir || 0, R: e.radius || 100, r0: e.inner || 0, L: e.length || 500, w: e.width || 70, ang: ((e.angle || 36) * Math.PI) / 180, gap: e.gap || 0, v: sigs.length % 2 });
     // the generals: 显圣 (a true form) and 雷震子's dive
-    if (e.type === 'trueForm') manifests.push({ at: clock, gen: e.general, x: e.x, y: e.y, el: GEN_EL[e.general] || 'metal' });
-    if (e.type === 'generalSkill' && e.id === 'thunderDive') dives.push({ at: clock, x: e.x, y: e.y, d: e.dir || 0, L: 380 });
+    // (显圣 and the true-form feats are gods.js's)
+    if (e.type === 'generalSkill' && e.id === 'thunderDive' && !e.trueForm) dives.push({ at: clock, x: e.x, y: e.y, d: e.dir || 0, L: 380 });
     // rank 5, the blessed host (神兵): its skill as the work of immortals, laid over the stroke version
     if (e.type === 'squadSkill' && e.blessed) hosts.push({ id: e.id, at: clock, x: e.x, y: e.y, d: e.dir || 0, el: e.element, targets: e.targets, v: hosts.length % 3 });
     // the eight new treasures (SPEC-CAMPAIGN 2.3)
@@ -280,11 +280,11 @@ export function createTreasures(ctx, ink, W = createWonders(), onKick = () => {}
     for (const a of as) { if (a.kind !== 'general' || a.state === 'dead') continue; const X = V.sx(a.x), Y = V.sy(a.y), el = GEN_EL[a.general] || 'metal';
       // 哪吒 rides the wind-fire wheels: his path burns behind him (in his true form, wider and longer)
       if (a.general === 'nezha') { let tr = tracks.get(a.id); if (!tr) tracks.set(a.id, (tr = [])); const last = tr[tr.length - 1]; if (layer === 'ground' && (!last || Math.hypot(a.x - last[0], a.y - last[1]) > 14)) { tr.push([a.x, a.y, clock]); }
-        while (tr.length && clock - tr[0][2] > (a.trueForm ? 1.4 : 0.8)) tr.shift();
-        if (layer === 'ground' && tr.length > 2) { const n = tr.length, life = a.trueForm ? 1.4 : 0.8;
-          for (const side of [-1, 1]) ribbon(c, `wfanfire_${side > 0 ? 1 : 0}`, (s2) => { const q = tr[Math.min(n - 1, Math.floor(s2 * (n - 1)))], q2 = tr[Math.min(n - 1, Math.floor(s2 * (n - 1)) + 1)], dx = q2[0] - q[0], dy = q2[1] - q[1], l = Math.hypot(dx, dy) || 1; return [V.sx(q[0] - dy / l * 12 * side), V.sy(q[1] + dx / l * 12 * side)]; }, (a.trueForm ? 0.42 : 0.3) * z, Math.min(1, (clock - tr[0][2]) / life + 0.2), 0, 1, Math.min(24, n), V); } }
+        while (tr.length && clock - tr[0][2] > 0.8) tr.shift();      // (in his true form no longer: the wide burning comb read as a heap; gods.js paints the form)
+        if (layer === 'ground' && tr.length > 2) { const n = tr.length, life = 0.8;
+          for (const side of [-1, 1]) ribbon(c, `wfanfire_${side > 0 ? 1 : 0}`, (s2) => { const q = tr[Math.min(n - 1, Math.floor(s2 * (n - 1)))], q2 = tr[Math.min(n - 1, Math.floor(s2 * (n - 1)) + 1)], dx = q2[0] - q[0], dy = q2[1] - q[1], l = Math.hypot(dx, dy) || 1; return [V.sx(q[0] - dy / l * 12 * side), V.sy(q[1] + dx / l * 12 * side)]; }, 0.3 * z, Math.min(1, (clock - tr[0][2]) / life + 0.2), 0, 1, Math.min(24, n), V); } }
       // 雷震子 in his true form: the storm goes with him, strokes of wind wheeling round him
-      if (a.general === 'leizhenzi' && a.trueForm && layer === 'over') for (let k = 0; k < 3; k++) { const b0 = clock * 2.6 + k * 2.1, R = 150; ribbon(c, `wtoll_${k % 2}`, (s2) => { const b = b0 + s2 * 1.6; return [V.sx(a.x + Math.cos(b) * R * (0.8 + 0.2 * s2)), V.sy(a.y + Math.sin(b) * R * (0.8 + 0.2 * s2)) - (30 + 40 * s2) * z]; }, 1.2 * z, 0.85, 0, 1, 10, V); }
+      if (a.general === 'leizhenzi' && a.trueForm && layer === 'ground') for (let k = 0; k < 3; k++) { const b0 = clock * 2.6 + k * 2.1, R = 150; ribbon(c, `wtoll_${k % 2}`, (s2) => { const b = b0 + s2 * 1.6; return [V.sx(a.x + Math.cos(b) * R * (0.8 + 0.2 * s2)), V.sy(a.y + Math.sin(b) * R * (0.8 + 0.2 * s2)) - (30 + 40 * s2) * z]; }, 1.2 * z, 0.85, 0, 1, 10, V); }
       // a true form stands on an aureole: a wash ring with a broken edge and fine rays, behind him
       if (a.trueForm && layer === 'ground') W.draw(c, HALO[el] || 'whalo_gold', X, Y - 70 * z, clock * 0.15, 0.9 * z, 0.9 * z, 0.55); }
     if (layer !== 'over') return;

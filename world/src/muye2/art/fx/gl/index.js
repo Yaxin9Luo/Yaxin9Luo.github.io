@@ -30,6 +30,7 @@ import { createOmen } from './omen.js';
 import { createSeal } from './seal.js';
 import { createQuality } from './quality.js';
 import { createTreasures } from './treasures.js';
+import { createGods } from './gods.js';
 import { createWonders } from './wonders.js';
 
 // the heavy blows (pattern ids of content/bosses.js) and how heavy
@@ -40,6 +41,7 @@ const BOSS_ELEMENT = { wenzhong: 'metal', zhangguifang: 'metal', moliqing: 'wood
 export function createGLFx(ctx, { elementOf = () => 'ink', kick = () => {} } = {}) {
   const post = createPost(ctx), ink = createInk(post), blow = createBlow(post), weather = createWeather(post), voice = createVoice(post);
   const Q = createQuality(ctx), impact = createImpact(post, Q), omen = createOmen(post, Q), wonders = createWonders(), _warm = wonders.loaded.then(() => ctx.prewarm && ctx.prewarm(wonders.image)), seal = createSeal(ctx, impact, omen, wonders), treasures = createTreasures(ctx, ink, wonders, (a) => kick(a));
+  const gods = createGods(ctx, wonders, { ink, kick: (a) => kick(a), hold: (s) => hard(0, s) });
   ink.quality = Q;
   let zNow = 1, G = null, wx = null, wAmt = 1, wWind = 0, lastBoss = { t: -9, x: 0, y: 0 }, clock = 0, blowsAt = -9, holdUntil = 0;
   const q = new URLSearchParams(globalThis.location ? location.search : ''); if (q.get('fxweather')) wx = q.get('fxweather');   // for review: ?fxweather=snow
@@ -98,7 +100,7 @@ export function createGLFx(ctx, { elementOf = () => 'ink', kick = () => {} } = {
     hard(second ? 14 : 22 * power, second ? 0.05 : 0.09);
   }
   function onEvent(e, game) {
-    if (game) G = game; treasures.onEvent(e);
+    if (game) G = game; treasures.onEvent(e); gods.onEvent(e, G);
     const t = e.type;
     if ((t === 'arrive' && e.tier !== 'lieutenant' && (e.tier || e.kind)) || t === 'boss') {
       if (clock - lastBoss.t < 2 && Math.hypot(e.x - lastBoss.x, e.y - lastBoss.y) < 200) return;      // 'arrive' and 'boss' come together
@@ -110,10 +112,8 @@ export function createGLFx(ctx, { elementOf = () => 'ink', kick = () => {} } = {
     } else if (t === 'land' && e.side === 'shang' && e.id === 'callName') {
       voice.call({ x: e.x, y: e.y, dir: typeof e.dir === 'number' ? e.dir : 0, half: ((e.angle || 36) * Math.PI) / 360, reach: e.radius || 440 });
     } else if (t === 'land' && e.side === 'shang' && (HEAVY[e.id] || e.great)) godBlow(e);
-    else if (t === 'trueForm') {      // 显圣: the sky closes over the field (no lightning) and the field darkens, as for a great boss, in the general's light
-      const el = ({ nezha: 'fire', leizhenzi: 'wood', tuxingsun: 'earth', yangjian: 'metal' })[e.general] || 'metal', light = impact.LIGHT[LIGHT_OF[el]] || impact.LIGHT.gold;
-      omen.start({ x: e.x, y: e.y, life: 2.8, light, strikes: [], seed: 7, dark: 0.7 }); hard(18, 0.08); }
-    else if (t === 'generalSkill' && e.id === 'thunderDive') { const L = 380, d = e.dir || 0; at(0.12, () => impact.hit({ x: e.x + Math.cos(d) * L, y: e.y + Math.sin(d) * L, power: 0.7, reach: 240, cracks: 5, light: LIGHT_OF.wood, column: 0.12, flash: 0.2, debris: 40, sparks: 30, life: 2, seed: 9 })); }   // great: the rules' shock blows (SPEC-CAMPAIGN 1.10)
+    else if (t === 'trueForm') hard(18, 0.08);      // 显圣: gods.js stands the 法相 up (no omen sky: its ink band would cover the image's head)
+    else if (t === 'generalSkill' && e.id === 'thunderDive' && !e.trueForm) { const L = 380, d = e.dir || 0; at(0.12, () => impact.hit({ x: e.x + Math.cos(d) * L, y: e.y + Math.sin(d) * L, power: 0.7, reach: 240, cracks: 5, light: LIGHT_OF.wood, column: 0.12, flash: 0.2, debris: 40, sparks: 30, life: 2, seed: 9 })); }   // great: the rules' shock blows (SPEC-CAMPAIGN 1.10)
   }
   function nearestBoss(e) { let best = null, bd = 1e9; for (const f of (G && G.foes) || []) { if (!f.tier || f.state === 'dead') continue; const d = Math.hypot(f.x - e.x, f.y - e.y); if (d < bd) { bd = d; best = f; } } return best && bd < 900 ? best : null; }
   // the sky closing, in brush: rows of 祥云 (wonders' wcloud_0/1: spiral heads in ink line, a gold hair on a lower rim) over
@@ -131,14 +131,14 @@ export function createGLFx(ctx, { elementOf = () => 'ink', kick = () => {} } = {
   return {
     onEvent,
     drawGround(V, dt) { clock += dt; zNow = V.z / V.dpr; Q.frame(omen.live + impact.live + seal.live > 0); for (let i = 0; i < plan.length; i++) if (plan[i][0] <= clock) { const f = plan[i][1]; plan.splice(i--, 1); f(); }
-      if (ink.live && !OFF.has('ink')) ink.draw(); if (impact.live) impact.drawGround(V, dt); if (seal.live) seal.drawGround(V, dt); if (blow.live) blow.drawGround(V, dt); treasures.drawGround(V, dt, G); },
-    drawOver(V, dt) { if (voice.live) voice.draw(V, dt); inkFigures(V); treasures.drawOver(V, dt, G); if (omen.live && !OFF.has('omen')) { omen.draw(V, dt); omenClouds(V); } if (impact.live) impact.drawOver(V, dt); if (seal.live) seal.drawOver(V, dt); if (blow.live && !OFF.has('blow')) blow.draw(V, dt); if (wx) weather.draw(V, dt, wx, wAmt, wWind); if (ink.live && !OFF.has('ink')) { const Vn = { ...V }; if (ctx.afterFrame) ctx.afterFrame(() => ink.after(Vn, dt)); else ink.after(Vn, dt); } },   // the ink steps after the frame's last draw (ink.js)
+      if (ink.live && !OFF.has('ink')) ink.draw(); if (impact.live) impact.drawGround(V, dt); if (seal.live) seal.drawGround(V, dt); if (blow.live) blow.drawGround(V, dt); treasures.drawGround(V, dt, G); gods.drawGround(V, dt, G); },
+    drawOver(V, dt) { if (voice.live) voice.draw(V, dt); inkFigures(V); treasures.drawOver(V, dt, G); gods.drawOver(V); if (omen.live && !OFF.has('omen')) { omen.draw(V, dt); omenClouds(V); } if (impact.live) impact.drawOver(V, dt); if (seal.live) seal.drawOver(V, dt); if (blow.live && !OFF.has('blow')) blow.draw(V, dt); if (wx) weather.draw(V, dt, wx, wAmt, wWind); if (ink.live && !OFF.has('ink')) { const Vn = { ...V }; if (ctx.afterFrame) ctx.afterFrame(() => ink.after(Vn, dt)); else ink.after(Vn, dt); } },   // the ink steps after the frame's last draw (ink.js)
     setWeather(kind, amount = 1, wind = 0) { wx = kind || null; wAmt = amount; wWind = wind; },
     hold: () => Math.max(0, holdUntil - clock),
     useFigures: (f) => { drawAgain = f; treasures.useTip(f && f.heroWeapon); },
-    reset() { ink.reset(); blow.reset(); voice.reset(); impact.reset(); omen.reset(); seal.reset(); treasures.reset(); plan.length = 0; inked.length = 0; },
+    reset() { ink.reset(); blow.reset(); voice.reset(); impact.reset(); omen.reset(); seal.reset(); treasures.reset(); gods.reset(); plan.length = 0; inked.length = 0; },
     /** the great moments this module plays itself: the stroke effects stand aside for them */
-    owns: (e) => e.type === 'evolve' && e.id === 'seal',
+    owns: (e) => (e.type === 'evolve' && e.id === 'seal') || gods.owns(e),
     /** whether the painted wonder of this treasure is drawn here (the stroke effects then leave out their own) */
     has: (kind) => treasures.has(kind),
     get quality() { return { tier: Q.tier, why: Q.why }; },

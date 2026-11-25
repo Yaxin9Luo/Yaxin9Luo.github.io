@@ -65,16 +65,16 @@ export const KEY_FIGURES = {
   'shang:wanggui': { file: 'wanggui', height: 93, side: 'shang', foot: true, shadow: [16, 4, 0.35], attack: { up: [-40, -10], hit: [16, 10], fol: [10, 6] } },
   'hero:wuwang-afoot': { file: 'wuwang-afoot', height: 84, side: 'zhou', foot: true, shadow: [18, 4, 0.45], attack: { up: [40, -4], hit: [-30, 2], fol: [-14, 2] } },   // his spear is cut level: the thrust is the arm drawing back then driving forward, the spear kept near 0
   // 显圣 true forms (the general revealed as a god, temple-mural iconography in this hand): apparitions up to 2.6H
-  'zhou:yangjian-true': { glide: true, maxTurn: 5, fixed: ['arm2', 'cloak'], file: 'yangjian-true', height: 149, side: 'zhou', foot: true, hover: 6, shadow: [30, 6, 0.3], attack: { up: [-8, -35], hit: [8, 85], fol: [4, 60] } },
-  'zhou:nezha-true': { glide: true, maxTurn: 8, file: 'nezha-true', height: 149, side: 'zhou', foot: true, hover: 10, shadow: [30, 6, 0.25], attack: { up: [-8, -40], hit: [8, 40], fol: [4, 20] } },
-  'zhou:huangfeihu-true': { drop: ['item2'], glide: true, maxTurn: 8, file: 'huangfeihu-true', height: 161, side: 'zhou', shadow: [44, 8, 0.35], attack: { up: [-8, -10], hit: [8, 6], fol: [4, 3] } },
-  'zhou:leizhenzi-true': { glide: true, maxTurn: 8, file: 'leizhenzi-true', height: 149, side: 'zhou', foot: true, hover: 10, shadow: [30, 6, 0.25], attack: { up: [-8, -60], hit: [8, 60], fol: [4, 30] } },
-  'zhou:dengchanyu-true': { glide: true, maxTurn: 8, file: 'dengchanyu-true', height: 149, side: 'zhou', foot: true, hover: 6, shadow: [28, 6, 0.3], attack: { up: [-8, -40], hit: [8, 30], fol: [4, 15] } },
-  'zhou:tuxingsun-true': { glide: true, maxTurn: 8, file: 'tuxingsun-true', height: 124, side: 'zhou', foot: true, shadow: [30, 6, 0.35], attack: { up: [-8, -22], hit: [8, 24], fol: [4, 12] } },   // the cudgel only to ±24: past that the shaft below his fist leaves a hole
-  'zhou:zhenglun-true': { glide: true, maxTurn: 8, file: 'zhenglun-true', height: 149, side: 'zhou', foot: true, hover: 6, shadow: [30, 6, 0.3], attack: { up: [-8, -60], hit: [8, 50], fol: [4, 25] } },
-  'zhou:jiangziya-true': { glide: true, maxTurn: 8, file: 'jiangziya-true', height: 161, side: 'zhou', shadow: [40, 8, 0.3], attack: { up: [-8, -50], hit: [8, 40], fol: [4, 20] } },
-  'zhou:huangtianhua-true': { glide: true, maxTurn: 8, file: 'huangtianhua-true', height: 161, side: 'zhou', shadow: [40, 8, 0.3], attack: { up: [-8, -60], hit: [8, 60], fol: [4, 30] } },
-  'zhou:longji-true': { glide: true, maxTurn: 8, file: 'longji-true', height: 161, side: 'zhou', shadow: [40, 8, 0.3], attack: { up: [-8, -40], hit: [8, 40], fol: [4, 20] } },
+  'zhou:yangjian-true': { travel: true, file: 'yangjian-t2', height: 143, side: 'zhou', shadow: [40, 8, 0.35], attack: { up: [-40, 55], hit: [30, 85], fol: [22, 80] } },
+  'zhou:nezha-true': { travel: true, file: 'nezha-t2', height: 124, side: 'zhou', foot: true, hover: 7, shadow: [26, 6, 0.3], attack: { up: [-10, -6], hit: [8, 6], fol: [5, 3] } },
+  'zhou:huangfeihu-true': { travel: true, file: 'huangfeihu-t2', height: 143, side: 'zhou', shadow: [40, 8, 0.35], attack: { up: [-30, 20], hit: [20, 10], fol: [12, 6] } },
+  'zhou:leizhenzi-true': { travel: true, file: 'leizhenzi-t2', height: 124, side: 'zhou', foot: true, hover: 19, shadow: [22, 5, 0.25], attack: { up: [-50, 20], hit: [30, 40], fol: [18, 28] } },
+  'zhou:dengchanyu-true': { travel: true, file: 'dengchanyu-t2', height: 143, side: 'zhou', shadow: [40, 8, 0.35], attack: { up: [-60, -10], hit: [22, 10], fol: [12, 6] } },
+  'zhou:tuxingsun-true': { travel: true, file: 'tuxingsun-t2', height: 124, side: 'zhou', foot: true, shadow: [26, 6, 0.35], attack: { up: [-30, -10], hit: [24, 12], fol: [14, 8] } },
+  'zhou:zhenglun-true': { travel: true, file: 'zhenglun-t2', height: 143, side: 'zhou', shadow: [40, 8, 0.35], attack: { up: [-60, 10], hit: [32, 40], fol: [20, 28] } },
+  'zhou:jiangziya-true': { travel: true, file: 'jiangziya-t2', height: 143, side: 'zhou', shadow: [40, 8, 0.35], attack: { up: [-50, -20], hit: [14, 22], fol: [8, 12] } },
+  'zhou:huangtianhua-true': { travel: true, drop: ['nail'], file: 'huangtianhua-t2', height: 143, side: 'zhou', shadow: [40, 8, 0.35], attack: { up: [-70, 10], hit: [36, 45], fol: [22, 32] } },
+  'zhou:longji-true': { travel: true, file: 'longji-t2', height: 143, side: 'zhou', shadow: [40, 8, 0.35], attack: { up: [-50, -20], hit: [24, 10], fol: [14, 6] } },
   'hero:wuwang': { file: 'wuwang', height: 112, side: 'zhou', shadow: [26, 6, 0.45], bannerSway: 0.35, motion: true,
     // the hand's weapon, one part each (w_*); keyframes of shoulder (armU), elbow (armF), the weapon in the hand (w), the torso's lean and the head.
     // Angles add down the arm: the weapon's angle on screen is armU + armF + w (+ torso). ride: the carry at the gallop.
@@ -261,7 +261,7 @@ export async function loadKeyFigures(keys = Object.keys(KEY_FIGURES), { base = B
         o = { ...o, v: (lastPos.get(u.id) || [0, 0, 0, 0])[3] }; }
       // a true form's strike: the time of his last cast and the period between casts (strikes: id -> [cast, period]), so the
       // blow travels on past the rules' 0.3 s attack state and he gathers a little before the next one is due
-      if (figs[key].F.glide && !o.rising) { const r = strikes.get(u.id), st0 = now - (u.stateT || 0);
+      if ((figs[key].F.glide || figs[key].F.travel) && !o.rising) { const r = strikes.get(u.id), st0 = now - (u.stateT || 0);
         if (u.state === 'attack' && (!r || st0 - r[0] > 0.35)) strikes.set(u.id, [st0, r ? Math.min(2, Math.max(0.4, st0 - r[0])) : 0]);
         const r2 = strikes.get(u.id); if (r2) { let sk = now - r2[0]; const d = sk - r2[1];
           if (sk >= 0.7 && r2[1] && d > -0.22 && d < 0.35) { const f = d < 0 ? 0.6 * (d + 0.22) / 0.22 : d < 0.15 ? 0.6 : 0.6 * Math.max(0, 1 - (d - 0.15) / 0.2); sk = -0.22 + 0.25 * f; }
@@ -391,6 +391,11 @@ function unitPose(fig, u, now, x, y, o = {}) {
     P = { mount: { ...base.mount, neck: (base.mount.neck || 0) + 16 * k, body: (base.mount.body || 0) + 2 * k + 0.8 * hv, $bob: 1.2 * hv }, rider: { ...base.rider, torso: (base.rider.torso || 0) + 6 * k, arm: (base.rider.arm || 0) + 10 * k } }; }
   // a true form's strike (o.strike: seconds from his cast, set by drawUnit) takes the place of the attack keys above
   if (F.glide && o.strike != null && o.strike > -0.22 && o.strike < 0.7 && st !== 'dead') { P = godStrike(F, base, o.strike, foot); snap = o.strike > 0.1 && o.strike < 0.5 ? 1 - (o.strike - 0.1) / 0.4 : 0; }
+  // a fully rigged true form (F.travel) strikes on the same clock with its own attack keys: gathered before the cast, the blow,
+  // the follow-through, and home by 0.7 s, past the rules' 0.3 s attack state
+  else if (F.travel && o.strike != null && o.strike > -0.22 && o.strike < 0.7 && st !== 'dead' && st !== 'windup') { const s = o.strike;
+    P = s < 0 ? lerpP(base, A[0], easeS((s + 0.22) / 0.22)) : s < 0.08 ? lerpP(A[0], A[1], easeS(s / 0.08)) : s < 0.3 ? lerpP(A[1], A[2], easeS((s - 0.08) / 0.22)) : lerpP(A[2], base, easeS((s - 0.3) / 0.4));
+    snap = s > 0 && s < 0.4 ? 1 - s / 0.4 : 0; }
   if (F.glide) {   // a god does not stride: legs still, the figure floats with a slow bob and his cloud drifts (no holes where feet covered cloud)
     const M = P.mount === base.mount && P === base ? (P = { ...P, mount: { ...P.mount }, rider: { ...P.rider } }).mount : P.mount, Rr = P.rider;
     for (const k of ['legA', 'legB', 'legC', 'legD', 'legA2', 'legB2', 'legC2', 'legD2']) M[k] = 0;

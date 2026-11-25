@@ -6,10 +6,11 @@
 //       the cell's pivot at (X, Y) device px, turned by rot, kx and ky device px per unit (negative mirrors), alpha a;
 //       only the part of it from u0 to u1 across its width (drawing a stroke on, or laying it in strips along a path)
 //   W.bitmap(name)              the cell cut out as an ImageBitmap and its pivot in px: {bm, px, py, scale} (for seal.js)
-const IMG_URL = new URL('../baked/wonders.webp', import.meta.url).href, JSON_URL = new URL('../baked/wonders.json', import.meta.url).href;
-export function createWonders() {
+// createWonders('gods') loads the gods' sheet instead (baked/gods.webp + gods.json, `SET=gods node gen/fx.gen.mjs`)
+export function createWonders(name = 'wonders') {
+  const IMG_URL = new URL(`../baked/${name}.webp`, import.meta.url).href, JSON_URL = new URL(`../baked/${name}.json`, import.meta.url).href;
   let img = null, cells = null, scale = 1; const cut = new Map();
-  const loaded = Promise.all([fetch(JSON_URL).then((r) => r.json()), fetch(IMG_URL).then((r) => r.blob()).then((b) => createImageBitmap(b))]).then(([j, bm]) => { cells = j.cells; scale = j.pages.wonders.scale; img = bm; }).catch((e) => console.warn('fx: the brush sheet did not load', e));
+  const loaded = Promise.all([fetch(JSON_URL).then((r) => r.json()), fetch(IMG_URL).then((r) => r.blob()).then((b) => createImageBitmap(b))]).then(([j, bm]) => { cells = j.cells; scale = j.pages[name].scale; img = bm; }).catch((e) => console.warn('fx: the brush sheet did not load', e));
   function draw(c, name, X, Y, rot, kx, ky, a, u0 = 0, u1 = 1) {
     const C = cells && cells[name]; if (!C || a <= 0 || u1 <= u0) return;
     const cs = Math.cos(rot), sn = Math.sin(rot);

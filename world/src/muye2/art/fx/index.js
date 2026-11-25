@@ -672,17 +672,18 @@ export async function loadFx({ ky = 0.62, horizon = 0.52 } = {}) {
   // under the danger marks and the figures, so nothing that can hurt is hidden. 土行孙 has no image: the earth opens round him.
   // A treasure's evolution uses the element's aureole and gather, without an image.
   function trueForm(e) {
-    const el = e.el || GEN[e.general] || 'fire', img = e.general && CELL['mandorla_' + e.general]; if (img) figures(e.general);
+    // the 法相: every general the figures module paints (all ten since 2026-11-25), with its old mandorla where one was cut
+    const el = e.el || GEN[e.general] || 'fire', img = e.general && CELL['mandorla_' + e.general]; if (e.general) figures(e.general); const fig = img || !!e.general;      // (whether the figure has loaded is asked each frame: the module resolves once its pictures are decoded)
     if (e.general === 'tuxingsun') { earthOpens(e); return; }
     if (e.general === 'huangfeihu') banners(1.6);
-    add({ g: e.general, x: e.x, y: e.y, el, img, life: img ? 2 : 1.6, seed: frame,
-      under: img ? (o) => { const x = o.x, y = o.y, t = o.t,      /* it stands where he showed himself: a picture that slid after a running figure read as a sticker */ rise = ease(clamp((t - 0.1) / 0.35)), sinkU = clamp((t - 1.55) / 0.45), a = rise * (1 - sinkU);
-        if (a > 0) { const tall = Math.max(o.img[6] * 0.85, FIG_UNITS * 930), fit = Math.min(1, (0.72 * F.h) / (tall * F.z)); let Y = clamp(sy(y), F.h * 0.5, F.h * 0.95); const Xa = clamp(sx(x), F.w * 0.22, F.w * 0.78), top = Y - tall * fit * F.z; if (top < F.h * 0.1) Y += F.h * 0.1 - top;      // a general far off still shows himself on the sheet, on his side of it      // the taller of the mandorla and the figure      // kept on the sheet, below the HUD: no taller than 72% of it, and lower if he stands high
+    add({ g: e.general, x: e.x, y: e.y, el, img, life: fig ? 2 : 1.6, seed: frame,
+      under: fig ? (o) => { const x = o.x, y = o.y, t = o.t,      /* it stands where he showed himself: a picture that slid after a running figure read as a sticker */ rise = ease(clamp((t - 0.1) / 0.35)), sinkU = clamp((t - 1.55) / 0.45), a = rise * (1 - sinkU);
+        if (a > 0) { const tall = Math.max(o.img ? o.img[6] * 0.85 : 0, FIG_UNITS * 930), fit = Math.min(1, (0.72 * F.h) / (tall * F.z)); let Y = clamp(sy(y), F.h * 0.5, F.h * 0.95); const Xa = clamp(sx(x), F.w * 0.22, F.w * 0.78), top = Y - tall * fit * F.z; if (top < F.h * 0.1) Y += F.h * 0.1 - top;      // a general far off still shows himself on the sheet, on his side of it      // the taller of the mandorla and the figure      // kept on the sheet, below the HUD: no taller than 72% of it, and lower if he stands high
           const Yi = Y + (1 - rise) * 120 * F.z + sinkU * 60 * F.z, strong = t < 0.55 ? 1 : 1 - 0.22 * clamp((t - 0.55) / 0.4);      // stronger while it rises, then it thins
-          spr(o.img, Xa, Yi, 0, 0.85 * fit, 0.85 * fit * (1 - 0.35 * sinkU), 0.7 * a); figure(o.g, Xa, Yi, 1 - 0.35 * sinkU, strong * a, fit); } } : null,
+          if (o.img) spr(o.img, Xa, Yi, 0, 0.85 * fit, 0.85 * fit * (1 - 0.35 * sinkU), 0.7 * a); figure(o.g, Xa, Yi, 1 - 0.35 * sinkU, strong * a, fit); } } : null,
       over: (o) => { const u = o.g ? genUnit(o.g) : G && G.hero, x = u ? u.x : o.x, y = u ? u.y : o.y, X = sx(x), Y = sy(y) - 60 * F.z, t = o.t;
         if (t < 0.25) for (let j = 0; j < 10; j++) { const a = (j / 10) * TAU + 0.3, d = 260 * (1 - ease(t / 0.25)); spr(C('ray', j), X + Math.cos(a) * d * F.z, Y + Math.sin(a) * d * F.z, a + PI, 0.4, 1, 0.6 * (t / 0.25) * (1 - t / 0.25) * 4); }      // gather: hair rays converge on him
-        if (o.img) return;
+        if (o.img || (o.g && FIG.mod && FIG.mod.FAXIANG[o.g])) return;
         const open = ease(clamp((t - 0.2) / 0.3)), fade = 1 - clamp((t - 1.0) / 0.6), n = o.el === 'wood' ? 12 : o.el === 'metal' ? 24 : 14;
         if (open > 0 && fade > 0) { spr(CELL.mandorla, X, sy(y) + 6 * F.z, 0, 1.15 * open, 1.1 * open, 0.8 * fade * veil(X, Y));
           for (let j = 0; j < n; j++) { const a = (j / n) * TAU + t * 0.4, r = (90 + 60 * open) * F.z, Xj = X + Math.cos(a) * r, Yj = Y + Math.sin(a) * r * 0.85, v = veil(Xj, Yj);
@@ -698,7 +699,8 @@ export async function loadFx({ ky = 0.62, horizon = 0.52 } = {}) {
     if (FIG.mod && g) bakeFig(g);
   }
   function bakeFig(g) { const k = Math.round(FIG_UNITS * F.z * 20) / 20, b = FIG.baked[g]; if (b && b.k === k) return b; if (!FIG.mod || !FIG.mod.FAXIANG[g]) return null; const cv = FIG.mod.bakeFaxiang(g, k); return (FIG.baked[g] = { k, cv, px: FIG.mod.FAXIANG[g].pivot[0] * k, py: FIG.mod.FAXIANG[g].pivot[1] * k }); }
-  const FIG_DENSE = { huangfeihu: 0.65, dengchanyu: 0.4 };      // figures painted in the palest washes get a second pass, so they stand as strong as the others
+  // (the old figures in the palest washes took a second pass; the painted pictures of 2026-11-25 are opaque, so none does)
+  const FIG_DENSE = {};
   function figure(g, X, Y, sy_, a, fit = 1) { if (a <= 0.004) return; const b = FIG.baked[g] || bakeFig(g); if (!b) return; const s = (FIG_UNITS * F.z * fit) / b.k;
     ctx.setTransform(s, 0, 0, s * sy_, X, Y); ctx.globalAlpha = a > 1 ? 1 : a; ctx.drawImage(b.cv, -b.px, -b.py);
     const d = FIG_DENSE[g]; if (d) { ctx.globalAlpha = Math.min(1, a * d); ctx.drawImage(b.cv, -b.px, -b.py); } }
@@ -722,6 +724,7 @@ export async function loadFx({ ky = 0.62, horizon = 0.52 } = {}) {
   function generalZones() {
     const zs = G && G.zones; if (!zs) return;
     for (let i = 0; i < zs.length; i++) { const z = zs[i]; if (z.dead || !GEN[z.src]) continue; const X = sx(z.x), Y = sy(z.y), r = z.r || 120, id = z.id || i, life = z.life || 3, a = clamp(z.t / 0.15) * clamp((life - z.t) / 0.3);
+      if (glfx && (z.kind === 'storm' || (z.kind === 'hold' && z.src === 'tuxingsun'))) continue;      // the true forms' zones are painted in fx/gl/gods.js
       if (z.kind === 'storm') { spr(C('cloud', id), X, Y - 150 * F.z, Math.sin(z.t) * 0.05, r / 90, r / 110, 0.85 * a * veil(X, Y - 150 * F.z)); const ph = z.t * 3.3, slot = Math.floor(ph), u = ph - slot; if (u < 0.35) { const b = hash(id * 13 + slot) * TAU, d = Math.sqrt(hash(id * 7 + slot)) * r, Xb = sx(z.x + Math.cos(b) * d), Yb = sy(z.y + Math.sin(b) * d); chord(C('bolt', slot), Xb + 10 * F.z, Yb - 140 * F.z, Xb, Yb, 200, 0.8, (1 - u / 0.35) * a * veil(Xb, Yb), 0, clamp(u / 0.08)); } }
       else if (z.kind === 'bind') spr(C('rope', id), X, Y, 0, 1, 1, a * veil(X, Y));
       else if (z.kind === 'quake' || z.kind === 'hold' || z.kind === 'pit') { spr(C('field', id), X, Y, id, r / 100, r / 100, 0.5 * a * veil(X, Y), KY); for (let j = 0; j < 4; j++) spr(C('crack', j + id), X, Y, j * 1.6, r / 90, r / 90, 0.7 * a * veil(X, Y), KY); } }
@@ -932,12 +935,12 @@ export async function loadFx({ ky = 0.62, horizon = 0.52 } = {}) {
     if ((e.type === 'bounce' || e.type === 'catch') && mine) { ringBounce(e); return; }
     if (e.type === 'pickup') { gathered(e); return; }
     if (e.type === 'squadSkill') { squadSkill(e); return; }
-    if (e.type === 'generalSkill') { generalSkill(e); return; }
+    if (e.type === 'generalSkill') { if (!(glfx && glfx.owns(e))) generalSkill(e); return; }      // a true-form feat is painted in fx/gl/gods.js
     if ((e.type === 'cast' || e.type === 'land') && GEN[e.id]) { if (e.type === 'cast') generalBlow(e); return; }
     if (e.type === 'summon' && GEN[e.general]) figures(e.general);
     if (e.type === 'summon' || e.type === 'generalReturn') { summonMoment(e, e.type === 'generalReturn'); return; }
     if (e.type === 'generalFall') { generalFall(e); return; }
-    if (e.type === 'trueForm') { ceremony(trueForm, e, 1.3); return; }
+    if (e.type === 'trueForm') { if (!(glfx && glfx.owns(e))) ceremony(trueForm, e, 1.3); return; }      // 显圣: fx/gl/gods.js stands the 法相 up
     if (e.type === 'rankUp' || e.type === 'blessed') { if (e.type === 'rankUp') rankUp(e); return; }
     if (e.type === 'land' && TROOP[e.id] && e.id === 'strongmen') { boulderBurst(e); return; }
     if (e.side === 'shang' && e.type === 'land') { shangLand(e); return; }
