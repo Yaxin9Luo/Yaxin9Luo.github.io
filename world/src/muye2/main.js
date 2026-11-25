@@ -6,7 +6,7 @@
 //   ?perf=1         timing overlay   ?bench=1       a scripted run with a fixed build among 300 foes, for measuring
 //   ?seed=7         a fixed field
 //   ?still=1        for review stills: losing focus does not pause, and __muye.hold freezes the rules
-//   ?full=1         the whole campaign instead of the M1 run that ends at 闻仲
+//   ?m1=1           the short run that ends at 闻仲 instead of the whole campaign (the default)
 import './muye.css';
 import {createAudio} from './audio.js';
 import {createContext} from './art/render/context.js';
@@ -182,7 +182,7 @@ const audio = createAudio();
 const metaStore = createMetaStore((() => { try { return localStorage; } catch { return {getItem: () => null, setItem: () => { throw new Error('no storage'); }}; } })());
 const bars = createBars({canvas: $('marks'), top: $('bossbar')});
 let timeline = null, camp = null, cp = null;
-const fullRun = params.has('full');
+const fullRun = !params.has('m1');
 // what this run did that the end sheet tells: bosses down, codex pages opened, the furthest time
 const runLog = {down: [], spoils: [], fresh: [], merit: null, meritParts: null, tierOpened: null};
 const keys = new Set(), edge = {dash: false, pick: null, reroll: false, banish: null};
@@ -906,7 +906,7 @@ async function begin(sameSeed) {
   mode = 'play'; hideSheet(true); hudKey = buildKey = offerKey = ''; focusGame();      // at once: the first offer opens on this frame and nothing may lie over it
   last = performance.now(); acc = 0;
 }
-/** What createGame receives (SPEC-CAMPAIGN 1.6): the camp's weapon, ranks and tier; the M1 build stops at 闻仲 unless ?full=1. */
+/** What createGame receives (SPEC-CAMPAIGN 1.6): the camp's weapon, ranks and tier; the whole campaign unless ?m1=1 stops the run at 闻仲. */
 function runOptions() { const o = camp ? camp.options() : {}; if (!fullRun) o.until = 'wenzhong'; return o; }
 /** The run is over: its merit is added to the record and saved, with the codex pages it opened. Nothing is saved before this. */
 function settle() {
