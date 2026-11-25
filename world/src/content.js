@@ -264,8 +264,8 @@ export const games = [
     title: { en: 'Muye', zh: '牧野' },
     kind: { en: 'Survival battle · ink, shadow puppets and paint', zh: '割草生存 · 水墨、皮影与颜料' },
     blurb: {
-      en: 'Ride the divine horse Jiliang across the field of Muye. You only steer: treasures, troops and generals of the Investiture of the Gods fight by themselves, and every run builds differently. Keyboard.',
-      zh: '骑上神驹吉量驰骋牧野。你只管走位，封神演义里的法宝、兵阵与神将自行出手，每一局的搭配都不一样。需要键盘。',
+      en: 'The eastern campaign of King Wu in one thirty-minute battle, from the siege of Xiqi to the gates of Zhaoge. You only steer: treasures, troops and generals of the Investiture of the Gods fight by themselves, ten bosses stand in the way, and every run builds differently. Keyboard.',
+      zh: '武王东征，一局三十分钟：从西岐之围打到兵临朝歌。你只管走位，封神演义里的法宝、兵阵与神将自行出手，十位首领拦路，每一局的搭配都不一样。需要键盘。',
     },
     url: '/muye.html',
   },

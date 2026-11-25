@@ -4,15 +4,16 @@
 <meta name="portfolio-release" content="2026.09.14.3"><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#EFE7D6">
 <title>牧野 · Muye</title>
-<meta name="description" content="Muye (牧野): ride the divine horse Jiliang across the field while your treasures, troops and generals fight by themselves. Keyboard needed. 骑神马吉量纵横战场，法宝、兵阵与神将自行出手。">
+<meta name="description" content="Muye (牧野): King Wu's eastern campaign in one thirty-minute battle. You steer; treasures, troops and generals of the Investiture of the Gods fight by themselves. Keyboard needed. 武王东征，一局三十分钟：你只管走位，法宝、兵阵与神将自行出手。">
 <meta property="og:title" content="牧野 · Muye">
-<meta property="og:description" content="A survival battle in ink: ride the divine horse Jiliang while your treasures, troops and generals fight by themselves.">
+<meta property="og:description" content="King Wu's eastern campaign in one thirty-minute battle: steer, and your treasures, troops and generals fight by themselves.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Yaxin Luo">
 <style>.cannot{position:fixed;inset:0;z-index:9;display:grid;place-content:center;gap:10px;padding:24px;background:#EFE7D6;color:#14110F;font:16px/1.6 system-ui,"PingFang SC","Microsoft YaHei",sans-serif;text-align:center}.cannot b{font-size:26px}</style>
 </head>
 <body>
   <canvas id="field" tabindex="0" aria-label="Muye: the battlefield"></canvas>
+  <canvas id="marks" aria-hidden="true"></canvas>
   <div id="veil" aria-hidden="true"></div>
   <div id="hurt" aria-hidden="true"></div>
 
@@ -30,7 +31,11 @@
       <span class="tools"><button id="sound"></button><button id="lang">中文</button></span>
     </div>
   </header>
+  <div id="afflict" role="status" aria-live="polite"></div>
   <section id="build" aria-label="Build" hidden></section>
+  <section id="timeline" aria-label="Campaign" hidden><div class="tl-track"></div><p class="next" aria-live="off"></p></section>
+  <section id="bossbar" aria-live="polite"><div class="who"><span class="bseal" aria-hidden="true"></span><strong></strong><small></small></div><canvas aria-hidden="true"></canvas><span class="bphase"></span></section>
+  <div id="herald" role="status" aria-live="polite"><i class="roller l"></i><div class="paper"><img class="hface" alt="" decoding="async" hidden><small class="kicker"></small><strong></strong><span class="sub"></span><span class="extra"></span></div><i class="roller r"></i></div>
 
   <div id="banner" role="status" aria-live="polite"></div>
   <section id="offer" role="dialog" aria-modal="false" hidden>
@@ -43,8 +48,9 @@
   </section>
 
   <pre id="perf" hidden></pre>
+  <section id="camp" aria-label="Before the battle" hidden></section>
   <section id="sheet" class="sheet show" aria-live="polite"><div id="sheet-body"><p class="note">grinding ink… 正在研墨…</p></div></section>
   <noscript><div class="cannot"><b>牧野 · Muye</b><span>This game needs JavaScript. Please turn it on and reload.</span><span>这个游戏需要 JavaScript，请开启后刷新。</span><a href="/">← Yaxin Luo</a></div></noscript>
   <script nomodule>document.body.insertAdjacentHTML('beforeend','<div class="cannot"><b>牧野 · Muye</b><span>This browser is too old to run the game. A recent Chrome, Edge, Firefox or Safari will do.</span><span>这个浏览器版本太旧，无法运行游戏。请使用较新的 Chrome、Edge、Firefox 或 Safari。</span><a href="/">← Yaxin Luo</a></div>');</script>
-  <script type="module" src="/src/muye/main.js"></script>
+  <script type="module" src="/src/muye2/main.js"></script>
 </body></html>

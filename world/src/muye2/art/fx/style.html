@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>muye fx style sheet</title>
+<style>
+  html, body { margin: 0; background: #EFE7D6; color: #35302B; font: 13px/1.45 ui-monospace, Menlo, monospace; }
+  canvas { display: block; }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<!-- The style sheet of the effects (review/DESIGN.md): every stroke of the vocabulary as baked, in colour and in grey;
+     the three beats of the hero pieces with their timings; the value plan. node gen/shoot.mjs style writes review/style.webp. -->
+<script type="module">
+const atlas = await fetch('./baked/atlas.json').then((r) => r.json());
+const load = (f) => new Promise((ok) => { const i = new Image(); i.onload = () => ok(i); i.src = './baked/' + f; });
+const IMG = [await load('fx-main.webp'), await load('fx-soft.webp')], CELL = atlas.cells;
+const W = 1440, S = 0.9, cv = document.getElementById('c'), ctx = cv.getContext('2d');
+const ROWS = [
+  ['FIRE 火 · cinnabar · tongues with hooked tips leaning one way; the core left as paper; dry deep red when it dies', ['fl_0', 'fl_2', 'fl_4', 'fl_dry_0', 'drg_0', 'drg_1', 'drg_dry_0', 'drg_head_0', 'drg_tail', 'ember_0', 'ash_0', 'scorch_0', 'cover_rim', 'cover_ghost']],
+  ['WATER 水 · azurite · Ma Yuan bundles that close and part; claw crests with paper foam; the silk thick-thin, pinched where it twists', ['silk_0', 'silk_1', 'silk_tip', 'wave_0', 'wave_1', 'crest_0', 'crest_1', 'crest_big', 'spray_0', 'ripple_0']],
+  ['EARTH 土 · ink and ochre · axe-cut with the side of the brush; thrown ink; square and heavy; the lit top near paper', ['seal_block', 'seal_smear', 'seal_shadow', 'seal_print', 'splash_0', 'splash_1', 'splash_2', 'slab_0', 'crack_0', 'dust_0', 'quake_0', 'field_0']],
+  ['WOOD 木 · malachite over ink · the driest family: bark in flying white; thunder as angular folds; pointed leaves', ['bark_0', 'bark_1', 'thunder_0', 'thunder_1', 'leaf_0', 'leaf_1', 'leaf_2']],
+  ['METAL 金 · bronze gold · ruled hair lines with a white hair beside; rings at four turns of their spin; rays', ['blade_0', 'blade_1', 'ray_0', 'ray_1', 'hoop_0', 'hoop_1', 'hoop_2', 'hoop_3', 'gold_ring']],
+  ['THE BONE · pale ink laid first: the gather of an effect', ['hair_0', 'hair_1', 'hair_2']],
+];
+function cellAt(name, x, y, k, grey) { const c = CELL[name]; if (!c) return [0, 0]; const w = c[7] * k, h = c[8] * k; ctx.drawImage(IMG[c[0]], c[1], c[2], c[3], c[4], x, y, w, h); return [w, h]; }
+function text(t, x, y, size = 13, col = '#35302B', weight = '') { ctx.font = `${weight} ${size}px ui-monospace, Menlo, monospace`; ctx.fillStyle = col; ctx.fillText(t, x, y); }
+function layout(draw) { let y = 40;
+  draw && text('牧野 · the effects\' style sheet (review/DESIGN.md)', 30, y, 22, '#14110F', '600'); y += 34;
+  for (const [title, names] of ROWS) { draw && text(title, 30, y, 13, '#14110F', '600'); y += 14;
+    let x = 30, rowH = 0; const ys = y;
+    for (const n of names) { const c = CELL[n]; if (!c) continue; let w = c[7] * S, h = c[8] * S; if (x + w > W - 30) { x = 30; y += rowH + 18; rowH = 0; }
+      if (draw) { cellAt(n, x, y, S); text(n, x, y + h + 12, 10, '#6B645C'); } x += w + 18; rowH = Math.max(rowH, h + 12); }
+    y += rowH + 10;
+    if (draw) { // the same row in grey: it must still read
+      const hh = y - ys; ctx.save(); ctx.globalCompositeOperation = 'source-over'; const img = ctx.getImageData(0, ys, W, hh); const d = img.data; for (let i = 0; i < d.length; i += 4) { const l = 0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2]; d[i] = d[i + 1] = d[i + 2] = l; } ctx.putImageData(img, 0, y); ctx.restore(); text('grey', W - 70, y + 14, 11, '#6B645C'); }
+    y += (y - ys) + 26; }
+  // the three beats
+  draw && text('TIME · three beats (seconds; the gather is as long as the rules\' delay)', 30, y, 13, '#14110F', '600'); y += 22;
+  const beats = [['九龙神火罩 fire cover', [[0, 0.5, 'gather: the gold rim and a pale bell fall; char ring'], [0.5, 0.8, 'burst: dragons come down the coil'], [0.8, 3.3, 'smoulder at a third, dry; tongues come and go'], [3.3, 3.9, 'linger: rise, ash']]],
+    ['混天绫 sash', [[0, 0.09, 'gather: silk in the hand'], [0.04, 0.2, 'burst: silk unfurls; water behind'], [0.2, 0.7, 'linger: silk pulled back; water thins; ripples sink']]],
+    ['番天印 seal', [[0, 0.6, 'gather: shadow first, then the seal falls'], [0.6, 0.72, 'burst: block, print, thrown ink'], [0.72, 1.85, 'linger: the seal leaps away; ink sinks']]]];
+  const t2x = (t) => 260 + t * 280;
+  for (const [name, segs] of beats) { if (draw) { text(name, 30, y + 14, 12); const col = ['#A69F94', '#B8321F', '#6B645C', '#D3CCBE'];
+      segs.forEach(([a, b, label], i) => { ctx.fillStyle = col[i]; ctx.fillRect(t2x(a), y + 2 + i * 3, Math.max(3, t2x(b) - t2x(a)), 12); text(label, t2x(a), y + 30 + i * 13, 10, '#35302B'); }); }
+    y += 30 + segs.length * 13 + 12; }
+  if (draw) for (let s = 0; s <= 4; s++) { ctx.fillStyle = '#6B645C'; ctx.fillRect(t2x(s), y - 6, 1, 6); text(s + ' s', t2x(s) - 8, y + 8, 10, '#6B645C'); }
+  y += 30;
+  // value plan
+  draw && text('VALUE · paper is the light (0 black .. 100 white, paper about 92)', 30, y, 13, '#14110F', '600'); y += 18;
+  const vals = [['foe mass', 14], ['an effect\'s bone', 18], ['the seal\'s face, 0.1 s', 22], ['an effect\'s body', 48], ['a mark after 0.4 s', 82], ['an effect\'s light: paper', 92]];
+  if (draw) vals.forEach(([n, L], i) => { const v = Math.round(L * 2.55); ctx.fillStyle = `rgb(${v},${v},${v})`; ctx.fillRect(30 + i * 200, y, 180, 40); text(`${n}: ${L}`, 30 + i * 200, y + 56, 11); });
+  y += 80;
+  return y; }
+const H = layout(false) + 40; cv.width = W; cv.height = H; cv.style.width = W + 'px'; cv.style.height = H + 'px';
+ctx.fillStyle = '#EFE7D6'; ctx.fillRect(0, 0, W, H); layout(true); document.title = 'drawn';
+</script>
+</body>
+</html>

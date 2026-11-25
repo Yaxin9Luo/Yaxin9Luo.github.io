@@ -1,0 +1,20 @@
+<!doctype html><meta charset="utf-8"><title>ground bench</title>
+<!-- The ground's draw time, old field (bench-old-ground.js, the pre-campaign ground kept for this measure) against the
+     campaign ground, along one camera path. ?which=old|new&weather=clear|mist|rain|snow&frames=300&flush=1 -->
+<style>html,body{margin:0;background:#EFE7D6}canvas{display:block;width:100vw;height:100vh}</style>
+<canvas id="c"></canvas>
+<script type="module">
+const q = new URLSearchParams(location.search), which = q.get('which') || 'new', frames = +(q.get('frames') || 300), flush = q.get('flush') === '1';
+const mod = which === 'old' ? await import('./bench-old-ground.js') : await import('../ground.js');
+const g = await mod.loadGround(() => {}, 7); if (g.setSeed) await g.setSeed(+(q.get('seed') || 7)); if (q.get('scene') && g.setStretch) await g.setStretch(q.get('scene')); if (q.get('skip')) for (const k of q.get('skip').split(',')) g.skip.add(k); if (g.setScene && q.get('weather')) g.setScene({ weather: q.get('weather'), hour: 'day' });
+const c = document.getElementById('c'), ctx = c.getContext('2d', { willReadFrequently: flush }), D = 1, W = innerWidth, H = innerHeight; c.width = W * D; c.height = H * D;
+const KY = g.KY, times = []; let i = 0;
+function frame() {
+  const t = i / frames, cx = 1200 + t * 3600, cy = 1500 + Math.sin(t * 6.28) * 1200, z = 1;
+  const ox = W / 2 * D - cx * z, oy = H * 0.52 * D - cy * KY * z;
+  const V = { W: W * D, H: H * D, z, dpr: D, cx, cy, hw: W / 2 + 30, hh: H * 0.52 / KY + 40, sx: (x) => ox + x * z, sy: (y) => oy + y * KY * z };
+  const a = performance.now(); g.drawBase(ctx, V); g.drawTone(ctx, V); if (g.drawOver && q.get('skip') !== 'all') g.drawOver(ctx, V); if (flush) ctx.getImageData(0, 0, 1, 1); const b = performance.now();
+  if (i >= 20) times.push(b - a); if (++i < frames + 20) requestAnimationFrame(frame); else { const s = times.slice().sort((x, y) => x - y); window.__bench = { which, n: s.length, mean: s.reduce((x, y) => x + y, 0) / s.length, median: s[s.length >> 1], p95: s[Math.floor(s.length * 0.95)], max: s[s.length - 1] }; }
+}
+requestAnimationFrame(frame);
+</script>

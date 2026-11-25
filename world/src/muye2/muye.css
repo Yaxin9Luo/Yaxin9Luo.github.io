@@ -1,0 +1,624 @@
+/* Muye as a survivors-like: the page's chrome. Ink and paint are on the canvas; everything to read is crisp type on
+   paper, never over ink (lab/game-studies/ART-DIRECTION.md section 7). In this view foes walk everywhere, so every
+   piece of HUD sits on a band or a panel of the picture's own paper with a faded edge: no ruled box, no shadow.
+   Type tokens are the site's; colours are the game's: warm paper, five inks, and the five pigments of the elements. */
+@font-face{font-family:"EC Serif";font-weight:700;font-display:swap;src:url(/fonts/ec/serif-700.woff2) format("woff2")}
+@font-face{font-family:"EC Sans";font-weight:400;font-display:swap;src:url(/fonts/ec/sans-400.woff2) format("woff2")}
+@font-face{font-family:"EC Sans";font-weight:500;font-display:swap;src:url(/fonts/ec/sans-500.woff2) format("woff2")}
+@font-face{font-family:"EC Sans";font-weight:700;font-display:swap;src:url(/fonts/ec/sans-700.woff2) format("woff2")}
+@font-face{font-family:"EC Mono";font-weight:500;font-display:swap;src:url(/fonts/ec/mono-500.woff2) format("woff2")}
+:root{--paper:#EFE7D6;--slip:#F7F1E4;--ink:#14110F;--ink-2:#35302B;--ink-3:#6B645C;--ink-4:#A69F94;--ink-5:#D3CCBE;--cinnabar:#B8321F;--gold:#B08A3C;
+  --serif:"EC Serif","EC Serif SC",Georgia,"Songti SC","Noto Serif CJK SC",serif;--sans:"EC Sans","EC Sans SC",system-ui,"PingFang SC","Microsoft YaHei","Noto Sans CJK SC",sans-serif;--mono:"EC Mono","JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,"PingFang SC",monospace}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0;height:100%;overflow:hidden;background:var(--paper);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+#field{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none;outline:none}
+#hurt{position:fixed;inset:0;pointer-events:none;opacity:0;box-shadow:inset 0 0 0 4px var(--cinnabar)}
+/* while an offer is up the field is laid under a thin sheet of paper: it dims, and the slips are the only strong thing */
+#veil{position:fixed;inset:0;background:var(--paper);opacity:0;pointer-events:none;transition:opacity .16s}
+#veil.on{opacity:.58}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+:focus-visible{outline:2px solid var(--ink);outline-offset:2px;border-radius:2px}
+i{font-style:normal}
+kbd{display:inline-grid;place-items:center;min-width:22px;height:22px;padding:0 5px;border-radius:2px;border:1px solid var(--ink-3);font:500 14px var(--mono);color:var(--ink-2);background:var(--slip)}
+
+/* ---------- the top band: paper across the whole width, fading out downward ---------- */
+#top{position:fixed;left:0;right:0;top:0;height:58px;padding:9px 24px 0;display:flex;align-items:center;gap:26px;font:500 14px/1 var(--mono);color:var(--ink-2)}
+#top::before{content:"";position:absolute;inset:0 0 -22px;z-index:-1;background:var(--paper);-webkit-mask:linear-gradient(#000 62%,transparent);mask:linear-gradient(#000 62%,transparent);pointer-events:none}
+#back{color:var(--ink);text-decoration:none;white-space:nowrap}
+/* battle spirit: one line along the very top edge, the level and the count beside the health */
+#xp{position:absolute;left:0;right:0;top:0;height:5px;background:rgba(53,48,43,.14)}
+#xp-fill{position:absolute;inset:0;background:var(--gold);transform-origin:0 50%;transform:scaleX(0);will-change:transform}
+#xp.up #xp-fill{animation:xp-up .5s ease-out}
+@keyframes xp-up{0%{background:var(--cinnabar)}100%{background:var(--gold)}}
+.vital{display:flex;align-items:center;gap:9px;white-space:nowrap}
+.vital .num{color:var(--ink);font-variant-numeric:tabular-nums}
+.track{position:relative;display:block;width:150px;height:5px;background:rgba(53,48,43,.16)}
+.fill{position:absolute;inset:0;background:var(--ink-2);transform-origin:0 50%;transform:scaleX(0);will-change:transform}
+#hp .fill{background:var(--cinnabar)}
+#hp.struck .track{animation:struck .3s ease-out}
+@keyframes struck{0%{transform:translateX(-3px)}40%{transform:translateX(2px)}100%{transform:none}}
+#level{font:700 17px/1 var(--sans);color:var(--ink)}
+#timer{position:absolute;left:50%;top:14px;transform:translateX(-50%);font:500 26px/1 var(--mono);color:var(--ink);font-variant-numeric:tabular-nums;letter-spacing:.01em}
+#dash{margin-left:auto}
+#dash .track{width:54px;height:3px}#dash.ready .fill{background:var(--ink)}#dash .fill{background:var(--ink-4)}
+#dash.short{animation:struck .3s ease-out}
+#kills .num{font:700 17px/1 var(--sans)}
+.tools{display:flex;gap:16px}.tools button:hover{color:var(--ink)}
+
+/* ---------- the build: four small rows of signs at the left, on paper ---------- */
+#build{position:fixed;left:14px;top:66px;padding:10px 12px 12px;display:grid;gap:8px;font:500 14px/1 var(--mono);color:var(--ink-2)}
+#build::before{content:"";position:absolute;z-index:-1;inset:-14px -30px -22px -40px;background:var(--paper);-webkit-mask:radial-gradient(closest-side,#000 74%,transparent);mask:radial-gradient(closest-side,#000 74%,transparent);pointer-events:none}
+.brow{display:flex;align-items:center;gap:6px;min-height:30px}
+.brow>span{flex:none;width:4.4em;white-space:nowrap;color:var(--ink-3)}
+.sign{position:relative;flex:none;display:inline-grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--pig,#6B645C);color:var(--on,#FFFDF8);font:700 15px/1 var(--serif)}
+.sign.evo{box-shadow:0 0 0 2px var(--paper),0 0 0 4px var(--pig)}
+.sign.empty{background:none;border:1px dashed var(--ink-4)}
+.sign b{position:absolute;right:-5px;bottom:-5px;min-width:15px;height:15px;padding:0 2px;border-radius:8px;background:var(--paper);color:var(--ink);font:500 14px/15px var(--mono);font-size:12px;text-align:center}
+.sign.fresh{animation:fresh .5s ease-out}
+@keyframes fresh{0%{transform:scale(1.7)}60%{transform:scale(.92)}100%{transform:none}}
+.sign[data-tip]::after{content:attr(data-tip);position:absolute;left:0;top:calc(100% + 9px);z-index:5;width:max-content;max-width:320px;padding:8px 11px;background:var(--slip);border:1px solid var(--ink-5);border-left:3px solid var(--pig,#6B645C);border-radius:1px;font:400 14px/1.45 var(--sans);color:var(--ink);text-align:left;white-space:normal;opacity:0;visibility:hidden;pointer-events:none}
+.sign[data-tip]:hover::after,.sign[data-tip]:focus-visible::after{opacity:1;visibility:visible}
+
+/* ---------- calls: a level, an evolution, an elite ---------- */
+#banner{position:fixed;left:0;right:0;top:66px;width:fit-content;max-width:calc(100vw - 32px);margin:0 auto;padding:7px 26px 9px;text-align:center;font:700 clamp(22px,2.4vw,32px)/1.15 var(--serif);color:var(--ink);opacity:0;pointer-events:none}
+#banner::before{content:"";position:absolute;z-index:-1;inset:0;border-radius:14px;background:var(--paper);box-shadow:0 0 14px 12px var(--paper)}
+#banner.show{animation:banner 2s ease-out both}
+#banner.danger{color:var(--cinnabar)}
+@keyframes banner{0%{opacity:0;transform:translateY(6px)}10%{opacity:1;transform:none}75%{opacity:1}100%{opacity:0}}
+
+/* ---------- the offer: three slips, read in two seconds ----------
+   Reading order on a slip: the big sign in its pigment and the name; what is new about it (new, or the level it
+   becomes); one sentence; the pips. Everything else is small. */
+#offer{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(940px,calc(100vw - 32px));display:grid;gap:14px;justify-items:center}
+#offer-title{margin:0;font:700 26px/1.1 var(--serif);color:var(--ink);text-align:center}
+#offer-title small{display:block;margin-top:6px;font:500 14px var(--mono);color:var(--ink-2)}
+#slips{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;width:100%}
+.slip{position:relative;display:grid;grid-template-rows:auto auto 1fr auto auto;align-content:start;justify-items:start;gap:10px;min-height:292px;padding:14px 18px 16px;text-align:left;background:var(--slip);border:1px solid var(--ink-5);border-top:6px solid var(--pig);border-radius:1px;box-shadow:0 18px 34px -22px rgba(20,17,15,.5);animation:slip-in .16s ease-out both;animation-delay:calc(var(--i)*35ms);transition:transform .1s,border-color .1s}
+@keyframes slip-in{from{opacity:0;transform:translateY(-18px)}to{opacity:1;transform:none}}
+.slip:hover,.slip:focus-visible{transform:translateY(-4px);border-color:var(--pig)}
+.slip .top{display:flex;align-items:center;gap:10px;width:100%;font:500 14px var(--mono);color:var(--ink-2)}
+.slip .top kbd{min-width:28px;height:28px;font-size:16px;color:var(--ink);border-color:var(--ink-2)}
+.slip .tag{margin-left:auto;padding:3px 8px;border-radius:2px;border:1px solid var(--ink-3);color:var(--ink);font:500 14px var(--mono);white-space:nowrap}
+.slip .tag.new{background:var(--ink);border-color:var(--ink);color:var(--slip)}
+.slip .tag.evo{background:var(--pig);border-color:var(--pig);color:var(--on)}
+.slip .head{display:flex;align-items:center;gap:12px}
+.slip .head .sign{width:52px;height:52px;font-size:29px}
+.slip .head strong{font:700 23px/1.12 var(--serif);color:var(--ink)}
+.slip .head small{display:block;margin-top:3px;font:500 14px var(--mono);color:var(--ink-2)}
+.slip .what{font-size:16px;line-height:1.42;color:var(--ink)}
+.slip .cycle{font-size:14px;line-height:1.35;color:var(--ink-2);padding-left:8px;border-left:2px solid var(--pig2,var(--ink-4))}
+.slip .cycle.ready{color:var(--ink);font-weight:500}
+.pips{display:flex;gap:5px;align-items:center}
+.pips i{width:16px;height:6px;background:rgba(53,48,43,.16)}
+.pips i.on{background:var(--ink-2)}
+.pips i.next{background:var(--pig);height:10px}
+.pips i.star{width:10px;height:10px;border-radius:50%;background:none;border:2px solid var(--ink-4)}
+.pips i.star.next,.pips i.star.on{background:var(--pig);border-color:var(--pig)}
+.slip.evo{border-color:var(--pig);box-shadow:0 0 0 2px var(--pig),0 18px 34px -22px rgba(20,17,15,.5)}
+/* a pick is fast: the taken slip takes its pigment for a moment, the others are already gone */
+#slips.taken .slip{animation:slip-out .12s ease-in both}
+#slips.taken .slip.chosen{animation:slip-take .2s ease-out both}
+@keyframes slip-out{to{opacity:0;transform:translateY(14px)}}
+@keyframes slip-take{0%{background:var(--pig)}100%{opacity:0;transform:scale(.96)}}
+/* banishing: the next slip chosen is thrown out, and says so */
+#offer.banishing .slip{border-style:dashed;border-color:var(--cinnabar);border-top-style:solid}
+#offer.banishing .slip .top kbd{color:var(--cinnabar);border-color:var(--cinnabar)}
+#offer-tools{display:flex;gap:22px;align-items:center}
+#offer-tools button{position:relative;display:inline-flex;align-items:center;gap:8px;height:34px;padding:0 6px;font:500 15px var(--sans);color:var(--ink)}
+#offer-tools button b{font:500 14px var(--mono);color:var(--ink-2)}
+#offer-tools button[disabled]{color:var(--ink-3);cursor:default}#offer-tools button[disabled] kbd{color:var(--ink-4);border-color:var(--ink-4)}
+#offer.banishing #banish{color:var(--cinnabar)}
+#offer-tools button.short{animation:struck .3s ease-out}
+/* the title and the tools stand on the dimmed field: the veil is their paper */
+
+#perf{position:fixed;right:24px;bottom:16px;margin:0;font:500 12px/1.5 var(--mono);color:var(--ink-2);background:var(--slip);padding:4px 8px;border-radius:2px;pointer-events:none}
+
+/* ---------- title, pause, end: one sheet of paper laid on the picture ---------- */
+.sheet{position:fixed;left:50%;top:44%;width:min(580px,calc(100vw - 32px));max-height:calc(100vh - 32px);overflow:auto;transform:translate(-50%,-47%) rotate(-.4deg);padding:34px 40px 30px;background:var(--slip);border:1px solid var(--ink-5);border-radius:1px;box-shadow:0 28px 60px -22px rgba(20,17,15,.4);opacity:0;visibility:hidden;transition:opacity .2s,transform .2s,visibility 0s .2s}
+.sheet.show{opacity:1;visibility:visible;transform:translate(-50%,-50%) rotate(-.4deg);transition:opacity .2s,transform .2s}
+.sheet.end{width:min(640px,calc(100vw - 32px))}
+.eyebrow{margin:0 0 12px;font:500 14px var(--mono);color:var(--ink-2)}
+.sheet h1{margin:0;font:700 clamp(40px,6vw,60px)/1.05 var(--serif);color:var(--ink)}
+.sheet h1 small{font:700 .42em/1 var(--serif);color:var(--ink-2);margin-left:.6em;vertical-align:.35em}
+.sheet h2{margin:0;font:700 30px/1.15 var(--serif)}
+.tag-line{margin:12px 0 0;font-size:16px;line-height:1.5;color:var(--ink-2)}
+.how{list-style:none;margin:20px 0 0;padding:0;display:grid;gap:8px;font-size:15px;color:var(--ink)}
+.how b{font:500 14px var(--mono);color:var(--ink-2);border:1px solid var(--ink-4);border-radius:2px;padding:1px 6px;margin-right:5px}
+.tip{margin:18px 0 0;padding-left:12px;border-left:2px solid var(--cinnabar);font-size:15px;line-height:1.5;color:var(--ink)}
+.notice{margin:18px 0 0;padding:10px 12px;border:1px solid var(--cinnabar);border-radius:2px;font-size:15px;line-height:1.5;color:var(--ink)}
+.go{margin-top:24px;height:44px;padding:0 28px;border-radius:2px;background:var(--cinnabar);color:#FFFDF8;font:700 15px var(--sans)}.go:hover{filter:brightness(1.08)}
+.plain{margin-top:24px;height:44px;padding:0 18px;border-radius:2px;border:1px solid var(--ink-3);font:500 15px var(--sans);color:var(--ink)}.plain:hover{border-color:var(--ink)}
+.actions{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.actions .note{margin:24px 0 0}
+.note{margin:14px 0 0;font:500 14px/1.6 var(--mono);color:var(--ink-2)}
+.seal{position:absolute;right:34px;top:32px;width:30px;height:30px;display:grid;place-items:center;background:var(--cinnabar);color:#FFFDF8;font:700 17px/1 var(--serif);border-radius:2px}
+.settings{margin:20px 0 0;padding:14px 0 0;border:0;border-top:1px solid var(--ink-5);display:grid;gap:12px;font-size:15px;color:var(--ink)}
+.settings legend{padding:0 10px 0 0;font:500 14px var(--mono);color:var(--ink-2)}
+.settings .row{display:flex;align-items:center;gap:10px;min-height:28px;cursor:pointer}
+.settings small{font-size:14px;color:var(--ink-2);margin-left:6px}
+.settings input{accent-color:var(--cinnabar);margin:0}
+.settings input[type=checkbox]{width:18px;height:18px}
+.settings input[type=range]{flex:1;max-width:220px}
+.settings output{font:500 14px var(--mono);min-width:3ch;text-align:right}
+.settings input:disabled+span{color:var(--ink-4)}
+/* the end sheet: three numbers, then what did the work, ranked */
+.figures{display:flex;gap:34px;margin:18px 0 0}
+.figures div{display:grid;gap:5px}
+.figures b{font:500 28px/1 var(--mono);color:var(--ink);font-variant-numeric:tabular-nums}
+.figures span{font:500 14px var(--mono);color:var(--ink-2)}
+.ranked{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:7px}
+.ranked li{display:grid;grid-template-columns:28px minmax(0,11em) 1fr auto;align-items:center;gap:10px;font-size:15px}
+.ranked .name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ranked .bar{height:8px;background:rgba(53,48,43,.12)}.ranked .bar i{display:block;height:100%;background:var(--pig,#6B645C)}
+.ranked .amount{font:500 14px var(--mono);color:var(--ink-2);font-variant-numeric:tabular-nums;white-space:nowrap}
+.sheet h3{margin:22px 0 0;font:500 14px var(--mono);color:var(--ink-2)}
+.owned{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:8px}
+.owned li{display:grid;grid-template-columns:28px 1fr;gap:10px;align-items:start;font-size:14.5px;line-height:1.4}
+.owned b{font-weight:700}.owned em{font:500 14px var(--mono);font-style:normal;color:var(--ink-2);margin-left:6px}
+
+@media (max-width:1180px){.track{width:96px}#top{gap:16px}#kills-label,#xp-label,#dash-label{display:none}}
+@media (max-width:820px){#hp .num,#dash,#back{display:none}#timer{font-size:20px;top:18px}}
+@media (max-width:760px),(max-height:640px){.sheet{top:16px;transform:translate(-50%,-8px)}.sheet.show{transform:translate(-50%,0)}}
+@media (prefers-reduced-motion:reduce){.slip,#slips.taken .slip,#slips.taken .slip.chosen,.sign.fresh,#hp.struck .track,#dash.short{animation:none}.sheet,.slip,#veil{transition:none}}
+.calm .slip,.calm #slips.taken .slip,.calm #slips.taken .slip.chosen,.calm .sign.fresh,.calm #hp.struck .track,.calm #dash.short{animation:none}.calm .sheet,.calm .slip,.calm #veil{transition:none}
+/* the offer's title and its two tools are read too: each sits on its own patch of the scene's paper with a soft edge, never on ink */
+#offer-title,#offer-tools{padding:4px 18px;border-radius:14px;background:var(--paper);box-shadow:0 0 14px 12px var(--paper)}
+/* the pause sheet lists the whole build: wider, in two columns, centred so that a full build still fits the window */
+.sheet.pause{top:50%;width:min(880px,calc(100vw - 32px));transform:translate(-50%,-49%)}
+.sheet.pause.show{transform:translate(-50%,-50%)}
+.sheet.pause .owned{grid-template-columns:1fr 1fr;column-gap:28px}
+@media (max-width:760px){.sheet.pause .owned{grid-template-columns:1fr}}
+.brow>span{color:var(--ink-2)}
+/* the title leaves at once when the battle starts: the first offer opens on the same frame */
+.sheet.cut{transition:none}
+/* The offer in a small window: three slips side by side from 720 px wide, tighter; below that they are stacked as rows.
+   The offer never grows past the window: it scrolls inside itself if a window is very low. */
+#offer{max-height:calc(100vh - 16px);overflow-y:auto;overflow-x:hidden;padding:14px 0;scrollbar-width:none}
+@media (max-width:1040px),(max-height:700px){
+  #offer{gap:10px}#slips{gap:8px}
+  .slip{min-height:0;gap:8px;padding:10px 12px 12px}
+  .slip .head{gap:9px}.slip .head .sign{width:38px;height:38px;font-size:21px}.slip .head strong{font-size:19px}
+  .slip .what{font-size:15px;line-height:1.38}
+  .pips i{width:11px}
+  #offer-title{font-size:22px}
+}
+@media (max-width:719px){
+  #slips{grid-template-columns:1fr;gap:6px}
+  .slip{grid-template-rows:auto;gap:6px;padding:8px 12px 10px}
+  .slip .head .sign{width:30px;height:30px;font-size:17px}.slip .head strong{font-size:17px}
+  .slip .what{font-size:14px}
+}
+@media (max-width:820px){#top .tools{margin-left:auto}#top{gap:12px;padding-left:16px;padding-right:16px}}
+@media (max-width:719px){
+  #offer{top:calc(50% + 24px);gap:8px;padding:6px 0}
+  #offer-title small,.slip .pips{display:none}
+  .slip{gap:5px;padding:7px 12px 9px}
+}
+/* ---- section 6: generals, ranks, named foes ---- */
+/* a general is a square seal, where everything else owned is a round mark */
+.sign.gseal{border-radius:4px}
+.sign.gseal.evo{box-shadow:0 0 0 2px var(--paper),0 0 0 4px var(--pig)}
+.sign.away{background:var(--ink-4);color:var(--paper)}
+.sign.away b{color:var(--ink-2)}
+/* a troop's rank, at the sign's upper left: 卒 锐 甲 玄 神, each heavier than the last */
+.sign em{position:absolute;left:-7px;top:-7px;min-width:15px;height:15px;padding:0 1px;border-radius:2px;background:var(--paper);color:var(--ink-2);font:700 12px/15px var(--serif);font-style:normal;text-align:center}
+.sign em.r2{color:var(--ink)}
+.sign em.r3{color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink-3)}
+.sign em.r4{background:var(--ink);color:var(--paper)}
+.sign em.r5{background:var(--gold);color:var(--ink)}
+.brow{min-height:32px}
+/* the general's slip: rarer than the others. A frame inside the frame, a larger seal, the name in the large face */
+.slip.general{border-width:1px;border-top-width:6px;border-color:var(--pig)}
+.slip.general::before{content:"";position:absolute;inset:5px;border:1px solid var(--pig);opacity:.55;pointer-events:none}
+.slip.general .top .kind{color:var(--ink);font-weight:700}
+.slip.general .head .sign{width:64px;height:64px;font-size:36px;border-radius:7px}
+.slip.general .head strong{font-size:28px}
+.slip .tag.rank{border-color:var(--pig);box-shadow:inset 0 0 0 1px var(--pig);font-weight:700}
+.pips.many{gap:4px}.pips.many i{width:12px}
+.pips i.mark{height:10px}
+/* the end sheet: damage by source, grouped by kind */
+.sheet.end{width:min(900px,calc(100vw - 32px))}
+.groups{columns:2;column-gap:36px;margin-top:10px}.groups section{break-inside:avoid;margin-bottom:16px}
+.groups h4{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin:0;padding-bottom:5px;border-bottom:1px solid var(--ink-5);font:700 16px var(--serif);color:var(--ink)}
+.groups h4 b{font:500 14px var(--mono);color:var(--ink-2);font-variant-numeric:tabular-nums}
+.groups .ranked li{grid-template-columns:28px minmax(0,6.5em) 1fr auto;gap:8px}
+@media (max-width:760px){.groups{columns:1}}
+@media (max-width:1040px),(max-height:700px){.slip.general .head .sign{width:46px;height:46px;font-size:26px}.slip.general .head strong{font-size:22px}.pips.many i{width:8px}.pips.many{gap:3px}}
+@media (max-width:719px){.slip.general .head .sign{width:34px;height:34px;font-size:19px}.slip.general .head strong{font-size:19px}}
+.brow.troops,.brow.gens{gap:13px}
+/* ---- tester round 1 ---- */
+/* S-1.6: the top band is three columns, the timer in the middle one in the flow, so that nothing can lie over it at any
+   width or in either language. The health bar gives way first, then the labels. */
+#top{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:18px}
+#top .side{display:flex;align-items:center;gap:22px;min-width:0}
+#top .side.right{justify-content:flex-end}
+#top .side.left{overflow:hidden}
+#timer{position:static;transform:none;justify-self:center;align-self:center}
+#dash{margin-left:0}
+#hp{min-width:0}#hp .track{flex:0 1 150px;min-width:40px}
+@media (max-width:1560px){#xp-label{display:none}}
+@media (max-width:1180px){#top .side{gap:14px}}
+@media (max-width:820px){#top .tools{margin-left:0}#timer{font-size:20px}#top{gap:10px}#top .side{gap:10px}}
+/* S-1.7: a name on the end sheet is never cut: it may take two lines, and its column is as wide as the longest needs */
+.ranked li,.groups .ranked li{grid-template-columns:28px minmax(0,auto) minmax(40px,1fr) auto}
+.ranked .name{white-space:normal;overflow:visible;text-overflow:clip;max-width:11.5em;line-height:1.2}
+/* S-1.10: no text under 14 px. The level beside a sign and a troop's rank mark grow, and the rows make room for them */
+.sign b{min-width:17px;height:17px;border-radius:9px;font-size:14px;line-height:17px;right:-7px;bottom:-6px}
+.sign em{min-width:17px;height:17px;font-size:14px;line-height:17px;left:-9px;top:-8px}
+.brow{gap:9px;min-height:34px}.brow.troops,.brow.gens{gap:16px}
+#perf{font-size:14px}
+#top .side.left{grid-column:1}#top #timer{grid-column:2}#top .side.right{grid-column:3}
+/* ---- from the tester's stills of two full runs ---- */
+/* a named foe's banner: the name, and his title under it in the small face */
+#banner small{display:block;margin-top:4px;font:500 15px/1.3 var(--sans);color:var(--ink)}
+/* a chest's offer is not a level: a title of its own between two gold rules, and no reroll or banish */
+#offer.chest #offer-title{padding:10px 30px 9px;border-top:2px solid var(--gold);border-bottom:2px solid var(--gold);border-radius:0}
+#offer-tools[hidden]{display:none}
+/* the next free slot of a row, faint */
+.sign.empty{border-color:var(--ink-5);opacity:.8}
+/* ---- tester round 2 ---- */
+/* S-2.9: paused, no battle banner lies over the sheet; the sheet fits the window or scrolls inside it, its buttons always in reach */
+.paused #banner{visibility:hidden}
+.sheet.pause{max-height:calc(100vh - 24px);padding-bottom:0}
+.sheet.pause .actions{position:sticky;bottom:0;margin:14px -40px 0;padding:12px 40px 18px;background:var(--slip);border-top:1px solid var(--ink-5)}
+.sheet.pause .actions .go{margin-top:0}
+@media (max-height:760px){.sheet.pause{padding-top:22px}.sheet.pause h2{font-size:24px}.sheet.pause .owned{gap:5px 28px}.sheet.pause .owned li{font-size:14px;line-height:1.32}.sheet.pause h3{margin-top:12px}.sheet.pause .settings{margin-top:12px}}
+.sheet.pause .actions .plain{margin-top:0}
+/* ==================================================================== the campaign (PLAN-CAMPAIGN section 8) */
+:root{--lacquer:#1B1512;--azurite:#2F4F7A;--malachite:#3F7D6A;--gold-leaf:#D9BC74}
+/* the page's own sheet over the picture: the bosses' bars. Under the veil, so an offer dims them with the field */
+#marks{position:fixed;inset:0;width:100%;height:100%;pointer-events:none}
+/* paused over an offer (Esc): the slips wait under the sheet unseen, and come back on resume */
+.paused #offer,.paused #herald{visibility:hidden}
+
+/* ---------- the timeline: thirty minutes, three stretches, the bosses as marks ---------- */
+#timeline{position:fixed;top:50px;left:50%;transform:translateX(-50%);width:min(600px,46vw);height:40px;pointer-events:none;font:500 14px/1 var(--mono);color:var(--ink-2)}
+#timeline .tl-track{position:relative;height:100%}
+.segs{list-style:none;margin:0;padding:0}
+.seg{position:absolute;top:7px;height:6px;background:rgba(53,48,43,.16)}
+.seg+.seg{border-left:3px solid var(--paper)}
+.seg .done{position:absolute;inset:0;background:var(--ink-2);transform-origin:0 50%;transform:scaleX(0)}
+.seg span{position:absolute;left:4px;top:13px;white-space:nowrap;font:500 14px/1 var(--sans);color:var(--ink-3)}
+.seg.cur span{color:var(--ink);font-weight:700}
+.seg.cur .done{background:var(--ink)}
+.mk{position:absolute;top:10px;transform:translate(-50%,-50%)}
+.mk.small{width:9px;height:9px;border-radius:50%;background:var(--paper);border:2px solid var(--cinnabar)}
+.mk.big,.mk.final{width:20px;height:20px;display:grid;place-items:center;background:var(--cinnabar);color:#FFFDF8;font:700 13px/1 var(--serif);border-radius:2px;box-shadow:0 0 0 2px var(--paper)}
+.mk.final{background:var(--lacquer);color:var(--gold-leaf);box-shadow:0 0 0 2px var(--paper),0 0 0 3px var(--gold)}
+.mk.past{opacity:.38}.mk.small.past{background:var(--cinnabar)}
+#timeline .now{position:absolute;top:1px;width:3px;height:18px;margin-left:-1px;background:var(--ink);border-radius:1px;box-shadow:0 0 0 2px var(--paper)}
+#timeline .next{position:absolute;left:calc(100% + 18px);top:3px;margin:0;white-space:nowrap;font:500 14px/1 var(--sans);color:var(--ink-2)}
+#timeline .next strong{color:var(--ink);font-weight:700}
+#timeline .next .in{font:500 15px/1 var(--mono);color:var(--ink);font-variant-numeric:tabular-nums;margin-left:4px}
+#timeline .next em{font-style:normal;color:var(--azurite);font-weight:700}
+#timeline.soon .next .in,#timeline.soon .next strong{color:var(--cinnabar)}
+#top::before{bottom:-46px}
+@media (max-width:1180px){#timeline .next{left:auto;right:0;top:auto;bottom:-22px}}
+
+/* ---------- the long bar of a great boss, under the timeline ---------- */
+#bossbar{position:fixed;top:96px;left:50%;width:min(640px,58vw);transform:translate(-50%,-6px);display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto 28px;column-gap:12px;align-items:center;padding:8px 16px 8px 12px;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .35s,transform .35s,visibility 0s .35s}
+#bossbar.on{opacity:1;visibility:visible;transform:translate(-50%,0);transition:opacity .35s,transform .35s}
+#bossbar.on.faint{opacity:.3}      /* a warned blow lies under it: it gives way */
+#bossbar .who{grid-column:1/3;display:flex;align-items:baseline;gap:10px;min-width:0}
+#bossbar .bseal{align-self:center;flex:none;width:26px;height:26px;display:grid;place-items:center;background:var(--cinnabar);color:#FFFDF8;font:700 16px/1 var(--serif);border-radius:2px}
+#bossbar strong{font:700 21px/1.1 var(--serif);color:var(--ink);white-space:nowrap}
+#bossbar small{font:500 14px/1.2 var(--sans);color:var(--ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+#bossbar canvas{grid-column:1/3;width:100%;height:28px;display:block}
+#bossbar .bphase{display:none}
+#bossbar.enraged strong{color:var(--cinnabar)}
+#bossbar.enraged strong::after{content:" · 怒";font-size:.8em}
+#bossbar.phase canvas{animation:phase .6s ease-out}
+@keyframes phase{0%{filter:brightness(1.6)}100%{filter:none}}
+/* the lacquer tally: a black plaque with a gold-leaf rim, the name in gold leaf, a slim gold rule under it */
+#bossbar::before{content:"";position:absolute;inset:0;z-index:-1;background:var(--lacquer);clip-path:polygon(10px 0,calc(100% - 10px) 0,100% 10px,100% calc(100% - 10px),calc(100% - 10px) 100%,10px 100%,0 calc(100% - 10px),0 10px)}
+#bossbar::after{content:"";position:absolute;inset:3px;z-index:-1;border:1px solid var(--gold);clip-path:polygon(8px 0,calc(100% - 8px) 0,100% 8px,100% calc(100% - 8px),calc(100% - 8px) 100%,8px 100%,0 calc(100% - 8px),0 8px)}
+#bossbar strong{color:var(--gold-leaf)}#bossbar small{color:#D9CFBC}
+#bossbar .bseal{background:var(--gold);color:var(--lacquer)}
+/* the banners give the bar its room */
+#banner{top:100px}
+#bossbar.on~#banner{top:172px}
+
+/* ---------- the herald: a long strip unrolled across the upper middle for the campaign's great moments ---------- */
+#herald{position:fixed;left:50%;top:21%;transform:translateX(-50%);display:flex;align-items:stretch;pointer-events:none;opacity:0;visibility:hidden}
+#herald .paper{min-width:min(520px,80vw);max-width:min(820px,92vw);padding:14px 44px 16px;display:grid;justify-items:center;gap:6px;text-align:center;background:var(--slip);border-top:1px solid rgba(27,21,18,.4);border-bottom:1px solid rgba(27,21,18,.4);box-shadow:0 18px 40px -20px rgba(20,17,15,.55)}
+#herald .roller{flex:none;width:12px;margin:-7px 0;background:var(--lacquer);border-radius:3px;border-top:4px solid var(--gold);border-bottom:4px solid var(--gold)}
+#herald .kicker{font:500 14px/1 var(--mono);color:var(--ink-2);letter-spacing:.08em}
+#herald strong{font:700 clamp(30px,3.6vw,46px)/1.1 var(--serif);color:var(--ink)}
+#herald .sub{font:500 16px/1.35 var(--sans);color:var(--ink-2);max-width:40em}
+#herald .sub:empty{display:none}
+#herald.big strong,#herald.small strong,#herald.final strong,#herald.guards strong{color:var(--cinnabar)}
+#herald.final .paper,#herald.guards .paper{background:var(--lacquer);border-color:var(--gold)}
+#herald.final strong,#herald.guards strong{color:var(--gold-leaf)}#herald.final .kicker,#herald.guards .kicker,#herald.final .sub,#herald.guards .sub{color:#D9CFBC}
+#herald.march strong{color:var(--azurite)}
+#herald[data-seal]:not([data-seal=""]) .paper::before{content:attr(data-seal);position:absolute;margin:-2px 0 0 calc(-1 * min(260px,40vw));width:34px;height:34px;display:grid;place-items:center;background:var(--cinnabar);color:#FFFDF8;font:700 20px/1 var(--serif);border-radius:2px;transform:rotate(-4deg)}
+#herald.show{visibility:visible;animation:herald 3.2s ease-out both}
+#herald.show .paper{animation:unroll .5s cubic-bezier(.2,.7,.2,1) both}
+@keyframes herald{0%{opacity:0}6%{opacity:1}82%{opacity:1}100%{opacity:0}}
+@keyframes unroll{from{clip-path:inset(0 0 0 100%)}to{clip-path:inset(0 0 0 0)}}
+.calm #herald.show .paper{animation:none}
+
+/* ---------- the pause sheet: leaving loses the run, said plainly ---------- */
+.leave-warn{margin:12px 0 0;padding:9px 12px;border-left:3px solid var(--cinnabar);background:rgba(184,50,31,.07);font:500 15px/1.45 var(--sans);color:var(--ink)}
+.plain.danger{border-color:var(--cinnabar);color:var(--cinnabar)}
+
+/* ---------- the scroll case: the place before a run ---------- */
+.in-camp #top .side.left>.vital,.in-camp #build{display:none}
+#camp{position:fixed;inset:0;z-index:3;display:grid;grid-template-rows:auto 1fr;justify-items:center;padding:14px 16px 16px;background:rgba(239,231,214,.62)}
+#camp .lid{position:relative;width:min(1200px,100%);display:grid;grid-template-columns:auto auto 1fr auto;align-items:center;gap:22px;padding:12px 22px 12px 18px;background:var(--lacquer);color:#EFE7D6;border-radius:4px 4px 0 0;box-shadow:inset 0 0 0 3px var(--lacquer),inset 0 0 0 4px var(--gold)}
+#camp .lid .seal{position:static;width:34px;height:34px;font-size:20px}
+#camp .lid h1{margin:0;font:700 34px/1 var(--serif);color:#F4EEDF;white-space:nowrap}
+#camp .lid h1 small{margin-left:10px;font:700 16px/1 var(--serif);color:var(--gold-leaf)}
+/* the three tags: ivory slips hanging from the lid onto the scroll */
+#camp .tags{display:flex;gap:8px;align-self:end;margin-bottom:-24px}
+#camp .tags button{position:relative;display:flex;align-items:center;gap:8px;height:44px;padding:0 16px 0 18px;background:#E9DFC8;color:var(--ink-2);border:1px solid #CBBE9F;border-bottom:0;border-radius:3px 3px 0 0;font:700 17px/1 var(--serif);transition:transform .12s}
+#camp .tags button::before{content:"";position:absolute;left:7px;top:50%;width:4px;height:4px;margin-top:-2px;border-radius:50%;background:var(--ink-4)}
+#camp .tags button kbd{min-width:20px;height:20px;font-size:13px;background:transparent}
+#camp .tags button.on{background:var(--slip);color:var(--ink);transform:translateY(-6px);height:50px;box-shadow:0 -2px 0 var(--cinnabar) inset}
+#camp .tags button.on::before{background:var(--cinnabar)}
+#camp .tags button:hover{color:var(--ink)}
+#camp .ride{justify-self:end;display:flex;align-items:center;gap:16px}
+#camp .ride .go{margin:0;display:flex;align-items:center;gap:12px;white-space:nowrap}
+#camp .ride .go kbd{background:transparent;border-color:rgba(255,253,248,.6);color:#FFFDF8;font-size:13px;min-width:0;height:20px}
+#camp .ride .note{margin:0;color:#D9CFBC}
+#camp .purse-sm{font:500 14px var(--mono);color:#D9CFBC;white-space:nowrap}#camp .purse-sm b{color:var(--gold-leaf);font-size:17px}
+/* the handscroll: paper between two lacquer rollers with gold caps; it unrolls from the right, as a handscroll opens */
+#camp .scroll{width:min(1200px,100%);min-height:0;display:grid;grid-template-columns:16px 1fr 16px;margin-top:6px}
+#camp .roller{background:linear-gradient(90deg,#0E0B09,#3A2E27 45%,#0E0B09);border-radius:5px;margin:-6px 0;border-top:7px solid var(--gold);border-bottom:7px solid var(--gold)}
+#camp .paper{min-height:0;overflow:auto;padding:30px 36px 22px;background:var(--slip) linear-gradient(180deg,rgba(176,138,60,.06),transparent 18%,transparent 82%,rgba(176,138,60,.06));border-top:1px solid #CBBE9F;border-bottom:1px solid #CBBE9F;scrollbar-width:thin}
+#camp .scroll.unroll .paper{animation:unroll .45s cubic-bezier(.2,.7,.2,1) both}
+.calm #camp .scroll.unroll .paper{animation:none}
+#camp .panel-head{display:flex;align-items:baseline;gap:22px;flex-wrap:wrap;margin-bottom:18px}
+#camp .panel-head h2{margin:0;font:700 26px/1.1 var(--serif);color:var(--ink)}
+#camp .panel-head p{margin:0;max-width:46em;font:400 15px/1.5 var(--sans);color:var(--ink-2)}
+#camp .standin{margin:18px 0 0;font:500 14px var(--mono);color:var(--ink-3)}
+#camp h3{margin:0 0 10px;font:500 14px var(--mono);color:var(--ink-2)}
+/* weapons: five slips side by side, like strips of bamboo */
+.wslips{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px}
+.wslip{position:relative;display:grid;grid-template-rows:auto auto 1fr auto auto;justify-items:center;gap:8px;min-height:268px;padding:20px 14px 16px;text-align:center;background:#FBF7EE;border:1px solid var(--ink-5);border-top:6px solid var(--ink-3);border-radius:1px;transition:transform .12s,border-color .12s}
+.wslip:hover{transform:translateY(-3px)}
+.wslip .wsign{width:64px;height:64px;display:grid;place-items:center;border-radius:50%;background:var(--ink-2);color:#FFFDF8;font:700 36px/1 var(--serif)}
+.wslip strong{font:700 22px/1.1 var(--serif);color:var(--ink)}
+.wslip .wtext{font:400 15px/1.45 var(--sans);color:var(--ink)}
+.wslip em{font:500 14px/1.3 var(--sans);font-style:normal;color:var(--ink-2)}
+.wslip .wstate{font:500 14px var(--mono);color:var(--ink-2)}
+.wslip kbd{position:absolute;left:8px;top:8px}
+.wslip.on{border-color:var(--cinnabar);border-top-color:var(--cinnabar);box-shadow:0 0 0 2px var(--cinnabar),0 18px 30px -22px rgba(20,17,15,.55)}
+.wslip.on .wsign{background:var(--cinnabar)}.wslip.on .wstate{color:var(--cinnabar);font-weight:700}
+.wslip.locked{background:transparent;border-style:dashed;border-top-style:solid;border-top-color:var(--ink-5)}
+.wslip.locked .wsign{background:none;color:var(--ink-4);box-shadow:inset 0 0 0 2px var(--ink-5)}
+.wslip.locked strong,.wslip.locked .wtext,.wslip.locked em{color:var(--ink-3)}
+.wslip.locked .wstate{color:var(--ink);padding:3px 8px;border:1px solid var(--ink-3);border-radius:2px}
+#camp .how{display:flex;flex-wrap:wrap;gap:8px 26px;margin:22px 0 0;font-size:15px}
+/* merit: the purse, ten stats in a column, unlocks and tiers and the record beside */
+#camp .purse{display:flex;align-items:baseline;gap:8px}#camp .purse b{font:500 30px/1 var(--mono);color:var(--gold)}#camp .purse span{font:500 14px var(--mono)}
+.merit-cols{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:34px}
+.stats{list-style:none;margin:0;padding:0;display:grid;gap:4px}
+.stats li{display:grid;grid-template-columns:6.4em 86px minmax(0,1fr) 58px;align-items:center;gap:12px;min-height:34px;border-bottom:1px solid rgba(53,48,43,.1)}
+.stats .sname{font:700 16px/1.2 var(--serif);color:var(--ink)}
+.pips5{display:flex;gap:4px}.pips5 i{width:13px;height:9px;background:rgba(53,48,43,.14);transform:skewX(-12deg)}.pips5 i.on{background:var(--gold)}
+.stats .snow{font:400 14.5px/1.3 var(--sans);color:var(--ink-2)}
+.buy{height:30px;border-radius:2px;border:1px solid var(--gold);font:500 14px var(--mono);color:var(--ink)}
+.buy:not([disabled]):hover{background:var(--gold);color:var(--ink)}
+.buy::before{content:"功 ";font:700 12px var(--serif);color:var(--gold)}
+.buy[disabled]{border-color:var(--ink-5);color:var(--ink-3);cursor:default}.buy[disabled]::before{color:var(--ink-4)}
+.stats .full{font:500 14px var(--mono);color:var(--gold);text-align:center}
+.unls{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin-bottom:18px}
+.unl{display:grid;grid-template-columns:1fr auto;align-items:center;gap:2px 8px;padding:7px 10px;border:1px solid var(--ink-5);border-left:3px solid var(--gold);border-radius:1px;background:#FBF7EE;text-align:left}
+.unl .ukind{grid-column:1/3;font:500 13.5px var(--mono);color:var(--ink-3)}.unl strong{font:700 15px/1.2 var(--serif);color:var(--ink)}.unl b{font:500 14px var(--mono);color:var(--ink-2)}
+.unl.have{border-left-color:var(--malachite);background:transparent}.unl.have b{color:var(--malachite)}
+.unl[disabled]:not(.have){opacity:.62;cursor:default}
+.tiers{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+.tier{display:grid;gap:3px;padding:8px 12px;border:1px solid var(--ink-5);border-radius:1px;text-align:left;max-width:200px}
+.tier strong{font:700 15px var(--serif)}.tier span{font:400 14px/1.3 var(--sans);color:var(--ink-2)}
+.tier.on{border-color:var(--cinnabar);box-shadow:inset 0 0 0 1px var(--cinnabar)}.tier[disabled]{opacity:.55;cursor:default}
+.savenote{margin:0 0 10px;font:400 14.5px/1.45 var(--sans);color:var(--ink)}
+.saverow{display:flex;gap:8px;align-items:center}
+.saverow input{flex:1;min-width:0;height:34px;padding:0 10px;border:1px solid var(--ink-4);border-radius:2px;background:#FBF7EE;font:500 14px var(--mono);color:var(--ink)}
+.plain.sm{margin:0;height:34px;padding:0 12px;font-size:14px;white-space:nowrap}
+.savemsg{min-height:1.4em;margin:8px 0 0;font:500 14px var(--sans);color:var(--malachite)}.savemsg.bad{color:var(--cinnabar)}
+/* the codex: five kinds; the entries as seals; the page of the one chosen, with its line from the novel */
+.ckinds{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.ckind{display:flex;gap:8px;align-items:baseline;padding:6px 12px;border:1px solid var(--ink-5);border-radius:1px;font:700 15px var(--serif);color:var(--ink-2)}
+.ckind b{font:500 13.5px var(--mono);color:var(--ink-3)}
+.ckind.on{border-color:var(--ink);color:var(--ink);box-shadow:inset 0 -2px 0 var(--cinnabar)}
+.cbody{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:28px;align-items:start}
+.clist{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px}
+.centry{display:grid;justify-items:center;gap:3px;min-height:58px;padding:8px 4px;border:1px solid var(--ink-5);border-radius:1px;background:#FBF7EE;font:700 17px/1.1 var(--serif);color:var(--ink)}
+.centry small{font:500 13.5px/1.1 var(--sans);color:var(--ink-3)}
+.centry.closed{background:transparent;border-style:dashed;color:var(--ink-4)}
+.centry.on{border-color:var(--cinnabar);box-shadow:inset 0 0 0 1px var(--cinnabar)}
+.cread{position:relative;padding:4px 0 0 92px;min-height:200px}
+.cread .cbig{position:absolute;left:0;top:0;width:72px;height:72px;display:grid;place-items:center;border-radius:4px;background:var(--pig,var(--ink-2));color:#FFFDF8;font:700 42px/1 var(--serif)}
+.cread.closed .cbig{background:none;color:var(--ink-4);box-shadow:inset 0 0 0 2px var(--ink-5)}
+.cread h3{margin:0;font:700 28px/1.1 var(--serif);color:var(--ink)}.cread h3 small{font:500 16px var(--sans);color:var(--ink-2);margin-left:6px}
+.cread .ctitle{margin:6px 0 0;font:400 15px/1.4 var(--sans);color:var(--ink-2)}
+.cread blockquote{margin:18px 0 0;padding:0 0 0 14px;border-left:3px solid var(--cinnabar);font:700 23px/1.55 var(--serif);color:var(--ink)}
+.cread .cch{margin:10px 0 0;font:500 14px var(--mono);color:var(--ink-2)}
+.cread .cgloss{margin:10px 0 0;font:400 15px/1.5 var(--sans);font-style:italic;color:var(--ink-2)}
+.cread.closed p{font:400 15px/1.5 var(--sans);color:var(--ink-2)}
+/* the scroll case in a small window */
+@media (max-height:760px){#camp{padding-top:10px}#camp .lid{padding-top:9px;padding-bottom:9px}#camp .lid h1{font-size:28px}#camp .paper{padding:26px 28px 16px}.wslip{min-height:236px;padding-top:16px}.wslip .wsign{width:54px;height:54px;font-size:30px}#camp .panel-head{margin-bottom:12px}#camp .how{margin-top:14px}}
+@media (max-width:1100px){#camp .lid{grid-template-columns:auto 1fr auto;gap:14px}#camp .lid h1{display:none}.wslips{grid-template-columns:repeat(3,minmax(0,1fr))}.merit-cols,.cbody{grid-template-columns:1fr}}
+
+/* ---------- the end sheet: merit and why, how far, what opened ---------- */
+.figures .merit-fig b{color:var(--gold)}
+.end-cols{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:34px;margin-top:6px}
+.end-cols h3{margin-top:18px}
+.why{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:5px;font-size:15px}
+.why li{display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid rgba(53,48,43,.1);padding-bottom:4px}
+.why b{font:500 14px var(--mono);color:var(--ink);font-variant-numeric:tabular-nums}
+.why li.sum{border:0;font-weight:700}.why li.sum b{color:var(--gold);font-size:17px}
+.note.small{font-size:14px;margin-top:6px}
+.timeline.end-line{position:relative;height:40px;margin:14px 0 0}
+.timeline.end-line .tl-track{position:relative;height:100%}
+.timeline.end-line .now{position:absolute;top:1px;width:3px;height:18px;margin-left:-1px;background:var(--cinnabar);box-shadow:0 0 0 2px var(--slip)}
+.timeline.end-line .seg+.seg{border-left-color:var(--slip)}
+.downs{margin:6px 0 0;display:flex;flex-wrap:wrap;gap:6px 14px;font:500 14px var(--mono);color:var(--ink-2)}
+.opened{margin:6px 0 0;font-size:15px;color:var(--ink)}
+@media (max-width:760px){.end-cols{grid-template-columns:1fr}}
+.mk.final{margin-left:26px}
+#timeline .next{left:calc(100% + 50px)}
+/* the case sits under the top band (back link, sound, language stay in reach) and is only as tall as what it shows */
+.in-camp #top{z-index:4}
+#camp{padding-top:54px;grid-template-rows:auto auto;align-content:start}
+#camp .scroll{max-height:calc(100vh - 54px - 84px - 20px)}
+#camp .paper{max-height:calc(100vh - 54px - 84px - 20px)}
+.in-camp #top::before{background:var(--paper)}
+#camp .cread h3{margin:0;font:700 28px/1.1 var(--serif);color:var(--ink)}
+/* the herald stands below the long bar, and its seal sits inside its paper at the left */
+#herald{top:31%}
+#herald .paper{position:relative}
+#herald[data-seal]:not([data-seal=""]) .paper{padding-left:84px}
+#herald[data-seal]:not([data-seal=""]) .paper::before{left:30px;top:50%;margin:-20px 0 0;width:40px;height:40px;font-size:24px}
+/* a stretch's name sits in the middle of its stretch, clear of the boss seals at its ends */
+.seg span{left:50%;transform:translateX(-50%)}
+#bossbar{top:100px}
+#bossbar{padding:9px 18px 7px 14px;row-gap:6px}
+#bossbar .who{position:relative;padding-bottom:6px}
+#bossbar .who::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:linear-gradient(90deg,var(--gold),rgba(176,138,60,.55) 70%,transparent)}
+#bossbar.enraged strong{color:#E8664C}
+#herald .paper::before{content:none}
+#herald[data-seal]:not([data-seal=""]) .paper[data-seal]::before{content:attr(data-seal);position:absolute;display:grid;place-items:center;background:var(--cinnabar);color:#FFFDF8;font:700 24px/1 var(--serif);border-radius:2px;transform:rotate(-4deg)}
+.timeline.end-line{margin-right:44px}
+#bossbar.on.faint{opacity:.4}
+/* the end sheet's small timeline: a stretch's name may take two lines rather than run into the next */
+.timeline.end-line{height:58px}
+.timeline.end-line .seg span{width:calc(100% - 8px);white-space:normal;text-align:center;line-height:1.2}
+
+/* ==================================================================== splendour pass (lead, 2026-11-25: a recent computer is
+   the baseline; the place before a run, the banners and the end sheet must look splendid). Materials only: paper with grain,
+   lacquer, jade knobs on the rollers, cinnabar seals, ink. No shine, no gold flecks (the user's board rejects them). */
+:root{
+  --grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .32 0 0 0 0 .26 0 0 0 0 .18 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.24'/%3E%3C/svg%3E");
+  --fibre:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.012 .32' numOctaves='2' seed='4'/%3E%3CfeColorMatrix values='0 0 0 0 .4 0 0 0 0 .33 0 0 0 0 .22 0 0 0 .9 -.42'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)' opacity='.16'/%3E%3C/svg%3E");
+  --jade:#8FB3A0;--jade-dark:#4E7A68;--silk:#7E2418;
+}
+/* paper: grain and long fibres over the slip colour, a warmer edge */
+#camp .paper,.sheet,#herald .paper,.wslip,.unl,.centry,.tier{background-image:var(--fibre),var(--grain)}
+#camp .paper{background-color:var(--slip);box-shadow:inset 0 0 60px rgba(120,92,48,.13)}
+.sheet{box-shadow:inset 0 0 70px rgba(120,92,48,.14),0 30px 70px -24px rgba(20,17,15,.55)}
+/* the rollers: lacquered wood, and a jade knob at each end */
+#camp .roller,#herald .roller{position:relative;background:linear-gradient(90deg,#0E0B09,#4A3A2F 38%,#2A201A 62%,#0E0B09);border:0;border-radius:4px}
+#camp .roller::before,#camp .roller::after,#herald .roller::before,#herald .roller::after{content:"";position:absolute;left:50%;width:24px;height:16px;margin-left:-12px;border-radius:50%;background:radial-gradient(ellipse at 38% 35%,#C9DCCF,var(--jade) 42%,var(--jade-dark) 100%);box-shadow:0 2px 4px rgba(20,17,15,.35)}
+#camp .roller::before,#herald .roller::before{top:-12px}
+#camp .roller::after,#herald .roller::after{bottom:-12px}
+#herald .roller::before,#herald .roller::after{width:20px;height:13px;margin-left:-10px}
+#camp .roller{margin:-4px 0}
+/* the lid: deep lacquer with a faint grain, and a silk band (包首) where the scroll leaves the case */
+#camp .lid{background:linear-gradient(180deg,#2A201A,var(--lacquer) 60%,#120E0B);box-shadow:inset 0 0 0 3px var(--lacquer),inset 0 0 0 4px rgba(176,138,60,.7),0 10px 26px -14px rgba(20,17,15,.6)}
+#camp .lid::after{content:"";position:absolute;left:14px;right:14px;bottom:-9px;height:9px;z-index:-1;background:repeating-linear-gradient(135deg,var(--silk) 0 6px,#5E1A12 6px 7px,var(--silk) 7px 13px),var(--silk);border-radius:0 0 2px 2px}
+#camp .lid .seal{box-shadow:inset 0 0 0 2px rgba(255,253,248,.25);transform:rotate(-3deg)}
+#camp .tags button{background-image:var(--grain);background-color:#E9DFC8}
+#camp .tags button.on{background-color:var(--slip)}
+/* weapons: the stage gives room to the king when his figure is cut; a chosen slip is stamped with a seal */
+.wstage{display:grid;grid-template-columns:1fr;gap:20px;align-items:end}
+.wstage.with-hero{grid-template-columns:minmax(180px,230px) 1fr}
+.hero-fig{margin:0;align-self:stretch;display:grid;grid-template-rows:1fr auto;justify-items:center;position:relative}
+.hero-fig img{max-width:100%;max-height:300px;object-fit:contain;object-position:bottom;filter:drop-shadow(0 10px 14px rgba(20,17,15,.25))}
+.hero-fig figcaption{font:700 17px/1.2 var(--serif);color:var(--ink);margin-top:6px}
+.wslip{background-color:#FBF7EE;box-shadow:0 1px 0 rgba(255,255,255,.6) inset,0 14px 26px -22px rgba(20,17,15,.5)}
+.wslip .wsign{width:72px;height:72px;font-size:40px;box-shadow:inset 0 0 0 3px rgba(255,253,248,.18)}
+.wslip .stamp{position:absolute;right:10px;top:10px;width:38px;height:38px;display:grid;place-items:center;background:var(--cinnabar);color:#FFF6EC;font:700 22px/1 var(--serif);border-radius:3px;transform:rotate(8deg);opacity:.92;box-shadow:inset 0 0 0 2px rgba(255,246,236,.55),inset 0 0 0 4px var(--cinnabar);animation:stamp .28s cubic-bezier(.2,1.6,.4,1) both}
+@keyframes stamp{from{transform:rotate(8deg) scale(1.6);opacity:0}to{transform:rotate(8deg) scale(1);opacity:.92}}
+.calm .wslip .stamp{animation:none}
+.wslip.locked{background-image:var(--grain);background-color:rgba(233,223,200,.5)}
+/* codex: a bust where the figure is cut; seals otherwise */
+.centry.has-face{grid-template-rows:56px auto auto;padding-top:4px}
+.centry img{width:56px;height:56px;object-fit:cover;object-position:top;border-radius:50%;background:#E9DFC8;box-shadow:inset 0 0 0 1px var(--ink-5)}
+.cread.with-bust{padding-left:168px}
+.cread .cbust{position:absolute;left:0;top:-8px;width:150px;max-height:220px;object-fit:contain;object-position:top;filter:drop-shadow(0 10px 12px rgba(20,17,15,.2))}
+.cread blockquote{font-size:25px}
+/* the herald: a wider strip, the name larger, an ink haze behind; a boss's own face rises above the strip at the left */
+#herald::before{content:"";position:absolute;inset:-40px -80px;z-index:-1;background:radial-gradient(closest-side,rgba(20,17,15,.28),transparent);pointer-events:none}
+#herald .paper{min-width:min(640px,84vw);padding:18px 64px 20px;background-color:var(--slip)}
+#herald strong{font-size:clamp(38px,4.4vw,58px);letter-spacing:.04em}
+#herald.big strong,#herald.small strong{text-shadow:0 1px 0 rgba(255,246,236,.6)}
+#herald.face .paper{padding-left:190px}
+#herald .hface{position:absolute;left:18px;bottom:0;height:150%;max-height:230px;width:auto;object-fit:contain;object-position:bottom;filter:drop-shadow(0 8px 10px rgba(20,17,15,.3))}
+#herald.show .hface{animation:rise .6s cubic-bezier(.2,.8,.2,1) both .12s}
+@keyframes rise{from{transform:translateY(18px);opacity:0}to{transform:none;opacity:1}}
+.calm #herald.show .hface{animation:none}
+/* the end sheet: held between two rollers, stamped 捷 or 败 */
+.sheet.end{padding-left:52px;padding-right:52px;overflow:visible}
+.sheet.end::before,.sheet.end::after{content:"";position:absolute;top:-10px;bottom:-10px;width:16px;border-radius:5px;background:linear-gradient(90deg,#0E0B09,#4A3A2F 38%,#2A201A 62%,#0E0B09)}
+.sheet.end::before{left:-8px}.sheet.end::after{right:-8px}
+.endseal{position:absolute;right:42px;top:30px;width:64px;height:64px;display:grid;place-items:center;background:var(--cinnabar);color:#FFF6EC;font:700 40px/1 var(--serif);border-radius:4px;transform:rotate(-6deg);box-shadow:inset 0 0 0 3px rgba(255,246,236,.5),inset 0 0 0 6px var(--cinnabar);opacity:.94;animation:stamp-end .35s cubic-bezier(.2,1.6,.4,1) both .25s}
+.endseal.lost{background:var(--ink-2);box-shadow:inset 0 0 0 3px rgba(255,246,236,.35),inset 0 0 0 6px var(--ink-2)}
+@keyframes stamp-end{from{transform:rotate(-6deg) scale(1.8);opacity:0}to{transform:rotate(-6deg) scale(1);opacity:.94}}
+.calm .endseal{animation:none}
+.sheet.end h2{font-size:38px}
+.figures .merit-fig b{font-size:34px}
+@media (max-height:699px){.sheet.end{overflow:auto}}
+/* tuned after the first stills: slips and seals carry grain only, never the fibre; an unmet codex entry is a blank seal */
+.wslip,.unl,.centry,.tier{background-image:var(--grain)}
+.wslip.locked{background-image:none;background-color:rgba(233,223,200,.32)}
+.centry.closed small{display:none}
+.centry.closed{font-size:20px;color:var(--ink-5);place-content:center}
+/* the herald's portrait keeps to its own column; the words never run under it */
+#herald.face .paper{padding-left:214px;justify-items:start;text-align:left}
+#herald .hface{left:16px;max-width:184px;height:auto;max-height:240px;bottom:0}
+/* the end sheet scrolls inside itself again when it is long; its rollers are its side edges */
+.sheet.end{overflow:auto;padding-left:44px;padding-right:44px;border-left:15px solid #2A201A;border-right:15px solid #2A201A;border-image:linear-gradient(180deg,#1B1512,#4A3A2F 18%,#2A201A 50%,#4A3A2F 82%,#1B1512) 1;border-top-color:var(--ink-5);border-bottom-color:var(--ink-5)}
+.sheet.end::before,.sheet.end::after{content:none}
+/* the weapon in the HUD is lacquer with a bronze character, not a round pigment mark like a treasure */
+.sign.wpn{border-radius:4px;background:var(--lacquer);color:var(--gold-leaf);box-shadow:inset 0 0 0 1px var(--gold)}
+.sheet.end{top:50%}
+.sheet.end.show{transform:translate(-50%,-50%)}
+/* a locked weapon's price: the word on its own small line, the price beneath, never broken mid-way */
+.wslip.locked .wstate{display:grid;justify-items:center;gap:2px;padding:4px 10px;white-space:nowrap}
+.wslip.locked .wstate i{font:500 14px var(--sans);color:var(--ink-2)}
+.wslip.locked .wstate b{font:500 17px var(--mono);color:var(--ink)}
+/* the unroll's clip holds only while it plays (fill backwards): after it, a portrait may rise above the strip */
+#herald.show .paper{animation:unroll .5s cubic-bezier(.2,.7,.2,1) backwards}
+/* ---------- what afflicts the hero: chips under the health bar, the build panel steps down to make room ---------- */
+#afflict{position:fixed;left:24px;top:54px;display:flex;flex-wrap:wrap;gap:6px;max-width:min(560px,40vw);pointer-events:none}
+#afflict:empty{display:none}
+.ail{display:inline-flex;align-items:center;gap:7px;height:28px;padding:0 10px 0 3px;border-radius:2px;background:var(--lacquer);color:#F4EEDF;box-shadow:0 0 0 1px rgba(176,138,60,.55),0 6px 14px -8px rgba(20,17,15,.6);animation:ail-in .22s ease-out both}
+.ail i{width:22px;height:22px;display:grid;place-items:center;background:var(--cinnabar);color:#FFF6EC;font:700 14px/1 var(--serif);border-radius:2px}
+.ail b{font:700 14px/1 var(--sans)}
+.ail em{font:500 14px/1 var(--mono);font-style:normal;color:#D9CFBC;font-variant-numeric:tabular-nums}
+.ail-dazzled i{background:var(--gold);color:var(--lacquer)}.ail-weak i{background:var(--malachite)}.ail-dizzy i{background:var(--azurite)}
+@keyframes ail-in{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.calm .ail{animation:none}
+.afflicted #build{top:92px}
+#hp.bleeding .fill{animation:bleed 1s ease-in-out infinite}
+@keyframes bleed{50%{background:#7E1A0E}}
+.calm #hp.bleeding .fill{animation:none}
+/* a treasure Kong Xuan's light has taken: grey, struck through, its count of seconds where its level was */
+.sign.taken{background:var(--ink-5);color:var(--ink-3);box-shadow:inset 0 0 0 2px var(--ink-4)}
+.sign.taken::before{content:"";position:absolute;left:3px;right:3px;top:50%;height:2px;background:var(--ink-3);transform:rotate(-35deg)}
+.sign.taken b{color:var(--cinnabar)}
+/* the chips stand in a column under the health bar, clear of the timeline; the build panel steps down by their rows */
+#afflict{flex-direction:column;align-items:flex-start;max-width:280px;top:56px;gap:5px}
+.afflicted #build{top:calc(70px + var(--ail-rows,0) * 33px)}
+.ail em{white-space:nowrap}
+#afflict{max-width:none}
+#herald strong{white-space:nowrap}
+#herald .paper{max-width:92vw}
+
+/* ---------- spoils (SPEC-CAMPAIGN 2.11): their own row, a ceremony greater than a chest's, the codex, the end sheet ---------- */
+.sign.spoil{border-radius:3px;background:var(--lacquer);color:var(--gold-leaf);box-shadow:inset 0 0 0 1px var(--gold),0 0 0 1px rgba(184,50,31,.55);font-family:var(--serif)}
+#build .brow.spoils{flex-wrap:wrap;max-width:300px}
+#build .reach{font:500 12px/1.2 var(--sans);color:var(--ink-2);white-space:nowrap;align-self:center}
+#herald .extra{font:600 15px/1.3 var(--sans);color:var(--cinnabar)}
+#herald .extra:empty{display:none}
+#herald.show{animation-duration:var(--herald-ms,3.2s)}
+#herald.spoil .paper{background-color:var(--lacquer);border-top:2px solid var(--gold);border-bottom:2px solid var(--gold);min-width:min(600px,86vw);padding-top:18px;padding-bottom:20px}
+#herald.spoil strong{color:var(--gold-leaf);font-size:clamp(36px,4.2vw,54px)}
+#herald.spoil .kicker{color:#D9CFBC;letter-spacing:.14em}
+#herald.spoil .sub{color:#EFE7D6;max-width:34em}
+#herald.spoil .extra{color:#F0B9A8}
+#herald.spoil.big-spoil .paper{box-shadow:0 0 0 4px rgba(176,138,60,.28),0 22px 50px -18px rgba(20,17,15,.7)}
+.calm #herald.spoil.show{animation-duration:var(--herald-ms,3.2s)}
+.cbig.spoil{background:var(--lacquer)!important;color:var(--gold-leaf)!important;box-shadow:inset 0 0 0 2px var(--gold);border-radius:4px}
+.cread .ctext{font:500 15px/1.5 var(--sans);color:var(--ink);max-width:34em;margin:4px 0 10px}
+.spoils-end{list-style:none;margin:0 0 12px;padding:0;display:flex;flex-wrap:wrap;gap:8px 18px}
+.spoils-end li{display:flex;gap:8px;align-items:center}
+.spoils-end li span{display:grid;gap:2px}.spoils-end li b{font:600 15px/1.2 var(--serif)}.spoils-end li em{font:500 12px/1.2 var(--sans);color:var(--ink-2);font-style:normal}
+/* a spoil's scroll: held in the middle while the field stands still, then it slides up to the top and play resumes under it */
+#herald.spoil{transition:top .45s cubic-bezier(.3,.7,.2,1)}
+#herald.spoil.up{top:112px}      /* its roller knobs clear the timeline's stretch names */
+#bossbar.on~#herald.spoil.up{top:188px}
+.calm #herald.spoil{transition:none}
+#herald.spoil.gone{opacity:0 !important;transition:top .45s cubic-bezier(.3,.7,.2,1),opacity .25s}
