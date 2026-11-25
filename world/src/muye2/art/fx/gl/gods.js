@@ -32,6 +32,17 @@ export function createGods(ctx, W = createWonders(), { ink = null, kick = () => 
   const sheet = (n) => (n.charCodeAt(0) === 103 ? GW : W0);
   // 泰山 (gen/tai.gen.mjs): a picture of its own, painted with the field's ink-wash engine; its foot sits at TAI_FOOT of its height
   let TAI = null; const TAI_FOOT = 868 / 896;
+  // 杨戬's changes (gen/beasts.prep.mjs): six freehand ink-wash animals, generated and cut out; how long each stands in world units
+  const BEAST_OF = { whound_0: 'hound', gtiger: 'tiger', ghawk: 'hawk', gmarten: 'marten', gcrane: 'crane', gserpent: 'serpent' }, BEAST_LEN = { hound: 260, tiger: 280, hawk: 230, marten: 210, crane: 260, serpent: 170 };
+  let BEASTS = null;
+  // the wonders (gen/pics.prep.mjs): 哪吒's weapons, 姜子牙's list, banner and whip, 龙吉's wave and vase, painted ink-wash pictures
+  let PICS = null;
+  fetch(new URL('../baked/pics/pics.json', import.meta.url).href).then((r) => r.json()).then(async (meta) => { const img = {}; for (const n of Object.keys(meta)) { img[n] = await createImageBitmap(await (await fetch(new URL(`../baked/pics/${n}.webp`, import.meta.url).href)).blob()); if (ctx.prewarm) ctx.prewarm(img[n]); warm.push(img[n]); } PICS = { meta, img }; }).catch((e) => console.warn('gods: the wonders did not load', e));
+  // draw a picture with its ink centre at (X, Y) device px, turned by rot, `len` device px across its width (ky: its height
+  // over that scale), mirrored when flip < 0; only from u0 to u1 of its width (a list unrolling, a spear drawn on). False if not loaded.
+  function pic(n, X, Y, rot, len, a, flip = 1, u0 = 0, u1 = 1, ky = 1) { const bm = PICS && PICS.img[n]; if (!bm || a <= 0.004 || u1 <= u0) return !!bm; const M = PICS.meta[n], k = len / M.w, cs = Math.cos(rot), sn = Math.sin(rot);
+    ctx.setTransform(cs * k * flip, sn * k * flip, -sn * k * ky, cs * k * ky, X, Y); ctx.globalAlpha = Math.min(1, a); const sx = M.w * u0, sw = M.w * (u1 - u0); ctx.drawImage(bm, sx, 0, sw, M.h, sx - M.cx, -M.cy, sw, M.h); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 1; return true; }
+  fetch(new URL('../baked/beasts/beasts.json', import.meta.url).href).then((r) => r.json()).then(async (meta) => { const img = {}; for (const n of Object.keys(meta)) { img[n] = await createImageBitmap(await (await fetch(new URL(`../baked/beasts/${n}.webp`, import.meta.url).href)).blob()); img[n].noMip = false; if (ctx.prewarm) ctx.prewarm(img[n]); warm.push(img[n]); } BEASTS = { meta, img }; }).catch((e) => console.warn('gods: the changes did not load', e));
   // 地裂 (gen/chasm.gen.mjs): the earth opened, painted with the same engine; centred, 520 units across at 1.4 px a unit
   let CHASM = null; fetch(new URL('../baked/gchasm.webp', import.meta.url).href).then((r) => r.blob()).then((b) => createImageBitmap(b)).then((bm) => { CHASM = bm; if (ctx.prewarm) ctx.prewarm(bm); warm.push(bm); }).catch((e) => console.warn('gods: 地裂 did not load', e));
   fetch(new URL('../baked/gtai.webp', import.meta.url).href).then((r) => r.blob()).then((b) => createImageBitmap(b)).then((bm) => { TAI = bm; if (ctx.prewarm) ctx.prewarm(bm); warm.push(bm); }).catch((e) => console.warn('gods: 泰山 did not load', e));
@@ -126,6 +137,7 @@ export function createGods(ctx, W = createWonders(), { ink = null, kick = () => 
   const STRIKE = { arc: 0.34, hound: 0.24, line: 0.24, bindOne: 0.2, cone: 0.22, charge: 0.3, command: 0.74, snort: 0.2, vase: 0.5, nail: 0.18 };
   const LIFE = { arc: 2.4, hound: 2.4, line: 2.2, bindOne: 2.6, cone: 1.8, charge: 2.4, command: 2.4, snort: 1.8, vase: 2.4, nail: 2.2 };
   const NEZHA8 = ['gspear_0', 'gsword_0', 'wring', 'gbrick', 'gspear_1', 'gsword_1', 'gsilk', 'gcage'];
+  const NEZHA_PIC = ['spear', 'sword', 'ring', 'brick', 'spear', 'sword', 'sash', 'cage'];
   function picks(x, y, R, n, cone = null) { const fs = (G && G.foes) || [], out = [];
     for (const f of fs) { if (f.state === 'dead') continue; const dx = f.x - x, dy = f.y - y, d = Math.hypot(dx, dy); if (d > R) continue;
       if (cone) { let da = Math.atan2(dy, dx) - cone[0]; da = Math.atan2(Math.sin(da), Math.cos(da)); if (Math.abs(da) > cone[1]) continue; } out.push({ x: f.x, y: f.y, id: f.id, d }); }
@@ -173,10 +185,15 @@ export function createGods(ctx, W = createWonders(), { ink = null, kick = () => 
             if (t > T0 - 0.05 && close < 1) ribbon(c, 'gsilk_0', (q) => P(gx + Math.cos(q * TAU + spin) * r, gy + Math.sin(q * TAU + spin) * r, 30), 0.55 * z, (1 - close) * Math.min(1, (t - T0 + 0.05) / 0.1), 0, 1, 24, null);
             for (let k = 0; k < 8; k++) { const [x, y] = wAt(k); if (t > T0 + 0.5 && !o['s' + k]) o['s' + k] = [x, y]; if (o['s' + k]) shockAt(c, V, o['s' + k][0], o['s' + k][1], T0 + 0.5, t, 0.65); }
             break; }
+          // a blade points out from the wheel's centre as seen on screen, and is never longer than reaches back to it (the wheel is flattened by the view)
+          const [CX, CY] = P(gx, gy, 50), blade = (n, X, Y, L, A) => { const dx = X - CX, dy = Y - CY, d = Math.hypot(dx, dy) || 1; return pic(n, X, Y, Math.atan2(dy, dx), Math.min(L, 1.05 * d), A); };
           for (let k = 0; k < 8; k++) { const n = NEZHA8[k], t0 = (k / 8) * T0 * 0.85; if (t < t0) continue;
             const shown = clamp((t - t0) / 0.06), [x, y, b] = wAt(k), [X, Y] = P(x, y, 50), big = t < T0 ? 0.32 : 0.32 + 0.3 * open * (1 - close), a = shown * (1 - close), rot = b + Math.PI / 2;
             // fire dragged behind each weapon as the wheel turns
             if (t > T0 && close < 1) ribbon(c, 'wfanfire_0', (q) => { const [x2, y2] = wAt(k, -0.5 * (1 - q)); return P(x2, y2, 50); }, 0.3 * z, 0.5 * (1 - close) * open, 0, 1, 6, V);
+            const PK = NEZHA_PIC[k], A8 = a * veil(V, X, Y), L8 = (big / 0.62) * z * Math.min(1, r / 170);
+            // the painted weapons (generated ink references), each by its own law: blades point out along the wheel, the ring faces us, the sash lies along the turn, the fire cover stands
+            if (PK === 'ring' ? pic('ring', X, Y, t * 3, 120 * L8, A8) : PK === 'cage' ? pic('cage', X, Y - 20 * L8, 0, 120 * L8, A8) : PK === 'brick' ? pic('brick', X, Y, rot * 0.1, 105 * L8, A8) : PK === 'sash' ? pic('sash', X, Y, rot, 240 * L8, A8) : blade(PK, X, Y, (PK === 'spear' ? 235 : 195) * L8, A8)) continue;
             if (n === 'wring') W.draw(c, 'wringt_0', X, Y, t * 8, big * 1.4 * z, big * 1.4 * z, a * veil(V, X, Y));
             else if (n === 'gcage') W.draw(c, 'gcage', X, Y + 30 * z, 0, big * 0.6 * z, big * 0.6 * z, a * veil(V, X, Y));
             else if (n === 'gbrick') W.draw(c, 'gbrick', X, Y + 20 * z, rot * 0.1, big * 0.9 * z, big * 0.9 * z, a * veil(V, X, Y));
@@ -188,13 +205,19 @@ export function createGods(ctx, W = createWonders(), { ink = null, kick = () => 
           const ps = o.picks.length ? o.picks : [{ x: gx + 300, y: gy }], SIX = ['whound_0', 'gtiger', 'ghawk', 'gmarten', 'gcrane', 'gserpent'], FLY = { ghawk: 1, gcrane: 1 };
           if (ground) { land(o, t, 8); const s = clamp(t / 0.18); D(c, `gsplash_${o.v}`, V.sx(gx), V.sy(gy), 0, 0.6 * z * s, 0.6 * z * s * V.KY / 0.55, 1 - clamp((t - 0.3) / 0.6));
             for (let k = 0; k < 6; k++) { const p = at(ps[k % ps.length]); shockAt(c, V, p.x, p.y, T0 + 0.3 + k * 0.03, t, 0.7); } break; }
-          for (let k = 0; k < 6; k++) { const n = SIX[k], p = at(ps[k % ps.length]), tk = t - k * 0.03, b = (k / 6) * TAU;
+          for (let k = 0; k < 6; k++) { const n = SIX[k], f0 = at(ps[k % ps.length]), tk = t - k * 0.03, b = ((k + 0.5) / 6) * TAU, fd = Math.hypot(f0.x - gx, f0.y - gy);
+            // each leaps out its own way, at least 260 out (a foe too near him would keep the six in a heap over him)
+            const p = fd >= 220 ? f0 : { x: gx + Math.cos(b) * 260, y: gy + Math.sin(b) * 200 };
             // out of him (0 to T0), the leap (T0 to T0 + 0.3), the strike held (to + 0.5), and back into him (+ 0.5 to + 0.85)
             let x, y, lift, sc, a, dir;
             if (tk < T0) { const q = ease(clamp(tk / T0)); x = gx + Math.cos(b) * 70 * q; y = gy + Math.sin(b) * 45 * q; lift = 70 + 40 * q; sc = 0.25 + 0.3 * q; a = q; dir = Math.cos(b) < 0 ? -1 : 1; }
             else if (tk < T0 + 0.5) { const q = ease(clamp((tk - T0) / 0.3)), x0 = gx + Math.cos(b) * 70, y0 = gy + Math.sin(b) * 45; x = x0 + (p.x - x0) * q; y = y0 + (p.y - y0) * q; lift = (FLY[n] ? 150 : 90) * Math.sin(Math.PI * q) + 30 * (1 - q) + 20; sc = 0.55 + 0.25 * Math.sin(Math.PI * q); a = 1; dir = p.x < x0 ? -1 : 1; }
             else { const q = ease(clamp((tk - T0 - 0.5) / 0.35)); x = p.x + (gx - p.x) * q; y = p.y + (gy - p.y) * q; lift = 20 + (FLY[n] ? 120 : 60) * Math.sin(Math.PI * q); sc = 0.55 * (1 - 0.7 * q); a = 1 - q * q; dir = gx < p.x ? -1 : 1; }
-            if (a <= 0.01) continue; const [X, Y] = P(x, y, lift); const kk = sc * (n === 'gserpent' ? 0.9 : n === 'ghawk' ? 0.95 : 1.3) * z; W.draw(c, n, X, Y, 0, dir * kk, kk, a * veil(V, X, Y) * (tk < T0 ? 1 : gclear(X, Y))); }      // once out of him, thinned round him so he stays in view
+            if (a <= 0.01) continue; const [X, Y] = P(x, y, lift), A = a * veil(V, X, Y) * (tk < T0 ? 1 : gclear(X, Y)), bn = BEAST_OF[n], bm = BEASTS && BEASTS.img[bn];
+            if (bm) {      // the painted beast (gen/beasts.prep.mjs): its length in world units, tilted along its leap, mirrored to face the way it goes
+              const M = BEASTS.meta[bn], k2 = (BEAST_LEN[bn] / M.w) * sc * 1.8 * z, tilt = tk >= T0 && tk < T0 + 0.3 ? (Math.cos(Math.PI * clamp((tk - T0) / 0.3)) * -0.22) * dir : 0;
+              ctx.setTransform(Math.cos(tilt) * k2 * dir, Math.sin(tilt) * k2, -Math.sin(tilt) * k2 * dir, Math.cos(tilt) * k2, X, Y); ctx.globalAlpha = Math.min(1, A); ctx.drawImage(bm, -M.cx, -M.cy); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 1; }
+            else { const kk = sc * (n === 'gserpent' ? 0.9 : n === 'ghawk' ? 0.95 : 1.3) * z; W.draw(c, n, X, Y, 0, dir * kk, kk, A); } }      // (the brush cell while the pictures load); once out of him, thinned round him so he stays in view
           break; }
         case 'line': {         // 雷震子: the wings beat (two great winds), lightning down the line, the staff splits the ground
           const L = o.length || 380, d = o.dir || 0, pt = (f) => [o.x + Math.cos(d) * L * f, o.y + Math.sin(d) * L * f], end = o.smash || { x: pt(1)[0], y: pt(1)[1] };
@@ -252,20 +275,23 @@ export function createGods(ctx, W = createWonders(), { ink = null, kick = () => 
         case 'command': {      // 姜子牙 金台拜将: the banner rises by him; the investiture list unrolls over the named foe; its slips fall and
           // stand round him; then the whip comes down on him: the peak, held. Gold threads of his command run to every squad.
           const p = at(o.at2), [NX, NY] = P(p.x, p.y, 40), up = ease(clamp(t / 0.22)), cw = ctx.canvas.width, ch = ctx.canvas.height;
-          const Wd = 760 * z, SX0 = Math.max(16, Math.min(cw - Wd - 16, NX - Wd * 0.5)), SY = Math.max(ch * 0.16, NY - 260 * z);
+          const Wd = 620 * z, SX0 = Math.max(16, Math.min(cw - Wd - 16, NX - Wd * 0.5)), SY = Math.max(ch * 0.16, NY - 260 * z);
           if (ground) { land(o, t, 13); shockAt(c, V, p.x, p.y, T0, t, 1.5);
             if (t > 0.2) squads((x, y) => { const [X0, Y0] = P(gx, gy), [X1, Y1] = P(x, y), C = W.cell('gthread_0'), L2 = Math.hypot(X1 - X0, Y1 - Y0); if (C) D(c, `gthread_${(x | 0) & 1}`, X0, Y0, Math.atan2(Y1 - Y0, X1 - X0), L2 / C[7], 0.9 * z, 0.9 * (1 - clamp((t - 1.6) / 0.6)), 0, clamp((t - 0.2) / 0.25)); });
             break; }
-          if (t < 1.3) { const [X, Y] = P(gx + 36, gy, 0); D(c, 'wflag', X, Y, Math.sin(clock * 2) * 0.03, 0.4 * z, 0.4 * z * up, (1 - clamp((t - 1) / 0.3)) * veil(V, X, Y - 120 * z)); }
+          if (t < 1.3) { const [X, Y] = P(gx + 36, gy, 0), fa = (1 - clamp((t - 1) / 0.3)) * veil(V, X, Y - 120 * z);
+            if (!pic('banner', X + 40 * z, Y - 105 * z * up, Math.sin(clock * 2) * 0.03, 160 * z, fa * gclear(X + 40 * z, Y - 105 * z), 1, 0, 1, up)) D(c, 'wflag', X, Y, Math.sin(clock * 2) * 0.03, 0.4 * z, 0.4 * z * up, (1 - clamp((t - 1) / 0.3)) * veil(V, X, Y - 120 * z)); }
           if (t > 0.18 && t < 1.4) { const q = ease(clamp((t - 0.18) / 0.3)), C = W.cell('gscroll'), fade = 1 - clamp((t - 1.05) / 0.35);
-            D(c, 'gscroll', SX0, SY, 0, Wd / C[7], 0.5 * z, fade * boxVeil(V, SX0, SY - 60 * z, SX0 + Wd * q, SY + 60 * z), 0, q); }
+            const SA = fade * boxVeil(V, SX0, SY - 60 * z, SX0 + Wd * q, SY + 60 * z);
+            if (!pic('scroll', SX0 + (PICS ? PICS.meta.scroll.cx : 0) * Wd / 900, SY, 0, Wd, SA, 1, 0, Math.max(0.12, q), 0.8)) D(c, 'gscroll', SX0, SY, 0, Wd / C[7], 0.5 * z, fade * boxVeil(V, SX0, SY - 60 * z, SX0 + Wd * q, SY + 60 * z), 0, q); }
           // the slips: seven, out of the list, falling to stand in a ring round him (the 七箭书's seven nails)
           for (let k = 0; k < 7; k++) { const tk = t - 0.42 - k * 0.03; if (tk < 0 || tk > 1.1) continue; const q = ease(clamp(tk / 0.2)), b = (k / 7) * TAU + 0.3;
             const XA = SX0 + Wd * (0.2 + 0.6 * (k / 6)), YA = SY + 40 * z, XB = NX + Math.cos(b) * 70 * z, YB = NY - 120 * z + Math.sin(b) * 34 * z;
             D(c, `gslip_${k % 2}`, XA + (XB - XA) * q, YA + (YB - YA) * q, (1 - q) * (k % 2 ? 0.5 : -0.5) + Math.sin(b) * 0.08, 0.55 * z, 0.55 * z, (1 - clamp((tk - 0.8) / 0.3)) * veil(V, XB, YB + 60 * z)); }
           // the whip: down on him from above, the peak of the feat
-          if (t > T0 - 0.1 && t < T0 + 0.45) { const s = clamp((t - T0 + 0.1) / 0.1), C = W.cell('wlash_0'), X0 = NX - 340 * z, Y0 = NY - 300 * z, len = Math.hypot(NX - X0, NY - Y0);
-            D(c, 'wlash_0', X0, Y0, Math.atan2(NY - Y0, NX - X0), len / (C[7] * 0.85), 1.4 * z, (1 - clamp((t - T0 - 0.25) / 0.2)) * veil(V, NX, NY), 0, s);
+          if (t > T0 - 0.1 && t < T0 + 0.45) { const s = clamp((t - T0 + 0.1) / 0.1), C = W.cell('wlash_0'), side = V.hero && V.hero[0] > NX ? 1 : -1, X0 = NX - side * 340 * z, Y0 = NY - 300 * z, len = Math.hypot(NX - X0, NY - Y0);
+            const wr = Math.atan2(NY - Y0, NX - X0), WA = (1 - clamp((t - T0 - 0.25) / 0.2)) * veil(V, NX, NY), wk = PICS ? PICS.meta.whip.cx * len / 900 : 0;
+            if (!pic('whip', X0 + Math.cos(wr) * wk, Y0 + Math.sin(wr) * wk, wr, len, WA, 1, 0, Math.max(0.05, s), 0.7 * side)) D(c, 'wlash_0', X0, Y0, Math.atan2(NY - Y0, NX - X0), len / (C[7] * 0.85), 1.4 * z, (1 - clamp((t - T0 - 0.25) / 0.2)) * veil(V, NX, NY), 0, s);
             if (t > T0) for (let j = 0; j < 2; j++) D(c, `wcut_${j}`, NX, NY, 0.7 + j * 1.3, 0.9 * z * ease(clamp((t - T0) / 0.08)), 0.9 * z, (1 - clamp((t - T0 - 0.15) / 0.25)) * veil(V, NX, NY)); }      // the blow lands: two cuts of ink across him
           break; }
         case 'snort': {        // 郑伦 白光摄魄: he draws breath; two great beams of white light pour out; the souls they take rise to him
@@ -279,16 +305,19 @@ export function createGods(ctx, W = createWonders(), { ink = null, kick = () => 
             D(c, 'gsoul', X, Y, Math.atan2(o.y - sy0, o.x - sx0) * 0.2, 0.7 * z, 0.7 * z, Math.sin(Math.PI * q) * veil(V, X, Y)); }
           break; }
         case 'vase': {         // 龙吉 四海归瓶: the vase rises and drinks every shot; then the seas break on them as waves
-          const [VX, VY] = P(gx, gy, 170), up = ease(clamp(t / 0.25)), n = Math.min(10, o.swallowed || 0), pours = (o.targets || []).filter((p) => p.pour).slice(0, 4), tgt = pours.length ? pours : (o.targets || []).slice(0, 1);
+          const [VX, VY] = P(gx, gy, 250), up = ease(clamp(t / 0.25)), n = Math.min(10, o.swallowed || 0), pours = (o.targets || []).filter((p) => p.pour).slice(0, 4), tgt = pours.length ? pours : (o.targets || []).slice(0, 1);
           if (ground) { land(o, t, 9); const rr = 60 + 120 * ease(clamp(t / 0.5)); for (let j = 0; j < 2; j++) ribbon(c, `wwave_${j}`, (q) => P(gx + Math.cos(q * TAU + j * 2) * rr * (1 + 0.15 * j), gy + Math.sin(q * TAU + j * 2) * rr * (1 + 0.15 * j)), 0.4 * z, 1 - clamp((t - 0.8) / 0.6), 0, clamp(t / 0.35), 20, null);
             for (const p of (o.wave ? [o.wave, ...pours.slice(1)] : tgt)) { shockAt(c, V, p.x, p.y, T0 + 0.2, t, 1.2); if (t > T0 + 0.25) W.draw(c, 'whalo_water', ...P(p.x, p.y), 0, 0.6 * z, 0.6 * z * V.KY, 0.6 * (1 - clamp((t - 1.2) / 1))); } break; }
-          if (t < 1.1) D(c, 'wvase', VX, VY, Math.sin(clock * 3) * 0.05, 0.7 * z * up, 0.7 * z * up, (1 - clamp((t - 0.85) / 0.25)) * veil(V, VX, VY));
+          if (t < 1.1 && !pic('vase', VX, VY, Math.sin(clock * 3) * 0.05, 115 * z * Math.max(0.05, up), (1 - clamp((t - 0.85) / 0.25)) * veil(V, VX, VY) * gclear(VX, VY))) D(c, 'wvase', VX, VY, Math.sin(clock * 3) * 0.05, 0.7 * z * up, 0.7 * z * up, (1 - clamp((t - 0.85) / 0.25)) * veil(V, VX, VY));
           if (t > 0.1 && t < 0.55) for (let k = 0; k < Math.max(n, 3); k++) { const b = (k / Math.max(3, n)) * TAU + 0.4, [X0, Y0] = P(gx + Math.cos(b) * 560, gy + Math.sin(b) * 380, 60); ribbon(c, `wwave_${k % 2}`, (s) => { const w = 1 - s; return [X0 + (VX - X0) * s + Math.sin(s * 6 + k) * 30 * w * z, Y0 + (VY - 30 * z - Y0) * s]; }, 0.3 * z, (n ? 1 : 0.5) * (1 - clamp((t - 0.4) / 0.15)), clamp((t - 0.25) / 0.3), clamp((t - 0.1) / 0.25), 10, V); }
           // one great wave, on the first group: several overlapping read as arches
           for (const p of o.wave ? [o.wave] : []) { const s = clamp((t - T0 + 0.05) / 0.25); if (s <= 0 || t > T0 + 0.7) continue; const [X0, Y] = P(p.x, p.y, 0), fade = 1 - clamp((t - T0 - 0.35) / 0.35), k = 0.65 * z * (0.55 + 0.45 * ease(s)), kf = 0.65 * z, H = V.hero, cw = ctx.canvas.width;
             // it breaks beside the hero, never over him: pushed out sideways until its whole outline clears him, rolling away from him
             let X = X0; if (H && Math.abs(X - H[0]) < 320 * kf + 150 * z) X = H[0] + (X >= H[0] ? 1 : -1) * (320 * kf + 150 * z); X = Math.max(320 * kf, Math.min(cw - 320 * kf, X)); const Yw = Math.max(380 * kf + ctx.canvas.height * 0.04, Math.min(ctx.canvas.height * 0.97, Y));
-            D(c, `gwave_${X >= (H ? H[0] : 0) ? 0 : 1}`, X, Yw + 20 * z - (1 - ease(s)) * 60 * z, 0, k, k, Math.min(1, s * 2) * fade * boxVeil(V, X - 320 * k, Yw - 380 * k, X + 320 * k, Yw + 30 * z)); }
+            const WA2 = Math.min(1, s * 2) * fade * boxVeil(V, X - 320 * k, Yw - 380 * k, X + 320 * k, Yw + 30 * z), wl = 680 * k, wm = PICS && PICS.meta.wave;
+            // the painted wave breaks to its left: mirrored when it stands right of the hero, so it always rolls away from him
+            if (!(wm && pic('wave', X, Yw + 20 * z - (1 - ease(s)) * 60 * z - (wm.h - wm.cy) * wl / wm.w, 0, wl, WA2, X >= (H ? H[0] : 0) ? -1 : 1)))
+              D(c, `gwave_${X >= (H ? H[0] : 0) ? 0 : 1}`, X, Yw + 20 * z - (1 - ease(s)) * 60 * z, 0, k, k, WA2); }
           break; }
         case 'nail': {         // 黄天化 华光穿心: the light gathers in his hand; then one hard lance of light, white-hot in matte gold, through
           // the heart of the strongest, struck three times (the three nails), each time a burst of flame at the heart

@@ -63,7 +63,7 @@ export const GEN_MASS = {
   'gen:shang:dog': { files: { '': 'mass2-dog-1' }, mount: true, side: 'shang', scale: 0.5, shadow: [38, 8, 0.3] },
   'gen:shang:buffalo': { files: { '': 'mass2-buffalo-1' }, mount: true, side: 'shang', scale: 0.5, shadow: [56, 10, 0.3] },
   // the nine Zhou squads, ranks 1..5
-  'gen:zhou:spearmen': { files: { 1: 'mass2-spear-1c', 2: 'mass2-spear-2', 3: 'mass2-spear-3', 4: 'mass2-spear-4', 5: 'mass2-spear-5' }, table: 'cspear', side: 'zhou', scale: 0.5, shadow: [18, 5.5, 0.5] },
+  'gen:zhou:spearmen': { files: { 1: 'mass2-spear-1d', 2: 'mass2-spear-2', 3: 'mass2-spear-3', 4: 'mass2-spear-4', 5: 'mass2-spear-5' }, table: 'cspear', side: 'zhou', scale: 0.5, shadow: [18, 5.5, 0.5] },
   'gen:zhou:shields': { motion: 'shove', files: R5('mass2-shields'), table: 'cspear', side: 'zhou', scale: 0.5, shadow: [19, 5.5, 0.5] },
   'gen:zhou:archers': { files: R5('mass2-archers'), table: 'archer', side: 'zhou', scale: 0.5, shadow: [18, 5.5, 0.5], archer: true },
   'gen:zhou:strongmen': { motion: 'smash', files: R5('mass2-strongmen'), table: 'cge', side: 'zhou', scale: 0.55, shadow: [34, 9, 0.5] },
