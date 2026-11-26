@@ -70,7 +70,7 @@ export const KEY_FIGURES = {
   'zhou:huangfeihu-true': { travel: true, file: 'huangfeihu-t2', height: 143, side: 'zhou', shadow: [40, 8, 0.35], attack: { up: [-30, 20], hit: [20, 10], fol: [12, 6] } },
   'zhou:leizhenzi-true': { travel: true, file: 'leizhenzi-t2', height: 124, side: 'zhou', foot: true, hover: 19, shadow: [22, 5, 0.25], attack: { up: [-50, 20], hit: [30, 40], fol: [18, 28] } },
   'zhou:dengchanyu-true': { travel: true, file: 'dengchanyu-t2', height: 143, side: 'zhou', shadow: [40, 8, 0.35], attack: { up: [-60, -10], hit: [22, 10], fol: [12, 6] } },
-  'zhou:tuxingsun-true': { travel: true, file: 'tuxingsun-t2', height: 124, side: 'zhou', foot: true, shadow: [26, 6, 0.35], attack: { up: [-30, -10], hit: [24, 12], fol: [14, 8] } },
+  'zhou:tuxingsun-true': { travel: true, file: 'tuxingsun-t2', height: 125, side: 'zhou', foot: true, shadow: [46, 8, 0.35], gain: { torso: 0.4, thighN: 0.4, thighF: 0.4 }, roll: { crest: [3, 0], surge: [2, 0.5] }, limits: { head: [-3, 3], arm: [0, 0] }, attack: { up: [0, 0], hit: [0, 0], fol: [0, 0] } },
   'zhou:zhenglun-true': { travel: true, file: 'zhenglun-t2', height: 143, side: 'zhou', shadow: [40, 8, 0.35], attack: { up: [-60, 10], hit: [32, 40], fol: [20, 28] } },
   'zhou:jiangziya-true': { travel: true, file: 'jiangziya-t2', height: 143, side: 'zhou', shadow: [40, 8, 0.35], attack: { up: [-50, -20], hit: [14, 22], fol: [8, 12] } },
   'zhou:huangtianhua-true': { travel: true, drop: ['nail'], file: 'huangtianhua-t2', height: 143, side: 'zhou', shadow: [40, 8, 0.35], attack: { up: [-70, 10], hit: [36, 45], fol: [22, 32] } },
@@ -411,6 +411,13 @@ function unitPose(fig, u, now, x, y, o = {}) {
     const L = F.maxTurn, cl = (o2, root) => { for (const k in o2) if (k[0] !== '$' && typeof o2[k] === 'number' && !FREE.test(k) && k !== root) { const l = k === 'cloak' ? L / 2 : L; o2[k] = Math.max(-l, Math.min(l, o2[k])); } };   // the ribbons are the biggest cut: half the turn
     const rr = foot ? 'torso' : null; if (P.rider === R) { const c = { ...R }; cl(c, rr); Object.assign(R, c); } else cl(R, rr); if (P.mount) { P.mount = { ...P.mount }; cl(P.mount, 'body'); }
     for (const k of F.fixed || []) R[k] = 0; }   // parts whose cut opens at any turn
+  // limits: [min, max] degrees for single parts of one figure (土行孙's true form: the staff only ever tips forward, away from his
+  // head; the head and arm only as far as his cut has paint under them), the legs left free to stride
+  // gain: a key's motion scaled for one figure (土行孙 riding his earth-wave: his legs pump on it rather than stride, his body
+  // rocks less); roll: { part: [degrees, phase] } a rolling sway added in step with the walk (slowly when he stands)
+  if (F.gain) for (const k in F.gain) if (typeof R[k] === 'number') R[k] *= F.gain[k];
+  if (F.roll) { const w = still ? now * 0.7 : phase * 2; for (const k in F.roll) R[k] = (R[k] || 0) + F.roll[k][0] * Math.sin((w + F.roll[k][1]) * Math.PI * 2); }
+  if (F.limits) for (const k in F.limits) if (typeof R[k] === 'number') R[k] = Math.max(F.limits[k][0], Math.min(F.limits[k][1], R[k]));
   { // squash and stretch: the wind-up settles and widens him, the blow stretches him out
     const an = st === 'windup' ? Math.min(1, t / 0.4) : 0, sx = st === 'attack' && t < 0.25 ? 1 - t / 0.25 : 0;
     if ((an || sx) && !R.$sq) R.$sq = { torso: [1 + 0.05 * an - 0.04 * sx, 1 - 0.08 * an + 0.07 * sx] }; }
