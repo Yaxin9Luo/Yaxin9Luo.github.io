@@ -482,6 +482,7 @@ const joined = new Set();
 function join(id) { if (joined.has(id)) return; joined.add(id); const r = rowOf('general', id); if (r) { banner(t.joins(r.name[lang] || r.name.en)); audio.general(r.element); } freshSign = id; buildKey = ''; }
 function handle(e) {
   const h = game.hero;
+  audio.event(e, h);
   switch (e.type) {
     case 'cast': { const s = sourceOf(e.id); audio.cast(e.id, s.element || 'earth', !!e.evolved || !!s.evolved); break; }
     case 'kill': audio.kill(!!e.elite);
@@ -862,6 +863,7 @@ function showEnd() {
 }
 /** Back to the scroll case: from the end sheet, or by leaving a run (which then earns nothing). */
 function toCamp() {
+  audio.leave();
   heralds.length = 0;
   mode = 'title'; endAt = 0; document.documentElement.classList.remove('paused'); bars.clear(); $('herald').className = ''; hudKey = '';
   $('veil').classList.remove('on'); $('offer').hidden = true; banners.length = 0;
@@ -881,6 +883,7 @@ function ownedHTML() {
 }
 function pause(on) {
   mode = on ? 'paused' : 'play';
+  audio.pause(on);
   document.documentElement.classList.toggle('paused', on);      // battle banners do not lie over the sheet
   if (on) {
     const v = Math.round(settings.volume * 100);
@@ -1035,6 +1038,7 @@ function frame(now) {
       if (ended() && !endAt) endAt = performance.now() + 1000;
     }
     const h = game.hero;
+    audio.crowd(game.foes.length);
     if (game.phase === 'fight') audio.hooves(Math.hypot(h.vx || 0, h.vy || 0), BASE_SPEED * 1.3, simDt);
     if (hurtFlash > 0) hurtFlash -= dt * 3;
   }
