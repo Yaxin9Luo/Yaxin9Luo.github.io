@@ -23,7 +23,7 @@
 import { loadGround, LANDMARKS } from './ground/ground.js';
 import { SCENE_OF } from './ground/layout.js';
 import { buildSprites, FLASH } from './sprites/sprites.js';
-import { SCHEDULE, BY } from '../content.js';
+import { SCHEDULE, BY, CAMPAIGN } from '../content.js';
 
 const SEAMS = import.meta.glob(['./puppets/index.js', './fx/index.js']);       // either folder may be empty: then the fallback, or no effects
 const KEYFIGS = import.meta.glob('./puppets/imagegen/figures.js');           // the generated key figures (hero, generals, bosses), drawn live: see that file
@@ -85,7 +85,7 @@ export async function loadArt({ onProgress = () => {}, puppets, fx: wantFx = tru
   onProgress(total, total);
 
   // ---- the view
-  let W = 1440, H = 900, D = 1, z = 1, ox = 0, oy = 0, now = 0, lastAlpha = 1, liveWarm = false, heroPhase = 0, heroAt = null, heroO = {}, warmKeys = new Set(), coming = [], comingAt = -99, brings = [], bringsAt = -99, castAt = -9, castReach = 0, castHeavy = false, warns = new Map(), lastGame = null, hitT = 9, lastFlash = 0, marchLen = 0;
+  let W = 1440, H = 900, D = 1, z = 1, ox = 0, oy = 0, now = 0, lastAlpha = 1, liveWarm = false, heroPhase = 0, heroAt = null, heroO = {}, warmKeys = new Set(), coming = [], comingAt = -99, brings = [], held = [], bringsAt = -99, castAt = -9, castReach = 0, castHeavy = false, warns = new Map(), lastGame = null, hitT = 9, lastFlash = 0, marchLen = 0;
   const sx = (x) => ox + x * z, sy = (y) => oy + y * KY * z;
   const V = { W: 1440, H: 900, z: 1, dpr: 1, cx: 0, cy: 0, hw: 0, hh: 0, sx, sy };
   function view(cam) { z = cam.zoom * D; ox = (W / 2 + (cam.shakeX || 0)) * D - cam.x * z; oy = (H * 0.52 + (cam.shakeY || 0)) * D - cam.y * KY * z;
@@ -199,6 +199,8 @@ export async function loadArt({ onProgress = () => {}, puppets, fx: wantFx = tru
       case 'attack': return at(F.attack || F.throw || F.idle, Math.floor(t / 0.12));
       case 'skill': { const L = (P && P.skill && F[P.skill.state]) || F.skill || F.attack || F.idle; return at(L, Math.floor(t / 0.22)); }   // a squad's skill, a general's
       case 'charge': if (F.rush) return F.rush[Math.floor(frac((x + y * 0.6) / 200) * F.rush.length)]; if (F.attack2) return F.attack2[0];   // falls through to the walk for kinds with no charge of their own
+      // a routed foe (rules: state 'flee') runs upright on his walk, facing the way he runs (the rules turn `facing` away from the hero)
+      case 'flee':
       case 'walk': { const L = F.walk || F.idle; return L[Math.floor(frac((x * 0.9 + y * 0.6) / (STRIDE[key] || (P && P.stride) || 46) + (u.id || 0) * 0.37) * L.length)]; }
       case 'stun': return (F.hurt || F.idle)[0];
       default: return (F.idle || F.walk)[0];
@@ -249,16 +251,24 @@ export async function loadArt({ onProgress = () => {}, puppets, fx: wantFx = tru
   }
   // what a boss brings that would otherwise be cut whole on its first frame mid-fight (a frame of 55 ms or more): his retinue in
   // every phase, what his patterns summon, and his spoil's beast in the hero's dress (花狐貂: 'shang:marten', variant 'f'); listed
-  // from 30 s before he is due (game.campaign.next) and while he is on the field (rebuilt once a second), cut a step a frame
+  // from 60 s before he is due (game.campaign.next: the minute before 袁洪's 30:00) and while he is on the field (rebuilt once a
+  // second), cut a step a frame. The finale (SPEC-CAMPAIGN 1.16): from 袁洪's coming through the rest after him (stage 'meishan',
+  // 'rest'), 纣王's retinue and the five kinds of his host (CAMPAIGN.final.host) are cut too, before the gate opens
   function bossBrings(game) {
     if (Math.abs(game.t - bringsAt) < 1) return brings; bringsAt = game.t; const c = game.campaign, kinds = new Set(), want = [];
-    if (c && c.next && c.next.t <= game.t + 30) kinds.add(c.next.kind);
+    if (c && c.next && c.next.t <= game.t + 60) kinds.add(c.next.kind);
     if (c) for (const f of c.live || []) if (!f.dead && f.state !== 'dead') kinds.add(f.kind);
+    const fin = CAMPAIGN && CAMPAIGN.final;
+    if (fin && c && (c.stage === 'meishan' || c.stage === 'rest' || c.stage === 'sortie')) { kinds.add(fin.kind);
+      for (const rank of [fin.host && fin.host.first, fin.host && fin.host.reserve]) for (const k in rank || {}) want.push(['shang:' + k, '']); }
     for (const k of kinds) { const row = BY.foe[k]; if (!row) continue;
       for (const R of row.retinue || []) want.push(['shang:' + R.kind, '']);
       for (const p of row.patterns || []) if (p.shape === 'summon' && p.kind) want.push(['shang:' + p.kind, '']);
       const sp = BY.spoilOf[k]; if (sp && sp.id === 'marten') want.push(['shang:marten', 'f']); }
-    brings = want.filter(([k, v], i) => PUP[k] && !(live && live.has(k)) && !sprites.get(k, v) && want.findIndex((w) => w[0] === k && w[1] === v) === i); return brings;
+    // held: everything listed, cut or not, is marked used each frame (art/sprites/sprites.js drops a lazy sheet unused for 240 frames
+    // once the budget is passed: cut during the 25 s rest, the host's sheets were dropped before the gate opened and cut again then)
+    held = want.filter(([k, v], i) => PUP[k] && !(live && live.has(k)) && want.findIndex((w) => w[0] === k && w[1] === v) === i);
+    brings = held.filter(([k, v]) => !sprites.get(k, v)); return brings;
   }
   const setFor = (key, variant) => sprites.get(key, variant) || sprites.ensure(key, variant);
 
@@ -328,6 +338,8 @@ export async function loadArt({ onProgress = () => {}, puppets, fx: wantFx = tru
       used = 0; order.length = 0; sprites.touch();
       if (live && !liveWarm) liveWarm = live.prewarm(ctx, 12);
       if (live && warmKeys.size) for (const k of warmKeys) { if (live.warm(ctx, k)) warmKeys.delete(k); break; }   // art.warm(kind): a boss's parts uploaded before he arrives
+      // what the coming boss brings, once cut, is kept from the sprite budget's eviction until it is used (see bossBrings)
+      for (const [k, v] of held) sprites.get(k, v);
       // while an offer holds the game still, cut the sheets of what it offers (one a frame): a squad or general the player picks
       // then appears without a synchronous cut (a read-back of 50 ms or more) in the middle of the fight
       if (game.phase === 'offer' && game.offer) warmOffer(game.offer, ctx);
@@ -358,7 +370,7 @@ export async function loadArt({ onProgress = () => {}, puppets, fx: wantFx = tru
           else ground.mark(ctx, 'warn', sx(zo.x), sy(zo.y), z, { k: (zo.r || 100) / 100, a }); }
         else if (zo.r > 0) { ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 0.3; ctx.strokeStyle = PIGMENT[zo.src] || INK; ctx.lineWidth = 2 * D; ctx.beginPath(); ctx.ellipse(sx(zo.x), sy(zo.y), zo.r * z, zo.r * KY * z, 0, 0, TAU); ctx.stroke(); } }
       ctx.globalAlpha = 1;
-      for (const p of ground.props) if (p.x > x0 && p.x < x1 && p.y > y0 && p.y < y1 + 300) put(p.y, P_PROP, p, 0);
+      for (const p of ground.props) if (p.x + (p.r > 100 ? p.r : 0) > x0 && p.x - (p.r > 100 ? p.r : 0) < x1 && p.y > y0 && p.y < y1 + 300) put(p.y, P_PROP, p, 0);
       if (!fx) for (const p of game.pickups || []) if (!p.dead && p.x > x0 && p.x < x1 && p.y > y0 && p.y < y1) put(p.y - 2, P_PICK, p, 0);
       for (const f of game.foes) if (f.x > x0 - 200 && f.x < x1 + 200 && f.y > y0 && f.y < y1 + 120) put(f.state === 'dead' ? f.y - 14 : f.y, P_FOE, f, 0);
       for (const a of game.allies || []) if (a.x > x0 && a.x < x1 && a.y > y0 && a.y < y1) put(pocket && a.y > hy && (a.y - hy) * KY < 80 && Math.abs(a.x - hx) < 84 ? hy + HERO_FRONT - 1 : a.y, P_ALLY, a, 0);   // his own men never stand over him either
@@ -370,7 +382,9 @@ export async function loadArt({ onProgress = () => {}, puppets, fx: wantFx = tru
       order.sort(byY);
       for (const e of (game.build && game.build.troops) || []) levels[e.id] = e.level || 1;
       for (let i = 0; i < order.length; i++) { const e = order[i], u = e.ref;
-        if (e.type === P_FOE || e.type === P_ALLY) { if (u.state === 'away' || u.state === 'under') continue;                         // a general withdrawn, or gone under the ground: nothing stands there
+        if (e.type === P_FOE || e.type === P_ALLY) { if (u.state === 'away' || u.state === 'under') continue;
+          // the dead have faded by 0.6 s; the routed the march leaves behind are set dead at 0.6 at once (no fall, no body): nothing is drawn
+          if (u.state === 'dead' && (u.stateT || 0) >= 0.6) continue;                         // a general withdrawn, or gone under the ground: nothing stands there
           if (live) { const lk = e.type === P_ALLY ? generalKey(u) : 'shang:' + u.kind;
             if (lk === NONE) continue;
             if (lk && live.has(lk)) { const x = u.px + (u.x - u.px) * alpha, y = u.py + (u.y - u.py) * alpha;

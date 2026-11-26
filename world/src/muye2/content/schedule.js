@@ -68,7 +68,12 @@ export const CAMPAIGN = {
   final: {index: 3, id: 'walls', name: T('Beneath the Walls of Zhaoge', '朝歌城下'), after: 'yuanhong', kind: 'zhouwang',
     // when he comes every Shang foe of the mass changes dress in place; from then only these enter
     guards: {shield: 'goldMelon', axe: 'axeGuard', cavalry: 'axeGuard', bianGuard: 'goldMelon', buffalo: 'goldMelon', chariot: 'zhendian', giant: 'zhendian', bladeCart: 'zhendian', other: 'yulin'},
-    mix: {yulin: 5, goldMelon: 2, axeGuard: 2, drumGuard: .5}, elites: {kind: 'zhendian', every: 50}},
+    mix: {yulin: 5, goldMelon: 2, axeGuard: 2, drumGuard: .5}, elites: {kind: 'zhendian', every: 50},
+    // the finale (SPEC-CAMPAIGN 1.16): at 袁洪's coming the field is the last common host (mustered to full strength once if
+    // thin); from then nothing common enters.
+    // 纣王's sortie at the rest's end after 袁洪: the last guard, a fixed roster, out of the gate over `issue` s; the `reserve`
+    // steps out at his last phase or when the first rank is gone. Their health is the mass's at `hpAt` s. Nothing respawns.
+    host: {first: {yulin: 100, goldMelon: 42, axeGuard: 34, drumGuard: 10, zhendian: 14}, reserve: {yulin: 40, goldMelon: 18, axeGuard: 14, zhendian: 8}, issue: 14, hpAt: 2400}},
   mojia: ['moliqing', 'molihong', 'molihai', 'molishou'],
   march: 4,          // seconds of march after a big boss falls: nothing enters; the Shang on the field rout (not before 纣王)
   rest: 25,          // and then this many seconds of rest after 闻仲 and 孔宣: no new mass while his spoil and the new field land (2026-11-26, B)

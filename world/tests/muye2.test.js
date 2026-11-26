@@ -9,6 +9,7 @@ import {
   createGame, step, give, addFoe, applyMeta, canEvolveWeapon, WEAPON_ART, META, MERIT, meritFrom, meritOf, buy, newSave, poolOf, rankCost, meritToAll, openingPool, inPool, xpNeed as XPNEED, familyShare, leanOf, takeSpoil, saveHero, bigPayoff, addMan, addShot, addPickup, castShape, canEvolve, canBless, elementAt, RANKS, rankOf, GENERAL, spawnPlan, counts, describe, xpNeed, fedBy,
   CONTENT, BY, WORLD, STEP, HERO, CRY, ALLY, ALLY_CLEAR, SLOTS, MAX, OFFER, ELEMENTS, RESONANCE, TRIGRAMS, RIDER, SCHEDULE, SPAWN, PICKUPS, CHEST, PAYOFF, CAMPAIGN,
 } from '../src/muye2/sim.js';
+import {kill as killFoe} from '../src/muye2/sim/harm.js';
 
 const C = WORLD.w / 2, TAU = Math.PI * 2;
 const near = (a, b, eps = 1e-6) => Math.abs(a - b) <= eps;
@@ -809,7 +810,7 @@ test('3. payoffs: the first of a run needs no chest; an offer always holds the s
     give(g, 'treasure', 'whip', MAX.treasure);
     assert.ok(near(g.power.whip, PAYOFF.curve[1]));
     give(g, 'troop', 'spears', 1);
-    assert.ok(near(g.power.spears, PAYOFF.curve[0]));
+    assert.ok(near(g.power.spears, (PAYOFF.troopCurve || PAYOFF.curve)[0]), 'a squad follows its own curve');
   }
   { // a chest with no payoff ready gives its level to what the player has taken to within OFFER.chestNear levels of its top
     for (let seed = 1; seed <= 12; seed++) {
@@ -1263,6 +1264,28 @@ test('4b. weapons: offers continue the weapon; it evolves at level 8 with 武艺
   addPickup(g, 'chest', C, C);
   const ev = run(g, 3);
   assert.ok(ev.some(e => e.type === 'evolve' && e.weapon && e.into === 'zhentian') && g.build.weapon.evolved);
+});
+
+test('a treasure at its last form is never offered again, nor are the two of a 合璧 (user\'s play, 2026-11-26)', () => {
+  const offers = (g, n) => { const seen = []; for (let i = 0; i < n; i++) { g.hero.xp = g.hero.xpNext; run(g, 1); if (g.phase !== 'offer') continue; seen.push(...g.offer); run(g, 1, {...NONE, pick: 0}); } return seen; };
+  for (const row of CONTENT.treasures) {
+    const g = stage(3);
+    give(g, 'treasure', row.id, MAX.treasure, true);
+    const seen = offers(g, 200);
+    assert.ok(seen.length > 100 && !seen.some(o => o.kind === 'treasure' && o.id === row.id), `${row.id}: evolved, never offered again`);
+    assert.equal(g.build.treasures.filter(t => t.id === row.id).length, 1);
+  }
+  for (const M of CONTENT.merges) {
+    const g = stage(4);
+    for (const p of M.parts) give(g, 'treasure', p, MAX.treasure, true);
+    give(g, 'merge', M.id);
+    const held = g.build.treasures.find(t => t.id === M.id);
+    assert.ok(held && held.merged && held.parts.map(p => p.id).join() === M.parts.join(), `${M.id}: one entry holding its two parts`);
+    const seen = offers(g, 200);
+    assert.ok(!seen.some(o => (o.kind === 'treasure' && M.parts.includes(o.id)) || (o.kind === 'merge' && o.id === M.id)), `${M.id}: neither part, nor the 合璧, offered again`);
+    give(g, 'treasure', M.parts[0], 1);
+    assert.ok(g.build.treasures.filter(t => t.id === M.parts[0] || (t.merged && t.parts.some(p => p.id === M.parts[0]))).length === 1, `${M.id}: giving a part again adds no second copy`);
+  }
 });
 
 test('5. 合璧: two evolved treasures of a pair join into one, free a slot, strike harder, and the first brings the second (SPEC-CAMPAIGN 2.6)', () => {
@@ -1833,7 +1856,7 @@ test('6. generals: what each one is for', () => {
     assert.ok(dist(g.allies[0], elite) < 120, 'he duels the elite');
     assert.ok(lost(elite) > 0 && lost(archer) > 0, 'and the hound found the archer');
     assert.ok(ev.some(e => e.type === 'generalSkill' && e.shape === 'hound' && e.targets[0].id === archer.id));
-    assert.ok(ev.some(e => e.type === 'hit' && e.id === 'yangjian' && e.target === elite.id && near(e.dmg, BY.general.yangjian.attack.dmg * BY.general.yangjian.attack.eliteMult * GENERAL.power)));
+    assert.ok(ev.some(e => e.type === 'hit' && e.id === 'yangjian' && e.target === elite.id && near(e.dmg, BY.general.yangjian.attack.dmg * BY.general.yangjian.attack.eliteMult * GENERAL.power * BY.general.yangjian.at[1].grow)));   // at[1].grow: his `might` (2026-11-26)
     assert.ok(mass);
   }
   { // 土行孙 comes up under an elite and binds it: even a chariot stands still
@@ -2158,7 +2181,16 @@ test('campaign: the timeline: two small bosses a stretch drawn by the seed, a bi
   assert.ok(ev.some(e => e.type === 'enrage' && e.id === boss.id) && boss.enraged && boss.dmg > dmg0);
 });
 
-test('campaign: a big boss\'s death: a march in which the Shang rout and nothing enters; 袁洪\'s brings 纣王 and the 御林军; 纣王\'s wins', () => {
+test('no single blow takes more than HERO.blowCap of the hero\'s full health (lead, 2026-11-26)', () => {
+  const g = stage();
+  g.hero.maxHp = g.hero.hp = 200;
+  const s = addShot(g, 'arrow', 'shang', 'archer', g.hero.x, g.hero.y, 0, 0, 12, 1e6, 1);
+  const ev = run(g, 5);
+  const hit = ev.find(e => e.type === 'hurt');
+  assert.ok(s && hit && near(hit.dmg, HERO.blowCap * 200) && near(g.hero.hp, 200 * (1 - HERO.blowCap)) && HERO.blowCap <= .3, `a blow of a million takes ${hit && hit.dmg}`);
+});
+
+test('campaign: a big boss\'s death: a march in which the Shang rout and nothing enters; the finale: 袁洪 with the last common host, 纣王\'s counted host rides out, his death wins (1.16)', () => {
   const pick = game => game.phase === 'offer' ? {...NONE, pick: 0} : NONE;
   const strike = (game, f, dmg) => { f.wardT = 0; f.capMax = 0; const s = addShot(game, 'ring', 'zhou', 'test', f.x, f.y, 0, 0, 12, dmg, .05); s.pierce = 99; return s; };   // (past his ward and burst cap: SPEC 1.14)   // a blow from nowhere, for staging (through whoever stands by him)
   // 闻仲 falls: the march, the rout, the scene changes; the run goes on
@@ -2177,36 +2209,70 @@ test('campaign: a big boss\'s death: a march in which the Shang rout and nothing
   ev = run(g, Math.round(CAMPAIGN.march * 60) + 5, pick);
   assert.ok(!ev.some(e => e.type === 'boss' || e.type === 'elite') && ev.some(e => e.type === 'marchEnd' && e.scene === 1) && g.campaign.scene === 1);
   assert.ok(g.alive < alive && !g.foes.some(f => f.flee && f.state !== 'dead'), 'the routed are gone when the march ends');
-  ev = run(g, 120, pick);
-  assert.ok(g.alive > 0, 'and the next stretch\'s mass enters');
-  // 袁洪 falls: no rout; after the march 纣王 comes and every Shang of the mass becomes one of the 御林军
-  const z = createGame(9, {bare: true});
+  // then a rest (2026-11-26): nothing enters for CAMPAIGN.rest seconds while the prize lands, then the next stretch's mass does
+  assert.ok(CAMPAIGN.rest >= 20 && ev.some(e => e.type === 'marchEnd' && e.rest === CAMPAIGN.rest));
+  ev = run(g, Math.round(CAMPAIGN.rest * 60) - 30, pick);
+  assert.ok(g.alive === 0 && !ev.some(e => e.type === 'restEnd'), `nobody enters in the rest (${g.alive} alive)`);
+  ev = run(g, 60 * 3, pick);
+  assert.ok(ev.some(e => e.type === 'restEnd') && g.alive > 0, 'and after it the next stretch\'s mass enters');
+  // 袁洪 comes (SPEC 1.16): with his six; the Shang on the field are the last common host, mustered to full strength once,
+  // and nothing common enters again (the user, 2026-11-26)
+  const z = createGame(9, {bare: true}), F = CAMPAIGN.final;
   z.spawn.elite = 99; z.spawn.ring = 99; z.spawn.shamanAt = 1e9; z.campaign.si = 99; z.campaign.bi = 2;
+  z.hero.hp = z.hero.maxHp = 1e6;
+  const there = [];
+  for (let i = 0; i < 30; i++) there.push(addFoe(z, 'spear', C + 300 + i * 8, C + 200));
   z.t = 1799.9;
-  run(z, 6);
-  for (const k of ['spear', 'axe', 'shield', 'archer', 'chariot', 'dog']) addFoe(z, k, C + 500, C + 300);
-  const yh = z.foes.find(f => f.kind === 'yuanhong');
-  yh.hp = 0.5; yh.armour = 0; yh.guardT = 0;
-  z.hero.hp = z.hero.maxHp = 1e6; strike(z, yh, 50);
-  ev = run(z, 60 * 10, pick, (game, now) => now.some(e => e.type === 'march'));
-  assert.ok(!ev.some(e => e.type === 'rout') && z.campaign.finalDue);
-  ev = run(z, Math.round(CAMPAIGN.march * 60) + 5, pick);
-  const gu = ev.find(e => e.type === 'guards'), king = z.foes.find(f => f.kind === 'zhouwang');
-  assert.ok(gu && gu.units.length >= 6 && king && king.tier === 'final' && z.campaign.guards && z.campaign.scene === 3);
-  const map = CAMPAIGN.final.guards;
-  for (const u of gu.units) { const f = z.foes.find(o => o.id === u.id); assert.ok(f.kind === (map[u.from] || map.other) && BY.foe[f.kind].stretch === 3, `${u.from} became ${f.kind}`); }
-  assert.ok(z.foes.filter(f => f.retinue === king.id && f.tier === 'lieutenant').length === 3, '鲁仁杰, 雷鹍, 雷鹏 ride with him');
+  ev = run(z, 60, pick, (game, now) => now.some(e => e.type === 'lastWave'));
+  const yh = z.foes.find(f => f.kind === 'yuanhong'), ms = ev.find(e => e.type === 'meishan'), lw = ev.find(e => e.type === 'lastWave');
+  assert.ok(ms && ms.demons.length === 6 && ms.demons.every(d => BY.foe[d.kind].tier === 'small'), 'the six of 梅山 come with him');
+  const full = Math.min(Math.ceil(spawnPlan(z.t).alive), SCHEDULE.cap);
+  assert.ok(lw && lw.mustered > 0 && lw.count >= full - 7 - 2, `the last wave is mustered to full strength: ${lw && lw.count} common of ${full}`);
+  assert.ok(there.every(f => f.state !== 'dead' && f.lastHost) && lw.ids.length === lw.count && z.foes.filter(f => f.lastHost).length === lw.count, 'those already on the field stay and fight, marked as the last host');
+  const after = z.t, keep = game => { game.hero.hp = game.hero.maxHp = 1e6; return pick(game); };      // (spoils and levels set his health back: he must not fall while the finale is staged)
+  const ev2 = run(z, 60 * 20, keep);
+  assert.ok(!z.foes.some(f => f.state !== 'dead' && !f.tier && f.born > after + .1), 'nothing common enters during 袁洪\'s fight');
+  // while any of his six lives he takes half, and the page is told who wards him
+  const kin = [...ev, ...ev2].filter(e => e.type === 'kinWard' && e.id === yh.id).pop();
+  assert.ok(kin && kin.by.length === 6 && kin.share === BY.foe.yuanhong.kin);
+  let hp0 = yh.hp; yh.armour = 0; strike(z, yh, 1000); run(z, 2, keep);
+  assert.ok(hp0 - yh.hp > 0 && hp0 - yh.hp <= 1000 * BY.foe.yuanhong.kin + 1, `warded by his kin: ${hp0 - yh.hp} of 1000`);
+  for (const d of z.foes.filter(f => f.retinue === yh.id && f.state !== 'dead')) killFoe(z, d, 'test');
+  ev = run(z, 30, keep);
+  assert.ok(ev.some(e => e.type === 'kinWard' && e.id === yh.id && e.by.length === 0 && e.share === 1), 'the ward is gone with the last of them');
+  // 袁洪 falls: the remnant routs, the march and the rest, then 纣王 rides out of the gate with all his host at once
+  killFoe(z, yh, 'test');
+  ev = run(z, 60 * 10, keep, (game, now) => now.some(e => e.type === 'march'));
+  assert.ok(ev.some(e => e.type === 'rout' && e.count >= 1), 'the remnant routs');
+  ev = run(z, Math.round((CAMPAIGN.march + CAMPAIGN.rest) * 60) + 30, keep, (game, now) => now.some(e => e.type === 'host'));
+  const host = ev.find(e => e.type === 'host'), king = z.foes.find(f => f.kind === 'zhouwang');
+  assert.ok(ev.some(e => e.type === 'restEnd') && (!z.gates.length || ev.some(e => e.type === 'gateOpen')) && host && king && king.tier === 'final' && z.campaign.scene === 3, `rest ${ev.some(e => e.type === 'restEnd')} gate ${ev.some(e => e.type === 'gateOpen')} host ${!!host} king ${king && king.tier} scene ${z.campaign.scene} gates ${z.gates.map(x => x.opensAfter)}`);
+  assert.equal(z.foes.filter(f => f.retinue === king.id && f.tier === 'lieutenant').length, 6, 'his three generals and the three fox-spirits ride out with him');
+  const kw = [...ev, ...run(z, 2, keep)].find(e => e.type === 'kinWard' && e.id === king.id);
+  assert.ok(kw && kw.by.length === 3 && kw.share === CAMPAIGN.guardAura, '纣王 is warded by his three generals, and the page is told');
+  const total = Object.values(F.host.first).reduce((a, b) => a + b, 0) + Object.values(F.host.reserve).reduce((a, b) => a + b, 0);
+  assert.ok(host.first + host.reserve === total && Object.values(host.roster).reduce((a, b) => a + b, 0) === total);
   assert.ok(Number.isFinite(z.campaign.rageAt) && near(z.campaign.rageAt, king.born + SCHEDULE.late.after, .02));
-  ev = run(z, 60 * 3, pick);
-  const entered = z.foes.filter(f => f.born > king.born && !f.tier && !f.retinue);
-  assert.ok(entered.length && entered.every(f => BY.foe[f.kind].stretch === 3), `from then only the 御林军 enter: ${entered.map(f => f.kind)}`);
-  // while his officers live he takes less; his death wins
+  // the host is counted: the first rank, then (when it breaks) the reserve, then nobody
+  let sorties = ev.filter(e => e.type === 'sortie').length;
+  for (let k = 0; k < 8 && !z.campaign.lastGuard; k++) {
+    const now = run(z, 60 * 7, keep);
+    sorties += now.filter(e => e.type === 'sortie').length;
+    assert.ok(z.campaign.host.every(o => o.host) && z.campaign.host.length + z.campaign.toCome + sorties >= total, 'every guard is marked; on the field and to come add up');
+    for (const o of [...z.campaign.host]) if (o.state !== 'dead') killFoe(z, o, 'test');
+    if (now.some(e => e.type === 'hostReserve')) assert.ok(now.find(e => e.type === 'hostReserve').why === 'broken');
+  }
+  ev = run(z, 60, keep);
+  assert.ok(z.campaign.lastGuard && sorties === total, `the last guard is dead: ${sorties} came of ${total}`);
+  run(z, 60 * 30, keep);
+  assert.ok(z.phase === 'fight' && !z.foes.some(f => f.state !== 'dead' && !f.tier && !f.retinue), 'and nothing comes after them');
+  // while his generals live he takes less; his death wins
   const before = king.hp; king.armour = 0;
   strike(z, king, 1000);
-  run(z, 2, pick);
+  run(z, 2, keep);
   assert.ok(before - king.hp > 0 && before - king.hp <= 1000 * CAMPAIGN.guardAura + 1, `his officers shield him: ${before - king.hp} of 1000`);
   king.hp = 1; strike(z, king, 50);
-  ev = run(z, 60 * 8, pick, game => game.phase === 'won');
+  ev = run(z, 60 * 8, keep, game => game.phase === 'won');
   assert.ok(z.phase === 'won' && ev.some(e => e.type === 'won') && ev.some(e => e.type === 'bossDown' && e.tier === 'final'), `phase ${z.phase}, king ${king.hp} ${king.state} ${king.kind}`);
   // a one-stretch run: {until: 'wenzhong'} wins on his death; the rage starts SCHEDULE.late.until s after he comes
   const u = createGame(3, {bare: true, until: 'wenzhong'});
@@ -2319,6 +2385,13 @@ test('campaign: the later bosses\' own blows do what SPEC-CAMPAIGN 1.11 says', (
   assert.ok(lt && lt.element === 'wood' && lt.ids.includes('whip') && r.g.lightTaken.wood > r.g.t);
   ev = run(r.g, Math.round(60 * (lt.time + .2)));
   assert.ok(ev.some(e => e.type === 'lightReturned' && e.element === 'wood') && !r.g.lightTaken.wood);
+  // a 合璧 is taken through its parts: 镇伏 (lotus wood, tower earth) loses the lotus to the wood light, and the event says so
+  r = once('kongxuan', 'fiveLights', {before: g => { for (const p of ['lotus', 'tower']) give(g, 'treasure', p, MAX.treasure, true); give(g, 'merge', 'zhenfu'); },
+    until: (g, now) => now.some(e => e.type === 'lightTaken')});
+  const lm = r.ev.find(e => e.type === 'lightTaken');
+  assert.ok(lm && lm.ids.includes('zhenfu') && lm.merged.length === 1 && lm.merged[0].parts.join() === 'lotus', `the joined treasure is named: ${JSON.stringify(lm && lm.merged)}`);
+  ev = run(r.g, Math.round(60 * (lm.time - .5)));
+  assert.ok(!ev.some(e => e.type === 'cast' && e.id === 'lotus') && ev.some(e => e.type === 'cast' && e.id === 'tower'), 'its lotus is silent while the light has wood; the tower strikes alone');
   // 卞吉's banner stays and seizes whoever rides under it
   r = once('bianji', 'boneBanner', {until: g => g.zones.some(z => z.kind === 'bone')});
   const bz = r.g.zones.find(z => z.kind === 'bone'); r.g.hero.held = 0; r.g.hero.boneCd = 0; r.g.hero.x = bz.x - 200; r.g.hero.y = bz.y;
@@ -3268,7 +3341,11 @@ test('balance: the scripted players and the eight one-way builds over 60 seeds e
     // the player who rides well and always takes the first slip still sees one
     const F = table.firstSlip.rows.filter(r => r.time >= 360), six = F.filter(r => r.payoffs.some(p => p.t <= 360)).length / F.length;
     say(`the first-slip player: wins ${table.firstSlip.wins.length}/${N}; the first payoff by 6:00 in ${pct(six)} of the runs that got there`);
-    assert.ok(six >= .9, `who always takes the first slip has a payoff by 6:00 in ${pct(six)} of runs (at least 90%)`);
+    // 50% from 90% (2026-11-26, lead's decision, SPEC-CAMPAIGN 2.8b): the offer no longer leads, so the first slip is often not the
+    // way to a payoff (measured 58.7%); the 90% now holds for the player who takes the marked payoff slips, the planner
+    assert.ok(six >= .5, `who always takes the first slip has a payoff by 6:00 in ${pct(six)} of runs (at least 50%)`);
+    { const P = S.rows.filter(r => r.time >= 360), sixP = P.filter(r => r.payoffs.some(p => p.t <= 360)).length / P.length;
+      assert.ok(sixP >= .9, `who takes the marked payoff slips has a payoff by 6:00 in ${pct(sixP)} of runs (at least 90%)`); }
     assert.ok(table.firstSlip.wins.length < S.wins.length - 10 * k, 'and wins far less often than the planner');
   }
   for (const type of ['cast', 'hit', 'kill', 'pickup', 'levelUp', 'offer', 'take', 'evolve', 'chest', 'elite', 'boss', 'hurt', 'fall', 'won', 'lost']) assert.ok(types.has(type), `the contract's event ${type} happens in play`);

@@ -125,8 +125,9 @@ export function layoutOf(seed = 1, scene = 'xiqi') {
     places.push({ id: 'citygate', kind: 'gate', x: gateX, y: wallY, r: 420 });
     // the wall: one wing of the painted gate, 325 units wide, repeated and turned over by turns along the whole north edge
     // the wall: two plain stretches and a tower cut from the painted gate (imagegen/raw/z1-gate), a tower every fifth piece
-    for (const s of [-1, 1]) for (let i = 0, x = gateX + s * 500; x > -300 && x < WORLD + 300; i++) { const tower = i % 5 === 3; P('pt-citywall' + (tower ? 2 : (i + (s > 0 ? 1 : 0)) % 2), x, wallY + (tower ? 2 : 0), 1, 200); x += s * (tower ? 100 : 82); }
-    G('citygate.g', gateX, wallY, 1); P('pt-citygate', gateX, wallY, 1, 420);
+    for (const s of [-1, 1]) for (let i = 0, x = gateX + s * 522; x > -300 && x < WORLD + 300; i++) { const tower = i % 5 === 3; P('pt-citywall' + (tower ? 2 : (i + (s > 0 ? 1 : 0)) % 2), x, wallY + (tower ? 2 : 0), 1, 200); x += s * (tower ? 100 : 82); }
+    G('citygate.g', gateX, wallY, 1); P('pt-citygate', gateX, wallY, 1, 480);
+    P('pt-citygate-in', gateX, wallY - 60, 1, 0);   // the passages behind its three mouths (ground.js CITYGATE): figures between the two are seen through the mouths
     // behind the wall the palace city: 摘星楼 and 鹿台 rising over it under the cloud (drawn before the wall: its foot is north of it)
     P('pt-zgterrace0', gateX + 470, wallY - 120, 1, 60); P('pt-zgtower0', gateX - 470, wallY - 45, 1, 60);
     // the palace standards: lining the way out of the gate, and along the foot of the wall
@@ -186,7 +187,11 @@ export function fieldOf(seed, index = 0) {
     bounds = (y) => { const [cx, hw] = at(y); return [Math.max(E, cx - hw + E), Math.min(WORLD - E, cx + hw - E)]; };
     gates = L.places.filter((p) => p.kind === 'gate').sort((a, b) => Math.abs(a.y - L.start[1]) - Math.abs(b.y - L.start[1])).map((p, i) => ({ id: index + ':' + p.id, x: p.x, y: p.y, hw: p.r, opensAfter: 'small' + i }));
   }
-  if (L.wall) { top = L.wall + 80; gates = [{ id: index + ':citygate', x: L.gate, y: L.wall, hw: 420, opensAfter: 'yuanhong' }]; }
+  if (L.wall) { top = L.wall + 80; gates = [{ id: index + ':citygate', x: L.gate, y: L.wall, hw: 420, opensAfter: 'yuanhong',
+    // the three mouths (world x, and their height above the wall's line in screen units): the host comes out of them, from inY (inside,
+    // seen through the mouth, drawn behind the lintel) south past passY; ground.js CITYGATE holds the same numbers
+    mouths: [[-135, -85, 99], [-43, 32, 114], [67, 124, 99]].map(([a, b, h]) => ({ x0: L.gate + a, x1: L.gate + b, height: h })), inY: L.wall - 45, passY: L.wall + 20 }]; }
   const ys = [top, WORLD - E];
-  return { scene: L.scene, index, start: L.start, places, gates, waters: L.waters, bounds, ys, inside: (x, y) => { if (y < ys[0] || y > ys[1]) return false; const [a, b] = bounds(y); return x >= a && x <= b; } };
+  const start = index === 3 && L.wall != null ? [L.gate, L.wall + 380] : L.start;   // the walls of Zhaoge: before the gate, where the camera sees it open
+  return { scene: L.scene, index, start, places, gates, waters: L.waters, bounds, ys, inside: (x, y) => { if (y < ys[0] || y > ys[1]) return false; const [a, b] = bounds(y); return x >= a && x <= b; } };
 }

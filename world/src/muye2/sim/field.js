@@ -218,7 +218,10 @@ function strike(g, P, z) {
   else if (P.effect === 'light') {
     const el = ELS[g.lightN++ % ELS.length];
     g.lightTaken[el] = g.t + P.time;
-    g.events.push({type: 'lightTaken', element: el, time: P.time, ids: g.build.treasures.filter(t => (BY.treasure[t.id] || {}).element === el).map(t => t.id), x: h.x, y: h.y});
+    // a 合璧 is struck through its parts: the part of the taken element falls silent, the other strikes alone and unjoined (shapes.js `taken`)
+    const ofEl = e => (BY.treasure[e.id] || {}).element === el, merged = [];
+    for (const t of g.build.treasures) if (t.merged && t.parts.some(ofEl)) merged.push({id: t.id, parts: t.parts.filter(ofEl).map(p => p.id)});
+    g.events.push({type: 'lightTaken', element: el, time: P.time, ids: [...g.build.treasures.filter(t => !t.merged && ofEl(t)).map(t => t.id), ...merged.map(m => m.id)], merged, x: h.x, y: h.y});
   }
 }
 /** A blow that leaves something lasting on the ground where it fell. */

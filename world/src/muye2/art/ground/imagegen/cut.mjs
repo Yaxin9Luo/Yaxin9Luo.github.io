@@ -5,6 +5,8 @@
 //    "stand": [{"name": "platform", "poly": [[x, y], ...], "foot": [x, y]}]}
 //     place: the whole picture becomes a lying piece `<name>.g` (drawn under the figures, its anchor at `foot`), and each
 //            polygon a standing piece (sorted with the figures by its own foot). Coordinates in source pixels.
+//     groundBelow (place): the lying part keeps only source rows below this y (a gate whose side walls must not lie flat);
+//     holes (stand): source rects [x0, y0, x1, y1] cut out of a standing piece (a gate's mouths, drawn open behind it)
 //   {"src": "raw/x1-pines.png", "scale": 0.5, "kind": "set", "name": "ppine", "minArea": 4000}
 //     set:   every separate island of the picture becomes a standing piece <name>0, <name>1 ... (left to right), its foot
 //            the middle of its lowest row.
@@ -54,9 +56,9 @@ for (const R of RIGS) {
   if (R.kind === 'place') {
     // the lying part: everything outside the standing polygons, at 60% of the standing parts' resolution (it is soft ground and cloud)
     const gk = k * 0.6, GW = Math.round(meta.width * gk), GH = Math.round(meta.height * gk), gpx = await sharp(join(HERE, R.src)).ensureAlpha().resize(GW, GH, { kernel: 'lanczos3' }).raw().toBuffer(); finish(gpx, GW, GH, R.sat ?? 0.82);
-    const GP = (R.stand || []).map((st) => st.poly.map(([x, y]) => [x * gk, y * gk])), g = crop(gpx, GW, GH, (x, y) => !GP.some((P) => inPoly(x + 0.5, y + 0.5, P))), f = [R.foot[0] * gk, R.foot[1] * gk];
+    const GP = (R.stand || []).map((st) => st.poly.map(([x, y]) => [x * gk, y * gk])), g = crop(gpx, GW, GH, (x, y) => (R.groundBelow == null || y + 0.5 >= R.groundBelow * gk) && !GP.some((P) => inPoly(x + 0.5, y + 0.5, P))), f = [R.foot[0] * gk, R.foot[1] * gk];
     pieces.push({ name: R.name + '.g', ...g, px: f[0] - g.x0, py: f[1] - g.y0, r: 0, s: res * 0.6, rig: R.atlas || 'paint' });
-    for (const st of R.stand || []) { const P = S(st.poly), c = crop(px, W, H, (x, y) => inPoly(x + 0.5, y + 0.5, P)); if (!c) continue; const sf = S([st.foot])[0];
+    for (const st of R.stand || []) { const P = S(st.poly), HO = (st.holes || []).map((h) => h.map((v) => v * k)), c = crop(px, W, H, (x, y) => inPoly(x + 0.5, y + 0.5, P) && !HO.some(([a, b, c2, d]) => x + 0.5 > a && x + 0.5 < c2 && y + 0.5 > b && y + 0.5 < d)); if (!c) continue; const sf = S([st.foot])[0];
       if (st.dropPale) dropPale(c, st.dropPale); if (st.fade) fadeBottom(c, Math.round(st.fade * k));
       pieces.push({ name: st.name, ...c, px: sf[0] - c.x0, py: sf[1] - c.y0, r: st.r ?? 60, s: res, rig: R.atlas || 'paint' }); }
   } else if (R.kind === 'whole') {   // the whole picture standing (a wall, a gate): foot at R.foot

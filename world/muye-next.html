@@ -28,6 +28,7 @@
     <strong id="timer" role="timer" hidden></strong>
     <div class="side right">
       <div class="vital" id="dash" hidden><kbd id="dash-key">Space</kbd><span class="label" id="dash-label"></span><i class="track"><i class="fill" id="dash-fill"></i></i></div>
+      <div class="vital" id="remain" hidden><i class="rseal" id="remain-seal" aria-hidden="true"></i><span class="label" id="remain-label"></span><span class="num" id="remain-num"></span><small id="remain-more"></small></div>
       <div class="vital" id="kills" hidden><span class="label" id="kills-label"></span><span class="num" id="kills-num"></span></div>
       <span class="tools"><button id="sound"></button><button id="lang">中文</button></span>
     </div>
@@ -35,7 +36,7 @@
   <div id="afflict" role="status" aria-live="polite"></div>
   <section id="build" aria-label="Build" hidden></section>
   <section id="timeline" aria-label="Campaign" hidden><div class="tl-track"></div><p class="next" aria-live="off"></p></section>
-  <section id="bossbar" aria-live="polite"><div class="who"><span class="bseal" aria-hidden="true"></span><strong></strong><small></small></div><canvas aria-hidden="true"></canvas><span class="bphase"></span></section>
+  <section id="bossbar" aria-live="polite"><div class="who"><span class="bseal" aria-hidden="true"></span><strong></strong><small></small><span class="bward" hidden></span></div><canvas aria-hidden="true"></canvas><span class="bphase"></span></section>
   <div id="herald" role="status" aria-live="polite"><i class="roller l"></i><div class="paper"><img class="hface" alt="" decoding="async" hidden><small class="kicker"></small><strong></strong><span class="sub"></span><span class="extra"></span></div><i class="roller r"></i></div>
 
   <div id="banner" role="status" aria-live="polite"></div>

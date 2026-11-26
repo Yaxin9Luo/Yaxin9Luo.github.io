@@ -68,7 +68,14 @@ const COPY = {
     lang: 'en', next: 'Next', facing: 'Now:', nextSmall: 'a Shang commander', march: 'On the march', finalStretch: 'Before the walls of Zhaoge',
     stretchKicker: n => `Stretch ${['one', 'two', 'three', 'four'][n] || n + 1}`, finalKicker: 'The last battle', marchKicker: 'The Shang break and run', marchTo: name => `On to ${name.replace(/^The /, 'the ')}`,
     arrives: 'arrives', lieutenant: 'comes to his side', phaseOf: (name, n) => `${name}: phase ${n + 1}`, enraged: name => `${name} is enraged`, weary: name => `${name} flags`, wearySub: 'every blow tells more; he presses in', bossDown: name => `${name} has fallen`, smallDown: name => `${name} is driven off`,
-    guards: 'The Imperial Guard', guardsSub: 'King Zhou rides out: every Shang soldier on the field is now one of his guard', zhouEnd: 'King Zhou withdraws into the Star-Plucking Tower as it burns',
+    meishanKicker: 'The Seven of Meishan', meishanSub: names => `${names} come with him`,
+    lastWaveKicker: 'The last host', lastWave: 'The last of Shang\'s common host', lastWaveSub: n => `no more will come · ${n} left, then none`,
+    remainCommon: 'Shang left', remainGuard: 'Guard left', remainMore: n => `${n} in the gate`,
+    wardLabel: (n, k) => `warded by ${n} · takes ${k === .5 ? 'half' : `${Math.round(k * 100)}%`}`, wardBroken: name => `${name}'s ward is broken`, wardBrokenSub: 'every blow now strikes him in full',
+    routSub: n => `${n} of the remnant flee`,
+    hostKicker: 'The Meridian Gate opens', host: n => `The Imperial Guard · ${n} men`, hostExtra: 'King Zhou\'s last men: when they fall, he stands alone',
+    hostReserve: 'The reserve rides out', hostReservePhase: n => `King Zhou falters: ${n} more ride out to guard him`, hostReserveBroken: n => `the first rank is gone: the last ${n} ride out`,
+    lastGuard: 'The last guard has fallen', lastGuardSub: (names, n) => n > 2 ? `only King Zhou and ${n} of his own are left` : names ? `only King Zhou and ${names} are left` : 'only King Zhou is left', zhouEnd: 'King Zhou withdraws into the Star-Plucking Tower as it burns',
     // what afflicts the hero (SPEC-CAMPAIGN 1.11): one chip each by the health bar
     spoilKicker: from => `Spoil · taken from ${from}`, spoilHeal: 'Whole again: your health is full', spoilPayoff: 'His chest holds a sure payoff', spoilFrom: from => `taken from ${from}`, spoilsEnd: 'Spoils', noSpoils: 'No boss fell to you, so no spoil.',
     reachNear: words => `Close: ${words}`, reachFar: px => `Shoots ${px} px`, reachTip: 'reach', mounts: r => r < .9 ? 'under a mount\'s length' : r < 1.1 ? 'a mount\'s length' : r < 1.35 ? 'a little over a mount\'s length' : r < 1.65 ? 'a mount and a half' : `${(Math.round(r * 2) / 2)} mounts' length`,
@@ -118,7 +125,14 @@ const COPY = {
     lang: 'zh', next: '下一将', facing: '决战', nextSmall: '商将', march: '行军中', finalStretch: '朝歌城下',
     stretchKicker: n => `第${'一二三四'[n] || n + 1}段`, finalKicker: '最后一战', marchKicker: '商军溃散', marchTo: name => `进军 · ${name}`,
     arrives: '来袭', lieutenant: '随行', phaseOf: (name, n) => `${name} · 第${'一二三四五'[n] || n + 1}阶段`, enraged: name => `${name}狂暴`, weary: name => `${name}力竭`, wearySub: '每一击都伤他更深，他也逼得更紧', bossDown: name => `${name}败亡`, smallDown: name => `${name}败走`,
-    guards: '御林军', guardsSub: '纣王亲征：场上商军尽换御林军', zhouEnd: '纣王退入摘星楼，楼火冲天',
+    meishanKicker: '梅山七怪', meishanSub: names => `${names} 同至`,
+    lastWaveKicker: '最后一阵', lastWave: '商军最后一阵', lastWaveSub: n => `再无援兵 · 尚余 ${n} 人，打完就没了`,
+    remainCommon: '残军', remainGuard: '御林军', remainMore: n => `其中 ${n} 人未出城`,
+    wardLabel: (n, k, kin) => `${'一二三四五六七'[n - 1] || n}${kin ? '怪护体' : '将护驾'} · 受伤${k === .5 ? '减半' : `只及${Math.round(k * 100)}%`}`, wardBroken: name => `${name}护体已破`, wardBrokenSub: '此后每一击都伤他全力',
+    routSub: n => `${n} 名残兵四散奔逃`,
+    hostKicker: '午门大开', host: n => `御林军 · ${n} 人`, hostExtra: '纣王最后的兵马，杀尽便只剩他一人',
+    hostReserve: '后队出城', hostReservePhase: n => `纣王力竭，再出 ${n} 人护驾`, hostReserveBroken: n => `前队尽没，最后 ${n} 人出城`,
+    lastGuard: '御林军尽没', lastGuardSub: (names, n) => n > 2 ? `只剩纣王与${'一二三四五六七八九'[n - 1] || n}员随驾` : names ? `只剩纣王与${names}` : '只剩纣王一人', zhouEnd: '纣王退入摘星楼，楼火冲天',
     spoilKicker: from => `战利品 · 得自${from}`, spoilHeal: '气血全复', spoilPayoff: '他的宝箱必出一件大成', spoilFrom: from => `得自${from}`, spoilsEnd: '战利品', noSpoils: '没有斩下 Boss，没有战利品。',
     reachNear: words => `近身 · ${words}`, reachFar: px => `远射 · ${px} 像素`, reachTip: '攻击距离', mounts: r => r < .9 ? '不到一马身' : r < 1.1 ? '一马身' : r < 1.35 ? '一马身多' : r < 1.65 ? '一个半马身' : `${Math.round(r * 2) / 2} 马身`,
     afflict: {afoot: ['落马', '不能腾跃'], held: ['被擒', '不能移动'], bleed: ['失血', '骑过解药'], dizzy: ['失魂', '不能腾跃'], dazzled: ['目眩', '预警难辨'], weak: ['瘟疫', '法宝减弱']},
@@ -402,6 +416,7 @@ let arrived = {kind: '', at: -1e9};
     his banner goes before any other waiting. One banner for one foe, whether the rules say it by `arrive`, by `boss`, or by both. */
 function arrival(e, last) {
   const now = performance.now(); if (arrived.kind === e.kind && now - arrived.at < 3000) return; arrived = {kind: e.kind, at: now};
+  if (finale.quiet.has(e.id)) { const r0 = rowOf('foe', e.kind); if (metaStore.see(e.tier || (r0 && r0.named) ? 'boss' : 'foe', e.kind)) runLog.fresh.push([e.tier ? 'boss' : 'foe', e.kind]); return; }      // 袁洪 and his six: one herald, on `meishan`
   const r = rowOf('foe', e.kind), named = e.name || (r && (r.named || e.named) && r.name), title = e.title || (r && r.title);
   const tier = e.tier || (r && r.named ? tierOf({kind: e.kind, named: true}) : '');
   if (metaStore.see(tier ? 'boss' : 'foe', e.kind)) runLog.fresh.push([tier ? 'boss' : 'foe', e.kind]);
@@ -479,6 +494,9 @@ function bossDown(e) {
 }
 let freshSign = null;
 const joined = new Set();
+/** The finale's page state: 袁洪 and his six (for the ward's marks), whether the last host and the guard are being counted. */
+const newFinale = () => ({quiet: new Set(), demons: [], ward: {}, broken: new Set(), lastWave: false, host: false, roster: {}, lastGuardAt: -1});
+let finale = newFinale(), wardKey = '', remainKey = '';
 function join(id) { if (joined.has(id)) return; joined.add(id); const r = rowOf('general', id); if (r) { banner(t.joins(r.name[lang] || r.name.en)); audio.general(r.element); } freshSign = id; buildKey = ''; }
 function handle(e) {
   const h = game.hero;
@@ -534,14 +552,27 @@ function handle(e) {
     case 'stretch': herald(e.index === 0 && game.t < 1 ? t.stretchKicker(0) : t.stretchKicker(e.index), (e.name && (e.name[lang] || e.name.en)) || stretchName(e.index), '', 'stretch'); timeline && timeline.reset(); break;
     case 'march': herald(t.march, t.marchTo(stretchName(e.to)), '', 'march'); break;
     case 'marchEnd': break;
-    case 'rout': if (e.count > 0) banner(t.marchKicker, false); break;      // after the fallen boss's own line
+    case 'rout': if (e.count > 0) banner(t.marchKicker, false, t.routSub(e.count)); break;      // after the fallen boss's own line
     case 'summoned': break;
     case 'weary': { const n = nameOf(sim, e.kind, lang); banner(t.weary(n.name), false, t.wearySub, false, false, e.id); break; }      // past his band (SPEC 1.14): told once; dropped if he falls first
     case 'bossPhase': { const n = nameOf(sim, e.kind, lang); banner(t.phaseOf(n.name, e.phase), true, phaseWords(e.kind, e.phase), false, false, e.id); $('bossbar').classList.remove('phase'); void $('bossbar').offsetWidth; $('bossbar').classList.add('phase'); audio.encircle(); break; }
     case 'enrage': banner(t.enraged(nameOf(sim, e.kind, lang).name), true, '', false, false, e.id); audio.encircle(); break;
     case 'bossDown': bossDown(e); break;
     case 'spoil': spoilTaken(e); break;
-    case 'guards': herald(t.finalKicker, t.guards, t.guardsSub, 'guards'); break;
+    // the finale (SPEC-CAMPAIGN 1.16): the last of everything, said and counted so the player sees the host is finite
+    case 'meishan': { finale.demons = e.demons || []; const n = nameOf(sim, e.kind, lang), r = rowOf('foe', e.kind) || {};
+      herald(t.meishanKicker, n.name, t.meishanSub(finale.demons.map(d => nameOf(sim, d.kind, lang).name).join(lang === 'zh' ? '、' : ', ')), 'big', n.zhName[0], e.kind); audio.named(true); break; }
+    case 'lastWave': finale.lastWave = true; herald(t.lastWaveKicker, t.lastWave, t.lastWaveSub(e.count), 'guards'); break;
+    case 'kinWard': { const by = e.by || [];      // 袁洪 by his six, 纣王 by his three generals: the first word names who wards him, for the marks on his bar
+      if (!finale.ward[e.id] && by.length) finale.ward[e.id] = by.map(id => { const o = game.foes.find(f => f.id === id); return {id, kind: o ? o.kind : ''}; });
+      if (!by.length && finale.ward[e.id] && !finale.broken.has(e.id)) { finale.broken.add(e.id); banner(t.wardBroken(nameOf(sim, e.kind, lang).name), true, t.wardBrokenSub, true); }
+      wardKey = ''; break; }
+    case 'host': { finale.host = true; finale.roster = e.roster || {}; const all = Object.values(finale.roster).reduce((a, b) => a + b, 0);
+      const list = Object.entries(finale.roster).sort((a, b) => b[1] - a[1]).map(([k, n]) => [...foeName(k)].join('\u2060') + `\u00a0${n}`).join(' · ');      // each name and its number stay whole at a line's end (Chinese may break between any two characters: a word joiner between them)
+      herald(t.hostKicker, t.host(all), list, 'guards', '御', '', t.hostExtra); break; }
+    case 'hostReserve': banner(t.hostReserve, true, e.why === 'phase' ? t.hostReservePhase(e.count) : t.hostReserveBroken(e.count), true); break;
+    case 'lastGuard': { finale.lastGuardAt = game.t; const left = game.foes.filter(o => o.state !== 'dead' && o.tier === 'lieutenant' && o.hp > 0).map(o => nameOf(sim, o.kind, lang).name);
+      payoff(t.lastGuard, t.lastGuardSub(left.join(lang === 'zh' ? '、' : ', '), left.length)); break; }      // short enough to read mid-fight: names only for two or fewer
     // the rest of the run (SPEC-CAMPAIGN 1.11): what the bosses do to the hero, said once, plainly; the strip keeps the time
     case 'lightTaken': banner(t.lightTaken(t.elements[e.element] || e.element), true, '', true); buildKey = ''; audio.refuse(); break;
     case 'lightReturned': banner(t.lightBack(t.elements[e.element] || e.element), false); buildKey = ''; break;
@@ -599,8 +630,9 @@ function draw(alpha, dt, realDt) {
   cp = campaignNow(sim, game);
   const fighting = (mode === 'play' || mode === 'paused') && endAt !== Infinity;
   if (fighting && cp.bar !== barWho) { barWho = cp.bar; const u = game.foes.find(f => f.id === cp.bar); if (u) { const n = nameOf(sim, u.kind, lang), bb = $('bossbar'); bb.querySelector('strong').textContent = n.name; bb.querySelector('small').textContent = n.title; bb.querySelector('.bseal').textContent = n.zhName[0]; bb.className = ''; } }
-  if (fighting) { bars.draw(game, art, {cam, ky: art.KY || .62, alpha}, realDt, cp.bar); bars.pointers(game, {cam, ky: art.KY || .62, alpha}, bossSign, [buildRect()]); bars.antidotes(game, {cam, ky: art.KY || .62}, antidoteIcon(), [buildRect()]); $('bossbar').classList.toggle('faint', bars.topOverWarning(game, {cam, ky: art.KY || .62, alpha, art})); }
-  else if (barsShown) bars.clear();
+  if (fighting) { bars.draw(game, art, {cam, ky: art.KY || .62, alpha}, realDt, cp.bar); bars.pointers(game, {cam, ky: art.KY || .62, alpha}, bossSign, [buildRect()]); bars.antidotes(game, {cam, ky: art.KY || .62}, antidoteIcon(), [buildRect()]); $('bossbar').classList.toggle('faint', bars.topOverWarning(game, {cam, ky: art.KY || .62, alpha, art}));
+    for (const id of ['banner', 'herald']) { const el = $(id); if (el) el.classList.toggle('faint', el.classList.contains('show') && bars.rectOverWarning(game, {cam, ky: art.KY || .62}, el.getBoundingClientRect())); } }      // a line in the middle of a fight never hides a warned blow: it gives way as the bar does
+  else if (barsShown) { bars.clear(); for (const id of ['banner', 'herald']) { const el = $(id); if (el) el.classList.remove('faint'); } }
   barsShown = fighting;
 }
 let barsShown = false, barWho = -1;
@@ -633,6 +665,7 @@ function hud() {
     $('dash-key').textContent = lang === 'zh' ? '空格' : 'Space';
   }
   if (timeline && cp && (mode === 'play' || mode === 'paused') && endAt !== Infinity) timeline.update(cp, game, lang, t);
+  finaleHud((mode === 'play' || mode === 'paused') && endAt !== Infinity);
   afflictions(h, (mode === 'play' || mode === 'paused') && endAt !== Infinity && game.phase !== 'lost' && h.hp > 0);      // gone when he falls, as the antidote pointers are
   if (cp && cp.next && cp.next.kind && cp.next.t - game.t < 25) { warm(cp.next.kind); warmFigure(cp.next.kind); warmSpoil(spoilOfKind(cp.next.kind)); }      // his herald's portrait and his figure's images, before he comes
   const b = game.build, gens = b.generals || [], lt = game.lightTaken || {}, bk = `${lang}|${Object.keys(lt).map(k => lt[k] > game.t ? k + Math.ceil(lt[k] - game.t) : '').join('')}|${b.weapon ? b.weapon.id + b.weapon.level + (b.weapon.evolved ? 'e' : '') : ''}|${b.treasures.map(e => e.id + e.level + (e.evolved ? 'e' : '')).join()}|${b.arts.map(e => e.id + e.level).join()}|${b.troops.map(e => e.id + e.level + 'r' + rankOfEntry(e)).join()}|${gens.map(e => e.id + e.level + (e.trueForm ? 'f' : '') + 'a' + Math.ceil(awayOf(e))).join()}|${b.formation ? b.formation.id + b.formation.level : ''}|${(b.resonance || []).join()}|${(b.spoils || []).map(x => x.id).join()}`;
@@ -677,6 +710,32 @@ function afflictions(h, on) {
   el.innerHTML = list.map(([k, s, w]) => `<span class="ail ail-${k}" title="${esc(t.afflict[k][1])}"><i>${AFFLICT_SIGN[k]}</i><b>${t.afflict[k][0]}</b><em>${s > 0 ? `${s.toFixed(1)} s` : esc(w || t.afflict[k][1])}</em></span>`).join('');
   document.documentElement.classList.toggle('afflicted', list.length > 0); document.documentElement.style.setProperty('--ail-rows', list.length);
   $('hp').classList.toggle('bleeding', list.some(([k]) => k === 'bleed'));
+}
+/** The finale's counts: the last common host while 袁洪's fight lasts, then the guard (alive, still in the gate, and the
+    reserve) until a little after the last falls; and the ward on 袁洪's bar, one seal a demon, struck out as each falls. */
+function finaleHud(playing) {
+  const C = game.campaign || {}, stage = C.stage;
+  let kind = '', n = 0, more = 0;
+  if (playing && finale.lastWave && stage === 'meishan') { for (const o of game.foes) if (o.lastHost && o.state !== 'dead' && o.hp > 0 && !o.flee) n++; if (n || finale.flagged) { kind = 'common'; finale.flagged = true; } }      // by the rules' flag only: without it, no chip
+  else if (playing && finale.host && (stage === 'sortie' || (stage === 'king' && game.t - finale.lastGuardAt < 4))) {
+    kind = 'guard'; for (const o of game.foes) if (o.host && o.state !== 'dead' && o.hp > 0) n++;
+    more = C.reserve ? C.reserve.length : 0; n += C.toCome != null ? Math.max(0, C.toCome - more) : (C.issue || []).length;      // `toCome`: still in the gate, the reserve with them
+  }
+  const rk = `${lang}|${kind}|${n}|${more}`;
+  const el = $('remain');      // a page without the chip (an older html) shows none
+  if (el && rk !== remainKey) {
+    remainKey = rk; el.hidden = !kind; document.documentElement.classList.toggle('counting', !!kind);
+    if (kind) { text('remain-seal', kind === 'guard' ? '御' : '残'); text('remain-label', kind === 'guard' ? t.remainGuard : t.remainCommon); text('remain-num', String(n + more)); text('remain-more', more ? t.remainMore(more) : ''); el.classList.toggle('none', n + more === 0); }
+  }
+  const u = playing && finale.ward[barWho] ? game.foes.find(f => f.id === barWho) : null, marks = u ? finale.ward[u.id] : [];
+  const by = u && u.kinKey ? u.kinKey.split(',').map(Number) : [], wk = `${lang}|${u ? u.id : ''}|${by.join()}|${u ? u.kinK : ''}`;
+  if (wk !== wardKey) {
+    wardKey = wk; const w = $('bossbar') && $('bossbar').querySelector('.bward');
+    if (!w) return;
+    w.hidden = !(u && by.length);
+    if (!w.hidden) w.innerHTML = `<b>${esc(t.wardLabel(by.length, u.kinK || .5, u.kind === 'yuanhong'))}</b>${marks.map(d => `<i class="${by.includes(d.id) ? '' : 'out'}">${esc(nameOf(sim, d.kind, 'zh').zhName[0])}</i>`).join('')}`;
+    $('bossbar').classList.toggle('warded', !w.hidden);
+  }
 }
 /** One sign: a round mark in its element's pigment with one character, the level beside it, the words on hover and focus. */
 /** Seconds until a withdrawn general is back; 0 while he fights. */
@@ -921,7 +980,7 @@ async function begin(sameSeed) {
   $('camp').hidden = true; document.documentElement.classList.remove('in-camp');
   runLog.down.length = 0; runLog.spoils.length = 0; runLog.fresh.length = 0; spoilHoldUntil = 0; spoilShowUntil = 0; spoilReadUntil = 0; spoilPending = 0; spoilUpAt = 0; runLog.merit = null; runLog.meritParts = null; runLog.tierOpened = null; runLog.saved = false; downIds.clear();
   bars.clear(); if (timeline) timeline.reset(); barWho = -1; heraldUntil = 0; heralds.length = 0; afflictKey = '-'; $('herald').className = '';
-  used = true; endAt = 0; fallAt = -1; hurtFlash = 0; shake.t = 1; bot.n = 0; toneAt = -1; banishing = false; taken = -1; freshSign = null; document.documentElement.classList.remove('paused'); joined.clear(); banners.length = 0; bannerUntil = 0; easeAt = 0;
+  used = true; endAt = 0; fallAt = -1; hurtFlash = 0; shake.t = 1; bot.n = 0; toneAt = -1; banishing = false; taken = -1; freshSign = null; document.documentElement.classList.remove('paused'); joined.clear(); finale = newFinale(); wardKey = remainKey = ''; banners.length = 0; bannerUntil = 0; easeAt = 0;
   edge.dash = edge.reroll = false; edge.pick = edge.banish = null;
   look.x = look.y = look.vx = look.vy = 0; north.y = north.v = 0;
   if (bench) benchSetup();
@@ -1033,7 +1092,7 @@ function frame(now) {
       const couldDash = (game.hero.dashCd || 0) <= 0;
       sim.step(game, input, STEP);
       acc -= STEP;
-      if (game.events.length) { for (const e of game.events) { art.onEvent(e, game); handle(e); if (perf.on && frameEvents.length < 12) frameEvents.push(e.type); } game.events.length = 0; }
+      if (game.events.length) { const ms = game.events.find(e => e.type === 'meishan'); if (ms) finale.quiet = new Set([ms.id, ...(ms.demons || []).map(d => d.id)]); for (const e of game.events) { art.onEvent(e, game); handle(e); if (perf.on && frameEvents.length < 12) frameEvents.push(e.type); } game.events.length = 0; }
       if (input.dash && !couldDash && game.phase === 'fight' && !bench) { const el = $('dash'); el.classList.remove('short'); void el.offsetWidth; el.classList.add('short'); audio.refuse(); }
       if (ended() && !endAt) endAt = performance.now() + 1000;
     }

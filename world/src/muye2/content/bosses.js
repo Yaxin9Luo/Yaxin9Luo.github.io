@@ -65,6 +65,8 @@ const pat = (id, base, more) => ({id, ...P[base], ...more});
 const officer = (id, en, zh, title, ch, patterns, more = {}) => ({id, element: null, name: T(en, zh), title, ch,
   ai: 'named', tier: 'lieutenant', hp: 2600, armour: 20, speed: 96, dmg: 18, r: 20, xp: 20, elite: true, heavy: true, boss: true, named: true, patterns, ...more,
   text: T(`${en}, a named officer: a short bar, warned blows of his own; he leaves a peach.`, `${zh}：有名有姓的部将，头顶短血条，有自己的带预警招式；击杀掉落仙桃。`)});
+const demon = (id, en, zh, title, ch, patterns, more = {}) => ({...officer(id, en, zh, title, ch, patterns, {tier: 'small', hp: 80000, armour: 50, dmg: 26, demon: true, cap: 1 / 60, weary: 65, ...more}),
+  text: T(`${en}, one of the seven of 梅山 who come with 袁洪: a short bar, two warned blows; while any of them lives 袁洪 takes only a fifth of every blow. He leaves a peach.`, `${zh}：随袁洪而来的梅山七怪之一，头顶短血条，两种带预警的招式；他们有一个活着，袁洪便只受五分之一的伤害。击杀掉落仙桃。`)});
 const beast = (id, en, zh, rider) => ({id, element: null, name: T(en, zh), ch: 38, ai: 'charge', hp: 300, speed: 120, dmg: 16, r: 20, xp: 10, heavy: true,
   sight: 460, warn: .8, length: 420, width: 48, chargeSpeed: 600, rest: 1.2, between: 4.5,
   text: T(`The ${en.toLowerCase()} the Nine-Dragon Isle sage ${rider} rode: one of 张桂芳's four beasts. It shows a short lane, then lunges down it.`, `九龙岛${rider}的坐骑${zh}，张桂芳的四只异兽之一。先亮出短冲锋道，再沿道扑来。`)});
@@ -125,33 +127,34 @@ bosses.push(
     patterns: [pat('greatBlade', 'rush', {dmg: 38, cd: 7.5}), pat('fiveLights', 'bands', {great: true, dmg: 24, cd: 8, effect: 'light', time: 12}), pat('lightSweep', 'cone', {dmg: 36, cd: 6, effect: 'light', time: 8, from: 1})],
     text: T('Five lights in five colours: a light that catches you sweeps away your treasures of its element for a while (wood, fire, earth, metal, water in turn). Do not build on one element alone.', '五色神光：被哪一道光刷中，你那一行的法宝便一时失效（木、火、土、金、水依次轮转）。莫只走一系。')},
   {id: 'yuanhong', element: 'metal', name: T('Yuan Hong', '袁洪'), title: T('the White Ape of Plum Mountain, with the iron staff and the Eight-Nine Arts', '梅山白猿，宾铁棍，八九玄功'), treasure: T('Eight-Nine Arts', '八九玄功'), ch: 88,
-    ai: 'named', tier: 'big', phases: [1, .66, .33], hp: 300000, armour: 62, speed: 104, dmg: 30, r: 31, xp: 0, elite: true, heavy: true, boss: true, named: true,
-    retinue: [{kind: 'wulong'}, {kind: 'changhao'}, {kind: 'daili', phase: 1}, {kind: 'jindasheng', phase: 1}, {kind: 'zhuzizhen', phase: 2}, {kind: 'yangxian', phase: 2},
-      {kind: 'centipede', count: 6}, {kind: 'snake', count: 6}, {kind: 'dog', count: 6, phase: 1}, {kind: 'buffalo', count: 4, phase: 1}, {kind: 'boar', count: 6, phase: 2}, {kind: 'goat', count: 6, phase: 2}],
-    patterns: [pat('ironStaff', 'rush', {dmg: 40, cd: 7}), {id: 'stoneForm', shape: 'stone', warn: .4, life: 3, cd: 14, within: 700}, pat('clearWind', 'scatter', {great: true, dmg: 34, cd: 8, vanish: true, from: 1}), pat('staffRing', 'ring', {dmg: 34, cd: 5.5})],
-    text: T('Under the blade he turns to stone (blows do little for a while) or to a clear wind (he is gone, and comes back beside you as five blows fall round you). His six fiends come out one pair at a time.', '刀下化为顽石（一时刀枪难伤），或化清风而去（不见踪影，再现于你身旁，同时五处落击）。六怪两两现出本相。')},
-  officer('wulong', 'Wu Long', '吴龙', T('the Centipede, who hides in black mist', '蜈蚣精，藏于黑雾'), 91, [pat('blackMist', 'scatter', {dmg: 24, cd: 7})], {hp: 6000, armour: 40}),
-  officer('changhao', 'Chang Hao', '常昊', T('the White Snake', '白蛇精'), 91, [pat('serpentStrike', 'charge', {dmg: 26, cd: 6})], {hp: 6000, armour: 40}),
-  officer('daili', 'Dai Li', '戴礼', T('the Hound, with two blades and a red pearl', '狗精，双刀，口吐红珠'), 92, [pat('redPearl', 'pair', {dmg: 26, cd: 5.5})], {hp: 6000, armour: 40}),
-  officer('jindasheng', 'Jin Dasheng', '金大升', T('the Buffalo, who spits ox-bezoar like lightning', '水牛精，喷牛黄如火电'), 92, [pat('bezoar', 'blast', {dmg: 28, cd: 7})], {hp: 7000, armour: 44, r: 27}),
-  officer('zhuzizhen', 'Zhu Zizhen', '朱子真', T('the Boar, who swallows a man whole', '猪精，一口吞人'), 92, [pat('swallow', 'one', {dmg: 22, cd: 7, effect: 'held', time: 1.5, how: 'swallow'})], {hp: 7000, armour: 44}),
-  officer('yangxian', 'Yang Xian', '杨显', T('the Goat, with the halberd and the white light', '羊精，持戟，吐白光'), 92, [pat('whiteLight', 'cone', {dmg: 28, cd: 6.5})], {hp: 6000, armour: 40}),
+    ai: 'named', tier: 'big', phases: [1, .66, .33], hp: 600000, weary: 115, armour: 62, speed: 104, dmg: 38, r: 31, xp: 0, elite: true, heavy: true, boss: true, named: true,
+    // the finale (SPEC-CAMPAIGN 1.16): the six of 梅山 come with him at once, and while any lives he takes `kin` of every blow
+    retinue: [{kind: 'wulong'}, {kind: 'changhao'}, {kind: 'daili'}, {kind: 'jindasheng'}, {kind: 'zhuzizhen'}, {kind: 'yangxian'}], kin: .2,
+    patterns: [pat('ironStaff', 'rush', {dmg: 50, cd: 6}), {id: 'stoneForm', shape: 'stone', warn: .4, life: 3, cd: 12, within: 700}, pat('clearWind', 'scatter', {great: true, dmg: 43, cd: 6.8, vanish: true, from: 1}), pat('staffRing', 'ring', {dmg: 43, cd: 4.7})],
+    text: T('He comes with all six of 梅山 at once, and the Shang then on the field are the last of their host: none come after them. While any of the six lives he takes only a fifth of every blow: kill them first. Under the blade he turns to stone (blows do little for a while) or to a clear wind (he is gone, and comes back beside you as five blows fall round you). When he falls the Shang left on the field break and flee.', '他与梅山六怪一同现身，此时场上的商军便是最后一批，再无后援。六怪有一个活着，他便只受五分之一的伤害：先除六怪。刀下化为顽石（一时刀枪难伤），或化清风而去（不见踪影，再现于你身旁，同时五处落击）。他一倒下，场上残余商军溃逃。')},
+  // 梅山七怪 (ch. 91-92): 袁洪's six, each a small boss of the finale with two warned blows; each leaves a peach, not a chest
+  demon('wulong', 'Wu Long', '吴龙', T('the Centipede, who hides in black mist', '蜈蚣精，藏于黑雾'), 91, [pat('blackMist', 'scatter', {dmg: 34, cd: 7}), pat('coil', 'ring', {dmg: 30, cd: 6.5})]),
+  demon('changhao', 'Chang Hao', '常昊', T('the White Snake', '白蛇精'), 91, [pat('serpentStrike', 'charge', {dmg: 36, cd: 6}), pat('venom', 'one', {dmg: 24, cd: 8, leaves: {kind: 'plague', life: 6, slow: .3, weak: .3}})]),
+  demon('daili', 'Dai Li', '戴礼', T('the Hound, with two blades and a red pearl', '狗精，双刀，口吐红珠'), 92, [pat('redPearl', 'pair', {dmg: 36, cd: 5.5}), pat('houndLeap', 'charge', {dmg: 30, cd: 6})]),
+  demon('jindasheng', 'Jin Dasheng', '金大升', T('the Buffalo, who spits ox-bezoar like lightning', '水牛精，喷牛黄如火电'), 92, [pat('bezoar', 'blast', {dmg: 39, cd: 7}), pat('horns', 'rush', {dmg: 34, cd: 7.5})], {r: 27, hp: 90000}),
+  demon('zhuzizhen', 'Zhu Zizhen', '朱子真', T('the Boar, who swallows a man whole', '猪精，一口吞人'), 92, [pat('swallow', 'one', {dmg: 31, cd: 7, effect: 'held', time: 1.5, how: 'swallow'}), pat('trample', 'charge', {dmg: 30, cd: 6.5})], {hp: 90000}),
+  demon('yangxian', 'Yang Xian', '杨显', T('the Goat, with the halberd and the white light', '羊精，持戟，吐白光'), 92, [pat('whiteLight', 'cone', {dmg: 39, cd: 6.5}), pat('halberdSweep', 'cone', {dmg: 30, cd: 6, radius: 300, angle: 50, within: 260})]),
 
   // the final boss: 纣王 (research notes section 1; the lead's decision of 2026-11-25). PLACEHOLDER numbers.
   {id: 'zhouwang', element: 'earth', name: T('King Zhou of Shang', '纣王'), title: T('on the Carefree Horse, with the gold-backed blade, who once held up a fallen beam', '骑逍遥马，提金背刀，托梁换柱'), treasure: T('the Gold-backed Blade', '金背刀'), ch: 95,
-    ai: 'named', tier: 'final', phases: [1, .6, .25], hp: 170000, armour: 70, speed: 104, dmg: 32, r: 35, xp: 0, elite: true, heavy: true, boss: true, named: true,
-    retinue: [{kind: 'lurenjie'}, {kind: 'leikun'}, {kind: 'leipeng'}, {kind: 'daji', phase: 2}, {kind: 'ximei', phase: 2}, {kind: 'wanggui', phase: 2}],
+    ai: 'named', tier: 'final', phases: [1, .6, .25], hp: 280000, cap: 1 / 135, weary: 165, armour: 70, speed: 104, dmg: 32, r: 35, xp: 0, elite: true, heavy: true, boss: true, named: true,
+    retinue: [{kind: 'lurenjie'}, {kind: 'leikun'}, {kind: 'leipeng'}, {kind: 'daji'}, {kind: 'ximei'}, {kind: 'wanggui'}],      // all ride out of the gate with him (1.16)
     patterns: [
       pat('goldBlade', 'cone', {dmg: 40, cd: 5}),
       {id: 'holdThree', shape: 'guard', warn: .6, life: 3, cut: 140, cd: 14, within: 520},
       pat('unhorsingShout', 'cone', {dmg: 10, unhorse: 2, cd: 11, angle: 36, radius: 400}),
       pat('pillar', 'one', {great: true, dmg: 44, cd: 7, from: 1, radius: 110, warn: 1.35, leaves: {kind: 'pillar', life: 8, r: 60}}),
       pat('bambooWhip', 'pair', {dmg: 40, cd: 4.5, from: 1})],
-    text: T('He comes when 袁洪 falls, and every Shang on the field becomes a man of the 御林军. Three phases: at the Meridian Gate with 鲁仁杰, 雷鹍 and 雷鹏 (while they live he takes less); hemmed in, he grows fiercer and brings down a beam; spent, the three fox-spirits ride to him. Killing him wins: he withdraws into the Star-plucking Tower as it burns.', '袁洪死后登场，场上商军尽数换成御林军。三个阶段：午门亲征，鲁仁杰、雷鹍、雷鹏护驾（三将在时他受伤减少）；困在垓心，越战越勇，托梁换柱；气力难撑，三妖骑桃花马来援。击杀即胜：他退入摘星楼，楼焚。')},
-  officer('lurenjie', 'Lu Renjie', '鲁仁杰', T('Grand General of the 御林军, with the spear', '纣王驾下总督兵马大将军，用枪'), 94, [pat('guardSpear', 'charge', {dmg: 30, cd: 6})], {hp: 9000, armour: 48, guard: true}),
-  officer('leikun', 'Lei Kun', '雷鹍', T('the king\'s left wing', '纣王左翼'), 95, [pat('leftWing', 'pair', {dmg: 28, cd: 5.5})], {hp: 8000, armour: 46, guard: true}),
-  officer('leipeng', 'Lei Peng', '雷鹏', T('the king\'s right wing', '纣王右翼'), 95, [pat('rightWing', 'blast', {dmg: 28, cd: 7})], {hp: 8000, armour: 46, guard: true}),
-  officer('daji', 'Daji', '妲己', T('the nine-tailed fox, with two blades, on a peach-blossom horse', '九尾狐，双刀，骑桃花马'), 96, [pat('twinBlades', 'pair', {dmg: 30, cd: 5})], {hp: 9000, armour: 46}),
-  officer('ximei', 'Hu Ximei', '胡喜媚', T('the pheasant spirit, with two swords, on a peach-blossom horse', '九头雉鸡精，两口宝剑，骑桃花马'), 96, [pat('twinSwords', 'cone', {dmg: 30, cd: 6})], {hp: 8000, armour: 46}),
-  officer('wanggui', 'Lady Wang', '王贵人', T('the jade-pipa spirit, with the embroidered blade, on a peach-blossom horse', '玉石琵琶精，绣鸾刀，骑桃花马'), 96, [pat('embroideredBlade', 'charge', {dmg: 30, cd: 6})], {hp: 8000, armour: 46}),
+    text: T('When 袁洪 has fallen and his remnant fled, the gate of 朝歌 opens and he rides out with all he has left: 鲁仁杰, 雷鹍 and 雷鹏 (while any of the three lives he takes half), the three fox-spirits on their peach-blossom horses, and the last of the 御林军, rank after rank, the second rank held back for his last stand. They are the last: none come after them. Hemmed in, he grows fiercer and brings down a beam. Killing him wins: he withdraws into the Star-plucking Tower as it burns.', '袁洪倒下、残军溃逃之后，朝歌城门大开，他带着最后的一切冲出城来：鲁仁杰、雷鹍、雷鹏护驾（三将有一个在，他便只受一半伤害），三妖骑桃花马随驾，最后的御林军一排接一排，第二排留待他困兽之斗时才出。这便是最后一批，再无后援。困在垓心，越战越勇，托梁换柱。击杀即胜：他退入摘星楼，楼焚。')},
+  officer('lurenjie', 'Lu Renjie', '鲁仁杰', T('Grand General of the 御林军, with the spear', '纣王驾下总督兵马大将军，用枪'), 94, [pat('guardSpear', 'charge', {dmg: 30, cd: 6})], {hp: 27000, armour: 48, guard: true}),
+  officer('leikun', 'Lei Kun', '雷鹍', T('the king\'s left wing', '纣王左翼'), 95, [pat('leftWing', 'pair', {dmg: 28, cd: 5.5})], {hp: 24000, armour: 46, guard: true}),
+  officer('leipeng', 'Lei Peng', '雷鹏', T('the king\'s right wing', '纣王右翼'), 95, [pat('rightWing', 'blast', {dmg: 28, cd: 7})], {hp: 24000, armour: 46, guard: true}),
+  officer('daji', 'Daji', '妲己', T('the nine-tailed fox, with two blades, on a peach-blossom horse', '九尾狐，双刀，骑桃花马'), 96, [pat('twinBlades', 'pair', {dmg: 30, cd: 5})], {hp: 27000, armour: 46}),
+  officer('ximei', 'Hu Ximei', '胡喜媚', T('the pheasant spirit, with two swords, on a peach-blossom horse', '九头雉鸡精，两口宝剑，骑桃花马'), 96, [pat('twinSwords', 'cone', {dmg: 30, cd: 6})], {hp: 24000, armour: 46}),
+  officer('wanggui', 'Lady Wang', '王贵人', T('the jade-pipa spirit, with the embroidered blade, on a peach-blossom horse', '玉石琵琶精，绣鸾刀，骑桃花马'), 96, [pat('embroideredBlade', 'charge', {dmg: 30, cd: 6})], {hp: 24000, armour: 46}),
 );

@@ -393,7 +393,7 @@ function unitPose(fig, u, now, x, y, o = {}) {
   if (st === 'dead') { const L = S.fall, q = Math.min(L.length - 1, t / 0.14), i = Math.floor(q); return i >= L.length - 1 ? L[L.length - 1] : lerpP(L[i], L[i + 1], easeS(q - i)); }
   // the gait follows how fast he really moves on the ground (o.v, px/s, measured by drawUnit), so a rush or a slide the rules give
   // any state name still gallops; the state names are the fallback when no measure exists yet
-  const named = st === 'walk' || st === 'charge' || st === 'gallop' || st === 'skill', v = o.v;
+  const named = st === 'walk' || st === 'charge' || st === 'gallop' || st === 'skill' || st === 'flee', v = o.v;
   const moving = v != null ? v > 25 && st !== 'windup' && st !== 'stun' : named, fast = st === 'charge' || st === 'gallop' || (v != null && v > 220);
   const speed = moving ? (v != null ? Math.min(340, v * 1.15) : fast ? 300 : Math.min(200, (u.speed || 90) * 1.2)) : 0, g = Math.min(1, speed / 300), still = !moving;
   const stride = foot ? 0.9 * F.height + 40 : 2.1 * F.height + 30, phase = frac((x * 0.9 + y * 0.6) / stride + (u.id || 0) * 0.37);

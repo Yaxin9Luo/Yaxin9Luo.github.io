@@ -18,7 +18,12 @@ export const SCENES = ['xiqi', 'passes', 'mengjin'];
 const PAINT = { xiqi: ['paint', 'paint-xiqi'], passes: ['paint', 'paint-xiqi', 'paint-passes'], mengjin: ['paint', 'paint-xiqi', 'paint-mengjin'] };   // painted atlases each scene draws from (in baked/xiqi/)
 const bitmap = async (src) => { const r = await fetch(src); if (!r.ok) throw new Error('muye art: cannot load ' + src); return createImageBitmap(await r.blob()); };
 const clamp = (v, a = 0, b = 1) => (v < a ? a : v > b ? b : v);
-const DOORS = { 'pt-gate': { cell: 'gd-open0', open: true, foot: [770, 640], s: 0.95, rects: [[683, 478, 847, 642]] }, 'pt-citygate': { cell: 'gd-shut0', open: false, foot: [770, 606], s: 0.66, rects: [[579, 495, 656, 597], [682, 479, 785, 607], [807, 497, 888, 608]] } };
+const DOORS = { 'pt-gate': { cell: 'gd-open0', open: true, foot: [770, 640], s: 0.95, rects: [[683, 478, 847, 642]] } };
+// the gate of Zhaoge (imagegen/raw/z1-gate.png, rigs.json 'citygate'): its three mouths are holes in the standing piece; the painted
+// passages (gd-in0..2) stand behind them at the wall's line - 60, so a figure between the two is seen through the mouth and passes
+// under the lintel when it crosses the wall's line. Source px -> world: (x - 740) * 0.9 across, (y - 606) * 0.9 up from the foot.
+export const CITYGATE = { foot: [740, 606], s: 0.9, holes: [[590, 496, 646, 598], [692, 479, 775, 607], [814, 497, 878, 607]], back: 60, open: 1.0 };
+const cgRect = ([x0, y0, x1, y1]) => [(x0 - CITYGATE.foot[0]) * CITYGATE.s, (y0 - CITYGATE.foot[1]) * CITYGATE.s, (x1 - x0) * CITYGATE.s, (y1 - y0) * CITYGATE.s];
 const smooth = (a, b, v) => { const t = clamp((v - a) / (b - a)); return t * t * (3 - 2 * t); };
 export const WORLD = W0, CELL = 620, STAND = 1;
 // The day: the paper's tone and one colour screened over the ground for the ink's temperature. Figures are not tinted.
@@ -76,6 +81,12 @@ export async function loadGround(step = () => {}, seed = 7, firstScene = 'xiqi')
   /** change scene ('xiqi' | 'passes' | 'mengjin'): the field of this seed in that scene */
   /** a gate of the passes or of Zhaoge opening (rules: g.gates, event gateOpen): setGate(id, open); the doors cross over in 0.9 s */
   G.setGate = (id, open) => { const g = gates.get(id); if (g ? g.open !== open : open) gates.set(id, { open, t: now }); };
+  /** how far open a gate is now, 0 shut .. 1 open (the city gate swings over CITYGATE.open s, the passes' doors cross over 0.9 s) */
+  const openness = (id, span) => { const st = gates.get(id); if (!st) return 0; const u = smooth(0, span, now - st.t); return st.open ? u : 1 - u; };
+  G.openness = (id) => openness(id, CITYGATE.open);
+  /** the city gate's mouths in world units, for the rules and the effects (null outside scene three): see CITYGATE */
+  G.gateMouth = () => { const gp = L && L.wall != null && L.places.find((q) => q.id === 'citygate'); if (!gp) return null;
+    return { id: gp.id, wall: L.wall, inY: L.wall - 45, passY: L.wall + 20, open: openness(gp.id, CITYGATE.open), mouths: CITYGATE.holes.map((h) => { const [x, y, w, hh] = cgRect(h); return { x0: Math.round(gp.x + x), x1: Math.round(gp.x + x + w), height: Math.round(-y), lintelY: Math.round(-y) }; }) }; };
   G.setStretch = async (name) => { if (!SCENES.includes(name) || (L && scene === name)) return; scene = name; await relayout(); };
   /** start loading a scene's files (call some seconds before its march) */
   const pre = new Map(); G.preload = (name) => { const k = name + ':' + seedNow; if (!pre.has(k)) pre.set(k, bundle(name).then((b) => course(b, layoutOf(seedNow, name).course))); return pre.get(k); };
@@ -98,6 +109,9 @@ export async function loadGround(step = () => {}, seed = 7, firstScene = 'xiqi')
   const fog = document.createElement('canvas'); fog.width = 1; fog.height = 256; { const c = fog.getContext('2d'), g = c.createLinearGradient(0, 0, 0, 256); g.addColorStop(0, 'rgba(239,231,214,1)'); g.addColorStop(0.3, 'rgba(239,231,214,.55)'); g.addColorStop(0.6, 'rgba(239,231,214,.15)'); g.addColorStop(1, 'rgba(239,231,214,0)'); c.fillStyle = g; c.fillRect(0, 0, 1, 256); }
   // the sky over Zhaoge: ink and dull purple, heaviest at the top, a breath of red low in it (multiplied over the far band)
   const doom = document.createElement('canvas'); doom.width = 1; doom.height = 256; { const c = doom.getContext('2d'), g = c.createLinearGradient(0, 0, 0, 256); g.addColorStop(0, 'rgb(112,98,112)'); g.addColorStop(0.45, 'rgb(168,146,150)'); g.addColorStop(0.75, 'rgb(226,200,190)'); g.addColorStop(1, 'rgb(255,255,255)'); c.fillStyle = g; c.fillRect(0, 0, 1, 256); }
+  // torchlight in the gate's passages: a warm glow (screened) and a small flame, both drawn once
+  const glow = document.createElement('canvas'); glow.width = glow.height = 64; { const c = glow.getContext('2d'), g = c.createRadialGradient(32, 32, 0, 32, 32, 32); g.addColorStop(0, 'rgba(255,170,80,0.9)'); g.addColorStop(0.45, 'rgba(200,110,40,0.4)'); g.addColorStop(1, 'rgba(120,60,20,0)'); c.fillStyle = g; c.fillRect(0, 0, 64, 64); }
+  const flame = document.createElement('canvas'); flame.width = 16; flame.height = 32; { const c = flame.getContext('2d'); c.fillStyle = 'rgba(214,92,32,0.95)'; c.beginPath(); c.moveTo(8, 1); c.bezierCurveTo(15, 14, 14, 30, 8, 31); c.bezierCurveTo(2, 30, 1, 14, 8, 1); c.fill(); c.fillStyle = 'rgba(250,206,120,0.95)'; c.beginPath(); c.moveTo(8, 12); c.bezierCurveTo(12, 20, 11, 29, 8, 29); c.bezierCurveTo(5, 29, 4, 20, 8, 12); c.fill(); }
   const bell = document.createElement('canvas'); bell.width = 1; bell.height = 256; { const c = bell.getContext('2d'), g = c.createLinearGradient(0, 0, 0, 256); g.addColorStop(0, 'rgba(239,231,214,0)'); g.addColorStop(0.38, 'rgba(239,231,214,.8)'); g.addColorStop(0.55, 'rgba(239,231,214,.6)'); g.addColorStop(1, 'rgba(239,231,214,0)'); c.fillStyle = g; c.fillRect(0, 0, 1, 256); }
   function sheet(kind) { const c = document.createElement('canvas'); c.width = c.height = 256; const x = c.getContext('2d'); let s = kind === 'rain' ? 11 : 23; const r = () => ((s = (s * 16807) % 2147483647) / 2147483647);
     if (kind === 'rain') { x.strokeStyle = 'rgba(40,46,56,0.32)'; x.lineCap = 'round'; for (let i = 0; i < 46; i++) { const px = r() * 256, py = r() * 256, l = 14 + r() * 22; x.lineWidth = 0.6 + r() * 0.7; x.beginPath(); x.moveTo(px, py); x.lineTo(px - l * 0.28, py + l); x.stroke(); x.beginPath(); x.moveTo(px + 256, py); x.lineTo(px + 256 - l * 0.28, py + l); x.stroke(); x.beginPath(); x.moveTo(px, py - 256); x.lineTo(px - l * 0.28, py - 256 + l); x.stroke(); } }
@@ -207,6 +221,15 @@ export async function loadGround(step = () => {}, seed = 7, firstScene = 'xiqi')
       const north = L.wall != null && p.y < L.wall + 700, Yf = north ? Y + (L.wall - p.y) * KY * z : Y;
       const f = (G.foot ? (north ? smooth(G.foot - 10 * z, G.foot + 50 * z, Yf) : smooth(G.foot - 60 * z, G.foot + 10 * z, Y)) : 1) * (1 - G.marchVeil()); if (f <= 0.01) return; if (f < 1) ctx.globalAlpha *= f;      /* lost in the band's mist, or in the march's */
       if (p.cell === 'incense' && spent.size && L.places.some((q) => spent.has(q.id) && Math.hypot(q.x - p.x, q.y - 150 - p.y) < 20)) return; const [A, I] = standing(p.cell); piece(ctx, A, I, p.cell, X, Y, z, p.flip, 1);
+      if (p.cell === 'pt-citygate-in' || p.cell === 'pt-citygate') { const gp = L.places.find((q) => q.id === 'citygate'), k = gp ? openness(gp.id, CITYGATE.open) : 0, a0 = ctx.globalAlpha;
+        if (p.cell === 'pt-citygate-in') { const Yg = Y + CITYGATE.back * KY * z, [B2, I2] = standing('gd-in0'); ctx.setTransform(z, 0, 0, z, X, Yg);
+          CITYGATE.holes.forEach((h, i) => { const q = B2.cells['gd-in' + i]; if (!q) return; const [x, y, w, hh] = cgRect(h); ctx.drawImage(I2, q[0], q[1], q[2], q[3], x, y, w, hh);
+            if (k > 0.02) { const fl = 0.85 + 0.15 * Math.sin(now * 9 + i * 2.1) * Math.sin(now * 5.3 + i); ctx.globalCompositeOperation = 'screen'; ctx.globalAlpha = a0 * k * 0.55 * fl; ctx.drawImage(glow, x - w * 0.2, y + hh * 0.05, w * 1.4, hh * 0.95);
+              ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = a0 * k; for (const sx2 of [0.16, 0.84]) ctx.drawImage(flame, x + w * sx2 - 3, y + hh * 0.28 - 4 * fl, 6, 12 * fl); ctx.globalAlpha = a0; } }); }
+        else if (k < 0.999) { const [B2, I2] = standing('gd-shut0'), q = B2.cells['gd-shut0']; if (q) { ctx.setTransform(z, 0, 0, z, X, Y); const th = k * 1.35, c = Math.cos(th), hw = q[2] / 2;
+          for (const h of CITYGATE.holes) { const [x, y, w, hh] = cgRect(h), lw = (w / 2) * c; ctx.drawImage(I2, q[0], q[1], hw, q[3], x, y, lw, hh); ctx.drawImage(I2, q[0] + hw, q[1], hw, q[3], x + w - lw, y, lw, hh);
+            if (k > 0.01) { ctx.globalAlpha = a0 * 0.55 * Math.sin(th); ctx.fillStyle = 'rgb(40,30,22)'; ctx.fillRect(x, y, lw, hh); ctx.fillRect(x + w - lw, y, lw, hh); ctx.globalAlpha = a0; } } } }
+        return; }
       const D = DOORS[p.cell]; if (D) { const gp = L.places.find((q) => q.kind === 'gate' && Math.abs(q.x - p.x) < 2 && Math.abs(q.y - p.y) < 2), st = gp && gates.get(gp.id), k = st ? (st.open ? smooth(0, 0.9, now - st.t) : 1 - smooth(0, 0.9, now - st.t)) : 0, a = D.open ? k : 1 - k;
         const [B2, I2] = standing(D.cell), q = B2.cells[D.cell]; if (q && a > 0.01) { const a0 = ctx.globalAlpha; ctx.globalAlpha = a0 * a; ctx.setTransform(p.flip * z, 0, 0, z, X, Y);
           for (const [x0, y0, x1, y1] of D.rects) ctx.drawImage(I2, q[0], q[1], q[2], q[3], (x0 - D.foot[0]) * D.s, (y0 - D.foot[1]) * D.s, (x1 - x0) * D.s, (y1 - y0) * D.s); ctx.globalAlpha = a0; } } },

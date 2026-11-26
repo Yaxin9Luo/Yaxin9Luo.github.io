@@ -157,7 +157,7 @@ kbd{display:inline-grid;place-items:center;min-width:22px;height:22px;padding:0 
 .owned li{display:grid;grid-template-columns:28px 1fr;gap:10px;align-items:start;font-size:14.5px;line-height:1.4}
 .owned b{font-weight:700}.owned em{font:500 14px var(--mono);font-style:normal;color:var(--ink-2);margin-left:6px}
 
-@media (max-width:1180px){.track{width:96px}#top{gap:16px}#kills-label,#xp-label,#dash-label{display:none}}
+@media (max-width:1180px){.track{width:96px}#top{gap:16px}#kills-label,#xp-label,#dash-label,#remain-label{display:none}}
 @media (max-width:820px){#hp .num,#dash,#back{display:none}#timer{font-size:20px;top:18px}}
 @media (max-width:760px),(max-height:640px){.sheet{top:16px;transform:translate(-50%,-8px)}.sheet.show{transform:translate(-50%,0)}}
 @media (prefers-reduced-motion:reduce){.slip,#slips.taken .slip,#slips.taken .slip.chosen,.sign.fresh,#hp.struck .track,#dash.short{animation:none}.sheet,.slip,#veil{transition:none}}
@@ -667,3 +667,37 @@ kbd{display:inline-grid;place-items:center;min-width:22px;height:22px;padding:0 
 .sign.spoil.has-pic .spic{left:-6px;top:-6px;width:calc(100% + 12px);height:calc(100% + 12px)}
 @media (max-width:719px){.sign[data-tip]::after{max-width:min(320px,calc(100vw - 190px))}}      /* a seal's words stay on a phone's screen */
 #build .sset.many .sign.spoil.has-pic .spic{left:-2px;top:-2px;width:calc(100% + 4px);height:calc(100% + 4px)}      /* small ones do not run into their neighbours */
+
+/* the finale (SPEC-CAMPAIGN 1.16): what is left of Shang, counted beside 斩; 袁洪's ward on his bar, one seal a demon */
+#remain .rseal{flex:none;width:21px;height:21px;display:grid;place-items:center;background:var(--cinnabar);color:#FFFDF8;font:700 13px/1 var(--serif);font-style:normal;border-radius:2px}
+#remain .num{font:700 17px/1 var(--sans)}
+#remain small{font:500 12px/1 var(--sans);color:var(--ink-2)}
+#remain small:empty{display:none}
+#remain.none .rseal{background:var(--ink-2)}
+#bossbar .bward{display:flex;align-items:center;gap:3px;margin-left:auto;flex:none;align-self:center}
+#bossbar .bward[hidden]{display:none}
+#bossbar .bward b{font:500 12px/1 var(--sans);color:#D9CFBC;margin-right:5px;white-space:nowrap}
+#bossbar .bward i{width:18px;height:18px;display:grid;place-items:center;font:700 11px/1 var(--serif);font-style:normal;background:var(--cinnabar);color:#FFFDF8;border-radius:2px;transition:background .3s,color .3s}
+#bossbar .bward i.out{background:transparent;color:#7D7366;box-shadow:inset 0 0 0 1px #5E564B;text-decoration:line-through}
+#bossbar.warded canvas{outline:2px solid rgba(220,235,226,.75);outline-offset:2px}
+@media (max-width:720px){#bossbar .bward b{display:none}#bossbar .bward i{width:15px;height:15px;font-size:10px}}
+/* a banner or herald over a warned blow gives way (filter, so it multiplies with their own fade) */
+#banner.faint,#herald.faint{filter:opacity(.22);transition:filter .15s}
+@media (max-width:720px){.counting #kills{display:none}#remain small{display:none}}      /* on a phone the count of what is left takes the place of the kills */
+@media (max-width:1500px){html[lang="en"] #remain small{display:none}}      /* English is wider: the reserve's note gives way before the sound and language buttons do */
+/* the phone's top bar (user's round, 2026-11-26: 声音：开 wrapped to three lines, the stretch names ran into each other):
+   one line, the numbers a reader needs (time, level, what is left or felled); the timeline keeps its boss marks, not its names */
+@media (max-width:719px){
+  #top{padding:8px 10px 0;gap:8px}
+  #top .side{gap:8px}
+  #xp-num,#hp .num{display:none}
+  #hp .track{flex:0 0 54px;width:54px}
+  #level{font-size:14px}
+  #timer{font-size:18px;top:13px}
+  #kills .num,#remain .num{font-size:15px}
+  #remain .rseal{width:18px;height:18px;font-size:11px}
+  #top .tools{gap:8px}
+  #top .tools button{white-space:nowrap;font-size:12px}
+  #timeline{width:calc(100vw - 28px)}
+  .seg span{display:none}      /* the names ran into each other and onto the build panel: each stretch's herald names it */
+}

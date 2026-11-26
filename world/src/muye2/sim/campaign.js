@@ -78,7 +78,8 @@ export function makeCampaign(g) {
   g.field = fieldFor(g, 0); g.gates = gatesOf(g.field);
   placeLandmarks(g, 0);
   return {stretch: -1, scene: 0, march: 0, rest: 0, marchTo: 0, next: null, bar: 0, guards: false, until: g.options.until || null,
-    rageAt: Infinity, small, si: 0, bi: 0, finalDue: false, live: [], officers: 0, moved: false, smallDown: {}};
+    rageAt: Infinity, small, si: 0, bi: 0, finalDue: false, live: [], officers: 0, moved: false, smallDown: {},
+    stage: '', sortieDue: false, host: [], toCome: 0, issue: [], issueT: 0, issueEvery: 0, reserve: null, lastGuard: false};      // the finale (1.16)
 }
 
 /** A boss of a tier enters: off screen as the mass does, with his retinue round him. */
@@ -95,11 +96,93 @@ export function enterBoss(g, kind, tier, hpK = 1, at = null) {
   if (c.until === kind) c.rageAt = Math.min(c.rageAt, g.t + SCHEDULE.late.until);
   if (tier === 'final') c.rageAt = Math.min(c.rageAt, g.t + SCHEDULE.late.after);
   bringRetinue(g, f, 0);
+  if (kind === CAMPAIGN.final.after) beginFinale(g, f);
   return f;
+}
+
+// ------------------------------------------------------------------------------------------- the finale (SPEC 1.16)
+/** 袁洪 has come with his six, and the Shang on the field are the last of the common host: if the field is thin it is mustered
+ * to its full strength once, then nothing common enters again (the user, 2026-11-26). */
+function beginFinale(g, f) {
+  const c = g.campaign, demons = c.live.filter(o => o.retinue === f.id);
+  c.stage = 'meishan';
+  g.events.push({type: 'meishan', id: f.id, kind: f.kind, x: f.x, y: f.y, demons: demons.map(o => ({id: o.id, kind: o.kind, x: o.x, y: o.y}))});
+  spawnPlan(g.t, PLAN);
+  let n = Math.min(Math.ceil(PLAN.alive), SCHEDULE.cap) - g.alive, mustered = 0;
+  while (n > 0) {
+    const k = Math.min(n, 1 + Math.floor(rand(g) * SPAWN.clump)), angle = rand(g) * TAU, dist = SPAWN.near + rand(g) * (SPAWN.far - SPAWN.near);
+    placeAt(g, angle, dist);
+    for (let i = 0; i < k; i++) addFoe(g, pickKind(g, PLAN.mix), AT.x + (rand(g) - .5) * SPAWN.spread, AT.y + (rand(g) - .5) * SPAWN.spread);
+    n -= k; mustered += k;
+  }
+  const ids = [];
+  for (const o of g.foes) if (o.state !== 'dead' && !o.tier && !o.flee) { o.lastHost = true; ids.push(o.id); }      // the page counts them down
+  g.events.push({type: 'lastWave', id: f.id, count: ids.length, mustered, ids, x: f.x, y: f.y});
+}
+/** The rest after 袁洪 is over: the gate of 朝歌 opens and 纣王 rides out with all he has left, a host that does not come again. */
+function sortie(g) {
+  const c = g.campaign, F = CAMPAIGN.final, H = F.host;
+  c.sortieDue = false; c.stage = 'sortie'; c.guards = true;
+  const gate = g.gates.find(x => x.opensAfter === F.after);
+  if (gate) { gate.open = true; g.events.push({type: 'gateOpen', id: gate.id, x: gate.x, y: gate.y}); }
+  // they come out of the gate's mouths (the ground's fieldOf: `mouths`, `inY`, `passY`): riders by the middle one, men on foot by any
+  const mouths = gate && gate.mouths && gate.mouths.length ? gate.mouths : null, mid = mouths ? mouths[Math.floor(mouths.length / 2)] : null;
+  c.mouths = mouths; c.inY = gate ? gate.inY : 0; c.passY = gate ? gate.passY : 0;
+  const at = mid ? {x: (mid.x0 + mid.x1) / 2, y: c.inY} : gate ? {x: gate.x, y: g.field.ys[0] + 60} : null;
+  const king = enterBoss(g, F.kind, 'final', 1, at);
+  if (mid) { king.gateIn = true; for (const o of c.live) if (o.retinue === king.id) inMouth(g, mid, o); }
+  const ranks = list => { const out = []; for (const k in list) for (let i = 0; i < list[k]; i++) out.push(k); for (let i = out.length - 1; i > 0; i--) { const j = Math.floor(rand(g) * (i + 1)); [out[i], out[j]] = [out[j], out[i]]; } return out; };
+  const first = ranks(H.first), reserve = ranks(H.reserve), roster = {};
+  for (const k of [...first, ...reserve]) roster[k] = (roster[k] || 0) + 1;
+  c.gateAt = at || {x: king.x, y: king.y};
+  c.issue = first.map(kind => ({kind, rank: 0})); c.issueEvery = H.issue / first.length; c.issueT = 0;
+  c.reserve = reserve.map(kind => ({kind, rank: 1})); c.host = []; c.lastGuard = false;
+  g.events.push({type: 'host', id: king.id, x: c.gateAt.x, y: c.gateAt.y, time: H.issue, roster, first: first.length, reserve: reserve.length,
+    officers: c.live.filter(o => o.retinue === king.id).map(o => ({id: o.id, kind: o.kind}))});
+}
+/** Stand a unit inside a mouth of the gate (x inset 10, y `inY`): he walks out of it; `confine` does not hold him until `passY`. */
+function inMouth(g, m, o) { o.x = o.px = m.x0 + 10 + rand(g) * Math.max(0, m.x1 - m.x0 - 20); o.y = o.py = g.campaign.inY; o.gateIn = true; }
+function releaseReserve(g, why) {
+  const c = g.campaign;
+  if (!c.reserve || !c.reserve.length) { c.reserve = null; return; }
+  g.events.push({type: 'hostReserve', count: c.reserve.length, why, x: c.gateAt.x, y: c.gateAt.y});
+  c.issue.push(...c.reserve); c.issueEvery = Math.min(c.issueEvery || 1, CAMPAIGN.final.host.issue / c.reserve.length); c.reserve = null;
+}
+const HOSTPLAN = {alive: 0, rate: 0, hp: 1, armour: 0, mix: null};
+function stepHost(g, dt) {
+  const c = g.campaign, H = CAMPAIGN.final.host;
+  if (c.issue.length) {
+    c.issueT -= dt;
+    while (c.issueT <= 0 && c.issue.length) {
+      c.issueT += c.issueEvery;
+      const {kind, rank} = c.issue.shift(), row = BY.foe[kind], P = spawnPlan(H.hpAt, HOSTPLAN);
+      const o = addFoe(g, kind, c.gateAt.x + (rand(g) - .5) * 180, c.gateAt.y + rand(g) * 50);
+      if (c.mouths) inMouth(g, BY.foe[kind].mount || BY.foe[kind].heavy ? c.mouths[Math.floor(c.mouths.length / 2)] : c.mouths[Math.floor(rand(g) * c.mouths.length)], o);
+      o.hp = o.maxHp = Math.round(row.hp * P.hp * g.tierK.hp); o.armour = (row.armour || 0) + P.armour; o.host = true;
+      c.host.push(o);
+      g.events.push({type: 'sortie', id: o.id, kind, rank, x: o.x, y: o.y});
+    }
+  }
+  c.host = c.host.filter(o => o.state !== 'dead');
+  c.toCome = c.issue.length + (c.reserve ? c.reserve.length : 0);      // the page: 御林军 = c.host.length (on the field) + c.toCome
+  if (!c.host.length && !c.issue.length) {
+    if (c.reserve) releaseReserve(g, 'broken');                   // the first rank is gone: the second steps out
+    else if (!c.lastGuard) { c.lastGuard = true; c.stage = 'king'; g.events.push({type: 'lastGuard', x: g.hero.x, y: g.hero.y, t: g.t}); }
+  }
+}
+/** 袁洪 is warded while any of his six lives, 纣王 while any of his three generals (鲁仁杰, 雷鹍, 雷鹏) does: every change is
+ * told, with who wards him. (纣王's share is taken in harm.js by `g.campaign.officers`; 袁洪's by `kinK`.) */
+function stepKin(g, f) {
+  const row = BY.foe[f.kind], k = row.kin || (f.tier === 'final' ? CAMPAIGN.guardAura : 0);
+  if (!k) return;
+  const by = g.campaign.live.filter(o => o.retinue === f.id && o.state !== 'dead' && !o.flee && (row.kin || BY.foe[o.kind].guard)).map(o => o.id), key = by.join(',');
+  if (key === (f.kinKey || '')) return;
+  f.kinKey = key; if (row.kin) f.kinK = by.length ? k : 0;
+  g.events.push({type: 'kinWard', id: f.id, kind: f.kind, by, share: by.length ? k : 1, x: f.x, y: f.y});
 }
 /** A boss (or officer) arrives warded, and his health may fall only so fast (1.14). */
 export function guardBoss(f) {
-  const G = CAMPAIGN.guard, share = G.cap[f.tier];
+  const G = CAMPAIGN.guard, share = BY.foe[f.kind].cap || G.cap[f.tier];      // a row may set its own share (梅山's six, 1.16)
   if (!share) return;
   f.wardT = f.tier === 'lieutenant' ? 0 : G.ward; f.capMax = f.maxHp * share; f.capB = f.capMax * G.hold;
 }
@@ -130,8 +213,8 @@ export function bossDown(g, f) {
   if ((f.tier === 'small' || f.tier === 'big') && !f.flee) BUILD.takeSpoil(g, f);   // his own power; a big boss's also heals fully (SPEC 2.11)
   if (c.until === f.kind || f.tier === 'final') { win(g, f); return; }
   if (f.tier !== 'big' || f.flee) return;
-  if (f.kind === CAMPAIGN.final.after) { c.finalDue = true; startMarch(g, false); }      // Zhaoge's men stand: 纣王 comes to them
-  else startMarch(g, true);
+  if (f.kind === CAMPAIGN.final.after) c.finalDue = true;      // the remnant routs; after the march and the rest 纣王 rides out (1.16)
+  startMarch(g, true);
 }
 /** The run's merit, by B's `meritOf` when it exists (it sets g.stats.merit and meritParts); 0 until then. */
 export function meritNow(g) {
@@ -163,39 +246,12 @@ function endMarch(g) {
   const c = g.campaign;
   for (const f of g.foes) if (f.flee && f.state !== 'dead') { f.state = 'dead'; f.stateT = DEAD; f.dead = true; g.alive--; }
   if (!c.moved) { c.moved = true; layNextField(g); }
-  if (!c.finalDue) c.rest = CAMPAIGN.rest;                  // a rest after 闻仲 and 孔宣: no new mass while the prize lands (SPEC 1.14)
+  c.rest = CAMPAIGN.rest;                                   // a rest after each big boss: no new mass while the prize lands (SPEC 1.14, 1.16)
   c.scene = c.marchTo;
   placeLandmarks(g, c.scene);
   g.events.push({type: 'marchEnd', scene: c.scene, x: g.hero.x, y: g.hero.y, landmarks: g.landmarks, rest: c.rest});
-  if (c.finalDue) {
-    c.finalDue = false;
-    swapGuards(g);
-    const gate = g.gates.find(x => x.opensAfter === CAMPAIGN.final.after);
-    if (gate) { gate.open = true; g.events.push({type: 'gateOpen', id: gate.id, x: gate.x, y: gate.y}); }
-    const king = enterBoss(g, CAMPAIGN.final.kind, 'final', 1, gate ? {x: gate.x, y: g.field.ys[0] + 60} : null);
-    void king;
-  }
+  if (c.finalDue) { c.finalDue = false; c.sortieDue = true; c.stage = 'rest'; }      // 纣王 rides out when the rest is over
 }
-/** 纣王 has come: every Shang of the mass on the field changes dress in place, health kept in the same share. */
-function swapGuards(g) {
-  const c = g.campaign, map = CAMPAIGN.final.guards, units = [];
-  c.guards = true;
-  spawnPlan(g.t, PLAN);
-  for (const f of g.foes) {
-    if (f.state === 'dead' || f.tier || f.flee) continue;
-    const to = map[f.kind] || map.other, row = BY.foe[to];
-    if (to === f.kind || !row) continue;
-    const share = f.hp / f.maxHp;
-    units.push({id: f.id, from: f.kind, to});
-    f.kind = to; f.elite = !!row.elite; f.heavy = !!row.heavy; f.r = row.r; f.speed = row.speed; f.scout = false; f.act = ''; f.pcd = null;
-    f.dmg = row.dmg * (1 + SCHEDULE.dmg * g.t / 60) * g.tierK.dmg;
-    f.maxHp = Math.round(row.hp * PLAN.hp * g.tierK.hp * (f.retinue ? CAMPAIGN.retinue.hp : 1)); f.hp = Math.max(1, Math.round(share * f.maxHp));
-    f.armour = (row.armour || 0) + PLAN.armour; f.cd = row.between ? row.between * rand(g) : 0;
-    if (f.state === 'windup' || f.state === 'charge' || f.state === 'rest') setState(f, 'walk');
-  }
-  g.events.push({type: 'guards', x: g.hero.x, y: g.hero.y, units});
-}
-
 /** A fresh set of landmarks for a scene, placed by the seed alone (not the game's generator). */
 function placeLandmarks(g, scene) {
   if (g.options.bare || g.options.spawn === false) { g.landmarks = []; return; }
@@ -226,12 +282,13 @@ function fieldFor(g, scene) {
   if (!F) { if (FIELDS.size > 64) FIELDS.clear(); F = fieldOf(g.seed >>> 0, scene); FIELDS.set(key, F); }
   return F;
 }
-const gatesOf = F => F ? F.gates.map(x => ({id: x.id, x: x.x, y: x.y, hw: x.hw, opensAfter: x.opensAfter, open: false})) : [];
+const gatesOf = F => F ? F.gates.map(x => ({id: x.id, x: x.x, y: x.y, hw: x.hw, opensAfter: x.opensAfter, open: false, mouths: x.mouths || null, inY: x.inY, passY: x.passY})) : [];
 /** Halfway through a march, under the art's mist: the next field is laid and the riders stand at its start. */
 function layNextField(g) {
   const c = g.campaign, F = fieldFor(g, c.marchTo);
   if (!F || F === g.field) return;
-  if (SCENE_OF[c.marchTo] === SCENE_OF[c.scene]) { g.field = F; g.gates = gatesOf(F); return; }   // the walls of Zhaoge stand on the same field: nobody moves
+  // the walls of Zhaoge stand on the same field as the gates' stretch; the riders are still brought before the gate (the ground session, 2026-11-26)
+  if (SCENE_OF[c.marchTo] === SCENE_OF[c.scene] && c.marchTo !== CAMPAIGN.final.index) { g.field = F; g.gates = gatesOf(F); return; }
   const h = g.hero, dx = F.start[0] - h.x, dy = F.start[1] - h.y;
   h.x = h.px = F.start[0]; h.y = h.py = F.start[1];
   for (const a of g.allies) { a.x += dx; a.y += dy; a.px = a.x; a.py = a.y; a.mx0 += dx; a.my0 += dy; a.mx1 += dx; a.my1 += dy; }
@@ -267,6 +324,7 @@ export function confine(g) {
   const scene = g.campaign.scene, box = scene === 0;
   for (const f of g.foes) {
     if (f.state === 'dead' || f.flee) continue;
+    if (f.gateIn) { if (f.y > g.campaign.passY) f.gateIn = false; else continue; }      // coming out of the gate's mouth: not held yet
     if (f.y < y0) f.y = y0; else if (f.y > y1) f.y = y1;
     if (!box) { b = F.bounds(f.y); if (f.x < b[0]) f.x = b[0]; else if (f.x > b[1]) f.x = b[1]; }
     if (shut && !f.tier) for (const gt of g.gates) if (!gt.open) f.y = wallHold(f.py, f.y, gt.y);
@@ -307,17 +365,20 @@ export function stepCampaign(g, dt, timeline) {
     c.march -= dt;
     if (!c.moved && c.march <= CAMPAIGN.march / 2) { c.moved = true; layNextField(g); }
     if (c.march <= 0) { c.march = 0; endMarch(g); }
-  } else if (c.rest > 0 && (c.rest -= dt) <= 0) { c.rest = 0; g.events.push({type: 'restEnd', x: g.hero.x, y: g.hero.y}); }
+  } else if (c.rest > 0 && (c.rest -= dt) <= 0) { c.rest = 0; g.events.push({type: 'restEnd', x: g.hero.x, y: g.hero.y}); if (c.sortieDue) sortie(g); }
+  if (c.stage === 'sortie' || c.stage === 'king') stepHost(g, dt);
   if (g.gates.length) openGates(g);
   for (let i = c.live.length - 1; i >= 0; i--) {
     const f = c.live[i];
     if (f.dead || f.state === 'dead') { c.live.splice(i, 1); continue; }
+    stepKin(g, f);
     if (f.phases) {
       const share = f.hp / f.maxHp;
       while (f.phase + 1 < f.phases.length && share < f.phases[f.phase + 1]) {
         f.phase++; f.cdK *= CAMPAIGN.phaseCd;
         g.events.push({type: 'bossPhase', id: f.id, kind: f.kind, phase: f.phase, x: f.x, y: f.y});
         bringRetinue(g, f, f.phase);
+        if (f.tier === 'final' && f.phase === f.phases.length - 1 && c.reserve) releaseReserve(g, 'phase');      // his last stand: the second rank
       }
     }
     if (f.tier === 'big' && !f.enraged && t - f.born >= CAMPAIGN.enrage) {
@@ -350,7 +411,8 @@ export function stepSpawn(g, dt) {
     }
   }
   const E = SCHEDULE.elites, R = SCHEDULE.rings, c = g.campaign;
-  if (c.march > 0 || c.rest > 0) {
+  if (c.march > 0 || c.rest > 0 || c.stage) {
+    // from 袁洪's coming nothing common enters at all: the finale's foes are counted (1.16)
     // nothing enters on the march or the rest after it: what fell due is let go
     while (s.elite < E.length && t >= E[s.elite].t) s.elite++;
     while (s.ring < R.length && t >= R[s.ring].t) s.ring++;

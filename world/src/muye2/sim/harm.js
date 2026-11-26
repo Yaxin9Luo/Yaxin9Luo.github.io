@@ -17,7 +17,7 @@ export function shove(f, ox, oy, dist) {
 
 /** How much more a boss takes, and how much higher his burst cap is, for having lived past his band (1 until then). */
 export function weary(g, f) {
-  const W = CAMPAIGN.weary, after = W.after[f.tier];
+  const W = CAMPAIGN.weary, after = BY.foe[f.kind].weary || W.after[f.tier];      // a row may set its own band (梅山's six, 1.16)
   if (!after) return 1;
   const over = g.t - f.born - after;
   return over > 0 ? 1 + over * W.rate : 1;
@@ -30,7 +30,7 @@ export function kill(g, f, src) {
   g.events.push({type: 'kill', x: f.x, y: f.y, id: f.id, kind: f.kind, by: src, elite: f.elite});
   if (row.xp) addPickup(g, 'spirit', f.x, f.y, f.scout ? Math.max(1, Math.round(row.xp * SCHEDULE.scouts.xp)) : row.xp);
   // a chest of value 1 is a small boss's (it offers generals), of value 2 a big boss's; a lieutenant leaves a peach
-  if (f.tier === 'lieutenant') addPickup(g, 'peach', f.x + 10, f.y, 0);
+  if (f.tier === 'lieutenant' || row.demon) addPickup(g, 'peach', f.x + 10, f.y, 0);
   else if (f.elite && f.tier !== 'final') addPickup(g, 'chest', f.x + 12, f.y + 8, f.tier === 'small' ? 1 : f.tier === 'big' ? 2 : 0);
   if (f.elite && !f.tier && g.mods.chest > 1 && rand(g) < g.mods.chest - 1) addPickup(g, 'chest', f.x - 12, f.y + 8, 0);   // B's meta rank `chest`: an elite may leave a second
   else if (row.ai === 'aura') addPickup(g, 'peach', f.x + 10, f.y, 0);
@@ -65,7 +65,6 @@ export function hitFoe(g, f, dmg, src, P, ox, oy, el, dot) {
     if (f.guardT > 0) d *= .15;                                  // 一刀抵三: he turns the blows aside
     if (f.exposeT > 0) d *= 1 + f.expose;                        // B's 照妖鉴 and 钉头七箭书: revealed, he takes more
     if (P && P.interrupt && f.named && (f.act === 'slam' || f.act === 'aim')) interrupt(g, f);
-    if (f.tier === 'final' && g.campaign.officers > 0) d *= CAMPAIGN.guardAura;   // 鲁仁杰, 雷鹍, 雷鹏 still ride with him
   }
   let capped = false;
   if (f.capMax) d *= weary(g, f);                              // past his band he tires: every blow tells more
@@ -75,6 +74,10 @@ export function hitFoe(g, f, dmg, src, P, ox, oy, el, dot) {
     else if (d > f.capB) { d = Math.max(0, f.capB); capped = true; }
     f.capB -= d;
   }
+  // a warded boss takes a share of what gets through his cap: 纣王 while 鲁仁杰, 雷鹍 or 雷鹏 rides with him, 袁洪 while any of
+  // his six lives (1.16); after the cap, so that a build that hits at the cap still finds him warded
+  if (f.tier === 'final' && g.campaign.officers > 0) d *= CAMPAIGN.guardAura;
+  if (f.kinK) d *= f.kinK;
   const dealt = d < f.hp ? d : f.hp;
   f.hp -= d; f.flash = .12;
   g.stats.damage[src] = (g.stats.damage[src] || 0) + dealt;

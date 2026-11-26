@@ -164,7 +164,12 @@ export function createBars({canvas, top}) {
         const sx = W / 2 + (x - cam.x) * z, sy = cy + (y - cam.y) * ky * z, hw = box.width * z / 2;
         if (sx + hw > r.left && sx - hw < r.right && sy - box.top * z - 30 < r.bottom && sy > r.top) return true;   // his bar, 30 px over his head, counts too
       }
-      // a disc of ground (world x, y, radius) seen on screen as an ellipse: does its box touch the bar?
+      return api.rectOverWarning(game, view, r);
+    },
+    /** Whether a Shang warning's ground area lies under a box on screen (the long bar; a banner or herald, which then give way). */
+    rectOverWarning(game, view, r) {
+      const {cam, ky} = view, z = cam.zoom, cy = H * .52;
+      // a disc of ground (world x, y, radius) seen on screen as an ellipse: does its box touch the box?
       const touches = (x, y, rad) => { const sx = W / 2 + (x - cam.x) * z, sy = cy + (y - cam.y) * ky * z; return sx + rad * z > r.left && sx - rad * z < r.right && sy - rad * ky * z < r.bottom && sy + rad * ky * z > r.top; };
       for (const zo of game.zones || []) {
         if (zo.dead || zo.side !== 'shang') continue;
