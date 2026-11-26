@@ -38,6 +38,8 @@ const HEAVY = { pairedWhips: 1, threeWhips: 1, goldWall: 1.3, greatAxe: 0.9 };  
 const LIGHT_OF = { metal: 'gold', fire: 'cinnabar', water: 'azurite', wood: 'malachite', earth: 'gold' };
 // the six of 梅山 land with 袁洪 at once: the shock is his alone (fx/gl/finale.js gives each his own column of ink)
 const MEISHAN_SIX = { wulong: 1, changhao: 1, daili: 1, jindasheng: 1, zhuzizhen: 1, yangxian: 1 };
+// the finale's two bosses get a short entrance kept off the hero (finaleEntrance)
+const FINALE_BOSS = { yuanhong: 1, zhouwang: 1 };
 const BOSS_ELEMENT = { wenzhong: 'metal', zhangguifang: 'metal', moliqing: 'wood', molihong: 'water', molihai: 'metal', molishou: 'earth', kongxuan: 'fire', yuanhong: 'earth', zhouwang: 'fire' };
 
 export function createGLFx(ctx, { elementOf = () => 'ink', kick = () => {} } = {}) {
@@ -79,7 +81,17 @@ export function createGLFx(ctx, { elementOf = () => 'ink', kick = () => {} } = {
     at(0.15, () => { impact.hit({ x: e.x, y: e.y + 6, power: 0.75, reach: e.shock ? e.shock.radius * 1.1 : 260, cracks: 6, light: LIGHT_OF[el], column: 0.08, flash: 0.22, debris: 50, sparks: 30, life: 2.2, seed });
       ink.bloom({ x: e.x, y: e.y + 8, w: 380, splats: bossScript(0.5), pigment: 'ink', life: 4.5, hero: true }); hard(10, 0.04); });
   }
+  // the finale's two (袁洪 lands with his six in a crowd, 纣王 rides out of the gate with his host): a short entrance kept off the
+  // hero (the lead, 2026-11-26: the shared one spread black ink and cracks over him for seconds); it clears within about a second
+  function finaleEntrance(e) {
+    const el = BOSS_ELEMENT[e.kind] || 'metal', light = impact.LIGHT[LIGHT_OF[el]] || impact.LIGHT.gold, h = G && G.hero, d = h ? Math.hypot(e.x - h.x, e.y - h.y) : 900, reach = Math.max(140, Math.min(420, d - 160));
+    const seed = Math.abs(Math.round(e.x * 7 + e.y * 3)) % 30;
+    omen.start({ x: e.x, y: e.y, life: 1.4, light, strikes: [{ t: 0.3, x: e.x, y: e.y + 6 }], seed, dark: 0.5 });
+    if (e.id != null) inked.push({ id: e.id, at: clock, from: 0.3, until: 1.2, box: null });
+    at(0.3, () => { impact.hit({ x: e.x, y: e.y + 6, power: 1.1, reach, cracks: 5, light: LIGHT_OF[el], column: 0.14, flash: 0.5, debris: 90, sparks: 70, life: 1.1, seed, ring: false }); hard(18, 0.08); });
+  }
   function entrance(e) {
+    if (FINALE_BOSS[e.kind]) return finaleEntrance(e);
     if (!GREAT[e.kind]) return smallEntrance(e);
     const big = e.tier !== 'small', el = BOSS_ELEMENT[e.kind] || 'metal', light = impact.LIGHT[LIGHT_OF[el]] || impact.LIGHT.gold;
     let s = Math.abs(Math.round(e.x * 7 + e.y * 3)) % 997 + 1; const r = () => ((s = (s * 16807 + 7) % 2147483647) / 2147483647);
@@ -134,7 +146,7 @@ export function createGLFx(ctx, { elementOf = () => 'ink', kick = () => {} } = {
     onEvent,
     drawGround(V, dt) { clock += dt; zNow = V.z / V.dpr; Q.frame(omen.live + impact.live + seal.live > 0); for (let i = 0; i < plan.length; i++) if (plan[i][0] <= clock) { const f = plan[i][1]; plan.splice(i--, 1); f(); }
       if (ink.live && !OFF.has('ink')) ink.draw(); if (impact.live) impact.drawGround(V, dt); if (seal.live) seal.drawGround(V, dt); if (blow.live) blow.drawGround(V, dt); treasures.drawGround(V, dt, G); gods.drawGround(V, dt, G); },
-    drawOver(V, dt) { if (voice.live) voice.draw(V, dt); inkFigures(V); treasures.drawOver(V, dt, G); gods.drawOver(V); if (omen.live && !OFF.has('omen')) { omen.draw(V, dt); omenClouds(V); } if (impact.live) impact.drawOver(V, dt); if (seal.live) seal.drawOver(V, dt); if (blow.live && !OFF.has('blow')) blow.draw(V, dt); if (wx) weather.draw(V, dt, wx, wAmt, wWind); if (ink.live && !OFF.has('ink')) { const Vn = { ...V }; if (ctx.afterFrame) ctx.afterFrame(() => ink.after(Vn, dt)); else ink.after(Vn, dt); } },   // the ink steps after the frame's last draw (ink.js)
+    drawOver(V, dt) { if (voice.live) voice.draw(V, dt); inkFigures(V); treasures.drawOver(V, dt, G); gods.drawOver(V); if (omen.live && !OFF.has('omen')) { omen.draw(V, dt); omenClouds(V); } if (impact.live) impact.drawOver(V, dt); if (seal.live) seal.drawOver(V, dt); if (blow.live && !OFF.has('blow')) blow.draw(V, dt); if (wx) weather.draw(V, dt, wx, wAmt, wWind); treasures.drawLast(V); if (ink.live && !OFF.has('ink')) { const Vn = { ...V }; if (ctx.afterFrame) ctx.afterFrame(() => ink.after(Vn, dt)); else ink.after(Vn, dt); } },   // the ink steps after the frame's last draw (ink.js)
     setWeather(kind, amount = 1, wind = 0) { wx = kind || null; wAmt = amount; wWind = wind; },
     hold: () => Math.max(0, holdUntil - clock),
     useFigures: (f) => { drawAgain = f; treasures.useTip(f && f.heroWeapon); },

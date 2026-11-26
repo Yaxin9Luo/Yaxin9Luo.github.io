@@ -111,9 +111,9 @@ void main(){
   const live = [], free = [];
   /** an impact at ground point (x, y). o: {power 0.5..2, reach (world units of the fissure), cracks (count), light
    *  ('gold'|'cinnabar'|'azurite'|'malachite'|'ink'), column (seconds the column of light stands, 0 none), flash (peak 0..1),
-   *  debris (count of clods), sparks (count), life (s)} */
+   *  debris (count of clods), sparks (count), life (s), ring (false: no shock ring across the field)} */
   function hit(o) {
-    const b = { x: o.x, y: o.y, t: 0, power: o.power || 1, reach: o.reach || 420, cracks: o.cracks || 8, light: LIGHT[o.light] || LIGHT.gold, column: o.column || 0, flash: o.flash ?? 0.6, life: o.life || 3.4, seed: (o.seed ?? Math.random() * 40) % 40 };
+    const b = { x: o.x, y: o.y, t: 0, power: o.power || 1, reach: o.reach || 420, cracks: o.cracks || 8, light: LIGHT[o.light] || LIGHT.gold, column: o.column || 0, flash: o.flash ?? 0.6, life: o.life || 3.4, seed: (o.seed ?? Math.random() * 40) % 40, ring: o.ring !== false };
     if (live.length >= N) free.push(live.shift().F);
     b.F = free.pop() || post.target(FW, FH); b.box = b.reach * 1.15;
     post.pass(BAKE, b.F, [], (u) => { gl.uniform1f(u.seed, b.seed); gl.uniform1f(u.reach, b.reach); gl.uniform1f(u.cracks, b.cracks); gl.uniform1f(u.power, b.power); gl.uniform1f(u.box, b.box); });
@@ -133,7 +133,7 @@ void main(){
     const off = api.off || new Set();
     if (!off.has('fissure')) for (const b of live) { const X = V.sx(b.x), Y = V.sy(b.y), e = b.box * V.z, r = [X - e, Y - e * 0.62, X + e, Y + e * 0.62];
       post.quad(GROUND, r, [post.grab(r), b.F.tex], (u) => { gl.uniform2f(u.at, X, Y); gl.uniform1f(u.k, b.t); gl.uniform1f(u.zc, V.z / V.dpr); gl.uniform1f(u.power, b.power); gl.uniform1f(u.seed, b.seed); gl.uniform1f(u.box, b.box); gl.uniform3f(u.light, b.light[0], b.light[1], b.light[2]); }, null); }
-    if (!off.has('rings') && live.some((b) => b.t < 1.8)) { const fl = arrays(V);
+    if (!off.has('rings') && live.some((b) => b.t < 1.8 && b.ring)) { const fl = arrays(V); live.forEach((b, i) => { if (!b.ring) K[i] = 9; });
       post.pass(RINGS, null, [], (u) => { setArr(V, fl)(u); }, 'multiply');
     }
   }

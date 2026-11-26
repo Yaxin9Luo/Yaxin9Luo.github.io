@@ -4,19 +4,23 @@
 //   the seven of 梅山 land   each comes down in a column of his own ink with his true shape half seen in it (fn<Name>), staggered
 //   meishan                  a grey wash closes in from the edges of the view for a moment
 //   lastWave                 a dry ink ring drawn round the host still on the field: this is the last of it
-//   kinWard                  a broken ring of ink turning on the ground under 袁洪 and a dark thread from him to each demon keeping it;
-//                            a thread snaps when its demon falls; with the last, the ring breaks into ash
+//   kinWard                  a gold ward ring and a broken ring of ink under 袁洪, and a gold cord from each demon keeping it with
+//                            beads of light running to him (drawn last, over all); a cord snaps when its demon falls; with the
+//                            last, the rings break into ash
 //   rout                     the routed leave dust behind them, Shang standards topple and lie, a pale wind blows after them
-//   gateOpen, sortie         dust rolling out of the gate's mouth and warm light from within; dust rank by rank as the guard
+//   gateOpen, sortie         dust shaken from the three lintels as the leaves swing and warm light from within each mouth; dust rank by rank as the guard
 //                            comes out; 妲己 and 胡喜媚 ride out in fox-fire, 王贵人 in a ring of string-sound (玉石琵琶精)
 //   lastGuard                a hush: one ring of ink opening where the last guard fell
-//   纣王 falls                摘星楼 alight on the skyline behind the fight (封神演义 ch. 97), flame climbing it; then the
-//                            palace standards fall along the foot of the wall
+//   纣王 falls                摘星楼 alight on the skyline behind the fight (封神演义 ch. 97), flame climbing it, its light washing
+//                            warm across the sky; then the palace standards fall along the foot of the wall
 const TAU = Math.PI * 2;
 const ease = (u) => { const q = Math.min(1, Math.max(0, u)); return q * q * (3 - 2 * q); };
 // the seven and their paintings, and how wide each is drawn (world units)
 const DEMON = { yuanhong: ['fnYuanhong', 440], wulong: ['fnWulong', 300], changhao: ['fnChanghao', 290], daili: ['fnDaili', 300], jindasheng: ['fnJindasheng', 380], zhuzizhen: ['fnZhuzizhen', 360], yangxian: ['fnYangxian', 380] };
 const FOX = { daji: 1, ximei: 1 };
+// the three mouths of 朝歌's gate, from the ground's numbers (zhaoge-gate-numbers.md): [centre offset from the gate's x, width],
+// world units; the passages run back from the gate front (its y) to y - 60
+const MOUTHS = [[-110, 50], [-5, 75], [96, 57]];
 
 export function createFinale({ W, GW, spic, ribbon, veil, ink }) {
   let clock = 0, G = null, prevBy = [], routAt = -9, lastWaveAt = -9, edgeAt = -9, gateAt = -9, gateK = 1, endAt = -9, lastPuff = -9, endGate = null;
@@ -40,8 +44,9 @@ export function createFinale({ W, GW, spic, ribbon, veil, ink }) {
     if (t === 'rout') { routAt = clock; topple(); return; }
     if (t === 'marchEnd') { for (const p of fleeing.slice(0, 20)) puffs.push({ x: p.x, y: p.y, dx: 0, dy: -1, at: clock, life: 0.7, k: 0.8 }); fleeing = []; return; }
     if (t === 'gateOpen') { const g = gateOf(e.id); if (!g || g.opensAfter !== 'yuanhong') return; gateAt = clock; gateK = 1; endGate = g;
-      for (let i = 0; i < 8; i++) puffs.push({ x: g.x + (i / 7 - 0.5) * Math.min(g.hw || 120, 160) * 1.6, y: g.y + 20, dx: (i / 7 - 0.5) * 0.6, dy: 1, at: clock + i * 0.06, life: 1.6, k: 1.3 }); return; }
-    if (t === 'sortie') { if (clock - lastPuff < 0.2) return; lastPuff = clock; puffs.push({ x: e.x, y: e.y, dx: 0, dy: 1, at: clock, life: 0.9, k: 0.9 }); return; }
+      // dust shaken from the three lintels as the leaves swing in (0.1 to 0.6 s), rolling out onto the field
+      MOUTHS.forEach(([dx, w], m) => { for (let i = 0; i < 2; i++) puffs.push({ x: g.x + dx + (i - 0.5) * w * 0.5, y: g.y + 12, dx: (i - 0.5) * 0.4, dy: 1, at: clock + 0.1 + m * 0.12 + i * 0.2, life: 1.4, k: 0.9 + w / 150 }); }); return; }
+    if (t === 'sortie') { if (clock - lastPuff < 0.2) return; lastPuff = clock; puffs.push({ x: e.x, y: endGate ? Math.max(e.y, endGate.y + 15) : e.y, dx: 0, dy: 1, at: clock, life: 0.9, k: 0.9 }); return; }      // (he comes from inside the passage: the dust rises in front of the gate)
     if (t === 'hostReserve') { gateAt = clock; gateK = 0.6; for (let i = 0; i < 5; i++) puffs.push({ x: e.x + (i - 2) * 40, y: e.y + 20, dx: (i - 2) * 0.15, dy: 1, at: clock + i * 0.08, life: 1.3, k: 1.1 }); return; }
     if (t === 'lastGuard') { const p = hostLast || { x: e.x, y: e.y }; rings.push({ x: p.x, y: p.y, at: clock }); return; }
     if (t === 'bossDown' && e.kind === 'zhouwang') { endAt = clock; return; }
@@ -58,21 +63,6 @@ export function createFinale({ W, GW, spic, ribbon, veil, ink }) {
     // the last wave: a dry ink ring drawn round the host, then fading
     if (clock - lastWaveAt < 3.2) { const t = clock - lastWaveAt, h = G && G.hero; if (h) { const R = 760, a = 0.45 * (t < 0.9 ? 1 : Math.max(0, 1 - (t - 0.9) / 2.3));
         ribbon(c, `wsweep_${Math.floor(clock * 3) % 2}`, (s) => [V.sx(h.x + Math.cos(s * TAU - 1.2) * R), V.sy(h.y + Math.sin(s * TAU - 1.2) * R * 0.8)], 0.7 * z, a, 0, ease(t / 0.9), 28, V); } }
-    // the ward on 袁洪 and its threads
-    const yh = ((G && G.foes) || []).find((f) => f.kind === 'yuanhong' && live(f)); const ids = yh && yh.kinK > 0 ? String(yh.kinKey || '').split(',').filter(Boolean) : [];
-    if (yh && ids.length) { const X = V.sx(yh.x), Y = V.sy(yh.y), k = 360 * z / cellW(GW, 'gshock_0');
-      GD(c, 'gshock_0', X, Y, clock * 0.4, k, k * V.KY, 0.7 * veil(V, X, Y - 30 * z));
-      for (let j = 0; j < ids.length; j++) { const d = foe(+ids[j]) || foe(ids[j]); if (!live(d)) continue; const pulse = 0.7 + 0.3 * Math.sin(clock * 3 + j);
-        const P = (s) => { const x = yh.x + (d.x - yh.x) * s, y = yh.y + (d.y - yh.y) * s; return [V.sx(x), V.sy(y) - (70 - 20 * s - 46 * Math.sin(s * Math.PI)) * z]; };
-        ribbon(c, `wlash_${j % 3}`, P, 0.45 * z, 0.75 * pulse, 0, 1, 12, V); } }
-    // a thread snapping: its two ends whip back toward 袁洪 and the demon and fade
-    for (let i = 0; i < snaps.length; i++) { const o = snaps[i], q = (clock - o.at) / 0.45; if (q > 1) { snaps.splice(i--, 1); continue; }
-      const P = (s) => [V.sx(o.ax + (o.bx - o.ax) * s), V.sy(o.ay + (o.by - o.ay) * s) - (70 - 20 * s) * z + Math.sin(s * 14 + q * 9) * 14 * q * z];
-      ribbon(c, 'wlash_1', P, 0.32 * z, (1 - q) * 0.8, 0, 0.5 * (1 - q), 8, V); ribbon(c, 'wlash_0', P, 0.32 * z, (1 - q) * 0.8, 1 - 0.5 * (1 - q), 1, 8, V); }
-    // the ward broken: the ring opens out and goes to ash
-    for (let i = 0; i < ashes.length; i++) { const o = ashes[i], q = (clock - o.at) / 0.9; if (q > 1) { ashes.splice(i--, 1); continue; } const X = V.sx(o.x), Y = V.sy(o.y), k = 360 * z * (1 + 0.5 * q) / cellW(GW, 'gshock_0');
-      GD(c, 'gshock_0', X, Y, clock * 0.4, k, k * V.KY, 0.7 * (1 - q) * veil(V, X, Y - 30 * z));
-      for (let j = 0; j < 10; j++) { const b = j / 10 * TAU, r = (150 + 160 * q) * z, px = X + Math.cos(b) * r, py = Y + Math.sin(b) * r * V.KY - 60 * q * z; W.draw(c, `wdust_${j % 2}`, px, py, b, 0.5 * z, 0.5 * z, (1 - q) * 0.7 * veil(V, px, py)); } }
     // the rout's dust: one stroke per group of the routed, trailing behind them
     if (clock - routAt < 5) { const cells = new Map(); fleeing = [];
       for (const f of (G && G.foes) || []) { if (!live(f) || !(f.flee || f.state === 'flee')) continue; fleeing.push({ x: f.x, y: f.y }); const key = Math.floor(f.x / 220) + ',' + Math.floor(f.y / 220); let b = cells.get(key); if (!b) { if (cells.size >= 24) continue; cells.set(key, (b = { x: 0, y: 0, vx: 0, vy: 0, n: 0 })); } b.x += f.x; b.y += f.y; b.vx += f.vx || 0; b.vy += f.vy || 0; b.n++; }
@@ -84,10 +74,10 @@ export function createFinale({ W, GW, spic, ribbon, veil, ink }) {
       const u = ease(t / 0.35), X = V.sx(o.x), Y = V.sy(o.y), a = Math.min(1, t / 0.08) * (t > o.life - 0.8 ? (o.life - t) / 0.8 : 1);
       spic('fnFallenStandard', X + o.side * (1 - u) * 20 * z, Y - (1 - u) * 60 * z, o.side * (1 - u) * 1.1, o.len * z, a * 0.92 * veil(V, X, Y), o.side, 0.45 + 0.55 * u);
       if (t > 0.3 && t < 0.9) W.draw(c, `wdust_${i % 2}`, X, Y + 6 * z, 0, 0.7 * z, 0.5 * z, (1 - (t - 0.3) / 0.6) * 0.6); }
-    // the gate: warm light fanning out of its mouth onto the field, then fading
-    if (endGate && clock - gateAt < 2.6) { const t = clock - gateAt, g = endGate, X = V.sx(g.x), Y = V.sy(g.y), a = gateK * (t < 0.4 ? t / 0.4 : t < 1.4 ? 1 : Math.max(0, 1 - (t - 1.4) / 1.2));
-      const kh = Math.min(g.hw || 120, 160) * 2.2 * z / cellW(W, 'whalo_gold'); W.draw(c, 'whalo_gold', X, Y + 40 * z, 0, kh, kh * V.KY * 0.7, 0.5 * a * veil(V, X, Y));
-      for (let j = 0; j < 5; j++) { const r = Math.PI / 2 + (j / 4 - 0.5) * 0.9, L = (320 + 60 * Math.sin(j * 3)) * z * (0.6 + 0.4 * ease(t / 0.6)); W.draw(c, `wray_${j % 2}`, X, Y + 10 * z, r - Math.PI / 2, 0.9 * z, L / cellH(W, 'wray_0'), 0.32 * a); } }
+    // the gate: warm light out of each of its three mouths onto the field as the leaves open (1.0 s), then fading
+    if (endGate && clock - gateAt < 2.6) { const t = clock - gateAt, g = endGate, Y = V.sy(g.y), a = gateK * ease(t / 1.0) * (t < 1.4 ? 1 : Math.max(0, 1 - (t - 1.4) / 1.2));
+      MOUTHS.forEach(([dx, w], m) => { const X = V.sx(g.x + dx), kh = w * 2.4 * z / cellW(W, 'whalo_gold'); W.draw(c, 'whalo_gold', X, Y + 30 * z, 0, kh, kh * V.KY * 0.7, 0.5 * a * veil(V, X, Y));
+        for (let j = 0; j < 3; j++) { const r = (j - 1) * 0.35 * (w / 75), L = (220 + 50 * Math.sin(j * 3 + m)) * (w / 75) * z * (0.6 + 0.4 * ease(t / 0.8)); W.draw(c, `wray_${(j + m) % 2}`, X + (j - 1) * w * 0.25 * z, Y + 6 * z, r, 0.7 * z, L / cellH(W, 'wray_0'), 0.3 * a); } }); }
     // dust puffs (the gate, the sortie, the routed gone at the march's end)
     for (let i = 0; i < puffs.length; i++) { const o = puffs[i], t = clock - o.at; if (t < 0) continue; if (t > o.life) { puffs.splice(i--, 1); continue; } const q = t / o.life, X = V.sx(o.x + o.dx * 140 * q), Y = V.sy(o.y + o.dy * 140 * q);
       W.draw(c, `wdust_${i % 2}`, X, Y, 0, o.k * (0.7 + 0.6 * q) * z, o.k * (0.6 + 0.4 * q) * z, 0.55 * Math.min(1, t / 0.1) * (1 - q) * veil(V, X, Y)); }
@@ -96,8 +86,33 @@ export function createFinale({ W, GW, spic, ribbon, veil, ink }) {
     for (let i = 0; i < rings.length; i++) { const o = rings[i], q = (clock - o.at) / 1.2; if (q > 1) { rings.splice(i--, 1); continue; } const X = V.sx(o.x), Y = V.sy(o.y), k = (120 + 900 * ease(q)) * z / cellW(GW, 'gshock_0');
       GD(c, 'gshock_0', X, Y, 0, k, k * V.KY, 0.5 * (1 - q)); }
     // 纣王's end: the palace standards fall along the foot of the wall once the tower is alight
-    if (endAt > 0 && !fell && clock - endAt > 1.5 && (endGate || gateOf(null))) { fell = true; const g = endGate || gateOf(null); for (let i = 0; i < 6; i++) { const s = i % 2 ? 1 : -1, d = 260 + Math.floor(i / 2) * 260; standards.push({ x: g.x + s * d, y: g.y + 40, side: -s, at: clock + i * 0.14, life: 30, len: 190 }); } }
+    if (endAt > 0 && !fell && clock - endAt > 2.4 && (endGate || gateOf(null))) { fell = true; const g = endGate || gateOf(null); for (let i = 0; i < 6; i++) { const s = i % 2 ? 1 : -1, d = 260 + Math.floor(i / 2) * 260; standards.push({ x: g.x + s * d, y: g.y + 40, side: -s, at: clock + i * 0.14, life: 30, len: 190 }); } }
   }
+
+  // ---------------------------------------------------------------- the ward, drawn last, over everything (the lead: it is the fight's
+  // instruction to the player, kill the six first): a gold ward ring and a turning broken ring of ink under 袁洪, and from each
+  // demon who keeps it a cord of gold thread over dark ink with beads of light running along it to him. A cord that breaks snaps
+  // back from both ends with a splash of ink at each; with the last, the rings open out and go to ash.
+  // a stroke of a cell of either sheet laid in strips along P(s), s from 0 to 1 (ribbon in treasures.js does it for W only)
+  function strand(c, sheet, name, P, k, a, from, to, N, V) { const C = sheet && sheet.cell(name); if (!C || a <= 0.004) return;
+    for (let i = 0; i < N; i++) { const u0 = i / N, u1 = Math.min(1, (i + 1) / N + 0.015); if (u1 < from || u0 > to) continue;
+      const P0 = P(u0), P1 = P(u1), dx = P1[0] - P0[0], dy = P1[1] - P0[1], len = Math.hypot(dx, dy) || 1, rot = Math.atan2(dy, dx), kx = len / ((u1 - u0) * C[7]), ky = (Math.cos(rot) < 0 ? -1 : 1) * k, lx = (-C[5] + C[7] * u0) * kx;
+      sheet.draw(c, name, P0[0] - Math.cos(rot) * lx, P0[1] - Math.sin(rot) * lx, rot, kx, ky, a * veil(V, P0[0], P0[1]), u0, u1); } }
+  const cordP = (V, ax, ay, bx, by, z) => (s) => [V.sx(ax + (bx - ax) * s), V.sy(ay + (by - ay) * s) - (70 - 20 * s - 40 * Math.sin(s * Math.PI)) * z];
+  function drawWard(c, V, game) { if (game) G = game; const z = V.z;
+    const yh = ((G && G.foes) || []).find((f) => f.kind === 'yuanhong' && live(f)); const ids = yh && yh.kinK > 0 ? String(yh.kinKey || '').split(',').filter(Boolean) : [];
+    if (yh && ids.length) { const X = V.sx(yh.x), Y = V.sy(yh.y), v = veil(V, X, Y - 30 * z), kr = 380 * z / cellW(GW, 'gring'), ks = 420 * z / cellW(GW, 'gshock_0');
+      GD(c, 'gring', X, Y, 0, kr, kr * V.KY, 0.85 * v); GD(c, 'gshock_0', X, Y, clock * 0.4, ks, ks * V.KY, 0.75 * v);
+      for (let j = 0; j < ids.length; j++) { const d = foe(+ids[j]) || foe(ids[j]); if (!live(d)) continue; const P = cordP(V, yh.x, yh.y, d.x, d.y, z);
+        strand(c, GW, `gthread_${j % 2}`, P, 1.1 * z, 1, 0, 1, 12, V);
+        // the pulse: beads of gold light running from the demon (s = 1) to 袁洪 (s = 0)
+        for (let b = 0; b < 2; b++) { const s = 1 - ((clock * 0.6 + b * 0.5 + j * 0.17) % 1), [px, py] = P(s), kb = 34 * z / cellW(W, 'whalo_gold'); W.draw(c, 'whalo_gold', px, py, 0, kb, kb, 0.9 * Math.sin(s * Math.PI) * veil(V, px, py)); } } }
+    for (let i = 0; i < snaps.length; i++) { const o = snaps[i], q = (clock - o.at) / 0.55; if (q > 1) { snaps.splice(i--, 1); continue; } const P = cordP(V, o.ax, o.ay, o.bx, o.by, z), w = (s) => { const p = P(s); p[1] += Math.sin(s * 14 + q * 9) * 16 * q * z; return p; };
+      strand(c, GW, 'gthread_0', w, 0.9 * z, (1 - q) * 0.95, 0, 0.5 * (1 - q), 8, V); strand(c, GW, 'gthread_1', w, 0.9 * z, (1 - q) * 0.95, 1 - 0.5 * (1 - q), 1, 8, V);
+      for (const s of [0, 1]) { const [px, py] = P(s), k = (0.3 + 0.25 * q) * z; GD(c, `gsplash_${s}`, px, py, s * 2, k, k, 0.85 * (1 - q) * veil(V, px, py)); } }
+    for (let i = 0; i < ashes.length; i++) { const o = ashes[i], q = (clock - o.at) / 0.9; if (q > 1) { ashes.splice(i--, 1); continue; } const X = V.sx(o.x), Y = V.sy(o.y), v = veil(V, X, Y - 30 * z), kr = 380 * z * (1 + 0.5 * q) / cellW(GW, 'gring'), ks = 420 * z * (1 + 0.5 * q) / cellW(GW, 'gshock_0');
+      GD(c, 'gring', X, Y, 0, kr, kr * V.KY, 0.85 * (1 - q) * v); GD(c, 'gshock_0', X, Y, clock * 0.4, ks, ks * V.KY, 0.75 * (1 - q) * v);
+      for (let j = 0; j < 12; j++) { const b = j / 12 * TAU, r = (170 + 170 * q) * z, px = X + Math.cos(b) * r, py = Y + Math.sin(b) * r * V.KY - 60 * q * z; W.draw(c, `wdust_${j % 2}`, px, py, b, 0.55 * z, 0.55 * z, (1 - q) * 0.75 * veil(V, px, py)); } } }
 
   // ---------------------------------------------------------------- the layer over the figures: brief moments only
   function drawOver(c, V, game) { if (game) G = game; const z = V.z, H = c.canvas.height, Wd = c.canvas.width;
@@ -105,7 +120,10 @@ export function createFinale({ W, GW, spic, ribbon, veil, ink }) {
     for (let i = 0; i < lands.length; i++) { const o = lands[i], t = clock - o.at; if (t < 0) continue; if (t > 1.35) { lands.splice(i--, 1); continue; }
       const u = foe(o.id), x = u ? u.x : o.x, y = u ? u.y : o.y, X = V.sx(x), Y = V.sy(y), [pic, w] = DEMON[o.kind], drop = (1 - ease(t / 0.45)) * 300 * z;
       const a = Math.min(1, t / 0.15) * (t < 0.75 ? 1 : Math.max(0, 1 - (t - 0.75) / 0.6));
-      spic(pic, X, Y - drop - w * 0.42 * z, 0, w * z, 0.85 * a * veil(V, X, Y - w * 0.4 * z));
+      // over the hero, the column thins to a third (one alpha for the whole painting: veil at its centre is not enough)
+      // its foot at his feet (a point of the picture: the middle of its bottom edge), the painting rising above him
+      const Hh = V.hero, over = Hh && Math.abs(Hh[0] - X) < w * 0.55 * z && Hh[1] < Y + 40 * z && Hh[1] > Y - drop - w * 1.8 * z;
+      spic(pic, X, Y - drop, 0, w * z, 0.85 * a * (over ? 0.33 : 1), 1, 1, 0.5, 0.96);
       if (o.kind === 'changhao') ribbon(c, 'wtoll_0', (s) => [X + Math.sin(s * 9 + t * 4) * 40 * z, Y - drop - (1 - s) * 330 * z], 3 * z, 0.6 * a, 0, ease(t / 0.4), 12, V);
       if (t > 0.4 && t < 1.2) { const q = (t - 0.4) / 0.8, k = (160 + 260 * q) * z / cellW(GW, 'gshock_0'); GD(c, 'gshock_1', X, Y, 0, k, k * V.KY, 0.45 * (1 - q)); } }
     // 妲己 and 胡喜媚 in fox-fire; 王贵人 in a ring of string-sound
@@ -122,13 +140,16 @@ export function createFinale({ W, GW, spic, ribbon, veil, ink }) {
         GD(c, `gwind_${j % 2}`, X, Y, Math.atan2(Math.sin(b) * V.KY, Math.cos(b)), k, k * 0.7, 0.35 * a * veil(V, X, Y)); } }
     // 纣王's end: 摘星楼 alight on the skyline, the fire climbing it from the foot (2.5 s), then burning on
     if (endAt > 0) { const t = clock - endAt, g = endGate || gateOf(null), h = G && G.hero, HX = h ? V.sx(h.x) : Wd / 2; let X = g ? V.sx(g.x + 700) : Wd * 0.7;
-      if (Math.abs(X - HX) < Wd * 0.18) X = HX + (X < HX ? -1 : 1) * Wd * 0.18; X = Math.min(Wd * 0.88, Math.max(Wd * 0.12, X));
-      const len = H * 0.19, Yb = Math.max(H * 0.36, Math.min(g ? V.sy(g.y) - 40 * z : H * 0.36, H * 0.42)), top = Yb - len * 512 / 322, up = ease(t / 1.6), cut = Yb - (Yb - top) * up;
+      if (Math.abs(X - HX) < Wd * 0.22) X = HX + (X < HX ? -1 : 1) * Wd * 0.22; X = Math.min(Wd * 0.85, Math.max(Wd * 0.15, X));
+      const len = H * 0.25, Yb = H * 0.46, top = Yb - len * 512 / 322, up = ease(t / 1.6), cut = Yb - (Yb - top) * up;
       const a = Math.min(1, t / 0.4) * 0.95 * veil(V, X, Yb - len);
+      // the brightest thing on screen for its 2.5 s: a warm wash of the fire's light across the sky from the tower, settling after
+      const env = ease(t / 0.5) * (t < 2.5 ? 1 : Math.max(0.4, 1 - (t - 2.5) / 1.5)), ym = cut - len * 0.2;
+      spic('fxRadiance', X, ym, 0, Wd * 0.95, 0.32 * env, 1, 0.42); spic('fxRadiance', X, ym, 0, len * 2.4, 0.55 * env * veil(V, X, ym));
       if (c.scissor) c.scissor([0, cut, Wd, H]); spic('fnZhaixing', X, Yb - (512 - 231) * len / 322, 0, len, a); if (c.scissor) c.scissor(null);
       if (t < 2.5) for (let j = 0; j < 3; j++) { const fx = X + (j - 1) * len * 0.18, fy = cut + 10 * z; W.draw(c, `wflame_${(j + Math.floor(t * 8)) % 2}`, fx, fy, 0, 0.42 * z, (0.42 + 0.14 * Math.sin(t * 13 + j)) * z, 0.6 * Math.min(1, t / 0.2) * (1 - Math.max(0, t - 2) / 0.5)); } }
   }
 
   function reset() { lands.length = snaps.length = ashes.length = standards.length = puffs.length = rings.length = lieutenants.length = 0; prevBy = []; fleeing = []; hostLast = null; endGate = null; fell = false; routAt = lastWaveAt = edgeAt = gateAt = endAt = lastPuff = -9; }
-  return { onEvent, drawGround, drawOver, reset };
+  return { onEvent, drawGround, drawOver, drawWard, reset };
 }

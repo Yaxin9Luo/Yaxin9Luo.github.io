@@ -173,7 +173,9 @@ export async function loadFx({ ky = 0.62, horizon = 0.52 } = {}) {
   const P0 = [0, 0, 0], P1 = [0, 0, 0];
   // the body is dry brush with paper through it; only the head and the leading segment are in full pigment, and only while the
   // dragon is new (FULL s); then the whole of it goes pale and dry and smoulders at a third
-  function drawDragons(o, front) { if (glfx && glfx.has('fireCover')) return;          // the painted dragons (fx/gl/treasures.js) fly instead
+  // without WebGL, 九龙焚天's nine covers keep only their scorched ring and the brief flames: nine sets of dragons filled the view
+  // (the user, 2026-11-26)
+  function drawDragons(o, front) { if ((glfx && glfx.has('fireCover')) || o.ev) return;          // the painted dragons (fx/gl/treasures.js) fly instead
     const N = o.ev ? 1 : DRAGONS[Math.min(6, o.lv)], M = level === 2 ? 3 : o.ev ? 7 : 6, flick = Math.floor(o.T * 9);
     const end = o.gone >= 0 ? clamp(o.gone / 0.6) : clamp((o.T - (o.zl - 0.3)) / 0.9);
     for (let k = 0; k < N; k++) {
