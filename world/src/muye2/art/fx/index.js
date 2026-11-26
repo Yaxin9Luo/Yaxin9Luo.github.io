@@ -29,6 +29,8 @@ const hash = (n) => { n = Math.imul(n | 0, 374761393); n = Math.imul(n ^ (n >>> 
 const sink = (s) => (s < 0.12 ? 1 : s < 0.4 ? 1 - ((s - 0.12) / 0.28) * 0.74 : s < 1.2 ? 0.26 * (1 - (s - 0.4) / 0.8) : 0);
 const TROOP = { shields: 'earth', spears: 'metal', archers: 'wood', strongmen: 'earth', chariots: 'metal', tigers: 'fire', acolytes: 'water', hooks: 'wood' };
 const GEN = { nezha: 'fire', yangjian: 'metal', leizhenzi: 'wood', tuxingsun: 'earth', dengchanyu: 'water', huangfeihu: 'earth' };
+// the six of 梅山 land with 袁洪 at once: the entrance is his alone (fx/gl/finale.js gives each his own column of ink)
+const MEISHAN_SIX = { wulong: 1, changhao: 1, daili: 1, jindasheng: 1, zhuzizhen: 1, yangxian: 1 };
 const NEW = { fireCover: 1, sash: 1, seal: 1, fireSpear: 1, pearls: 1, whip: 1, ring: 1, banner: 1 };          // the treasures
 // the kinds of the rules' shots this module draws; the art module reads this so it never draws them a second time
 export const SHOT_KINDS = new Set(['pearls', 'ring', 'boulder', 'blade', 'talisman', 'stone']);
@@ -945,7 +947,7 @@ export async function loadFx({ ky = 0.62, horizon = 0.52 } = {}) {
     if (e.type === 'land' && TROOP[e.id] && e.id === 'strongmen') { boulderBurst(e); return; }
     if (e.side === 'shang' && e.type === 'land') { shangLand(e); return; }
     if (e.type === 'warn') { if (e.hidden && G && G.zones) for (const z of G.zones) if (z.side === 'shang' && z.x === e.x && z.y === e.y) hiddenZ.add(z); if (e.shape === 'summon') summonWarn(e); return; }
-    if (e.type === 'arrive') { arrive(e); return; }
+    if (e.type === 'arrive') { if (!MEISHAN_SIX[e.kind]) arrive(e); return; }
     if (e.type === 'taken') { taken(e); return; }
     if (e.type === 'bite') { bite(e); return; }
     if (e.type === 'summoned') { summoned(e); return; }

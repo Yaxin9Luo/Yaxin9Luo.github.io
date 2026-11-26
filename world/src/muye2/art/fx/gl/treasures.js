@@ -13,6 +13,7 @@
 //       drawn back; a small brushed talisman (wfu_*) left on each one struck. Evolved, the lash leaps from target to target.
 // The stroke effects stand aside (fx/index.js asks has(kind)) once the brush sheet has loaded.
 import { createWonders } from './wonders.js';
+import { createFinale } from './finale.js';
 const TAU = Math.PI * 2;
 // the top of the hero's figure above his feet, in world units: what is attached to him (the bell, the crown) hangs just over
 // it, never on him. With the 华盖 gone, figures-key's measure (2026-11-26, zoom 1, above his ground point): helmet top 107-111,
@@ -36,6 +37,7 @@ export function createTreasures(ctx, ink, W = createWonders(), onKick = () => {}
   const PAINTED = { fireCover: 1, ring: 1, whip: 1, sash: 1, fireSpear: 1, pearls: 1, banner: 1, knife: 1, bell: 1, fan: 1, mirror: 1, rope: 1, lotus: 1, tower: 1, zhaoyao: 1, seal: 1 };
   const has = (kind) => W.ready && !!(PAINTED[kind] || BOSS_SIG[kind]);
   function onEvent(e) {
+    finale.onEvent(e, G0);
     if (e.type === 'hit' && e.id === 'bloodBlade') { bladeHits.push({ x: e.x, y: e.y, at: clock }); if (bladeHits.length > 40) bladeHits.shift(); }
     if (e.type === 'hit' && e.take && (e.id === 'boneBanner' || e.id === 'fiveLights')) { takes.push({ id: e.id, x: e.x, y: e.y, at: clock }); if (takes.length > 24) takes.shift(); }
     if (e.type === 'weary') { wearyAt.set(e.id, clock); return; }
@@ -201,6 +203,8 @@ export function createTreasures(ctx, ink, W = createWonders(), onKick = () => {}
   function wash(kind, x, y, w, pigment) { if (!ink || !ink.bloom || clock - (washAt[kind] ?? -9) < 2) return; washAt[kind] = clock; ink.bloom({ x, y, w, splats: BREAK_SCRIPT, pigment, life: 4.5, dry: [0.8, 1.6], sink: 2.2, hero: true }); }
   // the gods' brush sheet (shock rings, splashes, clods, souls), shared from index.js
   const GD = (c, name, X, Y, rot, kx, ky, a) => { if (GW && a > 0.004) GW.draw(c, name, X, Y, rot, kx, ky, a); };
+  // the finale's staging (fx/gl/finale.js): the seven of 梅山, the ward, the rout, the gate, the last guard, 纣王's end
+  const finale = createFinale({ W, GW, spic, ribbon, veil, ink });
   const takes = [], bladeHits = [];      // foes the banner or the five lights took (ghost ink to them, souls up into the light)
   const SPOIL_LIFE = { bite: 0.4, swallow: 0.3, dive: 0.5, ring: 0.5, windfire: 0.55, leap: 0.4, call: 1.4, whips: 0.45, line: 0.35, light: 0.4, flash: 0.6, fan: 0.6, burst: 0.5, banner: 0.6, cloud: 0.5, stone: 2.2 };
   const ease2 = (q) => 1 - (1 - q) * (1 - q), flat = (V) => (V.KY / 0.55) * 0.62;      // a painting laid on the ground: squashed as the ground is
@@ -476,15 +480,17 @@ export function createTreasures(ctx, ink, W = createWonders(), onKick = () => {}
   // with red dragons for their whole life and hid the fight). A cover lands: its dragons coil in for about half a second at
   // full strength (the act), then fall back to its sign for as long as it burns: a fine broken ring of ember on the ground
   // and two small flame-dragons circling low at under half strength. Everything is under the figures.
-  // A budget across covers: at most ACTS acts at once, a little staggered; a cover that lands while the budget is spent,
+  // A budget across covers: at most ACTS acts in any ACT_SPAN seconds, a little staggered (三昧火龙 drops covers at every
+  // thrust); a cover that lands while the budget is spent,
   // or close beside a cover whose act is playing, gets its sign only. Overlapping signs share their strength, so many
   // covers together never add up to a solid mass. When a cover lifts, only its sign climbs away.
-  const ACTS = 2, ACT_HOLD = 0.5, ACT_FADE = 0.35, ACT_GAP = 0.22, SIGN_A = 0.34;
-  let lastAct = -9;
+  const ACTS = 2, ACT_SPAN = 2, ACT_HOLD = 0.5, ACT_FADE = 0.35, ACT_GAP = 0.22, SIGN_A = 0.34;
+  let lastAct = -9; const actStarts = [];
   function watchCovers(G) { const zs = G && G.zones; if (zs) for (const z of zs) { if (z.dead || z.src !== 'fireCover' || z.kind !== 'burn') continue; let o = covers.get(z.id);
       if (!o) { const r = z.r || 78; let live = 0, near = false;
-        for (const q of covers.values()) if (q.act >= 0 && clock < q.act + ACT_HOLD + ACT_FADE) { live++; if (Math.hypot(q.x - z.x, q.y - z.y) < r * 3) near = true; }
-        const act = live < ACTS && !near ? Math.max(clock, lastAct + ACT_GAP) : -1; if (act >= 0) lastAct = act;
+        for (const q of covers.values()) if (q.act >= 0 && clock < q.act + ACT_HOLD + ACT_FADE && Math.hypot(q.x - z.x, q.y - z.y) < r * 3) near = true;
+        while (actStarts.length && actStarts[0] < clock - ACT_SPAN) actStarts.shift(); live = actStarts.length;
+        const act = live < ACTS && !near ? Math.max(clock, lastAct + ACT_GAP) : -1; if (act >= 0) { lastAct = act; actStarts.push(act); }
         covers.set(z.id, (o = { born: clock, gone: -1, act, ev: !!z.evolved, lv: z.level || 1, x: z.x, y: z.y, r }));
         // the wet cinnabar wash only where an act plays, smaller and shorter than before (it does not follow the cover)
         if (ink && act >= 0) ink.bloom({ x: z.x, y: z.y, w: r * 3, splats: RING_SCRIPT, pigment: 'fire', life: 3, dry: [0.8, 1.6], sink: 2.4, hero: true }); }
@@ -589,9 +595,13 @@ export function createTreasures(ctx, ink, W = createWonders(), onKick = () => {}
   function thrustsDraw(c, V) { for (let i = 0; i < thrusts.length; i++) { const o = thrusts[i], t = clock - o.at; if (t < 0) continue; if (t > 0.38) { thrusts.splice(i--, 1); continue; }
       const draw = Math.min(1, t / 0.06), a = t < 0.12 ? 1 : 1 - (t - 0.12) / 0.26, from = Math.max(0, (t - 0.14) / 0.24);     // thrust out in 0.06 s, held, then gone from the hand first
       const L = Math.min(o.L, 240); ribbon(c, `wthrust_${o.v}`, (s) => [V.sx(o.x + Math.cos(o.d) * L * s), V.sy(o.y + Math.sin(o.d) * L * s) - 34 * V.z], Math.min(o.k, 0.6) * V.z, a, from, draw, 8, V); } }   // reach by the lane on the ground, not by a stroke across the screen
-  function lanesDraw(c, V) { for (const o of lanes.values()) { const t = clock - o.born, out = o.gone >= 0 ? Math.min(1, (clock - o.gone) / 0.5) : 0, draw = Math.min(1, t / 0.1), a = (t < 0.3 ? 1 : 0.8) * (1 - out);
-      const P = (s) => [V.sx(o.x + Math.cos(o.dir) * o.len * s), V.sy(o.y + Math.sin(o.dir) * o.len * s) - 18 * V.z];
-      ribbon(c, `wthrust_${Math.floor(clock * 6 + o.x) % 2}`, P, (o.ev ? 0.75 : 0.55) * V.z, a, out, draw, 8, V); } }       // the fire flickers by swapping two strokes of one value
+  // a lane is a full stroke for its first 0.3 s, then a thin low ember line for the rest of its burn (the user, 2026-11-26:
+  // the evolved spear's forks left a standing star of thick red strokes over most of the screen); many lanes share their strength
+  function lanesDraw(c, V) { const share = Math.min(1, 6 / Math.max(1, lanes.size));
+    for (const o of lanes.values()) { const t = clock - o.born, out = o.gone >= 0 ? Math.min(1, (clock - o.gone) / 0.5) : 0, draw = Math.min(1, t / 0.1), q = Math.min(1, Math.max(0, (t - 0.3) / 0.25));
+      const a = (1 - q + q * 0.3 * share) * (1 - out), w = (o.ev ? 0.75 : 0.55) * (1 - 0.45 * q);
+      const P = (s) => [V.sx(o.x + Math.cos(o.dir) * o.len * s), V.sy(o.y + Math.sin(o.dir) * o.len * s) - 18 * (1 - 0.6 * q) * V.z];
+      ribbon(c, `wthrust_${Math.floor(clock * 6 + o.x) % 2}`, P, w * V.z, a, out, draw, 8, V); } }       // the fire flickers by swapping two strokes of one value
   // ---------------------------------------------------------------- 定海珠: paper pearls ringed in azurite, water trailing
   function pearlsDraw(c, V, G, layer) { const ss = G && G.shots, h = G && G.hero; if (!ss) return; let ev = 0, rs = 0, n = 0;
     for (let i = 0; i < ss.length; i++) { const s = ss[i]; if (s.dead || s.side === 'shang' || s.kind !== 'pearls') continue; const far = h && s.y < h.y; if (layer !== 'ground') continue;   // the orbit lasts: under the figures
@@ -606,7 +616,7 @@ export function createTreasures(ctx, ink, W = createWonders(), onKick = () => {}
     if (layer === 'ground') { W.draw(c, 'whalo_gold', X, Y, 0, k, k * V.KY, 0.75); if (ev) W.draw(c, 'whalo_gold', X, Y, 0, -k * 1.2, k * 1.2 * V.KY, 0.5);
       if (ev) { const sw = Math.sin(clock * 1.4) * 0.03; W.draw(c, 'wflag', V.sx(h.x - 165), V.sy(h.y - 50), sw, 0.46 * V.z, 0.46 * V.z, 0.95); } return; }   // the banner: over the crowd, and on screen when he is high in the view
     if (ev) for (let j = 0; j < 8; j++) { const b = (j / 8) * TAU + clock * 0.25, Xf = V.sx(h.x + Math.cos(b) * r * 1.05), Yf = V.sy(h.y + Math.sin(b) * r * 1.05) - 16 * V.z; W.draw(c, `wlotus_${j % 2}`, Xf, Yf, 0, 0.7 * V.z, 0.7 * V.z, 0.95 * veil(V, Xf, Yf)); } }
-  function drawGround(V, dt, G) { clock += dt; frame++; if (G) G0 = G; watchCovers(G); watchLanes(G); if (!W.ready) return; const c = ctx; c.save(); c.globalCompositeOperation = 'source-over'; coverGround(c, V); silksDraw(c, V, 'ground'); lanesDraw(c, V); thrustsDraw(c, V); hostsDraw(c, V, 'ground');   /* 火尖枪's thrusts with their lanes, under the figures */ generalsDraw(c, V, G, 'ground'); pearlsDraw(c, V, G, 'ground'); lightsGround(c, V); sealsGround(c, V); ropesDraw(c, V, G0); spoilsDraw(c, V, G0, 'ground'); wearyDraw(c, V, G0, 'ground'); bannerDraw(c, V, G, 'ground'); bannerDraw(c, V, G, 'over'); ringsGround(c, V, G0); lastingDraw(c, V, G0, 'ground'); c.restore(); }
-  function drawOver(V, dt, G) { if (!W.ready) return; const c = ctx, cv = ctx.canvas; covMax = COVER * (cv && cv.width ? cv.width * cv.height : 2880 * 1800); cov = 0; budgetOn = true; c.save(); c.globalCompositeOperation = 'source-over'; silksDraw(c, V, 'over'); blowsDraw(c, V); arrowsDraw(c, V, G); newsDraw(c, V, G); budgetOn = false; sigsDraw(c, V); lastingDraw(c, V, G0, 'over'); statesDraw(c, V, G0); hostsDraw(c, V, 'over'); generalsDraw(c, V, G, 'over'); budgetOn = true; ringsOver(c, V); spoilsDraw(c, V, G0, 'over'); wearyDraw(c, V, G0, 'over'); antidoteDraw(c, V, G0); columnsOver(c, V); budgetOn = false; c.restore(); }
-  return { useTip: (f) => { tipFn = typeof f === 'function' ? f : null; }, onEvent, drawGround, drawOver, has, wonders: W, reset() { prints.length = 0; covers.clear(); lastAct = breakAt = -9; columns.length = 0; talismans.length = 0; silks.length = 0; lanes.clear(); thrusts.length = 0; blows.length = 0; news.length = 0; hosts.length = 0; manifests.length = 0; dives.length = 0; sigs.length = 0; tracks.clear(); }, get live() { return covers.size + columns.length + silks.length + lanes.size; } };
+  function drawGround(V, dt, G) { clock += dt; frame++; if (G) G0 = G; watchCovers(G); watchLanes(G); if (!W.ready) return; const c = ctx; c.save(); c.globalCompositeOperation = 'source-over'; coverGround(c, V); silksDraw(c, V, 'ground'); lanesDraw(c, V); thrustsDraw(c, V); hostsDraw(c, V, 'ground');   /* 火尖枪's thrusts with their lanes, under the figures */ generalsDraw(c, V, G, 'ground'); pearlsDraw(c, V, G, 'ground'); lightsGround(c, V); sealsGround(c, V); ropesDraw(c, V, G0); spoilsDraw(c, V, G0, 'ground'); wearyDraw(c, V, G0, 'ground'); finale.drawGround(c, V, G0, dt); bannerDraw(c, V, G, 'ground'); bannerDraw(c, V, G, 'over'); ringsGround(c, V, G0); lastingDraw(c, V, G0, 'ground'); c.restore(); }
+  function drawOver(V, dt, G) { if (!W.ready) return; const c = ctx, cv = ctx.canvas; covMax = COVER * (cv && cv.width ? cv.width * cv.height : 2880 * 1800); cov = 0; budgetOn = true; c.save(); c.globalCompositeOperation = 'source-over'; silksDraw(c, V, 'over'); blowsDraw(c, V); arrowsDraw(c, V, G); newsDraw(c, V, G); budgetOn = false; sigsDraw(c, V); lastingDraw(c, V, G0, 'over'); statesDraw(c, V, G0); hostsDraw(c, V, 'over'); generalsDraw(c, V, G, 'over'); budgetOn = true; ringsOver(c, V); spoilsDraw(c, V, G0, 'over'); wearyDraw(c, V, G0, 'over'); antidoteDraw(c, V, G0); finale.drawOver(c, V, G0); columnsOver(c, V); budgetOn = false; c.restore(); }
+  return { useTip: (f) => { tipFn = typeof f === 'function' ? f : null; }, onEvent, drawGround, drawOver, has, wonders: W, reset() { finale.reset(); prints.length = 0; covers.clear(); lastAct = breakAt = -9; actStarts.length = 0; columns.length = 0; talismans.length = 0; silks.length = 0; lanes.clear(); thrusts.length = 0; blows.length = 0; news.length = 0; hosts.length = 0; manifests.length = 0; dives.length = 0; sigs.length = 0; tracks.clear(); }, get live() { return covers.size + columns.length + silks.length + lanes.size; } };
 }

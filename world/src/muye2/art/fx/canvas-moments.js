@@ -8,6 +8,8 @@
 // Cost: a few drawImage and stroke calls a frame (measured in the render spike: well under 1 ms of CPU at 4x throttle).
 const TAU = Math.PI * 2, LIGHT = { metal: '#E8B54A', fire: '#E0562C', water: '#7FB2E8', wood: '#7ED3A6', earth: '#E8B54A' };
 const BOSS_ELEMENT = { wenzhong: 'metal', zhangguifang: 'metal', moliqing: 'wood', molihong: 'water', molihai: 'metal', molishou: 'earth', kongxuan: 'fire', yuanhong: 'earth', zhouwang: 'fire' };
+// the six of 梅山 land with 袁洪 at once: the entrance is his alone (fx/gl/finale.js gives each his own column of ink)
+const MEISHAN_SIX = { wulong: 1, changhao: 1, daili: 1, jindasheng: 1, zhuzizhen: 1, yangxian: 1 };
 const HEAVY = { pairedWhips: 1, goldWall: 1.3, greatAxe: 0.9, pearlRing: 0.8 };
 const bitmap = (name) => fetch(new URL(`./gl/sprites/${name}.webp`, import.meta.url).href).then((r) => (r.ok ? r.blob() : Promise.reject(new Error(name)))).then((b) => createImageBitmap(b));
 
@@ -21,7 +23,7 @@ export function createCanvasMoments({ kick = () => {}, sx, sy, view }) {
   function printCanvas() { if (S.print) return S.print; const n = 256, c = document.createElement('canvas'); c.width = c.height = n; const x = c.getContext('2d'); x.fillStyle = '#b8321f'; x.fillRect(12, 12, n - 24, n - 24);
     x.globalCompositeOperation = 'destination-out'; x.font = 'bold 104px "Kaiti SC","STKaiti","KaiTi","Songti SC","SimSun",serif'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText('番', n * 0.7, n * 0.3); x.fillText('天', n * 0.7, n * 0.7); x.font = 'bold 160px "Kaiti SC","STKaiti","KaiTi","Songti SC","SimSun",serif'; x.fillText('印', n * 0.3, n * 0.5); return (S.print = c); }
   function onEvent(e, G) {
-    if ((e.type === 'arrive' && e.tier && e.tier !== 'lieutenant') || e.type === 'boss') {
+    if ((e.type === 'arrive' && e.tier && e.tier !== 'lieutenant' && !MEISHAN_SIX[e.kind]) || e.type === 'boss') {
       if (live.some((m) => m.kind === 'entrance' && clock - m.at < 2)) return;
       live.push({ kind: 'entrance', at: clock, x: e.x, y: e.y, light: LIGHT[BOSS_ELEMENT[e.kind] || 'metal'], big: e.tier !== 'small', seed: (e.x * 7 + e.y * 3) | 0 });
     } else if (e.type === 'land' && e.side === 'shang' && (HEAVY[e.id] || e.great)) { live.push({ kind: 'blow', at: clock, x: e.x, y: e.y, power: HEAVY[e.id] || 1.2, seed: (e.x * 3 + e.y) | 0 }); kick(20); }

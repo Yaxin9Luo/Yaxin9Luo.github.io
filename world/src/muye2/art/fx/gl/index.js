@@ -36,6 +36,8 @@ import { createWonders } from './wonders.js';
 // the heavy blows (pattern ids of content/bosses.js) and how heavy
 const HEAVY = { pairedWhips: 1, threeWhips: 1, goldWall: 1.3, greatAxe: 0.9 };   // (pearlRing's pearls carry it: the god's ring over a 232 band covered the screen)
 const LIGHT_OF = { metal: 'gold', fire: 'cinnabar', water: 'azurite', wood: 'malachite', earth: 'gold' };
+// the six of 梅山 land with 袁洪 at once: the shock is his alone (fx/gl/finale.js gives each his own column of ink)
+const MEISHAN_SIX = { wulong: 1, changhao: 1, daili: 1, jindasheng: 1, zhuzizhen: 1, yangxian: 1 };
 const BOSS_ELEMENT = { wenzhong: 'metal', zhangguifang: 'metal', moliqing: 'wood', molihong: 'water', molihai: 'metal', molishou: 'earth', kongxuan: 'fire', yuanhong: 'earth', zhouwang: 'fire' };
 
 export function createGLFx(ctx, { elementOf = () => 'ink', kick = () => {} } = {}) {
@@ -102,7 +104,7 @@ export function createGLFx(ctx, { elementOf = () => 'ink', kick = () => {} } = {
   function onEvent(e, game) {
     if (game) G = game; treasures.onEvent(e); gods.onEvent(e, G);
     const t = e.type;
-    if ((t === 'arrive' && e.tier !== 'lieutenant' && (e.tier || e.kind)) || t === 'boss') {
+    if ((t === 'arrive' && e.tier !== 'lieutenant' && !MEISHAN_SIX[e.kind] && (e.tier || e.kind)) || t === 'boss') {
       if (clock - lastBoss.t < 2 && Math.hypot(e.x - lastBoss.x, e.y - lastBoss.y) < 200) return;      // 'arrive' and 'boss' come together
       lastBoss = { t: clock, x: e.x, y: e.y }; entrance(e);
     } else if (t === 'evolve') {
