@@ -157,7 +157,7 @@ export function hurtHero(g, dmg, by, x, y, pattern = '') {
   }
   // the rage: past g.campaign.rageAt (SCHEDULE.late) every blow of the Shang is harder with each minute, whoever strikes it
   const past = (g.t - g.campaign.rageAt) / 60;
-  const d = Math.max(1, dmg * (past > 0 ? 1 + SCHEDULE.late.dmg * past * Math.max(1, past) : 1) - g.mods.armour);
+  const d = Math.min(HERO.blowCap * h.maxHp, Math.max(1, dmg * (past > 0 ? 1 + SCHEDULE.late.dmg * past * Math.max(1, past) : 1) - g.mods.armour));   // one blow takes at most HERO.blowCap of full health
   if (h.hp - d <= 0 && BUILD.saveHero && BUILD.saveHero(g)) return false;   // 袁洪's spoil, 八九玄功: stone instead of the fall
   h.hp -= d; h.flash = .15; h.hurtT = HERO.hurtTime;
   g.stats.taken[by] = (g.stats.taken[by] || 0) + d;

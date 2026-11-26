@@ -21,6 +21,7 @@ export const STEP = 1 / 60;
 export const HERO = {
   r: 18, hp: 100, speed: 215,
   safe: .5,            // after a hit, this long without further harm
+  blowCap: .3,         // no single blow takes more than this share of his full health (lead, 2026-11-26: a run is never ended by one hit)
   hurtTime: .25,       // how long `state` reads 'hurt' (display only)
   fallTime: 1.5,       // from the blow that takes the last health to the end of the run
   gather: 125,         // battle spirit this near flies to the hero

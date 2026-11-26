@@ -77,7 +77,7 @@ export function makeCampaign(g) {
   g.landmarks = [];
   g.field = fieldFor(g, 0); g.gates = gatesOf(g.field);
   placeLandmarks(g, 0);
-  return {stretch: -1, scene: 0, march: 0, marchTo: 0, next: null, bar: 0, guards: false, until: g.options.until || null,
+  return {stretch: -1, scene: 0, march: 0, rest: 0, marchTo: 0, next: null, bar: 0, guards: false, until: g.options.until || null,
     rageAt: Infinity, small, si: 0, bi: 0, finalDue: false, live: [], officers: 0, moved: false, smallDown: {}};
 }
 
@@ -163,9 +163,10 @@ function endMarch(g) {
   const c = g.campaign;
   for (const f of g.foes) if (f.flee && f.state !== 'dead') { f.state = 'dead'; f.stateT = DEAD; f.dead = true; g.alive--; }
   if (!c.moved) { c.moved = true; layNextField(g); }
+  if (!c.finalDue) c.rest = CAMPAIGN.rest;                  // a rest after 闻仲 and 孔宣: no new mass while the prize lands (SPEC 1.14)
   c.scene = c.marchTo;
   placeLandmarks(g, c.scene);
-  g.events.push({type: 'marchEnd', scene: c.scene, x: g.hero.x, y: g.hero.y, landmarks: g.landmarks});
+  g.events.push({type: 'marchEnd', scene: c.scene, x: g.hero.x, y: g.hero.y, landmarks: g.landmarks, rest: c.rest});
   if (c.finalDue) {
     c.finalDue = false;
     swapGuards(g);
@@ -306,7 +307,7 @@ export function stepCampaign(g, dt, timeline) {
     c.march -= dt;
     if (!c.moved && c.march <= CAMPAIGN.march / 2) { c.moved = true; layNextField(g); }
     if (c.march <= 0) { c.march = 0; endMarch(g); }
-  }
+  } else if (c.rest > 0 && (c.rest -= dt) <= 0) { c.rest = 0; g.events.push({type: 'restEnd', x: g.hero.x, y: g.hero.y}); }
   if (g.gates.length) openGates(g);
   for (let i = c.live.length - 1; i >= 0; i--) {
     const f = c.live[i];
@@ -349,8 +350,8 @@ export function stepSpawn(g, dt) {
     }
   }
   const E = SCHEDULE.elites, R = SCHEDULE.rings, c = g.campaign;
-  if (c.march > 0) {
-    // nothing enters on the march: what fell due is let go
+  if (c.march > 0 || c.rest > 0) {
+    // nothing enters on the march or the rest after it: what fell due is let go
     while (s.elite < E.length && t >= E[s.elite].t) s.elite++;
     while (s.ring < R.length && t >= R[s.ring].t) s.ring++;
     s.acc = 0;

@@ -71,6 +71,7 @@ export const CAMPAIGN = {
     mix: {yulin: 5, goldMelon: 2, axeGuard: 2, drumGuard: .5}, elites: {kind: 'zhendian', every: 50}},
   mojia: ['moliqing', 'molihong', 'molihai', 'molishou'],
   march: 4,          // seconds of march after a big boss falls: nothing enters; the Shang on the field rout (not before 纣王)
+  rest: 25,          // and then this many seconds of rest after 闻仲 and 孔宣: no new mass while his spoil and the new field land (2026-11-26, B)
   enrage: 120,       // a big boss not killed this long after he arrives enrages:
   rage: {dmg: 1.5, speed: 1.3, cd: .7},
   // bosses are fights (SPEC-CAMPAIGN.md 1.14): no harm for `ward` s after he arrives; then his health falls at most
