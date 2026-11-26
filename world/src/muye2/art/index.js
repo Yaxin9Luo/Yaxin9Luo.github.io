@@ -23,7 +23,7 @@
 import { loadGround, LANDMARKS } from './ground/ground.js';
 import { SCENE_OF } from './ground/layout.js';
 import { buildSprites, FLASH } from './sprites/sprites.js';
-import { SCHEDULE } from '../content.js';
+import { SCHEDULE, BY } from '../content.js';
 
 const SEAMS = import.meta.glob(['./puppets/index.js', './fx/index.js']);       // either folder may be empty: then the fallback, or no effects
 const KEYFIGS = import.meta.glob('./puppets/imagegen/figures.js');           // the generated key figures (hero, generals, bosses), drawn live: see that file
@@ -81,7 +81,7 @@ export async function loadArt({ onProgress = () => {}, puppets, fx: wantFx = tru
   onProgress(total, total);
 
   // ---- the view
-  let W = 1440, H = 900, D = 1, z = 1, ox = 0, oy = 0, now = 0, lastAlpha = 1, liveWarm = false, heroPhase = 0, heroAt = null, heroO = {}, warmKeys = new Set(), coming = [], comingAt = -99, castAt = -9, castReach = 0, castHeavy = false, warns = new Map(), lastGame = null, hitT = 9, lastFlash = 0, marchLen = 0;
+  let W = 1440, H = 900, D = 1, z = 1, ox = 0, oy = 0, now = 0, lastAlpha = 1, liveWarm = false, heroPhase = 0, heroAt = null, heroO = {}, warmKeys = new Set(), coming = [], comingAt = -99, brings = [], bringsAt = -99, castAt = -9, castReach = 0, castHeavy = false, warns = new Map(), lastGame = null, hitT = 9, lastFlash = 0, marchLen = 0;
   const sx = (x) => ox + x * z, sy = (y) => oy + y * KY * z;
   const V = { W: 1440, H: 900, z: 1, dpr: 1, cx: 0, cy: 0, hw: 0, hh: 0, sx, sy };
   function view(cam) { z = cam.zoom * D; ox = (W / 2 + (cam.shakeX || 0)) * D - cam.x * z; oy = (H * 0.52 + (cam.shakeY || 0)) * D - cam.y * KY * z;
@@ -240,6 +240,19 @@ export async function loadArt({ onProgress = () => {}, puppets, fx: wantFx = tru
     for (const e of SCHEDULE.elites || []) if (e.t <= t + 30) want.add('shang:' + e.kind);
     coming = [...want].filter((k) => PUP[k] && !(live && live.has(k)) && !sprites.get(k, '')); return coming;
   }
+  // what a boss brings that would otherwise be cut whole on its first frame mid-fight (a frame of 55 ms or more): his retinue in
+  // every phase, what his patterns summon, and his spoil's beast in the hero's dress (花狐貂: 'shang:marten', variant 'f'); listed
+  // from 30 s before he is due (game.campaign.next) and while he is on the field (rebuilt once a second), cut a step a frame
+  function bossBrings(game) {
+    if (Math.abs(game.t - bringsAt) < 1) return brings; bringsAt = game.t; const c = game.campaign, kinds = new Set(), want = [];
+    if (c && c.next && c.next.t <= game.t + 30) kinds.add(c.next.kind);
+    if (c) for (const f of c.live || []) if (!f.dead && f.state !== 'dead') kinds.add(f.kind);
+    for (const k of kinds) { const row = BY.foe[k]; if (!row) continue;
+      for (const R of row.retinue || []) want.push(['shang:' + R.kind, '']);
+      for (const p of row.patterns || []) if (p.shape === 'summon' && p.kind) want.push(['shang:' + p.kind, '']);
+      const sp = BY.spoilOf[k]; if (sp && sp.id === 'marten') want.push(['shang:marten', 'f']); }
+    brings = want.filter(([k, v], i) => PUP[k] && !(live && live.has(k)) && !sprites.get(k, v) && want.findIndex((w) => w[0] === k && w[1] === v) === i); return brings;
+  }
   const setFor = (key, variant) => sprites.get(key, variant) || sprites.ensure(key, variant);
 
   // For art/fx: draw one unit again exactly as drawWorld drew it in this frame (same frame, place, size; no shadow, no hit edge),
@@ -317,6 +330,9 @@ export async function loadArt({ onProgress = () => {}, puppets, fx: wantFx = tru
       else if (sprites.recutStep && !sprites.recutStep(8)) { /* the window grew: re-cutting, a step a frame */ }
       // then the Shang kinds the schedule brings within the next 30 s (content.js SCHEDULE, read only), a step of about 8 ms a
       // frame: the first cavalry (from 4:00), wasps or fire crows are otherwise cut in one go on their first frame (a 60 ms frame)
+      // what the boss due next (or on the field) brings with him, the same way
+      else if (sprites.ensureStep && bossBrings(game).length) {
+        const [k, v] = brings[0], S = sprites.get(k, v) || sprites.ensureStep(k, v, 8); if (S) { brings.shift(); if (ctx.prewarm) ctx.prewarm(S.img); } }
       else if (sprites.ensureStep && comingKinds(game.t).length) {
         const k = coming[0], S = sprites.get(k, '') || sprites.ensureStep(k, '', 8); if (S) { coming.shift(); if (ctx.prewarm) ctx.prewarm(S.img); } }
       if (game !== lastGame) { lastGame = game; if (ground.setSeed && game.seed != null) ground.setSeed(game.seed); if (fx && fx.onEvent) fx.onEvent({ type: 'game' }, game); }      // the field of this run comes from its seed (ground/layout.js)                 // art/fx reads zones, pickups and shots from the game it was last handed
@@ -363,7 +379,7 @@ export async function loadArt({ onProgress = () => {}, puppets, fx: wantFx = tru
           const face = faceOf(u, dt); if (PUP[key] && PUP[key].liveBanner) liveBanner(ctx, PUP[key], S, f, u, sx(x), sy(y), face, a, dt);
           sprite(ctx, S, f, sx(x), sy(y), face, a, u.flash); }
         else if (e.type === P_BEAST) drawBeast(ctx, u, alpha, dt);
-        else if (e.type === P_PROP) { const big = u.r >= 100, front = u.y > hy && u.y - hy < (big ? 640 : 300) && Math.abs(u.x - hx) < (big ? u.r * 1.5 : 95); ctx.globalAlpha = front ? (big ? 0.42 : 0.32) : 1;      /* a landmark the hero is behind goes thin too */ ground.prop(ctx, u, sx(u.x), sy(u.y), z); }     // rule 5
+        else if (e.type === P_PROP) { const big = u.r >= 100, front = u.y > hy && (ground.hides ? ground.hides(u, hx, hy) : u.y - hy < (big ? 640 : 300) && Math.abs(u.x - hx) < (big ? u.r * 1.5 : 95)); ctx.globalAlpha = front ? (big ? 0.42 : 0.32) : 1;      /* a landmark the hero is behind goes thin too */ ground.prop(ctx, u, sx(u.x), sy(u.y), z); }     // rule 5
         else if (e.type === P_PICK) { const x = u.px + (u.x - u.px) * alpha, y = u.py + (u.y - u.py) * alpha; ground.mark(ctx, u.kind === 'spirit' ? 'spirit' + (u.size || 0) : u.kind, sx(x), sy(y) - (u.kind === 'spirit' ? (1.5 + 1.5 * Math.sin(now * 3.1 + u.id)) * z : 0), z); }
         else if (e.type === P_HERO && heroUnder(game)) { /* under the earth with 张奎's 地行术: nothing of him shows; art/fx draws the mound */ }
         else if (e.type === P_HERO && live && live.has('hero:wuwang-afoot') && h.state === 'afoot') {   // unhorsed: 武王 on foot from the generated art, his cinnabar edge kept

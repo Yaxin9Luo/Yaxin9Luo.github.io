@@ -13,7 +13,7 @@ export const spoils = [
     text: T('Every 6 s a black wind full of blades spins out from you, cutting everything within 260 px.', '每 6 秒，一阵夹着万千戈矛的黑风从你身边卷出，斩切 260 像素内的一切。')},
   {id: 'hunyuanUmbrella', from: 'molihong', tier: 'small', ch: [40], name: T('Umbrella of Chaos', '混元伞'),
     radius: 170, every: 8, burst: {radius: 120, dmg: 120},
-    text: T('The umbrella opens over you: every Shang shot that comes within 170 px is swallowed, and every eighth comes back as a burst of light on the densest group.', '混元伞撑开在你头上：射进 170 像素内的商军箭与火尽被收去，每收八支就化作一团光砸向最密的敌群。')},
+    text: T('Whenever a Shang shot comes within 170 px of you, the umbrella opens in the air beside you and swallows it; every eighth swallowed comes back as a burst of light on the densest group.', '商军的箭与火一射进你身边 170 像素内，混元伞便在你身旁半空撑开，把它收去；每收八支就化作一团光砸向最密的敌群。')},
   {id: 'jadePipa', from: 'molihai', tier: 'small', ch: [40], name: T('Jade Lute', '碧玉琵琶'),
     cd: 7, count: 3, radius: 110, dmg: 70, push: 120, burnDps: 25, burnLife: 3,
     text: T('Every 7 s the lute is plucked: wind and fire come together on the three densest groups, throwing them back and leaving the ground burning.', '每 7 秒拨动琵琶：风火齐至，落在最密的三处敌群，把他们掀开，地上烧起火来。')},

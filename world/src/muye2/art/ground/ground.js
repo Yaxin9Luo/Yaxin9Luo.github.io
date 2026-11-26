@@ -197,6 +197,10 @@ export async function loadGround(step = () => {}, seed = 7, firstScene = 'xiqi')
       ctx.setTransform(kx * c, kx * s2 * f, -ky * s2, ky * c * f, X, Y); ctx.globalAlpha = o.a ?? 1; ctx.drawImage(marksImg, q[0], q[1], q[2], q[3], -q[4], -q[5], q[2] / q[6], q[3] / q[6]); ctx.globalAlpha = 1; },
     /* the doors drawn over a painted gate: the passes' gate is painted shut and opens; Zhaoge's is painted open and is shut until 纣王 comes out.
        rects are the doorways in the source picture's pixels, foot and scale as in imagegen/rigs.json */
+    /** does the standing piece p hide the hero (feet at hx, hy)? Only when his feet are north of its foot and inside its
+     *  painted box (inset 20 at the sides, 60 at the top: most of him behind it): a landmark goes thin only when he is really behind it */
+    hides(p, hx, hy) { if (!(hy < p.y)) return false; const [A] = standing(p.cell), q = A.cells[p.cell]; if (!q) return false;
+      const w = q[2] / q[6], left = p.flip < 0 ? p.x - (w - q[4]) : p.x - q[4]; return (p.y - hy) * KY < q[5] - 60 && hx > left + 20 && hx < left + w - 20; },
     prop(ctx, p, X, Y, z) {
       // a thing whose foot is up in the far band's mist is lost in it (it would otherwise stand on the distant range)
       /* Zhaoge's wall, gate, palace and standards come out of the band's mist together, as the wall's own line clears the band */
