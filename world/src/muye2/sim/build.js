@@ -6,7 +6,7 @@ import {syncSquads} from './squads.js';
 import {syncGenerals} from './generals.js';
 import {HERO, SLOTS, MAX, OFFER, ELEMENTS, fedBy, RESONANCE, rankOf, PAYOFF, WEAPON_ART, xpNeed, CONTENT, BY, LIST} from '../content.js';
 import {STAT, poolOf, meritFrom} from '../content/meta.js';
-import {spoilMods} from './spoils.js';
+import {spoilMods, forcePayoff} from './spoils.js';
 export {takeSpoil, saveHero, bigPayoff} from './spoils.js';
 
 export const owned = (g, kind) => kind === 'treasure' ? g.build.treasures : kind === 'art' ? g.build.arts : kind === 'general' ? g.build.generals : g.build.troops;
@@ -61,9 +61,9 @@ export function recompute(g) {
  */
 export function setPower(g) {
   const b = g.build, [c0, c1] = PAYOFF.curve, [f0, f1] = PAYOFF.fade, k = g.options.bare ? 0 : Math.min(1, Math.max(0, (g.t - f0) / (f1 - f0)));
-  const before = (lvl, max) => 1 + (c0 + (c1 - c0) * (lvl - 1) / (max - 1) - 1) * k;
+  const before = (lvl, max, [a0, a1] = [c0, c1]) => 1 + (a0 + (a1 - a0) * (lvl - 1) / (max - 1) - 1) * k;
   for (const t of b.treasures) { if (t.merged) for (const p of t.parts) g.power[p.id] = PAYOFF.merge; else g.power[t.id] = t.evolved ? PAYOFF.evolve : before(t.level, MAX.treasure); }
-  for (const t of b.troops) g.power[t.id] = t.blessed ? PAYOFF.blessed : before(t.level, MAX.troop);
+  for (const t of b.troops) g.power[t.id] = t.blessed ? PAYOFF.blessed : before(t.level, MAX.troop, PAYOFF.troopCurve);   // squads follow `troopCurve` when it is set, else `curve`
 }
 export function give(g, kind, id, level, evolved = false) {
   if (!BY[kind] || !BY[kind][id]) throw new Error(`no ${kind} ${id}`);
@@ -317,6 +317,7 @@ export function openChest(g, x, y, named) {
     }
   }
   if (payoff(g, x, y, true)) return;                      // a payoff that is ready always comes first
+  if (OFFER.firstChestPays && !g.stats.payoffs.length && g.t >= PAYOFF.from && forcePayoff(g, x, y)) return;   // an option for the user (off): a run's first chest after PAYOFF.from brings its first payoff
   // otherwise it carries the build toward its next payoff: what unlocks one if anything does, else a level for
   // the treasure, squad or general that is furthest along
   const {cont, unlock} = candidates(g, null, true);
