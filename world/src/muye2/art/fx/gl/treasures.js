@@ -403,13 +403,15 @@ export function createTreasures(ctx, ink, W = createWonders(), onKick = () => {}
   function antidoteDraw(c, V, G) { const z = V.z, ps = G && G.pickups;
     if (ps) for (const p of ps) { if (p.dead || p.kind !== 'antidote') continue; const X = V.sx(p.x), Yg = V.sy(p.y), lift = 118 + 6 * Math.sin(clock * 2 + p.id), Y = Yg - lift * z, pulse = 0.5 + 0.5 * Math.sin(clock * 2.6 + p.id);
       W.draw(c, 'whalo_water', X, Yg, 0, 0.32 * z, 0.32 * z * V.KY, 0.55);      // its place on the ground
-      if (!spic('fxJadeGlow', X, Y, clock * 0.3, (120 + 30 * pulse) * z, 0.45 + 0.35 * pulse)) W.draw(c, 'whalo_water', X, Y, clock * 0.3, (0.45 + 0.1 * pulse) * z, (0.45 + 0.1 * pulse) * z, 0.3 + 0.3 * pulse);
+      if (!spic('fxJadeGlow', X, Y, clock * 0.3, (96 + 18 * pulse) * z, 0.22 + 0.18 * pulse)) W.draw(c, 'whalo_water', X, Y, clock * 0.3, (0.45 + 0.1 * pulse) * z, (0.45 + 0.1 * pulse) * z, 0.3 + 0.3 * pulse);
       // the wisp: a thin pale stroke rising off the seal, swaying
       ribbon(c, 'wtoll_0', (s2) => [X + Math.sin(s2 * 5 + clock * 2) * 6 * z * s2, Y - (30 + 70 * s2) * z], 0.55 * z, 0.45, 0, 1, 10, null);
       // until the painting is made: a celadon jar in brush, a cinnabar talisman pasted across its mouth as the seal
       if (!spic('antidote', X, Y, Math.sin(clock * 1.4 + p.id) * 0.06, 62 * z, 1)) { const r = Math.sin(clock * 1.4 + p.id) * 0.06; W.draw(c, 'wvase', X, Y + 30 * z, r, 0.55 * z, 0.55 * z, 1); W.draw(c, `wfu_${p.id % 2}`, X + Math.sin(r) * 50 * z, Y - 22 * z, r + 0.15, 0.42 * z, 0.42 * z, 1); } }
     for (let i = 0; i < cures.length; i++) { const o = cures[i], t = clock - o.at; if (t > 0.9) { cures.splice(i--, 1); continue; } const h = G && G.hero, X = V.sx(h ? h.x : o.x), Y = V.sy(h ? h.y : o.y) - 70 * z, q = t / 0.9;
-      if (!spic('fxJadeGlow', X, Y, t, (90 + 260 * ease2(Math.min(1, q * 1.5))) * z, (1 - q) * 0.85)) W.draw(c, 'whalo_water', X, Y, 0, (0.4 + 1.2 * q) * z, (0.4 + 1.2 * q) * z * V.KY, 1 - q);
+      // the burst is hollow: pieces of jade light opening outward in a ring, each veiled, so he is never hidden under a disc
+      const R = (50 + 170 * ease2(Math.min(1, q * 1.4))) * z;
+      for (let k = 0; k < 16; k++) { const b2 = (k / 16) * TAU + 0.3 * t, px = X + Math.cos(b2) * R, py = Y + Math.sin(b2) * R * 0.75, va = (1 - q) * 0.5 * veil(V, px, py); if (!spic('fxJadeGlow', px, py, b2 + Math.PI / 2, (110 + 70 * q) * z, va, 1, 0.32)) W.draw(c, 'whalo_water', px, py, b2, 0.3 * z, 0.3 * z, va); }
       if (!spic('antidote', X + 40 * z, Y - (60 + 120 * ease2(q)) * z, 0.2 * q, 62 * z * (1 - 0.3 * q), Math.min(1, (1 - q) * 2))) W.draw(c, 'wvase', X + 40 * z, Y - (60 + 120 * ease2(q)) * z, 0.2 * q, 0.36 * z * (1 - 0.3 * q), 0.36 * z * (1 - 0.3 * q), Math.min(1, (1 - q) * 2)); } }      // cured: jade light bursts round him, and the gourd rises away
   const foeOf = (G, id) => { const fs = G && G.foes; if (fs && id != null) for (let i = 0; i < fs.length; i++) if (fs[i].id === id) return fs[i]; return null; };
   // ---------------------------------------------------------------- the first stretch's boss patterns
