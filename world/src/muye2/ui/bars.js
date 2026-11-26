@@ -9,6 +9,7 @@
 import {tierOf, phasesOf} from './campaign.js';
 import {KEY_FIGURES} from '../art/puppets/imagegen/figures.js';
 
+const JADE_PALE = '#DCEBE2', JADE_DARK = '#4E7D68', JADE_INK = '#2F5A48';      // the antidote's marks: healing, never the bosses' red
 const LACQUER = '#1B1512', CIN = '#B8321F', CIN_DARK = '#8E2415', GOLD = '#B08A3C', GOLD_LIGHT = '#E3CC8E', HOLLOW = '#3A2A22';
 // the over-head bar's height, and its width as limits in CSS px, by tier
 const SIZE = {final: {h: 11, min: 110, max: 170}, big: {h: 10, min: 96, max: 150}, small: {h: 9, min: 74, max: 120}, lieutenant: {h: 7, min: 56, max: 90}, elite: {h: 6, min: 40, max: 64}};
@@ -211,6 +212,53 @@ export function createBars({canvas, top}) {
       return out.length;
     },
     lastPointers: [],
+    /** Antidotes while the hero bleeds (user: "解药在哪啊"): off the screen, a pale jade seal at the edge with its point
+        toward it; on the screen, a soft ring on the ground under it and a small marker bobbing over it. `icon`: an
+        image of the antidote once the art has one (else the character 药). Returns the marks drawn, for checks. */
+    antidotes(game, view, icon, avoid = []) {
+      const h = game.hero, out = [];
+      if (!h || !(h.bleed > 0) || !(h.hp > 0)) { api.lastAntidotes = out; return 0; }
+      const {cam, ky} = view, cx = W / 2 + (cam.shakeX || 0), cy = H * .52 + (cam.shakeY || 0), z = cam.zoom;
+      const L = 30, R = W - 30, T = 104, B = H - 30, now = performance.now() / 1000;
+      const sign = (r, size) => {
+        if (icon && icon.complete && icon.naturalWidth) { const k = size / Math.max(icon.naturalWidth, icon.naturalHeight); ctx.drawImage(icon, -icon.naturalWidth * k / 2, -icon.naturalHeight * k / 2, icon.naturalWidth * k, icon.naturalHeight * k); }
+        else { ctx.fillStyle = JADE_INK; ctx.font = `700 ${Math.round(r * 1.05)}px "EC Serif","Songti SC",serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('药', 0, 1); ctx.textBaseline = 'alphabetic'; }
+      };
+      ctx.setTransform(D, 0, 0, D, 0, 0);
+      for (const p of game.pickups) {
+        if (p.dead || p.kind !== 'antidote') continue;
+        const sx = cx + (p.x - cam.x) * z, sy = cy + (p.y - cam.y) * ky * z;
+        if (sx > 20 && sx < W - 20 && sy > 70 && sy < H - 10) {
+          // on the screen: a ring on the ground that breathes, and a marker bobbing over it
+          const pulse = .5 + .5 * Math.sin(now * 4), rr = (24 + 5 * pulse) * z, bob = Math.sin(now * 3.2) * 5;
+          ctx.save(); ctx.translate(sx, sy);
+          ctx.strokeStyle = `rgba(78,125,104,${.55 + .35 * pulse})`; ctx.lineWidth = 3; ctx.beginPath(); ctx.ellipse(0, 0, rr, rr * ky, 0, 0, Math.PI * 2); ctx.stroke();
+          ctx.fillStyle = 'rgba(207,227,214,.22)'; ctx.fill();
+          ctx.translate(0, -44 * z - 16 + bob);
+          ctx.fillStyle = JADE_DARK; ctx.beginPath(); ctx.moveTo(-7, 11); ctx.lineTo(7, 11); ctx.lineTo(0, 21); ctx.closePath(); ctx.fill();
+          ctx.fillStyle = JADE_PALE; ctx.beginPath(); ctx.arc(0, 0, 14, 0, Math.PI * 2); ctx.fill(); ctx.strokeStyle = JADE_DARK; ctx.lineWidth = 2; ctx.stroke();
+          sign(14, 22); ctx.restore();
+          out.push({on: true, x: Math.round(sx), y: Math.round(sy)}); continue;
+        }
+        const dx = sx - cx, dy = sy - cy; let k = Infinity;
+        if (dx > 0) k = Math.min(k, (R - cx) / dx); if (dx < 0) k = Math.min(k, (L - cx) / dx);
+        if (dy > 0) k = Math.min(k, (B - cy) / dy); if (dy < 0) k = Math.min(k, (T - cy) / dy);
+        if (!isFinite(k)) continue;
+        let px = cx + dx * k, py = cy + dy * k; const a = Math.atan2(dy, dx), r = 17;
+        for (const q of avoid) if (q && px > q.left - r && px < q.right + r && py > q.top - r && py < q.bottom + r) px = q.right + r + 14;   // not under the build panel
+        const pulse = .5 + .5 * Math.sin(now * 4);
+        ctx.save(); ctx.translate(px, py);
+        ctx.fillStyle = `rgba(156,195,176,${.25 + .25 * pulse})`; ctx.beginPath(); ctx.arc(0, 0, r + 6 + 3 * pulse, 0, Math.PI * 2); ctx.fill();
+        ctx.save(); ctx.rotate(a); ctx.fillStyle = JADE_DARK; ctx.beginPath(); ctx.moveTo(r + 11, 0); ctx.lineTo(r - 3, -8); ctx.lineTo(r - 3, 8); ctx.closePath(); ctx.fill(); ctx.restore();
+        ctx.fillStyle = JADE_PALE; ctx.beginPath(); ctx.arc(0, 0, r, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = JADE_DARK; ctx.lineWidth = 2; ctx.stroke();
+        sign(r, 26); ctx.restore();
+        out.push({on: false, x: Math.round(px), y: Math.round(py)});
+      }
+      api.lastAntidotes = out;
+      return out.length;
+    },
+    lastAntidotes: [],
     signFor: null,      // the page sets it: a boss's one character
     get topShare() { return topK; },
     /** For checks: where the over-head bar of a unit would stand, and its width. */

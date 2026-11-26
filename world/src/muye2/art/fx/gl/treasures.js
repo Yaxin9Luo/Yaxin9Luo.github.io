@@ -39,6 +39,7 @@ export function createTreasures(ctx, ink, W = createWonders(), onKick = () => {}
     if (e.type === 'hit' && e.id === 'bloodBlade') { bladeHits.push({ x: e.x, y: e.y, at: clock }); if (bladeHits.length > 40) bladeHits.shift(); }
     if (e.type === 'hit' && e.take && (e.id === 'boneBanner' || e.id === 'fiveLights')) { takes.push({ id: e.id, x: e.x, y: e.y, at: clock }); if (takes.length > 24) takes.shift(); }
     if (e.type === 'weary') { wearyAt.set(e.id, clock); return; }
+    if (e.type === 'cured') { cures.push({ x: e.x, y: e.y, at: clock }); if (cures.length > 4) cures.shift(); return; }
     if (e.type === 'hit' && e.id === 'ring' && !e.dot) { if (ringHits.length >= 6) return; ringHits.push({ x: e.x, y: e.y, at: clock, v: frame % 2 }); return; }
     if (e.type === 'cast' && e.id === 'whip') { const ts = e.targets || [{ x: e.x, y: e.y }], ev = !!e.evolved, h = G0 && G0.hero;
       // 打神鞭: a lash cracks out from beside him to each target (evolved, 封神: the lash leaps on from target to target);
@@ -393,6 +394,23 @@ export function createTreasures(ctx, ink, W = createWonders(), onKick = () => {}
         W.draw(c, 'wdrip', X, Y, sx * 0.02, 0.8 * z, 0.8 * z, (0.7 + 0.3 * w) * Math.sin(Math.PI * ph) * veil(V, X, Y)); }
       if (t0 < 0.6) { const q = t0 / 0.6, [X, Y] = P(f.x + face * 30, f.y, lift + 20); W.draw(c, `wcloud_${f.id % 2}`, X, Y, face * 0.2, (0.35 + 0.5 * q) * z * face, (0.25 + 0.35 * q) * z, 0.85 * (1 - q) * veil(V, X, Y)); }      // the gasp
     } }
+  // the antidote (sim/field.js: two fall 300-500 px from him at 化血神刀's first cut; riding over one stops the bleeding): 余化's own
+  // 丹药 in a jade gourd sealed in cinnabar (the painting `antidote`), floating at a general's head height over the crowd so no foe
+  // hides it, with a slow pulse of pale jade light round it and a thin wisp rising; a shadow on the ground under it marks the
+  // place to ride to. Taken ('cured'), a burst of jade light round him and the gourd rising away. (Not like a spirit wisp, a peach
+  // or a chest: those lie on the ground in white, pink and ochre.)
+  const cures = [];
+  function antidoteDraw(c, V, G) { const z = V.z, ps = G && G.pickups;
+    if (ps) for (const p of ps) { if (p.dead || p.kind !== 'antidote') continue; const X = V.sx(p.x), Yg = V.sy(p.y), lift = 118 + 6 * Math.sin(clock * 2 + p.id), Y = Yg - lift * z, pulse = 0.5 + 0.5 * Math.sin(clock * 2.6 + p.id);
+      W.draw(c, 'whalo_water', X, Yg, 0, 0.32 * z, 0.32 * z * V.KY, 0.55);      // its place on the ground
+      if (!spic('fxJadeGlow', X, Y, clock * 0.3, (120 + 30 * pulse) * z, 0.45 + 0.35 * pulse)) W.draw(c, 'whalo_water', X, Y, clock * 0.3, (0.45 + 0.1 * pulse) * z, (0.45 + 0.1 * pulse) * z, 0.3 + 0.3 * pulse);
+      // the wisp: a thin pale stroke rising off the seal, swaying
+      ribbon(c, 'wtoll_0', (s2) => [X + Math.sin(s2 * 5 + clock * 2) * 6 * z * s2, Y - (30 + 70 * s2) * z], 0.55 * z, 0.45, 0, 1, 10, null);
+      // until the painting is made: a celadon jar in brush, a cinnabar talisman pasted across its mouth as the seal
+      if (!spic('antidote', X, Y, Math.sin(clock * 1.4 + p.id) * 0.06, 62 * z, 1)) { const r = Math.sin(clock * 1.4 + p.id) * 0.06; W.draw(c, 'wvase', X, Y + 30 * z, r, 0.55 * z, 0.55 * z, 1); W.draw(c, `wfu_${p.id % 2}`, X + Math.sin(r) * 50 * z, Y - 22 * z, r + 0.15, 0.42 * z, 0.42 * z, 1); } }
+    for (let i = 0; i < cures.length; i++) { const o = cures[i], t = clock - o.at; if (t > 0.9) { cures.splice(i--, 1); continue; } const h = G && G.hero, X = V.sx(h ? h.x : o.x), Y = V.sy(h ? h.y : o.y) - 70 * z, q = t / 0.9;
+      if (!spic('fxJadeGlow', X, Y, t, (90 + 260 * ease2(Math.min(1, q * 1.5))) * z, (1 - q) * 0.85)) W.draw(c, 'whalo_water', X, Y, 0, (0.4 + 1.2 * q) * z, (0.4 + 1.2 * q) * z * V.KY, 1 - q);
+      if (!spic('antidote', X + 40 * z, Y - (60 + 120 * ease2(q)) * z, 0.2 * q, 62 * z * (1 - 0.3 * q), Math.min(1, (1 - q) * 2))) W.draw(c, 'wvase', X + 40 * z, Y - (60 + 120 * ease2(q)) * z, 0.2 * q, 0.36 * z * (1 - 0.3 * q), 0.36 * z * (1 - 0.3 * q), Math.min(1, (1 - q) * 2)); } }      // cured: jade light bursts round him, and the gourd rises away
   const foeOf = (G, id) => { const fs = G && G.foes; if (fs && id != null) for (let i = 0; i < fs.length; i++) if (fs[i].id === id) return fs[i]; return null; };
   // ---------------------------------------------------------------- the first stretch's boss patterns
   const BOSS_SIG = { blackWind: 1, fireSnakes: 1, pearlRing: 1, fourStrings: 1, windFire: 1, lunge: 1, qilinRush: 1, qilinReturn: 1 }, sigs = [];
@@ -559,6 +577,6 @@ export function createTreasures(ctx, ink, W = createWonders(), onKick = () => {}
       if (ev) { const sw = Math.sin(clock * 1.4) * 0.03; W.draw(c, 'wflag', V.sx(h.x - 165), V.sy(h.y - 50), sw, 0.46 * V.z, 0.46 * V.z, 0.95); } return; }   // the banner: over the crowd, and on screen when he is high in the view
     if (ev) for (let j = 0; j < 8; j++) { const b = (j / 8) * TAU + clock * 0.25, Xf = V.sx(h.x + Math.cos(b) * r * 1.05), Yf = V.sy(h.y + Math.sin(b) * r * 1.05) - 16 * V.z; W.draw(c, `wlotus_${j % 2}`, Xf, Yf, 0, 0.7 * V.z, 0.7 * V.z, 0.95 * veil(V, Xf, Yf)); } }
   function drawGround(V, dt, G) { clock += dt; frame++; if (G) G0 = G; watchCovers(G); watchLanes(G); if (!W.ready) return; const c = ctx; c.save(); c.globalCompositeOperation = 'source-over'; coverGround(c, V); coverOver(c, V, true); silksDraw(c, V, 'ground'); lanesDraw(c, V); thrustsDraw(c, V); hostsDraw(c, V, 'ground');   /* 火尖枪's thrusts with their lanes, under the figures */ generalsDraw(c, V, G, 'ground'); pearlsDraw(c, V, G, 'ground'); lightsGround(c, V); sealsGround(c, V); ropesDraw(c, V, G0); spoilsDraw(c, V, G0, 'ground'); wearyDraw(c, V, G0, 'ground'); bannerDraw(c, V, G, 'ground'); bannerDraw(c, V, G, 'over'); ringsGround(c, V, G0); lastingDraw(c, V, G0, 'ground'); c.restore(); }
-  function drawOver(V, dt, G) { if (!W.ready) return; const c = ctx, cv = ctx.canvas; covMax = COVER * (cv && cv.width ? cv.width * cv.height : 2880 * 1800); cov = 0; budgetOn = true; c.save(); c.globalCompositeOperation = 'source-over'; coverOver(c, V); silksDraw(c, V, 'over'); blowsDraw(c, V); arrowsDraw(c, V, G); newsDraw(c, V, G); budgetOn = false; sigsDraw(c, V); lastingDraw(c, V, G0, 'over'); statesDraw(c, V, G0); hostsDraw(c, V, 'over'); generalsDraw(c, V, G, 'over'); budgetOn = true; ringsOver(c, V); spoilsDraw(c, V, G0, 'over'); wearyDraw(c, V, G0, 'over'); columnsOver(c, V); budgetOn = false; c.restore(); }
+  function drawOver(V, dt, G) { if (!W.ready) return; const c = ctx, cv = ctx.canvas; covMax = COVER * (cv && cv.width ? cv.width * cv.height : 2880 * 1800); cov = 0; budgetOn = true; c.save(); c.globalCompositeOperation = 'source-over'; coverOver(c, V); silksDraw(c, V, 'over'); blowsDraw(c, V); arrowsDraw(c, V, G); newsDraw(c, V, G); budgetOn = false; sigsDraw(c, V); lastingDraw(c, V, G0, 'over'); statesDraw(c, V, G0); hostsDraw(c, V, 'over'); generalsDraw(c, V, G, 'over'); budgetOn = true; ringsOver(c, V); spoilsDraw(c, V, G0, 'over'); wearyDraw(c, V, G0, 'over'); antidoteDraw(c, V, G0); columnsOver(c, V); budgetOn = false; c.restore(); }
   return { useTip: (f) => { tipFn = typeof f === 'function' ? f : null; }, onEvent, drawGround, drawOver, has, wonders: W, reset() { prints.length = 0; covers.clear(); columns.length = 0; talismans.length = 0; silks.length = 0; lanes.clear(); thrusts.length = 0; blows.length = 0; news.length = 0; hosts.length = 0; manifests.length = 0; dives.length = 0; sigs.length = 0; tracks.clear(); }, get live() { return covers.size + columns.length + silks.length + lanes.size; } };
 }

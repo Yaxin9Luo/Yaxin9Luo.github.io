@@ -74,7 +74,7 @@ const COPY = {
     afflict: {afoot: ['Unhorsed', 'no spring'], held: ['Held', 'cannot move'], bleed: ['Bleeding', 'ride over an antidote'], dizzy: ['Soul lost', 'no spring'], dazzled: ['Dazzled', 'warnings hard to see'], weak: ['Plague ground', 'treasures weaker']},
     weakBy: n => `treasures ${n}% weaker`, bleedBy: n => `${n}/s · find an antidote`,
     lightTaken: el => `Kong Xuan's light takes your ${el} treasures`, lightBack: el => `Your ${el} treasures return`, takenFor: n => `taken by Kong Xuan's light, back in ${n} s`,
-    bleedCut: 'The blood-dissolving blade: you bleed', bleedHint: 'ride over an antidote', cured: 'The bleeding stops', soulLost: 'The yellow breath: souls lost', glare: 'The golden crown blazes: warnings are hard to see',
+    bleedCut: 'The blood-dissolving blade: you bleed', bleedHint: 'ride over an antidote',  bleedWhere: n => `ride over one of the ${n} antidotes: the jade arrows lead to them`, cured: 'The bleeding stops', soulLost: 'The yellow breath: souls lost', glare: 'The golden crown blazes: warnings are hard to see',
     stone: name => `${name} turns to stone`, wind: name => `${name} turns to a clear wind`, burrow: name => `${name} goes under the earth`, dazzle: 'Sun needles: you are dazzled', antidote: 'Antidote',
     held: {seize: 'Seized', swallow: 'Swallowed', hook: 'Hooked and dragged'},
     leaveWarn: 'Leaving ends this run and earns no merit. A run is never saved: it cannot be resumed later.', leaveRun: 'Leave and lose this run',
@@ -123,7 +123,7 @@ const COPY = {
     afflict: {afoot: ['落马', '不能腾跃'], held: ['被擒', '不能移动'], bleed: ['失血', '骑过解药'], dizzy: ['失魂', '不能腾跃'], dazzled: ['目眩', '预警难辨'], weak: ['瘟疫', '法宝减弱']},
     weakBy: n => `法宝减弱 ${n}%`, bleedBy: n => `${n}/秒 · 寻解药`,
     lightTaken: el => `五色神光收去${el}系法宝`, lightBack: el => `${el}系法宝归来`, takenFor: n => `被孔宣的五色神光收去，${n} 秒后归还`,
-    bleedCut: '化血神刀：血流不止', bleedHint: '骑过解药即止', cured: '血已止住', soulLost: '黄气喷出：兵将失魂', glare: '金霞冠放光：预警难辨',
+    bleedCut: '化血神刀：血流不止', bleedHint: '骑过解药即止', bleedWhere: n => `骑过${n}剂解药之一即止，青玉箭头指路`, cured: '血已止住', soulLost: '黄气喷出：兵将失魂', glare: '金霞冠放光：预警难辨',
     stone: name => `${name}化为顽石`, wind: name => `${name}化清风而去`, burrow: name => `${name}遁入地下`, dazzle: '太阳神针：双目难睁', antidote: '解药',
     held: {seize: '被擒', swallow: '被吞', hook: '被钩索拖走'},
     leaveWarn: '离开即结束本局，不计功德。对局不会存档，之后无法接着打。', leaveRun: '离开并放弃本局',
@@ -548,7 +548,7 @@ function handle(e) {
     case 'lightTaken': banner(t.lightTaken(t.elements[e.element] || e.element), true, '', true); buildKey = ''; audio.refuse(); break;
     case 'lightReturned': banner(t.lightBack(t.elements[e.element] || e.element), false); buildKey = ''; break;
     case 'held': banner((t.held[e.how] || t.afflict.held[0]), true, t.afflict.held[1], true); break;
-    case 'bleed': banner(t.bleedCut, true, t.bleedHint, true); break;
+    case 'bleed': { const n = game.pickups.filter(p => !p.dead && p.kind === 'antidote').length; banner(t.bleedCut, true, n ? t.bleedWhere(n) : t.bleedHint, true); break; }
     case 'cured': banner(t.cured, false); break;
     case 'soulLost': banner(t.soulLost, true); break;
     case 'glare': banner(t.glare, true); break;
@@ -601,7 +601,7 @@ function draw(alpha, dt, realDt) {
   cp = campaignNow(sim, game);
   const fighting = (mode === 'play' || mode === 'paused') && endAt !== Infinity;
   if (fighting && cp.bar !== barWho) { barWho = cp.bar; const u = game.foes.find(f => f.id === cp.bar); if (u) { const n = nameOf(sim, u.kind, lang), bb = $('bossbar'); bb.querySelector('strong').textContent = n.name; bb.querySelector('small').textContent = n.title; bb.querySelector('.bseal').textContent = n.zhName[0]; bb.className = ''; } }
-  if (fighting) { bars.draw(game, art, {cam, ky: art.KY || .62, alpha}, realDt, cp.bar); bars.pointers(game, {cam, ky: art.KY || .62, alpha}, bossSign, [buildRect()]); $('bossbar').classList.toggle('faint', bars.topOverWarning(game, {cam, ky: art.KY || .62, alpha, art})); }
+  if (fighting) { bars.draw(game, art, {cam, ky: art.KY || .62, alpha}, realDt, cp.bar); bars.pointers(game, {cam, ky: art.KY || .62, alpha}, bossSign, [buildRect()]); bars.antidotes(game, {cam, ky: art.KY || .62}, antidoteIcon(), [buildRect()]); $('bossbar').classList.toggle('faint', bars.topOverWarning(game, {cam, ky: art.KY || .62, alpha, art})); }
   else if (barsShown) bars.clear();
   barsShown = fighting;
 }
@@ -635,7 +635,7 @@ function hud() {
     $('dash-key').textContent = lang === 'zh' ? '空格' : 'Space';
   }
   if (timeline && cp && (mode === 'play' || mode === 'paused') && endAt !== Infinity) timeline.update(cp, game, lang, t);
-  afflictions(h, (mode === 'play' || mode === 'paused') && endAt !== Infinity);
+  afflictions(h, (mode === 'play' || mode === 'paused') && endAt !== Infinity && game.phase !== 'lost' && h.hp > 0);      // gone when he falls, as the antidote pointers are
   if (cp && cp.next && cp.next.kind && cp.next.t - game.t < 25) { warm(cp.next.kind); warmFigure(cp.next.kind); warmSpoil(spoilOfKind(cp.next.kind)); }      // his herald's portrait and his figure's images, before he comes
   const b = game.build, gens = b.generals || [], lt = game.lightTaken || {}, bk = `${lang}|${Object.keys(lt).map(k => lt[k] > game.t ? k + Math.ceil(lt[k] - game.t) : '').join('')}|${b.weapon ? b.weapon.id + b.weapon.level + (b.weapon.evolved ? 'e' : '') : ''}|${b.treasures.map(e => e.id + e.level + (e.evolved ? 'e' : '')).join()}|${b.arts.map(e => e.id + e.level).join()}|${b.troops.map(e => e.id + e.level + 'r' + rankOfEntry(e)).join()}|${gens.map(e => e.id + e.level + (e.trueForm ? 'f' : '') + 'a' + Math.ceil(awayOf(e))).join()}|${b.formation ? b.formation.id + b.formation.level : ''}|${(b.resonance || []).join()}|${(b.spoils || []).map(x => x.id).join()}`;
   if (bk !== buildKey) { buildKey = bk; renderBuild(); }
@@ -650,6 +650,15 @@ function hud() {
 
 /** The art uploads a coming boss's figure ahead of need (art.warm, figures-key session), once per kind. */
 const figureWarmed = new Set();
+/** The antidote's own picture, when the art has one (render-spike: any antidote*.webp under art/fx/baked/); else the pointers show 药. */
+const ANTIDOTE_ICONS = import.meta.glob('./art/fx/baked/**/antidote*.webp', {eager: true, query: '?url', import: 'default'});
+let antidoteImg;
+function antidoteIcon() {
+  if (antidoteImg !== undefined) return antidoteImg;
+  const urls = Object.entries(ANTIDOTE_ICONS).sort(([a], [b]) => (b.includes('icon') ? 1 : 0) - (a.includes('icon') ? 1 : 0)), url = urls.length ? urls[0][1] : '';
+  antidoteImg = null; if (url) { antidoteImg = new Image(); antidoteImg.decoding = 'async'; antidoteImg.src = url; }
+  return antidoteImg;
+}
 function warmFigure(kind) { if (figureWarmed.has(kind) || !art || !art.warm) return; figureWarmed.add(kind); try { art.warm(kind); } catch { /* the art cannot: he loads on first draw */ } }
 /** What afflicts the hero now (SPEC-CAMPAIGN 1.11), as chips by the health bar: a seal, the name, and how long or how much. */
 const AFFLICT_SIGN = {afoot: '落', held: '擒', bleed: '血', dizzy: '魂', dazzled: '眩', weak: '瘟'};

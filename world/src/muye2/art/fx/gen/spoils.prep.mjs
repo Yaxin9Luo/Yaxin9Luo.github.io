@@ -14,7 +14,7 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 const sharp = createRequire('/Users/yaxinluo/Desktop/Yaxin9Luo.github.io/world/package.json')('sharp');
 const HERE = dirname(fileURLToPath(import.meta.url)), RAW = join(HERE, '../../../../../../lab/game-studies/imagegen/fx/raw'), OUT = join(HERE, '../baked/spoils');
-const IDS = ['qingyunSword', 'hunyuanUmbrella', 'jadePipa', 'marten', 'callName', 'goldWhips', 'bloodBlade', 'yellowBreath', 'plague', 'goldenCrown', 'boneBanner', 'earthTravel', 'fiveLights', 'changeForm'], PARTS = ['goldWhip1', 'stone', 'fxBlackWind', 'fxYellowCloudA', 'fxYellowCloudB', 'fxMiasma', 'fxEarthRings', 'fxBloodSlash', 'fxGoldSpark', 'fxGhostInk', 'fxRadiance'];
+const IDS = ['qingyunSword', 'hunyuanUmbrella', 'jadePipa', 'marten', 'callName', 'goldWhips', 'bloodBlade', 'yellowBreath', 'plague', 'goldenCrown', 'boneBanner', 'earthTravel', 'fiveLights', 'changeForm'], PARTS = ['goldWhip1', 'stone', 'fxBlackWind', 'fxYellowCloudA', 'fxYellowCloudB', 'fxMiasma', 'fxEarthRings', 'fxBloodSlash', 'fxGoldSpark', 'fxGhostInk', 'fxRadiance', 'antidote', 'fxJadeGlow'];      // antidote: the pickup that stops 化血神刀's bleeding (with an icon, for the page's off-screen pointer)
 const SAT = JSON.parse(process.env.SAT || '{}'), meta = {};
 // the icon's crop [x0, y0, x1, y1] in fractions of the 512 picture: the banner's skulled head, the sword's hilt and upper blade,
 // the whips' dragon heads crossed, the umbrellas' domes, ...
@@ -55,7 +55,7 @@ for (const n of [...IDS, ...PARTS]) { const src = join(RAW, `spoil-${n}.png`); i
     data[i] = Math.min(255, (l + (r - l) * s) * 0.97 + 6); data[i + 1] = Math.min(255, (l + (g - l) * s) * 0.97 + 4); data[i + 2] = Math.min(255, (l + (b - l) * s) * 0.97);
     const p = i / 4, x = p % info.width, y = (p / info.width) | 0; sx += x * a; sy += y * a; sa += a; }
   await sharp(data, { raw: info }).webp({ quality: 86, alphaQuality: 90 }).toFile(join(OUT, `${n}.webp`));
-  if (IDS.includes(n)) await icon(data, info, n);
+  if (IDS.includes(n) || n === 'antidote') await icon(data, info, n);
   // the field's cut parts, feathered where they are cut so no straight edge shows (the lead, round 4): the rolling cloud of the
   // 腹中黄气 painting without the face, and the white ape of the 八九玄功 painting without its trailing wind
   if (n === 'yellowBreath') await feathered(data, info, 'breathCloud', 0.4, 1, 'left');
