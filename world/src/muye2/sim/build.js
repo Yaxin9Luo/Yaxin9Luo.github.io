@@ -9,6 +9,8 @@ import {STAT, poolOf, meritFrom} from '../content/meta.js';
 import {spoilMods, forcePayoff} from './spoils.js';
 export {takeSpoil, saveHero, bigPayoff} from './spoils.js';
 
+/** The build's entry that holds this treasure: its own, or the 合璧 it was joined into (whose `parts` hold it). */
+export const holderOf = (g, id) => g.build.treasures.find(t => t.id === id || (t.merged && t.parts.some(p => p.id === id))) || null;
 export const owned = (g, kind) => kind === 'treasure' ? g.build.treasures : kind === 'art' ? g.build.arts : kind === 'general' ? g.build.generals : g.build.troops;
 export const keyOf = o => o.kind + ':' + o.id;
 
@@ -90,7 +92,8 @@ export function give(g, kind, id, level, evolved = false) {
     e = b.formation;
   } else {
     const list = owned(g, kind);
-    e = list.find(x => x.id === id);
+    e = kind === 'treasure' ? holderOf(g, id) : list.find(x => x.id === id);
+    if (e && e.merged) return e;                          // a treasure joined into a 合璧 is past its levels: nothing to raise, never a second copy
     if (e) e.level = Math.min(MAX[kind], level || e.level + 1);
     else {
       e = kind === 'treasure' ? {id, level: level || 1, evolved: false, cd: .4}
@@ -143,7 +146,8 @@ export function candidates(g, shown, chest = false) {
     const list = owned(g, kind);
     if (kind === 'general' && g.hero.level < OFFER.generalFrom && !chest) continue;
     for (const e of list) if (e.level < MAX[kind]) { const o = {kind, id: e.id, level: e.level + 1, isNew: false}; if (!barred(o)) cont.push(o); }
-    if (list.length < SLOTS[kind]) for (const row of LIST[kind]) if (!list.some(e => e.id === row.id) && inPool(g, kind, row.id)) { const o = {kind, id: row.id, level: 1, isNew: true}; if (!barred(o)) fresh.push(o); }
+    // (a treasure inside a 合璧 is owned: holderOf finds it in the joined entry's parts)
+    if (list.length < SLOTS[kind]) for (const row of LIST[kind]) if (!(kind === 'treasure' ? holderOf(g, row.id) : list.some(e => e.id === row.id)) && inPool(g, kind, row.id)) { const o = {kind, id: row.id, level: 1, isNew: true}; if (!barred(o)) fresh.push(o); }
   }
   if (b.weapon && b.weapon.level < MAX.weapon) { const o = {kind: 'weapon', id: b.weapon.id, level: b.weapon.level + 1, isNew: false}; if (!barred(o)) cont.push(o); }
   for (const row of CONTENT.formations) {
