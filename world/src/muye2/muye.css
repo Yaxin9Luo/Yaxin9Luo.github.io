@@ -599,7 +599,12 @@ kbd{display:inline-grid;place-items:center;min-width:22px;height:22px;padding:0 
 
 /* ---------- spoils (SPEC-CAMPAIGN 2.11): their own row, a ceremony greater than a chest's, the codex, the end sheet ---------- */
 .sign.spoil{border-radius:3px;background:var(--lacquer);color:var(--gold-leaf);box-shadow:inset 0 0 0 1px var(--gold),0 0 0 1px rgba(184,50,31,.55);font-family:var(--serif)}
-#build .brow.spoils{flex-wrap:wrap;max-width:300px}
+#build .brow.spoils{align-items:flex-start}
+#build .brow.spoils>span{padding-top:7px}      /* the label sits by the first line of pictures */
+/* the pictures wrap inside the icon column, aligned with the first; past five (a full run holds fourteen) a step smaller */
+#build .sset{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;max-width:216px;min-height:34px}
+#build .sset.many{gap:5px 6px;max-width:200px}
+#build .sset.many .sign.spoil,#build .sset.many .sign.spoil.pic{width:26px;height:26px;font-size:13px}
 #build .reach{font:500 12px/1.2 var(--sans);color:var(--ink-2);white-space:nowrap;align-self:center}
 #herald .extra{font:600 15px/1.3 var(--sans);color:var(--cinnabar)}
 #herald .extra:empty{display:none}
@@ -622,3 +627,43 @@ kbd{display:inline-grid;place-items:center;min-width:22px;height:22px;padding:0 
 #bossbar.on~#herald.spoil.up{top:188px}
 .calm #herald.spoil{transition:none}
 #herald.spoil.gone{opacity:0 !important;transition:top .45s cubic-bezier(.3,.7,.2,1),opacity .25s}
+/* ---- the spoils' paintings (ui/spoil-pictures.js): a prize, larger than any chest's ---- */
+/* the herald: the fallen boss's face at the left, the words, the painting large at the right, rising out of the scroll */
+#herald .hpic{position:absolute;right:16px;top:50%;width:208px;height:208px;margin-top:-104px;object-fit:contain;pointer-events:none;filter:drop-shadow(0 0 18px rgba(233,215,166,.55)) drop-shadow(0 12px 14px rgba(0,0,0,.45))}
+#herald .hpic[hidden]{display:none}
+#herald.spoil.pic .paper{padding-right:236px;width:min(900px,max(640px,calc(100vw - 620px)));min-width:0;max-width:none;box-sizing:border-box}      /* clear of the build panel on both sides */
+#herald.spoil.pic strong{white-space:normal;font-size:clamp(32px,3.4vw,46px);line-height:1.05}
+#herald.spoil.pic.show .hpic{animation:prize .7s cubic-bezier(.2,.8,.2,1) .28s both}
+@keyframes prize{from{opacity:0;transform:scale(.62) rotate(-6deg)}to{opacity:1;transform:none}}
+.calm #herald.spoil.pic.show .hpic{animation:none}
+/* a seal in the build panel, the end sheet and the codex: the painting covers it once loaded; the seal stays otherwise */
+.sign.spoil .spic{position:absolute;left:-4px;top:-4px;width:calc(100% + 8px);height:calc(100% + 8px);object-fit:contain;display:none;filter:drop-shadow(0 1px 1px rgba(0,0,0,.5))}
+.sign.spoil.has-pic .spic,.cbig.spoil.has-pic .spic{display:block}
+.sign.spoil.has-pic .spic-seal,.cbig.spoil.has-pic .spic-seal{visibility:hidden}
+#build .sign.spoil.pic{width:34px;height:34px}
+.cread.with-pic{padding-left:184px}
+.cread .cbig.spoil.pic{width:164px;height:164px;font-size:64px;background:radial-gradient(closest-side,#4A3A2F,var(--lacquer))!important}
+.cbig.spoil .spic{position:absolute;inset:6px;width:calc(100% - 12px);height:calc(100% - 12px);object-fit:contain;display:none;filter:drop-shadow(0 6px 8px rgba(0,0,0,.45))}
+/* a phone: the face and the painting side by side above the words, both rising out of the scroll's top */
+@media (max-width:719px){
+  #herald.spoil .paper{min-width:0;width:92vw;max-width:92vw;padding:88px 14px 14px;justify-items:center;text-align:center}
+  #herald.spoil.pic .paper{padding-right:14px;width:92vw}
+  #herald.spoil.pic strong{font-size:28px}
+  #herald.spoil .hface{left:10px;top:-30px;bottom:auto;max-width:104px;max-height:124px}
+  #herald.spoil .hpic{right:10px;top:-34px;margin:0;width:150px;height:124px}
+  #herald.spoil:not(.face) .hpic{right:auto;left:50%;margin-left:-75px}
+  #herald.spoil strong{white-space:normal;font-size:28px}
+  #herald.spoil .sub{font-size:14px}
+  #herald.spoil[data-seal]:not([data-seal=""]) .paper{padding-left:14px}
+  #herald.spoil[data-seal]:not([data-seal=""]) .paper[data-seal]::before{left:12px;top:12px;margin:0}
+  .cread.with-pic{padding-left:0;padding-top:176px}
+  #herald.spoil.up{top:150px}      /* the face and the painting rise 30 px out of the scroll: clear of the timeline */
+}
+/* a general in true form is called by his divine title: on his seal's tooltip, the title, who he was and his feat, then his words */
+.sign.gseal.evo[data-tip]::after{white-space:pre-line}
+#banner{max-width:min(920px,calc(100vw - 32px))}      /* the longest titles (东岳泰山天齐仁圣大帝, and longer in English) wrap */
+.ctitle.cform{color:var(--cinnabar);font-weight:600}
+.sign.spoil.has-pic{background:none;box-shadow:none}      /* the painting stands alone in the seal's place, without the lacquer tile */
+.sign.spoil.has-pic .spic{left:-6px;top:-6px;width:calc(100% + 12px);height:calc(100% + 12px)}
+@media (max-width:719px){.sign[data-tip]::after{max-width:min(320px,calc(100vw - 190px))}}      /* a seal's words stay on a phone's screen */
+#build .sset.many .sign.spoil.has-pic .spic{left:-2px;top:-2px;width:calc(100% + 4px);height:calc(100% + 4px)}      /* small ones do not run into their neighbours */

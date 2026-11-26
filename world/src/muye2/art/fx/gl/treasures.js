@@ -14,12 +14,16 @@
 // The stroke effects stand aside (fx/index.js asks has(kind)) once the brush sheet has loaded.
 import { createWonders } from './wonders.js';
 const TAU = Math.PI * 2;
+// the top of the hero's figure above his feet, in world units: what is attached to him (the bell, the crown) hangs just over
+// it, never on him. With the 华盖 gone, figures-key's measure (2026-11-26, zoom 1, above his ground point): helmet top 107-111,
+// top of the whole figure 136 (the finial of the banner pole at his back). The crown and the bell clear the finial, not just the helmet.
+const HERO_TOP = 136;
 // a wash bleeding out round a point, in cells of the 256 x 160 sheet: wet ring, pigment at four points, one drop flung
 const RING_SCRIPT = [[0.02, 128, 84, 104, 58, 0.5, 0, 0.6, 0.5], [0.12, 60, 84, 14, 9, 1, 1.6, 0.55], [0.18, 196, 84, 13, 8, 1, 1.5, 0.55], [0.24, 128, 40, 12, 7, 1, 1.4, 0.55], [0.3, 128, 128, 15, 9, 1, 1.6, 0.55], [0.5, 220, 40, 2.2, 1.8, 0.6, 1.5, 0.3]];
 // water: a soft wet ring with azurite let down thin (the pigment is strong; at full ink it lands as blots)
 const WATER_SCRIPT = [[0.02, 128, 84, 112, 62, 0.6, 0, 0.5, 0.5]].concat([0, 1, 2, 3, 4, 5, 6, 7].map((i) => { const a = i / 8 * Math.PI * 2; return [0.1 + i * 0.03, 128 + Math.cos(a) * 92, 84 + Math.sin(a) * 50, 26, 12, 0.85, 0.32, 0.6]; }));   // a ring of thin wash along the wetted ring, never a pool
 const BREAK_SCRIPT = [[0.02, 128, 80, 96, 40, 0.55, 0, 0.8], [0.1, 90, 82, 22, 9, 1, 1.3, 0.6], [0.16, 150, 76, 18, 8, 1, 1.1, 0.6], [0.24, 200, 70, 10, 5, 0.9, 1, 0.5], [0.3, 50, 90, 8, 4, 0.9, 0.9, 0.5]];
-export function createTreasures(ctx, ink, W = createWonders(), onKick = () => {}) {
+export function createTreasures(ctx, ink, W = createWonders(), onKick = () => {}, GW = null) {      // GW: the gods' brush sheet (shock rings, splashes, clods), for the spoils
   // The fight stays readable (the lead, after the user's second play, 2026-11-25): an ordinary cast's paint over the figures is
   // counted each frame, and once the frame's ordinary paint passes a few percent of the screen every later stroke is drawn
   // fainter (grow by number, reach and speed; never by thickness and opacity). The great moments are left out of the count.
@@ -32,6 +36,9 @@ export function createTreasures(ctx, ink, W = createWonders(), onKick = () => {}
   const PAINTED = { fireCover: 1, ring: 1, whip: 1, sash: 1, fireSpear: 1, pearls: 1, banner: 1, knife: 1, bell: 1, fan: 1, mirror: 1, rope: 1, lotus: 1, tower: 1, zhaoyao: 1, seal: 1 };
   const has = (kind) => W.ready && !!(PAINTED[kind] || BOSS_SIG[kind]);
   function onEvent(e) {
+    if (e.type === 'hit' && e.id === 'bloodBlade') { bladeHits.push({ x: e.x, y: e.y, at: clock }); if (bladeHits.length > 40) bladeHits.shift(); }
+    if (e.type === 'hit' && e.take && (e.id === 'boneBanner' || e.id === 'fiveLights')) { takes.push({ id: e.id, x: e.x, y: e.y, at: clock }); if (takes.length > 24) takes.shift(); }
+    if (e.type === 'weary') { wearyAt.set(e.id, clock); return; }
     if (e.type === 'hit' && e.id === 'ring' && !e.dot) { if (ringHits.length >= 6) return; ringHits.push({ x: e.x, y: e.y, at: clock, v: frame % 2 }); return; }
     if (e.type === 'cast' && e.id === 'whip') { const ts = e.targets || [{ x: e.x, y: e.y }], ev = !!e.evolved, h = G0 && G0.hero;
       // 打神鞭: a lash cracks out from beside him to each target (evolved, 封神: the lash leaps on from target to target);
@@ -85,7 +92,7 @@ export function createTreasures(ctx, ink, W = createWonders(), onKick = () => {}
       if (o.id === 'mirror') { const dd = o.d + o.sweep * t, mx = V.sx(o.x + Math.cos(dd) * 90), my = V.sy(o.y + Math.sin(dd) * 90) - 50 * z, a = Math.min(1, t / 0.06) * Math.max(0, 1 - Math.max(0, t - 0.2) / 0.15);   // 阴阳镜: the mirror held out beside him for a moment (its light runs along the ground: lightsGround)
         if (a > 0) W.draw(c, 'wmirror', mx, my, 0, 0.7 * z, 0.7 * z, a * veil(V, mx, my)); continue; }
       const T = Math.min(1, t / 0.18), a = Math.min(1, t / 0.04) * fade, span = Math.min(Math.PI * 2, o.ang), a0 = o.d - span / 2;
-      if (o.id === 'bell') { W.draw(c, 'wbell', X, Y - 178 * z, Math.sin(t * 20) * 0.12 * (1 - T), 0.5 * z, 0.5 * z, a);   // 落魂钟: rung above his canopy (never over his figure), its toll rolls out in dry rings
+      if (o.id === 'bell') { const crowned = G0 && G0.build && (G0.build.spoils || []).some((q) => q.id === 'goldenCrown'); W.draw(c, 'wbell', X, Y - (HERO_TOP + (crowned ? 95 : 28)) * z, Math.sin(t * 20) * 0.12 * (1 - T), 0.5 * z, 0.5 * z, a);   // 落魂钟: rung just over his head (over the crown when he wears 金霞冠; never over his figure), its toll rolls out in dry rings
         for (let r = 0; r < (o.ev ? 4 : 3); r++) { const tr = t - r * 0.09; if (tr < 0) continue; const R = o.R * (0.3 + 0.75 * Math.min(1, tr / 0.4)); ribbon(c, `wtoll_${(r + o.v) % 2}`, (s) => [V.sx(o.x + Math.cos(a0 + span * s) * R), V.sy(o.y + Math.sin(a0 + span * s) * R) - 20 * z], 0.6 * z, a * (1 - Math.min(1, tr / 0.6)), 0, 1, Math.max(6, Math.round(span * 5)), V); } continue; }
       if (o.id === 'fan') { for (let r = 0; r < 3; r++) { const R = o.R * (0.5 + 0.25 * r);           // 五火七禽扇: fire fanned out in three fronts, seven birds of fire flying out of it
           ribbon(c, `wfanfire_${(r + o.v) % 2}`, (s) => [V.sx(o.x + Math.cos(a0 + span * s) * R), V.sy(o.y + Math.sin(a0 + span * s) * R) - 10 * z], (0.5 + 0.12 * r) * z, a * (1 - r * 0.15), 0, Math.min(1, (t - r * 0.05) / 0.12), Math.max(6, Math.round(span * 5)), V); }
@@ -165,97 +172,227 @@ export function createTreasures(ctx, ink, W = createWonders(), onKick = () => {}
   // ---------------------------------------------------------------- spoils (SPEC-CAMPAIGN 2.11): each boss's own power in the hero's hand
   // Every `spoilStrike` in brush, as its boss's own blow was, inside the readability rule: what lasts or spreads lies on the
   // ground under the figures; over them only brief marks (under 0.4 s), never over the hero.
-  const spoilFx = [], swallowed = new Map(); let umbrellaR = 0;
-  function spoilEvent(e) { spoilFx.push({ ...e, at: clock, v: spoilFx.length % 2 }); if (spoilFx.length > 40) spoilFx.shift(); }
+  const spoilFx = [], swallowed = new Map(); let umbrellaR = 0, pipaAt = -9, umbOpen = -9, umbLast = -9;
+  // 混元伞 is not held over him (the user, 2026-11-26: a parasol sitting on him is ugly): it opens in the air behind his
+  // shoulder when it swallows a shot or gives the light back, stays open while they keep coming, then folds away
+  const umbrellaSeen = (o) => { if (clock - umbLast > 1.1) umbOpen = clock; umbLast = clock; };
+  // the spoils' own paintings (generated ink-and-colour, fx/gen/spoils.prep.mjs): one per spoil id, the same the panel and
+  // the codex show, plus two parts only the field uses (goldWhip1: one whip of the pair; stone: the rock 袁洪 becomes)
+  let SPIC = null;
+  fetch(new URL('../baked/spoils/spoils.json', import.meta.url).href).then((r) => r.json()).then(async (meta) => { const img = {};
+    await Promise.all(Object.keys(meta).map(async (n) => { img[n] = await createImageBitmap(await (await fetch(new URL(`../baked/spoils/${n}.webp`, import.meta.url).href)).blob()); }));
+    for (const n of Object.keys(img)) if (ctx.prewarm) ctx.prewarm(img[n]);
+    SPIC = { meta, img }; }).catch(() => {});
+  // one painting, pivot at its centre of ink, `len` device px across; (ox, oy): a point of the picture in 0..1 put at (X, Y) instead
+  function spic(n, X, Y, rot, len, a, flip = 1, ky = 1, ox = null, oy = null, u0 = 0, u1 = 1) { const bm = SPIC && SPIC.img[n]; if (!bm) return false; if (a <= 0.004 || len <= 0) return true;
+    const M = SPIC.meta[n], k = len / M.w, cs = Math.cos(rot), sn = Math.sin(rot); let px = M.cx, py = M.cy; if (ox != null) { px = ox * M.w; py = oy * M.h; }
+    if (budgetOn) { cov += len * M.h * k * Math.abs(ky) * 0.35 * Math.min(1, a); if (cov > covMax) a *= Math.max(0.15, covMax / cov); }
+    ctx.setTransform(cs * k * flip, sn * k * flip, -sn * k * ky, cs * k * ky, X, Y); ctx.globalAlpha = Math.min(1, a); if (u0 > 0 || u1 < 1) ctx.drawImage(bm, M.w * u0, 0, M.w * (u1 - u0), M.h, M.w * u0 - px, -py, M.w * (u1 - u0), M.h); else ctx.drawImage(bm, -px, -py); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 1; return true; }
+  // what each working lasts (s): about half a second where it owns its radius, then it clears (the lead, round 3)
+  const SPOIL_LIFE_OF = { qingyunSword: 0.95, goldWhips: 0.65, bloodBlade: 0.75, goldenCrown: 1.1, fiveLights: 1.1, boneBanner: 0.9 };
+  const SHAPE_LIFE_OF = { 'yellowBreath:ring': 0.6, 'earthTravel:burst': 0.85, 'earthTravel:dive': 0.6 };
+  function spoilEvent(e) { if (e.id === 'hunyuanUmbrella') umbrellaSeen(e); spoilFx.push({ ...e, at: clock, v: spoilFx.length % 2, s: hs(clock * 7.13) }); if (spoilFx.length > 40) spoilFx.shift();
+    // a wash let into the wet ground where a working lands (the ink sheets are shared: one per kind every two seconds at most)
+    if (e.id === 'bloodBlade') wash('blood', e.x + Math.cos(e.dir || 0) * (e.length || 420) * 0.55, e.y + Math.sin(e.dir || 0) * (e.length || 420) * 0.55, (e.length || 420) * 0.8, 'fire');
+    if (e.id === 'plague' && e.shape === 'cloud') wash('plague', e.x, e.y, (e.radius || 170) * 2.2, 'wood');
+    if (e.id === 'earthTravel' && e.shape === 'burst') wash('earth', e.x, e.y, (e.radius || 140) * 2, 'earth'); }
+  const washAt = {};
+  function wash(kind, x, y, w, pigment) { if (!ink || !ink.bloom || clock - (washAt[kind] ?? -9) < 2) return; washAt[kind] = clock; ink.bloom({ x, y, w, splats: BREAK_SCRIPT, pigment, life: 4.5, dry: [0.8, 1.6], sink: 2.2, hero: true }); }
+  // the gods' brush sheet (shock rings, splashes, clods, souls), shared from index.js
+  const GD = (c, name, X, Y, rot, kx, ky, a) => { if (GW && a > 0.004) GW.draw(c, name, X, Y, rot, kx, ky, a); };
+  const takes = [], bladeHits = [];      // foes the banner or the five lights took (ghost ink to them, souls up into the light)
   const SPOIL_LIFE = { bite: 0.4, swallow: 0.3, dive: 0.5, ring: 0.5, windfire: 0.55, leap: 0.4, call: 1.4, whips: 0.45, line: 0.35, light: 0.4, flash: 0.6, fan: 0.6, burst: 0.5, banner: 0.6, cloud: 0.5, stone: 2.2 };
-  function spoilsDraw(c, V, G, layer) { const z = V.z, P = (x, y, lift = 0) => [V.sx(x), V.sy(y) - lift * z];
-    for (let i = 0; i < spoilFx.length; i++) { const o = spoilFx[i], t = clock - o.at, life = o.shape === 'stone' ? (o.time || 2) + 0.2 : SPOIL_LIFE[o.shape] || 0.5; if (t > life) { if (layer === 'over') spoilFx.splice(i--, 1); continue; }
-      const u = t / life, fade = 1 - Math.max(0, (u - 0.6) / 0.4), R = o.radius || 100, brief = Math.max(0, 1 - t / 0.3);
-      if (o.id === 'qingyunSword') {          // 青云剑: a black wind of blades spinning out from him
-        if (layer === 'ground') for (let k = 0; k < 8; k++) { const b0 = (k / 8) * TAU + t * 4; ribbon(c, `wlash_${k % 3}`, (s2) => P(o.x + Math.cos(b0 + s2 * 1.3) * (60 + R * s2), o.y + Math.sin(b0 + s2 * 1.3) * (60 + R * s2), 10), 0.9 * z, fade, Math.max(0, u * 1.6 - 0.7), Math.min(1, u * 3.5), 12, null); }
-        else if (brief > 0) for (let k = 0; k < 8; k++) { const b = (k / 8) * TAU + 0.5 + t * 4, [X, Y] = P(o.x + Math.cos(b) * R * (0.5 + 0.4 * Math.min(1, t / 0.2)), o.y + Math.sin(b) * R * (0.5 + 0.4 * Math.min(1, t / 0.2)), 30); W.draw(c, `wcut_${k % 2}`, X, Y, b + 1.2, 0.75 * z, 0.75 * z, brief * veil(V, X, Y)); }
+  const ease2 = (q) => 1 - (1 - q) * (1 - q), flat = (V) => (V.KY / 0.55) * 0.62;      // a painting laid on the ground: squashed as the ground is
+  function spoilsDraw(c, V, G, layer) { const z = V.z, P = (x, y, lift = 0) => [V.sx(x), V.sy(y) - lift * z], h0 = G && G.hero;
+    for (let i = 0; i < spoilFx.length; i++) { const o = spoilFx[i], t = clock - o.at, life = o.shape === 'stone' ? (o.time || 2) + 0.4 : SHAPE_LIFE_OF[`${o.id}:${o.shape}`] || SPOIL_LIFE_OF[o.id] || SPOIL_LIFE[o.shape] || 0.5; if (t > life) { if (layer === 'over') spoilFx.splice(i--, 1); continue; }
+      const u = t / life, fade = 1 - Math.max(0, (u - 0.6) / 0.4), R = o.radius || 100, brief = Math.max(0, 1 - t / 0.3), grow = ease2(Math.min(1, t / 0.2)), out = Math.max(0, (t - life + 0.35) / 0.35);
+      if (o.id === 'qingyunSword') {          // 青云剑: the black wind full of blades (第40回: 「風內有萬千戈矛」), filling its radius round him
+        const cx = h0 ? h0.x : o.x, cy = h0 ? h0.y : o.y, [X, Y] = P(cx, cy);
+        if (layer === 'ground') {
+          // the whirlwind itself, painted: two layers turning against each other, laid on the ground under the figures
+          if (spic('fxBlackWind', X, Y, -t * 5 + o.s * 6, 2.2 * R * z * (0.45 + 0.55 * grow), 0.92 * (1 - out), 1, flat(V))) spic('fxBlackWind', X, Y, t * 3.4 + 1, 1.55 * R * z * (0.4 + 0.6 * grow), 0.55 * (1 - out), -1, flat(V));
+          else for (let k = 0; k < 8; k++) { const b0 = (k / 8) * TAU + t * 4; ribbon(c, `wlash_${k % 3}`, (s2) => P(o.x + Math.cos(b0 + s2 * 1.3) * (60 + R * s2), o.y + Math.sin(b0 + s2 * 1.3) * (60 + R * s2), 10), 0.7 * z, fade * 0.6, Math.max(0, u * 1.6 - 0.7), Math.min(1, u * 3.5), 12, null); }
+          continue; }
+        // over: the sword large, riding the wind's edge point first, and blade glints flung round in it
+        const b = -1.2 + u * TAU * 1.25, r = R * 0.72 * grow, [XS, YS] = P(cx + Math.cos(b) * r, cy + Math.sin(b) * r, 45);
+        spic('qingyunSword', XS, YS, Math.atan2(Math.cos(b) * V.KY / 0.55, -Math.sin(b)) - 0.5, 210 * z, (1 - out) * veil(V, XS, YS));
+        for (let k = 0; k < 7; k++) { const bk = (k / 7) * TAU + t * 5.5 + o.s * 6, rk = R * (0.45 + 0.45 * hs(o.s * 31 + k)) * grow, [XK, YK] = P(cx + Math.cos(bk) * rk, cy + Math.sin(bk) * rk, 25 + 30 * hs(k + o.s));
+          W.draw(c, `wcut_${k % 2}`, XK, YK, bk + 1.4, 0.55 * z, 0.4 * z, 0.85 * (1 - out) * veil(V, XK, YK)); }
         continue; }
       if (o.id === 'jadePipa' && o.shape === 'windfire') {   // 碧玉琵琶: wind and fire come together on them
+        if (t < 0.02 && clock - pipaAt > 1) pipaAt = clock;      // the lute is plucked (drawn by him, below)
         if (layer === 'ground') { ribbon(c, `wfanfire_${o.v}`, (s2) => P(o.x + Math.cos(s2 * TAU + t * 4) * R * 0.8, o.y + Math.sin(s2 * TAU + t * 4) * R * 0.8), 0.75 * z, fade, 0, Math.min(1, u * 3), 18, V);
           for (let k = 0; k < 5; k++) { const b = (k / 5) * TAU + t * 2, [X, Y] = P(o.x + Math.cos(b) * R * 0.35, o.y + Math.sin(b) * R * 0.35); W.draw(c, `wflame_${k % 2}`, X, Y, 0, (k % 2 ? -1 : 1) * 0.55 * z, 0.5 * z * Math.min(1, u * 4), fade); }
           ribbon(c, `wtoll_${o.v}`, (s2) => P(o.x + Math.cos(s2 * TAU) * R * (0.7 + 0.6 * u), o.y + Math.sin(s2 * TAU) * R * (0.7 + 0.6 * u), 12), 0.9 * z, fade * 0.7, 0, 1, 20, V); }
         continue; }
-      if (o.id === 'marten' && o.shape === 'bite') {   // the bite: three claw strokes; devoured, a splash of ink as well
-        if (layer === 'over' && t < 0.35) { const [X, Y] = P(o.x, o.y, 40), q = Math.min(1, t / 0.05) * (1 - t / 0.35); for (let k = 0; k < 3; k++) W.draw(c, `wcut_${k % 2}`, X + (k - 1) * 14 * z, Y, 0.9 + k * 0.08, 0.6 * z, 0.6 * z, q * veil(V, X, Y)); }
-        else if (layer === 'ground' && o.devour) W.draw(c, `wscorch_${o.v}`, V.sx(o.x), V.sy(o.y), 0, 0.6 * z, 0.5 * z, fade);
+      if (o.id === 'marten' && o.shape === 'bite') {   // the bite: three claw strokes and a splash; devoured, a pool of ink as well
+        if (layer === 'over' && t < 0.35) { const [X, Y] = P(o.x, o.y, 40), q = Math.min(1, t / 0.05) * (1 - t / 0.35); for (let k = 0; k < 3; k++) W.draw(c, `wcut_${k % 2}`, X + (k - 1) * 16 * z, Y, 0.9 + k * 0.08, 0.8 * z, 0.8 * z, q * veil(V, X, Y)); GD(c, `gsplash_${o.v}`, X, Y + 30 * z, o.s * 6, 0.35 * z, 0.3 * z, q * veil(V, X, Y)); }
+        else if (layer === 'ground' && o.devour) GD(c, `gpool_${o.v}`, V.sx(o.x), V.sy(o.y), 0, 0.3 * z, 0.3 * z * V.KY / 0.55, fade * 0.8);
         continue; }
       if (o.id === 'marten') {                 // 花狐貂's leap: a swift dry stroke to the foe, then the bite (its body is the figures')
-        if (layer === 'over') { const [X0, Y0] = P(o.fromX ?? o.x, o.fromY ?? o.y, 40), [X1, Y1] = P(o.x, o.y, 40); if (t < 0.2) ribbon(c, `wlash_${o.v}`, (s2) => [X0 + (X1 - X0) * s2, Y0 + (Y1 - Y0) * s2 - Math.sin(s2 * Math.PI) * 60 * z], 0.7 * z, 1 - 0.5 * t / 0.2, Math.max(0, t / 0.2 - 0.5), Math.min(1, t / 0.08), 10, V);
-          }
+        if (layer === 'over') { const [X0, Y0] = P(o.fromX ?? o.x, o.fromY ?? o.y, 40), [X1, Y1] = P(o.x, o.y, 40); if (t < 0.2) ribbon(c, `wlash_${o.v}`, (s2) => [X0 + (X1 - X0) * s2, Y0 + (Y1 - Y0) * s2 - Math.sin(s2 * Math.PI) * 60 * z], 0.9 * z, 1 - 0.5 * t / 0.2, Math.max(0, t / 0.2 - 0.5), Math.min(1, t / 0.08), 10, V); }
         continue; }
-      if (o.id === 'callName') {               // 呼名落马: his name called, rings of sound on the one named
+      if (o.id === 'callName') {               // 呼名落马: the call goes out from him, the one named is thrown from his seat, and he is stunned
         const f = foeOf(G, o.target), x = f ? f.x : o.x, y = f ? f.y : o.y;
-        if (layer === 'ground') { const q = Math.min(1, t / 0.1); ribbon(c, `wlash_${o.v}`, (s2) => P(x + Math.cos(s2 * TAU * 0.92 + o.v) * 46, y + Math.sin(s2 * TAU * 0.92 + o.v) * 46), 0.7 * z, fade, 0, q, 18, null); }   // his name has fallen on him
-        if (layer === 'ground') for (let r = 0; r < 3; r++) { const tr = t - r * 0.12; if (tr < 0) continue; const q = Math.min(1, tr / 0.45), rr = 30 + (R - 30) * q; ribbon(c, `wtoll_${(r + o.v) % 2}`, (s2) => P(x + Math.cos(s2 * TAU) * rr, y + Math.sin(s2 * TAU) * rr), 3.6 * z, 1 - q * q, 0, 1, 24, V); }
-        else if (t < 0.45) { const q = t / 0.45; ribbon(c, `wtoll_${o.v}`, (s2) => P(x + Math.cos(s2 * TAU) * (26 + 30 * q), y + Math.sin(s2 * TAU) * (26 + 40 * q), 70), 3.4 * z, (1 - q) * veil(V, V.sx(x), V.sy(y) - 70 * z), 0, 1, 16, null); }
+        if (layer === 'ground') { for (let r = 0; r < 3; r++) { const tr = t - 0.3 - r * 0.12; if (tr < 0) continue; const q = Math.min(1, tr / 0.45), rr = 30 + (R - 30) * q; ribbon(c, `wtoll_${(r + o.v) % 2}`, (s2) => P(x + Math.cos(s2 * TAU) * rr, y + Math.sin(s2 * TAU) * rr), 3.6 * z, 1 - q * q, 0, 1, 24, V); } continue; }   // riders near him fall with him: the rings go out over them
+        if (h0 && t < 0.5) { const dx = x - h0.x, dy = y - h0.y, d = Math.hypot(dx, dy) || 1, ux = dx / d, uy = dy / d, nb = Math.atan2(uy * V.KY / 0.55, ux);
+          // the call: three bold arcs of ink, like the rings of a shout, leaving him (from outside his figure) and widening as they travel to the one named
+          for (let r = 0; r < 3; r++) { const q = (t - r * 0.07) / 0.32; if (q <= 0 || q >= 1) continue; const run = 100 + Math.max(60, d - 100) * q, [CX, CY] = P(h0.x + ux * run, h0.y + uy * run, 70), w = (30 + 70 * q) * z;
+            ribbon(c, `wlash_${(r + o.v) % 3}`, (s2) => [CX + Math.cos(nb + (s2 - 0.5) * 2) * w, CY + Math.sin(nb + (s2 - 0.5) * 2) * w], 3.2 * z, 1 - q * 0.45, 0, 1, 12, null); } }
+        // the one named, thrown from his seat: the painting flashed large above the crowd for a few frames (out of the hero's zone)
+        if (t > 0.3 && t < 0.72) { const q = (t - 0.3) / 0.42, Hh = V.hero; let [X, Y] = P(x, y, 150 + 30 * q);
+          if (Hh) { let dx = X - Hh[0], dy = Y - (Hh[1] - 60 * z); const dl = Math.hypot(dx, dy) || 1; dx /= dl; dy /= dl; for (let k = 0; k < 20 && veil(V, X, Y) < 0.95; k++) { X += dx * 14 * z; Y += dy * 14 * z; } }
+          spic('callName', X, Y, 0, 270 * z * (0.85 + 0.15 * ease2(Math.min(1, q * 4))), Math.min(1, q * 10) * (1 - Math.max(0, (q - 0.65) / 0.35))); }
+        // then the stun marked: a ring of ink turning over his head while it lasts
+        if (t > 0.6) { const q = Math.min(1, (t - 0.6) / 0.15), [X, Y] = P(x, y, 78); ribbon(c, `wtoll_${o.v}`, (s2) => [X + Math.cos(s2 * TAU + clock * 6) * 28 * z, Y + Math.sin(s2 * TAU + clock * 6) * 10 * z], 2.6 * z, q * fade * veil(V, X, Y), 0, 0.8, 14, null); }
         continue; }
-      if (o.id === 'goldWhips') {              // 雌雄金鞭: two gold whips fall on the strongest and leap on
+      if (o.id === 'goldWhips') {              // 雌雄金鞭: two gold whips fall on the strongest as dragons, and leap on
         for (const tg of o.targets || []) { const [X, Y] = P(tg.x, tg.y);
-          if (layer === 'ground') { if (!tg.chain) { W.draw(c, 'whalo_gold', X, Y, o.v, 0.5 * z, 0.5 * z * V.KY, fade); for (let k = 0; k < 4; k++) W.draw(c, `wcut_${k % 2}`, X, Y, k * 1.57 + o.v, 0.45 * z, 0.25 * z, fade * 0.9); } else W.draw(c, 'whalo_gold', X, Y, 0, 0.25 * z, 0.25 * z * V.KY, fade * 0.8); continue; }
+          if (layer === 'ground') { if (!tg.chain) { const q = Math.max(0, t - 0.11); if (t > 0.11) { GD(c, `gshock_${o.v}`, X, Y, 0, (0.25 + 0.5 * ease2(Math.min(1, q / 0.3))) * z, (0.25 + 0.5 * ease2(Math.min(1, q / 0.3))) * z * V.KY / 0.55, (1 - Math.min(1, q / 0.4)) * 0.95); GD(c, `gpool_${o.v}`, X, Y, 0, 0.32 * z, 0.32 * z * V.KY / 0.55, fade * 0.6); } }
+            else W.draw(c, 'whalo_gold', X, Y, 0, 0.25 * z, 0.25 * z * V.KY, fade * 0.8); continue; }
+          if (tg.chain && SPIC && SPIC.img.goldWhip1) { if (t > 0.08 && t < 0.36) { const src = (o.targets || []).find((q) => !q.chain) || tg, [X0, Y0] = P(src.x, src.y, 40), s2 = (t - 0.08) / 0.28, e2 = ease2(s2), XA = X0 + (X - X0) * e2, YA = Y0 + (Y - 40 * z - Y0) * e2 - Math.sin(e2 * Math.PI) * 50 * z;
+              spic('goldWhip1', XA, YA, Math.atan2(Y - 40 * z - Y0, X - X0) + (1 - e2) * -0.8, 110 * z, Math.sin(Math.PI * s2) * veil(V, XA, YA)); } continue; }      // the blow leaps on: the whip, small, arcing to the next
           if (tg.chain) { if (t < 0.25) { const src = (o.targets || []).find((q) => !q.chain) || tg, [X0, Y0] = P(src.x, src.y, 40); ribbon(c, `wringt_0`, (s2) => [X0 + (X - X0) * s2, Y0 + (Y - 40 * z - Y0) * s2 - Math.sin(s2 * Math.PI) * 40 * z], 0.3 * z, 1 - t / 0.25, 0, Math.min(1, t / 0.1), 6, V); } continue; }
-          if (t < 0.3) { const q = Math.min(1, t / 0.08); W.draw(c, `wray_${o.v}`, X, Y - 20 * z, Math.PI, 1.3 * z, (0.7 * q) * z, (1 - t / 0.3) * veil(V, X, Y)); } }
+          // the whip itself falls on him: raised beside him on the side away from the hero, it comes down in a tenth of a second
+          // and lies across him a moment (each from its own target's far side); its dragon's head strikes large; gold flung up
+          if (SPIC && SPIC.img.goldWhip1) { const M = SPIC.meta.goldWhip1, Hh = V.hero, j = (o.targets || []).filter((q) => !q.chain).indexOf(tg), side = Hh ? (Hh[0] > X ? -1 : 1) : (j % 2 ? 1 : -1);
+            const HX0 = X + side * 170 * z, HY0 = Y - 170 * z, q = Math.min(1, t / 0.11), aim = Math.atan2(Y - 40 * z - HY0, X - HX0), up = aim + side * 1.25, rot = up + (aim - up) * q * q, len = Math.hypot(X - HX0, Y - 40 * z - HY0) + 110 * z, off = (M.cx / M.w) * len;
+            const A = (t < 0.4 ? 1 : 1 - (t - 0.4) / 0.25) * Math.min(veil(V, HX0, HY0), veil(V, (X + HX0) / 2, (Y + HY0) / 2), veil(V, X, Y));
+            spic('goldWhip1', HX0 + Math.cos(rot) * off, HY0 + Math.sin(rot) * off, rot, len, A, 1, side > 0 ? -1 : 1);
+            if (t > 0.1 && t < 0.5) { const s3 = (t - 0.1) / 0.4, [XD, YD] = P(tg.x, tg.y, 55); spic('goldWhip1', XD, YD, rot, 520 * z * (0.9 + 0.2 * ease2(Math.min(1, s3 * 4))), Math.min(1, s3 * 6) * (1 - s3) * veil(V, XD, YD), 1, side > 0 ? -1 : 1, 0.88, 0.5, 0.74, 1); }      // the dragon's head, large, as the blow lands
+            if (t > 0.11) { const s3 = (t - 0.11) / 0.4, [XG, YG] = P(tg.x, tg.y, 40); if (s3 < 1) spic('fxGoldSpark', XG, YG, o.s * 6 + j, (120 + 80 * ease2(s3)) * z, (1 - s3) * veil(V, XG, YG)); } }
+          else if (t < 0.3) { const q = Math.min(1, t / 0.08); W.draw(c, `wray_${o.v}`, X, Y - 20 * z, Math.PI, 1.3 * z, (0.7 * q) * z, (1 - t / 0.3) * veil(V, X, Y)); } }
         continue; }
       if (o.id === 'hunyuanUmbrella' && o.shape === 'light') {   // every eighth shot it swallowed comes back as light on them
         if (layer === 'ground') W.draw(c, 'whalo_gold', V.sx(o.x), V.sy(o.y), 0, (R / 150) * z * (0.7 + 0.5 * u), (R / 150) * z * V.KY * (0.7 + 0.5 * u), fade);
         else if (brief > 0) for (let k = 0; k < 5; k++) W.draw(c, `wray_${k % 2}`, V.sx(o.x), V.sy(o.y) - 30 * z, (k / 5) * TAU, 0.6 * z, 0.3 * z, brief);
         continue; }
       if (o.id === 'hunyuanUmbrella' && o.shape === 'swallow') { if (layer === 'over') { const [X, Y] = P(o.x, o.y, 30), q = 1 - t / 0.3; W.draw(c, 'wswirl', X, Y, t * 12, 0.5 * z * q, 0.5 * z * q, q); } continue; }   // a shot twisted into the umbrella's dark
-      if (o.id === 'earthTravel' && o.shape === 'dive') { if (layer === 'ground') { W.draw(c, `wscorch_${o.v}`, V.sx(o.x), V.sy(o.y), 0, 0.7 * z * (1 - 0.4 * u), 0.55 * z * (1 - 0.4 * u), fade); W.draw(c, 'wmound', V.sx(o.x), V.sy(o.y), 0, 0.8 * z, 0.8 * z * (1 - u), fade); } continue; }   // he goes under: the earth closes over him
-      if (o.id === 'bloodBlade') {             // 化血神刀: one flash of the blade down the line (the bleeding: bleedDraw)
-        if (layer === 'ground') { const L = o.length || 420; ribbon(c, `wthrust_${o.v}`, (s2) => P(o.x + Math.cos(o.dir) * L * s2, o.y + Math.sin(o.dir) * L * s2), 0.5 * z, fade * 0.8, Math.max(0, u * 1.4 - 0.4), Math.min(1, t / 0.06), 8, null); }   // the cut it leaves on the ground, deep cinnabar
-        if (layer === 'over' && t < 0.25) { const L = o.length || 420, [X0, Y0] = P(o.x, o.y, 40); ribbon(c, `wcut_${o.v}`, (s2) => [X0 + Math.cos(o.dir) * L * z * s2, Y0 + Math.sin(o.dir) * L * z * V.KY * s2], 1.1 * z, 1 - t / 0.25, Math.max(0, t / 0.25 - 0.3), Math.min(1, t / 0.06), 8, V); }
+      if (o.id === 'earthTravel' && o.shape === 'dive') {   // 地行术: he goes under; the earth parts in rings and closes over him
+        if (layer === 'ground') { const [X, Y] = P(o.x, o.y), q = u; if (!spic('fxEarthRings', X, Y, 0, 190 * z * (1.15 - 0.5 * q * q), (1 - q) * 0.95, 1, flat(V) * 1.25)) W.draw(c, 'wmound', X, Y, 0, 0.8 * z, 0.8 * z * (1 - u), fade); }
         continue; }
-      if (o.id === 'yellowBreath') {           // 陈奇's 哈: the ring of breath takes their souls (the ring itself: breathDraw)
-        if (layer === 'ground') ribbon(c, `wtoll_${o.v}`, (s2) => P(o.x + Math.cos(s2 * TAU) * R * (0.5 + 0.6 * u), o.y + Math.sin(s2 * TAU) * R * (0.5 + 0.6 * u)), 3 * z, fade, 0, 1, 24, null);
+      if (o.id === 'bloodBlade') {             // 化血神刀: the blade flies down the line, a red-black slash through those it cuts; they bleed
+        // the slash ends at the last foe it cut (just past him), never running on (the lead, round 3)
+        let L = o.length || 420; const d = o.dir || 0; { let far = -1; for (const bh of bladeHits) if (Math.abs(bh.at - o.at) < 0.06) far = Math.max(far, (bh.x - o.x) * Math.cos(d) + (bh.y - o.y) * Math.sin(d)); L = far > 0 ? Math.min(L, far + 40) : L * 0.7; }
+        const [X0, Y0] = P(o.x + Math.cos(d) * 90, o.y + Math.sin(d) * 90, 40), [X1, Y1] = P(o.x + Math.cos(d) * Math.max(L, 140), o.y + Math.sin(d) * Math.max(L, 140), 40), q = 1 - Math.pow(1 - Math.min(1, t / 0.22), 3), ang = Math.atan2(Y1 - Y0, X1 - X0), Ls = Math.hypot(X1 - X0, Y1 - Y0);
+        if (layer === 'ground') { ribbon(c, `wthrust_${o.v}`, (s2) => P(o.x + Math.cos(d) * L * s2, o.y + Math.sin(d) * L * s2), 0.5 * z, fade * 0.8, Math.max(0, u * 1.4 - 0.4), Math.min(1, t / 0.06), 8, null); continue; }   // the cut it leaves on the ground, deep cinnabar
+        // the slash, revealed behind the flying blade (the painting runs lower left to upper right: turned to lie along the line)
+        if (SPIC && SPIC.img.fxBloodSlash) { const M = SPIC.meta.fxBloodSlash, own = Math.atan2(-M.h * 0.62, M.w * 0.8), XM = (X0 + X1) / 2, YM = (Y0 + Y1) / 2;
+          spic('fxBloodSlash', XM, YM, ang - own, Ls * 0.95, (1 - out) * Math.min(veil(V, XM, YM), veil(V, X0, Y0) * 0.5 + 0.5), 1, 0.55, 0.5, 0.5, 0, Math.max(0.02, q)); }
+        if (t < 0.34) { const XB = X0 + (X1 - X0) * q, YB = Y0 + (Y1 - Y0) * q; spic('bloodBlade', XB, YB, ang - 0.6, 170 * z, (1 - Math.max(0, t - 0.24) / 0.1) * veil(V, XB, YB)); }      // the blade itself, a flash of lightning down the line
         continue; }
-      if (o.id === 'goldenCrown') {            // 金霞冠: it blazes; all near are blind
-        if (layer === 'ground') { const k = (R / 190) * z * (0.3 + 0.9 * Math.min(1, u * 1.6)); W.draw(c, 'whalo_gold', V.sx(o.x), V.sy(o.y), 0, k, k * V.KY, fade * 0.7); }
-        else if (t < 0.25) for (let k = 0; k < 10; k++) { const b = (k / 10) * TAU, [X, Y] = P(o.x + Math.cos(b) * 120, o.y + Math.sin(b) * 120, 30); W.draw(c, `wray_${k % 2}`, X, Y, Math.atan2(Math.sin(b) * V.KY, Math.cos(b)) - Math.PI / 2, 0.3 * z, 0.3 * z, (1 - t / 0.25) * 0.8); }
+      if (o.id === 'yellowBreath') {           // 陈奇's 哈: the yellow breath bursts out from him as a ring, opaque cloud with ink edges, under the figures; his own body stays clear (a hollow centre), it reaches the rule's radius and is gone in 0.6 s
+        if (layer !== 'ground') continue; const cx = h0 ? h0.x : o.x, cy = h0 ? h0.y : o.y, sw = ease2(Math.min(1, u * 1.6)), gone = 1 - Math.max(0, (u - 0.45) / 0.55);
+        for (let k = 0; k < 14; k++) { const b = (k / 14) * TAU + o.s * 3 + (hs(k * 5 + o.s) - 0.5) * 0.25, r = R * (0.62 + 0.42 * sw) * (0.94 + 0.12 * hs(k * 7 + o.s)), [X, Y] = P(cx + Math.cos(b) * r, cy + Math.sin(b) * r, 4), sa = Math.atan2(Math.sin(b) * V.KY / 0.55, Math.cos(b));
+          // many overlapping pieces of the painting's billow (its cut side feathered), turned and sized apart so the ring rolls as one mass; each thinned where it
+          // would come within the hero's clear zone, so the centre stays open
+          spic('breathCloud', X, Y, sa + Math.PI / 2 + (hs(k + o.s) - 0.5) * 0.9, R * 0.8 * z * (0.8 + 0.3 * sw) * (0.8 + 0.4 * hs(k * 3 + o.s)), Math.min(1, u * 10) * gone * veil(V, X, Y - 30 * z), hs(k + 9) > 0.5 ? 1 : -1, flat(V) * 1.3); }
         continue; }
-      if (o.id === 'fiveLights') {             // 孔宣's five-coloured light: a fan of five pigments sweeping out toward the mass
-        if (layer !== 'ground') continue; const span = ((o.angle || 140) * Math.PI) / 180, a0 = (o.dir || 0) - span / 2, CELLS = ['wtoll_0', 'wwave_0', 'wthrust_0', 'wtoll_1', 'wringt_0'];
-        for (let k = 0; k < 5; k++) { const rr = R * (0.35 + 0.15 * k), sweep = Math.min(1, u * 2.2 - k * 0.08); if (sweep <= 0) continue; ribbon(c, k === 3 ? 'wtoll_1' : CELLS[k], (s2) => P(o.x + Math.cos(a0 + span * s2) * rr, o.y + Math.sin(a0 + span * s2) * rr), [3.2, 1, 1, 3.2, 0.4][k] * z, fade, 0, sweep, 16, null); }
+      if (o.id === 'goldenCrown') {            // 金霞冠: the crown comes out over his head and blazes: rays and a rosy-gold wash roll out; all near are dazzled
+        const cx = h0 ? h0.x : o.x, cy = h0 ? h0.y : o.y;
+        if (layer === 'ground') { const [X, Y] = P(cx, cy); if (!spic('fxRadiance', X, Y, o.s * 6 + t * 0.3, 2 * R * z * (0.15 + 0.85 * ease2(Math.min(1, u * 1.6))), 0.6 * (1 - u), 1, flat(V))) { const k = (R / 190) * z * (0.3 + 0.9 * Math.min(1, u * 1.6)); W.draw(c, 'whalo_gold', X, Y, 0, k, k * V.KY, fade * 0.7); } continue; }
+        const lift = HERO_TOP + 30 + 40 * ease2(Math.min(1, t / 0.3)), [X, Y] = P(cx, cy, lift), a = Math.min(1, t / 0.1) * (1 - out);
+        spic('fxRadiance', X, Y, t * 0.8, (90 + 90 * ease2(Math.min(1, t / 0.25))) * z, a * 0.75);
+        if (!spic('goldenCrown', X, Y + 6 * z, 0, 80 * z, a)) W.draw(c, 'wcrown', X, Y, 0, 0.5 * z, 0.5 * z, a);
         continue; }
-      if (o.id === 'earthTravel') {            // 张奎's earth bursts where he comes up
-        if (layer === 'ground') { W.draw(c, `wscorch_${o.v}`, V.sx(o.x), V.sy(o.y), 0, (R / 60) * z, (R / 60) * z, fade); W.draw(c, `wscorch_${1 - o.v}`, V.sx(o.x), V.sy(o.y), 1.2, (R / 80) * z, (R / 80) * z, fade); W.draw(c, 'wmound', V.sx(o.x), V.sy(o.y), 0, 1.1 * z, 1.1 * z * Math.max(0, 1 - u * 1.5), fade); for (let k = 0; k < 5; k++) { const b = (k / 5) * TAU + o.v, [X, Y] = P(o.x + Math.cos(b) * R * 0.6, o.y + Math.sin(b) * R * 0.6); W.draw(c, `wcut_${k % 2}`, X, Y, b, 0.8 * z, 0.5 * z, fade); } }
+      if (o.id === 'fiveLights') {             // 孔宣's 五色神光: the five plumes open behind him like a peacock's train, then sweep toward the mass
+        if (layer !== 'ground') { for (const tk of takes) { const s2 = (clock - tk.at) / 0.6; if (tk.id !== 'fiveLights' || s2 < 0 || s2 > 1) continue; const [X, Y] = P(tk.x, tk.y, 40 + 140 * ease2(s2)); GD(c, 'gsoul', X, Y, 0, 0.6 * z, 0.6 * z, Math.sin(Math.PI * s2) * veil(V, X, Y)); } continue; }      // those taken go up into the light
+        const cx = h0 ? h0.x : o.x, cy = h0 ? h0.y : o.y, [X, Y] = P(cx, cy, 10), side = Math.cos(o.dir || 0) >= 0 ? 1 : -1, open = ease2(Math.min(1, t / 0.28)), sweep = ease2(Math.max(0, Math.min(1, (t - 0.3) / 0.35)));
+        if (!spic('fiveLights', X, Y, side * (0.25 + 0.75 * sweep), R * 1.35 * z * (0.5 + 0.5 * open), 0.62 * (1 - out), 1, 1 / Math.max(0.12, open) * 0.9, 0.5, 0.97)) {
+          const span = ((o.angle || 140) * Math.PI) / 180, a0 = (o.dir || 0) - span / 2, CELLS = ['wtoll_0', 'wwave_0', 'wthrust_0', 'wtoll_1', 'wringt_0'];
+          for (let k = 0; k < 5; k++) { const rr = R * (0.35 + 0.15 * k), sw = Math.min(1, u * 2.2 - k * 0.08); if (sw <= 0) continue; ribbon(c, k === 3 ? 'wtoll_1' : CELLS[k], (s2) => P(o.x + Math.cos(a0 + span * s2) * rr, o.y + Math.sin(a0 + span * s2) * rr), [3.2, 1, 1, 3.2, 0.4][k] * z, fade, 0, sw, 16, null); } }
         continue; }
-      if (o.id === 'changeForm') {             // 八九玄功: turned to stone a moment; a ring of dry ink and ochre holds round him
-        if (layer === 'ground') ribbon(c, `wtoll_${o.v}`, (s2) => P(o.x + Math.cos(s2 * TAU) * 60, o.y + Math.sin(s2 * TAU) * 70), 3.4 * z, fade, 0, Math.min(1, u * 8), 24, null); W.draw(c, `wscorch_${o.v}`, V.sx(o.x), V.sy(o.y), 0, 0.6 * z, 0.45 * z, fade * 0.7);
+      if (o.id === 'earthTravel') {            // 张奎's earth: he bursts up through it; it parts in rings and flings clods
+        const [X, Y] = P(o.x, o.y);
+        if (layer === 'ground') { if (!spic('fxEarthRings', X, Y, 0, 2.4 * R * z * (0.45 + 0.65 * ease2(Math.min(1, u * 1.5))), 0.95 * (1 - u), 1, flat(V) * 1.25)) W.draw(c, 'wmound', X, Y, 0, 1.1 * z, 1.1 * z * Math.max(0, 1 - u * 1.5), fade);
+          GD(c, `gshock_${o.v}`, X, Y, 0, (0.3 + 0.6 * ease2(Math.min(1, t / 0.3))) * R / 140 * z, (0.3 + 0.6 * ease2(Math.min(1, t / 0.3))) * R / 140 * z * V.KY / 0.55, (1 - Math.min(1, t / 0.45)) * 0.9); continue; }
+        for (let k = 0; k < 9; k++) { const b = (k / 9) * TAU + o.s * 5, s2 = Math.min(1, t / 0.6), rr = R * (0.2 + 0.8 * s2) * (0.7 + 0.5 * hs(k + o.s)), [XC, YC] = P(o.x + Math.cos(b) * rr, o.y + Math.sin(b) * rr, 90 * Math.sin(Math.PI * s2) * (0.6 + 0.6 * hs(k * 2 + o.s)));
+          GD(c, `gclod_${k % 3}`, XC, YC, t * (6 + k), 0.5 * z, 0.5 * z, (1 - out) * veil(V, XC, YC)); }      // clods of the parted earth flung up and falling
+        continue; }
+      if (o.id === 'changeForm') {             // 八九玄功: the killing blow turns him: the white ape rears over all for an instant, he is the stone (untouchable) for its 2 s, a crack of light, he is back
+        const cx = h0 ? h0.x : o.x, cy = h0 ? h0.y : o.y, [X, Y] = P(cx, cy), T2 = (o.time || 2), back = Math.max(0, (t - T2) / 0.4);
+        if (layer === 'ground') { ribbon(c, `wtoll_${o.v}`, (s2) => P(cx + Math.cos(s2 * TAU) * 60, cy + Math.sin(s2 * TAU) * 70), 3.4 * z, fade, 0, Math.min(1, u * 8), 24, null); continue; }
+        // the rock: ringed in ink so it reads as him changed (not scenery), white wind curling at its foot, from the change to the crack
+        if (t > 0.3) { const a = Math.min(1, (t - 0.3) / 0.12) * (1 - back); spic('stoneRim', X, Y + 10 * z, 0, 100 * z, a * 0.95, 1, 1, 0.5, 1); spic('stone', X, Y + 8 * z, 0, 96 * z, a, 1, 1, 0.5, 1);
+          for (let k = 0; k < 2; k++) { const ph = (clock * 0.6 + k * 0.5) % 1; spic('apeWind', X + (k ? 1 : -1) * (55 + 20 * ph) * z, Y - (10 + 30 * ph) * z, 0, 105 * z, a * 0.7 * Math.sin(Math.PI * ph), k ? 1 : -1, 0.7); } }      // the ape's white wind, cut from his painting
+        // the change: the white ape, whole upper body, reared over everything for an instant (above him: he is turning into it)
+        // (the whole ape, its trailing side baked faded into vapour: no cut edge)
+        if (t < 0.45) { const q = t / 0.45; spic('apeRear', X, Y - (200 + 40 * q) * z, 0, 258 * z * (0.9 + 0.15 * q), Math.min(1, q * 8) * Math.min(1, (1 - q) * 3)); }
+        // the crack of light as it ends: the rock splits in a burst of gold light and he is back
+        if (back > 0 && back < 1) { spic('fxRadiance', X, Y - 60 * z, 0, (80 + 160 * ease2(back)) * z, (1 - back) * 0.95); spic('fxGoldSpark', X, Y - 60 * z, 0.4, (90 + 90 * back) * z, (1 - back) * 0.8); }
         continue; }
     }
-    // what stays: the umbrella open round him (shots it swallows twist into ink), the pipa's burning ground, the plague cloud, the
-    // bone banner, the yellow breath round him, the bleeding of those the blade cut, the mound of the one under the earth
+    // what stays: the umbrella open beside him while it works, the pipa's burning ground, the plague cloud, the bone banner, the
+    // yellow breath round him, the bleeding of those the blade cut, the ripple of the one under the earth
     const sp = G && G.build && G.build.spoils, h = G && G.hero; if (!sp || !h) return; const has = (id) => sp.some((q) => q.id === id), entry = (id) => sp.find((q) => q.id === id);
     const HX = V.sx(h.x), HY = V.sy(h.y), under = (entry('earthTravel') || {}).under;
     if (layer === 'ground') {
-      // behind him (the figures are drawn over these): the five-coloured light, 青云剑 and the jade lute at his back, the clear wind trailing
-      if (!under) { if (has('fiveLights')) W.draw(c, 'wfive', HX, HY + 4 * z, 0, 0.75 * z, 0.75 * z, 0.6 + 0.1 * Math.sin(clock * 2));
-        // 青云剑 and the jade lute slung behind him: drawn before the figures, their ends showing past him
-        if (has('qingyunSword')) W.draw(c, 'wsword', HX - 30 * z, HY - 20 * z, -0.35, 0.5 * z, 0.5 * z, 0.95);
-        if (has('jadePipa')) W.draw(c, 'wpipa', HX + 34 * z, HY - 24 * z, 0.45, 0.45 * z, 0.45 * z, 0.95);
+      // behind him (the figures are drawn over these): 青云剑 and the jade lute slung at his back, the clear wind trailing
+      if (!under) {
+        if (has('qingyunSword') && !spic('qingyunSword', HX - 26 * z, HY - 34 * z, -2.4, 95 * z, 0.95)) W.draw(c, 'wsword', HX - 30 * z, HY - 20 * z, -0.35, 0.5 * z, 0.5 * z, 0.95);
+        if (has('jadePipa') && !(clock - pipaAt < 0.8 && SPIC) && !spic('jadePipa', HX + 30 * z, HY - 36 * z, 0.5, 60 * z, 0.95)) W.draw(c, 'wpipa', HX + 34 * z, HY - 24 * z, 0.45, 0.45 * z, 0.45 * z, 0.95);
         if (has('changeForm')) { const sp2 = Math.hypot(h.vx || 0, h.vy || 0); if (sp2 > 20) { const bx = -(h.vx || 0) / sp2, by = -(h.vy || 0) / sp2; for (let k = 0; k < 3; k++) ribbon(c, `wtoll_${k % 2}`, (s2) => P(h.x + bx * (30 + 170 * s2) + (k - 1) * 14 * -by, h.y + by * (30 + 170 * s2) + (k - 1) * 14 * bx, 30 + 12 * k), 1.4 * z, 0.55 - 0.12 * k, 0, 1, 8, null); } } }
+      // under the earth: the ground ripples in rings where he travels (he himself is not drawn)
+      else spic('fxEarthRings', HX, HY, 0, 120 * z * (0.92 + 0.1 * Math.sin(clock * 9)), 0.8, 1, flat(V) * 1.25);
       if (has('hunyuanUmbrella')) { umbrellaR = (entry('hunyuanUmbrella').radius) || 170; ribbon(c, 'wtoll_1', (s2) => P(h.x + Math.cos(s2 * TAU + clock * 0.4) * umbrellaR, h.y + Math.sin(s2 * TAU + clock * 0.4) * umbrellaR), 2 * z, 0.5, 0, 0.94, 24, null); }
-      if (has('yellowBreath')) for (let k = 0, R2 = (entry('yellowBreath').radius || 150) * 0.93; k < 10; k++) { const b = (k / 10) * TAU + clock * 0.3, [X, Y] = P(h.x + Math.cos(b) * R2, h.y + Math.sin(b) * R2); W.draw(c, `wplague_${k % 2}`, X, Y, b, 0.6 * z, 0.6 * z * V.KY * 1.6, 1); }
+      // 陈奇's yellow breath round him between the 哈s: a few large rolling billows of the painted breath, overlapping, turning slowly
+      // (腹中黄气 has no resting ring: nothing stays on him between the 哈s; the lead, from the build, 2026-11-26)
       for (const zn of G.zones || []) { if (zn.dead || zn.side !== 'zhou') continue; const a = Math.min(1, (zn.t || 0) / 0.3) * Math.max(0, Math.min(1, ((zn.life || 3) - (zn.t || 0)) / 0.5)); if (a <= 0) continue;
         if (zn.src === 'jadePipa') { for (let k = 0; k < 4; k++) { const b = hs(zn.id + k) * TAU, r = zn.r * 0.6 * Math.sqrt(hs(zn.id * 3 + k)), [X, Y] = P(zn.x + Math.cos(b) * r, zn.y + Math.sin(b) * r); W.draw(c, `wscorch_${k % 2}`, X, Y, 0, 0.6 * z, 0.6 * z, a * 0.8); W.draw(c, `wflame_${k % 2}`, X, Y, 0, (Math.sin(clock * 5 + k) > 0 ? 1 : -1) * 0.45 * z, 0.4 * z, a * 0.85); } }
-        else if (zn.src === 'plague') { ribbon(c, `wtoll_${zn.id % 2}`, (s2) => P(zn.x + Math.cos(s2 * TAU) * zn.r, zn.y + Math.sin(s2 * TAU) * zn.r), 1.6 * z, a * 0.8, 0, 1, 24, null); const n = Math.max(7, Math.round(zn.r / 14)); for (let k = 0; k < n; k++) { const b = hs(zn.id + k) * TAU, r = zn.r * 0.85 * Math.sqrt(hs(zn.id * 5 + k)), [X, Y] = P(zn.x + Math.cos(b) * r, zn.y + Math.sin(b) * r); W.draw(c, `wplague_${k % 2}`, X, Y, 0, 0.8 * z, 0.8 * z * V.KY * 1.6, a); } }
-        else if (zn.src === 'boneBanner') ribbon(c, `wtoll_${zn.id % 2}`, (s2) => P(zn.x + Math.cos(s2 * TAU + clock * 0.3) * zn.r, zn.y + Math.sin(s2 * TAU + clock * 0.3) * zn.r), 2 * z, a * 0.8, 0, 0.92, 22, null);
+        // the plague: sour green ink pooling and dribbling where the cloud lies, breathing a little
+        else if (zn.src === 'plague') { const [X, Y] = P(zn.x, zn.y); if (!spic('fxMiasma', X, Y, hs(zn.id) * 6, 2.3 * zn.r * z * (0.96 + 0.04 * Math.sin(clock * 1.5 + zn.id)), a * 0.85, 1, flat(V) * 1.1)) ribbon(c, `wtoll_${zn.id % 2}`, (s2) => P(zn.x + Math.cos(s2 * TAU) * zn.r, zn.y + Math.sin(s2 * TAU) * zn.r), 1.6 * z, a * 0.8, 0, 1, 24, null); }
+        else if (zn.src === 'boneBanner') ribbon(c, `wtoll_${zn.id % 2}`, (s2) => P(zn.x + Math.cos(s2 * TAU + clock * 0.3) * zn.r, zn.y + Math.sin(s2 * TAU + clock * 0.3) * zn.r), 2 * z, a * 0.6, 0, 0.92, 22, null);
         }
       return; }
-    // over: the banner standing beside him (a thin pole and a pale cloth, clear of him), the shots the umbrella swallows, the bleeding
-    for (const zn of G.zones || []) if (!zn.dead && zn.src === 'boneBanner' && zn.side === 'zhou') { const [X, Y] = P(zn.x + 95, zn.y - 20), a = Math.min(1, (zn.t || 0) / 0.2) * Math.max(0, Math.min(1, ((zn.life || 7) - (zn.t || 0)) / 0.4)); W.draw(c, 'wbone', X, Y, Math.sin(clock * 1.3) * 0.03, 0.55 * z, 0.55 * z, a * 0.9); }
-    // over him, clear of his body: the umbrella open above his head, the crown on it; under the earth, the mound he is
-    if (under) W.draw(c, 'wmound', HX, HY, 0, 0.75 * z, 0.75 * z * (0.9 + 0.1 * Math.sin(clock * 14)), 1);
-    // (what is attached to him is an open form above his canopy or under him, never over his figure: tester round 2)
-    else { if (has('hunyuanUmbrella')) W.draw(c, 'wumbrella', HX, HY - 150 * z, Math.sin(clock * 1.1) * 0.04, 0.5 * z, 0.5 * z, 0.92);
-      if (has('goldenCrown')) W.draw(c, 'wcrown', HX, HY - (has('hunyuanUmbrella') ? 236 : 158) * z, 0, 0.4 * z, 0.4 * z, 0.95); }
-    for (const f of G.foes || []) if (f.burnSrc === 'bloodBlade' && f.burnT > 0 && f.state !== 'dead') { const [X, Y] = P(f.x, f.y), q = (clock * 0.9 + (f.id % 7) / 7) % 1; W.draw(c, 'wdrip', X + 10 * z, Y - (60 - 40 * q) * z, 0, 0.8 * z, 0.8 * z, Math.sin(Math.PI * q) * 0.9); }
+    // over: the bone banner planted beside him, tall, ghost ink streaming from those it takes into it; the plague umbrella over its
+    // cloud; the jade lute plucked; the umbrella beside him while it works; the bleeding of those the blade cut
+    for (const zn of G.zones || []) if (!zn.dead && zn.src === 'boneBanner' && zn.side === 'zhou') { const [X, Y] = P(zn.x + 140, zn.y - 20), t0 = zn.t || 0, a = Math.min(1, t0 / 0.2) * Math.max(0, Math.min(1, ((zn.life || 7) - t0) / 0.4)), rise = ease2(Math.min(1, t0 / 0.3)), M = SPIC && SPIC.meta.boneBanner, bh = M ? 110 * z * M.h / M.w : 160 * z;      // planted 140 out from where he stood: clear of him, so its pale bones are not thinned by his clear zone
+      // at full strength (laid twice: one pass of its pale bones and grey ink reads washed out on the pale ground)
+      if (spic('boneBanner', X, Y + 30 * z, Math.sin(clock * 1.3) * 0.03, 110 * z, a * veil(V, X, Y - bh * 0.5), 1, rise, 0.5, 0.98)) spic('boneBanner', X, Y + 30 * z, Math.sin(clock * 1.3) * 0.03, 110 * z, a * 0.8 * veil(V, X, Y - bh * 0.5), 1, rise, 0.5, 0.98);
+      else W.draw(c, 'wbone', X, Y, Math.sin(clock * 1.3) * 0.03, 0.55 * z, 0.55 * z, a * 0.9);
+      // as it is planted it reaches for the souls round it: ghost-ink streamers from the nearest foes, several at once, drawn up into the skulls
+      if (t0 < 1.1) { const near = []; for (const f of G.foes || []) { if (f.state === 'dead') continue; const dd = Math.hypot(f.x - zn.x, f.y - zn.y); if (dd < zn.r * 2.2) near.push([dd, f]); } near.sort((p, q) => p[0] - q[0]);
+        const XT = X, YT = Y + 30 * z - bh * 0.8 * rise; for (let k = 0; k < Math.min(6, near.length); k++) { const f = near[k][1], s2 = Math.max(0, Math.min(1, (t0 - k * 0.05) / 0.9)); if (s2 <= 0 || s2 >= 1) continue; const [XF, YF] = P(f.x, f.y, 45), L = Math.hypot(XT - XF, YT - YF), XM = (XF + XT) / 2, YM = (YF + YT) / 2;
+          spic('fxGhostInk', XM, YM, Math.atan2(YT - YF, XT - XF), L * 1.05, 0.95 * Math.sin(Math.PI * s2) * Math.max(0.5, veil(V, XM, YM)), 1, 0.9, 0.5, 0.5, Math.max(0, s2 * 1.6 - 0.6), Math.min(1, s2 * 2.2)); } }
+      // pale ghost ink coiling up round it while it stands
+      for (let k = 0; k < 2; k++) { const ph = (clock * 0.35 + k * 0.5) % 1, [XG, YG] = P(zn.x + 140 + Math.sin(ph * 6 + k * 3) * 30, zn.y - 20, 40 + 150 * ph); spic('fxGhostInk', XG, YG, -Math.PI / 2 + Math.sin(ph * 5) * 0.4, 120 * z, a * 0.45 * Math.sin(Math.PI * ph) * veil(V, XG, YG), 1, 0.7); }
+      for (const tk of takes) { const s2 = (clock - tk.at) / 0.7; if (tk.id !== 'boneBanner' || s2 < 0 || s2 > 1) continue; const [XF, YF] = P(tk.x, tk.y, 40), XT = X, YT = Y + 30 * z - bh * 0.75 * rise, L = Math.hypot(XT - XF, YT - YF), XM = (XF + XT) / 2, YM = (YF + YT) / 2;
+        spic('fxGhostInk', XM, YM, Math.atan2(YT - YF, XT - XF), L * 1.05, 0.95 * Math.sin(Math.PI * Math.min(1, s2 * 1.4)) * Math.max(0.5, veil(V, XM, YM)), 1, 0.9, 0.5, 0.5, Math.max(0, s2 * 1.5 - 0.5), Math.min(1, s2 * 2.5)); } }      // his soul drawn up into the banner
+    for (const zn of G.zones || []) if (!zn.dead && zn.src === 'plague' && zn.side === 'zhou') { const t0 = zn.t || 0, X = V.sx(zn.x), Y = Math.max(80 * z, V.sy(zn.y) - 110 * z), a = Math.min(1, t0 / 0.3) * Math.max(0, Math.min(1, ((zn.life || 6) - t0) / 0.5)), op = ease2(Math.min(1, t0 / 0.25));
+      spic('plague', X, Y, Math.sin(clock * 0.9 + zn.id) * 0.06, 1.15 * zn.r * z * (0.2 + 0.8 * op), a * 0.95 * veil(V, X, Y), 1, 1 / Math.max(0.2, 0.2 + 0.8 * op)); }      // it opens over the cloud like a fan and stays, tilting
+    // the jade lute plucked: it comes out beside him, above his shoulder, shaken by the strings, then is slung back
+    if (has('jadePipa') && clock - pipaAt < 0.8 && !under) { const q = clock - pipaAt, X = HX + 105 * z, Y = HY - 135 * z - 20 * z * Math.min(1, q / 0.1); spic('jadePipa', X, Y, -0.5 + Math.sin(q * 60) * 0.05 * Math.max(0, 1 - q / 0.4), 120 * z * Math.min(1, 0.6 + q / 0.1 * 0.4), Math.min(1, q / 0.06) * Math.min(1, (0.8 - q) / 0.2) * veil(V, X, Y)); }
+    // (nothing rides over his head at rest: the 混元伞 opens beside him only while it works, the crown only when it blazes)
+    if (under) W.draw(c, 'wmound', HX, HY, 0, 0.6 * z, 0.6 * z * (0.9 + 0.1 * Math.sin(clock * 14)), 0.8);
+    else if (has('hunyuanUmbrella') && clock - umbLast < 1.1) { const op = Math.min(1, (clock - umbOpen) / 0.16), shut = Math.max(0, (clock - umbLast - 0.7) / 0.4), w = (0.15 + 0.85 * (1 - (1 - op) * (1 - op))) * (1 - 0.85 * shut), X = HX - 95 * z, Y = HY - (HERO_TOP - 20) * z;
+      // it opens like a fan from closed (its width grows from the handle's line), leaning back over his shoulder, and folds the same way
+      if (!spic('hunyuanUmbrella', X, Y, -0.38 + Math.sin(clock * 1.1) * 0.04, 120 * z * w, Math.min(1, op * 3) * (1 - shut), 1, 1 / Math.max(0.15, w))) W.draw(c, 'wumbrella', X, Y, -0.38, 0.5 * z * w, 0.5 * z, 0.92 * (1 - shut)); }
+    // the bleeding of those the blade cut: a red-black slash across each, and the drops running
+    for (const f of G.foes || []) if (f.burnSrc === 'bloodBlade' && f.burnT > 0 && f.state !== 'dead') { const [X, Y] = P(f.x, f.y), q = (clock * 0.9 + (f.id % 7) / 7) % 1;
+      spic('fxBloodSlash', X, Y - 42 * z, 0.3 + (f.id % 5) * 0.1, 46 * z, Math.min(0.9, f.burnT) * veil(V, X, Y - 42 * z));
+      W.draw(c, 'wdrip', X + 10 * z, Y - (60 - 40 * q) * z, 0, 0.8 * z, 0.8 * z, Math.sin(Math.PI * q) * 0.9); }
   }
+  // a great boss past his band (SPEC 1.14, the rule `weary`: he takes more and closes in): he is seen to flag. Once, as it
+  // comes, a gasp: a broken ring of dry ink knocked out round him and a puff of breath; then while it lasts, breath going up
+  // from him in grey wash, sweat falling, and dust kicked up dry behind each stride, all a little more as he tires. Small, and
+  // nothing over the hero (the boss is the one marked).
+  const wearyAt = new Map(), wearySince = new Map();
+  function wearyDraw(c, V, G, layer) { if (!G || !G.foes) return; const z = V.z, P = (x, y, lift = 0) => [V.sx(x), V.sy(y) - lift * z];
+    for (const f of G.foes) { if (!f.weary || f.state === 'dead' || !f.tier) continue; const t0 = wearyAt.has(f.id) ? clock - wearyAt.get(f.id) : 9, w = Math.min(1, ((G.t || 0) - (wearySince.get(f.id) ?? (wearySince.set(f.id, G.t || 0), G.t || 0))) / 30), lift = 3 * (f.r || 30) + 5, face = (f.vx || 0) < -5 ? -1 : 1;
+      if (layer === 'ground') { const sp = Math.hypot(f.vx || 0, f.vy || 0);
+        // the gasp: a broken ring of dry ink knocked out round his feet
+        if (t0 < 0.7) { const q = t0 / 0.7; for (let j = 0; j < 2; j++) ribbon(c, `wtoll_${(f.id + j) % 2}`, (s2) => P(f.x + Math.cos(s2 * TAU * 0.8 + f.id + j * 2.6) * (50 + 90 * q) * (1 + 0.15 * j), f.y + Math.sin(s2 * TAU * 0.8 + f.id + j * 2.6) * (50 + 90 * q) * (1 + 0.15 * j)), 3 * z, (1 - q) * 0.9, 0, Math.min(1, q * 5), 18, V); }
+        // dust behind his stride: dry ochre scuffs left at his heels, each fading
+        for (let k = 0; k < 3; k++) { const ph = (clock * 1.6 + k / 3 + (f.id % 5) / 5) % 1, bx = sp > 5 ? -(f.vx || 0) / sp : -face, by = sp > 5 ? -(f.vy || 0) / sp : 0, [X, Y] = P(f.x + bx * (30 + 70 * ph) + (k - 1) * 14, f.y + by * (30 + 70 * ph) + 12);
+          W.draw(c, `wdust_${k % 2}`, X, Y, k, (0.45 + 0.4 * ph) * z, (0.3 + 0.25 * ph) * z, (0.55 + 0.35 * w) * (1 - ph) * veil(V, X, Y)); }
+        continue; }
+      // over: his breath, heavy grey puffs out of his mouth and up, faster as he tires; sweat flung off his brow
+      for (let k = 0; k < 3; k++) { const ph = (clock * (0.9 + 0.6 * w) + k / 3 + (f.id % 7) / 7) % 1, [X, Y] = P(f.x + face * (22 + 40 * ph), f.y, lift + 10 + 50 * ph);
+        W.draw(c, `wcloud_${k % 2}`, X, Y, face * 0.3, (0.22 + 0.3 * ph) * z * face, (0.16 + 0.22 * ph) * z, (0.55 + 0.3 * w) * Math.sin(Math.PI * Math.min(1, ph * 1.3)) * veil(V, X, Y)); }
+      for (let k = 0; k < 3; k++) { const ph = (clock * 1.3 + k / 3 + (f.id % 3) / 3) % 1, sx = (k - 1) * 22, [X, Y] = P(f.x + sx + sx * 0.8 * ph, f.y, lift - 5 + 25 * Math.sin(Math.PI * ph) - 40 * ph * ph);
+        W.draw(c, 'wdrip', X, Y, sx * 0.02, 0.8 * z, 0.8 * z, (0.7 + 0.3 * w) * Math.sin(Math.PI * ph) * veil(V, X, Y)); }
+      if (t0 < 0.6) { const q = t0 / 0.6, [X, Y] = P(f.x + face * 30, f.y, lift + 20); W.draw(c, `wcloud_${f.id % 2}`, X, Y, face * 0.2, (0.35 + 0.5 * q) * z * face, (0.25 + 0.35 * q) * z, 0.85 * (1 - q) * veil(V, X, Y)); }      // the gasp
+    } }
   const foeOf = (G, id) => { const fs = G && G.foes; if (fs && id != null) for (let i = 0; i < fs.length; i++) if (fs[i].id === id) return fs[i]; return null; };
   // ---------------------------------------------------------------- the first stretch's boss patterns
   const BOSS_SIG = { blackWind: 1, fireSnakes: 1, pearlRing: 1, fourStrings: 1, windFire: 1, lunge: 1, qilinRush: 1, qilinReturn: 1 }, sigs = [];
@@ -421,7 +558,7 @@ export function createTreasures(ctx, ink, W = createWonders(), onKick = () => {}
     if (layer === 'ground') { W.draw(c, 'whalo_gold', X, Y, 0, k, k * V.KY, 0.75); if (ev) W.draw(c, 'whalo_gold', X, Y, 0, -k * 1.2, k * 1.2 * V.KY, 0.5);
       if (ev) { const sw = Math.sin(clock * 1.4) * 0.03; W.draw(c, 'wflag', V.sx(h.x - 165), V.sy(h.y - 50), sw, 0.46 * V.z, 0.46 * V.z, 0.95); } return; }   // the banner: over the crowd, and on screen when he is high in the view
     if (ev) for (let j = 0; j < 8; j++) { const b = (j / 8) * TAU + clock * 0.25, Xf = V.sx(h.x + Math.cos(b) * r * 1.05), Yf = V.sy(h.y + Math.sin(b) * r * 1.05) - 16 * V.z; W.draw(c, `wlotus_${j % 2}`, Xf, Yf, 0, 0.7 * V.z, 0.7 * V.z, 0.95 * veil(V, Xf, Yf)); } }
-  function drawGround(V, dt, G) { clock += dt; frame++; if (G) G0 = G; watchCovers(G); watchLanes(G); if (!W.ready) return; const c = ctx; c.save(); c.globalCompositeOperation = 'source-over'; coverGround(c, V); coverOver(c, V, true); silksDraw(c, V, 'ground'); lanesDraw(c, V); thrustsDraw(c, V); hostsDraw(c, V, 'ground');   /* 火尖枪's thrusts with their lanes, under the figures */ generalsDraw(c, V, G, 'ground'); pearlsDraw(c, V, G, 'ground'); lightsGround(c, V); sealsGround(c, V); ropesDraw(c, V, G0); spoilsDraw(c, V, G0, 'ground'); bannerDraw(c, V, G, 'ground'); bannerDraw(c, V, G, 'over'); ringsGround(c, V, G0); lastingDraw(c, V, G0, 'ground'); c.restore(); }
-  function drawOver(V, dt, G) { if (!W.ready) return; const c = ctx, cv = ctx.canvas; covMax = COVER * (cv && cv.width ? cv.width * cv.height : 2880 * 1800); cov = 0; budgetOn = true; c.save(); c.globalCompositeOperation = 'source-over'; coverOver(c, V); silksDraw(c, V, 'over'); blowsDraw(c, V); arrowsDraw(c, V, G); newsDraw(c, V, G); budgetOn = false; sigsDraw(c, V); lastingDraw(c, V, G0, 'over'); statesDraw(c, V, G0); hostsDraw(c, V, 'over'); generalsDraw(c, V, G, 'over'); budgetOn = true; ringsOver(c, V); spoilsDraw(c, V, G0, 'over'); columnsOver(c, V); budgetOn = false; c.restore(); }
+  function drawGround(V, dt, G) { clock += dt; frame++; if (G) G0 = G; watchCovers(G); watchLanes(G); if (!W.ready) return; const c = ctx; c.save(); c.globalCompositeOperation = 'source-over'; coverGround(c, V); coverOver(c, V, true); silksDraw(c, V, 'ground'); lanesDraw(c, V); thrustsDraw(c, V); hostsDraw(c, V, 'ground');   /* 火尖枪's thrusts with their lanes, under the figures */ generalsDraw(c, V, G, 'ground'); pearlsDraw(c, V, G, 'ground'); lightsGround(c, V); sealsGround(c, V); ropesDraw(c, V, G0); spoilsDraw(c, V, G0, 'ground'); wearyDraw(c, V, G0, 'ground'); bannerDraw(c, V, G, 'ground'); bannerDraw(c, V, G, 'over'); ringsGround(c, V, G0); lastingDraw(c, V, G0, 'ground'); c.restore(); }
+  function drawOver(V, dt, G) { if (!W.ready) return; const c = ctx, cv = ctx.canvas; covMax = COVER * (cv && cv.width ? cv.width * cv.height : 2880 * 1800); cov = 0; budgetOn = true; c.save(); c.globalCompositeOperation = 'source-over'; coverOver(c, V); silksDraw(c, V, 'over'); blowsDraw(c, V); arrowsDraw(c, V, G); newsDraw(c, V, G); budgetOn = false; sigsDraw(c, V); lastingDraw(c, V, G0, 'over'); statesDraw(c, V, G0); hostsDraw(c, V, 'over'); generalsDraw(c, V, G, 'over'); budgetOn = true; ringsOver(c, V); spoilsDraw(c, V, G0, 'over'); wearyDraw(c, V, G0, 'over'); columnsOver(c, V); budgetOn = false; c.restore(); }
   return { useTip: (f) => { tipFn = typeof f === 'function' ? f : null; }, onEvent, drawGround, drawOver, has, wonders: W, reset() { prints.length = 0; covers.clear(); columns.length = 0; talismans.length = 0; silks.length = 0; lanes.clear(); thrusts.length = 0; blows.length = 0; news.length = 0; hosts.length = 0; manifests.length = 0; dives.length = 0; sigs.length = 0; tracks.clear(); }, get live() { return covers.size + columns.length + silks.length + lanes.size; } };
 }

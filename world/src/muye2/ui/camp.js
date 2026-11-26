@@ -5,6 +5,7 @@ import {WEAPONS_STANDIN, META_STANDIN} from './camp-data.js';
 import {CODEX} from './codex-data.js';
 import {exportCode, importCode} from './meta-store.js';
 import {BOSS_NAMES, SPOIL_SIGN, nameOf as bossName} from './campaign.js';
+import {spoilPic, spoilMarkHTML} from './spoil-pictures.js';
 import {portrait, portraitsReady} from './portraits.js';
 
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
@@ -73,8 +74,8 @@ export function createCamp({root, sim, store, words, onBegin, onChange}) {
     const e = CODEX[codexKind][codexId], open = seen[codexKind].includes(codexId), n = nameOf(codexKind, codexId);
     const row = (codexKind === 'boss' || codexKind === 'foe' ? sim.BY.foe : sim.BY[codexKind] || {})[codexId] || {};
     const detail = !open ? `<div class="cread closed"><span class="cbig">？</span><p>${t().codexLocked}</p></div>`
-      : `<div class="cread${portrait(codexId) ? ' with-bust' : ''}">${portrait(codexId) ? `<img class="cbust" src="${portrait(codexId)}" alt="" loading="lazy" decoding="async">` : codexKind === 'spoil' ? `<span class="cbig spoil">${esc(SPOIL_SIGN[codexId] || n.zh[0])}</span>` : `<span class="cbig" style="${row.element ? `--pig:${PIGMENT[row.element]}` : ''}">${esc(n.zh[0])}</span>`}<h3>${esc(n.zh)}${lang() === 'zh' ? '' : ` <small>${esc(n.en)}</small>`}</h3>
-        ${row.title ? `<p class="ctitle">${esc(nm(row.title))}</p>` : ''}${codexKind === 'spoil' && row.from ? `<p class="ctitle">${esc(t().spoilFrom(bossName(sim, row.from, lang()).name))}</p><p class="ctext">${esc(nm(row.text))}</p>` : ''}
+      : `<div class="cread${portrait(codexId) ? ' with-bust' : codexKind === 'spoil' && spoilPic(codexId) ? ' with-pic' : ''}">${portrait(codexId) ? `<img class="cbust" src="${portrait(codexId)}" alt="" loading="lazy" decoding="async">` : codexKind === 'spoil' ? (spoilPic(codexId) ? `<span class="cbig spoil pic">${spoilMarkHTML(codexId, esc, false)}</span>` : `<span class="cbig spoil">${esc(SPOIL_SIGN[codexId] || n.zh[0])}</span>`) : `<span class="cbig" style="${row.element ? `--pig:${PIGMENT[row.element]}` : ''}">${esc(n.zh[0])}</span>`}<h3>${esc(n.zh)}${lang() === 'zh' ? '' : ` <small>${esc(n.en)}</small>`}</h3>
+        ${row.title ? `<p class="ctitle">${esc(nm(row.title))}</p>` : ''}${codexKind === 'general' && (seen.form || []).includes(codexId) && row.trueForm && row.trueForm.title ? `<p class="ctitle cform">${esc(t().trueFormOf ? t().trueFormOf(nm(row.trueForm.title)) : nm(row.trueForm.title))}</p>` : ''}${codexKind === 'spoil' && row.from ? `<p class="ctitle">${esc(t().spoilFrom(bossName(sim, row.from, lang()).name))}</p><p class="ctext">${esc(nm(row.text))}</p>` : ''}
         ${e.quote ? `<blockquote lang="zh-Hant">「${esc(e.quote)}」</blockquote><p class="cch">${t().chapter(e.ch)}${e.who ? ` · ${esc(e.who)}` : ''}</p>${lang() === 'zh' ? '' : `<p class="cgloss">${esc(String(e.en || '').replace(/^Gloss:\s*/, ''))}</p>`}` : `<p class="cch">${t().noQuote}</p>`}</div>`;
     return `<div class="panel-head"><h2>${t().codex}</h2><p>${t().codexNote}</p></div><div class="ckinds">${tabs}</div><div class="cbody"><div class="clist">${items}</div>${detail}</div>`;
   }

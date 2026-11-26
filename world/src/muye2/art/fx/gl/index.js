@@ -40,8 +40,8 @@ const BOSS_ELEMENT = { wenzhong: 'metal', zhangguifang: 'metal', moliqing: 'wood
 
 export function createGLFx(ctx, { elementOf = () => 'ink', kick = () => {} } = {}) {
   const post = createPost(ctx), ink = createInk(post), blow = createBlow(post), weather = createWeather(post), voice = createVoice(post);
-  const Q = createQuality(ctx), impact = createImpact(post, Q), omen = createOmen(post, Q), wonders = createWonders(), _warm = wonders.loaded.then(() => ctx.prewarm && ctx.prewarm(wonders.image)), seal = createSeal(ctx, impact, omen, wonders), treasures = createTreasures(ctx, ink, wonders, (a) => kick(a));
-  const gods = createGods(ctx, wonders, { ink, kick: (a) => kick(a), hold: (s) => hard(0, s) });
+  const Q = createQuality(ctx), impact = createImpact(post, Q), omen = createOmen(post, Q), wonders = createWonders(), _warm = wonders.loaded.then(() => ctx.prewarm && ctx.prewarm(wonders.image)), godsSheet = createWonders('gods'), _warmG = godsSheet.loaded.then(() => ctx.prewarm && ctx.prewarm(godsSheet.image)), seal = createSeal(ctx, impact, omen, wonders), treasures = createTreasures(ctx, ink, wonders, (a) => kick(a), godsSheet);
+  const gods = createGods(ctx, wonders, { ink, kick: (a) => kick(a), hold: (s) => hard(0, s), gw: godsSheet });
   ink.quality = Q;
   let zNow = 1, G = null, wx = null, wAmt = 1, wWind = 0, lastBoss = { t: -9, x: 0, y: 0 }, clock = 0, blowsAt = -9, holdUntil = 0;
   const q = new URLSearchParams(globalThis.location ? location.search : ''); if (q.get('fxweather')) wx = q.get('fxweather');   // for review: ?fxweather=snow

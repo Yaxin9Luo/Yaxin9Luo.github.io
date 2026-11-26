@@ -66,7 +66,7 @@ export const KEY_FIGURES = {
   'hero:wuwang-afoot': { file: 'wuwang-afoot', height: 84, side: 'zhou', foot: true, shadow: [18, 4, 0.45], attack: { up: [40, -4], hit: [-30, 2], fol: [-14, 2] } },   // his spear is cut level: the thrust is the arm drawing back then driving forward, the spear kept near 0
   // 显圣 true forms (the general revealed as a god, temple-mural iconography in this hand): apparitions up to 2.6H
   'zhou:yangjian-true': { travel: true, file: 'yangjian-t2', height: 143, side: 'zhou', shadow: [40, 8, 0.35], attack: { up: [-40, 55], hit: [30, 85], fol: [22, 80] } },
-  'zhou:nezha-true': { travel: true, file: 'nezha-t2', height: 124, side: 'zhou', foot: true, hover: 7, shadow: [26, 6, 0.3], attack: { up: [-10, -6], hit: [8, 6], fol: [5, 3] } },
+  'zhou:nezha-true': { travel: true, file: 'nezha-t2', height: 124, side: 'zhou', foot: true, hover: 7, shadow: [26, 6, 0.3], attack: { up: [-14, 0], hit: [12, 0], fol: [6, 0] } },
   'zhou:huangfeihu-true': { travel: true, file: 'huangfeihu-t2', height: 143, side: 'zhou', shadow: [40, 8, 0.35], attack: { up: [-30, 20], hit: [20, 10], fol: [12, 6] } },
   'zhou:leizhenzi-true': { travel: true, file: 'leizhenzi-t2', height: 124, side: 'zhou', foot: true, hover: 19, shadow: [22, 5, 0.25], attack: { up: [-50, 20], hit: [30, 40], fol: [18, 28] } },
   'zhou:dengchanyu-true': { travel: true, file: 'dengchanyu-t2', height: 143, side: 'zhou', shadow: [40, 8, 0.35], attack: { up: [-60, -10], hit: [22, 10], fol: [12, 6] } },
@@ -75,7 +75,8 @@ export const KEY_FIGURES = {
   'zhou:jiangziya-true': { travel: true, file: 'jiangziya-t2', height: 143, side: 'zhou', shadow: [40, 8, 0.35], attack: { up: [-50, -20], hit: [14, 22], fol: [8, 12] } },
   'zhou:huangtianhua-true': { travel: true, drop: ['nail'], file: 'huangtianhua-t2', height: 143, side: 'zhou', shadow: [40, 8, 0.35], attack: { up: [-70, 10], hit: [36, 45], fol: [22, 32] } },
   'zhou:longji-true': { travel: true, file: 'longji-t2', height: 143, side: 'zhou', shadow: [40, 8, 0.35], attack: { up: [-50, -20], hit: [24, 10], fol: [14, 6] } },
-  'hero:wuwang': { file: 'wuwang', height: 112, side: 'zhou', shadow: [26, 6, 0.45], bannerSway: 0.35, motion: true,
+  // the 华盖 over him is not drawn (user, 2026-11-26: an umbrella over his head is ugly and abrupt); chariot canopies stay
+  'hero:wuwang': { file: 'wuwang', drop: ['canopy'], height: 112, side: 'zhou', shadow: [26, 6, 0.45], bannerSway: 0.35, motion: true,
     // the hand's weapon, one part each (w_*); keyframes of shoulder (armU), elbow (armF), the weapon in the hand (w), the torso's lean and the head.
     // Angles add down the arm: the weapon's angle on screen is armU + armF + w (+ torso). ride: the carry at the gallop.
     weapons: {
@@ -89,7 +90,8 @@ export const KEY_FIGURES = {
 
 // drop: part ids not drawn at all (a figure's prop that could be taken for another's mark, e.g. 黄飞虎's 华盖)
 function puppetOf(meta, img, layer, paper, drop) {
-  const parts = meta.parts.filter((p) => p.layer === layer).map((p, i) => {
+  // a dropped part is left out of the puppet itself, so it neither draws nor widens the figure's bounds
+  const parts = meta.parts.filter((p) => p.layer === layer && !(drop && drop.includes(p.id))).map((p, i) => {
     const cv = document.createElement('canvas'); const [x, y, w, h] = p.rect;
     cv.width = w; cv.height = h; const c = cv.getContext('2d'); c.drawImage(img, x, y, w, h, 0, 0, w, h);
     if (paper) { c.globalCompositeOperation = 'multiply'; c.fillStyle = paper; c.fillRect(0, 0, w, h); c.globalCompositeOperation = 'destination-in'; c.drawImage(img, x, y, w, h, 0, 0, w, h); }   // the dye in the paper, as the baked sheets are
@@ -98,7 +100,7 @@ function puppetOf(meta, img, layer, paper, drop) {
   const byId = Object.fromEntries(parts.map((p) => [p.id, p]));
   const depth = (p) => (p.parent ? 1 + depth(byId[p.parent]) : 0);
   parts.sort((a, b) => depth(a) - depth(b));
-  const order = parts.filter((p) => !(drop && drop.includes(p.id))).sort((a, b) => a.z - b.z);
+  const order = parts.slice().sort((a, b) => a.z - b.z);
   return { parts, byId, order, feet: (meta.feet || []).filter((f) => byId[f.id]) };
 }
 
@@ -219,7 +221,7 @@ export async function loadKeyFigures(keys = Object.keys(KEY_FIGURES), { base = B
     },
     /** For the art module: the hero (武王) by his rules state; phase is his stride (0..1); edge > 0 draws his cinnabar hit edge behind him. */
     drawHero(ctx, key, h, X, Y, z, phase, now, edge = 0, edgeColour = '#B8321F', grow = 0.07, shadow = true, o = {}) {
-      const fig = figs[key], S = fig.states, t = h.stateT || 0, flip = o.face ?? (h.facing < 0 ? -1 : 1);
+      const fig = figs[key], S = fig.states, t = h.stateT || 0, flip = legible(o.face ?? (h.facing < 0 ? -1 : 1));
       let P;
       if (fig.F.motion) P = heroPose(fig, h, phase, now, o);
       else {
@@ -266,7 +268,7 @@ export async function loadKeyFigures(keys = Object.keys(KEY_FIGURES), { base = B
         const r2 = strikes.get(u.id); if (r2) { let sk = now - r2[0]; const d = sk - r2[1];
           if (sk >= 0.7 && r2[1] && d > -0.22 && d < 0.35) { const f = d < 0 ? 0.6 * (d + 0.22) / 0.22 : d < 0.15 ? 0.6 : 0.6 * Math.max(0, 1 - (d - 0.15) / 0.2); sk = -0.22 + 0.25 * f; }
           o = { ...o, strike: sk }; } }
-      const fig = figs[key], P = unitPose(fig, u, now, x, y, o), st = u.state === 'dead' ? 'fall' : '', sh = shadow && fig.F.shadow, flip = face ?? (u.facing < 0 ? -1 : 1);
+      const fig = figs[key], P = unitPose(fig, u, now, x, y, o), st = u.state === 'dead' ? 'fall' : '', sh = shadow && fig.F.shadow, flip = legible(face ?? (u.facing < 0 ? -1 : 1));
       if (sh && st !== 'fall') { const g = ctx.createRadialGradient(0, 0, 0, 0, 0, 1); g.addColorStop(0, `rgba(30,26,22,${sh[2]})`); g.addColorStop(0.6, `rgba(30,26,22,${sh[2] * 0.6})`); g.addColorStop(1, 'rgba(30,26,22,0)');
         ctx.setTransform(sh[0] * z, 0, 0, sh[1] * z, X, Y + z); ctx.globalAlpha = alpha; ctx.fillStyle = g; ctx.beginPath(); ctx.arc(0, 0, 1, 0, TAU); ctx.fill(); }
       const box = drawFigure(ctx, fig, P, X, Y, fig.scale * z, flip, alpha); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 1; return box;
@@ -518,6 +520,9 @@ function drawPup(ctx, pup, base, pose) {
   return M;
 }
 
+// the eased turn (art/index.js faceOf, -1..1 over 0.12 s) is drawn never narrower than 0.6 of the figure: it squeezes a little,
+// then flips at the middle, so no frame shows him edge-on as a sliver
+const legible = (f) => (f < 0 ? -1 : 1) * (0.6 + 0.4 * Math.min(1, Math.abs(f)));
 function drawFigure(ctx, fig, P, x, y, k, flip, alpha) {
   if (fig.foot) {   // on foot: feet on the ground; lying, the lowest edge of any part on the ground (a little sunk, as cloth lies)
     const R = P.rider, drop = R.$lie ? lowestAll(fig.rider, R) - 6 : lowest(fig.rider, R) - (R.$bob || 0);

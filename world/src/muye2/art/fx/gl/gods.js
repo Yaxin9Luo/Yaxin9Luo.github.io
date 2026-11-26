@@ -26,9 +26,9 @@ const ease = (t) => (t <= 0 ? 0 : t >= 1 ? 1 : t * t * (3 - 2 * t)), clamp = (t)
 const HALO = { fire: 'whalo_fire', water: 'whalo_water', metal: 'whalo_gold', earth: 'whalo_gold', wood: 'whalo_gold' };
 const EL = { nezha: 'fire', yangjian: 'metal', leizhenzi: 'wood', tuxingsun: 'earth', dengchanyu: 'water', huangfeihu: 'earth', jiangziya: 'water', zhenglun: 'metal', longji: 'water', huangtianhua: 'fire' };
 
-export function createGods(ctx, W = createWonders(), { ink = null, kick = () => {}, hold = () => {} } = {}) {
+export function createGods(ctx, W = createWonders(), { ink = null, kick = () => {}, hold = () => {}, gw = null } = {}) {
   // the gods' sheet (gen/gods.cells.mjs) beside the wonders: a cell whose name starts with 'g' comes from it
-  const W0 = W, GW = createWonders('gods'); GW.loaded.then(() => ctx.prewarm && ctx.prewarm(GW.image));
+  const W0 = W, GW = gw || createWonders('gods'); if (!gw) GW.loaded.then(() => ctx.prewarm && ctx.prewarm(GW.image));      // the gods' brush sheet, shared with the treasures (index.js)
   const sheet = (n) => (n.charCodeAt(0) === 103 ? GW : W0);
   // 泰山 (gen/tai.gen.mjs): a picture of its own, painted with the field's ink-wash engine; its foot sits at TAI_FOOT of its height
   let TAI = null; const TAI_FOOT = 868 / 896;

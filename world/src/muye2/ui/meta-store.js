@@ -4,7 +4,7 @@
 // An export code carries the same record to another browser.
 
 export const KEY = 'muye.meta', VERSION = 1;
-const KINDS = ['treasure', 'art', 'troop', 'general', 'formation', 'weapon', 'boss', 'foe', 'spoil'];   // 'spoil' added 2026-11-25: an older record reads it as none seen
+const KINDS = ['treasure', 'art', 'troop', 'general', 'formation', 'weapon', 'boss', 'foe', 'spoil', 'form'];   // 'spoil' added 2026-11-25, 'form' (generals seen in true form) 2026-11-26: an older record reads them as none seen
 const STATS = ['hp', 'speed', 'gather', 'spirit', 'merit', 'chest', 'rerolls', 'banishes', 'dashCd', 'startLevel'];
 
 export function fresh() {

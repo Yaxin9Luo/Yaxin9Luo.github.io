@@ -32,7 +32,7 @@ export const generals = [
       T('He hits harder and stands more.', '他打得更重，也更耐打。'),
       T('He thrusts at two foes at once.', '他同时刺向两个敌人。'),
     ],
-    trueForm: {id: 'threeHeadsEightArms', great: true, name: T('Three Heads, Eight Arms', '三头八臂'), count: 4, skillCd: 2.6, radiusUp: 1.3, full: true,
+    trueForm: {id: 'threeHeadsEightArms', great: true, name: T('Three Heads, Eight Arms', '三头八臂'), title: T('Great God of the Three Altars and the Sea Assembly', '三坛海会大神'), count: 4, skillCd: 2.6, radiusUp: 1.3, full: true,
       text: T('After the three fire dates he shows three heads and eight arms: every arm a weapon, spear thrusts on all sides, the sash a full circle.', '吃下三枚火枣后现出三头八臂：每只手一件兵器，四面出枪，混天绫甩成整圈。')},
   }),
   general({
@@ -48,7 +48,7 @@ export const generals = [
       T('He hits harder and stands more.', '他打得更重，也更耐打。'),
       T('The hound hunts more often.', '哮天犬出击更勤。'),
     ],
-    trueForm: {id: 'seventyTwoChanges', name: T('The Seventy-two Changes', '七十二变'), count: 6, eliteMult: 2.6, skillCd: 1.6,
+    trueForm: {id: 'seventyTwoChanges', name: T('The Seventy-two Changes', '七十二变'), title: T('True Lord of Clear Source and Wondrous Way', '清源妙道真君'), count: 6, eliteMult: 2.6, skillCd: 1.6,
       text: T('He turns into whatever beats his foe, so elites take far more from his blade; the hound becomes a pack of six ink hounds.', '他变作克制对手之物，精英在他刀下受伤大增；哮天犬化作六条墨犬成群扑出。')},
   }),
   general({
@@ -64,7 +64,7 @@ export const generals = [
       T('He hits harder and stands more.', '他打得更重，也更耐打。'),
       T('The dive is broader.', '俯冲的一线更宽。'),
     ],
-    trueForm: {id: 'stormWings', great: true, name: T('Storm on the Wing', '风雷随身'), storm: {radius: 150, dps: 34}, skillCd: 4,
+    trueForm: {id: 'stormWings', great: true, name: T('Storm on the Wing', '风雷随身'), title: T('True Lord Who Guards the Law with Wind and Thunder', '风雷护法真君'), /* coined for the game (the user, 2026-11-26): in no old text; the attested alternative is 破纣凶神, 武王伐纣平话 vol. 1 */ storm: {radius: 150, dps: 34}, skillCd: 4,
       text: T('A storm goes with him: a cloud that moves where he flies and strikes everything under it.', '风雷随身：一团雷云跟着他移动，击打云下的一切。')},
   }),
   general({
@@ -80,7 +80,7 @@ export const generals = [
       T('He hits harder and stands more.', '他打得更重，也更耐打。'),
       T('He binds more often.', '他出绳更勤。'),
     ],
-    trueForm: {id: 'earthOpens', great: true, name: T('The Earth Opens', '地裂'), quake: {count: 3, radius: 125, dmg: 90, hold: 2.5}, skillCd: 5,
+    trueForm: {id: 'earthOpens', great: true, name: T('The Earth Opens', '地裂'), title: T('Star of the Earth Palace', '土府星'), quake: {count: 3, radius: 125, dmg: 90, hold: 2.5}, skillCd: 5,
       text: T('When he binds, the ground opens under three whole groups and holds everyone in it.', '他出绳时，三处敌群脚下的大地同时裂开，把其中的敌人全部陷住。')},
   }),
   general({
@@ -96,7 +96,7 @@ export const generals = [
       T('She hits harder and stands more.', '她打得更重，也更耐打。'),
       T('She throws five at once more often.', '她连掷五石更勤。'),
     ],
-    trueForm: {id: 'fiveLights', great: true, name: T('The Five Lights', '五光齐放'), blind: {angle: 130, radius: 440, dmg: 46, stun: 2}, skillCd: 7,
+    trueForm: {id: 'fiveLights', great: true, name: T('The Five Lights', '五光齐放'), title: T('Star of the Six Unions', '六合星'), blind: {angle: 130, radius: 440, dmg: 46, stun: 2}, skillCd: 7,
       text: T('The stones blaze together: a fan of five lights that blinds the whole side the foes are thickest on.', '五石齐放光华：一片扇形的五色光，让敌人最密的整整一侧目不能视。')},
   }),
   general({
@@ -113,7 +113,7 @@ export const generals = [
       T('His presence reaches further and the squads near him take less.', '他的威势传得更远，身边兵阵受伤更少。'),
       T('The squads near him hit harder still.', '他身边的兵阵打得更重。'),
     ],
-    trueForm: {id: 'kingWucheng', great: true, name: T('Prince Wucheng', '武成王'), aura: {radius: 5000, dmg: .35, guard: .35}, back: true,
+    trueForm: {id: 'kingWucheng', great: true, name: T('Prince Wucheng', '武成王'), title: T('Great Emperor of the Eastern Peak, Taishan, Equal to Heaven, Benevolent and Holy', '东岳泰山天齐仁圣大帝'), aura: {radius: 5000, dmg: .35, guard: .35}, back: true,
       text: T('As Prince Wucheng his presence has no edge: every squad on the field hits harder and takes less, and the ox charges out and back down the same lane.', '武成王亲临：威势遍及全军，每一队都打得更重、受伤更少；神牛沿同一条道冲出又冲回。')},
   }),
   general({
@@ -133,7 +133,7 @@ export const generals = [
       T('His thunder falls harder and he stands more.', '他的雷法更重，也更耐打。'),
       T('The Nailing Book of Seven Arrows: his command also nails the named foe with the most health, and for 7 s every blow on him is 30% harder.', '钉头七箭书：号令时一并钉住血最多的名将，7 秒内他所受的每一击都重三成。'),
     ],
-    trueForm: {id: 'marshal', name: T('Invested at the Golden Terrace', '金台拜将'), allSkills: true, nail: {expose: .4, time: 7, range: 800}, skillCd: 7,
+    trueForm: {id: 'marshal', name: T('Invested at the Golden Terrace', '金台拜将'), title: T('Grand Marshal of the Heavenly Treasure Who Sweeps Away Chengtang', '扫荡成汤天宝大元帅'), /* his own title at the golden terrace, 封神演义 ch. 67 */ allSkills: true, nail: {expose: .4, time: 7, range: 800}, skillCd: 7,
       text: T('Invested as marshal at the golden terrace: his command fires every squad\'s skill at once, and the nail makes every blow 40% harder.', '金台拜将，执掌帅印：一声号令，所有兵阵的技能同时发动；七箭书让名将所受每一击重四成。')},
   }),
   general({
@@ -150,7 +150,7 @@ export const generals = [
       T('He hits harder and stands more.', '他打得更重，也更耐打。'),
       T('The light spreads wider.', '白光散得更宽。'),
     ],
-    trueForm: {id: 'soulLight', great: true, name: T('The Soul-taking Light', '白光摄魄'), full: true, capture: .5,
+    trueForm: {id: 'soulLight', great: true, name: T('The Soul-taking Light', '白光摄魄'), title: T('Heng, the Snorting General', '哼将'), full: true, capture: .5,
       text: T('The light goes out all round him, and takes any common foe with less than half its health.', '白光向四面八方喷出，生命不足一半的寻常敌兵尽数被擒。')},
   }),
   general({
@@ -168,7 +168,7 @@ export const generals = [
       T('She strikes harder and stands more.', '她打得更重，也更耐打。'),
       T('The vase draws from further away.', '四海瓶收得更远。'),
     ],
-    trueForm: {id: 'allSeas', great: true, name: T('All the Four Seas in the Vase', '四海归瓶'), all: true, pour: {dmg: 40, radius: 80},
+    trueForm: {id: 'allSeas', great: true, name: T('All the Four Seas in the Vase', '四海归瓶'), title: T('Star of the Red Phoenix', '红鸾星'), all: true, pour: {dmg: 40, radius: 80},
       text: T('The vase swallows every Shang shot on the field and pours it back as water on the densest groups.', '四海瓶收尽满场商军的箭与火，再化作大水倾向最密的敌群。')},
   }),
   general({
@@ -185,7 +185,7 @@ export const generals = [
       T('He hits harder and stands more.', '他打得更重，也更耐打。'),
       T('He throws the nail more often.', '他祭钉更勤。'),
     ],
-    trueForm: {id: 'piercingLight', name: T('Light Through the Heart', '华光穿心'), count: 3, share: .05,
+    trueForm: {id: 'piercingLight', name: T('Light Through the Heart', '华光穿心'), title: T('Duke Bingling, God of the Three Mountains', '三山正神炳灵公'), count: 3, share: .05,
       text: T('Three nails in a row, each taking 5% of the greatest health.', '连发三钉，每一钉取走最大生命的 5%。')},
   }),
 ];

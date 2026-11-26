@@ -92,7 +92,7 @@ export function describe(kind, id, level) {
   if (kind === 'merge') return {name: row.name, text: row.text, element: null, parts: row.parts};
   if (kind === 'spoil') return {name: row.name, text: row.text, element: null, from: row.from, tier: row.tier};
   if (kind === 'weapon') return {name: row.name, text: row.levels[level - 1].text, element: null, sign: row.sign};
-  if (kind === 'general' && level > MAX.general) return {name: row.trueForm.name, text: row.trueForm.text, element: row.element};
+  if (kind === 'general' && level > MAX.general) return {name: row.trueForm.title, feat: row.trueForm.name, text: row.trueForm.text, element: row.element};   // in his true form a general is named by his divine title; `feat` is the true form's own name
   if (kind === 'troop') {
     // a squad's slip also says its rank; level 9 is the blessed host
     const blessed = level > MAX.troop, rank = rankOf(Math.min(level, MAX.troop), blessed);
