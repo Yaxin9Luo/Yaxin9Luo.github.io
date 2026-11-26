@@ -74,7 +74,11 @@ export async function loadArt({ onProgress = () => {}, puppets, fx: wantFx = tru
   // the key figures from generated art: a unit whose kind has one is drawn live from its jointed parts, not from a baked sheet
   // (a dozen big figures of twenty frames each would pass the sprite budget). Without the folder, the code puppets stand in.
   let live = null;
-  if (puppets !== 'fallback' && KEYFIGS['./puppets/imagegen/figures.js']) { try { live = await (await KEYFIGS['./puppets/imagegen/figures.js']()).loadKeyFigures(undefined, { paper: '#EFE7D6' }); } catch (e) { console.warn('muye art: the key figures failed to load, using the code puppets', e); } }
+  let figureKey = null;   // generalFigureKey from the same module
+  if (puppets !== 'fallback' && KEYFIGS['./puppets/imagegen/figures.js']) { try { const KF = await KEYFIGS['./puppets/imagegen/figures.js'](); figureKey = KF.generalFigureKey; live = await KF.loadKeyFigures(undefined, { paper: '#EFE7D6' }); } catch (e) { console.warn('muye art: the key figures failed to load, using the code puppets', e); } }
+  // key figures that failed at load (a dropped request): tried again a few seconds into the run, up to four times; what comes in
+  // is uploaded ahead of its first draw (liveWarm reset)
+  if (live && live.failed && live.failed().length) { const again = (n) => setTimeout(async () => { if (await live.retry()) liveWarm = false; if (live.failed().length && n < 3) again(n + 1); }, 4000 * (n + 1)); again(0); }
   const fxShots = (() => { const k = fx && fx.shotKinds; if (!k) return FX_SHOTS; const o = {}; for (const id of (k instanceof Set || Array.isArray(k) ? k : Object.keys(k))) o[id] = 1; return o; })();
   const ground = await loadGround(tick, seed), KY = ground.KY, base = done, PUP = source.PUPPETS;
   const sprites = await buildSprites(source, { dpr: bakeDpr, budgetMB, core: (k) => !!CORE[k] && !(k === 'hero' && live && live.has('hero:wuwang')),   /* the hero is the live 武王: his code puppet is cut only if he is ever unhorsed (ensure, below), not 69 MB at load */ shadowOf: (k, v) => (PUP[k].noShadow && PUP[k].noShadow.includes(v) ? false : k === 'hero' && !pocket ? { rx: 66, ry: 15, a: 0.8, hard: 0.5 } : SHADOW[k] || (k.startsWith('zhou:') && PUP[k].shadow ? { ...DISC, rx: Math.max(DISC.rx, PUP[k].shadow[0] * 1.15), ry: Math.max(DISC.ry, PUP[k].shadow[1] * 1.35) } : null)), toneOf: (k) => (pocket && MASS_TONE[k] && !PUP[k].generated ? TONE : null), sizeOf: (k) => SIZE[k] || 1, onProgress: (a, b) => { done = base + Math.round((a / b) * (total - base)); onProgress(Math.min(done, total - 1), total); } });
@@ -140,7 +144,10 @@ export async function loadArt({ onProgress = () => {}, puppets, fx: wantFx = tru
   // retry every 0.12 s and the arm must not keep winding up), and his eased facing
   // a general's key figure: his 显圣 true form when he has one ('zhou:<id>-true'), else the ordinary figure only while not in true form
   // (a true form with no figure yet keeps the code puppet's 法相)
-  const generalKey = (u) => (u.kind !== 'general' ? '' : u.trueForm ? (live && live.has('zhou:' + u.general + '-true') ? 'zhou:' + u.general + '-true' : '') : 'zhou:' + u.general);
+  // a general's figure is never the code cartoon while the generated art is in use (puppets/imagegen/figures.js generalFigureKey):
+  // his true form, else his own generated figure, else NONE (nothing drawn until it comes in); '' only without key figures
+  const NONE = '-';
+  const generalKey = (u) => (live && figureKey ? figureKey(u, live.has, live.known) : '');
   // the hero travelling under the earth (spoil earthTravel, s.under while his spring lasts): he is not drawn
   // the player's mark on the ground (F9, read in grey): an ink ring brushed round where he stands, open at the back, with a
   // cinnabar seal carved 周 at its front; nothing else on the field has it. Painted once (RES canvas px a world px), world size RX.
@@ -269,7 +276,7 @@ export async function loadArt({ onProgress = () => {}, puppets, fx: wantFx = tru
         const save = heroPhase, f = heroFrame(S, u, 0); heroPhase = save; box = spriteBox(S, f, X, Y, u.facing < 0 ? -1 : 1); sprite(ctx, S, f, X, Y, u.facing < 0 ? -1 : 1, 1, 0); }
     } else {
       const ally = (g.allies || []).includes(u);
-      if (live) { const lk = ally ? generalKey(u) : 'shang:' + u.kind;
+      if (live) { const lk = ally ? generalKey(u) : 'shang:' + u.kind; if (lk === NONE) return null;
         if (lk && live.has(lk)) box = live.drawUnit(ctx, lk, u, X, Y, z, now, x, y, 1, false, faceOf(u, 0), { warn: u.state === 'windup' ? warns.get(u.id) : null }); }
       if (!box) { keyFor(u, ally); let key = vKey, S = PUP[key] ? sprites.get(key, vVar) : null;
         if (!S) { key = !ally ? (u.elite && PUP['shang:moliqing'] ? 'shang:moliqing' : 'shang:spear') : 'zhou:spears'; S = sprites.get(key, PUP[key] && PUP[key].tiers ? '1' : ''); }
@@ -364,7 +371,8 @@ export async function loadArt({ onProgress = () => {}, puppets, fx: wantFx = tru
       for (const e of (game.build && game.build.troops) || []) levels[e.id] = e.level || 1;
       for (let i = 0; i < order.length; i++) { const e = order[i], u = e.ref;
         if (e.type === P_FOE || e.type === P_ALLY) { if (u.state === 'away' || u.state === 'under') continue;                         // a general withdrawn, or gone under the ground: nothing stands there
-          if (live) { const lk = e.type === P_ALLY ? generalKey(u) : 'shang:' + u.kind;      // a general in his true form keeps the code puppet's 法相 for now
+          if (live) { const lk = e.type === P_ALLY ? generalKey(u) : 'shang:' + u.kind;
+            if (lk === NONE) continue;
             if (lk && live.has(lk)) { const x = u.px + (u.x - u.px) * alpha, y = u.py + (u.y - u.py) * alpha;
               const bx = live.drawUnit(ctx, lk, u, sx(x), sy(y), z, now, x, y, u.state === 'dead' ? clamp((0.62 - u.stateT) / 0.3) : 1, true, faceOf(u, dt), { warn: u.state === 'windup' ? warns.get(u.id) : null });
               if (DC) { const r = DC.kinds['live:' + lk] || (DC.kinds['live:' + lk] = { drawn: 0, generated: 0, tall: 0, standIn: 0 }); r.drawn++; r.generated++;   // live key figures: drawn from their generated parts; tall when the drawn box stands above a shadow

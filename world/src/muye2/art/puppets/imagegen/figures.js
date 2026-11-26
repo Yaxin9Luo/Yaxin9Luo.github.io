@@ -181,12 +181,25 @@ const statesFor = (F) => {
 };
 const STATES = statesFor({});
 
+/** Which key figure draws a general (art/index.js): his true form's figure when he is in it and it has loaded, else his own
+ *  generated figure, else '-' (draw nothing: the figure is known but not in yet, after a failed load and while it is retried),
+ *  never the code cartoon while generated art is in use; '' when there are no key figures (the code puppets stand in).
+ *  has(key): loaded; known(key): this folder has it. */
+export function generalFigureKey(u, has, known) {
+  if (!u || u.kind !== 'general' || !has) return '';
+  const t = 'zhou:' + u.general + '-true', b = 'zhou:' + u.general;
+  if (u.trueForm && has(t)) return t;
+  if (has(b)) return b;
+  return known && (known(t) || known(b)) ? '-' : '';
+}
+
 export async function loadKeyFigures(keys = Object.keys(KEY_FIGURES), { base = BASE, suffix = '', paper = null, dev = (typeof devicePixelRatio === 'number' ? devicePixelRatio : 1) * 1.25 } = {}) {   // dev: device px per game px at the closest zoom the camera uses (dpr x 1.25)   // base/suffix: a review copy at another resolution; paper: '#EFE7D6' multiplies the parts into the paper at load (the game; the review sheets do it per layer)
   const figs = {};
   if (/[?&]drawcheck=nolive/.test((globalThis.location && location.search) || '')) keys = keys.filter((k) => k.startsWith('hero:'));   // the draw check's own test: no live key figure but the hero
-  await Promise.all(keys.map(async (key) => { try {   // one figure's missing or broken atlas leaves that figure to the code puppet, never the others
-    const F = KEY_FIGURES[key], meta = await (await fetch(base + F.file + suffix + '.json')).json();
-    const img = new Image(); img.src = base + F.file + suffix + '.webp'; await img.decode();
+  // one figure: its atlas fetched and cut; n > 0 is a retry (the query keeps a cached broken answer out)
+  async function loadOne(key, n = 0) {
+    const F = KEY_FIGURES[key], q = n ? '?r=' + n : '', res = await fetch(base + F.file + suffix + '.json' + q); if (!res.ok) throw new Error('json ' + res.status); const meta = await res.json();
+    const img = new Image(); img.src = base + F.file + suffix + '.webp' + q; await img.decode();
     const mount = puppetOf(meta, img, 'mount', paper, F.drop), rider = puppetOf(meta, img, 'rider', paper, F.drop);
     // measure: rider's head top above the ground in the idle pose, to set the game scale
     const fig = { F, meta, mount, rider, seat: meta.seat, scale: 1, states: statesFor(F), foot: !!F.foot };
@@ -194,19 +207,31 @@ export async function loadKeyFigures(keys = Object.keys(KEY_FIGURES), { base = B
     fig.scale = F.height / (g - top);
     sharpen(fig, dev);
     for (const pup of [fig.mount, fig.rider]) for (const p of pup.parts) { p.uid = UID++; p.skin = skinOf(p); }   // after sharpen: uv in the final canvas px
-    figs[key] = fig;
-  } catch (e) { console.warn('key figure ' + key + ' not loaded: ' + (e && e.message)); } }));
+    return fig;
+  }
+  // a dropped request or a failed decode is tried again (a figure that never loads leaves only that figure without its art,
+  // and art/index.js then draws a general's other generated form or nothing, never the code cartoon; tester 2026-11-26)
+  const failed = new Set(), wait = (ms) => new Promise((r) => setTimeout(r, ms));
+  async function tryLoad(key, tries, from = 0) { for (let n = from; n < from + tries; n++) { try { if (n > from) await wait(n === from + 1 ? 400 : 1500); figs[key] = await loadOne(key, n); failed.delete(key); return true; } catch (e) { if (n === from + tries - 1) { failed.add(key); console.warn('key figure ' + key + ' not loaded (' + (n + 1) + ' tries): ' + (e && e.message)); } } } return false; }
+  await Promise.all(keys.map((key) => tryLoad(key, 3)));
   const TAU = Math.PI * 2, frac = (v) => v - Math.floor(v);
   const seen = new Map();
   const lastSt = new Map(), strikes = new Map();
   const lastPos = new Map();   // unit id -> [x, y, time, smoothed speed]   // unit id -> [state, time it left a wind-up]: a named foe's pattern ends its wind-up with no 'attack' state, so the blow is played here   // unit id -> 'under' while it is under the earth, then the time it came up
   const queue = Object.values(figs).flatMap((f) => [...f.mount.parts, ...f.rider.parts].map((p) => p.cv));
+  let retries = 0;
   return {
     /** Upload part images to a GL context ahead of need, at most n a call (ctx.prewarm from art/render/glctx.js); true when all are done. */
     /** Upload one figure's part images ahead of its arrival (art.warm(kind) from the page, ~25 s before a boss comes): n a call; true when done. */
     warm(ctx, key, n = 24) { const f = figs[key]; if (!f || !ctx || !ctx.prewarm) return true; f._w = f._w || [...f.mount.parts, ...f.rider.parts].map((p) => p.cv); for (let i = 0; i < n && f._w.length; i++) ctx.prewarm(f._w.pop()); return !f._w.length; },
     prewarm(ctx, n = 12) { if (!ctx || !ctx.prewarm) return true; for (let i = 0; i < n && queue.length; i++) ctx.prewarm(queue.pop()); return !queue.length; },
     figs, states: STATES, has: (key) => !!figs[key],
+    /** a figure this folder has (loaded or still to come): the page never draws a code puppet in its place */
+    known: (key) => keys.includes(key),
+    /** the figures that failed at load (after their retries) */
+    failed: () => [...failed],
+    /** try the failed figures again, a few seconds into the run; resolves to how many came in (their parts join the warm-up queue) */
+    async retry() { let got = 0; for (const key of [...failed]) if (await tryLoad(key, 2, 10 + (retries++) * 2)) { got++; const f = figs[key]; for (const p of [...f.mount.parts, ...f.rider.parts]) queue.push(p.cv); } return got; },
     /** For the art module: which frame a unit of the rules shows. Its states: walk, idle, windup, attack, skill, charge, stun, dead. */
     pick(key, u, now, x, y) {
       const st = u.state, t = u.stateT || 0, S = figs[key].states;
