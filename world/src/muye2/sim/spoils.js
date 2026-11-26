@@ -39,7 +39,7 @@ export function bigPayoff(g, x, y) {
   return null;
 }
 /** A big boss's payoff when none is ready: the furthest treasure evolves, else the furthest squad is blessed, else a general's true form. */
-function forcePayoff(g, x, y) {
+export function forcePayoff(g, x, y) {
   const b = g.build, far = (list, max) => list.reduce((best, e) => !best || e.level / max > best.level / max ? e : best, null);
   const t = far(b.treasures.filter(e => !e.evolved && !e.merged), MAX.treasure);
   if (t) {
