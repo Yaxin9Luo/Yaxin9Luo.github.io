@@ -48,13 +48,13 @@ export const SCHEDULE = {
   scouts: {from: 125, until: 295, every: 18, faster: {from: 175, every: 9}, most: 2, hp: .6, dmg: .33, xp: .25},   // never more than `most` alive
   // an encirclement: a full ring of one kind closes in from every side at once
   rings: [{t: 170, kind: 'spear', count: 30}, {t: 300, kind: 'axe', count: 24}, {t: 390, kind: 'spear', count: 44}, {t: 510, kind: 'axe', count: 56}, {t: 560, kind: 'shield', count: 30}],
-  early: {until: 100, dmg: .35},   // the mass strikes at this share of its damage at 0:00, rising to all of it by `until`
+  early: {until: 240, dmg: .35},  /* until was 100; 240 since the ×1.2 of TIERS (2026-11-26), so a careless first run still lasts 3:30 */   // the mass strikes at this share of its damage at 0:00, rising to all of it by `until`
   // the rage ("the longer, the harder"): from `after` s after 纣王 arrives (`until` s after the boss that ends a
   // one-stretch run), every Shang blow is `dmg` harder with each minute, and a minute later by as much again for every
   // minute beyond it; from that minute every foe also moves `speed` faster with each minute: no run outlasts it.
   // `at`: and from this clock time whatever has happened, so that a run whose last boss is never killed ends too.
   late: {after: 240, until: 60, at: 2400, dmg: 1.5, speed: 1.2},
-  dmg: .08,            // the damage of Shang blows and shots grows by this share every minute (their health is `hp` in the rows above)
+  dmg: .065,           // the damage of Shang blows and shots grows by this share every minute (their health is `hp` in the rows above); .08 until 2026-11-26, when TIERS' ×1.2 came in (B, SPEC-CAMPAIGN 2.8b)
   cap: 450,            // never more of the mass than this alive (each wave's `alive` keeps stretch one at 300; a recent computer is the baseline, 2026-11-25)
 };
 // The whole run as data (contract: SPEC-CAMPAIGN.md 1.1). Small slots: `t` and what his health is multiplied by;
@@ -104,7 +104,7 @@ export const LANDMARKS = {
   near: 700, far: 2300, apart: 500,   // from the hero when the scene begins, and from each other
 };
 // Difficulty tiers (contract 1.6): what the Shang's health and harm are multiplied by. B's merit reads `merit`.
-export const TIERS = [{hp: 1, dmg: 1, merit: 1}, {hp: 1.35, dmg: 1.2, merit: 1.5}, {hp: 1.8, dmg: 1.4, merit: 2.2}];
+export const TIERS = [{hp: 1, dmg: 1.2, merit: 1}, {hp: 1.35, dmg: 1.44, merit: 1.5}, {hp: 1.8, dmg: 1.68, merit: 2.2}];   // dmg ×1.2 in every tier, 2026-11-26 (B, SPEC-CAMPAIGN 2.8b): the whole run to plan; was 1, 1.2, 1.4
 
 export const SPAWN = {near: 760, far: 860, clump: 6, spread: 90, every: .5,
   // the Shang are already on the field when the run begins, in four loose rings: something happens at once and keeps happening

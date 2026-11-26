@@ -34,16 +34,16 @@ export const treasures = [
   },
   {
     id: 'sash', element: 'water', name: T('Armillary Sash', '混天绫'), shape: 'arc',
-    base: {cd: 1.7, dmg: 20, angle: 120, radius: 165, push: 70},
+    base: {cd: 1.7, dmg: 22, angle: 120, radius: 165, push: 70},
     levels: [
       {text: T('A long sash whips an arc toward the nearest foes and pushes them back.', '长绫朝最近的敌人甩出一道弧，并把他们推开。')},
-      {dmg: 26, radius: 172, text: T('A longer sash that hits for 26 instead of 20.', '长绫更长，伤害由 20 升到 26。')},
+      {dmg: 28, radius: 172, text: T('A longer sash that hits for 28 instead of 22.', '长绫更长，伤害由 22 升到 28。')},
       {angle: 160, radius: 180, text: T('A wider and longer arc.', '弧更宽，绫更长。')},
-      {dmg: 35, push: 90, angle: 175, text: T('Nearly a half circle; hits for 35 and pushes further.', '将近半圈；伤害升到 35，推得更远。')},
+      {dmg: 38, push: 90, angle: 175, text: T('Nearly a half circle; hits for 38 and pushes further.', '将近半圈；伤害升到 38，推得更远。')},
       {cd: 1.4, radius: 190, text: T('Longer, and whips more often.', '更长，甩得更勤。')},
-      {dmg: 47, angle: 200, radius: 200, text: T('More than a half circle, longer, and 47 damage.', '超过半圈，更长，伤害升到 47。')},
+      {dmg: 51, angle: 200, radius: 200, text: T('More than a half circle, longer, and 51 damage.', '超过半圈，更长，伤害升到 51。')},
     ],
-    evolved: {id: 'riverTurner', name: T('River-turning Wave', '翻江'), dmg: 44, angle: 360, radius: 230, push: 150, span: .35,
+    evolved: {id: 'riverTurner', name: T('River-turning Wave', '翻江'), dmg: 48, angle: 360, radius: 230, push: 150, span: .35,
       text: T('The arc becomes a full circle of wave that throws everything round you far back.', '弧变成一整圈浪，把四周的敌人远远掀开。')},
   },
   {
@@ -150,16 +150,16 @@ export const treasures = [
   {
     // 五火七禽扇 (49): 道德真君's fan of five fires, 「空中火、石中火、木中火、三昧火、人間火」; one fanning and a man is ash
     id: 'fan', element: 'fire', name: T('Fan of Five Fires', '五火七禽扇'), shape: 'arc', opening: false, ch: [49],   // weak at level 1: a fan-only run survived 8:02 (median)
-    base: {cd: 2.2, dmg: 36, angle: 60, radius: 220, push: 0, burnDps: 10, burnLife: 2},
+    base: {cd: 2.2, dmg: 40, angle: 60, radius: 220, push: 0, burnDps: 10, burnLife: 2},
     levels: [
       {text: T('A cone of fire is fanned toward the nearest foes and leaves the ground burning along it.', '向最近的敌人扇出一片锥形火焰，所过之地燃烧一阵。')},
-      {dmg: 48, radius: 235, text: T('Hotter: 48 instead of 36.', '火更旺，伤害由 36 升到 48。')},
+      {dmg: 53, radius: 235, text: T('Hotter: 53 instead of 40.', '火更旺，伤害由 40 升到 53。')},
       {angle: 75, radius: 250, text: T('A wider and longer cone.', '火焰更宽更长。')},
-      {burnDps: 15, dmg: 67, radius: 260, text: T('The ground burns hotter, and the fire strikes for 67.', '地火更烈，扇火伤害升到 67。')},
+      {burnDps: 15, dmg: 74, radius: 260, text: T('The ground burns hotter, and the fire strikes for 74.', '地火更烈，扇火伤害升到 74。')},
       {cd: 1.9, radius: 275, text: T('Longer, and fanned more often.', '更长，扇得更勤。')},
-      {angle: 90, dmg: 83, radius: 290, text: T('A quarter circle of fire that strikes for 83.', '火焰张成四分之一圆，伤害升到 83。')},
+      {angle: 90, dmg: 91, radius: 290, text: T('A quarter circle of fire that strikes for 91.', '火焰张成四分之一圆，伤害升到 91。')},
     ],
-    evolved: {id: 'sevenBirds', name: T('Seven Birds, and Ash', '七禽化灰'), angle: 140, radius: 330, burnDps: 26, dmg: 103, ash: .16,
+    evolved: {id: 'sevenBirds', name: T('Seven Birds, and Ash', '七禽化灰'), angle: 140, radius: 330, burnDps: 26, dmg: 113, ash: .16,
       text: T('A great fan of fire; a common foe left with less than a sixth of its health in it is ash.', '一扇烈焰铺开；火中生命不足六分之一的寻常敌兵化为飞灰。')},
   },
   {

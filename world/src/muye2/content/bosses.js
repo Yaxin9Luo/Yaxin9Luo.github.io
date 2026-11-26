@@ -35,8 +35,8 @@ export const bosses = [
     ai: 'named', tier: 'big', phases: [1, .5], hp: 17000, armour: 44, speed: 100, dmg: 26, r: 31, xp: 0, elite: true, heavy: true, boss: true, named: true,
     retinue: [{kind: 'dengzhong'}, {kind: 'xinhuan'}, {kind: 'zhangjie'}, {kind: 'taorong'}],
     patterns: [
-      {id: 'qilinRush', shape: 'lane', warn: 1, length: 780, width: 80, chargeSpeed: 720, rest: .8, dmg: 36, cd: 7.5, within: 620},
-      {id: 'pairedWhips', shape: 'circles', warn: 1.25, count: 2, radius: 110, ahead: 215, lead: .9, dmg: 36, cd: 4.5, within: 600},
+      {id: 'qilinRush', shape: 'lane', warn: 1, length: 780, width: 80, chargeSpeed: 720, rest: .8, dmg: 26, cd: 7.5, within: 620},
+      {id: 'pairedWhips', shape: 'circles', warn: 1.25, count: 2, radius: 110, ahead: 215, lead: .9, dmg: 26, cd: 4.5, within: 600},
       {id: 'goldWall', great: true, shape: 'wall', warn: 1.45, r0: 128, r: 160, life: 3, slam: {radius: 120, warn: 1.2, dmg: 40}, cd: 13, within: 560},
       {id: 'qilinReturn', from: 1, shape: 'lane', warn: 1, length: 780, width: 80, chargeSpeed: 720, rest: .5, dmg: 36, cd: 9, within: 620},
       {id: 'threeWhips', from: 1, shape: 'circles', warn: 1.25, count: 3, radius: 110, ahead: 215, lead: .9, near: 2.6, scatter: 300, dmg: 36, cd: 6, within: 600}],
