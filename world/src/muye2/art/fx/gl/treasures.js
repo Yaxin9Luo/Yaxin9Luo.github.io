@@ -472,38 +472,66 @@ export function createTreasures(ctx, ink, W = createWonders(), onKick = () => {}
     for (let i = 0; i < ss.length; i++) { const s = ss[i]; if (s.dead || s.side === 'shang' || !WEAPON_SHOTS[s.kind]) continue; const vx = (s.x - s.px) * V.z, vy = (s.y - s.py) * V.KY * V.z;
       const X = V.sx(s.x), Y = V.sy(s.y) - 30 * V.z, k = (s.kind === 'zhentian' ? 0.85 : 0.65) * V.z; W.draw(c, `warrow_${s.kind === 'zhentian' ? 1 : 0}`, X, Y, Math.atan2(vy, vx), k, k, veil(V, X, Y) * 0.5 + 0.5); } }
   // ---------------------------------------------------------------- 九龙神火罩
+  // The dragons are a short act, not a standing picture (the user, 2026-11-26: nine evolved covers filled half the screen
+  // with red dragons for their whole life and hid the fight). A cover lands: its dragons coil in for about half a second at
+  // full strength (the act), then fall back to its sign for as long as it burns: a fine broken ring of ember on the ground
+  // and two small flame-dragons circling low at under half strength. Everything is under the figures.
+  // A budget across covers: at most ACTS acts at once, a little staggered; a cover that lands while the budget is spent,
+  // or close beside a cover whose act is playing, gets its sign only. Overlapping signs share their strength, so many
+  // covers together never add up to a solid mass. When a cover lifts, only its sign climbs away.
+  const ACTS = 2, ACT_HOLD = 0.5, ACT_FADE = 0.35, ACT_GAP = 0.22, SIGN_A = 0.34;
+  let lastAct = -9;
   function watchCovers(G) { const zs = G && G.zones; if (zs) for (const z of zs) { if (z.dead || z.src !== 'fireCover' || z.kind !== 'burn') continue; let o = covers.get(z.id);
-      if (!o) { covers.set(z.id, (o = { born: clock, gone: -1, ev: !!z.evolved, lv: z.level || 1, x: z.x, y: z.y, r: z.r || 78 }));
-        if (ink) ink.bloom({ x: z.x, y: z.y, w: (z.r || 78) * 4.2, splats: RING_SCRIPT, pigment: 'fire', life: 6, dry: [1.2, 2.4], sink: 3.6, hero: true }); }
+      if (!o) { const r = z.r || 78; let live = 0, near = false;
+        for (const q of covers.values()) if (q.act >= 0 && clock < q.act + ACT_HOLD + ACT_FADE) { live++; if (Math.hypot(q.x - z.x, q.y - z.y) < r * 3) near = true; }
+        const act = live < ACTS && !near ? Math.max(clock, lastAct + ACT_GAP) : -1; if (act >= 0) lastAct = act;
+        covers.set(z.id, (o = { born: clock, gone: -1, act, ev: !!z.evolved, lv: z.level || 1, x: z.x, y: z.y, r }));
+        // the wet cinnabar wash only where an act plays, smaller and shorter than before (it does not follow the cover)
+        if (ink && act >= 0) ink.bloom({ x: z.x, y: z.y, w: r * 3, splats: RING_SCRIPT, pigment: 'fire', life: 3, dry: [0.8, 1.6], sink: 2.4, hero: true }); }
       o.x = z.x; o.y = z.y; o.r = z.r || o.r; o.seen = frame; }
-    for (const [id, o] of covers) { if (o.seen !== frame && o.gone < 0) { o.gone = clock; if (ink) ink.bloom({ x: o.x, y: o.y - o.r * 1.2, w: o.r * 5, splats: BREAK_SCRIPT, pigment: 'fire', life: 5, dry: [1, 2], sink: 3, hero: true }); }
-      if (o.gone >= 0 && clock - o.gone > 0.9) covers.delete(id); } }
+    for (const [id, o] of covers) { if (o.seen !== frame && o.gone < 0) { o.gone = clock; if (ink && clock - breakAt > 0.6) { breakAt = clock; ink.bloom({ x: o.x, y: o.y - o.r * 0.6, w: o.r * 2.6, splats: BREAK_SCRIPT, pigment: 'fire', life: 2.5, dry: [0.6, 1.2], sink: 2, hero: true }); } }
+      if (o.gone >= 0 && clock - o.gone > 0.9) covers.delete(id); }
+    // overlapping signs share their strength: each cover's share falls with how many others are within reach of it
+    for (const o of covers.values()) { let nb = 0; for (const q of covers.values()) if (q !== o && Math.hypot(q.x - o.x, q.y - o.y) < (o.r + q.r) * 1.4) nb++; o.share = 1 / (1 + 0.7 * nb); } }
+  let breakAt = -9;
   // the hero's patch (DESIGN.md 6): the player's own effects thin to a quarter over him, whole again by twice that
   function veil(V, X, Y) { const H = V.hero; if (!H || H[0] < -1e4) return 1; const dx = (X - H[0]) / (70 * V.z), dy = (Y - (H[1] - 60 * V.z)) / (95 * V.z), d = Math.sqrt(dx * dx + dy * dy); return d >= 2 ? 1 : d <= 1 ? 0.06 : 0.06 + 0.94 * (d - 1); }   // the space round the hero stays clear (the lead, 2026-11-25)
-  // how many come: 3 + its level, nine when evolved (DESIGN.md 7: 「現出九條火龍」 is the treasure at its height)
+  // how many come in the act: 3 + its level, nine when evolved (DESIGN.md 7: 「現出九條火龍」 is the treasure at its height)
   const count = (o) => (o.ev ? 9 : Math.min(8, 3 + (o.lv || 1)));
-  // dragon j of a cover: where its body runs (tail s = 0 to head s = 1) in device px, how much of it is drawn, its alpha
+  // how strong the act is now (0 before it starts and after it fades)
+  const actA = (o) => { if (o.act < 0) return 0; const u = clock - o.act; return u < 0 ? 0 : u < ACT_HOLD ? 1 : Math.max(0, 1 - (u - ACT_HOLD) / ACT_FADE); };
+  // dragon j of a cover in the act: where its body runs (tail s = 0 to head s = 1) in device px, how much is drawn, its alpha
   function dragon(o, j, V) {
-    const t = clock - o.born, inU = Math.min(1, t / 0.7), outU = o.gone >= 0 ? Math.min(1, (clock - o.gone) / 0.9) : 0, sp = o.ev ? 1.7 : 1.25;
+    const t = clock - o.act, inU = Math.min(1, t / 0.45), sp = o.ev ? 1.7 : 1.25;
     const tier = j % 3, dir = tier === 1 ? -1 : 1, size = (o.ev ? 0.62 : 0.5) * (1 - 0.12 * tier) * o.r / 100;
-    const R = o.r * (o.ev ? 1.9 : 1.6) * (1 - 0.24 * tier) * (1 + (1 - inU) * 1.4 + outU * 0.8), bodyLen = 470 * size, span = Math.min(1.6, bodyLen / R);
-    const b = ((j / 3) | 0) * (TAU / 3) + tier * 1.05 + dir * (t * sp + (1 - inU) * 2.2), lift0 = 46 + tier * (o.ev ? 120 : 96) + (1 - inU) ** 2 * 700 + outU * outU * 800;
+    const R = o.r * (o.ev ? 1.9 : 1.6) * (1 - 0.24 * tier) * (1 + (1 - inU) * 1.4), bodyLen = 470 * size, span = Math.min(1.6, bodyLen / R);
+    const b = ((j / 3) | 0) * (TAU / 3) + tier * 1.05 + dir * (t * sp + (1 - inU) * 2.2), lift0 = 46 + tier * (o.ev ? 120 : 96) + (1 - inU) ** 2 * 700;
     const P = (s) => { const a = b - dir * span * (1 - s), lift = lift0 + 22 * Math.sin(a * 2 + j) + (1 - s) * 18; return [V.sx(o.x + Math.cos(a) * R), V.sy(o.y + Math.sin(a) * R) - lift * V.z]; };
-    const back = Math.sin(b) < -0.15; return { P, size, back, shown: [Math.min(1, outU * 1.3), 1], from: 1 - inU, a: Math.min(1, t / 0.15) * (1 - outU * outU) * (back ? 0.55 : 1), v: j % 3, hv: j % 2 };   // the far side paler, as if behind smoke
+    const back = Math.sin(b) < -0.15; return { P, size, shown: [0, 1], from: 1 - inU, a: Math.min(1, t / 0.12) * actA(o) * (back ? 0.55 : 1), v: j % 3, hv: j % 2 };   // the far side paler, as if behind smoke
+  }
+  // flame-dragon j (0 or 1) of a cover's sign: small, low, circling the ring; when the cover lifts it climbs away
+  function signDragon(o, j, V, a) {
+    const t = clock - o.born, outU = o.gone >= 0 ? Math.min(1, (clock - o.gone) / 0.9) : 0, size = 0.24 * o.r / 100 * (o.ev ? 1 : 1.15), R = o.r * 1.12 * (1 + outU * 0.4), span = Math.min(1.4, 470 * size / R);
+    const b = j * Math.PI + t * 1.1, lift0 = 16 + 10 * j + outU * outU * 420;
+    const P = (s) => { const q = b - span * (1 - s); return [V.sx(o.x + Math.cos(q) * R), V.sy(o.y + Math.sin(q) * R) - (lift0 + 8 * Math.sin(q * 2 + j)) * V.z]; };
+    return { P, size, shown: [Math.min(1, outU * 1.3), 1], from: 0, a, v: j % 3, hv: j % 2 };
   }
   function drawDragon(c, d, V) {
+    if (d.a <= 0.01) return;
     const k = d.size * V.z, last = ribbon(c, `wdrg_${d.v}`, d.P, k, d.a, Math.max(d.from, d.shown[0]), 1, 12, V);
     if (last && d.from < 0.999) { const [p, rot, ky] = last; W.draw(c, `wdrg_head_${d.hv}`, p[0], p[1], rot, k * 0.72, ky * 0.72, d.a * veil(V, p[0], p[1])); }
   }
-  function coverGround(c, V) { for (const o of covers.values()) { const t = clock - o.born, outU = o.gone >= 0 ? Math.min(1, (clock - o.gone) / 0.9) : 0, a = Math.min(1, t / 0.4) * (1 - outU), X = V.sx(o.x), Y = V.sy(o.y), k = o.r * (o.ev ? 1.6 : 1.3) / 160 * V.z * (0.92 + 0.08 * Math.min(1, t / 0.6));
-      W.draw(c, 'whalo_fire', X, Y, 0, k, k * V.KY, a * 0.85);
-      for (let j = 0; j < count(o); j++) { const d = dragon(o, j, V); if (d.back) drawDragon(c, d, V); } } }
-  function coverOver(c, V, ground = false) { if (!ground) return; for (const o of covers.values()) {   // a lasting dome: all of it under the figures (the tester's cover check)
- const t = clock - o.born, outU = o.gone >= 0 ? Math.min(1, (clock - o.gone) / 0.9) : 0;
-      for (let j = 0; j < count(o); j++) { const d = dragon(o, j, V); if (!d.back) drawDragon(c, d, V); }
-      // pale 祥云 the dragons are half lost in, drifting slowly across the dome
-      for (let i = 0; i < 3; i++) { const k = o.r / 120 * V.z * (o.ev ? 1.2 : 1), dx = ((i - 1) * 1.3 + Math.sin(t * 0.4 + i) * 0.2) * o.r, lift = (60 + i * 70) * V.z;
-        W.draw(c, `wcloud_${2 + (i % 2)}`, V.sx(o.x + dx), V.sy(o.y + (i - 1) * o.r * 0.4) - lift, 0, (i % 2 ? -k : k), k, Math.min(1, t / 0.5) * (1 - outU) * 0.9); } } }
+  // all of a cover is under the figures (the tester's cover check): the ring, the sign's two dragons, and the act
+  function coverGround(c, V) { for (const o of covers.values()) { const t = clock - o.born, outU = o.gone >= 0 ? Math.min(1, (clock - o.gone) / 0.9) : 0, A = actA(o), X = V.sx(o.x), Y = V.sy(o.y), k = o.r * (o.ev ? 1.5 : 1.3) / 160 * V.z;
+      const sign = Math.min(1, t / 0.3) * (1 - outU) * (o.share ?? 1), ring = sign * (SIGN_A + (0.85 - SIGN_A) * A);
+      W.draw(c, 'whalo_fire', X, Y, t * 0.15, k, k * V.KY, ring * veil(V, X, Y - 20 * V.z));
+      const sa = SIGN_A * (o.share ?? 1) * Math.min(1, t / 0.4) * (1 - A) * (1 - outU * outU);
+      if (sa > 0.01) for (let j = 0; j < 2; j++) drawDragon(c, signDragon(o, j, V, sa), V);
+      if (A <= 0) continue;
+      for (let j = 0; j < count(o); j++) drawDragon(c, dragon(o, j, V), V);
+      // pale 祥云 the dragons are half lost in, only while the act plays
+      for (let i = 0; i < 3; i++) { const kc = o.r / 120 * V.z * (o.ev ? 1.2 : 1), dx = ((i - 1) * 1.3 + Math.sin(t * 0.4 + i) * 0.2) * o.r, lift = (60 + i * 70) * V.z;
+        W.draw(c, `wcloud_${2 + (i % 2)}`, V.sx(o.x + dx), V.sy(o.y + (i - 1) * o.r * 0.4) - lift, 0, (i % 2 ? -kc : kc), kc, Math.min(1, (clock - o.act) / 0.3) * A * 0.8); } } }
   // ---------------------------------------------------------------- 乾坤圈
   // the ring flies low, a thin gold circle the size of what it hits (a figure and a half), under the figures; each foe it strikes
   // gets one quick thin flash over him, gone in 0.35 s. Many rings read as many quick flashes, never as stacked discs.
@@ -578,7 +606,7 @@ export function createTreasures(ctx, ink, W = createWonders(), onKick = () => {}
     if (layer === 'ground') { W.draw(c, 'whalo_gold', X, Y, 0, k, k * V.KY, 0.75); if (ev) W.draw(c, 'whalo_gold', X, Y, 0, -k * 1.2, k * 1.2 * V.KY, 0.5);
       if (ev) { const sw = Math.sin(clock * 1.4) * 0.03; W.draw(c, 'wflag', V.sx(h.x - 165), V.sy(h.y - 50), sw, 0.46 * V.z, 0.46 * V.z, 0.95); } return; }   // the banner: over the crowd, and on screen when he is high in the view
     if (ev) for (let j = 0; j < 8; j++) { const b = (j / 8) * TAU + clock * 0.25, Xf = V.sx(h.x + Math.cos(b) * r * 1.05), Yf = V.sy(h.y + Math.sin(b) * r * 1.05) - 16 * V.z; W.draw(c, `wlotus_${j % 2}`, Xf, Yf, 0, 0.7 * V.z, 0.7 * V.z, 0.95 * veil(V, Xf, Yf)); } }
-  function drawGround(V, dt, G) { clock += dt; frame++; if (G) G0 = G; watchCovers(G); watchLanes(G); if (!W.ready) return; const c = ctx; c.save(); c.globalCompositeOperation = 'source-over'; coverGround(c, V); coverOver(c, V, true); silksDraw(c, V, 'ground'); lanesDraw(c, V); thrustsDraw(c, V); hostsDraw(c, V, 'ground');   /* 火尖枪's thrusts with their lanes, under the figures */ generalsDraw(c, V, G, 'ground'); pearlsDraw(c, V, G, 'ground'); lightsGround(c, V); sealsGround(c, V); ropesDraw(c, V, G0); spoilsDraw(c, V, G0, 'ground'); wearyDraw(c, V, G0, 'ground'); bannerDraw(c, V, G, 'ground'); bannerDraw(c, V, G, 'over'); ringsGround(c, V, G0); lastingDraw(c, V, G0, 'ground'); c.restore(); }
-  function drawOver(V, dt, G) { if (!W.ready) return; const c = ctx, cv = ctx.canvas; covMax = COVER * (cv && cv.width ? cv.width * cv.height : 2880 * 1800); cov = 0; budgetOn = true; c.save(); c.globalCompositeOperation = 'source-over'; coverOver(c, V); silksDraw(c, V, 'over'); blowsDraw(c, V); arrowsDraw(c, V, G); newsDraw(c, V, G); budgetOn = false; sigsDraw(c, V); lastingDraw(c, V, G0, 'over'); statesDraw(c, V, G0); hostsDraw(c, V, 'over'); generalsDraw(c, V, G, 'over'); budgetOn = true; ringsOver(c, V); spoilsDraw(c, V, G0, 'over'); wearyDraw(c, V, G0, 'over'); antidoteDraw(c, V, G0); columnsOver(c, V); budgetOn = false; c.restore(); }
-  return { useTip: (f) => { tipFn = typeof f === 'function' ? f : null; }, onEvent, drawGround, drawOver, has, wonders: W, reset() { prints.length = 0; covers.clear(); columns.length = 0; talismans.length = 0; silks.length = 0; lanes.clear(); thrusts.length = 0; blows.length = 0; news.length = 0; hosts.length = 0; manifests.length = 0; dives.length = 0; sigs.length = 0; tracks.clear(); }, get live() { return covers.size + columns.length + silks.length + lanes.size; } };
+  function drawGround(V, dt, G) { clock += dt; frame++; if (G) G0 = G; watchCovers(G); watchLanes(G); if (!W.ready) return; const c = ctx; c.save(); c.globalCompositeOperation = 'source-over'; coverGround(c, V); silksDraw(c, V, 'ground'); lanesDraw(c, V); thrustsDraw(c, V); hostsDraw(c, V, 'ground');   /* 火尖枪's thrusts with their lanes, under the figures */ generalsDraw(c, V, G, 'ground'); pearlsDraw(c, V, G, 'ground'); lightsGround(c, V); sealsGround(c, V); ropesDraw(c, V, G0); spoilsDraw(c, V, G0, 'ground'); wearyDraw(c, V, G0, 'ground'); bannerDraw(c, V, G, 'ground'); bannerDraw(c, V, G, 'over'); ringsGround(c, V, G0); lastingDraw(c, V, G0, 'ground'); c.restore(); }
+  function drawOver(V, dt, G) { if (!W.ready) return; const c = ctx, cv = ctx.canvas; covMax = COVER * (cv && cv.width ? cv.width * cv.height : 2880 * 1800); cov = 0; budgetOn = true; c.save(); c.globalCompositeOperation = 'source-over'; silksDraw(c, V, 'over'); blowsDraw(c, V); arrowsDraw(c, V, G); newsDraw(c, V, G); budgetOn = false; sigsDraw(c, V); lastingDraw(c, V, G0, 'over'); statesDraw(c, V, G0); hostsDraw(c, V, 'over'); generalsDraw(c, V, G, 'over'); budgetOn = true; ringsOver(c, V); spoilsDraw(c, V, G0, 'over'); wearyDraw(c, V, G0, 'over'); antidoteDraw(c, V, G0); columnsOver(c, V); budgetOn = false; c.restore(); }
+  return { useTip: (f) => { tipFn = typeof f === 'function' ? f : null; }, onEvent, drawGround, drawOver, has, wonders: W, reset() { prints.length = 0; covers.clear(); lastAct = breakAt = -9; columns.length = 0; talismans.length = 0; silks.length = 0; lanes.clear(); thrusts.length = 0; blows.length = 0; news.length = 0; hosts.length = 0; manifests.length = 0; dives.length = 0; sigs.length = 0; tracks.clear(); }, get live() { return covers.size + columns.length + silks.length + lanes.size; } };
 }
