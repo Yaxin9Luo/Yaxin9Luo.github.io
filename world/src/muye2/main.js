@@ -20,6 +20,7 @@ import {meritStandin, META_STANDIN} from './ui/camp-data.js';
 import {CODEX} from './ui/codex-data.js';
 import {portrait, warm} from './ui/portraits.js';
 import {spoilPic, warmSpoil, spoilMarkHTML} from './ui/spoil-pictures.js';
+import * as N from './ui/names.js';
 
 const $ = id => document.getElementById(id);
 const params = new URLSearchParams(location.search);
@@ -48,7 +49,7 @@ const COPY = {
     needKeys: 'This game needs a keyboard for now. Touch controls are not built yet.', noStart: 'This browser could not start the game', noStartTail: 'Muye needs a current browser with canvas drawing. A recent Chrome, Edge, Firefox or Safari will do.',
     settings: 'Settings', volume: 'Sound volume', shake: 'Screen shake', calm: 'Reduced motion', calmNote: 'no shake, no slow motion', leave: 'Leave the game',
     start: 'Ride out', again: 'Ride again', sameSeed: n => `Same field (seed ${n})`, resume: 'Resume', paused: 'Paused', yourBuild: 'What you own',
-    kinds: {treasure: 'Treasure', art: 'Art', troop: 'Troop', formation: 'Formation', general: 'General', mend: 'Rest', weapon: 'Weapon'}, rows: {treasure: 'treas.', art: 'arts', troop: 'troops', formation: 'form.', general: 'gen.', weapon: 'weapon', spoil: 'spoils'},
+    kinds: {treasure: 'Treasure', art: 'Art', troop: 'Troop', formation: 'Formation', general: 'General', mend: 'Rest', weapon: 'Weapon', merge: 'Joined pair'}, rows: {treasure: 'treas.', art: 'arts', troop: 'troops', formation: 'form.', general: 'gen.', weapon: 'weapon', spoil: 'spoils'},
     groups: {spoil: 'Spoils', weapon: 'Weapon', treasure: 'Treasures', troop: 'Troops', general: 'Generals', trample: 'Jiliang', other: 'Other'}, trueForm: 'true form', trueFormOf: name => `True form: ${name}`, mortalForm: (name, feat) => feat ? `${name} in true form · ${feat}` : `${name} in true form`, formFrom: (name, title) => `${name} → ${title}`, joins: name => `${name} joins you`, returnsIn: n => `withdrawn, back in ${n} s`, blessedHost: name => `Blessed host: ${name}`,
     skillAt: name => `squad skill ${name} unlocks at level 3`, patronNeed: name => `fifth rank: level 8, a chest, and ${name} with you`, patronHave: name => `fifth rank: level 8 and a chest (${name} is with you)`, patronOf: names => `patron of ${names}: they can reach the fifth rank`, trueFormNeed: 'true form at level 5 with a chest', unlockSelf: into => `leads to ${into}`, unlockOther: (name, into) => `lets ${name} become ${into}`, unlockForm: into => `leads to his true form: ${into}`, unlockHost: into => `leads to the blessed host: ${into}`, unlockHostOther: (name, into) => `lets ${name} become the blessed host: ${into}`,
     elements: {fire: 'fire', water: 'water', wood: 'wood', metal: 'metal', earth: 'earth'},
@@ -57,7 +58,7 @@ const COPY = {
     evolvesWith: (el, sign) => `evolves at level 6 · needs ${el} ${sign} art`, evolvesOwned: (art) => `evolves at level 6: you have ${art}`, readyToEvolve: 'ready to evolve: open a chest', letsEvolve: names => `lets ${names} evolve at level 6`, replaces: name => `replaces ${name}`,
     peach: ['Peach of immortality', 'Nothing is left to learn. Rest, and mend.'],
     hp: 'health', spirit: 'battle spirit', lv: n => `Lv ${n}`, kills: 'felled', dash: 'spring', resonance: 'reson.',
-    evolved: name => `Evolved: ${name}`, comes: name => `${name}`, encircled: 'Encircled', chestGave: name => `Chest: ${name}`, chestMend: 'Chest: mended',
+    evolved: name => `Evolved: ${name}`, merged: name => `Joined: ${name}`, mergedState: 'joined pair', unknownThing: 'unnamed', comes: name => `${name}`, encircled: 'Encircled', chestGave: name => `Chest: ${name}`, chestMend: 'Chest: mended',
     won: 'The field is yours', lost: 'You fell', time: 'time', level: 'level', work: 'What did the work', trample: 'Jiliang’s trample', share: p => `${p}%`, nothing: 'nothing struck a blow',
     sound: on => on ? 'sound on' : 'sound off',
     loading: 'grinding ink…', loadingAt: (mb, pct) => `grinding ink… ${pct != null ? pct + '%' : mb + ' MB'}`, queued: 'the battle starts as soon as the ink is ready',
@@ -99,7 +100,7 @@ const COPY = {
     needKeys: '这个游戏目前需要键盘，触屏操作还没有做。', noStart: '这个浏览器没能启动游戏', noStartTail: '《牧野》需要支持画布绘制的新版浏览器：较新的 Chrome、Edge、Firefox 或 Safari 都可以。',
     settings: '设置', volume: '音量', shake: '画面震动', calm: '减少动效', calmNote: '无震动，无慢动作', leave: '离开游戏',
     start: '出阵', again: '再来一局', sameSeed: n => `同一战场（种子 ${n}）`, resume: '继续', paused: '已暂停', yourBuild: '你拥有的',
-    kinds: {treasure: '法宝', art: '心法', troop: '兵', formation: '阵法', general: '神将', mend: '休整', weapon: '兵器'}, rows: {treasure: '法宝', art: '心法', troop: '兵', formation: '阵', general: '将', weapon: '兵器', spoil: '战利'},
+    kinds: {treasure: '法宝', art: '心法', troop: '兵', formation: '阵法', general: '神将', mend: '休整', weapon: '兵器', merge: '合璧'}, rows: {treasure: '法宝', art: '心法', troop: '兵', formation: '阵', general: '将', weapon: '兵器', spoil: '战利'},
     groups: {spoil: '战利品', weapon: '兵器', treasure: '法宝', troop: '兵', general: '将', trample: '吉量', other: '其他'}, trueForm: '显圣', trueFormOf: name => `显圣：${name}`, mortalForm: (name, feat) => feat ? `${name}显圣 · ${feat}` : `${name}显圣`, formFrom: (name, title) => `${name} → ${title}`, joins: name => `${name}来助`, returnsIn: n => `暂退，${n} 秒后归来`, blessedHost: name => `神兵：${name}`,
     skillAt: name => `三级解锁小队技能「${name}」`, patronNeed: name => `升神兵：八级、一个宝箱，并有${name}在阵`, patronHave: name => `升神兵：八级加一个宝箱（${name}已在阵）`, patronOf: names => `${names}的主将：他们可升为神兵`, trueFormNeed: '五级时开宝箱可显圣', unlockSelf: into => `进化为 ${into}`, unlockOther: (name, into) => `让${name}进化为 ${into}`, unlockForm: into => `可显圣：${into}`, unlockHost: into => `可升神兵：${into}`, unlockHostOther: (name, into) => `让${name}升为神兵：${into}`,
     elements: {fire: '火', water: '水', wood: '木', metal: '金', earth: '土'},
@@ -108,7 +109,7 @@ const COPY = {
     evolvesWith: (el, sign) => `六级时配合${el}系心法进化`, evolvesOwned: (art) => `六级时进化：你已有${art}`, readyToEvolve: '可以进化了：打开一个宝箱', letsEvolve: names => `能让${names}在六级时进化`, replaces: name => `替换${name}`,
     peach: ['仙桃', '已经没有可学的了。歇一歇，回复生命。'],
     hp: '命', spirit: '战意', lv: n => `${n} 级`, kills: '斩', dash: '腾跃', resonance: '共鸣',
-    evolved: name => `进化：${name}`, comes: name => `${name}来袭`, encircled: '四面合围', chestGave: name => `宝箱：${name}`, chestMend: '宝箱：回复生命',
+    evolved: name => `进化：${name}`, merged: name => `合璧：${name}`, mergedState: '合璧', unknownThing: '无名之物', comes: name => `${name}来袭`, encircled: '四面合围', chestGave: name => `宝箱：${name}`, chestMend: '宝箱：回复生命',
     won: '此战告捷', lost: '你倒下了', time: '用时', level: '等级', work: '谁出的力', trample: '吉量踩踏', share: p => `${p}%`, nothing: '没有打出一击',
     sound: on => on ? '声音：开' : '声音：关',
     loading: '正在研墨…', loadingAt: (mb, pct) => `正在研墨… ${pct != null ? pct + '%' : mb + ' MB'}`, queued: '墨一研好就出阵',
@@ -228,12 +229,15 @@ addEventListener('resize', resize);
 /* ---------- what a thing is called, and its sign ---------- */
 const KINDS = ['treasure', 'art', 'troop', 'formation', 'general', 'weapon', 'spoil'];
 const kindOf = id => KINDS.find(k => rowOf(k, id));
-/** A treasure's evolved form is known by its own id in events and in the damage table: find the treasure it came from. */
-const evolvedFrom = id => (sim.CONTENT.treasures || []).find(r => r.evolved && r.evolved.id === id);
-/** The hero's weapon in its evolved form is known by its own id too (SPEC-CAMPAIGN 2.4). */
-const weaponFrom = id => (sim.CONTENT.weapons || []).find(r => r.evolved && r.evolved.id === id);
-function rowOf(kind, id) { return sim.BY && sim.BY[kind] ? sim.BY[kind][id] : (sim.CONTENT[kind + 's'] || []).find(r => r.id === id); }
+const evolvedFrom = id => N.evolvedFrom(sim, id), weaponFrom = id => N.weaponFrom(sim, id);
+const rowOf = (kind, id) => N.rowOf(sim, kind, id), formRow = (kind, id) => N.formRow(sim, kind, id), mergeElement = m => N.mergeElement(sim, m);
+/** The words of a thing at a level, its divine title (ui/names.js: one past the top level is its last form). */
+const wordsOf = (kind, id, level) => N.wordsOf({sim, lang, t}, kind, id, level), titleOf = row => N.titleOf({sim, lang, t}, row);
 function signOf(kind, id) {
+  const f = kind && formRow(kind, id);
+  const m = f && (f.merge || (f.kind === 'merge' ? f.row : null));   // a 合璧 pair: one sign on its slip and in the build
+  if (m) { const zh = m.name.zh; return m.sign || zh[zh.length - 1]; }
+  if (f && f.row.id !== id) return signOf(f.kind, f.row.id);
   const row = kind && rowOf(kind, id);
   if (row && row.sign) return row.sign;
   if (SIGN[id]) return SIGN[id];
@@ -242,20 +246,6 @@ function signOf(kind, id) {
   if (!zh) return '·';
   return kind === 'treasure' || kind === 'art' ? zh[zh.length - 1] : zh[0];
 }
-/** The words of a thing at a level. One past the top level is its last form: a treasure evolved, a general's true form, a blessed host. */
-function wordsOf(kind, id, level) {
-  if (kind === 'mend') return {name: t.peach[0], text: t.peach[1], element: null};
-  const row = rowOf(kind, id); if (!row) return {name: id, text: '', element: null};
-  const last = level > maxOf(kind) ? row.evolved || (row.trueForm && {name: row.name, text: row.trueForm.text}) || (row.blessed && {name: row.name, text: row.blessed.text}) : null;
-  let d = null;
-  try { d = sim.describe ? sim.describe(kind, id, level) : null; } catch { /* a level the rules have no words for: the table's own */ }
-  if (!d || !d.name || !d.text) d = last || {name: row.name, text: ((row.levels || [])[Math.min(level, (row.levels || []).length) - 1] || {}).text || row.text || {en: '', zh: ''}};
-  const out = {name: d.name[lang] || d.name.en, text: d.text[lang] || d.text.en, element: row.element || null};
-  if (kind === 'general' && last) { out.mortal = row.name[lang] || row.name.en; out.name = titleOf(row); out.feat = row.trueForm && row.trueForm.name ? row.trueForm.name[lang] || row.trueForm.name.en : ''; }
-  return out;
-}
-/** A general in true form is called by his divine title (杨戬 → 清源妙道真君), never by his feat's name; his own name until the rules give one. */
-const titleOf = row => { const ti = row && row.trueForm && row.trueForm.title; return ti ? ti[lang] || ti.en : row ? row.name[lang] || row.name.en : ''; };
 /** A general's name now: his title while he is in true form in this run, else his name. */
 const generalNow = row => { const e = game && game.build && (game.build.generals || []).find(g => g.id === row.id); return e && e.trueForm ? titleOf(row) : row.name[lang] || row.name.en; };
 const both = name => name ? (lang === 'zh' ? `${name.zh} ${name.en}` : `${name.en} ${name.zh}`) : '';
@@ -269,23 +259,29 @@ const rankName = (rank, short) => { const q = rankTable()[rank - 1], r = q && q.
 /** Whether an owned thing is in its last form, and the level that stands for it in the words. */
 const lastForm = (kind, e) => !!(e.evolved || e.trueForm || e.blessed || (kind === 'troop' && e.rank === 5));
 const formLevel = (kind, e) => lastForm(kind, e) ? maxOf(kind) + 1 : e.level;
-const maxOf = kind => (sim.MAX && sim.MAX[kind]) || (kind === 'general' ? 5 : kind === 'troop' ? 8 : 6);
+const maxOf = kind => N.maxOf(sim, kind);
 const pig = element => `--pig:${PIGMENT[element] || PIGMENT.none};--on:${ON[element] || '#FFFDF8'}`;
 /** The element a source of damage or a cast belongs to: a treasure, its evolved form, a troop. */
 function sourceOf(id) {
+  // the damage table keeps a treasure's own id after its payoff: name it by its form in this run (a 合璧 pair, its evolution)
+  const b = game && game.build, pair = b && (b.treasures || []).find(e => e.merged && (e.parts || []).some(p => p.id === id));
+  if (pair || rowOf('merge', id)) { const m = rowOf('merge', pair ? pair.id : id); if (m) return {kind: 'treasure', id: m.id, element: mergeElement(m), name: m.name[lang] || m.name.en, evolved: true}; }
+  const own = b && rowOf('treasure', id) && (b.treasures || []).find(e => e.id === id && e.evolved);
+  if (own) return sourceOf(rowOf('treasure', id).evolved.id);
+  if (b && b.weapon && b.weapon.id === id && b.weapon.evolved && rowOf('weapon', id)) return sourceOf(rowOf('weapon', id).evolved.id);
   const from = evolvedFrom(id);
   if (from) return {kind: 'treasure', id: from.id, element: from.element, name: from.evolved.name[lang] || from.evolved.name.en, evolved: true};
   const wf = weaponFrom(id);
   if (wf) return {kind: 'weapon', id: wf.id, element: null, name: wf.evolved.name[lang] || wf.evolved.name.en, evolved: true};
   const kind = kindOf(id);
-  if (kind) { const row = rowOf(kind, id); return {kind, id, element: row.element || null, name: kind === 'general' ? generalNow(row) : row.name[lang] || row.name.en}; }
+  if (kind) { const row = rowOf(kind, id), host = kind === 'troop' && row.blessed && b && (b.troops || []).some(e => e.id === id && e.blessed); return {kind, id, element: row.element || null, name: kind === 'general' ? generalNow(row) : host ? row.blessed.name[lang] || row.blessed.name.en : row.name[lang] || row.name.en, evolved: host || undefined}; }
   if (id === 'trample') return {kind: null, id, element: null, name: t.trample};
   // a squad's skill counts for its troop, a true form for its general
   const tr = (sim.CONTENT.troops || []).find(r => (r.skill && r.skill.id === id) || (r.blessed && r.blessed.id === id));
   if (tr) return {kind: 'troop', id: tr.id, element: tr.element || null, name: tr.name[lang] || tr.name.en};
   const ge = (sim.CONTENT.generals || []).find(r => r.trueForm && r.trueForm.id === id);
   if (ge) return {kind: 'general', id: ge.id, element: ge.element || null, name: titleOf(ge)};
-  return {kind: null, id, element: null, name: String(id)};
+  return {kind: null, id, element: null, name: t.unknownThing};
 }
 
 /* ---------- input ---------- */
@@ -495,13 +491,14 @@ function handle(e) {
     case 'pickup': if (e.kind === 'antidote') audio.peach(); else if (e.kind === 'peach') audio.peach(); else if (e.kind === 'lodestone') audio.lodestone(); else if (e.kind !== 'chest') audio.pickup(e.size || 0); break;
     case 'chest': audio.chest();      // gave: 'generals' (an offer follows and says so itself), 'evolve' | 'blessed' | 'trueForm' (their own banners), a kind with an id, or 'mend'
       if (['evolve', 'trueForm', 'rank', 'blessed', 'generals'].includes(e.gave)) break;
-      { const w = sim.CHEST && sim.CHEST[e.gave], k = KINDS.includes(e.gave) ? e.gave : e.id && kindOf(e.id), r = k && rowOf(k, e.id), name = r ? r.name[lang] || r.name.en : '';
+      { const w = sim.CHEST && sim.CHEST[e.gave], k = KINDS.includes(e.gave) ? e.gave : e.gave === 'merge' ? 'merge' : e.id && kindOf(e.id), name = k && e.id ? wordsOf(k, e.id, 1).name : '';
         if (w) banner(w[lang] || w.en, false, name, false, true); else if (e.gave === 'mend' || e.id === 'peach') banner(t.chestMend, false, '', false, true); else if (name) banner(t.chestGave(name), false, '', false, true); }
       break;
     case 'levelUp': audio.levelUp(); $('xp').classList.remove('up'); void $('xp').offsetWidth; $('xp').classList.add('up'); break;
     case 'take': if (e.kind === 'general' && e.isNew) join(e.id);      // in case the rules send no `summon`
       if (e.kind !== 'mend' && metaStore.see(e.kind, e.id)) runLog.fresh.push([e.kind, e.id]);
       audio.take(e.kind === 'mend' ? 'wood' : (rowOf(e.kind, e.id) || {}).element || 'earth'); freshSign = e.id; buildKey = ''; break;
+    case 'merge': { const m = rowOf('merge', e.id); if (m) { payoff(t.merged(m.name[lang] || m.name.en), (e.parts || m.parts || []).map(p => wordsOf('treasure', p, maxOf('treasure') + 1).name).join(' + ')); audio.evolve(mergeElement(m)); } freshSign = e.id; buildKey = ''; break; }
     case 'evolve': { const s = sourceOf(e.into || e.id); payoff(t.evolved(s.name)); audio.evolve(s.element); freshSign = e.id; buildKey = ''; break; }
     case 'resonance': audio.resonance(); break;
     case 'elite': arrival(e, false); break;
@@ -693,7 +690,7 @@ function awayOf(e) {
 function signHTML(kind, e) {
   const last = lastForm(kind, e), w = wordsOf(kind, e.id, formLevel(kind, e)), away = kind === 'general' ? awayOf(e) : 0;
   const rank = kind === 'troop' && ranked() ? rankOfEntry(e) : 0;
-  const state = away > 0 ? t.returnsIn(Math.ceil(away)) : kind === 'general' && last ? t.trueForm : (kind === 'treasure' || kind === 'weapon') && last ? t.evolution : rank ? `${rankName(rank)} · ${t.lv(e.level)}` : t.lv(e.level);
+  const state = away > 0 ? t.returnsIn(Math.ceil(away)) : kind === 'general' && last ? t.trueForm : w.merged ? `${t.mergedState} · ${(e.parts || (rowOf('merge', e.id) || {}).parts || []).map(p => wordsOf('treasure', p.id || p, maxOf('treasure') + 1).name).join(' + ')}` : (kind === 'treasure' || kind === 'weapon') && last ? t.evolution : rank ? `${rankName(rank)} · ${t.lv(e.level)}` : t.lv(e.level);
   const taken = kind === 'treasure' && game.lightTaken && w.element && game.lightTaken[w.element] > game.t ? Math.ceil(game.lightTaken[w.element] - game.t) : 0;
   const tip = taken ? `${w.name} · ${t.takenFor(taken)}` : kind === 'general' && w.mortal && !(away > 0) ? `${w.name}\n${t.mortalForm(w.mortal, w.feat)}\n${w.text}` : `${w.name} · ${state}${kind === 'weapon' ? ` · ${reachWords(e)}` : ''} · ${w.text}`;
   const badge = taken || (away > 0 ? Math.ceil(away) : last && kind !== 'troop' ? '✦' : e.level);
@@ -776,16 +773,18 @@ function cycleLine(o) {
   return '';
 }
 function slipHTML(o, i) {
-  const max = o.kind === 'mend' ? 0 : maxOf(o.kind), row = rowOf(o.kind, o.id), w = wordsOf(o.kind, o.id, o.level);
+  const max = o.kind === 'mend' || o.kind === 'merge' ? 0 : maxOf(o.kind), row = rowOf(o.kind, o.id), w = wordsOf(o.kind, o.id, o.level);
+  if (o.kind === 'merge' && !w.element) w.element = mergeElement(row);
   const troop = o.kind === 'troop' && ranked(), general = o.kind === 'general';
   // one past the top level is the last form: a treasure evolved, a general's true form, a troop's fifth rank
   const evo = max > 0 && o.level > max, rank = troop ? rankAt(o.level, evo) : 0, before = troop && !o.isNew ? rankAt(o.level - 1, false) : rank;
-  const tag = o.kind === 'mend' ? '' : evo ? `<span class="tag evo">${general ? t.trueForm : troop ? rankName(5) : t.evolution}</span>` : o.isNew ? `<span class="tag new">${t.isNew}</span>` : troop && rank !== before ? `<span class="tag rank">${rankName(before, lang !== 'zh')} → ${rankName(rank, lang !== 'zh')}</span>` : `<span class="tag">${t.levelTo(o.level - 1, o.level)}</span>`;
+  const tag = o.kind === 'mend' ? '' : o.kind === 'merge' ? `<span class="tag evo">${t.kinds.merge}</span>` : evo ? `<span class="tag evo">${general ? t.trueForm : troop ? rankName(5) : t.evolution}</span>` : o.isNew ? `<span class="tag new">${t.isNew}</span>` : troop && rank !== before ? `<span class="tag rank">${rankName(before, lang !== 'zh')} → ${rankName(rank, lang !== 'zh')}</span>` : `<span class="tag">${t.levelTo(o.level - 1, o.level)}</span>`;
   // pips: one a level; a troop's pips stand taller where a rank begins; the ring at the end is the last form
   const hasLast = row && (o.kind === 'treasure' || o.kind === 'weapon' ? row.evolved : general ? row.trueForm !== false : troop);
   const pips = max ? `<span class="pips${max > 6 ? ' many' : ''}" aria-hidden="true">${Array.from({length: max}, (_, n) => `<i class="${n + 1 < o.level ? 'on' : n + 1 === o.level ? 'next' : ''}${troop && [1, 3, 5, 7].includes(n + 1) ? ' mark' : ''}"></i>`).join('')}${hasLast ? `<i class="star${evo ? ' next' : ''}"></i>` : ''}</span>` : '<span></span>';
-  const under = evo && (o.kind === 'treasure' || o.kind === 'weapon') && row ? `<small>${t.evolvedFrom(row.name[lang] || row.name.en)}</small>` : troop ? `<small>${rankName(rank)}${evo ? '' : ` · ${t.lv(o.level)}`}</small>` : general && evo && row ? `<small>${esc(t.formFrom(row.name[lang] || row.name.en, titleOf(row)))}${row.trueForm && row.trueForm.name ? ` · ${esc(row.trueForm.name[lang] || row.trueForm.name.en)}` : ''}</small>` : general && lang !== 'zh' && row ? `<small>${row.name.zh}</small>` : '';
-  return `<button class="slip${evo ? ' evo' : ''}${general ? ' general' : ''}" data-pick="${i}" style="${pig(w.element)};--i:${i}">
+  const parts = o.kind === 'merge' && row && row.parts ? row.parts.map(p => wordsOf('treasure', p, maxOf('treasure') + 1).name).join(' + ') : '';
+  const under = parts ? `<small>${esc(parts)}</small>` : evo && (o.kind === 'treasure' || o.kind === 'weapon') && row ? `<small>${t.evolvedFrom(row.name[lang] || row.name.en)}</small>` : troop ? `<small>${rankName(rank)}${evo ? '' : ` · ${t.lv(o.level)}`}</small>` : general && evo && row ? `<small>${esc(t.formFrom(row.name[lang] || row.name.en, titleOf(row)))}${row.trueForm && row.trueForm.name ? ` · ${esc(row.trueForm.name[lang] || row.trueForm.name.en)}` : ''}</small>` : general && lang !== 'zh' && row ? `<small>${row.name.zh}</small>` : '';
+  return `<button class="slip${evo || o.kind === 'merge' ? ' evo' : ''}${general ? ' general' : ''}" data-pick="${i}" style="${pig(w.element)};--i:${i}">
     <span class="top"><kbd>${i + 1}</kbd><span class="kind">${t.kinds[o.kind] || o.kind}${w.element ? ` · ${t.elements[w.element]}` : ''}</span>${tag}</span>
     <span class="head"><i class="sign${general ? ' gseal' : ''}" aria-hidden="true">${signOf(o.kind === 'mend' ? null : o.kind, o.id)}</i><span><strong>${esc(w.name)}</strong>${under}</span></span>
     <span class="what">${esc(w.text)}</span>${pips}${cycleLine(o) || '<span></span>'}</button>`;
@@ -878,7 +877,7 @@ function showError(err) {
 function ownedHTML() {
   const b = game.build, all = [...(b.weapon ? [['weapon', b.weapon]] : []), ...b.treasures.map(e => ['treasure', e]), ...b.arts.map(e => ['art', e]), ...b.troops.map(e => ['troop', e]), ...(b.generals || []).map(e => ['general', e]), ...(b.formation ? [['formation', b.formation]] : [])];
   if (!all.length) return '';
-  return `<h3>${t.yourBuild}</h3><ul class="owned">${all.map(([kind, e]) => { const last = lastForm(kind, e), w = wordsOf(kind, e.id, formLevel(kind, e)); return `<li><i class="sign${kind === 'general' ? ' gseal' : ''}${last ? ' evo' : ''}" style="${pig(w.element)}" aria-hidden="true">${signOf(kind, e.id)}</i><span><b>${esc(w.name)}</b><em>${kind === 'troop' && ranked() ? `${rankName(rankOfEntry(e))} · ${t.lv(e.level)}` : last ? (kind === 'general' ? `${t.trueForm} · ${esc(w.mortal || '')}` : t.evolution) : t.lv(e.level)}</em><br>${esc(w.text)}</span></li>`; }).join('')}</ul>`;
+  return `<h3>${t.yourBuild}</h3><ul class="owned">${all.map(([kind, e]) => { const last = lastForm(kind, e), w = wordsOf(kind, e.id, formLevel(kind, e)); return `<li><i class="sign${kind === 'general' ? ' gseal' : ''}${last ? ' evo' : ''}" style="${pig(w.element)}" aria-hidden="true">${signOf(kind, e.id)}</i><span><b>${esc(w.name)}</b><em>${kind === 'troop' && ranked() ? `${rankName(rankOfEntry(e))} · ${t.lv(e.level)}` : last ? (kind === 'general' ? `${t.trueForm} · ${esc(w.mortal || '')}` : w.merged ? t.mergedState : t.evolution) : t.lv(e.level)}</em><br>${esc(w.text)}</span></li>`; }).join('')}</ul>`;
 }
 function pause(on) {
   mode = on ? 'paused' : 'play';
