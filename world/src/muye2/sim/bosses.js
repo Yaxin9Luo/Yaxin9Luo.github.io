@@ -14,7 +14,7 @@ function ringClose(f, h) {
 export function startPattern(g, f, A) {
   if (A.shape === 'lane' && A.chargeSpeed) { startLane(g, f, A); return; }
   const h = g.hero, k = f.dmg / BY.foe[f.kind].dmg, dir = Math.atan2(h.y - f.y, h.x - f.x);
-  const warn = (z, more) => { z.pattern = A.id; z.dmg = (A.dmg || 0) * k; z.P = A; z.great = !!A.great; g.events.push({type: 'warn', kind: A.id, shape: z.shape, by: f.kind, id: f.id, time: z.life, x: z.x, y: z.y, hidden: f.glareT > 0, ...more}); return z; };
+  const warn = (z, more) => { z.pattern = A.id; z.dmg = (A.dmg || 0) * k; z.P = A; z.great = !!A.great; g.events.push({type: 'warn', kind: A.id, shape: z.shape, by: f.kind, id: f.id, time: z.life, x: z.x, y: z.y, hidden: f.glareT > 0 && !(f.eyeUntil > g.t), ...more}); return z; };
   // 张奎 goes under the earth and comes up where the blow falls; 袁洪 goes on the wind and comes back beside the hero
   if (A.burrow) { f.under = true; f.ex = h.x; f.ey = h.y; setState(f, 'under'); g.events.push({type: 'burrow', id: f.id, x: f.x, y: f.y}); }
   if (A.vanish) { f.gone = true; setState(f, 'gone'); g.events.push({type: 'transform', id: f.id, form: 'wind', time: A.warn, x: f.x, y: f.y}); }

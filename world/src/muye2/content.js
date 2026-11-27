@@ -61,8 +61,8 @@ for (const row of generals) {
     cur = {...cur, attack, skill, aura: aura || cur.aura, grow: (1 + GENERAL.grow * i) * at(M.dmg, i), hpGrow: (1 + GENERAL.hpGrow * i) * at(M.hp, i)};
     row.at.push(cur);
   });
-  const {id, name, text, skillCd, count, eliteMult, ...form} = row.trueForm;
-  const attack = {...cur.attack}, skill = {...cur.skill};
+  const {id, name, text, skillCd, count, eliteMult, skill: own, ...form} = row.trueForm;
+  const attack = {...cur.attack}, skill = own ? {...own} : {...cur.skill};     // a true form may bring a skill of its own (杨戬's 天眼)
   if (skillCd) skill.cd = skillCd;
   if (count) { if (row.skill.count !== undefined) skill.count = count; else attack.count = count; }
   if (eliteMult) attack.eliteMult = eliteMult;

@@ -56,13 +56,15 @@ export function fallNow(g, by) {
  * `el` is the element a soldier's blow has taken in the eight trigrams; `dot` is burning: no armour, no effects.
  */
 export function hitFoe(g, f, dmg, src, P, ox, oy, el, dot) {
-  if (f.state === 'dead' || f.under || f.gone) return;          // under the earth, or gone on the wind: nothing reaches him
+  // 杨戬's 天眼: what it has marked cannot hide (a leader only while his ward is broken, 2 s in 15)
+  const seen = f.tier ? f.eyeWardUntil > g.t : f.eyeUntil > g.t;
+  if (f.state === 'dead' || ((f.under || f.gone) && !seen)) return;          // under the earth, or gone on the wind: nothing reaches him
   let d = dmg * (g.power[src] || 1);
   if (!dot) {
     if (P && f.elite && P.eliteMult) d *= P.eliteMult;
     if (el === 'metal') d *= 1 + RIDER.metal.more * (g.form && g.form.rider || 1);
     if (f.armour) d = Math.max(1, d - f.armour);
-    if (f.guardT > 0) d *= .15;                                  // 一刀抵三: he turns the blows aside
+    if (f.guardT > 0 && !seen) d *= .15;                                  // 一刀抵三: he turns the blows aside
     if (f.exposeT > 0) d *= 1 + f.expose;                        // B's 照妖鉴 and 钉头七箭书: revealed, he takes more
     if (P && P.interrupt && f.named && (f.act === 'slam' || f.act === 'aim')) interrupt(g, f);
   }
@@ -70,14 +72,14 @@ export function hitFoe(g, f, dmg, src, P, ox, oy, el, dot) {
   if (f.capMax) d *= weary(g, f);                              // past his band he tires: every blow tells more
   if (f.capMax) {
     // a boss's ward on arrival and his burst cap (SPEC-CAMPAIGN.md 1.14): what goes over is turned aside
-    if (f.wardT > 0) { d = 0; capped = true; }
+    if (f.wardT > 0 && !seen) { d = 0; capped = true; }
     else if (d > f.capB) { d = Math.max(0, f.capB); capped = true; }
     f.capB -= d;
   }
   // a warded boss takes a share of what gets through his cap: 纣王 while 鲁仁杰, 雷鹍 or 雷鹏 rides with him, 袁洪 while any of
   // his six lives (1.16); after the cap, so that a build that hits at the cap still finds him warded
-  if (f.tier === 'final' && g.campaign.officers > 0) d *= CAMPAIGN.guardAura;
-  if (f.kinK) d *= f.kinK;
+  if (f.tier === 'final' && g.campaign.officers > 0 && !seen) d *= CAMPAIGN.guardAura;
+  if (f.kinK && !seen) d *= f.kinK;
   const dealt = d < f.hp ? d : f.hp;
   f.hp -= d; f.flash = .12;
   g.stats.damage[src] = (g.stats.damage[src] || 0) + dealt;

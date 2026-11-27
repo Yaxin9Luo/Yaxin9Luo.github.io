@@ -67,6 +67,19 @@ export function createGLFx(ctx, { elementOf = () => 'ink', kick = () => {} } = {
         ctx.scissor([b.left - 4, line - H * 0.14, b.right + 4, line - H * 0.05]); ctx.globalAlpha = 0.45; drawAgain(ctx, u); }
       ctx.scissor(null); ctx.silhouette = null; ctx.restore(); }
   }
+  // 天眼 (gods.js): each foe 杨戬's eye has marked (f.eyeUntil, game seconds) rimmed in gold. His silhouette is drawn offset eight
+  // ways in the ground pass, under the figures, so only its edge shows round him; at most 12, nearest the hero; each appears as
+  // the eye's gaze sweeps across him (gods.eyeReveal)
+  const RIM_GOLD = [232, 192, 96], RIM_INK = [38, 28, 20], RIM8 = [[1, 0], [-1, 0], [0, 1], [0, -1], [0.71, 0.71], [-0.71, 0.71], [0.71, -0.71], [-0.71, -0.71]];
+  function eyeRims(V) { if (!drawAgain || !G || !G.foes) return; const now = G.t || 0, h = G.hero, ms = [];
+    for (const f of G.foes) if (f.state !== 'dead' && f.eyeUntil > now) ms.push(f);
+    if (!ms.length) return; if (h) ms.sort((a, b) => Math.hypot(a.x - h.x, a.y - h.y) - Math.hypot(b.x - h.x, b.y - h.y));
+    // a clean gold edge on black-and-white foes: an ink outline 9 px out, then bright gold 6 px out, the figure drawn over both
+    ctx.save(); ctx.globalCompositeOperation = 'source-over';
+    for (const [rgb, px] of [[RIM_INK, 9], [RIM_GOLD, 6]]) { ctx.silhouette = rgb; const o = px / V.z;
+      for (let i = 0; i < Math.min(12, ms.length); i++) { const f = ms[i], rv = gods.eyeReveal ? gods.eyeReveal(f) : 1; if (rv <= 0) continue; ctx.globalAlpha = Math.min(1, (f.eyeUntil - now) / 0.3) * rv;
+        for (const [dx, dy] of RIM8) drawAgain(ctx, { ...f, x: f.x + dx * o, y: f.y + dy * o }); } }
+    ctx.silhouette = null; ctx.globalAlpha = 1; ctx.restore(); }
   const OFF = new Set((q.get('fxoff') || '').split(','));      // for profiling: ?fxoff=omen,ink,fissure,rings,over,debris,blow
   impact.off = OFF;
   const plan = [];                      // [time, fn]: the beats of a moment, in the effects' clock
@@ -145,7 +158,7 @@ export function createGLFx(ctx, { elementOf = () => 'ink', kick = () => {} } = {
   return {
     onEvent,
     drawGround(V, dt) { clock += dt; zNow = V.z / V.dpr; Q.frame(omen.live + impact.live + seal.live > 0); for (let i = 0; i < plan.length; i++) if (plan[i][0] <= clock) { const f = plan[i][1]; plan.splice(i--, 1); f(); }
-      if (ink.live && !OFF.has('ink')) ink.draw(); if (impact.live) impact.drawGround(V, dt); if (seal.live) seal.drawGround(V, dt); if (blow.live) blow.drawGround(V, dt); treasures.drawGround(V, dt, G); gods.drawGround(V, dt, G); },
+      if (ink.live && !OFF.has('ink')) ink.draw(); if (impact.live) impact.drawGround(V, dt); if (seal.live) seal.drawGround(V, dt); if (blow.live) blow.drawGround(V, dt); treasures.drawGround(V, dt, G); gods.drawGround(V, dt, G); eyeRims(V); },
     drawOver(V, dt) { if (voice.live) voice.draw(V, dt); inkFigures(V); treasures.drawOver(V, dt, G); gods.drawOver(V); if (omen.live && !OFF.has('omen')) { omen.draw(V, dt); omenClouds(V); } if (impact.live) impact.drawOver(V, dt); if (seal.live) seal.drawOver(V, dt); if (blow.live && !OFF.has('blow')) blow.draw(V, dt); if (wx) weather.draw(V, dt, wx, wAmt, wWind); treasures.drawLast(V); if (ink.live && !OFF.has('ink')) { const Vn = { ...V }; if (ctx.afterFrame) ctx.afterFrame(() => ink.after(Vn, dt)); else ink.after(Vn, dt); } },   // the ink steps after the frame's last draw (ink.js)
     setWeather(kind, amount = 1, wind = 0) { wx = kind || null; wAmt = amount; wWind = wind; },
     hold: () => Math.max(0, holdUntil - clock),

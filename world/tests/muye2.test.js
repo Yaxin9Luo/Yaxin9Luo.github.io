@@ -9,7 +9,7 @@ import {
   createGame, step, give, addFoe, applyMeta, canEvolveWeapon, WEAPON_ART, META, MERIT, meritFrom, meritOf, buy, newSave, poolOf, rankCost, meritToAll, openingPool, inPool, xpNeed as XPNEED, familyShare, leanOf, takeSpoil, saveHero, bigPayoff, addMan, addShot, addPickup, castShape, canEvolve, canBless, elementAt, RANKS, rankOf, GENERAL, spawnPlan, counts, describe, xpNeed, fedBy,
   CONTENT, BY, WORLD, STEP, HERO, CRY, ALLY, ALLY_CLEAR, SLOTS, MAX, OFFER, ELEMENTS, RESONANCE, TRIGRAMS, RIDER, SCHEDULE, SPAWN, PICKUPS, CHEST, PAYOFF, CAMPAIGN,
 } from '../src/muye2/sim.js';
-import {kill as killFoe} from '../src/muye2/sim/harm.js';
+import {kill as killFoe, hitFoe as hitFoeRaw} from '../src/muye2/sim/harm.js';
 
 const C = WORLD.w / 2, TAU = Math.PI * 2;
 const near = (a, b, eps = 1e-6) => Math.abs(a - b) <= eps;
@@ -1797,7 +1797,7 @@ test('6. generals: ten named figures in five places; each fights by himself; he 
       const elite = dummy(g, 'chariot', C + 120, C + 250), shooter = dummy(g, 'archer', C - 260, C - 200);
       const ev = run(g, 60 * 14, NONE, (game, now, all) => all.some(x => x.type === 'generalSkill') && game.stats.damage[row.id] > 0);
       const skill = ev.find(x => x.type === 'generalSkill');
-      assert.ok(skill && skill.general === row.id && skill.id === row.skill.id && skill.level === e.level && skill.trueForm === form && skill.by === u.id, `${row.id} ${lvl}: his skill, by himself`);
+      assert.ok(skill && skill.general === row.id && skill.id === row.at[lvl].skill.id && skill.level === e.level && skill.trueForm === form && skill.by === u.id, `${row.id} ${lvl}: his skill, by himself`);
       if (row.id !== 'huangfeihu') assert.ok(g.stats.damage[row.id] > 0, `${row.id} ${lvl}: his harm is counted under his name`);
       assert.ok(ev.some(x => x.type === 'cast' && x.id === row.id && x.by === u.id) || row.attack.shape === 'stone', 'and his plain blows');
       assert.ok(elite && shooter && foes.length);
@@ -1858,6 +1858,42 @@ test('6. generals: what each one is for', () => {
     assert.ok(ev.some(e => e.type === 'generalSkill' && e.shape === 'hound' && e.targets[0].id === archer.id));
     assert.ok(ev.some(e => e.type === 'hit' && e.id === 'yangjian' && e.target === elite.id && near(e.dmg, BY.general.yangjian.attack.dmg * BY.general.yangjian.attack.eliteMult * GENERAL.power * BY.general.yangjian.at[1].grow)));   // at[1].grow: his `might` (2026-11-26)
     assert.ok(mass);
+  }
+  { // 杨戬 in his true form: the third eye (天眼照妖), never beasts; the marked cannot hide, a leader's ward breaks 2 s in 15
+    const g = stage(), S = BY.general.yangjian.at[6].skill, A = BY.general.yangjian.attack;
+    assert.equal(S.id, 'heavenEye'); assert.equal(BY.general.yangjian.at[5].skill.id, 'houndHunt', 'the hound stays his skill below the true form');
+    give(g, 'general', 'yangjian', 5, true);
+    const u = g.allies[0]; u.cd = 1e9;                          // the blade silent: only the eye
+    const boss = dummy(g, 'yuanhong', C + 330, C - 30); boss.pcd = boss.pcd && boss.pcd.map(() => 1e9); boss.kinK = .2; boss.elite = false;
+    const snake = dummy(g, 'snake', C + 300, C + 20), hid = dummy(g, 'spear', C + 280, C - 10), behind = dummy(g, 'spear', C - 360, C);
+    hid.under = true;
+    const gone = dummy(g, 'spear', C + 250, C + 10);           // in the fan when the eye opens, out of it when the light lands
+    const ev0 = run(g, 60 * 10, NONE, untilType('generalSkill'));
+    const eye = ev0.find(e => e.type === 'generalSkill'), t0 = g.t;
+    assert.ok(eye && near(eye.land, S.delay) && !ev0.some(e => e.type === 'hit' && e.id === 'yangjian') && lost(snake) === 0, 'the light lands after the eye opens, not with it');
+    assert.ok(eye.marked.some(m => m.id === gone.id), 'he is in the fan as it opens');
+    gone.x = C - 400; gone.y = C + 300;
+    const ev = [...ev0, ...run(g, 60, NONE, (game, now) => now.some(e => e.type === 'hit' && e.id === 'yangjian'))];
+    assert.ok(near(g.t - t0, S.delay, 1.5 / 60), `and lands ${S.delay} s later`);
+    assert.ok(lost(gone) === 0, 'who has left the fan by then is not struck');
+    assert.ok(eye && eye.id === 'heavenEye' && eye.shape === 'eye' && eye.trueForm && eye.general === 'yangjian', 'the eye, not the hound');
+    for (const k of ['x', 'y', 'dir', 'angle', 'radius']) assert.equal(typeof eye[k], 'number', `the event carries ${k}`);
+    const ids = eye.marked.map(m => m.id).filter(id => id !== gone.id);
+    assert.ok(ids.includes(boss.id) && ids.includes(snake.id) && ids.includes(hid.id) && !ids.includes(behind.id), 'the fan marks who is in it');
+    assert.ok(eye.marked.every(m => near(m.until, t0 + S.delay + S.mark * g.mods.dur, .05)) && near(boss.eyeUntil, t0 + S.delay + S.mark * g.mods.dur, .05));
+    assert.ok(lost(hid) > 0, 'one under the earth is reached once marked');
+    assert.ok(lost(behind) === 0 && boss.stun === 0 && snake.stun === 0, 'no harm behind, and no control: the eye never locks a boss');
+    const wb = ev.find(e => e.type === 'wardBroken');
+    assert.ok(wb && wb.id === boss.id && wb.wards.includes('kin') && eye.broke.includes(boss.id) && near(wb.until, g.t + S.ward, .05), 'his kin ward breaks');
+    const mul = g.mods.dmg * BY.general.yangjian.at[6].grow * GENERAL.power, hb = ev.find(e => e.type === 'hit' && e.target === boss.id);
+    assert.ok(near(hb.dmg, (S.dmg * mul * A.baneMult - (boss.armour || 0)) * (1 + S.baneExpose), 1e-6), 'his kin does not shield him, and a beast in the light takes the most');
+    // the ward comes back after 2 s, and is not broken again for 15
+    const ev2 = [...run(g, 60 * 7, NONE, untilType('generalSkill')), ...run(g, 30)];     // the next eye, and its light landing
+    assert.ok(ev2.some(e => e.type === 'generalSkill' && e.id === 'heavenEye') && !ev2.some(e => e.type === 'wardBroken'), 'once in 15 s');
+    boss.exposeT = 0; const before = boss.hp;
+    hitFoeRaw(g, boss, 200, 'test', null, boss.x, boss.y, null, false);
+    assert.ok(near(before - boss.hp, (200 - (boss.armour || 0)) * .2, 1e-6), 'his kin shields him again');
+    assert.ok(!run(g, 60 * 12).some(e => e.type === 'generalSkill' && e.shape === 'hound'), 'no hound in the true form');
   }
   { // 土行孙 comes up under an elite and binds it: even a chariot stands still
     const g = stage();

@@ -26,7 +26,7 @@ export function addFoe(g, kind, x, y) {
   f.pcd = row.patterns ? row.patterns.map((A, i) => A.cd * (.35 + .3 * i)) : null; f.named = !!row.named; f.summon = ''; f.scout = false;
   // the campaign's fields (SPEC-CAMPAIGN.md 1.2, 1.3)
   f.tier = row.tier || ''; f.retinue = 0; f.phases = row.phases || null; f.phase = 0; f.enraged = false; f.cdK = 1; f.flee = false; f.guardT = 0; f.born = g.t;
-  f.expose = 0; f.exposeT = 0; f.pat = '';
+  f.expose = 0; f.exposeT = 0; f.pat = ''; f.eyeUntil = 0; f.eyeWardUntil = 0; f.eyeWardNext = 0;     // B's 天眼 (times on g.t)
   f.wardT = 0; f.capB = 0; f.capMax = 0; f.weary = false; f.kinK = 0; f.kinKey = ''; f.host = false; f.lastHost = false; f.gateIn = false;      // the finale (1.16)
   f.melee = MELEE.has(row.ai) && !row.named && !row.heavy; f.atk = 0; if (f.melee) f.hitCd = Infinity;     // a melee foe swings (below); the squads' contact code never fires for him
   f.under = false; f.gone = false; f.ex = 0; f.ey = 0; f.glareT = 0; f.cutDmg = 0; f.summonN = 0; f.hookCd = 0; f.trailT = 0; f.wob = rand(g) * 6.283;      // B's (照妖鉴, 钉头七箭书): every field a pooled foe can carry is reset here, or a replay parts

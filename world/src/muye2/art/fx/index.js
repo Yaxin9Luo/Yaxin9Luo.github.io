@@ -650,7 +650,7 @@ export async function loadFx({ ky = 0.62, horizon = 0.52 } = {}) {
     if (e.trueForm) echo(e.general);
     signature(e, el, seed);
     if (e.shape === 'arc') { castSash({ x: e.x, y: e.y, radius: e.radius, angle: e.angle, dir: e.dir, level: e.trueForm ? 6 : 3, evolved: (e.angle || 0) >= 359, fixed: true }); return; }
-    if (e.shape === 'hound') { const n = e.trueForm ? 6 : 1, ts = e.targets || [];
+    if (e.shape === 'hound') { const n = 1, ts = e.targets || [];      // (in true form 杨戬 opens his 天眼 instead: shape 'eye', gods.js)
       add({ life: 0.7, over: (o) => { for (let j = 0; j < Math.max(n, ts.length); j++) { const p = ts[j % Math.max(1, ts.length)] || e, u = clamp((o.t - j * 0.05) / 0.3); if (u <= 0) continue; const off = (j - n / 2) * 22, x = e.x + (p.x - e.x) * ease(u) + off * 0.3, y = e.y + (p.y - e.y) * ease(u) + off, z = 70 * Math.sin(PI * Math.min(1, u)), X = sx(x), Y = sy(y) - z * F.z;
           if (u < 1) spr(C('hound', j), X, Y, Math.atan2((p.y - e.y) * KY, p.x - e.x) * 0.3, p.x < e.x ? -1.3 : 1.3, 1.3, veil(X, Y)); else { const s2 = o.t - j * 0.05 - 0.3; spr(C('splash', j + seed), sx(p.x), sy(p.y), j, 0.5, 0.6, (1 - s2 / 0.35) * veil(X, Y), KY, 0, clamp(s2 / 0.05)); } } } }); return; }
     if (e.shape === 'line') { const L = e.length || 380, w = (e.width || 64) / 64, T = e.time || 0.35;      // 雷震子 dives along it: wind-and-thunder, bold folds and a green wake

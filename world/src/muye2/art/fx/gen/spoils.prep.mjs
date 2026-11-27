@@ -16,7 +16,7 @@ const sharp = createRequire('/Users/yaxinluo/Desktop/Yaxin9Luo.github.io/world/p
 const HERE = dirname(fileURLToPath(import.meta.url)), RAW = join(HERE, '../../../../../../lab/game-studies/imagegen/fx/raw'), OUT = join(HERE, '../baked/spoils');
 // the finale's parts (fx/gl/finale.js): the seven of 梅山 coming down each in his own ink (fn<Name>), a Shang standard fallen
 // flat (the rout), and 摘星楼 alight on the skyline (纣王's end)
-const FINALE = ['fnYuanhong', 'fnWulong', 'fnChanghao', 'fnDaili', 'fnJindasheng', 'fnZhuzizhen', 'fnYangxian', 'fnFallenStandard', 'fnZhaixing'];
+const FINALE = ['fnYuanhong', 'fnWulong', 'fnChanghao', 'fnDaili', 'fnJindasheng', 'fnZhuzizhen', 'fnYangxian', 'fnFallenStandard', 'fnZhaixing', 'fnEye'];
 const IDS = ['qingyunSword', 'hunyuanUmbrella', 'jadePipa', 'marten', 'callName', 'goldWhips', 'bloodBlade', 'yellowBreath', 'plague', 'goldenCrown', 'boneBanner', 'earthTravel', 'fiveLights', 'changeForm'], PARTS = ['goldWhip1', 'stone', 'fxBlackWind', 'fxYellowCloudA', 'fxYellowCloudB', 'fxMiasma', 'fxEarthRings', 'fxBloodSlash', 'fxGoldSpark', 'fxGhostInk', 'fxRadiance', 'antidote', 'fxJadeGlow', ...FINALE];      // antidote: the pickup that stops 化血神刀's bleeding (with an icon, for the page's off-screen pointer)
 const SAT = JSON.parse(process.env.SAT || '{}'), meta = {};
 // the icon's crop [x0, y0, x1, y1] in fractions of the 512 picture: the banner's skulled head, the sword's hilt and upper blade,

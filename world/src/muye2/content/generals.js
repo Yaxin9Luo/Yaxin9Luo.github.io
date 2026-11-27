@@ -48,8 +48,10 @@ export const generals = [
       T('He hits harder and stands more.', '他打得更重，也更耐打。'),
       T('The hound hunts more often.', '哮天犬出击更勤。'),
     ],
-    trueForm: {id: 'seventyTwoChanges', name: T('The Seventy-two Changes', '七十二变'), title: T('True Lord of Clear Source and Wondrous Way', '清源妙道真君'), count: 6, eliteMult: 2.6, skillCd: 1.6,
-      text: T('He turns into whatever beats his foe, so elites take far more from his blade; the hound becomes a pack of six ink hounds.', '他变作克制对手之物，精英在他刀下受伤大增；哮天犬化作六条墨犬成群扑出。')},
+    // 天眼 (the user, 2026-11-26/27): his true form opens the third eye; no beasts in it, the hound stays his skill below it
+    trueForm: {id: 'heavenEye', name: T('The Heaven Eye Shows the Demons', '天眼照妖'), title: T('True Lord of Clear Source and Wondrous Way', '清源妙道真君'), eliteMult: 2.6,
+      skill: {id: 'heavenEye', name: T('The Heaven Eye', '天眼'), shape: 'eye', cd: 5, delay: .4, dmg: 150, radius: 420, angle: 70, mark: 5, expose: .3, baneExpose: .6, ward: 2, wardCd: 15},
+      text: T('The third eye in his brow opens and a fan of gold light falls on the field: every foe in it is struck and marked for 5 seconds. The marked take 30% more from your whole side and cannot hide under the earth, on the wind or behind a guard; beasts and shape-changers take 60% more. A Shang leader in the light loses his ward for 2 seconds (once in 15). His blade bites elites harder still.', '眉间天眼睁开，一扇金光照落阵上：光中之敌尽受一击，并被照住 5 秒。被照住的敌人受你方一切伤害多三成，遁地、化风、护身皆藏不住；妖兽与变化之物多受六成。光中的商军主将护身之法被破 2 秒（每 15 秒至多一次）。他刀下的精英受伤更重。')},
   }),
   general({
     id: 'leizhenzi', element: 'wood', name: T('Leizhenzi', '雷震子'), mount: T('his two wings of wind and thunder', '风雷二翅'), weapon: T('the Golden Staff', '黄金棍'),

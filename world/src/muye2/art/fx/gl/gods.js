@@ -8,7 +8,7 @@
 // Each true-form feat (a `generalSkill` event with `trueForm`) is his own from the novel, with a build-up, a strike and an
 // after-trace on the ground:
 //   哪吒 三头八臂       eight weapons at once: spear thrusts on every side, the sash a full circle, the ring round it
-//   杨戬 七十二变       six ink hounds run down six foes from one splash of ink
+//   杨戬 天眼照妖       his third eye opens over his brow, its light lies on the ground in a fan, the marked are rimmed in gold
 //   雷震子 风雷随身     lightning strikes down the line of his dive; the storm he carries is a cloud that strikes under it
 //   土行孙 地裂         under three groups the ground cracks and slabs of earth stand up round them, then sink
 //   邓婵玉 五光齐放     five stones in her hand, then a fan of five mineral lights over the whole side
@@ -33,8 +33,11 @@ export function createGods(ctx, W = createWonders(), { ink = null, kick = () => 
   // 泰山 (gen/tai.gen.mjs): a picture of its own, painted with the field's ink-wash engine; its foot sits at TAI_FOOT of its height
   let TAI = null; const TAI_FOOT = 868 / 896;
   // 杨戬's changes (gen/beasts.prep.mjs): six freehand ink-wash animals, generated and cut out; how long each stands in world units
-  const BEAST_OF = { whound_0: 'hound', gtiger: 'tiger', ghawk: 'hawk', gmarten: 'marten', gcrane: 'crane', gserpent: 'serpent' }, BEAST_LEN = { hound: 260, tiger: 280, hawk: 230, marten: 210, crane: 260, serpent: 170 };
-  let BEASTS = null;
+  // 天眼: the third eye (generated ink and dull gold, fx/gen/spoils.prep.mjs: fnEye), opening upright over his brow
+  let EYE = null;
+  // the eye's height and where it opens (world units above his feet: about his true-form height), and the sweep of its gaze
+  // the eye sits just above his aureole (the true form's figure stands ~165 units tall to the aureole's top), as his, not floating
+  const EYE_H = 190, EYE_LIFT = 242, SWEEP0 = 0.35, SWEEP = 0.35;
   // the wonders (gen/pics.prep.mjs): 哪吒's weapons, 姜子牙's list, banner and whip, 龙吉's wave and vase, painted ink-wash pictures
   let PICS = null;
   fetch(new URL('../baked/pics/pics.json', import.meta.url).href).then((r) => r.json()).then(async (meta) => { const img = {}; for (const n of Object.keys(meta)) { img[n] = await createImageBitmap(await (await fetch(new URL(`../baked/pics/${n}.webp`, import.meta.url).href)).blob()); if (ctx.prewarm) ctx.prewarm(img[n]); warm.push(img[n]); } PICS = { meta, img }; }).catch((e) => console.warn('gods: the wonders did not load', e));
@@ -42,12 +45,13 @@ export function createGods(ctx, W = createWonders(), { ink = null, kick = () => 
   // over that scale), mirrored when flip < 0; only from u0 to u1 of its width (a list unrolling, a spear drawn on). False if not loaded.
   function pic(n, X, Y, rot, len, a, flip = 1, u0 = 0, u1 = 1, ky = 1) { const bm = PICS && PICS.img[n]; if (!bm || a <= 0.004 || u1 <= u0) return !!bm; const M = PICS.meta[n], k = len / M.w, cs = Math.cos(rot), sn = Math.sin(rot);
     ctx.setTransform(cs * k * flip, sn * k * flip, -sn * k * ky, cs * k * ky, X, Y); ctx.globalAlpha = Math.min(1, a); const sx = M.w * u0, sw = M.w * (u1 - u0); ctx.drawImage(bm, sx, 0, sw, M.h, sx - M.cx, -M.cy, sw, M.h); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 1; return true; }
-  fetch(new URL('../baked/beasts/beasts.json', import.meta.url).href).then((r) => r.json()).then(async (meta) => { const img = {}; for (const n of Object.keys(meta)) { img[n] = await createImageBitmap(await (await fetch(new URL(`../baked/beasts/${n}.webp`, import.meta.url).href)).blob()); img[n].noMip = false; if (ctx.prewarm) ctx.prewarm(img[n]); warm.push(img[n]); } BEASTS = { meta, img }; }).catch((e) => console.warn('gods: the changes did not load', e));
+  fetch(new URL('../baked/spoils/fnEye.webp', import.meta.url).href).then((r) => r.blob()).then((b) => createImageBitmap(b)).then((bm) => { EYE = bm; if (ctx.prewarm) ctx.prewarm(bm); warm.push(bm); }).catch(() => {});
   // 地裂 (gen/chasm.gen.mjs): the earth opened, painted with the same engine; centred, 520 units across at 1.4 px a unit
   let CHASM = null; fetch(new URL('../baked/gchasm.webp', import.meta.url).href).then((r) => r.blob()).then((b) => createImageBitmap(b)).then((bm) => { CHASM = bm; if (ctx.prewarm) ctx.prewarm(bm); warm.push(bm); }).catch((e) => console.warn('gods: 地裂 did not load', e));
   fetch(new URL('../baked/gtai.webp', import.meta.url).href).then((r) => r.blob()).then((b) => createImageBitmap(b)).then((bm) => { TAI = bm; if (ctx.prewarm) ctx.prewarm(bm); warm.push(bm); }).catch((e) => console.warn('gods: 泰山 did not load', e));
   W = { draw: (c, n, ...r) => sheet(n).draw(c, n, ...r), cell: (n) => sheet(n).cell(n), get ready() { return W0.ready && GW.ready; } };
   let clock = 0, G = null, FX = null, FXload = null;
+  const breaks = [];
   const stages = [], feats = [], baked = new Map();
   const unitOf = (g) => { const as = G && G.allies; if (as) for (let i = 0; i < as.length; i++) if (as[i].kind === 'general' && as[i].general === g) return as[i]; return null; };
   const foeOf = (id) => { const fs = G && G.foes; if (fs && id != null) for (let i = 0; i < fs.length; i++) if (fs[i].id === id) return fs[i]; return null; };
@@ -78,13 +82,16 @@ export function createGods(ctx, W = createWonders(), { ink = null, kick = () => 
   // first use costs a frame (the sheet and the 法相 reach the GPU only when first sampled): a summoned general's 法相 is
   // baked while the field is quiet, and each new image is drawn once, invisibly, into a corner
   const warm = [];
-  function warmUp() { for (const im of warm.splice(0)) { ctx.globalAlpha = 0.004; ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.drawImage(im, 0, 0, 4, 4, 0, 0, 1, 1); ctx.globalAlpha = 1; } }
+  // each warmed image drawn whole, shrunk to 2 px, nearly clear: its first real draw then costs no upload and no mip level (the
+  // first 天眼 cast cost a 100 to 300 ms frame when only a 4 px corner had been drawn)
+  function warmUp() { for (const im of warm.splice(0)) { ctx.globalAlpha = 0.004; ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.drawImage(im, 0, 0, im.width, im.height, 0, 0, 2, 2); ctx.globalAlpha = 1; } }
   GW.loaded.then(() => warm.push(GW.image));
   function prebake(g) { const idle = globalThis.requestIdleCallback || ((f) => setTimeout(f, 200)); const go = () => { if (!faxiang(g)) { if (FXload) FXload.then(() => idle(go)); return; } const b = bake(g, tallOf(g)); if (b) warm.push(b.cv); }; idle(go); }
   function onEvent(e, game) {
     if (game) G = game;
     if (e.type === 'summon' && e.general) prebake(e.general);
     if (e.type === 'trueForm' && e.general) { faxiang(e.general); stages.push({ g: e.general, at: clock, x: e.x, y: e.y, beat: false }); if (ink) ink.bloom({ x: e.x, y: e.y + 10, w: 420, splats: BLOOM, pigment: EL[e.general] === 'fire' ? 'fire' : 'ink', life: 3.2, hero: true }); return true; }
+    if (e.type === 'wardBroken') { breaks.push({ id: e.id, x: e.x, y: e.y, at: clock }); if (breaks.length > 8) breaks.shift(); return false; }
     if (e.type === 'generalSkill' && e.trueForm) { const f = { ...e, at: clock, v: feats.length % 2 }; feats.push(f); if (feats.length > 24) feats.shift();
       kick(e.general === 'tuxingsun' || e.general === 'huangfeihu' ? 7 : 4); return true; }
     return false;
@@ -134,24 +141,18 @@ export function createGods(ctx, W = createWonders(), { ink = null, kick = () => 
   // Each in three beats: GATHER (his own pose and a brief build of strokes at him, about 0.2 s), STRIKE (the god's blow
   // laid on the foes at full size, a held frame and a shock when it lands), TRACE (pools, rifts, rings left on the ground
   // under the figures, fading over a second and more). What stands over the figures is the strike alone, and only briefly.
-  const STRIKE = { arc: 0.34, hound: 0.24, line: 0.24, bindOne: 0.2, cone: 0.22, charge: 0.3, command: 0.74, snort: 0.2, vase: 0.5, nail: 0.18 };
-  const LIFE = { arc: 2.4, hound: 2.4, line: 2.2, bindOne: 2.6, cone: 1.8, charge: 2.4, command: 2.4, snort: 1.8, vase: 2.4, nail: 2.2 };
+  const STRIKE = { arc: 0.34, eye: 0.35, line: 0.24, bindOne: 0.2, cone: 0.22, charge: 0.3, command: 0.74, snort: 0.2, vase: 0.5, nail: 0.18 };
+  const LIFE = { arc: 2.4, eye: 1.4, line: 2.2, bindOne: 2.6, cone: 1.8, charge: 2.4, command: 2.4, snort: 1.8, vase: 2.4, nail: 2.2 };
   const NEZHA8 = ['gspear_0', 'gsword_0', 'wring', 'gbrick', 'gspear_1', 'gsword_1', 'gsilk', 'gcage'];
   const NEZHA_PIC = ['spear', 'sword', 'ring', 'brick', 'spear', 'sword', 'sash', 'cage'];
   function picks(x, y, R, n, cone = null) { const fs = (G && G.foes) || [], out = [];
     for (const f of fs) { if (f.state === 'dead') continue; const dx = f.x - x, dy = f.y - y, d = Math.hypot(dx, dy); if (d > R) continue;
       if (cone) { let da = Math.atan2(dy, dx) - cone[0]; da = Math.atan2(Math.sin(da), Math.cos(da)); if (Math.abs(da) > cone[1]) continue; } out.push({ x: f.x, y: f.y, id: f.id, d }); }
     out.sort((a, b) => a.d - b.d); const step = Math.max(1, Math.floor(out.length / n)), r = []; for (let i = 0; i < out.length && r.length < n; i += step) r.push(out[i]); return r; }
-  // one foe in each of n sectors round (x, y), none within a figure's reach of the hero, the nearest in its sector first
-  function spread(x, y, R, n) { const fs = (G && G.foes) || [], h = G && G.hero, best = new Array(n).fill(null);
-    for (const f of fs) { if (f.state === 'dead') continue; const dx = f.x - x, dy = f.y - y, d = Math.hypot(dx, dy); if (d > R || d < 40) continue; if (h && Math.hypot(f.x - h.x, f.y - h.y) < 120) continue;
-      const k = Math.floor(((Math.atan2(dy, dx) + TAU) % TAU) / (TAU / n)); if (!best[k] || d < best[k].d) best[k] = { x: f.x, y: f.y, id: f.id, d }; }
-    const got = best.filter(Boolean); if (!got.length) return picks(x, y, R, n); const out = []; for (let k = 0; k < n; k++) out.push(best[k] || got[k % got.length]); return out; }
   function prepare(o) { const u = unitOf(o.general), gx = u ? u.x : o.x, gy = u ? u.y : o.y;
     if (o.shape === 'arc') { const fs = (G && G.foes) || [], h = G && G.hero; o.picks = [];      // a wheel round him: in each of eight directions the nearest foe within 300, else the ground 240 out that way
       for (let k = 0; k < 8; k++) { const b = ((k + 0.5) / 8) * TAU; let best = null, bd = 1e9; for (const f of fs) { if (f.state === 'dead') continue; const dx = f.x - gx, dy = f.y - gy, d = Math.hypot(dx, dy); if (d > 300 || d < 60) continue; if (h && Math.hypot(f.x - h.x, f.y - h.y) < 110) continue; let da = Math.atan2(dy, dx) - b; da = Math.atan2(Math.sin(da), Math.cos(da)); if (Math.abs(da) > TAU / 16) continue; if (d < bd) { bd = d; best = f; } }
         o.picks.push(best ? { x: best.x, y: best.y, id: best.id } : { x: gx + Math.cos(b) * 240, y: gy + Math.sin(b) * 240 }); } }
-    if (o.shape === 'hound') o.picks = spread(gx, gy, 600, 6);      // six changes out to six directions round him
     if (o.shape === 'cone') o.picks = picks(gx, gy, o.radius || 440, 5, [o.dir || 0, ((o.angle || 130) * Math.PI) / 360]);
     if (o.shape === 'vase') { const pr = (o.targets || []).find((p) => p.pour && (!G || !G.hero || Math.hypot(p.x - G.hero.x, p.y - G.hero.y) >= 380)), fs = (G && G.foes) || [], h = G && G.hero; let best = pr || null, bn = -1;
       if (!best) for (const f of fs) { if (f.state === 'dead' || Math.hypot(f.x - gx, f.y - gy) > 760 || (h && (Math.hypot(f.x - h.x, f.y - h.y) < 380 || Math.hypot(f.x - h.x, f.y - h.y) > 600))) continue; let n = 0; for (const g2 of fs) if (g2.state !== 'dead' && Math.abs(g2.x - f.x) < 110 && Math.abs(g2.y - f.y) < 90) n++; if (n > bn) { bn = n; best = f; } }
@@ -200,24 +201,37 @@ export function createGods(ctx, W = createWonders(), { ink = null, kick = () => 
             else if (n === 'gsilk') W.draw(c, 'gsilk_0', X, Y, rot, big * 0.6 * z, big * 0.8 * z, a * veil(V, X, Y), 0.4, 1);
             else W.draw(c, n, X - Math.cos(b) * 60 * big * z, Y - Math.sin(b) * 40 * big * z, b, big * 0.7 * z, big * 0.9 * z, a * veil(V, X, Y), n.startsWith('gsword') ? 0.3 : 0.45, 1); }
           break; }
-        case 'hound': {        // 杨戬 七十二变: six changes: a hound, a tiger, a hawk, a marten, a crane and a serpent leap out of him to six
-          // foes in a few wet strokes each, strike, and leap back into him
-          const ps = o.picks.length ? o.picks : [{ x: gx + 300, y: gy }], SIX = ['whound_0', 'gtiger', 'ghawk', 'gmarten', 'gcrane', 'gserpent'], FLY = { ghawk: 1, gcrane: 1 };
-          if (ground) { land(o, t, 8); const s = clamp(t / 0.18); D(c, `gsplash_${o.v}`, V.sx(gx), V.sy(gy), 0, 0.6 * z * s, 0.6 * z * s * V.KY / 0.55, 1 - clamp((t - 0.3) / 0.6));
-            for (let k = 0; k < 6; k++) { const p = at(ps[k % ps.length]); shockAt(c, V, p.x, p.y, T0 + 0.3 + k * 0.03, t, 0.7); } break; }
-          for (let k = 0; k < 6; k++) { const n = SIX[k], f0 = at(ps[k % ps.length]), tk = t - k * 0.03, b = ((k + 0.5) / 6) * TAU, fd = Math.hypot(f0.x - gx, f0.y - gy);
-            // each leaps out its own way, at least 260 out (a foe too near him would keep the six in a heap over him)
-            const p = fd >= 220 ? f0 : { x: gx + Math.cos(b) * 260, y: gy + Math.sin(b) * 200 };
-            // out of him (0 to T0), the leap (T0 to T0 + 0.3), the strike held (to + 0.5), and back into him (+ 0.5 to + 0.85)
-            let x, y, lift, sc, a, dir;
-            if (tk < T0) { const q = ease(clamp(tk / T0)); x = gx + Math.cos(b) * 70 * q; y = gy + Math.sin(b) * 45 * q; lift = 70 + 40 * q; sc = 0.25 + 0.3 * q; a = q; dir = Math.cos(b) < 0 ? -1 : 1; }
-            else if (tk < T0 + 0.5) { const q = ease(clamp((tk - T0) / 0.3)), x0 = gx + Math.cos(b) * 70, y0 = gy + Math.sin(b) * 45; x = x0 + (p.x - x0) * q; y = y0 + (p.y - y0) * q; lift = (FLY[n] ? 150 : 90) * Math.sin(Math.PI * q) + 30 * (1 - q) + 20; sc = 0.55 + 0.25 * Math.sin(Math.PI * q); a = 1; dir = p.x < x0 ? -1 : 1; }
-            else { const q = ease(clamp((tk - T0 - 0.5) / 0.35)); x = p.x + (gx - p.x) * q; y = p.y + (gy - p.y) * q; lift = 20 + (FLY[n] ? 120 : 60) * Math.sin(Math.PI * q); sc = 0.55 * (1 - 0.7 * q); a = 1 - q * q; dir = gx < p.x ? -1 : 1; }
-            if (a <= 0.01) continue; const [X, Y] = P(x, y, lift), A = a * veil(V, X, Y) * (tk < T0 ? 1 : gclear(X, Y)), bn = BEAST_OF[n], bm = BEASTS && BEASTS.img[bn];
-            if (bm) {      // the painted beast (gen/beasts.prep.mjs): its length in world units, tilted along its leap, mirrored to face the way it goes
-              const M = BEASTS.meta[bn], k2 = (BEAST_LEN[bn] / M.w) * sc * 1.8 * z, tilt = tk >= T0 && tk < T0 + 0.3 ? (Math.cos(Math.PI * clamp((tk - T0) / 0.3)) * -0.22) * dir : 0;
-              ctx.setTransform(Math.cos(tilt) * k2 * dir, Math.sin(tilt) * k2, -Math.sin(tilt) * k2 * dir, Math.cos(tilt) * k2, X, Y); ctx.globalAlpha = Math.min(1, A); ctx.drawImage(bm, -M.cx, -M.cy); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 1; }
-            else { const kk = sc * (n === 'gserpent' ? 0.9 : n === 'ghawk' ? 0.95 : 1.3) * z; W.draw(c, n, X, Y, 0, dir * kk, kk, A); } }      // (the brush cell while the pictures load); once out of him, thinned round him so he stays in view
+        case 'eye': {         // 杨戬 天眼照妖 (the lead, round 2: the weight of a true form): the third eye, as tall as he is, tears open
+          // above him (an ink slit splits, the lids part, the gold iris flares, a ring of ink and gold shocks out), holds open, and shuts
+          // by 1.2 s. From 0.35 to 0.7 s its gaze, a blade of gold-white light, sweeps the fan from the eye down across the ground,
+          // throwing ink shadows behind the foes it crosses (that sweep is the hit: the marked are rimmed in gold as it passes them,
+          // index.js eyeRims with eyeReveal below); then only thin gold rays lie on the ground, and fade.
+          // the fan's origin is where he stood as it opened (rules-build), even if he moves before it lands
+          const ox = o.x != null ? o.x : gx, oy = o.y != null ? o.y : gy;
+          const half = ((o.angle || 70) * Math.PI) / 360, R = o.radius || 420, d = o.dir || 0, sw = clamp((t - SWEEP0) / SWEEP), b0 = d - half + 2 * half * ease(sw);
+          // the eye over him, held inside the view (below the HUD's top band) when he stands near an edge
+          const cwE = ctx.canvas.width, chE = ctx.canvas.height, hE = EYE_H * z, EX = Math.max(hE * 0.4, Math.min(cwE - hE * 0.4, V.sx(ox))), EY = Math.max(chE * 0.11 + hE * 0.5, Math.min(chE - hE * 0.5, V.sy(oy) - EYE_LIFT * z));
+          if (ground) { const X0 = V.sx(ox), Y0 = V.sy(oy), fan = clamp((t - SWEEP0) / 0.15) * (1 - clamp((t - 0.9) / 0.5));
+            if (fan > 0) { for (let k = 0; k < 9; k++) { const b = d + (k / 8 - 0.5) * 2 * half * 0.92; if (b > b0 + 0.05) continue; const L2 = R * (0.8 + 0.2 * Math.sin(k * 2.3)), XE = V.sx(ox + Math.cos(b) * L2), YE = V.sy(oy + Math.sin(b) * L2);
+                // (wray is an upright cell, its foot at the pivot and its light running down +y: turned to point along the ray)
+                const Cr = W.cell(`wray_${k % 2}`), Lr = Math.hypot(XE - X0, YE - Y0); if (Cr) W.draw(c, `wray_${k % 2}`, X0, Y0, Math.atan2(YE - Y0, XE - X0) - Math.PI / 2, 1.8 * z, Lr / Cr[8], 0.34 * fan * veil(V, (X0 + XE) / 2, (Y0 + YE) / 2)); }
+              for (const s2 of [-1, 1]) { const b = d + s2 * half, XE = V.sx(ox + Math.cos(b) * R), YE = V.sy(oy + Math.sin(b) * R); along(c, `gthread_${s2 > 0 ? 1 : 0}`, X0, Y0, XE, YE, 0.8 * z, 0.85 * fan, 0, 1, V); } }
+            // the ink shadows: behind each foe the blade is crossing, a short dark stroke thrown away from the eye
+            if (sw > 0 && sw < 1) { let n = 0; for (const f of (G && G.foes) || []) { if (f.state === 'dead') continue; const dx = f.x - ox, dy = f.y - oy, dd = Math.hypot(dx, dy); if (dd > R || dd < 40) continue; let da = Math.atan2(dy, dx) - b0; da = Math.atan2(Math.sin(da), Math.cos(da)); if (Math.abs(da) > 0.14) continue; if (++n > 24) break;
+                const ux = dx / dd, uy = dy / dd, XF = V.sx(f.x), YF = V.sy(f.y), XS = V.sx(f.x + ux * 90), YS = V.sy(f.y + uy * 90); along(c, `wsweep_${n & 1}`, XF, YF, XS, YS, 0.22 * z, 0.45 * (1 - Math.abs(da) / 0.14), 0, 1, V); } }
+            land(o, t, 5); break; }
+          if (!EYE) break;
+          // the eye opening: the slit tears (0 to 0.12 s), the lids part (to 0.38 s), held open, shut by 1.2 s; kept off the hero
+          const tear = clamp(t / 0.12), open = ease(clamp((t - 0.1) / 0.28)) * (1 - ease(clamp((t - 0.85) / 0.35))), hgt = EYE_H * z, k2 = hgt / EYE.height, Hh = V.hero;
+          const off = Hh && Math.abs(Hh[0] - EX) < hgt * 0.45 && Math.abs(Hh[1] - 60 * z - EY) < hgt * 0.6 ? 0.35 : 1;
+          if (t < 0.4) { const q = t / 0.4; D(c, 'wcut_0', EX, EY, Math.PI / 2, hgt / 120 * tear, 0.6 * z, (1 - q) * off); }
+          if (open > 0.02) { ctx.setTransform(k2, 0, 0, k2 * (0.06 + 0.94 * open), EX, EY); ctx.globalAlpha = Math.min(1, t / 0.1) * off; ctx.drawImage(EYE, -EYE.width / 2, -EYE.height / 2); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 1; }
+          // the flare and the shock ring going out from it, ink and gold (upright: a ring in the air, not on the ground)
+          if (t > 0.12 && t < 0.75) { const q = (t - 0.12) / 0.63, kr = (0.6 + 2.2 * ease(q)) * z; W.draw(c, 'whalo_gold', EX, EY, q, kr, kr, (1 - q) * 0.9 * off); D(c, 'gshock_0', EX, EY, 0, kr * 0.9, kr * 0.9, (1 - q) * 0.8 * off); }
+          // the gaze: a blade of gold-white light from the eye to the ground, sweeping the fan
+          if (sw > 0 && sw < 1) { const XG = V.sx(ox + Math.cos(b0) * R), YG = V.sy(oy + Math.sin(b0) * R), Cb = W.cell('gbeam_0'), Lb = Math.hypot(XG - EX, YG - EY), rb = Math.atan2(YG - EY, XG - EX), a3 = Math.sin(sw * Math.PI) * 0.4 + 0.6;
+            if (Cb) { W.draw(c, 'gbeam_0', EX, EY, rb, Lb / Cb[7], 0.55 * z, a3 * veil(V, (EX + XG) / 2, (EY + YG) / 2)); W.draw(c, 'gbeam_1', EX, EY, rb - 0.025, Lb / Cb[7], 0.3 * z, 0.45 * a3); }
+            W.draw(c, 'whalo_gold', XG, YG, 0, 0.7 * z, 0.7 * z * V.KY, 0.9 * a3); }
           break; }
         case 'line': {         // 雷震子: the wings beat (two great winds), lightning down the line, the staff splits the ground
           const L = o.length || 380, d = o.dir || 0, pt = (f) => [o.x + Math.cos(d) * L * f, o.y + Math.sin(d) * L * f], end = o.smash || { x: pt(1)[0], y: pt(1)[1] };
@@ -343,12 +357,39 @@ export function createGods(ctx, W = createWonders(), { ink = null, kick = () => 
         const ph = clock * 3.1 + zn.id, slot = Math.floor(ph), q = ph - slot; if (q < 0.25) { const h1 = Math.sin(slot * 12.9 + zn.id) * 43758.5, b = (h1 - Math.floor(h1)) * TAU, [XB, YB] = [V.sx(zn.x + Math.cos(b) * r * 0.6), V.sy(zn.y + Math.sin(b) * r * 0.4)]; W.draw(c, `wbolt_${slot % 2}`, XB, YB, 0, 0.45 * z, 0.45 * z, (1 - q / 0.25) * veil(V, XB, YB - 80 * z)); } }
       else if (false && zn.kind === 'hold' && zn.src === 'tuxingsun' && layer === 'ground')      /* (the chasm of the feat is his held ground now) */ { const a = clamp((zn.t || 0) / 0.2) * clamp(((zn.life || 2.5) - (zn.t || 0)) / 0.4); for (let k = 0; k < 3; k++) { const b = (k / 3) * TAU + zn.id; along(c, `wcrack_${k % 2}`, V.sx(zn.x), V.sy(zn.y), V.sx(zn.x + Math.cos(b) * zn.r), V.sy(zn.y + Math.sin(b) * zn.r), 0.38 * z, a * 0.7, 0, 1, null); } } } }
 
+  // ---------------------------------------------------------------- 天眼: what it leaves
+  // how far the latest gaze has reached a foe (0 until the blade crosses him, then 1): the rim and seal appear as it passes
+  function eyeReveal(f) { let best = null; for (const o of feats) if (o.shape === 'eye' && (!best || o.at > best.at)) best = o; if (!best) return 1;
+    const gx = best.x, gy = best.y, half = ((best.angle || 70) * Math.PI) / 360, d = best.dir || 0;
+    let da = Math.atan2(f.y - gy, f.x - gx) - (d - half); da = Math.atan2(Math.sin(da), Math.cos(da)); if (da < 0) da += TAU; const frac = Math.min(1, da / (2 * half));
+    const tSweep = best.at + Math.max(best.land || 0, SWEEP0 + SWEEP * frac); return clamp((clock - tSweep) / 0.06); }
+
+  // a small eye over each marked foe while his mark lasts (f.eyeUntil, game seconds), at most 30 drawn
+  function eyeSeals(V) { const fs = G && G.foes; if (!EYE || !fs) return; const z = V.z, now = G.t || 0; let n = 0;
+    for (const f of fs) { if (f.state === 'dead' || !(f.eyeUntil > now)) continue; if (++n > 30) break;
+      const X = V.sx(f.x), Y = V.sy(f.y) - (f.tier ? 160 : 100) * z, hgt = 34 * z, k = hgt / EYE.height, a = clamp((f.eyeUntil - now) / 0.3) * eyeReveal(f) * 0.95 * veil(V, X, Y);
+      ctx.setTransform(k, 0, 0, k, X, Y); ctx.globalAlpha = a; ctx.drawImage(EYE, -EYE.width / 2, -EYE.height / 2); }
+    ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 1; }
+  // a ward broken (wardBroken), the pay-off: a gold ward ring round him cracks all the way round, swells and bursts; shards of ink
+  // and gold fly out and a flash of gold goes up from him (0.9 s)
+  function breaksDraw(c, V, layer) { const z = V.z;
+    for (let i = 0; i < breaks.length; i++) { const o = breaks[i], t = clock - o.at; if (t > 0.9) { if (layer === 'over') breaks.splice(i--, 1); continue; }
+      const u = foeOf(o.id), x = u ? u.x : o.x, y = u ? u.y : o.y, X = V.sx(x), Y = V.sy(y), q = t / 0.9, sw = 1 + 0.7 * ease(clamp((t - 0.25) / 0.5)), R = 170 * sw, a = 1 - clamp((t - 0.35) / 0.55);
+      if (layer === 'ground') { const kr = (R * 2 * z) / 360; W.draw(c, 'whalo_gold', X, Y, q * 0.4, kr, kr * V.KY, a); D(c, 'gshock_0', X, Y, 0, kr * 0.9, kr * 0.9 * V.KY / 0.55, a * 0.85);
+        // the cracks: gold lines running round and out through the ring, all the way round
+        const run = clamp(t / 0.25); for (let k = 0; k < 14; k++) { const b = (k / 14) * TAU + 0.2, r0 = R * 0.75, r1 = R * (1.05 + 0.25 * Math.sin(k * 3.7)) * run, j = 0.18 * Math.sin(k * 5.1);
+          along(c, `gthread_${k & 1}`, V.sx(x + Math.cos(b) * r0), V.sy(y + Math.sin(b) * r0), V.sx(x + Math.cos(b + j) * r1), V.sy(y + Math.sin(b + j) * r1), 0.7 * z, a, 0, 1, V); }
+        continue; }
+      if (t > 0.25) { const s2 = (t - 0.25) / 0.65; for (let k = 0; k < 16; k++) { const b = (k / 16) * TAU + 0.1, r = (R * 0.9 + 220 * ease(s2)) * z, px = X + Math.cos(b) * r, py = Y + Math.sin(b) * r * V.KY - (70 * s2 - 40 * s2 * s2) * z;
+          W.draw(c, `wcut_${k & 1}`, px, py, b, 0.4 * z, 0.4 * z, (1 - s2) * veil(V, px, py)); } }
+      if (t < 0.3) { const f2 = t < 0.06 ? 1 : 1 - (t - 0.06) / 0.24; W.draw(c, 'whalo_gold', X, Y - 90 * z, 0, 1.2 * z, 1.2 * z, f2 * veil(V, X, Y - 90 * z)); } } }
+
   return {
-    onEvent, owns,
-    drawGround(V, dt, game) { clock += dt; if (game) G = game; if (!W.ready) return; const c = ctx; c.save(); if (warm.length) warmUp(); stageGround(c, V); featsDraw(c, V, 'ground'); zonesDraw(c, V, 'ground'); c.restore(); },
-    drawOver(V) { if (!W.ready) return; const c = ctx; c.save(); stageOver(c, V); featsDraw(c, V, 'over'); zonesDraw(c, V, 'over'); c.restore(); },
+    onEvent, owns, eyeReveal,
+    drawGround(V, dt, game) { clock += dt; if (game) G = game; if (!W.ready) return; const c = ctx; c.save(); if (warm.length) warmUp(); stageGround(c, V); featsDraw(c, V, 'ground'); zonesDraw(c, V, 'ground'); breaksDraw(c, V, 'ground'); c.restore(); },
+    drawOver(V) { if (!W.ready) return; const c = ctx; c.save(); stageOver(c, V); featsDraw(c, V, 'over'); zonesDraw(c, V, 'over'); breaksDraw(c, V, 'over'); eyeSeals(V); c.restore(); },
     get live() { return stages.length + feats.length; },
-    reset() { stages.length = 0; feats.length = 0; },
+    reset() { stages.length = 0; feats.length = 0; breaks.length = 0; },
   };
 }
 

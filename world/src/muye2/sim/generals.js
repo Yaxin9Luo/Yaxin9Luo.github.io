@@ -2,7 +2,7 @@
 
 import {setState, query, Qpick, Qhit, Qally, PICKED, nearestFoe, CL, clusters, allyPool} from './core.js';
 import {hitFoe, hurtAlly, addShot, addZone, kill} from './harm.js';
-import {greatShock, take} from './shapes.js';
+import {greatShock, take, expose} from './shapes.js';
 import {cast} from './shapes.js';
 import {lineHit, carry, held} from './squads.js';
 import {ALLY, MAX, GENERAL, BY} from '../content.js';
@@ -14,7 +14,7 @@ export function addGeneral(g, e) {
   a.hp = a.maxHp = Math.round(P.hp * P.hpGrow); a.state = 'walk'; a.stateT = 0; a.flash = 0; a.elite = false;
   a.r = row.r; a.cd = .5; a.i = 0; a.j = 0; a.m = 1; a.wade = false; a.free = true; a.blocks = false;
   a.dead = false; a.seekT = 0; a.tx = a.x; a.ty = a.y; a.hasTarget = false; a.mvT = 0; a.mvD = 0; a.mx0 = 0; a.my0 = 0; a.mx1 = 0; a.my1 = 0;
-  a.awayT = 0; a.storm = null; a.stormId = 0; a.flip = 0; a.netT = 0;
+  a.awayT = 0; a.storm = null; a.stormId = 0; a.flip = 0; a.netT = 0; a.eye = null;
   g.allies.push(a);
   return a;
 }
@@ -78,6 +78,25 @@ export function generalSkill(g, a, e, row, P, mul) {
       const A = row.attack;
       for (let i = 0; i < n; i++) hitFoe(g, PICKED[i], S.dmg * mul * (isShooter(PICKED[i]) ? 2 : 1) * (A.bane && A.bane.includes(PICKED[i].kind) ? A.baneMult : 1), e.id, null, a.x, a.y, null, false);
       ev.count = n;
+      break;
+    }
+    case 'eye': {                                           // 杨戬 in his true form: the third eye opens, a fan of gold light
+      // toward the Shang leader with the most health in reach, else the densest group. The light reaches the field S.delay s
+      // after the eye opens (the drawn blade's travel, lead 2026-11-27): the blow and the mark land then (landEye), on whoever
+      // is in the fan by then; the event goes at the opening, naming who is in it now
+      const R = S.radius * area;
+      let best = null;
+      for (let i = 0, n = query(a.x, a.y, R, Qpick); i < n; i++) { const f = Qpick[i]; if (f.state !== 'dead' && f.tier && (!best || f.hp > best.hp)) best = f; }
+      if (!best && !clusters(g, a.x, a.y, R, 1)) return false;
+      const tx = best ? best.x : CL[0].x, ty = best ? best.y : CL[0].y, dir = Math.atan2(ty - a.y, tx - a.x), until = g.t + S.delay + S.mark * dur;
+      a.eye = {at: g.t + S.delay, x: a.x, y: a.y, dir, R, mul, until};
+      ev.dir = dir; ev.angle = S.angle; ev.radius = R; ev.land = S.delay; ev.marked = []; ev.broke = [];
+      for (let i = 0, n = query(a.x, a.y, R, Qhit); i < n; i++) {
+        const f = Qhit[i];
+        if (!inFan(f, a.eye, S)) continue;
+        ev.marked.push({id: f.id, until});
+        if (wardsOf(g, f).length && g.t + S.delay >= (f.eyeWardNext || 0)) ev.broke.push(f.id);
+      }
       break;
     }
     case 'line': {                                          // 雷震子: a dive along a line through the thickest of them
@@ -234,6 +253,27 @@ export function generalSkill(g, a, e, row, P, mul) {
   setState(a, 'skill'); a.stateT = 0;
   return true;
 }
+const inFan = (f, E, S) => { const dx = f.x - E.x, dy = f.y - E.y, d = Math.hypot(dx, dy); return f.state !== 'dead' && d <= E.R + f.r && (d <= f.r || (dx * Math.cos(E.dir) + dy * Math.sin(E.dir)) / d >= Math.cos(S.angle * Math.PI / 360)); };
+/** A leader's wards the eye can break: his arrival ward, his kin's (袁洪's six, 纣王's three), a guard he has taken. */
+const wardsOf = (g, f) => { const w = []; if (!f.tier) return w; if (f.wardT > 0) w.push('arrival'); if (f.kinK || (f.tier === 'final' && g.campaign.officers > 0)) w.push('kin'); if (f.guardT > 0) w.push('guard'); return w; };
+/** 天眼's light reaches the field: every foe in the fan is marked, then struck; a leader's ward breaks (2 s in 15). */
+function landEye(g, a, e, row, S) {
+  const E = a.eye, A = row.attack;
+  a.eye = null;
+  for (let i = 0, n = query(E.x, E.y, E.R, Qhit); i < n; i++) {
+    const f = Qhit[i];
+    if (!inFan(f, E, S)) continue;
+    const bane = !!(A.bane && A.bane.includes(f.kind));
+    // marked before the blow, so that what hid him does not turn this one aside either
+    f.eyeUntil = E.until; expose(f, bane ? S.baneExpose : S.expose, E.until - g.t);
+    const wards = g.t >= (f.eyeWardNext || 0) ? wardsOf(g, f) : [];
+    if (wards.length) {
+      f.eyeWardUntil = g.t + S.ward; f.eyeWardNext = g.t + S.wardCd;
+      g.events.push({type: 'wardBroken', id: f.id, kind: f.kind, wards, until: f.eyeWardUntil, by: e.id, x: f.x, y: f.y});
+    }
+    hitFoe(g, f, S.dmg * E.mul * (bane ? A.baneMult : 1), e.id, null, E.x, E.y, null, false);
+  }
+}
 /** 五光石: fast stones, one foe each, first at whatever is winding up a blow. Returns how many were thrown. */
 export function throwStones(g, a, e, S, count, mul) {
   const n = quarry(g, a.x, a.y, S.range, count || 1, isWinding);
@@ -249,6 +289,7 @@ export function stepGeneral(g, a, dt) {
   const h = g.hero, m = g.mods, e = g.build.generals.find(x => x.id === a.general);
   if (!e) { a.dead = true; return; }
   const row = BY.general[e.id], P = row.at[e.trueForm ? MAX.general + 1 : e.level], F = P.form || null;
+  if (a.eye && g.t >= a.eye.at - 1e-9) landEye(g, a, e, row, row.at[MAX.general + 1].skill);     // 天眼's light, cast S.delay s ago
   if (a.state === 'away') {
     // he has withdrawn; he is never lost
     a.awayT -= dt; a.x = a.px = h.x; a.y = a.py = h.y;
