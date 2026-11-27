@@ -21,12 +21,12 @@ export const general = o => ({...o, levels: o.levels.map((text, i) => ({text, ..
 export const generals = [
   general({
     id: 'nezha', element: 'fire', name: T('Nezha', '哪吒'), mount: T('the Wind-fire Wheels', '风火轮'), weapon: T('the Fire-tipped Spear', '火尖枪'),
-    treasures: ['乾坤圈', '混天绫'], patronOf: [], echoes: ['fireSpear', 'ring', 'sash', 'fireCover'], station: {angle: 0.55, dist: 260}, seek: 'cluster', fly: true, hp: 260, r: 15, speed: 400,
+    treasures: ['乾坤圈', '混天绫'], patronOf: [], echoes: ['fireSpear', 'ring', 'sash', 'fireCover'], station: {angle: 0.55, dist: 260}, seek: 'cluster', fly: true, hp: 260, r: 15, speed: 400, might: {dmg: [1.5, 3], hp: [1.25, 2]},
     attack: {shape: 'line', cd: .75, dmg: 26, length: 150, width: 30, count: 1},
     skill: {id: 'ringAndSash', name: T('Ring and Sash', '圈绫并用'), shape: 'arc', cd: 4.5, dmg: 30, radius: 150, angle: 220, push: 90, ring: {dmg: 30, bounces: 4, hop: 240, speed: 520, r: 15, life: 3}},
     steps: [{}, {}, {skillCd: 3.6}, {}, {count: 2}],
     levels: [
-      T('Nezha darts between groups on the Wind-fire Wheels and thrusts with the Fire-tipped Spear; now and then he throws the Universe Ring and sweeps the Armillary Sash. While he is with you, your own Fire-tipped Spear, Universe Ring, Armillary Sash and Nine-dragon Fire Cover also strike from where he stands, at two fifths of their strength.', '哪吒脚踏风火轮穿梭于敌群之间，以火尖枪刺敌，不时掷出乾坤圈、甩开混天绫。有他在场，你自己的火尖枪、乾坤圈、混天绫、九龙神火罩也会从他所在之处再出手一次，威力为四成。'),
+      T('The strongest of your generals with Yang Jian: he grows into it, and by his fifth level and in his true form he hits about three times as hard as any other and stands twice as long. Nezha darts between groups on the Wind-fire Wheels and thrusts with the Fire-tipped Spear; now and then he throws the Universe Ring and sweeps the Armillary Sash. While he is with you, your own Fire-tipped Spear, Universe Ring, Armillary Sash and Nine-dragon Fire Cover also strike from where he stands, at two fifths of their strength.', '他与杨戬是你最强的两位神将：越升越强，到第五级与显圣时，出手约为其他神将的三倍，耐打一倍。哪吒脚踏风火轮穿梭于敌群之间，以火尖枪刺敌，不时掷出乾坤圈、甩开混天绫。有他在场，你自己的火尖枪、乾坤圈、混天绫、九龙神火罩也会从他所在之处再出手一次，威力为四成。'),
       T('He hits harder and stands more.', '他打得更重，也更耐打。'),
       T('He throws the ring and sweeps the sash more often.', '他掷圈甩绫更勤。'),
       T('He hits harder and stands more.', '他打得更重，也更耐打。'),
@@ -37,12 +37,12 @@ export const generals = [
   }),
   general({
     id: 'yangjian', element: 'metal', name: T('Yang Jian', '杨戬'), mount: null, weapon: T('the three-pointed, two-edged blade', '三尖两刃刀'),
-    treasures: ['哮天犬'], patronOf: ['spears'], station: {angle: 1.25, dist: 200}, seek: 'elite', hp: 320, r: 19, speed: 340,
+    treasures: ['哮天犬'], patronOf: ['spears'], station: {angle: 1.25, dist: 200}, seek: 'elite', hp: 320, r: 19, speed: 340, might: {dmg: [1.5, 3], hp: [1.25, 2]},
     attack: {shape: 'arc', cd: .85, dmg: 46, radius: 100, angle: 150, push: 0, eliteMult: 1.6, range: 80, bane: BEASTS, baneMult: 2},
     skill: {id: 'houndHunt', name: T('The Heaven-barking Hound', '哮天犬'), shape: 'hound', cd: 2.4, dmg: 80, count: 1, range: 640},
     steps: [{}, {}, {count: 2}, {}, {skillCd: 1.8}],
     levels: [
-      T('Yang Jian seeks out elites and duels them with the three-pointed blade, which bites them harder; his Heaven-barking Hound runs down archers and shamans far off. Beasts and shape-changers (the marten, the Meishan kinds) take twice from blade and hound.', '杨戬专找精英，以三尖两刃刀与之单挑，对精英伤害更高；哮天犬扑杀远处的弓手与巫。妖兽与变化之物（花狐貂、梅山诸怪）在他刀下、犬口受伤加倍。'),
+      T('The strongest of your generals with Nezha: he grows into it, and by his fifth level and in his true form he hits about three times as hard as any other and stands twice as long. Yang Jian seeks out elites and duels them with the three-pointed blade, which bites them harder; his Heaven-barking Hound runs down archers and shamans far off. Beasts and shape-changers (the marten, the Meishan kinds) take twice from blade and hound.', '他与哪吒是你最强的两位神将：越升越强，到第五级与显圣时，出手约为其他神将的三倍，耐打一倍。杨戬专找精英，以三尖两刃刀与之单挑，对精英伤害更高；哮天犬扑杀远处的弓手与巫。妖兽与变化之物（花狐貂、梅山诸怪）在他刀下、犬口受伤加倍。'),
       T('He hits harder and stands more.', '他打得更重，也更耐打。'),
       T('The hound takes two at a time.', '哮天犬一次扑两个。'),
       T('He hits harder and stands more.', '他打得更重，也更耐打。'),

@@ -50,12 +50,15 @@ for (const row of troops) {
 for (const row of generals) {
   row.kind = 'general';
   row.at = [null];
-  let cur = {hp: row.hp, attack: row.attack, skill: row.skill, aura: row.aura || null, grow: 1, hpGrow: 1};
+  // 杨戬 and 哪吒, the two strongest (user, 2026-11-26): `might` {dmg, hp}, each a factor or [at level 1, at level 5] that grows
+  // evenly with his level (the true form keeps level 5's), so they grow into their strength rather than start with it
+  const M = row.might || {dmg: 1, hp: 1}, last = row.levels.length - 1, at = (v, i) => Array.isArray(v) ? v[0] + (v[1] - v[0]) * i / last : v;
+  let cur = {hp: row.hp, attack: row.attack, skill: row.skill, aura: row.aura || null, grow: at(M.dmg, 0), hpGrow: at(M.hp, 0)};
   row.levels.forEach((lv, i) => {
     const {text, aura, ...nums} = lv;
     const attack = {...cur.attack}, skill = {...cur.skill};
     for (const k in nums) { if (k === 'skillCd') skill.cd = nums[k]; else if (k in skill && k !== 'count') skill[k] = nums[k]; else if (k === 'count') { if (row.skill.count !== undefined) skill.count = nums[k]; else attack.count = nums[k]; } else attack[k] = nums[k]; }
-    cur = {...cur, attack, skill, aura: aura || cur.aura, grow: 1 + GENERAL.grow * i, hpGrow: 1 + GENERAL.hpGrow * i};
+    cur = {...cur, attack, skill, aura: aura || cur.aura, grow: (1 + GENERAL.grow * i) * at(M.dmg, i), hpGrow: (1 + GENERAL.hpGrow * i) * at(M.hp, i)};
     row.at.push(cur);
   });
   const {id, name, text, skillCd, count, eliteMult, ...form} = row.trueForm;
