@@ -91,11 +91,11 @@ function drain(e, k, dt, hold, rate) {
 export function createBars({canvas, top}) {
   const ctx = canvas.getContext('2d');
   const lags = new Map();       // unit id -> the trail's state
-  let W = 0, H = 0, D = 1, barId = 0, topK = 1;
+  let W = 0, H = 0, D = 1, barId = 0, topK = 1, lastTop = null;
   const topTrail = {lag: 1, hold: 0, draining: false};
   const topCanvas = top.querySelector('canvas'), tctx = topCanvas.getContext('2d');
   const api = {
-    look: 'c',
+    look: 'c', holdId: 0,
     resize(w, h, dpr) { W = w; H = h; D = dpr; canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr); },
     clear() { ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, canvas.width, canvas.height); lags.clear(); barId = 0; top.classList.remove('on', 'enraged', 'faint'); },
     /** One frame of the over-head bars. `view`: {cam, ky, alpha}. Returns how many bars were drawn, for checks. */
@@ -108,6 +108,7 @@ export function createBars({canvas, top}) {
       for (const u of game.foes) {
         if (u.dead || u.state === 'dead' || !(u.hp > 0) || !u.maxHp) continue;
         const tier = tierOf(u); if (!tier) continue;
+        if (u.duelFoe && u.id === bossBarId) continue;      // in a duel his long bar is the only one: none over his head
         const k = Math.max(0, Math.min(1, u.hp / u.maxHp));
         if (tier === 'elite' && k >= .999) continue;      // an elite's bar appears with its first wound: 300 figures do not wear 30 full bars
         const x = u.px + (u.x - u.px) * alpha, y = u.py + (u.y - u.py) * alpha;
@@ -139,9 +140,11 @@ export function createBars({canvas, top}) {
     },
     /** The long bar at the top, with gold studs at the phases. */
     drawTop(game, id, dt) {
-      const u = id ? game.foes.find(f => f.id === id && f.hp > 0 && f.state !== 'dead') : null;
+      // `holdId`: a duel's fall, when his bar stays a moment, emptied, after he is down (the page sets it)
+      let u = id ? game.foes.find(f => f.id === id && ((f.hp > 0 && f.state !== 'dead') || id === api.holdId)) : null;
+      if (u) lastTop = u; else if (id && id === api.holdId && lastTop && lastTop.id === id) u = lastTop;      // the rules may have cleared him from the field already
       if (!u) { if (barId) { barId = 0; top.classList.remove('on'); } return; }
-      const k = Math.max(0, Math.min(1, u.hp / u.maxHp));
+      const k = u.hp > 0 && u.state !== 'dead' ? Math.max(0, Math.min(1, u.hp / u.maxHp)) : 0;
       if (barId !== id) { barId = id; topTrail.lag = k; topTrail.hold = 0; topTrail.draining = false; top.classList.add('on'); }
       const lag = drain(topTrail, k, dt, .5, .45);
       const r = topCanvas.getBoundingClientRect(), cw = Math.round(r.width * D), ch = Math.round(r.height * D);

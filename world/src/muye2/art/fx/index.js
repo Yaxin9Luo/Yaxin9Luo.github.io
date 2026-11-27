@@ -740,9 +740,11 @@ export async function loadFx({ ky = 0.62, horizon = 0.52 } = {}) {
   // Never veiled, never thinned by density: danger is the second read.
   const PRESS = (z) => { const left = z.life - z.t; return left < 0.25 ? 1 + 0.22 * Math.sin(PI * clamp(1 - left / 0.25)) : 1; };
   function edgeLine(x0, y0, dir, L, a, k) { spr(CELL.warn_edge, sx(x0), sy(y0), dir, L / 200, k, a, KY); }
+  // a duel's boss: his warnings and blows are drawn in the night sheet by fx/gl/duel.js
+  const duelZ = (src) => !!(glfx && glfx.duelOwns && glfx.duelOwns(src));
   function shangGround() {
     const zs = G && G.zones; if (!zs) return; const dz = G.hero && G.hero.dazzled > 0 ? 0.35 : 1;
-    for (let i = 0; i < zs.length; i++) { const z = zs[i]; if (z.dead || z.side !== 'shang') continue; DIM = dz * (hiddenZ.has(z) ? 0.3 : 1); if (z.x < F.x0 - 700 || z.x > F.x1 + 700 || z.y < F.y0 - 700 || z.y > F.y1 + 700) continue;
+    for (let i = 0; i < zs.length; i++) { const z = zs[i]; if (z.dead || z.side !== 'shang' || duelZ(z.src)) continue; DIM = dz * (hiddenZ.has(z) ? 0.3 : 1); if (z.x < F.x0 - 700 || z.x > F.x1 + 700 || z.y < F.y0 - 700 || z.y > F.y1 + 700) continue;
       const X = sx(z.x), Y = sy(z.y), life = z.life || 1, p = clamp(z.t / life), inA = clamp(z.t / 0.08), r = z.r || 80, id = z.id || i;
       if (z.kind === 'dark') { darkGround(z, X, Y, r, id); continue; }
       if (z.kind === 'wall') { wallDraw(z, false); continue; }
@@ -788,7 +790,7 @@ export async function loadFx({ ky = 0.62, horizon = 0.52 } = {}) {
     const life = z.life || 3, up = z.t < 0.14 ? ease(z.t / 0.14) : z.t > life - 0.25 ? clamp((life - z.t) / 0.25) : 1, R = ((z.r0 || 128) + (z.r || 160)) / 2, n = Math.max(12, Math.round((TAU * R) / 42)), id = z.id || 0;
     for (let j = 0; j < n; j++) { const b = (j / n) * TAU, s = Math.sin(b); if ((s > 0) !== front) continue; const X = sx(z.x + Math.cos(b) * R), Y = sy(z.y + s * R); spr(C('gold_wall', j + id), X, Y, 0, 1.15, 1.25 * up, front ? veil(X, Y - 40 * F.z) : 1); }
   }
-  function shangOver() { const zs = G && G.zones; if (!zs) return; const dz = G.hero && G.hero.dazzled > 0 ? 0.35 : 1; for (let i = 0; i < zs.length; i++) { const z = zs[i]; if (!z.dead && z.side === 'shang' && z.kind === 'wall') { DIM = dz * (hiddenZ.has(z) ? 0.3 : 1); wallDraw(z, true); } } DIM = 1; }
+  function shangOver() { const zs = G && G.zones; if (!zs) return; const dz = G.hero && G.hero.dazzled > 0 ? 0.35 : 1; for (let i = 0; i < zs.length; i++) { const z = zs[i]; if (!z.dead && z.side === 'shang' && z.kind === 'wall' && !duelZ(z.src)) { DIM = dz * (hiddenZ.has(z) ? 0.3 : 1); wallDraw(z, true); } } DIM = 1; }
 
   // the blows land, each in its own stroke (and none in cinnabar: that was the warning)
   const SHANG_LAND = {
@@ -829,7 +831,7 @@ export async function loadFx({ ky = 0.62, horizon = 0.52 } = {}) {
     for (let i = 0; i < n; i++) { const f = lane ? (i + 0.5) / n * L : cone ? (i + 1) / (n + 1) * r : e.shape === 'ring' ? 0 : 0, x = e.x + Math.cos(d) * f, y = e.y + Math.sin(d) * f, k = lane ? (e.width || 80) / 70 : cone ? r / 200 : r / 75;
       add({ x, y, life: 0.9, seed: frame + i, k, ring: e.shape === 'ring' ? (e.inner + r) / 2 : 0, gap: e.gap || 0, gd: e.dir || 0, ground: (o) => { const m = sink(o.t), X = sx(o.x), Y = sy(o.y); if (o.ring) { for (let j = 0; j < 10; j++) { const b = (j / 10) * TAU + o.seed; if (o.gap && Math.abs(Math.atan2(Math.sin(b - o.gd), Math.cos(b - o.gd))) < o.gap) continue; const Xj = sx(o.x + Math.cos(b) * o.ring), Yj = sy(o.y + Math.sin(b) * o.ring); spr(C('splash', j), Xj, Yj, b, 0.9, 0.9, 0.75 * m * veil(Xj, Yj), KY, 0, clamp(o.t / 0.06)); } return; }
         for (let j = 0; j < 6; j++) spr(C('splash', j + o.seed), X, Y, j * 1.05 + o.seed, o.k * 0.8, o.k * 0.8, 0.8 * m * veil(X, Y), KY, 0, clamp(o.t / 0.06)); spr(C('quake', o.seed), X, Y, 0, o.k * 0.6 * (1 + 2 * o.t), o.k * 0.6 * (1 + 2 * o.t), 0.7 * (1 - clamp(o.t / 0.35)) * veil(X, Y), KY); } }); } }
-  function shangLand(e) { if (e.id === 'callName') return;      /* 张桂芳's call is a voice, not a blow: no landing mark (with WebGL2, fx/gl/voice.js draws it) */
+  function shangLand(e) { if (e.id === 'callName' || (G && G.campaign && G.campaign.duel && duelZ(G.campaign.duel.kind))) return;      /* 张桂芳's call is a voice, not a blow: no landing mark (with WebGL2, fx/gl/voice.js draws it) */
     const f = SHANG_LAND[e.id]; if (f) { if (!(glfx && glfx.has(e.id))) f(e);   /* the first stretch's blows painted in fx/gl/treasures.js */
       if (e.id !== 'umbrellaDark' && e.id !== 'goldWall') landWeight(e); return; }
     add({ x: e.x, y: e.y, life: 0.8, seed: frame, ground: (o) => { const m = sink(o.t), r = (e.radius || 80) / 100; for (let j = 0; j < 4; j++) spr(C('splash', j + o.seed), sx(o.x), sy(o.y), j * 1.57, r * 0.8, r * 0.8, 0.6 * m, KY, 0, clamp(o.t / 0.06)); } }); }
@@ -995,13 +997,16 @@ export async function loadFx({ ky = 0.62, horizon = 0.52 } = {}) {
     if (CER.q.length && clock >= CER.until) { const [fn, ev, dur] = CER.q.shift(); CER.until = clock + dur; fn(ev); }
     laneRank = 0; step(dt); chargeDust(dt); gatherDanger(); kickT += dt; if (kickT > 0.2) kickA = 0;
     TALLY = globalThis.__fxTally || null; { const g = glReady(c); if (g) { c.save(); g.drawGround(GV, dt); c.restore(); } else if (noGL()) moments().drawGround(c, dt); }
-    c.save(); drawAll('under'); TAG = 'shang'; shangGround(); DIM = 1; TAG = 'halos'; blessedHalos(); TAG = 'troopZones'; troopZones(); TAG = 'generalZones'; generalZones(); TAG = 'ward'; wardStanding(); TAG = 'pickups'; drawPickups(); TAG = 'shots'; drawShots('ground'); drawAll('ground'); c.restore();
+    // in a duel the player's side is drawn quieter (gl duck) and the boss's warnings go over it (gl drawDuel, last)
+    const gd = glReady(c), dk = gd && gd.duck ? gd.duck() : 1;
+    c.save(); c.alphaMul = dk; drawAll('under'); TAG = 'shang'; shangGround(); DIM = 1; TAG = 'halos'; blessedHalos(); TAG = 'troopZones'; troopZones(); TAG = 'generalZones'; generalZones(); TAG = 'ward'; wardStanding(); c.alphaMul = 1; TAG = 'pickups'; drawPickups(); c.alphaMul = dk; TAG = 'shots'; drawShots('ground'); drawAll('ground'); c.alphaMul = 1; c.restore();
+    if (gd && gd.drawDuel) { c.save(); gd.drawDuel(GV, dt); c.restore(); }
     if (T0) TIME_G = performance.now() - T0;
   }
   function drawOver(c, cam, dt = 1 / 60) {
     const T0 = globalThis.__fxTime ? performance.now() : 0;
     ctx = c; frameOf(c, cam);
-    c.save(); TAG = 'shots'; drawShots('over'); wardOver(); evolvedStanding(); drawAll('over'); TAG = 'shang'; shangOver(); c.restore();
+    { const gd = glReady(c); c.save(); c.alphaMul = gd && gd.duck ? gd.duck() : 1; TAG = 'shots'; drawShots('over'); wardOver(); evolvedStanding(); drawAll('over'); c.alphaMul = 1; TAG = 'shang'; shangOver(); c.restore(); }
     { const g = glReady(c); if (g) g.drawOver(GV, dt); else if (cmo) cmo.drawOver(c, dt); }
     if (T0) { const ms = TIME_G + performance.now() - T0, q = globalThis.__fxTime; if (q.length < 200000) q.push(ms, live.length, level); }
   }

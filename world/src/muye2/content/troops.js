@@ -38,6 +38,8 @@ export const RANK_HP = [1, 1, 1.5, 2.2, 3], RANK_DMG = [1, 1, 1.5, 2.1, 2.8];
  * the squad strike more often.
  */
 export const TROOP_UP = 1.3;   // 1.25 to 1.3 (at 1.4–1.6 the troops build won 51–53/60, over its 85%) (2026-11-25): soldiers did 11-14% of a sensible winning build's damage (bar 15%) as treasures and generals grew   // every squad's blows, skills and blessed skills, over the numbers written in the rows below
+export const FOLLOW = {mult: 1.4, t: 2};   // 2026-11-27: a squad does `mult` times its damage to a foe a general struck within the last `t` s (天眼's marks too). Stronger generals had taken the soldiers' kills: troop-heavy wins 41% soldiers (bar 45%); with this and PAYOFF.troopCurve [.5, .9], 47.7% over 120 seeds, generals untouched
+const FOLLOW_TEXT = T(` They fall on whatever a general has just struck: ${Math.round((FOLLOW.mult - 1) * 100)}% more damage to it for ${FOLLOW.t} s.`, `将领刚击中的敌人，兵士乘势掩杀：${FOLLOW.t} 秒内对其伤害提高 ${Math.round((FOLLOW.mult - 1) * 100)}%。`);
 export function troop(o) {
   const up = x => x && x.dmg ? {...x, dmg: Math.round(x.dmg * TROOP_UP)} : x;
   o = {...o, base: up(o.base), skill: up(o.skill), blessed: up(o.blessed)};
@@ -50,7 +52,7 @@ export function troop(o) {
     nums.cd = cd;
     const R = RANKS[rank - 1], n = nums.men, one = n === 1;
     let text;
-    if (l === 1) text = o.text;
+    if (l === 1) text = T(o.text.en + FOLLOW_TEXT.en, o.text.zh + FOLLOW_TEXT.zh);
     else if (up && rank === 2) text = T(`Picked men (锐士): ${nums.hp} health each and a blow of ${nums.dmg}. They learn ${o.skill.name.en}: ${o.skill.text.en}`, `锐士：每人 ${nums.hp} 点生命，攻击 ${nums.dmg}。习得「${o.skill.name.zh}」：${o.skill.text.zh}`);
     else if (up && rank === 3) text = T(`Armoured men (甲士)${more ? `, ${n} of them` : ''}: ${nums.hp} health each and a blow of ${nums.dmg}. ${o.skill.name.en} grows: ${o.skill.at3.text.en}`, `甲士${more ? `，增至 ${n} 名` : ''}：每人 ${nums.hp} 点生命，攻击 ${nums.dmg}。「${o.skill.name.zh}」更强：${o.skill.at3.text.zh}`);
     else if (up && rank === 4) text = T(`Dark-armour guard (玄甲): ${nums.hp} health each and a blow of ${nums.dmg}. ${o.skill.name.en} also ${SECOND[o.element].en}.`, `玄甲：每人 ${nums.hp} 点生命，攻击 ${nums.dmg}。「${o.skill.name.zh}」还会${SECOND[o.element].zh}。`);

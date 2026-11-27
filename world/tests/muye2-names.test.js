@@ -55,3 +55,40 @@ test('names: a last form is called by its own name, by its base id one past the 
   for (const r of C.generals) if (r.trueForm && r.trueForm.title) assert.equal(wordsOf(c, 'general', r.id, top('general')).name, r.trueForm.title.zh, r.id);
   assert.equal(wordsOf(c, 'treasure', 'noSuchThing', 1).name, UNKNOWN, 'an id the tables lack is never shown as itself');
 });
+
+// Both pages carry every element main.js looks up each frame (a page without `#remain` once threw on every frame,
+// 2026-11-26): the finale's chip and ward, and a duel's card, phase, poise strip and fall stamp (SPEC-CAMPAIGN 1.17).
+test('both campaign pages carry the markup the page reads every frame', async () => {
+  const {readFile} = await import('node:fs/promises');
+  for (const page of ['muye.html', 'muye-next.html']) {
+    const html = await readFile(new URL(`../${page}`, import.meta.url), 'utf8');
+    for (const sel of ['id="remain"', 'class="bward"', 'id="duelcard"', 'class="dfig"', 'class="dname"', 'class="dseal"', 'class="bphase"', 'class="poise"', 'class="pfill"', 'class="pnote"', 'class="bfallen"'])
+      assert.ok(html.includes(sel), `${page} lacks ${sel}`);
+    assert.ok(/<div class="who">[^]*?class="bphase"[^]*?<\/div><canvas/.test(html), `${page}: the phase stands in the bar's top row`);
+  }
+});
+
+// A duel's title card plays whole however the field goes as he lands (the lead's second joint look, 2026-11-27: with a
+// join's ceremony or an offer just before 闻仲 landed, the card ran out on the wall clock unseen, in two runs of three).
+test('a duel card keeps its own clock: it waits for a still field, plays over an offer, tells each moment once', async () => {
+  const {newCard, startCard, stepCard, cardShowing, cardQuiet, CARD_MS, CARD_QUIET, CARD_BEATS} = await import('../src/muye2/ui/duelcard.js');
+  const c = startCard(newCard()), told = [];
+  const frame = (o) => told.push(...stepCard(c, {dt: 1 / 60, moved: false, offer: false, playing: true, held: false, ...o}));
+  frame({});      // the frame he lands: the first moment at once
+  assert.deepEqual(told, ['sweep']);
+  for (let i = 0; i < 600; i++) frame({});      // ten seconds of a still field (a ceremony's hold, slow frames): the card waits
+  assert.ok(cardShowing(c) && c.t === 0, 'a still field does not run the card out');
+  for (let i = 0; i < 600; i++) frame({playing: false, moved: true});      // paused
+  for (let i = 0; i < 600; i++) frame({held: true, moved: true});          // held for stills
+  assert.equal(c.t, 0);
+  for (let i = 0; i < 60; i++) frame({offer: true});      // an offer opened as he landed: the card plays over it (the offer waits)
+  assert.ok(cardShowing(c) && c.t > 900 && c.t < 1100);
+  while (cardShowing(c)) frame({moved: true});
+  assert.deepEqual(told, CARD_BEATS.map(b => b[0]), 'every moment once, in order');
+  assert.ok(cardQuiet(c), 'banners still wait just after the card');
+  for (let i = 0; i < Math.ceil(CARD_QUIET / (1000 / 60)) + 2; i++) frame({moved: true});
+  assert.ok(!cardQuiet(c) && !cardShowing(c), 'and then the page speaks again');
+  assert.equal(CARD_MS, 2500);
+  const big = startCard(newCard()); stepCard(big, {dt: 5, moved: true, offer: false, playing: true, held: false});
+  assert.ok(big.t <= 100, 'one long frame does not skip the card');
+});

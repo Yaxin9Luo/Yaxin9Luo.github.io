@@ -10,8 +10,11 @@ function ringClose(f, h) {
   const C = CAMPAIGN.ringClose, d = Math.hypot(h.x - f.x, h.y - f.y);
   return C.add * Math.min(1, Math.max(0, (C.none - d) / (C.none - C.full)));
 }
+/** The ground a pattern covers: the duel's arena, or a circle of the duel's size round the hero outside one. */
+function arenaOf(g) { const d = g.campaign && g.campaign.duel; return d ? d : {x: g.hero.x, y: g.hero.y, r: CAMPAIGN.duel.r}; }
 /** A named foe begins one of his patterns: the ground is marked for `warn` seconds, then it strikes. */
 export function startPattern(g, f, A) {
+  if (A.then && f.duelFoe) { f.comboK = BY.foe[f.kind].patterns.findIndex(p => p.id === A.then); f.comboT = A.thenAfter || .5; }      // a follow-up where the dodge lands
   if (A.shape === 'lane' && A.chargeSpeed) { startLane(g, f, A); return; }
   const h = g.hero, k = f.dmg / BY.foe[f.kind].dmg, dir = Math.atan2(h.y - f.y, h.x - f.x);
   const warn = (z, more) => { z.pattern = A.id; z.dmg = (A.dmg || 0) * k; z.P = A; z.great = !!A.great; g.events.push({type: 'warn', kind: A.id, shape: z.shape, by: f.kind, id: f.id, time: z.life, x: z.x, y: z.y, hidden: f.glareT > 0 && !(f.eyeUntil > g.t), ...more}); return z; };
@@ -23,6 +26,36 @@ export function startPattern(g, f, A) {
       const z = addZone(g, 'warn', 'shang', f.kind, f.x, f.y, 0, A.warn);
       z.shape = 'lane'; z.dir = dir; z.len = A.length; z.w = A.width;
       warn(z, {dir, length: A.length, width: A.width});
+      break;
+    }
+    case 'sweep': {                                         // 闻仲's third eye: lanes out from him, each a little later and further round
+      const a0 = dir - (A.count - 1) / 2 * A.step;
+      for (let i = 0; i < A.count; i++) {
+        const z = addZone(g, 'warn', 'shang', f.kind, f.x, f.y, 0, A.warn + i * A.gap), d = a0 + i * A.step;
+        z.shape = 'lane'; z.dir = d; z.len = A.length; z.w = A.width;
+        warn(z, {dir: d, length: A.length, width: A.width, order: i});
+      }
+      break;
+    }
+    case 'rows': {                                          // the 雷部's rows straight across the arena (or round the hero): the odd ones, then the even
+      const C = arenaOf(g), w = 2 * C.r / A.count, across = rand(g) < .5 ? 0 : Math.PI / 2, c = Math.cos(across), sn = Math.sin(across);
+      for (let i = 0; i < A.count; i++) {
+        const off = -C.r + (i + .5) * w, x = C.x - c * C.r - sn * off, y = C.y - sn * C.r + c * off;
+        const z = addZone(g, 'warn', 'shang', f.kind, x, y, 0, A.warn + (i % 2) * A.gap);
+        z.shape = 'lane'; z.dir = across; z.len = 2 * C.r; z.w = w;
+        warn(z, {dir: across, length: 2 * C.r, width: w, order: i % 2});
+      }
+      break;
+    }
+    case 'four': {                                          // 邓忠, 辛环, 张节, 陶荣 ride across side by side, with gaps between them
+      const C = arenaOf(g), side = dir + Math.PI / 2, c = Math.cos(dir), sn = Math.sin(dir), pc = Math.cos(side), ps = Math.sin(side);
+      const on = Math.floor(rand(g) * A.count);               // one of them rides at the hero, which one is not known
+      for (let i = 0; i < A.count; i++) {
+        const off = (i - on) * A.spacing, x = h.x - c * C.r + pc * off, y = h.y - sn * C.r + ps * off;
+        const z = addZone(g, 'warn', 'shang', f.kind, x, y, 0, A.warn + i * A.gap);
+        z.shape = 'lane'; z.dir = dir; z.len = 2 * C.r; z.w = A.width;
+        warn(z, {dir, length: 2 * C.r, width: A.width, order: i, who: A.who ? A.who[i % A.who.length] : ''});
+      }
       break;
     }
     case 'cone': {
@@ -100,8 +133,15 @@ export function startPattern(g, f, A) {
       break;
     }
   }
-  f.act = 'slam'; f.actT = A.warn;
+  f.act = 'slam'; f.actT = f.duelFoe ? Math.min(A.warn, CAMPAIGN.duel.layer) : A.warn;      // in a duel he stands only so long: his next warning may begin under this one (1.17)
   setState(f, 'windup');
+}
+/** A duel's follow-up laid while he is still on a charge: the ground is warned, and his charge runs on (1.17). */
+export function castOver(g, f, k) {
+  const A = BY.foe[f.kind].patterns[k], act = f.act, actT = f.actT, state = f.state, stateT = f.stateT;
+  f.pcd[k] = A.cd * f.cdK; if (f.used) f.used[k] = g.t;
+  startPattern(g, f, A);
+  f.act = act; f.actT = actT; f.state = state; f.stateT = stateT;
 }
 
 /** A named foe's turn when he is free to act: the first of his patterns that is ready and in reach begins. Returns true when he stands for it. */
@@ -111,7 +151,7 @@ export function stepNamed(g, f, row, d, dt) {
   for (let k = pats.length - 1; k >= 0; k--) {
     const A = pats[k];
     if (f.pcd[k] > 0 || d > A.within || (A.from && f.phase < A.from) || (A.shape === 'summon' && !A.count && g.foes.some(o => o.kind === A.kind && o.state !== 'dead'))) continue;
-    f.pcd[k] = A.cd * f.cdK; startPattern(g, f, A);
+    f.pcd[k] = A.cd * f.cdK; if (f.used) f.used[k] = g.t; else if (f.duelFoe) { f.used = pats.map(() => -1e9); f.used[k] = g.t; } startPattern(g, f, A);
     return true;
   }
   return false;

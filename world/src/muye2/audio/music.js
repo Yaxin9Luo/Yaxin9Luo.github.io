@@ -1,3 +1,4 @@
+import {DUELS} from './duels.js';
 // The music: written parts, not random notes, played by a look-ahead scheduler on the engine's instruments.
 // A cue is a loop of bars (16 steps a bar) in layers; a layer sounds only above its intensity threshold, so the same
 // cue thins out when the field is quiet and fills when a boss is up. Cues change on a bar line.
@@ -95,31 +96,45 @@ const ENDS = {
   },
 };
 
+/* The duels' phase loops join the cues by name: wenzhong1, wenzhong2, wenzhong3. */
+for (const id in DUELS) for (const n in DUELS[id].phases) CUES[id + n] = {bpm: DUELS[id].bpm, bars: 8, midi: true, bus: 'duel', full: true, ...DUELS[id].phases[n]};
+const mtof = m => 440 * Math.pow(2, (m - 69) / 12);
+const FIXED = new Set(['drum', 'wood', 'drumMass', 'nao']), BREATHS = new Set(['xun', 'horn', 'hornSec', 'choir', 'choirO', 'yu']);
+
 export function createMusic(E) {
   const LOOK = .25, TICK = 60;           // schedule a quarter second ahead; wake every 60 ms
   let cue = null, next = null, boss = null, bar = 0, step = 0, t = 0, timer = null, intensity = .5, lift = 0, stretchCue = 'xiqi';
   const pent = E.pent;
-  const FIXED = new Set(['drum', 'wood']);
-  /** One note: an instrument, a note index (or a frequency for drums and wood), a time, a gain, a held length for breath. */
-  function note(inst, n, when, gain, dur = 1) {
-    const f = FIXED.has(inst) ? n : pent(n), bus = 'music';
-    if (inst === 'xun' || inst === 'horn') return E.play(inst, inst === 'horn' ? [f, dur, .8] : [f, dur], {gain, when, bus});
+  /** One note: an instrument, a note (pentatonic index, a MIDI number in a cue that says so, or a frequency for the
+      drums and bronzes), a time, a gain, a held length for the breath instruments. `C`: the cue (its pitch kind, its bus). */
+  function note(inst, n, when, gain, dur = 1, C = null) {
+    const f = FIXED.has(inst) ? n : C && C.midi ? mtof(n) : pent(n), bus = (C && C.bus) || 'music';
+    if (BREATHS.has(inst)) return E.play(inst, inst === 'horn' ? [f, dur, .8] : [f, dur], {gain, when, bus});
     return E.play(inst, f, {gain, when, bus});
   }
   const raw = (inst, f, when, gain) => E.play(inst, f, {gain, when, bus: 'music'});
   const M = {note, raw};
+  const DUELC = {midi: true, bus: 'duel'};
+  /** The duel themes' one-shots (entrance, held beats, fall) write in MIDI on the duel bus. */
+  const MD = {n: (inst, m, when, gain, dur = 1) => note(inst, m, when, gain, dur, DUELC), hit: (inst, f, when, gain) => E.play(inst, f, {gain, when, bus: 'duel'}),
+    /** Strokes the page's title card may move: [kind, inst, note, gain, dur] played at t0 + at, kept by name so duelCard() can stop them and play them at its own moment. */
+    card(name, at, items) { const when = cardT0 + at; cards[name] = {when, items, srcs: items.map(it => playItem(it, when))}; }};
+  let cards = {}, cardT0 = 0;
+  const playItem = ([kind, inst, n, gain, dur], when) => kind === 'hit' ? MD.hit(inst, n, when, gain) : MD.n(inst, n, when, gain, dur);
+  let duelId = null, duelPh = 0, holdUntil = 0;
   function resolve(n, C) { return typeof n === 'string' ? C.tonic + Number(n.slice(1)) : n; }
+  let silent = false;      // for measuring: the score keeps its state and time but plays no note
   function scheduleStep(when) {
-    const C = CUES[cue]; if (!C) return;
-    const spb = 60 / C.bpm / 4, k = Math.min(1, intensity + lift);
-    const layers = boss ? C.layers.concat(BOSS.filter(l => !l.tier || l.tier === 'small' || boss !== 'small')) : C.layers;
+    const C = CUES[cue]; if (!C || silent) return;
+    const spb = 60 / C.bpm / 4, k = C.full ? 1 : Math.min(1, intensity + lift);
+    const layers = boss && !C.full ? C.layers.concat(BOSS.filter(l => !l.tier || l.tier === 'small' || boss !== 'small')) : C.layers;
     for (const L of layers) {
       if ((L.min || 0) > k) continue;
       const len = (L.bars || 1) * 16, at = (bar % (L.bars || 1)) * 16 + step;
       for (const [st, n, dur, acc] of L.notes) if (st === at) {
         const fr = L.f ?? resolve(n, C), g = L.gain * (acc ?? 1) * (.85 + .15 * k);
-        if (L.inst === 'drum' || L.inst === 'wood') E.play(L.inst, fr, {gain: g * (.94 + Math.random() * .12), when, bus: 'music'});
-        else note(L.inst, fr, when, g, dur * spb);
+        if (FIXED.has(L.inst)) E.play(L.inst, fr, {gain: g * (.94 + Math.random() * .12), when, bus: C.bus || 'music'});
+        else note(L.inst, fr, when, g, dur * spb, C);
       }
       void len;
     }
@@ -139,22 +154,58 @@ export function createMusic(E) {
       if (step === 16) { step = 0; bar = (bar + 1) % C.bars; lift *= .5; }
     }
   }
+  let after = null;      // the field's cue to come back to after a duel
+  function startAt(name, at) {
+    cue = name; next = null; bar = 0; step = 0; t = at;
+    if (!timer && typeof setInterval === 'function' && !E.offline) timer = setInterval(tick, TICK);
+    tick();
+  }
   const api = {
     get cue() { return cue; }, get bossTier() { return boss; }, get stretchCue() { return stretchCue; }, get intensity() { return intensity; },
     /** Starts a cue: at once if nothing plays, else on the next bar line. An ending (won, lost) plays once and stops the loop. */
     play(name) {
       const ctx = E.ctx; if (!ctx) return;
-      if (ENDS[name]) { api.stop(); E.duck(0, 0, 0); ENDS[name](M, ctx.currentTime + .1); return; }
+      if (ENDS[name]) { const at = Math.max(ctx.currentTime + .1, holdUntil); api.stop(); E.duck(0, 0, 0); ENDS[name](M, at); return; }      // a duel's fall plays out first (纣王's, then the victory)
       if (!CUES[name]) return;
       if (['xiqi', 'dongzheng', 'zhaoge', 'final'].includes(name)) stretchCue = name;
+      if (duelId && !CUES[name].full) { after = name; return; }       // a duel holds the music: the field's cue waits for his fall
       if (name === 'rest' || name === 'march') boss = null;
-      if (!cue) { cue = name; bar = 0; step = 0; t = ctx.currentTime + .05; } else if (name !== cue) next = name;
-      if (!timer && typeof setInterval === 'function' && !E.offline) timer = setInterval(tick, TICK);
-      tick();
+      if (!cue) startAt(name, Math.max(ctx.currentTime + .05, holdUntil)); else if (name !== cue) next = name;
     },
-    stop() { cue = null; next = null; boss = null; if (timer) { clearInterval(timer); timer = null; } },
+    stop() { cue = null; next = null; boss = null; duelId = null; duelPh = 0; holdUntil = 0; after = null; if (timer) { clearInterval(timer); timer = null; } },
+    /** A duel begins: the boss's entrance, then his phase 1 on the bar after it, exactly. The field's music stops. */
+    duel(id) {
+      const ctx = E.ctx, D = DUELS[id]; if (!ctx || !D) return;
+      duelId = id; duelPh = 1; cue = null; next = null; after = after || stretchCue;
+      const t0 = ctx.currentTime + .08; cards = {}; cardT0 = t0; startAt(id + 1, t0 + D.intro(MD, t0));
+    },
+    /** The page's title card reached `moment`: a stroke marked for it, not yet sounded, is moved to now. */
+    duelCard(moment) {
+      const ctx = E.ctx, c = cards[moment]; if (!ctx || !c) return;
+      const now = ctx.currentTime; delete cards[moment];
+      if (c.when <= now + .02) return;      // it has sounded (or is sounding): the card came late, leave it
+      for (const src of c.srcs) if (src) try { src.stop(); } catch { /* not started */ }
+      for (const it of c.items) playItem(it, now + .01);
+    },
+    /** Straight into phase n's loop, with no entrance or held beat: for a duel joined midway, and for measuring. */
+    duelAt(id, n) { const ctx = E.ctx, D = DUELS[id]; if (!ctx || !D || !D.phases[n]) return; duelId = id; duelPh = n; after = after || stretchCue; startAt(id + n, ctx.currentTime + .05); },
+    /** The boss's phase n: the loop stops, the held beat plays, phase n begins as it ends. */
+    duelPhase(n) {
+      const ctx = E.ctx, D = DUELS[duelId]; if (!ctx || !D || !D.phases[n] || n <= duelPh) return;
+      duelPh = n; cue = null; next = null;
+      const t0 = ctx.currentTime + .05; startAt(duelId + n, t0 + D.held(MD, t0, n));
+    },
+    /** He falls: the loop stops, his fall plays; the field's music comes back only after it. */
+    duelEnd() {
+      const ctx = E.ctx, D = DUELS[duelId]; if (!ctx || !D) return;
+      cue = null; next = null; duelId = null; duelPh = 0;
+      const t0 = ctx.currentTime + .05; holdUntil = t0 + D.fall(MD, t0);
+      const resume = after; after = null; if (resume) api.play(resume);
+    },
+    set silent(v) { silent = !!v; },
+    get duelState() { return duelId ? {id: duelId, phase: duelPh} : null; },
     /** A boss is up ('small' | 'big' | 'final'), or none (null). The final boss changes the cue itself. */
-    boss(tier) { boss = tier || null; if (tier === 'final') api.play('final'); },
+    boss(tier) { boss = tier || null; if (tier === 'final' && !duelId) api.play('final'); },
     /** How full the field is, 0..1: the page may set it from the foe count; layers come in above their thresholds. */
     setIntensity(x) { intensity = Math.max(0, Math.min(1, x)); },
     /** A boss's phase or rage: the music rises for a few bars. */
@@ -163,14 +214,19 @@ export function createMusic(E) {
     tick,
     get timer() { return !!timer; },
     /** Every note the score can ask for, through the engine's dry run (E.play collects instead of playing). */
-    wanted() {
+    /** Every note the score can ask for, through the engine's dry run (E.play collects instead of playing).
+        `part`: 'field' (the stretches' cues and the endings), a duel's id (that boss's theme), or 'all'. */
+    wanted(part = 'all') {
       for (const name in CUES) {
-        const C = CUES[name], spb = 60 / C.bpm / 4;
-        for (const L of C.layers.concat(BOSS)) for (const [, n, dur] of L.notes) {
-          if (L.inst === 'drum' || L.inst === 'wood') E.play(L.inst, L.f, {gain: 0, when: 0, bus: 'music'}); else note(L.inst, resolve(n, C), 0, 0, dur * spb);
+        const C = CUES[name], duel = Object.keys(DUELS).find(id => name.startsWith(id) && C.full);
+        if (part !== 'all' && (duel ? duel !== part : part !== 'field')) continue;
+        const spb = 60 / C.bpm / 4;
+        for (const L of C.full ? C.layers : C.layers.concat(BOSS)) for (const [, n, dur] of L.notes) {
+          if (FIXED.has(L.inst)) E.play(L.inst, L.f, {gain: 0, when: 0, bus: C.bus || 'music'}); else note(L.inst, resolve(n, C), 0, 0, dur * spb, C);
         }
       }
-      for (const name in ENDS) ENDS[name](M, 0);
+      if (part === 'all' || part === 'field') for (const name in ENDS) ENDS[name](M, 0);
+      for (const id in DUELS) if (part === 'all' || part === id) { const D = DUELS[id]; D.intro(MD, 0); for (const n in D.phases) if (n > 1) D.held(MD, 0, +n); D.fall(MD, 0); }
     },
     CUES,
   };

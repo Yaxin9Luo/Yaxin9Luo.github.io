@@ -14,11 +14,12 @@ export function addFoe(g, kind, x, y) {
   const row = BY.foe[kind];
   if (!row) throw new Error(`no foe ${kind}`);
   const f = foePool.pop() || {};
-  const grow = (row.boss ? 1 : spawnPlan(g.t, PLAN).hp) * g.tierK.hp;
+  const T = g.t - (g.campaign ? g.campaign.held : 0);       // the campaign's clock (it stands for a duel, 1.17)
+  const grow = (row.boss ? 1 : spawnPlan(T, PLAN).hp) * g.tierK.hp;
   f.id = g.nextId++; f.kind = kind; f.x = f.px = clamp(x, 0, WORLD.w); f.y = f.py = clamp(y, 0, WORLD.h);
   f.vx = 0; f.vy = 0; f.facing = g.hero.x >= x ? 1 : -1; f.dir = 0;
   f.hp = f.maxHp = Math.round(row.hp * grow); f.state = 'walk'; f.stateT = 0; f.flash = 0; f.elite = !!row.elite;
-  f.r = row.r; f.speed = row.speed; f.dmg = row.dmg * (1 + SCHEDULE.dmg * g.t / 60) * (g.t < SCHEDULE.early.until ? SCHEDULE.early.dmg + (1 - SCHEDULE.early.dmg) * g.t / SCHEDULE.early.until : 1) * g.tierK.dmg; f.armour = (row.armour || 0) + (row.boss ? 0 : PLAN.armour); f.heavy = !!row.heavy;
+  f.r = row.r; f.speed = row.speed; f.dmg = row.dmg * (1 + SCHEDULE.dmg * T / 60) * (T < SCHEDULE.early.until ? SCHEDULE.early.dmg + (1 - SCHEDULE.early.dmg) * T / SCHEDULE.early.until : 1) * g.tierK.dmg; f.armour = (row.armour || 0) + (row.boss ? 0 : PLAN.armour); f.heavy = !!row.heavy;
   f.cd = row.between ? row.between * (.3 + .7 * rand(g)) : 0; f.hitCd = 0; f.tcd = 0; f.oh = 0; f.backT = 0;
   f.stun = 0; f.slow = 0; f.slowT = 0; f.haste = 1; f.hasteT = 0; f.kx = 0; f.ky = 0;
   f.burn = 0; f.burnT = 0; f.burnTick = 0; f.burnSrc = '';
@@ -26,12 +27,55 @@ export function addFoe(g, kind, x, y) {
   f.pcd = row.patterns ? row.patterns.map((A, i) => A.cd * (.35 + .3 * i)) : null; f.named = !!row.named; f.summon = ''; f.scout = false;
   // the campaign's fields (SPEC-CAMPAIGN.md 1.2, 1.3)
   f.tier = row.tier || ''; f.retinue = 0; f.phases = row.phases || null; f.phase = 0; f.enraged = false; f.cdK = 1; f.flee = false; f.guardT = 0; f.born = g.t;
-  f.expose = 0; f.exposeT = 0; f.pat = ''; f.eyeUntil = 0; f.eyeWardUntil = 0; f.eyeWardNext = 0;     // B's 天眼 (times on g.t)
-  f.wardT = 0; f.capB = 0; f.capMax = 0; f.weary = false; f.kinK = 0; f.kinKey = ''; f.host = false; f.lastHost = false; f.gateIn = false;      // the finale (1.16)
+  f.expose = 0; f.exposeT = 0; f.pat = ''; f.eyeUntil = 0; f.engagedUntil = 0; f.eyeWardUntil = 0; f.eyeWardNext = 0;     // B's 天眼 (times on g.t)
+  f.wardT = 0; f.capB = 0; f.capMax = 0; f.weary = false; f.kinK = 0; f.kinKey = ''; f.host = false; f.lastHost = false; f.gateIn = false;
+  f.touchAt = -1e9; f.duelFoe = false; f.used = null; f.comboT = 0; f.comboK = -1; f.duelHold = 0; f.paceRate = 0; f.paceB = 0; f.poise = 0; f.poiseNeed = 0; f.poiseImmune = 0; f.staggerT = 0; f.stunWould = 0; f.shrugT = 0;      // duels and poise (1.17)      // the finale (1.16)
   f.melee = MELEE.has(row.ai) && !row.named && !row.heavy; f.atk = 0; if (f.melee) f.hitCd = Infinity;     // a melee foe swings (below); the squads' contact code never fires for him
   f.under = false; f.gone = false; f.ex = 0; f.ey = 0; f.glareT = 0; f.cutDmg = 0; f.summonN = 0; f.hookCd = 0; f.trailT = 0; f.wob = rand(g) * 6.283;      // B's (照妖鉴, 钉头七箭书): every field a pooled foe can carry is reset here, or a replay parts
   g.foes.push(f); g.alive++;
   return f;
+}
+
+/**
+ * A great boss's poise (SPEC 1.17): what control did to him since the last step (stun, slow, push) is taken back and fills the
+ * meter instead; full, he is staggered for a fixed time, then shrugs control off for a while, and needs more the next time.
+ */
+function stepPoise(g, f, dt) {
+  const P = CAMPAIGN.poise;
+  if (f.staggerT > 0) { f.staggerT -= dt; if (f.staggerT <= 0) { f.staggerT = 0; f.poiseImmune = P.immune; f.stun = 0; setState(f, 'walk'); } else { f.stun = f.staggerT; f.stunWould = 0; if (f.state !== 'stun') setState(f, 'stun'); return; } }      // the art shows a stagger as the 'stun' pose
+  else if (f.poiseImmune > 0 && (f.poiseImmune -= dt) <= 0) { f.poiseImmune = 0; g.events.push({type: 'poiseReady', id: f.id, x: f.x, y: f.y}); }
+  if (f.shrugT > 0) f.shrugT -= dt;
+  let fill = 0, what = '';
+  f.stunWould = Math.max(0, f.stunWould - dt);
+  if (f.stun > f.stunWould) { fill += f.stun - f.stunWould; f.stunWould = f.stun; what = 'stun'; }      // the stun he would have had: counted once
+  f.stun = 0;
+  if (f.slow > 0) { fill += f.slow * dt * P.slow; f.slow = 0; f.slowT = 0; what = what || 'slow'; }
+  const push = Math.hypot(f.kx, f.ky);
+  if (push > 0) { fill += push * P.push; f.kx = f.ky = 0; what = what || 'push'; }
+  if (!fill) return;
+  if (f.poiseImmune > 0 || f.duelHold > 0) {
+    if (f.shrugT <= 0) { f.shrugT = P.shrugEvery; g.events.push({type: 'shrug', id: f.id, what, x: f.x, y: f.y}); }
+    return;
+  }
+  f.poise += fill;
+  if (f.poise >= f.poiseNeed) {
+    f.poise = 0; f.poiseNeed *= P.grow; f.staggerT = P.stagger; f.stun = P.stagger; f.stunWould = 0; f.act = ''; f.actT = 0;
+    if (f.state === 'windup' || f.state === 'charge' || f.state === 'rest') setState(f, 'walk');
+    setState(f, 'stun');
+    g.events.push({type: 'stagger', id: f.id, time: P.stagger, x: f.x, y: f.y});
+  }
+}
+
+/** A duel's boss steps back from a hero inside his range: quicker the closer he is, and round the arena's edge, not into it;
+ * whatever the hero does, outside a charge he is never stood on (`step` false: he is held, and is only kept apart) (1.17). */
+function duelBack(g, f, dx, dy, d, dt, step = true) {
+  const K = CAMPAIGN.duel.keep, D = g.campaign.duel, h = g.hero, sp = step ? f.speed * (f.slow > 0 ? 1 - f.slow : 1) * (.6 + 1.4 * Math.max(0, 1 - d / K[0])) : 0;
+  let ux = -dx / d, uy = -dy / d;
+  if (D) { const cx = D.x - f.x, cy = D.y - f.y, q = Math.hypot(cx, cy) || 1, w = Math.max(0, (q - (D.r - 160)) / 160); ux += cx / q * w * 1.5; uy += cy / q * w * 1.5; }
+  const u = Math.hypot(ux, uy) || 1;
+  f.x += ux / u * sp * dt; f.y += uy / u * sp * dt;
+  const ex = f.x - h.x, ey = f.y - h.y, e = Math.hypot(ex, ey) || 1, apart = Math.max(CAMPAIGN.duel.apart, f.r + HERO.r + 30);
+  if (e < apart) { const vx = ex / e + ux / u, vy = ey / e + uy / u, v = Math.hypot(vx, vy) || 1; f.x = h.x + vx / v * apart; f.y = h.y + vy / v * apart; }
 }
 
 export function startLane(g, f, A) {
@@ -51,6 +95,8 @@ export function stepFoes(g, dt) {
     const f = foes[i];
     f.px = f.x; f.py = f.y; f.stateT += dt;
     if (f.state === 'dead') { if (f.stateT >= DEAD) f.dead = true; continue; }
+    if (f.poiseNeed) stepPoise(g, f, dt);
+    if (f.duelHold > 0) { f.duelHold -= dt; f.vx = f.vy = 0; f.kx = f.ky = 0; f.act = ''; if (f.state !== 'idle') setState(f, 'idle'); continue; }   // a duel's held beat
     if (f.flash > 0) f.flash -= dt;
     if (f.cd > 0) f.cd -= dt;
     if (f.hitCd > 0) f.hitCd -= dt;
@@ -90,6 +136,7 @@ export function stepFoes(g, dt) {
       continue;
     }
     let walk = 1;                                        // 1 toward the hero, -1 away, 0 stand
+    if (f.duelFoe) { const K = CAMPAIGN.duel.keep; walk = d > K[1] ? 1 : 0; if (d < K[0] && f.act !== 'aim' && f.act !== 'charge' && f.act !== 'rest') { duelBack(g, f, dx, dy, d, dt, f.stun <= 0); if (!f.act && f.stun <= 0) setState(f, 'walk'); } }   // a duel's boss holds his ground between his patterns, and while he stands for one (1.17)
     if (f.stun > 0) {
       f.stun -= dt; walk = 0;
       if (f.act === 'swing' || f.act === 'after') { f.act = ''; f.atk = 0; }
@@ -109,6 +156,11 @@ export function stepFoes(g, dt) {
       else if (f.act === 'charge') {
         f.x += f.ax * f.cs * dt; f.y += f.ay * f.cs * dt; f.facing = f.ax >= 0 ? 1 : -1;
         if (f.actT <= 0) { f.act = 'rest'; f.actT = f.rest; setState(f, 'rest'); }
+      } else if (f.duelFoe && f.act === 'rest') {
+        // a duel's boss carries through after his charge, slowing, and does not stop on the hero (1.17)
+        const k = Math.max(0, f.actT / (f.rest || 1)) * .25; f.x += f.ax * f.cs * k * dt; f.y += f.ay * f.cs * k * dt;
+        if (d < CAMPAIGN.duel.keep[0]) duelBack(g, f, dx, dy, d, dt);
+        if (f.actT <= 0) { f.act = ''; setState(f, 'walk'); }
       } else if (f.actT <= 0) {
         if (f.summon) {
           for (let k = 0, n = f.summonN || 1; k < n; k++) {
@@ -188,7 +240,7 @@ export function stepFoes(g, dt) {
         if (ai === 'swarm') { const w = Math.sin(g.t * 5 + f.wob) * sp * .8; f.vx += -dy / d * w; f.vy += dx / d * w; }   // crows and wasps weave as they come
         f.x += f.vx * dt; f.y += f.vy * dt;
         setState(f, 'walk');
-      } else if (!f.act && f.state !== 'windup' && f.state !== 'attack' && f.stun <= 0) setState(f, 'idle');
+      } else if (!f.act && f.state !== 'windup' && f.state !== 'attack' && f.stun <= 0 && !(f.duelFoe && d < CAMPAIGN.duel.keep[0])) setState(f, 'idle');
       if (Math.abs(dx) > 6) f.facing = dx > 0 ? 1 : -1;
     }
     f.dir = Math.atan2(dy, dx);

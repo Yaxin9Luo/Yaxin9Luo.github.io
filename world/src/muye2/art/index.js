@@ -272,6 +272,21 @@ export async function loadArt({ onProgress = () => {}, puppets, fx: wantFx = tru
   }
   const setFor = (key, variant) => sprites.get(key, variant) || sprites.ensure(key, variant);
 
+  // a stage-final boss in his own duel is drawn larger (KEY_FIGURES duel: 闻仲 1.5; the user, 2026-11-27: "boss 画大一些"), his shadow with him;
+  // he grows over the duel's first 0.6 s and keeps the size through his fall. 1 for everyone else.
+  function duelGrow(g, u, lk) { const d = g && g.campaign && g.campaign.duel; if (!d || d.id !== u.id || !live) return 1; const f = live.figs[lk || 'shang:' + u.kind], k = (f && f.F.duel) || 1;
+    return k === 1 ? 1 : 1 + (k - 1) * smooth(0, 0.6, d.t || 0); }
+  // a stage-final boss's staged fall in his duel (duel stage 'fall'; rules: duel-events.md): the rules let him go as `dead` after 0.6 s,
+  // but his figure stays through the whole hold, kneeling (figures.js fallenPose), and fades over its last 0.5 s as the soul rises (render-spike)
+  let fallen = null;   // { id, hold: the hold's length, u: a copy of him as the rules last had him }
+  // a brow eye that opens with a pattern (KEY_FIGURES eye: 闻仲's 中央神目 on thirdEye): open while that pattern's zones are on the ground, and 0.5 s after
+  const eyeAt = new Map();
+  function eyeOpen(lk) { const f = live && live.figs[lk], k = f && f.eye && f.F.eye; return !!k && now - (eyeAt.get(k) ?? -9) < 0.5; }
+  function fallOf(g, u) { const f = fallen, d = g && g.campaign && g.campaign.duel; if (!f || !u || u.id !== f.id || !d || d.stage !== 'fall') return null; return { s: Math.max(0, f.hold - d.beat), a: clamp(d.beat / 0.5) }; }
+  function trackFall(g) {   // each frame: returns his copy when the rules no longer hold him (to be drawn in his place), else null
+    const d = g.campaign && g.campaign.duel; if (!d || d.stage !== 'fall') { fallen = null; return null; }
+    if (!fallen || fallen.id !== d.id) fallen = { id: d.id, hold: d.beat, u: {} };
+    const b = g.foes.find((f) => f.id === d.id); if (b) Object.assign(fallen.u, b); return b || fallen.u.id == null ? null : fallen.u; }
   // For art/fx: draw one unit again exactly as drawWorld drew it in this frame (same frame, place, size; no shadow, no hit edge),
   // with the context's current state (fx sets a silhouette colour and a scissor band). Returns [left, top, right, bottom] in device px, or null.
   function drawUnitAgain(ctx, u) {
@@ -287,7 +302,7 @@ export async function loadArt({ onProgress = () => {}, puppets, fx: wantFx = tru
     } else {
       const ally = (g.allies || []).includes(u);
       if (live) { const lk = ally ? generalKey(u) : 'shang:' + u.kind; if (lk === NONE) return null;
-        if (lk && live.has(lk)) box = live.drawUnit(ctx, lk, u, X, Y, z, now, x, y, 1, false, faceOf(u, 0), { warn: u.state === 'windup' ? warns.get(u.id) : null }); }
+        if (lk && live.has(lk)) box = live.drawUnit(ctx, lk, u, X, Y, z * duelGrow(g, u, lk), now, x, y, 1, false, faceOf(u, 0), { warn: u.state === 'windup' ? warns.get(u.id) : null, fallen: (fallOf(g, u) || {}).s, eye: eyeOpen(lk) }); }
       if (!box) { keyFor(u, ally); let key = vKey, S = PUP[key] ? sprites.get(key, vVar) : null;
         if (!S) { key = !ally ? (u.elite && PUP['shang:moliqing'] ? 'shang:moliqing' : 'shang:spear') : 'zhou:spears'; S = sprites.get(key, PUP[key] && PUP[key].tiers ? '1' : ''); }
         if (!S) return null; const f = frameOf(S, u, key, x, y); if (!f) return null; const fl = u.facing < 0 ? -1 : 1; box = spriteBox(S, f, X, Y, fl); sprite(ctx, S, f, X, Y, fl, 1, 0); }
@@ -305,6 +320,10 @@ export async function loadArt({ onProgress = () => {}, puppets, fx: wantFx = tru
     standIns,                                                    // kinds that had to borrow another's figure: empty when the wiring is whole
     get live() { return live; },                                  // the key figures (debug and tools)
     drawUnitAgain, heroWeapon: () => drawUnitAgain.heroWeapon(),   // the same drawer as handed to fx.useFigures: (ctx, unit) -> {left, top, right, bottom} | null
+    /** how much larger than his field size a unit is drawn this frame (a stage-final boss in his duel: up to KEY_FIGURES duel; else 1): effects sized to him (aureole, wind-up) multiply by it */
+    grow: (u) => duelGrow(lastGame, u),
+    /** the fallen duel boss as drawn through his fall hold (a copy once the rules have let him go), or null: pass it to drawUnitAgain */
+    duelFallen: () => (fallen && fallen.u.id != null ? fallen.u : null),
     KY, landmarks: LANDMARKS, stats: { sprites: sprites.stats, puppets: sourceName, fx: !!fx, keyFigures: live ? Object.keys(live.figs) : [], props: ground.props.length, patches: ground.patches.length }, ground, sprites,
     setView(v) { W = v.width; H = v.height; D = v.dpr || 1;
       // the window grew after load (a small window maximised): the sheets were cut for the old size and would be magnified.
@@ -317,7 +336,7 @@ export async function loadArt({ onProgress = () => {}, puppets, fx: wantFx = tru
     reset() { heroPhase = 0; heroAt = null; castAt = -9; warns.clear(); lastGame = null; hitT = 9; lastFlash = 0; if (fx && fx.reset) fx.reset(); },
     /** The page calls this ahead of a named foe's arrival (cp.next): his key figure's parts are uploaded a few a frame before he comes. kind: a foe kind ('wenzhong') or a key ('shang:wenzhong'). */
     warm(kind) { const k = String(kind).includes(':') ? String(kind) : 'shang:' + kind; if (live && live.has(k)) warmKeys.add(k); },
-    onEvent(e, game) { if (e.type === 'cast' && e.weapon) { castAt = now; castReach = e.length || e.radius || 0; castHeavy = !!e.heavy; } if (e.type === 'warn' && e.id != null) warns.set(e.id, { shape: e.shape, time: e.time, kind: e.kind }); if (fx && fx.onEvent) fx.onEvent(e, game); },   // the hero's weapon struck: his arm's beat keys off it
+    onEvent(e, game) { if (ground.setArena) { if (e.type === 'arena') ground.setArena({ x: e.x, y: e.y, r: e.r, phase: e.phase || 0 }); else if (e.type === 'duelPhase') ground.arenaBeat(e.hold); else if (e.type === 'duelEnd') ground.setArena(null); }   /* the duel's arena (ground/ground.js; rules: duel-events.md) */ if (e.type === 'cast' && e.weapon) { castAt = now; castReach = e.length || e.radius || 0; castHeavy = !!e.heavy; } if (e.type === 'warn' && e.id != null) warns.set(e.id, { shape: e.shape, time: e.time, kind: e.kind }); if (fx && fx.onEvent) fx.onEvent(e, game); },   // the hero's weapon struck: his arm's beat keys off it
     /** the effects' camera kick for a heavy blow, [dx, dy] in CSS px; [0, 0] when idle or without art/fx */
     kick: () => (fx && fx.kick ? fx.kick() : NO_KICK),
     /** seconds the page should hold the rules still now (a held frame on a great blow), 0 if none */
@@ -361,7 +380,10 @@ export async function loadArt({ onProgress = () => {}, puppets, fx: wantFx = tru
         if (cg.march > 0) { const to = SCENE_OF[cg.marchTo] || sc; marchLen = Math.max(marchLen, cg.march); if (to !== sc) { ground.preload(to); ground.march(clamp(1 - cg.march / marchLen), to); } }
         else { marchLen = 0; ground.march(null); ground.setStretch(sc); if (game.t > 60 && cg.scene < 2) ground.preload(SCENE_OF[cg.scene + 1]); }
         for (const m of game.landmarks || []) if (m.taken) ground.setSpent(String(m.id).split(':').pop());
-        if (ground.setGate) for (const gt of game.gates || []) ground.setGate(String(gt.id).split(':').pop(), !!gt.open); }
+        if (ground.setGate) for (const gt of game.gates || []) ground.setGate(String(gt.id).split(':').pop(), !!gt.open);
+        if (ground.setArena) { const du = cg.duel; if (game.t > 20) ground.preloadDuel();   /* the duel's 0.9 MB atlas: loaded 20 s into the run, not with the scene */
+          if (du && !ground.arenaState()) ground.setArena({ x: du.x, y: du.y, r: du.r, phase: du.phase || 0 }); else if (!du && ground.arenaState() && ground.arenaState().k >= 1) ground.setArena(null);
+ } }
       const x0 = V.cx - V.hw - 160, x1 = V.cx + V.hw + 160, y0 = V.cy - V.hh - 60, y1 = V.cy + V.hh + 260;
       // rule 4: danger on the ground, in cinnabar, under everything that stands
       if (!fx) for (const zo of game.zones || []) { if (zo.dead) continue; const k = zo.life > 0 && isFinite(zo.life) ? clamp(zo.t / zo.life) : 1;
@@ -373,6 +395,8 @@ export async function loadArt({ onProgress = () => {}, puppets, fx: wantFx = tru
       for (const p of ground.props) if (p.x + (p.r > 100 ? p.r : 0) > x0 && p.x - (p.r > 100 ? p.r : 0) < x1 && p.y > y0 && p.y < y1 + 300) put(p.y, P_PROP, p, 0);
       if (!fx) for (const p of game.pickups || []) if (!p.dead && p.x > x0 && p.x < x1 && p.y > y0 && p.y < y1) put(p.y - 2, P_PICK, p, 0);
       for (const f of game.foes) if (f.x > x0 - 200 && f.x < x1 + 200 && f.y > y0 && f.y < y1 + 120) put(f.state === 'dead' ? f.y - 14 : f.y, P_FOE, f, 0);
+      { const ghost = trackFall(game); if (ghost) put(ghost.y - 14, P_FOE, ghost, 0); }
+      for (const zo of game.zones || []) if (!zo.dead && zo.pattern === 'thirdEye') { eyeAt.set('thirdEye', now); break; }   // the brow eye's pattern on the ground (eyeOpen)   // the fallen duel boss, held after the rules let him go
       for (const a of game.allies || []) if (a.x > x0 && a.x < x1 && a.y > y0 && a.y < y1) put(pocket && a.y > hy && (a.y - hy) * KY < 80 && Math.abs(a.x - hx) < 84 ? hy + HERO_FRONT - 1 : a.y, P_ALLY, a, 0);   // his own men never stand over him either
       for (const s of game.shots || []) if (!s.dead && s.kind !== 'arrow' && !(fx && fxShots[s.kind]) && s.x > x0 && s.x < x1 && s.y > y0 && s.y < y1) put(s.y, P_SHOT, s, 0);
       // the hero's own beast (spoil `marten`, 魔礼寿's 花狐貂 taken): a body the rules move (sim/spoils.js: x, y, px, py, dir, state, stateT)
@@ -384,11 +408,14 @@ export async function loadArt({ onProgress = () => {}, puppets, fx: wantFx = tru
       for (let i = 0; i < order.length; i++) { const e = order[i], u = e.ref;
         if (e.type === P_FOE || e.type === P_ALLY) { if (u.state === 'away' || u.state === 'under') continue;
           // the dead have faded by 0.6 s; the routed the march leaves behind are set dead at 0.6 at once (no fall, no body): nothing is drawn
-          if (u.state === 'dead' && (u.stateT || 0) >= 0.6) continue;                         // a general withdrawn, or gone under the ground: nothing stands there
+          const fa = e.type === P_FOE ? fallOf(game, u) : null;
+          if (u.state === 'dead' && (u.stateT || 0) >= 0.6 && !fa) continue;                         // a general withdrawn, or gone under the ground: nothing stands there
           if (live) { const lk = e.type === P_ALLY ? generalKey(u) : 'shang:' + u.kind;
             if (lk === NONE) continue;
             if (lk && live.has(lk)) { const x = u.px + (u.x - u.px) * alpha, y = u.py + (u.y - u.py) * alpha;
-              const bx = live.drawUnit(ctx, lk, u, sx(x), sy(y), z, now, x, y, u.state === 'dead' ? clamp((0.62 - u.stateT) / 0.3) : 1, true, faceOf(u, dt), { warn: u.state === 'windup' ? warns.get(u.id) : null });
+              const bx = live.drawUnit(ctx, lk, u, sx(x), sy(y), z * duelGrow(game, u, lk), now, x, y, fa ? fa.a : u.state === 'dead' ? clamp((0.62 - u.stateT) / 0.3) : 1, true, faceOf(u, dt), { warn: u.state === 'windup' ? warns.get(u.id) : null, fallen: fa ? fa.s : null, eye: eyeOpen(lk) });
+              if (game.campaign && game.campaign.duel && game.campaign.duel.id === u.id) { const pe = live.point(lk, 'eye');   // his brow eye in world units, for the effects (render-spike's flare)
+                u.eyeAt = pe ? [x + (pe[0] - sx(x)) / z, y + (pe[1] - sy(y)) / (KY * z)] : null; }
               if (DC) { const r = DC.kinds['live:' + lk] || (DC.kinds['live:' + lk] = { drawn: 0, generated: 0, tall: 0, standIn: 0 }); r.drawn++; r.generated++;   // live key figures: drawn from their generated parts; tall when the drawn box stands above a shadow
                 if (bx && bx[3] - bx[1] > 24 * z) r.tall++; }
               continue; } }

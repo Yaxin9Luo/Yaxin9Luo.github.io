@@ -32,15 +32,22 @@ export const bosses = [
   {id: 'marten', element: null, name: T('Flower-fox Marten', '花狐貂'), ai: 'marten', hp: 420, speed: 175, dmg: 16, r: 22, xp: 10, bite: 45, between: 1.1,
     text: T('Eats soldiers: one bite each second or so. With no soldier left it comes for you.', '吃士兵：约每秒一口。没有士兵可吃时就来扑你。')},
   {id: 'wenzhong', element: 'metal', name: T('Wen Zhong', '闻仲'), title: T('Grand Preceptor of Shang, on the Black Qilin, with his two golden whips', '商朝太师，骑墨麒麟，挂两根金鞭'), treasure: T('the Golden Whips', '金鞭'),
-    ai: 'named', tier: 'big', phases: [1, .5], hp: 17000, armour: 44, speed: 100, dmg: 26, r: 31, xp: 0, elite: true, heavy: true, boss: true, named: true,
-    retinue: [{kind: 'dengzhong'}, {kind: 'xinhuan'}, {kind: 'zhangjie'}, {kind: 'taorong'}],
+    // a duel (SPEC-CAMPAIGN 1.17): the field clears, an arena; three phases, 太师出征, 雷部, 绝龙岭 (ch 41-52)
+    ai: 'named', tier: 'big', duel: true, phases: [1, .66, .33], hp: 30000, armour: 44, speed: 100, dmg: 15, r: 31, xp: 0, elite: true, heavy: true, boss: true, named: true,
     patterns: [
-      {id: 'qilinRush', shape: 'lane', warn: 1, length: 780, width: 80, chargeSpeed: 720, rest: .8, dmg: 26, cd: 7.5, within: 620},
-      {id: 'pairedWhips', shape: 'circles', warn: 1.25, count: 2, radius: 110, ahead: 215, lead: .9, dmg: 26, cd: 4.5, within: 600},
-      {id: 'goldWall', great: true, shape: 'wall', warn: 1.45, r0: 128, r: 160, life: 3, slam: {radius: 120, warn: 1.2, dmg: 40}, cd: 13, within: 560},
-      {id: 'qilinReturn', from: 1, shape: 'lane', warn: 1, length: 780, width: 80, chargeSpeed: 720, rest: .5, dmg: 36, cd: 9, within: 620},
-      {id: 'threeWhips', from: 1, shape: 'circles', warn: 1.25, count: 3, radius: 110, ahead: 215, lead: .9, near: 2.6, scatter: 300, dmg: 36, cd: 6, within: 600}],
-    text: T('Arrives at 10:00 with his four officers. The Black Qilin rushes down a lane; the two whips fall on two circles, one where you are and one where you are going; a wall of gold rises in a ring round you and a whip falls inside it. Ride out of the ring before it closes, or spring through it.', '10:00 率邓、辛、张、陶四将到场。墨麒麟沿一条道冲来；双鞭落向两个圈，一个在你脚下，一个在你前路；一道金墙在你四周升起成环，随后一鞭落入环内。在金墙合拢前骑出去，或纵跃穿过。')},
+      // `then`: in a duel the pattern that follows this one `thenAfter` s after it begins, aimed at where the dodge took the hero (1.17)
+      // `read`: an arena pattern (1.17): no straight way out; a safe place within reach is found by reading it (the test checks it)
+      {id: 'qilinRush', then: 'pairedWhips', thenAfter: .45, shape: 'lane', warn: 1, length: 780, width: 90, chargeSpeed: 720, rest: .8, dmg: 10, cd: 6.5, within: 620},
+      {id: 'pairedWhips', shape: 'circles', warn: 1.25, count: 2, radius: 110, ahead: 215, lead: .9, dmg: 9, cd: 4.5, within: 900},
+      {id: 'thirdEye', then: 'qilinRush', thenAfter: .9, read: true, shape: 'sweep', warn: 1.1, count: 9, step: .36, gap: .18, length: 720, width: 90, dmg: 8, cd: 8, within: 620},
+      {id: 'thunderRows', read: true, from: 1, shape: 'rows', warn: 1.2, count: 6, gap: 1.1, dmg: 7, cd: 9, within: 2000},
+      {id: 'goldWall', from: 1, great: true, shape: 'wall', warn: 1.45, r0: 128, r: 160, life: 3, slam: {radius: 120, warn: 1.2, dmg: 12}, cd: 12, within: 560},
+      {id: 'threeWhips', from: 1, shape: 'circles', warn: 1.25, count: 3, radius: 110, ahead: 215, lead: .9, near: 2.6, scatter: 300, dmg: 10, cd: 6, within: 900},
+      {id: 'fourGenerals', then: 'threeWhips', thenAfter: .7, read: true, from: 1, shape: 'four', warn: 1.15, count: 4, spacing: 230, width: 90, gap: .15, dmg: 11, cd: 7, within: 2000, who: ['dengzhong', 'xinhuan', 'zhangjie', 'taorong']},
+      {id: 'qilinReturn', from: 2, shape: 'lane', warn: 1.2, length: 780, width: 90, chargeSpeed: 720, rest: .5, dmg: 9, cd: 5, within: 620},
+      {id: 'dragonPillars', read: true, from: 2, great: true, shape: 'rings', warn: 1.1, bands: [[80, 190], [190, 310], [310, 440], [440, 580]], gap: .55, dmg: 12, cd: 6, within: 2000},
+      {id: 'thunderStorm', read: true, from: 2, shape: 'circles', warn: 1.2, count: 9, radius: 80, near: 2.4, scatter: 520, dmg: 12, cd: 6.5, within: 2000}],
+    text: T('At 10:00 he calls you out alone: the field clears and a ring of his thunder holds you both. Three parts: the Grand Preceptor rides out (the Black Qilin, the paired whips, the white light of his third eye); the thunder of 雷部 breaks (rows of thunder across the ground, a wall of gold, his four officers riding side by side); at the Dragon-ending Ridge the fire pillars close on him and he drives their fire outward. Each part takes its time; read the ground and move.', '十点整他单独叫阵：战场清空，雷霆圈住你们二人。三段：太师出征（墨麒麟、雌雄鞭、第三只眼的白光）；雷部发作（一排排雷霆横扫地面、金遁、邓辛张陶四将并驾冲来）；绝龙岭上神火柱围住他，他把火势向外推开。每一段都有它的时间；读地面，然后走位。')},
 ];
 
 // ---------------------------------------------------------------------------------------- the campaign's bosses

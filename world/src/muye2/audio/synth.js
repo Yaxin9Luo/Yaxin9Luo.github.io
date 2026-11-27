@@ -249,3 +249,45 @@ export function room(sr, {len = 2.4, predelay = .018, dark = 1, seed = 43} = {})
   for (let i = 0; i < n; i++) { L[i] /= m * 6; R[i] /= m * 6; }
   return [L, R];
 }
+
+/* ---------- the duel's voices: what a boss theme needs that the court ensemble has not ---------- */
+
+/** Sum of harmonics with fixed amplitudes amp[h] (h from 1), on one fundamental phase per sample (sin(hθ) by the
+    recurrence), with a pitch curve pitch(t) in Hz. Shared by the chorus and the 竽. */
+function harmonics(out, sr, amp, pitch, env, from = 0) {
+  const H = amp.length - 1; let ph = 0;
+  for (let i = from; i < out.length; i++) {
+    const t = (i - from) / sr, e = env(t); if (e <= 0) continue;
+    ph += TAU * pitch(t) / sr; const s1 = Math.sin(ph), c2 = 2 * Math.cos(ph);
+    let s = 0, sp = 0, sh = s1; for (let h = 1; h <= H; h++) { s += sh * amp[h]; const sn = c2 * sh - sp; sp = sh; sh = sn; }
+    out[i] += s * e;
+  }
+}
+/** A men's chorus on an open vowel, without words: `voices` singers a few cents apart, each with his own slow vibrato,
+    the vowel's formants shaping the harmonics, a breath under it. The army's chant, held. */
+export function choir(sr, f, dur, {voices = 5, seed = 61, vowel = 'a'} = {}) {
+  const F = vowel === 'o' ? [[450, 70, 1], [800, 80, .45], [2830, 120, .12], [3300, 150, .08]] : [[650, 80, 1], [1080, 90, .5], [2650, 120, .22], [2900, 130, .15]];
+  const att = Math.min(.35, dur * .4), rel = .45, n = Math.ceil((dur + rel + .1) * sr), out = new Float32Array(n), r = rng(seed);
+  const env = t => t < att ? Math.pow(t / att, 1.6) : t < dur ? 1 : Math.max(0, 1 - (t - dur) / rel);
+  for (let v = 0; v < voices; v++) {
+    const det = Math.pow(2, (r() * 9) / 1200), fv = f * det, H = Math.max(1, Math.floor(Math.min(5200, sr * .45) / fv)), amp = new Float32Array(H + 1);
+    for (let h = 1; h <= H; h++) { const fh = h * fv; let a = 0; for (const [fc, bw, g] of F) a += g / (1 + ((fh - fc) / bw) ** 2); amp[h] = a * Math.pow(h, -.35) / voices; }
+    const rate = 5 + r() * .8, depth = .012 + Math.abs(r()) * .008, ph0 = Math.abs(r()) * TAU, delay = Math.floor(Math.abs(r()) * .04 * sr);
+    harmonics(out, sr, amp, t => fv * (1 + depth * Math.min(1, t / .6) * Math.sin(TAU * rate * t + ph0)), t => env(t) * (1 + .06 * Math.sin(TAU * .7 * t + ph0)), delay);
+  }
+  burstInto(out, sr, {len: dur + .3, amp: .012, t60: dur + .3, seed, bp: F[1][0], q: 1.2});
+  return normalize(edges(out, sr, .004, .06), .85);
+}
+/** 竽, the large mouth organ of the Zhou court: free reeds, so a steady, slightly nasal tone, all harmonics, the even
+    ones weaker; two reeds a hair apart beat slowly. It holds the chords under the theme. */
+export function yu(sr, f, dur, {seed = 67} = {}) {
+  const att = Math.min(.09, dur * .2), rel = .25, n = Math.ceil((dur + rel + .05) * sr), out = new Float32Array(n);
+  const env = t => t < att ? t / att : t < dur ? 1 : Math.max(0, 1 - (t - dur) / rel);
+  for (const [k, g] of [[1, .55], [1.0019, .45]]) {
+    const fv = f * k, H = Math.max(1, Math.floor(Math.min(6000, sr * .45) / fv)), amp = new Float32Array(H + 1);
+    for (let h = 1; h <= H; h++) amp[h] = g * (h % 2 ? 1 : .55) / Math.pow(h, .9) * (fv * h > 2500 ? .5 : 1);
+    harmonics(out, sr, amp, () => fv, env);
+  }
+  burstInto(out, sr, {len: dur, amp: .02, t60: dur, seed, bp: f * 3, q: 2});
+  return normalize(edges(out, sr, .003, .05), .85);
+}

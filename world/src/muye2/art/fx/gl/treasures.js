@@ -14,6 +14,7 @@
 // The stroke effects stand aside (fx/index.js asks has(kind)) once the brush sheet has loaded.
 import { createWonders } from './wonders.js';
 import { createFinale } from './finale.js';
+import { createDuel } from './duel.js';
 const TAU = Math.PI * 2;
 // the top of the hero's figure above his feet, in world units: what is attached to him (the bell, the crown) hangs just over
 // it, never on him. With the 华盖 gone, figures-key's measure (2026-11-26, zoom 1, above his ground point): helmet top 107-111,
@@ -24,7 +25,7 @@ const RING_SCRIPT = [[0.02, 128, 84, 104, 58, 0.5, 0, 0.6, 0.5], [0.12, 60, 84, 
 // water: a soft wet ring with azurite let down thin (the pigment is strong; at full ink it lands as blots)
 const WATER_SCRIPT = [[0.02, 128, 84, 112, 62, 0.6, 0, 0.5, 0.5]].concat([0, 1, 2, 3, 4, 5, 6, 7].map((i) => { const a = i / 8 * Math.PI * 2; return [0.1 + i * 0.03, 128 + Math.cos(a) * 92, 84 + Math.sin(a) * 50, 26, 12, 0.85, 0.32, 0.6]; }));   // a ring of thin wash along the wetted ring, never a pool
 const BREAK_SCRIPT = [[0.02, 128, 80, 96, 40, 0.55, 0, 0.8], [0.1, 90, 82, 22, 9, 1, 1.3, 0.6], [0.16, 150, 76, 18, 8, 1, 1.1, 0.6], [0.24, 200, 70, 10, 5, 0.9, 1, 0.5], [0.3, 50, 90, 8, 4, 0.9, 0.9, 0.5]];
-export function createTreasures(ctx, ink, W = createWonders(), onKick = () => {}, GW = null) {      // GW: the gods' brush sheet (shock rings, splashes, clods), for the spoils
+export function createTreasures(ctx, ink, W = createWonders(), onKick = () => {}, GW = null, onHold = () => {}) {      // GW: the gods' brush sheet (shock rings, splashes, clods), for the spoils
   // The fight stays readable (the lead, after the user's second play, 2026-11-25): an ordinary cast's paint over the figures is
   // counted each frame, and once the frame's ordinary paint passes a few percent of the screen every later stroke is drawn
   // fainter (grow by number, reach and speed; never by thickness and opacity). The great moments are left out of the count.
@@ -37,7 +38,7 @@ export function createTreasures(ctx, ink, W = createWonders(), onKick = () => {}
   const PAINTED = { fireCover: 1, ring: 1, whip: 1, sash: 1, fireSpear: 1, pearls: 1, banner: 1, knife: 1, bell: 1, fan: 1, mirror: 1, rope: 1, lotus: 1, tower: 1, zhaoyao: 1, seal: 1 };
   const has = (kind) => W.ready && !!(PAINTED[kind] || BOSS_SIG[kind]);
   function onEvent(e) {
-    finale.onEvent(e, G0);
+    finale.onEvent(e, G0); duel.onEvent(e, G0);
     if (e.type === 'hit' && e.id === 'bloodBlade') { bladeHits.push({ x: e.x, y: e.y, at: clock }); if (bladeHits.length > 40) bladeHits.shift(); }
     if (e.type === 'hit' && e.take && (e.id === 'boneBanner' || e.id === 'fiveLights')) { takes.push({ id: e.id, x: e.x, y: e.y, at: clock }); if (takes.length > 24) takes.shift(); }
     if (e.type === 'weary') { wearyAt.set(e.id, clock); return; }
@@ -205,6 +206,9 @@ export function createTreasures(ctx, ink, W = createWonders(), onKick = () => {}
   const GD = (c, name, X, Y, rot, kx, ky, a) => { if (GW && a > 0.004) GW.draw(c, name, X, Y, rot, kx, ky, a); };
   // the finale's staging (fx/gl/finale.js): the seven of 梅山, the ward, the rout, the gate, the last guard, 纣王's end
   const finale = createFinale({ W, GW, spic, ribbon, veil, ink });
+  // the stage-final duels (fx/gl/duel.js), drawn in their own night sheet (gen/duel.cells.mjs)
+  const DW = createWonders('duel'); DW.loaded.then(() => ctx.prewarm && ctx.prewarm(DW.image));
+  const duel = createDuel({ W, GW, DW, spic, veil, kick: onKick, hold: onHold });
   const takes = [], bladeHits = [];      // foes the banner or the five lights took (ghost ink to them, souls up into the light)
   const SPOIL_LIFE = { bite: 0.4, swallow: 0.3, dive: 0.5, ring: 0.5, windfire: 0.55, leap: 0.4, call: 1.4, whips: 0.45, line: 0.35, light: 0.4, flash: 0.6, fan: 0.6, burst: 0.5, banner: 0.6, cloud: 0.5, stone: 2.2 };
   const ease2 = (q) => 1 - (1 - q) * (1 - q), flat = (V) => (V.KY / 0.55) * 0.62;      // a painting laid on the ground: squashed as the ground is
@@ -531,7 +535,7 @@ export function createTreasures(ctx, ink, W = createWonders(), onKick = () => {}
   function coverGround(c, V) { for (const o of covers.values()) { const t = clock - o.born, outU = o.gone >= 0 ? Math.min(1, (clock - o.gone) / 0.9) : 0, A = actA(o), X = V.sx(o.x), Y = V.sy(o.y), k = o.r * (o.ev ? 1.5 : 1.3) / 160 * V.z;
       const sign = Math.min(1, t / 0.3) * (1 - outU) * (o.share ?? 1), ring = sign * (SIGN_A + (0.85 - SIGN_A) * A);
       W.draw(c, 'whalo_fire', X, Y, t * 0.15, k, k * V.KY, ring * veil(V, X, Y - 20 * V.z));
-      const sa = SIGN_A * (o.share ?? 1) * Math.min(1, t / 0.4) * (1 - A) * (1 - outU * outU);
+      const sa = duel.inDuel() ? 0 : SIGN_A * (o.share ?? 1) * Math.min(1, t / 0.4) * (1 - A) * (1 - outU * outU);
       if (sa > 0.01) for (let j = 0; j < 2; j++) drawDragon(c, signDragon(o, j, V, sa), V);
       if (A <= 0) continue;
       for (let j = 0; j < count(o); j++) drawDragon(c, dragon(o, j, V), V);
@@ -597,8 +601,8 @@ export function createTreasures(ctx, ink, W = createWonders(), onKick = () => {}
       const L = Math.min(o.L, 240); ribbon(c, `wthrust_${o.v}`, (s) => [V.sx(o.x + Math.cos(o.d) * L * s), V.sy(o.y + Math.sin(o.d) * L * s) - 34 * V.z], Math.min(o.k, 0.6) * V.z, a, from, draw, 8, V); } }   // reach by the lane on the ground, not by a stroke across the screen
   // a lane is a full stroke for its first 0.3 s, then a thin low ember line for the rest of its burn (the user, 2026-11-26:
   // the evolved spear's forks left a standing star of thick red strokes over most of the screen); many lanes share their strength
-  function lanesDraw(c, V) { const share = Math.min(1, 6 / Math.max(1, lanes.size));
-    for (const o of lanes.values()) { const t = clock - o.born, out = o.gone >= 0 ? Math.min(1, (clock - o.gone) / 0.5) : 0, draw = Math.min(1, t / 0.1), q = Math.min(1, Math.max(0, (t - 0.3) / 0.25));
+  function lanesDraw(c, V) { const share = Math.min(1, 6 / Math.max(1, lanes.size)), inDuel = duel.inDuel();
+    for (const o of lanes.values()) { if (inDuel && clock - o.born > 0.35) continue; const t = clock - o.born, out = o.gone >= 0 ? Math.min(1, (clock - o.gone) / 0.5) : 0, draw = Math.min(1, t / 0.1), q = Math.min(1, Math.max(0, (t - 0.3) / 0.25));
       const a = (1 - q + q * 0.3 * share) * (1 - out), w = (o.ev ? 0.75 : 0.55) * (1 - 0.45 * q);
       const P = (s) => [V.sx(o.x + Math.cos(o.dir) * o.len * s), V.sy(o.y + Math.sin(o.dir) * o.len * s) - 18 * (1 - 0.6 * q) * V.z];
       ribbon(c, `wthrust_${Math.floor(clock * 6 + o.x) % 2}`, P, w * V.z, a, out, draw, 8, V); } }       // the fire flickers by swapping two strokes of one value
@@ -619,6 +623,8 @@ export function createTreasures(ctx, ink, W = createWonders(), onKick = () => {}
   function drawGround(V, dt, G) { clock += dt; frame++; if (G) G0 = G; watchCovers(G); watchLanes(G); if (!W.ready) return; const c = ctx; c.save(); c.globalCompositeOperation = 'source-over'; coverGround(c, V); silksDraw(c, V, 'ground'); lanesDraw(c, V); thrustsDraw(c, V); hostsDraw(c, V, 'ground');   /* 火尖枪's thrusts with their lanes, under the figures */ generalsDraw(c, V, G, 'ground'); pearlsDraw(c, V, G, 'ground'); lightsGround(c, V); sealsGround(c, V); ropesDraw(c, V, G0); spoilsDraw(c, V, G0, 'ground'); wearyDraw(c, V, G0, 'ground'); finale.drawGround(c, V, G0, dt); bannerDraw(c, V, G, 'ground'); bannerDraw(c, V, G, 'over'); ringsGround(c, V, G0); lastingDraw(c, V, G0, 'ground'); c.restore(); }
   function drawOver(V, dt, G) { if (!W.ready) return; const c = ctx, cv = ctx.canvas; covMax = COVER * (cv && cv.width ? cv.width * cv.height : 2880 * 1800); cov = 0; budgetOn = true; c.save(); c.globalCompositeOperation = 'source-over'; silksDraw(c, V, 'over'); blowsDraw(c, V); arrowsDraw(c, V, G); newsDraw(c, V, G); budgetOn = false; sigsDraw(c, V); lastingDraw(c, V, G0, 'over'); statesDraw(c, V, G0); hostsDraw(c, V, 'over'); generalsDraw(c, V, G, 'over'); budgetOn = true; ringsOver(c, V); spoilsDraw(c, V, G0, 'over'); wearyDraw(c, V, G0, 'over'); antidoteDraw(c, V, G0); finale.drawOver(c, V, G0); columnsOver(c, V); budgetOn = false; c.restore(); }
   // drawn after every other effect, the impact's and the omen's included: the finale's ward (its cords are the fight's instruction)
+  // the duel's boss, drawn after the player's side in each layer (index.js calls it: his warnings over the player's effects)
+  function duelDraw(V, layer, dt = 0) { if (!W.ready) return; const c = ctx; c.save(); c.globalCompositeOperation = 'source-over'; if (layer === 'ground') duel.drawGround(c, V, G0, dt); else duel.drawOver(c, V, G0); c.restore(); }
   function drawLast(V) { if (!W.ready) return; const c = ctx; c.save(); c.globalCompositeOperation = 'source-over'; finale.drawWard(c, V, G0); c.restore(); }
-  return { useTip: (f) => { tipFn = typeof f === 'function' ? f : null; }, onEvent, drawGround, drawOver, drawLast, has, wonders: W, reset() { finale.reset(); prints.length = 0; covers.clear(); lastAct = breakAt = -9; actStarts.length = 0; columns.length = 0; talismans.length = 0; silks.length = 0; lanes.clear(); thrusts.length = 0; blows.length = 0; news.length = 0; hosts.length = 0; manifests.length = 0; dives.length = 0; sigs.length = 0; tracks.clear(); }, get live() { return covers.size + columns.length + silks.length + lanes.size; } };
+  return { useTip: (f) => { tipFn = typeof f === 'function' ? f : null; }, onEvent, drawGround, drawOver, drawLast, duelDraw, duck: duel.duck, has, duelOwns: duel.owns, wonders: W, reset() { finale.reset(); duel.reset(); prints.length = 0; covers.clear(); lastAct = breakAt = -9; actStarts.length = 0; columns.length = 0; talismans.length = 0; silks.length = 0; lanes.clear(); thrusts.length = 0; blows.length = 0; news.length = 0; hosts.length = 0; manifests.length = 0; dives.length = 0; sigs.length = 0; tracks.clear(); }, get live() { return covers.size + columns.length + silks.length + lanes.size; } };
 }

@@ -4,7 +4,9 @@
 
 import {TAU, DEAD, clamp, rand, setState} from './core.js';
 import {addFoe} from './foes.js';
-import {WORLD, SCHEDULE, SPAWN, BY, CAMPAIGN, LANDMARKS} from '../content.js';
+import {castOver} from './bosses.js';
+import {WORLD, SCHEDULE, SPAWN, BY, CAMPAIGN, LANDMARKS, HERO} from '../content.js';
+const HERO_R = HERO.r;
 import {mend} from './build.js';
 import * as BUILD from './build.js';
 import {fieldOf, SCENE_OF} from '../art/ground/layout.js';
@@ -79,7 +81,7 @@ export function makeCampaign(g) {
   placeLandmarks(g, 0);
   return {stretch: -1, scene: 0, march: 0, rest: 0, marchTo: 0, next: null, bar: 0, guards: false, until: g.options.until || null,
     rageAt: Infinity, small, si: 0, bi: 0, finalDue: false, live: [], officers: 0, moved: false, smallDown: {},
-    stage: '', sortieDue: false, host: [], toCome: 0, issue: [], issueT: 0, issueEvery: 0, reserve: null, lastGuard: false};      // the finale (1.16)
+    stage: '', duel: null, held: 0, clock: 0, bigDown: {}, sortieDue: false, host: [], toCome: 0, issue: [], issueT: 0, issueEvery: 0, reserve: null, lastGuard: false};      // the finale (1.16)
 }
 
 /** A boss of a tier enters: off screen as the mass does, with his retinue round him. */
@@ -93,14 +95,86 @@ export function enterBoss(g, kind, tier, hpK = 1, at = null) {
   g.events.push({type: 'arrive', kind, name: row.name, title: row.title, x: f.x, y: f.y, id: f.id, tier, maxHp: f.maxHp, phases: f.phases, shock: sh});
   c.live.push(f);
   if (tier === 'big' || tier === 'final') c.bar = f.id;
-  if (c.until === kind) c.rageAt = Math.min(c.rageAt, g.t + SCHEDULE.late.until);
-  if (tier === 'final') c.rageAt = Math.min(c.rageAt, g.t + SCHEDULE.late.after);
+  if (c.until === kind) c.rageAt = Math.min(c.rageAt, g.t - c.held + SCHEDULE.late.until);      // the rage is on the campaign's clock
+  if (tier === 'final') c.rageAt = Math.min(c.rageAt, g.t - c.held + SCHEDULE.late.after);
   bringRetinue(g, f, 0);
   if (kind === CAMPAIGN.final.after) beginFinale(g, f);
+  if (row.duel) beginDuel(g, f);
   return f;
 }
 
 // ------------------------------------------------------------------------------------------- the finale (SPEC 1.16)
+// ------------------------------------------------------------------------------------------- the duels (SPEC 1.17)
+/** A stage-final boss lands: the common foes flee and vanish, an arena forms round the hero, the campaign's clock stands. */
+function beginDuel(g, f) {
+  const c = g.campaign, D = CAMPAIGN.duel, h = g.hero, row = BY.foe[f.kind];
+  const d = c.duel = {id: f.id, kind: f.kind, stage: 'enter', phase: 0, x: h.x, y: h.y, r: D.r, t: 0, phaseT: 0, beat: D.enter, clearT: D.clear, idle: 0, due: false};
+  // he lands inside the ring, before the hero
+  const a = Math.atan2(f.y - h.y, f.x - h.x) || -Math.PI / 2;
+  f.x = f.px = d.x + Math.cos(a) * d.r * .55; f.y = f.py = d.y + Math.sin(a) * d.r * .55;
+  f.duelFoe = true; f.duelHold = d.beat; f.wardT = Math.max(f.wardT, d.beat);
+  if (D.size) f.r = Math.round(row.r * D.size);                // drawn half as large again in his duel (figures-key: 214 px for 闻仲)
+  let n = 0;
+  for (const o of g.foes) {
+    if (o === f || o.state === 'dead' || o.flee) continue;
+    o.flee = true; o.act = ''; o.stun = 1e9; o.summon = ''; setState(o, 'flee'); n++;
+  }
+  for (const z of g.zones) if (z.side === 'shang') z.dead = true;
+  c.live = c.live.filter(o => o === f);
+  g.events.push({type: 'duelBegin', id: f.id, kind: f.kind, x: f.x, y: f.y, arena: {x: d.x, y: d.y, r: d.r}, phases: (f.phases || [1]).length, names: [row.name.en, row.name.zh], title: row.title});
+  g.events.push({type: 'duelClear', count: n, x: h.x, y: h.y});
+  g.events.push({type: 'arena', id: f.id, kind: f.kind, phase: 0, x: d.x, y: d.y, r: d.r, scene: f.kind + ':0'});
+}
+/** A phase line is crossed: a held beat (he is untouchable and still, his blows in flight are gone), then the arena changes. */
+function duelBeat(g, f) {
+  const d = g.campaign.duel;
+  d.stage = 'beat'; d.beat = CAMPAIGN.duel.beat; d.phase = f.phase; d.phaseT = 0;
+  f.paceB = 0; f.duelHold = d.beat; f.wardT = Math.max(f.wardT, d.beat); f.act = ''; f.actT = 0; if (f.state === 'windup' || f.state === 'charge' || f.state === 'rest') setState(f, 'walk');
+  for (const z of g.zones) if (z.side === 'shang') z.dead = true;
+  g.events.push({type: 'duelPhase', id: f.id, phase: f.phase, x: f.x, y: f.y, hold: d.beat});
+}
+function stepDuel(g, dt) {
+  const c = g.campaign, d = c.duel, D = CAMPAIGN.duel, f = g.foes.find(o => o.id === d.id);
+  d.t += dt; d.phaseT += dt;
+  if (d.clearT > 0 && (d.clearT -= dt) <= 0) for (const o of g.foes) if (o.flee && o.state !== 'dead') { o.state = 'dead'; o.stateT = DEAD; g.alive--; }   // the fled are gone, with no kill
+  if (d.beat > 0 && (d.beat -= dt) <= 0) {
+    d.beat = 0;
+    if (d.stage === 'fall') { g.events.push({type: 'duelEnd', id: d.id, x: g.hero.x, y: g.hero.y, clock: c.clock}); c.duel = null; startMarch(g, true); return; }
+    if (d.stage === 'beat') g.events.push({type: 'arena', id: d.id, kind: d.kind, phase: d.phase, x: d.x, y: d.y, r: d.r, scene: d.kind + ':' + d.phase});
+    d.stage = 'fight';
+  }
+  if (!f || f.state === 'dead') return;
+  // a phase cannot be cut short, and the bar does not lie: the health between this line and the next is taken no faster
+  // than over the phase's least time (a bucket that fills at that pace and keeps what is not taken; what goes over is lost), so the bar
+  // drains steadily, reaches the line when the time is up or later, and he falls the moment it is empty (the tester, round 2)
+  const lines = f.phases || [1], next = lines[d.phase + 1] ?? 0, minT = D.minT[d.phase];
+  f.paceRate = minT ? (lines[d.phase] - next) * f.maxHp / minT : 0;
+  if (d.stage !== 'fall') f.paceB = Math.min(f.paceB + f.paceRate * dt, f.paceRate * minT);      // a build behind the pace may catch up, none runs ahead of it; the held beats count (as the phase's time does)
+  // a follow-up: the pattern a pattern names comes right after it (when he is free to begin it)
+  // on a charge it is laid at once and the charge runs on (the hero dodges the lane into it)
+  if (f.comboT > 0 && (f.comboT -= dt) <= 0 && f.comboK >= 0 && f.pcd) {
+    const P = BY.foe[f.kind].patterns[f.comboK];
+    if ((f.act === 'aim' || f.act === 'charge') && !(P.shape === 'lane' && P.chargeSpeed) && f.stun <= 0) castOver(g, f, f.comboK); else f.pcd[f.comboK] = 0;
+  }
+  // he never stands idle long: if nothing of his is warned for `gap` s, his readiest pattern begins (a charge's run, its rest
+  // and a stagger are not warnings: the next one begins as soon as he is free, and a rest is cut short for it)
+  const busy = d.stage !== 'fight' || f.act === 'aim' || f.act === 'slam' || g.zones.some(z => z.side === 'shang' && !z.dead && (z.kind === 'warn' || z.kind === 'lane') && z.src === f.kind);
+  d.idle = busy ? 0 : d.idle + dt;
+  if (busy) d.due = false;
+  if (d.idle >= D.gap && f.pcd) {
+    // the one he has gone longest without, of those that reach the hero from where he stands (he does not walk back for it)
+    const pats = BY.foe[f.kind].patterns, used = f.used || (f.used = pats.map(() => -1e9)), far = Math.hypot(g.hero.x - f.x, g.hero.y - f.y);
+    let best = -1;
+    for (const reach of [true, false]) {
+      for (let k = 0; k < pats.length; k++) if (!(pats[k].from && f.phase < pats[k].from) && (!reach || pats[k].within >= far) && (best < 0 || used[k] < used[best])) best = k;
+      if (best >= 0) break;
+    }
+    if (best >= 0) f.pcd[best] = 0;
+    d.idle = 0; d.due = true;
+  }
+  if (d.due && f.act === 'rest') f.actT = 0;                    // a charge's rest is cut short for it
+}
+
 /** 袁洪 has come with his six, and the Shang on the field are the last of the common host: if the field is thin it is mustered
  * to its full strength once, then nothing common enters again (the user, 2026-11-26). */
 function beginFinale(g, f) {
@@ -185,6 +259,7 @@ export function guardBoss(f) {
   const G = CAMPAIGN.guard, share = BY.foe[f.kind].cap || G.cap[f.tier];      // a row may set its own share (梅山's six, 1.16)
   if (!share) return;
   f.wardT = f.tier === 'lieutenant' ? 0 : G.ward; f.capMax = f.maxHp * share; f.capB = f.capMax * G.hold;
+  if (f.tier === 'big' || f.tier === 'final') { f.poiseNeed = CAMPAIGN.poise.need; f.poise = 0; }      // control staggers a great boss, never locks him (1.17)
 }
 /** What a boss brings when he enters (phase 0) or enters a phase. */
 function bringRetinue(g, f, phase) {
@@ -207,12 +282,19 @@ export function bossDown(g, f) {
   const c = g.campaign;
   g.events.push({type: 'bossDown', id: f.id, kind: f.kind, tier: f.tier, x: f.x, y: f.y});
   g.stats.bosses[f.tier] = (g.stats.bosses[f.tier] || 0) + 1;      // B's meritOf reads it
+  if (f.tier === 'big') c.bigDown[f.kind] = true;
   if (BY.foe[f.kind].guard && c.officers > 0) c.officers--;
   if (f.tier === 'small') { const slot = c.small.find(x => x.unit === f.id); if (slot) c.smallDown[slot.stretch + ':' + slot.slot] = true; }
   if (c.bar === f.id) c.bar = 0;
   if ((f.tier === 'small' || f.tier === 'big') && !f.flee) BUILD.takeSpoil(g, f);   // his own power; a big boss's also heals fully (SPEC 2.11)
-  if (c.until === f.kind || f.tier === 'final') { win(g, f); return; }
+  if (c.until === f.kind || f.tier === 'final') { if (c.duel && c.duel.id === f.id) c.duel = null; win(g, f); return; }
   if (f.tier !== 'big' || f.flee) return;
+  if (c.duel && c.duel.id === f.id) {                           // a duel's end is staged: the fall is held, then the field returns and the march begins
+    const d = c.duel; d.stage = 'fall'; d.beat = CAMPAIGN.duel.fall;
+    for (const z of g.zones) if (z.side === 'shang') z.dead = true;
+    g.events.push({type: 'duelFall', id: f.id, x: f.x, y: f.y, hold: d.beat});
+    return;
+  }
   if (f.kind === CAMPAIGN.final.after) c.finalDue = true;      // the remnant routs; after the march and the rest 纣王 rides out (1.16)
   startMarch(g, true);
 }
@@ -329,6 +411,13 @@ export function confine(g) {
     if (!box) { b = F.bounds(f.y); if (f.x < b[0]) f.x = b[0]; else if (f.x > b[1]) f.x = b[1]; }
     if (shut && !f.tier) for (const gt of g.gates) if (!gt.open) f.y = wallHold(f.py, f.y, gt.y);
   }
+  const d = g.campaign.duel;
+  if (d) {                                                      // a duel's arena: nobody leaves the ring
+    const hold = (o, pad) => { const dx = o.x - d.x, dy = o.y - d.y, q = Math.hypot(dx, dy), m = d.r - pad; if (q > m) { o.x = d.x + dx / q * m; o.y = d.y + dy / q * m; } };
+    hold(h, HERO_R);
+    for (const f of g.foes) if (f.state !== 'dead' && !f.flee) hold(f, f.r);
+    for (const a of g.allies) if (a.state !== 'dead' && a.state !== 'away') hold(a, a.r || 12);
+  }
   if (!box) for (const a of g.allies) {
     if (a.state === 'dead' || a.state === 'away' || a.mvT > 0) continue;
     if (a.y < y0) a.y = y0; else if (a.y > y1) a.y = y1;
@@ -360,7 +449,10 @@ function stepLandmarks(g) {
 
 /** The campaign's turn: marches, the bosses' phases and rage, the rage's fallback; and when `timeline`, who arrives. */
 export function stepCampaign(g, dt, timeline) {
-  const c = g.campaign, t = g.t;
+  const c = g.campaign;
+  if (c.duel) { c.held += dt; stepDuel(g, dt); }             // the campaign's clock stands for a duel (1.17)
+  c.clock = g.t - c.held;
+  const t = c.clock;
   if (c.march > 0) {
     c.march -= dt;
     if (!c.moved && c.march <= CAMPAIGN.march / 2) { c.moved = true; layNextField(g); }
@@ -377,22 +469,24 @@ export function stepCampaign(g, dt, timeline) {
       while (f.phase + 1 < f.phases.length && share < f.phases[f.phase + 1]) {
         f.phase++; f.cdK *= CAMPAIGN.phaseCd;
         g.events.push({type: 'bossPhase', id: f.id, kind: f.kind, phase: f.phase, x: f.x, y: f.y});
+        if (c.duel && c.duel.id === f.id) duelBeat(g, f);
         bringRetinue(g, f, f.phase);
         if (f.tier === 'final' && f.phase === f.phases.length - 1 && c.reserve) releaseReserve(g, 'phase');      // his last stand: the second rank
       }
     }
-    if (f.tier === 'big' && !f.enraged && t - f.born >= CAMPAIGN.enrage) {
+    if (f.tier === 'big' && !f.enraged && g.t - f.born >= CAMPAIGN.enrage) {      // a boss's own time runs in a duel too
       const R = CAMPAIGN.rage;
       f.enraged = true; f.dmg *= R.dmg; f.speed *= R.speed; f.cdK *= R.cd;
       g.events.push({type: 'enrage', id: f.id, kind: f.kind, x: f.x, y: f.y});
     }
   }
   if (t >= SCHEDULE.late.at && c.rageAt > SCHEDULE.late.at) c.rageAt = SCHEDULE.late.at;
-  for (const el in g.lightTaken) if (t >= g.lightTaken[el]) { delete g.lightTaken[el]; g.events.push({type: 'lightReturned', element: el, x: g.hero.x, y: g.hero.y}); }
+  for (const el in g.lightTaken) if (g.t >= g.lightTaken[el]) { delete g.lightTaken[el]; g.events.push({type: 'lightReturned', element: el, x: g.hero.x, y: g.hero.y}); }
   if (g.landmarks.length) stepLandmarks(g);
   if (!timeline) return;
   const S = CAMPAIGN.stretches;
-  while (c.stretch + 1 < S.length && t >= S[c.stretch + 1].from) { const x = S[++c.stretch]; g.events.push({type: 'stretch', index: x.index, id: x.id, name: x.name, x: g.hero.x, y: g.hero.y}); }
+  // a stretch that follows a duel's boss waits for his fall (its herald comes with `duelEnd`, not as he lands: 1.17)
+  while (c.stretch + 1 < S.length && t >= S[c.stretch + 1].from && !c.duel && !(c.stretch >= 0 && BY.foe[S[c.stretch].big.kind].duel && !c.bigDown[S[c.stretch].big.kind])) { const x = S[++c.stretch]; g.events.push({type: 'stretch', index: x.index, id: x.id, name: x.name, x: g.hero.x, y: g.hero.y}); }
   if (c.march > 0) return;                                  // nobody arrives on the march
   while (c.si < c.small.length && t >= c.small[c.si].t) { const s = c.small[c.si++]; s.unit = enterBoss(g, s.kind, 'small', s.hp).id; }
   while (c.bi < S.length && t >= S[c.bi].big.t) enterBoss(g, S[c.bi++].big.kind, 'big');
@@ -402,7 +496,7 @@ export function stepCampaign(g, dt, timeline) {
 }
 
 export function stepSpawn(g, dt) {
-  const s = g.spawn, t = g.t;
+  const s = g.spawn, t = g.campaign.clock;
   if (!s.opened) {
     s.opened = true;
     for (const O of SPAWN.opening) {
@@ -411,7 +505,7 @@ export function stepSpawn(g, dt) {
     }
   }
   const E = SCHEDULE.elites, R = SCHEDULE.rings, c = g.campaign;
-  if (c.march > 0 || c.rest > 0 || c.stage) {
+  if (c.march > 0 || c.rest > 0 || c.stage || c.duel) {
     // from 袁洪's coming nothing common enters at all: the finale's foes are counted (1.16)
     // nothing enters on the march or the rest after it: what fell due is let go
     while (s.elite < E.length && t >= E[s.elite].t) s.elite++;

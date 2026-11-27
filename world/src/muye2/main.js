@@ -19,6 +19,7 @@ import {createCamp} from './ui/camp.js';
 import {meritStandin, META_STANDIN} from './ui/camp-data.js';
 import {CODEX} from './ui/codex-data.js';
 import {portrait, warm} from './ui/portraits.js';
+import {newCard, startCard, stepCard, cardShowing, cardQuiet} from './ui/duelcard.js';
 import {spoilPic, warmSpoil, spoilMarkHTML} from './ui/spoil-pictures.js';
 import * as N from './ui/names.js';
 
@@ -76,6 +77,7 @@ const COPY = {
     hostKicker: 'The Meridian Gate opens', host: n => `The Imperial Guard · ${n} men`, hostExtra: 'King Zhou\'s last men: when they fall, he stands alone',
     hostReserve: 'The reserve rides out', hostReservePhase: n => `King Zhou falters: ${n} more ride out to guard him`, hostReserveBroken: n => `the first rank is gone: the last ${n} ride out`,
     lastGuard: 'The last guard has fallen', lastGuardSub: (names, n) => n > 2 ? `only King Zhou and ${n} of his own are left` : names ? `only King Zhou and ${names} are left` : 'only King Zhou is left', zhouEnd: 'King Zhou withdraws into the Star-Plucking Tower as it burns',
+    duelKicker: 'DUEL', duelPhase: n => `Phase ${['one', 'two', 'three', 'four'][n] || n + 1}`, poise: 'Poise', poiseBroken: 'Staggered', poiseBraced: 'Unmoved', shrug: 'Shrugs it off',
     // what afflicts the hero (SPEC-CAMPAIGN 1.11): one chip each by the health bar
     spoilKicker: from => `Spoil · taken from ${from}`, spoilHeal: 'Whole again: your health is full', spoilPayoff: 'His chest holds a sure payoff', spoilFrom: from => `taken from ${from}`, spoilsEnd: 'Spoils', noSpoils: 'No boss fell to you, so no spoil.',
     reachNear: words => `Close: ${words}`, reachFar: px => `Shoots ${px} px`, reachTip: 'reach', mounts: r => r < .9 ? 'under a mount\'s length' : r < 1.1 ? 'a mount\'s length' : r < 1.35 ? 'a little over a mount\'s length' : r < 1.65 ? 'a mount and a half' : `${(Math.round(r * 2) / 2)} mounts' length`,
@@ -133,6 +135,7 @@ const COPY = {
     hostKicker: '午门大开', host: n => `御林军 · ${n} 人`, hostExtra: '纣王最后的兵马，杀尽便只剩他一人',
     hostReserve: '后队出城', hostReservePhase: n => `纣王力竭，再出 ${n} 人护驾`, hostReserveBroken: n => `前队尽没，最后 ${n} 人出城`,
     lastGuard: '御林军尽没', lastGuardSub: (names, n) => n > 2 ? `只剩纣王与${'一二三四五六七八九'[n - 1] || n}员随驾` : names ? `只剩纣王与${names}` : '只剩纣王一人', zhouEnd: '纣王退入摘星楼，楼火冲天',
+    duelKicker: '单挑', duelPhase: n => `第${'一二三四'[n] || n + 1}相`, poise: '势', poiseBroken: '破势', poiseBraced: '不动', shrug: '不受控',
     spoilKicker: from => `战利品 · 得自${from}`, spoilHeal: '气血全复', spoilPayoff: '他的宝箱必出一件大成', spoilFrom: from => `得自${from}`, spoilsEnd: '战利品', noSpoils: '没有斩下 Boss，没有战利品。',
     reachNear: words => `近身 · ${words}`, reachFar: px => `远射 · ${px} 像素`, reachTip: '攻击距离', mounts: r => r < .9 ? '不到一马身' : r < 1.1 ? '一马身' : r < 1.35 ? '一马身多' : r < 1.65 ? '一个半马身' : `${Math.round(r * 2) / 2} 马身`,
     afflict: {afoot: ['落马', '不能腾跃'], held: ['被擒', '不能移动'], bleed: ['失血', '骑过解药'], dizzy: ['失魂', '不能腾跃'], dazzled: ['目眩', '预警难辨'], weak: ['瘟疫', '法宝减弱']},
@@ -228,13 +231,13 @@ function applySettings(save) {
 // machine (SPEC-CAMPAIGN 3.7, round 2): 3840×2400 held p95 16.7 ms; 4224×2640 and 4608×2880 (a 2304×1440 window at
 // dpr 2) dropped 3-4% of those frames to 33 ms, with the average under the step-down threshold, so nothing caught it.
 const MAX_PIXELS = 3840 * 2400;
-let resScale = 1;
+let resScale = 1, baseZoom = 1;
 function resize() {
   W = canvas.clientWidth; H = canvas.clientHeight;
   dpr = Math.min(window.devicePixelRatio || 1, 3, Math.sqrt(MAX_PIXELS / Math.max(1, W * H))) * resScale;
   canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
   // a 1440 x 900 window shows the field at the view study's size; other windows show about the same area of it
-  cam.zoom = clamp(Math.sqrt(W * H / (1440 * 900)), .7, 1.6);
+  cam.zoom = baseZoom = clamp(Math.sqrt(W * H / (1440 * 900)), .7, 1.6);
   if (art) art.setView({width: W, height: H, dpr});
   bars.resize(W, H, dpr);
 }
@@ -302,7 +305,7 @@ function sourceOf(id) {
 const DIRS = {w: [0, -1], ArrowUp: [0, -1], s: [0, 1], ArrowDown: [0, 1], a: [-1, 0], ArrowLeft: [-1, 0], d: [1, 0], ArrowRight: [1, 0]};
 const GAME_KEYS = [' ', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'];
 const ended = () => game.phase === 'won' || game.phase === 'lost';
-const offering = () => mode === 'play' && game.phase === 'offer';
+const offering = () => mode === 'play' && game.phase === 'offer' && !cardShowing(duelPage.card);      // an offer waits for a duel's card
 const running = () => (mode === 'play' || mode === 'paused') && endAt !== Infinity;
 const focusGame = () => canvas.focus({preventScroll: true});
 let banishing = false, offerAt = 0;
@@ -403,7 +406,7 @@ function payoff(text, sub = '') {
 function bannerTick(now) {
   // a payoff's banner follows another payoff's after 1.25 s, the pace at which the art plays their ceremonies; any other waits the full two seconds
   const ready = banners.length && banners[0].pay && bannerPay ? now >= bannerUntil - 2000 + PAY_GAP : now >= bannerUntil;
-  if (!banners.length || !ready || mode === 'paused' || now < heraldUntil - ($('herald').classList.contains('up') ? 0 : 600)) return;      // the herald speaks alone (a raised spoil scroll stands where banners show: they wait it out)
+  if (!banners.length || !ready || mode === 'paused' || duelQuiet(now) || now < heraldUntil - ($('herald').classList.contains('up') ? 0 : 600)) return;      // the herald speaks alone (a raised spoil scroll stands where banners show: they wait it out)
   const {text, danger, sub, pay} = banners.shift(), b = $('banner');
   bannerPay = !!pay;
   b.innerHTML = esc(text) + (sub ? `<small>${esc(sub)}</small>` : ''); b.className = danger ? 'danger' : ''; void b.offsetWidth; b.classList.add('show');
@@ -433,17 +436,26 @@ function arrival(e, last) {
     (a stretch, a march, a boss's arrival, the guard). One at a time; a newer one replaces it. */
 let heraldUntil = 0;
 /** The words of a boss's phase where the design names them (SPEC-CAMPAIGN 1.4a); none otherwise. */
-const PHASE_WORDS = {zhouwang: [{zh: '午门亲征', en: 'He rides out of the Meridian Gate'}, {zh: '困在垓心', en: 'Hemmed in at the heart of the ring'}, {zh: '气力难撑', en: 'His strength fails him'}]};
+const PHASE_WORDS = {wenzhong: [{zh: '太师出征', en: 'The Grand Preceptor Rides Out'}, {zh: '雷部', en: 'The Thunder Ministry'}, {zh: '绝龙岭', en: 'The Dragon-ending Ridge'}], zhouwang: [{zh: '午门亲征', en: 'He rides out of the Meridian Gate'}, {zh: '困在垓心', en: 'Hemmed in at the heart of the ring'}, {zh: '气力难撑', en: 'His strength fails him'}]};
 const phaseWords = (kind, n) => { const w = PHASE_WORDS[kind] && PHASE_WORDS[kind][n]; return w ? w[lang] : ''; };
 const heralds = [];
 /** Several great moments can come in one step (纣王 arrives as the guard changes; a boss arrives as a stretch begins):
     each herald has its own 3 s, in turn, a boss's arrival first. */
 function herald(kicker, name, sub, tone = '', seal = '', face = '', extra = '', pic = '') {
   const item = [kicker, name, sub, tone, seal, face, extra, pic], first = ['big', 'small', 'final'].includes(tone) && face;
-  if (performance.now() >= heraldUntil && !heralds.length) { heraldShow(...item); return; }
+  if (performance.now() >= heraldUntil && !heralds.length && !duelQuiet(performance.now()) && !heldInDuel(tone)) { heraldShow(...item); return; }      // a duel's card speaks alone; his fall is watched before his spoil is read
   if (first) heralds.unshift(item); else heralds.push(item);
 }
-function heraldTick(now) { if (heralds.length && now >= heraldUntil && mode !== 'paused') heraldShow(...heralds.shift()); }
+function heraldTick(now) {
+  if (!heralds.length || now < heraldUntil || duelQuiet(now) || mode === 'paused') return;
+  // after a duel his spoil is read before the stretch's herald that waited out the fight
+  let i = duelPage.kind ? heralds.findIndex(h => String(h[3]).startsWith('spoil')) : -1; if (i < 0) i = heralds.findIndex(h => !heldInDuel(h[3]));
+  if (i >= 0) heraldShow(...heralds.splice(i, 1)[0]);
+}
+/** A stretch's or a march's herald waits out a duel (the campaign's clock reaches the stretch's start as he lands); his spoil does not. */
+const duelFalling = () => !!(game && game.campaign && game.campaign.duel && game.campaign.duel.stage === 'fall');      // the rules' held fall, in game time
+const duelQuiet = () => cardQuiet(duelPage.card) || duelFalling();      // the card, its quiet after (the seal still spreading), his fall
+const heldInDuel = tone => !!(game && game.campaign && game.campaign.duel) && (tone === 'stretch' || tone === 'march');
 const HERALD_MS = {spoil: 4600, 'spoil big-spoil': 5400};
 function heraldShow(kicker, name, sub, tone = '', seal = '', face = '', extra = '', pic = '') {
   const h = $('herald'), img = h.querySelector('.hface'), url = face ? portrait(face) : '';
@@ -497,6 +509,69 @@ const joined = new Set();
 /** The finale's page state: 袁洪 and his six (for the ward's marks), whether the last host and the guard are being counted. */
 const newFinale = () => ({quiet: new Set(), demons: [], ward: {}, broken: new Set(), lastWave: false, host: false, roster: {}, lastGuardAt: -1});
 let finale = newFinale(), wardKey = '', remainKey = '';
+/** A duel (SPEC-CAMPAIGN 1.17; the rules' duel-events.md): his title card as he lands, the wider bar with the phase and his
+    poise, the clock held, the stamp of his fall, the return. The art draws the arena and the strokes; the page only the type. */
+const newDuel = () => ({id: 0, kind: '', card: newCard(), lastGT: 0, lastNow: 0, anims: [], held: false, phase: 0, turn: false, shrugUntil: 0, immuneMax: 0, fallId: 0, key: '', poiseKey: ''});
+let duelPage = newDuel();
+/** The card's moments (ui/duelcard.js: sweep, name, seal, clear), told to audio and the art as the card's own clock reaches
+    them: `audio.duelCard(moment, kind)`, `art.duelCard(moment, kind)`, each only where the module has it. */
+function cardBeat(moment) {
+  if (moment === 'clear') document.documentElement.classList.remove('duel-bar-wait');
+  for (const m of [audio, art]) if (m && typeof m.duelCard === 'function') { try { m.duelCard(moment, duelPage.kind); } catch (err) { console.warn('duelCard', err); } }
+}
+function duelBegin(e) {
+  duelPage = {...newDuel(), id: e.id, kind: e.kind, card: startCard(newCard()), lastGT: game.t, lastNow: performance.now()};
+  const c = $('duelcard'); if (!c) return;
+  const n = nameOf(sim, e.kind, lang), r = rowOf('foe', e.kind), title = r && r.title ? r.title[lang] || r.title.en : n.title, url = portrait(e.kind, 'full') || portrait(e.kind);
+  const img = c.querySelector('.dfig img'); img.hidden = !url; if (url) img.src = url; else img.removeAttribute('src');
+  c.querySelector('.dfig b').textContent = n.zhName[0]; c.querySelector('.dseal').textContent = n.zhName[0];
+  const where = cp ? stretchName(cp.stretch) : '';
+  c.querySelector('.kicker').innerHTML = esc(t.duelKicker) + (where ? ` · <b>${esc(lang === 'en' ? where.toUpperCase() : where)}</b>` : '');
+  c.querySelector('strong').textContent = n.name; c.querySelector('.title').textContent = title || '';
+  c.hidden = true; void c.offsetWidth; c.hidden = false;
+  // its animations run on the card's own clock, set each frame (not the wall clock: see ui/duelcard.js)
+  duelPage.anims = c.getAnimations ? c.getAnimations({subtree: true}) : []; for (const a of duelPage.anims) { a.pause(); a.currentTime = 0; }
+  document.documentElement.classList.add('duel-card', 'duel-bar-wait');      // his bar comes in as the card clears: before, it cut across his crown
+}
+function duelEnd(e) {
+  duelPage.fallId = 0; duelPage.id = 0;
+  const tm = $('timer'); tm.classList.remove('resumed'); void tm.offsetWidth; tm.classList.add('resumed');
+}
+/** One frame of the duel's type: the classes, the card's end, the phase on the bar, the poise strip (any great boss with
+    poise has it on his bar, duel or not), the stamp of the fall. Lookups are guarded. */
+function duelHud(playing) {
+  const now = performance.now(), d = playing && game.campaign ? game.campaign.duel : null, falling = playing && duelFalling();
+  const root = document.documentElement, on = !!d || falling;
+  root.classList.toggle('duel', on); root.classList.toggle('duel-fall', falling);
+  // the card's clock: it runs while the field runs (or while an offer waits for it), so it plays whole however the field goes
+  const card = duelPage.card, moved = !!game && game.t !== duelPage.lastGT, dtCard = (now - (duelPage.lastNow || now)) / 1000;
+  duelPage.lastGT = game ? game.t : 0; duelPage.lastNow = now;
+  for (const m of stepCard(card, {dt: dtCard, moved, offer: !!game && game.phase === 'offer', playing: mode === 'play', held: duelPage.held})) cardBeat(m);
+  if (cardShowing(card)) { for (const a of duelPage.anims) if (a.currentTime !== card.t) a.currentTime = card.t; }
+  else if (root.classList.contains('duel-card') && !duelPage.held) { root.classList.remove('duel-card', 'duel-bar-wait'); const c = $('duelcard'); if (c) c.hidden = true; duelPage.anims = []; }
+  if (!playing) { const c = $('duelcard'); if (c && !c.hidden) c.hidden = true; root.classList.remove('duel-card', 'duel-bar-wait'); }
+  const tm = $('timer'); if (tm) tm.classList.toggle('held', !!d);
+  const bb = $('bossbar'); if (!bb) return;
+  bb.classList.toggle('duel', on);
+  // the phase, at the bar's right
+  const ph = bb.querySelector('.bphase');
+  if (ph) { const k = on ? `${lang}|${duelPage.kind}|${duelPage.phase}` : ''; if (k !== duelPage.key) { duelPage.key = k; ph.innerHTML = on ? `<b>${esc(t.duelPhase(duelPage.phase))}</b>${esc(phaseWords(duelPage.kind, duelPage.phase))}<i>${duelPage.phase + 1} / 3</i>` : ''; if (duelPage.turn) { duelPage.turn = false; ph.classList.remove('turn'); void ph.offsetWidth; ph.classList.add('turn'); } } }
+  // poise: filling bronze; cinnabar and full while he staggers; gold hatching, draining, while control cannot reach him
+  const p = bb.querySelector('.poise'), u = playing && barWho > 0 ? game.foes.find(f => f.id === barWho && f.hp > 0 && f.state !== 'dead') : null;
+  if (p) {
+    const show = !!(u && u.poiseNeed > 0); if (p.hidden === show) p.hidden = !show;
+    if (show) {
+      let cls = '', w = clamp(u.poise / u.poiseNeed, 0, 1), note = '';
+      if (u.staggerT > 0) { cls = 'broken'; w = 1; note = esc(t.poiseBroken); }
+      else if (u.poiseImmune > 0) { duelPage.immuneMax = Math.max(duelPage.immuneMax, u.poiseImmune); cls = 'braced'; w = u.poiseImmune / duelPage.immuneMax; note = esc(t.poiseBraced); }
+      if (now < duelPage.shrugUntil) note = `<span class="shrug">${esc(t.shrug)}</span>`;
+      const k = `${lang}|${cls}|${note}`;
+      if (k !== duelPage.poiseKey) { duelPage.poiseKey = k; p.className = `poise ${cls}`; p.querySelector('.pl').textContent = t.poise; p.querySelector('.pnote').innerHTML = note; }
+      p.querySelector('.pfill').style.width = `calc(${(w * 100).toFixed(1)}% - ${w > .99 ? 2 : 0}px)`;
+    }
+  }
+  const st = bb.querySelector('.bfallen'); if (st && st.hidden === falling) st.hidden = !falling;
+}
 function join(id) { if (joined.has(id)) return; joined.add(id); const r = rowOf('general', id); if (r) { banner(t.joins(r.name[lang] || r.name.en)); audio.general(r.element); } freshSign = id; buildKey = ''; }
 function handle(e) {
   const h = game.hero;
@@ -558,6 +633,12 @@ function handle(e) {
     case 'bossPhase': { const n = nameOf(sim, e.kind, lang); banner(t.phaseOf(n.name, e.phase), true, phaseWords(e.kind, e.phase), false, false, e.id); $('bossbar').classList.remove('phase'); void $('bossbar').offsetWidth; $('bossbar').classList.add('phase'); audio.encircle(); break; }
     case 'enrage': banner(t.enraged(nameOf(sim, e.kind, lang).name), true, '', false, false, e.id); audio.encircle(); break;
     case 'bossDown': bossDown(e); break;
+    case 'duelBegin': duelBegin(e); break;      // his card, not his herald (the step's events are scanned first: `finale.quiet`)
+    case 'duelPhase': case 'arena': if (e.id === duelPage.id && e.phase !== duelPage.phase) { duelPage.phase = e.phase; duelPage.turn = true; } break;
+    case 'shrug': if (e.id === barWho) duelPage.shrugUntil = performance.now() + 900; break;
+    case 'poiseReady': duelPage.immuneMax = 0; break;
+    case 'duelFall': duelPage.fallId = e.id; framing.fall = {x: e.x, y: e.y}; break;
+    case 'duelEnd': duelEnd(e); break;
     case 'spoil': spoilTaken(e); break;
     // the finale (SPEC-CAMPAIGN 1.16): the last of everything, said and counted so the player sees the host is finite
     case 'meishan': { finale.demons = e.demons || []; const n = nameOf(sim, e.kind, lang), r = rowOf('foe', e.kind) || {};
@@ -595,6 +676,53 @@ function spring(s, kx, kv, target, dt, omega) {
   s[kx] = target + (d + tmp) * e; s[kv] = (s[kv] - omega * tmp) * e;
 }
 const LEAD = 64;      // world px the view runs ahead of a horse at its base speed
+/** In a duel the view frames the fight, not the hero alone (the lead, 2026-11-27: with him near the rim half the screen
+    was night outside the ring and the boss off at an edge). Toward the midpoint of hero and boss; held so the ring fills
+    the view (a little of the outside at most where the ring is narrower than the window); the zoom set so the ring fills
+    the window's shorter way, and out a step (not below 85% of the window's own) when the two are far apart; the hero always
+    well inside. Eased in as the duel begins and out after it ends, on a spring, so it never jumps. */
+const framing = {w: 0, v: 0, z: 0, zv: 0, arena: null, fall: null, k: 0, kv: 0};
+const FALL_RING = 300;      // world px: the widest ring of render-spike's nine pillars round the fallen boss (art/fx/gl/duel.js)
+function duelFrame(hx, hy, alpha, dt) {
+  const d = (mode === 'play' || mode === 'paused') && endAt !== Infinity && game.campaign ? game.campaign.duel : null;
+  if (d) framing.arena = {x: d.x, y: d.y, r: d.r};
+  spring(framing, 'w', 'v', d ? 1 : 0, dt, 2.4);
+  if (!d && framing.w < .002) { framing.w = 0; framing.v = 0; framing.z = 0; framing.arena = null; framing.fall = null; framing.k = framing.kv = 0; cam.zoom = baseZoom; return; }
+  const A = framing.arena; if (!A) return;
+  const u = d ? game.foes.find(f => f.id === d.id && f.state !== 'dead') : null;
+  const ux = u ? u.px + (u.x - u.px) * alpha : hx, uy = u ? u.py + (u.y - u.py) * alpha : hy, ky = art.KY || .62, z0 = baseZoom;
+  // the ground under the duel's bar is not his: the ring's top rim stands below the bar (the lead, 2026-11-27: the bar,
+  // faded over whatever passed under it, was unreadable all fight; now it stays solid and the fight is kept out from under it)
+  const bb = $('bossbar'), top = bb ? Math.min(H * .4, bb.getBoundingClientRect().bottom + 10) : 0, room = H - top;
+  // the zoom: the ring fills the room below the bar the shorter way (out to 85% of the window's own, never nearer than
+  // 1.25 of it), out when the two are far apart
+  const fill = clamp(Math.min(W / (2 * A.r), .97 * room / (2 * A.r * ky)), z0 * .85, z0 * 1.25);
+  const fit = Math.min(Math.abs(ux - hx) > 1 ? .78 * W / Math.abs(ux - hx) : Infinity, Math.abs(uy - hy) > 1 ? .78 * room / (ky * Math.abs(uy - hy)) : Infinity);
+  if (!framing.z) framing.z = z0;
+  spring(framing, 'z', 'zv', d ? Math.max(z0 * .85, Math.min(fill, fit)) : z0, dt, 1.8);
+  // his fall (the rules hold it 3 s): the view eases onto where he fell, a small step in, so render-spike's nine pillars
+  // close round the middle of the screen, not at its edge; back to the fight's framing (and then the hero) as it ends
+  spring(framing, 'k', 'kv', d && d.stage === 'fall' && framing.fall ? 1 : 0, dt, 3.2);
+  const zFall = clamp(.9 * W / (2 * FALL_RING), z0 * .85, framing.z * 1.1);
+  const z = z0 + (framing.z + (zFall - framing.z) * framing.k - z0) * framing.w;
+  // the centre, one axis at a time: toward the midpoint, the ring held in view, the hero kept inside
+  const ex = W / 2 / z, eyUp = (.52 * H - top) / (ky * z), eyDown = .48 * H / (ky * z), out = 40;
+  // `bound`: a further limit on the centre before the hero's (the boss's head kept below the bar)
+  const axis = (mid, c, lo, hi, h, mLo, mHi, bound = Infinity) => {
+    let v = mid;
+    if (lo + hi >= 2 * A.r) v = clamp(v, c + A.r - hi, c - A.r + lo);      // the ring fits this way: all of it in view
+    else v = clamp(v, c - A.r + lo - out, c + A.r - hi + out);              // it does not: no more than a little outside
+    v = Math.min(v, bound);
+    return clamp(v, h - hi + mHi, h + lo - mLo);                            // and the hero well inside: mLo of room above him, mHi below
+  };
+  const cx = axis((hx + ux) / 2, A.x, ex, ex, hx, 90, 90);
+  // his head below the bar: his feet at least HEAD world px (drawn at the zoom, not foreshortened) under its foot
+  const HEAD = 215, headBound = u ? uy - (top + HEAD * z - .52 * H) / (ky * z) : Infinity;
+  const cy = axis((hy + uy) / 2, A.y, eyUp, eyDown, hy, 200, 70, headBound);       // room above the hero for his figure
+  let tx = cx, ty = cy;
+  if (framing.fall && framing.k > .001) { tx += (framing.fall.x - cx) * framing.k; ty += (framing.fall.y - 60 - cy) * framing.k; }      // a little above his feet: his soul rises
+  cam.x += (tx - cam.x) * framing.w; cam.y += (ty - cam.y) * framing.w; cam.zoom = z;
+}
 let paperNow = [239, 231, 214];
 function setPaper(p) { paperNow = p; const root = document.documentElement.style; root.setProperty('--paper', `rgb(${p.join(',')})`); root.setProperty('--slip', `rgb(${p.map(v => Math.round(v + (255 - v) * .45)).join(',')})`); }
 function draw(alpha, dt, realDt) {
@@ -614,6 +742,7 @@ function draw(alpha, dt, realDt) {
   lift = Math.min(lift, Math.max(0, (.82 - .52) * H / ((art.KY || .62) * cam.zoom)));      // he moves down the screen as the view lifts
   spring(north, 'y', 'v', lift, realDt, 5);
   cam.y -= north.y;
+  duelFrame(hx, hy, alpha, realDt);
   shake.t += realDt;
   const k = shake.t < .4 ? Math.exp(-shake.t * 16) * Math.cos(shake.t * 52) : 0;
   const ak = mode === 'play' ? artKick() : [0, 0];
@@ -630,7 +759,8 @@ function draw(alpha, dt, realDt) {
   cp = campaignNow(sim, game);
   const fighting = (mode === 'play' || mode === 'paused') && endAt !== Infinity;
   if (fighting && cp.bar !== barWho) { barWho = cp.bar; const u = game.foes.find(f => f.id === cp.bar); if (u) { const n = nameOf(sim, u.kind, lang), bb = $('bossbar'); bb.querySelector('strong').textContent = n.name; bb.querySelector('small').textContent = n.title; bb.querySelector('.bseal').textContent = n.zhName[0]; bb.className = ''; } }
-  if (fighting) { bars.draw(game, art, {cam, ky: art.KY || .62, alpha}, realDt, cp.bar); bars.pointers(game, {cam, ky: art.KY || .62, alpha}, bossSign, [buildRect()]); bars.antidotes(game, {cam, ky: art.KY || .62}, antidoteIcon(), [buildRect()]); $('bossbar').classList.toggle('faint', bars.topOverWarning(game, {cam, ky: art.KY || .62, alpha, art}));
+  const duelFallen = duelPage.fallId && duelFalling() ? duelPage.fallId : 0; bars.holdId = duelFallen;      // a duel's fall: his bar stays, emptied, under the stamp
+  if (fighting) { bars.draw(game, art, {cam, ky: art.KY || .62, alpha}, realDt, duelFallen || cp.bar); bars.pointers(game, {cam, ky: art.KY || .62, alpha}, bossSign, [buildRect()]); bars.antidotes(game, {cam, ky: art.KY || .62}, antidoteIcon(), [buildRect()]); $('bossbar').classList.toggle('faint', !(game.campaign && game.campaign.duel) && bars.topOverWarning(game, {cam, ky: art.KY || .62, alpha, art}));
     for (const id of ['banner', 'herald']) { const el = $(id); if (el) el.classList.toggle('faint', el.classList.contains('show') && bars.rectOverWarning(game, {cam, ky: art.KY || .62}, el.getBoundingClientRect())); } }      // a line in the middle of a fight never hides a warned blow: it gives way as the bar does
   else if (barsShown) { bars.clear(); for (const id of ['banner', 'herald']) { const el = $(id); if (el) el.classList.remove('faint'); } }
   barsShown = fighting;
@@ -648,7 +778,7 @@ function hud() {
   $('xp-fill').style.transform = `scaleX(${clamp(h.xp / need, 0, 1).toFixed(3)})`;
   text('xp-num', `${Math.floor(h.xp)} / ${need}`);
   text('level', t.lv(h.level));
-  text('timer', clock(game.t));
+  text('timer', clock(game.campaign && game.campaign.clock != null ? game.campaign.clock : game.t));      // it stands still while a duel is on
   text('kills-num', (game.stats.kills || 0).toLocaleString('en-US'));
   const left = h.dashCd || 0, dash = $('dash');
   dash.classList.toggle('ready', left <= 0);
@@ -666,8 +796,9 @@ function hud() {
   }
   if (timeline && cp && (mode === 'play' || mode === 'paused') && endAt !== Infinity) timeline.update(cp, game, lang, t);
   finaleHud((mode === 'play' || mode === 'paused') && endAt !== Infinity);
+  duelHud((mode === 'play' || mode === 'paused') && endAt !== Infinity);
   afflictions(h, (mode === 'play' || mode === 'paused') && endAt !== Infinity && game.phase !== 'lost' && h.hp > 0);      // gone when he falls, as the antidote pointers are
-  if (cp && cp.next && cp.next.kind && cp.next.t - game.t < 25) { warm(cp.next.kind); warmFigure(cp.next.kind); warmSpoil(spoilOfKind(cp.next.kind)); }      // his herald's portrait and his figure's images, before he comes
+  if (cp && cp.next && cp.next.kind && cp.next.t - (cp.clock ?? game.t) < 25) { warm(cp.next.kind); if ((rowOf('foe', cp.next.kind) || {}).duel) warm(cp.next.kind, 'full'); warmFigure(cp.next.kind); warmSpoil(spoilOfKind(cp.next.kind)); }      // his herald's portrait and his figure's images, before he comes
   const b = game.build, gens = b.generals || [], lt = game.lightTaken || {}, bk = `${lang}|${Object.keys(lt).map(k => lt[k] > game.t ? k + Math.ceil(lt[k] - game.t) : '').join('')}|${b.weapon ? b.weapon.id + b.weapon.level + (b.weapon.evolved ? 'e' : '') : ''}|${b.treasures.map(e => e.id + e.level + (e.evolved ? 'e' : '')).join()}|${b.arts.map(e => e.id + e.level).join()}|${b.troops.map(e => e.id + e.level + 'r' + rankOfEntry(e)).join()}|${gens.map(e => e.id + e.level + (e.trueForm ? 'f' : '') + 'a' + Math.ceil(awayOf(e))).join()}|${b.formation ? b.formation.id + b.formation.level : ''}|${(b.resonance || []).join()}|${(b.spoils || []).map(x => x.id).join()}`;
   if (bk !== buildKey) { buildKey = bk; renderBuild(); }
 
@@ -979,7 +1110,7 @@ async function begin(sameSeed) {
   }
   $('camp').hidden = true; document.documentElement.classList.remove('in-camp');
   runLog.down.length = 0; runLog.spoils.length = 0; runLog.fresh.length = 0; spoilHoldUntil = 0; spoilShowUntil = 0; spoilReadUntil = 0; spoilPending = 0; spoilUpAt = 0; runLog.merit = null; runLog.meritParts = null; runLog.tierOpened = null; runLog.saved = false; downIds.clear();
-  bars.clear(); if (timeline) timeline.reset(); barWho = -1; heraldUntil = 0; heralds.length = 0; afflictKey = '-'; $('herald').className = '';
+  bars.clear(); if (timeline) timeline.reset(); barWho = -1; heraldUntil = 0; heralds.length = 0; duelPage = newDuel(); bars.holdId = 0; if ($('duelcard')) $('duelcard').hidden = true; document.documentElement.classList.remove('duel', 'duel-card', 'duel-fall', 'duel-bar-wait'); afflictKey = '-'; $('herald').className = '';
   used = true; endAt = 0; fallAt = -1; hurtFlash = 0; shake.t = 1; bot.n = 0; toneAt = -1; banishing = false; taken = -1; freshSign = null; document.documentElement.classList.remove('paused'); joined.clear(); finale = newFinale(); wardKey = remainKey = ''; banners.length = 0; bannerUntil = 0; easeAt = 0;
   edge.dash = edge.reroll = false; edge.pick = edge.banish = null;
   look.x = look.y = look.vx = look.vy = 0; north.y = north.v = 0;
@@ -1092,7 +1223,7 @@ function frame(now) {
       const couldDash = (game.hero.dashCd || 0) <= 0;
       sim.step(game, input, STEP);
       acc -= STEP;
-      if (game.events.length) { const ms = game.events.find(e => e.type === 'meishan'); if (ms) finale.quiet = new Set([ms.id, ...(ms.demons || []).map(d => d.id)]); for (const e of game.events) { art.onEvent(e, game); handle(e); if (perf.on && frameEvents.length < 12) frameEvents.push(e.type); } game.events.length = 0; }
+      if (game.events.length) { const ms = game.events.find(e => e.type === 'meishan'); if (ms) finale.quiet = new Set([ms.id, ...(ms.demons || []).map(d => d.id)]); const db = game.events.find(e => e.type === 'duelBegin'); if (db) { finale.quiet.add(db.id); startCard(duelPage.card); } for (const e of game.events) { art.onEvent(e, game); handle(e); if (perf.on && frameEvents.length < 12) frameEvents.push(e.type); } game.events.length = 0; }
       if (input.dash && !couldDash && game.phase === 'fight' && !bench) { const el = $('dash'); el.classList.remove('short'); void el.offsetWidth; el.classList.add('short'); audio.refuse(); }
       if (ended() && !endAt) endAt = performance.now() + 1000;
     }
@@ -1135,7 +1266,8 @@ function perfStats() {
 }
 
 /* ---------- start ---------- */
-const hook = window.__muye = {get game() { return game; }, get mode() { return mode; }, get art() { return art; }, get sim() { return sim; }, get seed() { return seed; }, perfStats, perf, cam, begin, kick: askKick, settings, audio, ready: false, bars, metaStore, get camp() { return camp; }, get campaign() { return cp; }, herald, toCamp, modules: {sim: useStub('sim') ? 'stub' : 'real', art: useStub('art') ? 'stub' : 'real'}};
+const hook = window.__muye = {get game() { return game; }, get mode() { return mode; }, get art() { return art; }, get sim() { return sim; }, get seed() { return seed; }, perfStats, perf, cam, begin, kick: askKick, settings, audio, ready: false, bars, metaStore, get camp() { return camp; }, get campaign() { return cp; }, holdCard(on) { duelPage.held = !!on; },      // for stills: the card stays up until released
+  get duelView() { return {...duelPage, heralds: heralds.map(h => h[3] + ':' + h[1])}; }, herald, toCamp, modules: {sim: useStub('sim') ? 'stub' : 'real', art: useStub('art') ? 'stub' : 'real'}};
 (async function start() {
   const t0 = performance.now();
   setLang(lang);      // the title sheet, at once

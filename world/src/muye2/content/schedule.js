@@ -85,6 +85,17 @@ export const CAMPAIGN = {
   ringClose: {add: .45, full: 160, none: 280, gap: .5},      // `gap`: half-angle (rad) of the open way on the banded rings' far side
   // a boss comes to the hero: further than `far` px from him he strides at `stride` times his pace (SPEC 1.14)
   come: {far: 220, stride: 2},
+  // a named foe's body (small, great and final bosses, officers; 1.17): on a charge it strikes in full; any other touch is a
+  // brush that costs `brush` of his blow, and then his body does no harm for `grace` s (the mass is not changed)
+  touch: {brush: .25, grace: 1.5},
+  // the duels of the stage-final bosses (SPEC-CAMPAIGN 1.17; duel-events.md): the arena's radius, the held beats (`enter` as he
+  // lands, `beat` at a phase line, `fall` when he falls), the longest he may stand idle (`gap`), each phase's least time
+  // (`minT`: each phase's health is taken no faster than over it: never ahead of that pace, though a build behind it may catch up), how long the fled
+  // mass takes to vanish (`clear`)
+  duel: {r: 600, enter: 2.5, beat: 2.5, fall: 3, gap: .9, minT: [25, 35, 40], layer: .6, clear: 3, keep: [180, 260], apart: 110, size: 1.32},      // `size`: his radius in the duel (31 → 41: 0.19 of the 214 px he is drawn)      // `keep`: the range he holds between patterns; `apart`: outside a charge he is never nearer the hero than this (centre to centre: he is drawn 214 px tall)
+  // a great boss's poise (1.17): control fills it (`need` seconds of would-be stun; a slow fills at its strength a second, a
+  // push at `push` per px/s); full, he is staggered `stagger` s, then shrugs control off for `immune` s, and needs `grow` times more
+  poise: {need: 3, stagger: 1, immune: 10, grow: 1.6, slow: 1, push: 1 / 400, shrugEvery: 1},
   // a boss alive past his band tires (SPEC 1.14): each second past `after` he takes `rate` more from every blow, and his
   // burst cap grows alike; a fight a strong build ends in its band never meets it, a weak or distant one ends soon after
   // and he closes: weary, he strides at `close` times his stride whenever further than `near` px

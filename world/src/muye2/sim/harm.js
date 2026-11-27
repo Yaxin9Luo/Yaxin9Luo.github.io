@@ -5,7 +5,7 @@ import {KB, clamp, setState, rand, query, Qward, shotPool, zonePool, pickupPool,
 import {mend} from './build.js';
 import * as BUILD from './build.js';
 import {inAura} from './squads.js';
-import {WORLD, HERO, GENERAL, RIDER, SCHEDULE, PICKUPS, BY, CAMPAIGN} from '../content.js';
+import {WORLD, HERO, GENERAL, RIDER, SCHEDULE, PICKUPS, BY, CAMPAIGN, FOLLOW} from '../content.js';
 import {bossDown} from './campaign.js';
 
 export function shove(f, ox, oy, dist) {
@@ -60,6 +60,7 @@ export function hitFoe(g, f, dmg, src, P, ox, oy, el, dot) {
   const seen = f.tier ? f.eyeWardUntil > g.t : f.eyeUntil > g.t;
   if (f.state === 'dead' || ((f.under || f.gone) && !seen)) return;          // under the earth, or gone on the wind: nothing reaches him
   let d = dmg * (g.power[src] || 1);
+  if (BY.general[src]) f.engagedUntil = g.t + FOLLOW.t; else if (BY.troop[src] && f.engagedUntil > g.t) d *= FOLLOW.mult;     // B: the squads fall on what a general engaged
   if (!dot) {
     if (P && f.elite && P.eliteMult) d *= P.eliteMult;
     if (el === 'metal') d *= 1 + RIDER.metal.more * (g.form && g.form.rider || 1);
@@ -80,6 +81,9 @@ export function hitFoe(g, f, dmg, src, P, ox, oy, el, dot) {
   // his six lives (1.16); after the cap, so that a build that hits at the cap still finds him warded
   if (f.tier === 'final' && g.campaign.officers > 0 && !seen) d *= CAMPAIGN.guardAura;
   if (f.kinK && !seen) d *= f.kinK;
+  if (f.duelHold > 0) { d = 0; capped = true; }               // a duel's held beat: untouchable, even to what 天眼 sees (1.17)
+  if (f.paceRate) { if (d > f.paceB) { d = Math.max(0, f.paceB); capped = true; } f.paceB -= d; }   // a duel's pace (1.17): the bar drains no faster than its phase's least time
+  if (f.duelFoe && g.hero.fallT > 0) { d = 0; capped = true; }   // the hero has fallen: the duel is his loss, the boss does not fall over him
   const dealt = d < f.hp ? d : f.hp;
   f.hp -= d; f.flash = .12;
   g.stats.damage[src] = (g.stats.damage[src] || 0) + dealt;
@@ -161,7 +165,7 @@ export function hurtHero(g, dmg, by, x, y, pattern = '') {
     }
   }
   // the rage: past g.campaign.rageAt (SCHEDULE.late) every blow of the Shang is harder with each minute, whoever strikes it
-  const past = (g.t - g.campaign.rageAt) / 60;
+  const past = (g.t - g.campaign.held - g.campaign.rageAt) / 60;      // on the campaign's clock (it stands for a duel)
   const d = Math.min(HERO.blowCap * h.maxHp, Math.max(1, dmg * (past > 0 ? 1 + SCHEDULE.late.dmg * past * Math.max(1, past) : 1) - g.mods.armour));   // one blow takes at most HERO.blowCap of full health
   if (h.hp - d <= 0 && BUILD.saveHero && BUILD.saveHero(g)) return false;   // 袁洪's spoil, 八九玄功: stone instead of the fall
   h.hp -= d; h.flash = .15; h.hurtT = HERO.hurtTime;

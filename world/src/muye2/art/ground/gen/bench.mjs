@@ -2,7 +2,7 @@
 import { createRequire } from 'node:module';
 const require = createRequire('/Users/yaxinluo/Desktop/Yaxin9Luo.github.io/world/package.json'), { chromium } = require('playwright-core');
 const B = (process.env.MUYE_URL || 'http://127.0.0.1:5173') + '/src/muye2/art/ground/gen/bench.html';
-const browser = await chromium.launch({ channel: 'chrome', headless: true }), out = [];
+const browser = await chromium.launch({ channel: 'chrome', headless: true, args: ['--mute-audio'] }), out = [];
 for (const [which, weather, scene] of [['old', '', ''], ['new', 'clear', 'xiqi'], ['new', 'rain', 'xiqi'], ['new', 'snow', 'xiqi'], ['new', 'clear', 'passes'], ['new', 'dust', 'passes'], ['new', 'clear', 'mengjin'], ['new', 'rain', 'mengjin']]) for (const rate of [1, 4]) for (const flush of [0, 1]) {
   const page = await browser.newPage({ viewport: { width: 1440, height: 900 } }); const cdp = await page.context().newCDPSession(page); await cdp.send('Emulation.setCPUThrottlingRate', { rate });
   page.on('pageerror', (e) => console.log('[err]', e.message));

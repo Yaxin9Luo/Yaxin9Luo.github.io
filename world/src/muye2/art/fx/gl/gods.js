@@ -99,30 +99,35 @@ export function createGods(ctx, W = createWonders(), { ink = null, kick = () => 
   const owns = (e) => (e.type === 'trueForm' && !!e.general) || (e.type === 'generalSkill' && !!e.trueForm);
 
   // ---------------------------------------------------------------- 显圣: rise, hold, leave
+  // a stage-final boss's duel is on: the player's great images give way to him and his warnings (gl/index.js ducks the feats)
+  const duelOn = () => !!(G && G.campaign && G.campaign.duel);
   const T_GATHER = 0.3, T_RISE = 0.75, T_BEAT = 0.9, T_HOLD = 2.25, T_END = 2.85;
   function stageGround(c, V) {
     for (let i = 0; i < stages.length; i++) { const o = stages[i], t = clock - o.at; if (t > T_END) { stages.splice(i--, 1); continue; }
       const u = unitOf(o.g), gx = u ? u.x : o.x, gy = u ? u.y : o.y, z = V.z, cw = ctx.canvas.width, ch = ctx.canvas.height;
-      const rise = ease(clamp((t - T_GATHER + 0.05) / (T_RISE - T_GATHER))), leave = clamp((t - T_HOLD) / (T_END - T_HOLD)), a = rise * (1 - leave);
-      if (!o.beat && t >= T_BEAT) { o.beat = true; kick(9); hold(0.07); }
+      // in a stage-final duel (the tester: a 法相 a third of the screen covered 闻仲 and his lanes) it stands small and faint at the
+      // general's own feet, under the boss's figure and warnings: × 0.42 in size, × 0.5 in strength, no held beat
+      const dk = duelOn() ? 0.42 : 1;
+      const rise = ease(clamp((t - T_GATHER + 0.05) / (T_RISE - T_GATHER))), leave = clamp((t - T_HOLD) / (T_END - T_HOLD)), a = rise * (1 - leave) * (dk < 1 ? 0.5 : 1);
+      if (!o.beat && t >= T_BEAT) { o.beat = true; if (dk === 1) { kick(9); hold(0.07); } }
       // where it stands: centred near him across, its feet low on the screen, so the whole figure is inside the frame
       // as tall as three quarters of the screen, unless it is so wide (郑伦's beast, the riders) that it would not fit across;
       // centred near him, held inside the screen by its own width
-      const feet = ch * 0.93, tall = tallOf(o.g), b = bake(o.g, tall), half = b ? b.cv.width / 2 : cw * 0.24, Xs = Math.max(half + cw * 0.02, Math.min(cw - half - cw * 0.02, V.sx(gx)));
+      const tall0 = tallOf(o.g), b = bake(o.g, tall0), tall = tall0 * dk, half = b ? (b.cv.width / 2) * dk : cw * 0.24 * dk, feet = dk < 1 ? V.sy(gy) + 8 * z : ch * 0.93, Xs = Math.max(half + cw * 0.02, Math.min(cw - half - cw * 0.02, V.sx(gx)));
       // the ground under it: a wash of gold that opens with it (its stage)
       W.draw(c, HALO[EL[o.g]] || 'whalo_gold', Xs, feet - tall * 0.02, 0, (tall / 380) * 1.3 * (0.6 + 0.4 * rise), (tall / 380) * 1.3 * (0.6 + 0.4 * rise) * V.KY, 0.55 * a);
       // 土行孙: the earth opens round him as his figure rises out of it
       if (o.g === 'tuxingsun') earthStage(c, V, o, t, gx, gy, a);
-      if (b) { const lift = (1 - rise) * ch * 0.18 - leave * ch * 0.05, sy = 1 + 0.03 * leave;
+      if (b) { const lift = ((1 - rise) * ch * 0.18 - leave * ch * 0.05) * dk, sy = 1 + 0.03 * leave;
         // the held beat: for an instant it stands brighter (drawn twice), and a ring of matte gold opens behind its head
-        const beat = Math.max(0, 1 - Math.abs(t - T_BEAT - 0.06) / 0.12), hx = b.head ? b.head[0] - b.px : 0, hy = b.head ? b.head[1] - b.py : -b.h * 0.84;
-        if (beat > 0 || (t > T_BEAT && t < T_HOLD)) { const ring = ease(clamp((t - T_BEAT) / 0.4)); W.draw(c, 'whalo_gold', Xs + hx, feet + hy - lift, t * 0.1, (b.h / 900) * (0.7 + 0.6 * ring), (b.h / 900) * (0.7 + 0.6 * ring), 0.75 * a * (0.6 + 0.4 * beat)); }
-        ctx.setTransform(1, 0, 0, sy, Xs, feet - lift); ctx.globalAlpha = Math.min(1, 0.95 * a); ctx.drawImage(b.cv, -b.px, -b.py);
+        const beat = dk < 1 ? 0 : Math.max(0, 1 - Math.abs(t - T_BEAT - 0.06) / 0.12), hx = (b.head ? b.head[0] - b.px : 0) * dk, hy = (b.head ? b.head[1] - b.py : -b.h * 0.84) * dk;
+        if (beat > 0 || (t > T_BEAT && t < T_HOLD)) { const ring = ease(clamp((t - T_BEAT) / 0.4)); W.draw(c, 'whalo_gold', Xs + hx, feet + hy - lift, t * 0.1, (b.h * dk / 900) * (0.7 + 0.6 * ring), (b.h * dk / 900) * (0.7 + 0.6 * ring), 0.75 * a * (0.6 + 0.4 * beat)); }
+        ctx.setTransform(dk, 0, 0, sy * dk, Xs, feet - lift); ctx.globalAlpha = Math.min(1, 0.95 * a); ctx.drawImage(b.cv, -b.px, -b.py);
         if (beat > 0) { ctx.globalAlpha = 0.35 * beat * a; ctx.drawImage(b.cv, -b.px, -b.py); }
         ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 1;
         // it leaves in ink: dry strokes blow up off it as it thins
-        if (leave > 0) for (let k = 0; k < 9; k++) { const x0 = Xs + (k / 8 - 0.5) * b.h * 0.42, y0 = feet - b.h * (0.15 + 0.08 * (k % 4)), up = ease(leave);
-          ribbon(c, `wtoll_${k % 2}`, (s) => [x0 + Math.sin(s * 3 + k) * 26 * z, y0 - (s * 0.55 + up * 0.5) * b.h], 2.4 * z, (1 - leave) * 0.9, Math.max(0, up - 0.2), Math.min(1, up * 1.6 + 0.2), 10, null); }
+        if (leave > 0) for (let k = 0; k < 9; k++) { const bh = b.h * dk, x0 = Xs + (k / 8 - 0.5) * bh * 0.42, y0 = feet - bh * (0.15 + 0.08 * (k % 4)), up = ease(leave);
+          ribbon(c, `wtoll_${k % 2}`, (s) => [x0 + Math.sin(s * 3 + k) * 26 * z, y0 - (s * 0.55 + up * 0.5) * bh], 2.4 * z, (1 - leave) * 0.9, Math.max(0, up - 0.2), Math.min(1, up * 1.6 + 0.2), 10, null); }
       } else {      // no image: a brush aureole of his element behind him, rays out of it
         const X = V.sx(gx), Y = V.sy(gy) - 70 * z, k = (0.9 + 0.8 * rise) * z;
         W.draw(c, HALO[EL[o.g]] || 'whalo_gold', X, Y, t * 0.2, k * 1.2, k * 1.2, 0.85 * a);

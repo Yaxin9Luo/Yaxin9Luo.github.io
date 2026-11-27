@@ -27,16 +27,17 @@ export function createTimeline(root, sim) {
     update(cp, game, lang, t) {
       const C = cp.C, L = runLength(C), k = `${lang}|${C.stretches.length}`;
       if (k !== key) { key = k; root.querySelector('.tl-track').innerHTML = timelineHTML(C, lang); last = {}; }
-      const now = Math.min(game.t, L);
+      const at = cp.clock ?? game.t;      // the campaign's clock: it stands still while a duel is on (the rules' `clock`; `g.t` runs on)
+      const now = Math.min(at, L);
       const nowEl = root.querySelector('.now');
       nowEl.style.left = `${(100 * now / L).toFixed(3)}%`;
       // each stretch fills as it passes
       for (const seg of root.querySelectorAll('.seg')) {
-        const s = C.stretches[+seg.dataset.i], k2 = Math.max(0, Math.min(1, (game.t - s.from) / (s.big.t - s.from)));
+        const s = C.stretches[+seg.dataset.i], k2 = Math.max(0, Math.min(1, (at - s.from) / (s.big.t - s.from)));
         const done = seg.firstElementChild; const v = k2.toFixed(3); if (done.dataset.v !== v) { done.dataset.v = v; done.style.transform = `scaleX(${v})`; }
         seg.classList.toggle('cur', cp.stretch === s.index);
       }
-      for (const mk of root.querySelectorAll('.mk')) mk.classList.toggle('past', +mk.dataset.t <= game.t);
+      for (const mk of root.querySelectorAll('.mk')) mk.classList.toggle('past', +mk.dataset.t <= at);
       // the words at the right: the march, the boss on the field, or the next boss and how long until he comes
       let words;
       // a run that ends at a boss (the M1 build: `until`) names nothing past him; while he is on the field, he is the battle
@@ -47,11 +48,11 @@ export function createTimeline(root, sim) {
       else if (cp.next && cp.next.t > endT) words = '';
       else if (cp.next) {
         const who = cp.next.kind ? nameOf(sim, cp.next.kind, lang).name : t.nextSmall;
-        words = `${t.next} <strong>${who}</strong> <span class="in">${clock(cp.next.t - game.t)}</span>`;
+        words = `${t.next} <strong>${who}</strong> <span class="in">${clock(cp.next.t - at)}</span>`;
       } else if (cp.guards) words = `<em>${t.finalStretch}</em>`;
       else words = '';
       if (last.words !== words) { last.words = words; root.querySelector('.next').innerHTML = words; }
-      root.classList.toggle('soon', !!cp.next && cp.next.t - game.t <= 10 && cp.next.t > game.t);
+      root.classList.toggle('soon', !!cp.next && cp.next.t - at <= 10 && cp.next.t > at);
     },
   };
 }

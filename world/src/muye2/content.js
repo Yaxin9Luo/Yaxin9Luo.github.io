@@ -17,7 +17,7 @@ import {bosses} from './content/bosses.js';
 
 export {WORLD, STEP, HERO, CRY, ALLY, ELEMENTS, fedBy} from './content/base.js';
 export {SLOTS, MAX, OFFER, RESONANCE, CHEST, PAYOFF, GENERAL, ALLY_CLEAR} from './content/build.js';
-export {RANKS, rankOf} from './content/troops.js';
+export {RANKS, rankOf, FOLLOW} from './content/troops.js';
 export {TRIGRAMS, RIDER} from './content/formations.js';
 export {WEAPON_ART} from './content/weapons.js';
 export {SCHEDULE, SPAWN, PICKUPS, XP, xpNeed, CAMPAIGN, TIERS, LANDMARKS} from './content/schedule.js';

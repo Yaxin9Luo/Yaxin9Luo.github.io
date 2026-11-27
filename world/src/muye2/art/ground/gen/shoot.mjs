@@ -9,7 +9,7 @@ import { mkdirSync, readFileSync } from 'node:fs';
 const require = createRequire('/Users/yaxinluo/Desktop/Yaxin9Luo.github.io/world/package.json'), { chromium } = require('playwright-core');
 const [OUT, LIST] = process.argv.slice(2); mkdirSync(OUT, { recursive: true });
 const SHOTS = JSON.parse(readFileSync(LIST, 'utf8')), URL0 = process.env.MUYE_URL || 'http://127.0.0.1:5173/muye-next.html';
-const browser = await chromium.launch({ channel: 'chrome', headless: true });
+const browser = await chromium.launch({ channel: 'chrome', headless: true, args: ['--mute-audio'] });
 const pages = {};
 async function pageFor(seed, w, h) {
   const key = `${seed}:${w}x${h}`; if (pages[key]) return pages[key];
@@ -30,6 +30,7 @@ for (const S of SHOTS) for (let attempt = 0; attempt < 3; attempt++) { try {
     if (S.scene && G.setStretch) await G.setStretch(S.scene);
     if (S.march != null && G.march) { G.march(S.march, S.to); await new Promise((r) => setTimeout(r, 1500)); G.march(S.march, S.to); await new Promise((r) => setTimeout(r, 800)); } else if (G.march) G.march(null);
     if (G.setScene) G.setScene({ weather: S.weather, hour: S.hour });
+    if (G.setArena) G.setArena(null); if (S.arena && G.setArena) { if (G.preloadDuel) await G.preloadDuel(); G.setArena(S.arena); if (S.beat) { await new Promise((r) => setTimeout(r, 2400)); G.arenaBeat(2.5); } if (S.arenaWait) await new Promise((r) => setTimeout(r, S.arenaWait)); if (S.arenaLeave != null) { G.setArena(null); await new Promise((r) => setTimeout(r, S.arenaLeave)); } }
     if (S.gateOpen != null && G.setGate) for (const q of G.places || []) if (q.kind === 'gate') { if (S.reopen) G.setGate(q.id, !S.gateOpen); G.setGate(q.id, S.gateOpen); }
     if (S.k != null) { art.setTime(S.k); }
     M.cam.zoom = S.zoom || Math.min(1.6, Math.max(0.7, Math.sqrt(innerWidth * innerHeight / (1440 * 900))));
@@ -42,8 +43,10 @@ for (const S of SHOTS) for (let attempt = 0; attempt < 3; attempt++) { try {
     else if (g.allies) g.allies.length = 0;
     for (let i = 0; i < (S.foes || 0); i++) { const c = i % 7, ca = c / 7 * 6.283 + 0.4, cd = 330 + hash(c, 5) * 300, r = Math.sqrt(hash(i, 11)) * 150, t = hash(i, 13) * 6.283;
       sim.addFoe(g, KINDS[Math.floor(hash(i, 17) * KINDS.length)], x + Math.cos(ca) * cd * 1.3 + Math.cos(t) * r, y + Math.sin(ca) * cd + Math.sin(t) * r); }
+    if (S.zones && g.zones) for (const z of S.zones) g.zones.push({ id: 900000 + Math.floor(Math.random() * 90000), side: 'shang', dead: false, t: 0.4, life: 1.2, ...z });
     if (S.place) { M.hold = true; for (const [kind, px, py] of S.place) { const f = sim.addFoe(g, kind, px, py); if (f) { f.px = f.x = px; f.py = f.y = py; f.facing = 1; } } }
     await new Promise((r) => setTimeout(r, S.warm ?? 900));
+    if (S.js) await (new Function('M', 'S', 'return (async () => {' + S.js + '})()'))(M, S);   /* review only: page code run before the still (an overlay of another session's cells) */
     const hh = g.hero; return { hero: [Math.round(hh.x), Math.round(hh.y)], foes: g.foes.length, allies: (g.allies || []).length, scene: G.scene ? G.scene() : null, ownFall: !!G.ownFall, weatherState: G.weatherState ? G.weatherState() : null };
   }, S);
   await page.screenshot({ path: `${OUT}/${S.name}.png` });

@@ -14,6 +14,8 @@
 // The frame is flushed by itself at the end of the task that drew it (a microtask), so callers need not flush.
 // Beyond Canvas 2D: ctx.silhouette = [r, g, b] draws images as flat shapes of that colour (their alpha only);
 // ctx.target(fb, w, h) draws into a framebuffer; ctx.gl, ctx.onRestore(f), ctx.generation for effects with GL of their own.
+// ctx.alphaMul (default 1) scales every draw's alpha and is untouched by save/restore: the effects duck a whole pass with it (the
+// player's side in a duel, fx/gl/duel.js)
 const UNITS = 16, MAXQ = 16384, FLOATS = 6;                 // per vertex: x, y, u, v, colour (packed), texture unit
 
 const VS = `#version 300 es
@@ -180,7 +182,7 @@ export function createGL2D(canvas, { antialias = false, units = UNITS, software 
   let path = [], sub = null;
   const ctx = {
     canvas, gl, stats,
-    silhouette: null, generation: 0, globalAlpha: 1, globalCompositeOperation: 'source-over', fillStyle: '#000', strokeStyle: '#000', lineWidth: 1, lineCap: 'butt', lineJoin: 'miter', imageSmoothingEnabled: true, imageSmoothingQuality: 'low', filter: 'none', font: '10px sans-serif', textAlign: 'start', textBaseline: 'alphabetic',
+    silhouette: null, generation: 0, globalAlpha: 1, alphaMul: 1, globalCompositeOperation: 'source-over', fillStyle: '#000', strokeStyle: '#000', lineWidth: 1, lineCap: 'butt', lineJoin: 'miter', imageSmoothingEnabled: true, imageSmoothingQuality: 'low', filter: 'none', font: '10px sans-serif', textAlign: 'start', textBaseline: 'alphabetic',
     save() { stack.push([T.slice(), this.globalAlpha, this.globalCompositeOperation, this.fillStyle, this.strokeStyle, this.lineWidth, this.lineCap]); },
     restore() { const s = stack.pop(); if (!s) return; [T, this.globalAlpha, this.globalCompositeOperation, this.fillStyle, this.strokeStyle, this.lineWidth, this.lineCap] = s; },
     setTransform(a, b, c, d, e, f) { if (typeof a === 'object' && a) { T = [a.a, a.b, a.c, a.d, a.e, a.f]; return; } T[0] = a; T[1] = b; T[2] = c; T[3] = d; T[4] = e; T[5] = f; },
@@ -189,7 +191,7 @@ export function createGL2D(canvas, { antialias = false, units = UNITS, software 
     transform(a, b, c, d, e, f) { const m = T; T = [m[0] * a + m[2] * b, m[1] * a + m[3] * b, m[0] * c + m[2] * d, m[1] * c + m[3] * d, m[0] * e + m[2] * f + m[4], m[1] * e + m[3] * f + m[5]]; },
     translate(x, y) { this.transform(1, 0, 0, 1, x, y); }, scale(x, y) { this.transform(x, 0, 0, y, 0, 0); }, rotate(r) { const c = Math.cos(r), s = Math.sin(r); this.transform(c, s, -s, c, 0, 0); },
     drawImage(img, a, b, c, d, e, f, g, h) {
-      const ga = this.globalAlpha; if (ga <= 0 || !img || !img.width) return;
+      const ga = this.globalAlpha * this.alphaMul; if (ga <= 0 || !img || !img.width) return;
       setBlend(this.globalCompositeOperation); const rec = texture(img), sc = this.silhouette, a1 = ga > 1 ? 1 : ga, col = sc ? pack(sc[0] / 255, sc[1] / 255, sc[2] / 255, a1) : pack(1, 1, 1, a1); sil = sc ? 32 : 0;
       if (e === undefined) { if (c === undefined) { c = img.width; d = img.height; } quad(rec, a, b, a + c, b + d, 0, 0, img.width, img.height, col); }
       else quad(rec, e, f, e + g, f + h, a, b, a + c, b + d, col);
@@ -205,7 +207,7 @@ export function createGL2D(canvas, { antialias = false, units = UNITS, software 
      *  The bend moves each point sideways only, and the edges follow its curve, so the cell keeps its width. On Canvas 2D
      *  (context.js) the same call draws the cell unbent. */
     drawStrip(img, sx, sy, sw, sh, dx, dy, dw, dh, wave) {
-      const ga = this.globalAlpha; if (ga <= 0 || !img || !img.width) return;
+      const ga = this.globalAlpha * this.alphaMul; if (ga <= 0 || !img || !img.width) return;
       const w = wave || {}, n = Math.max(1, Math.min(16, w.n | 0 || 8)), from = w.from || 'top', amp = w.amp || 0, phase = w.phase || 0, waves = w.waves ?? 0.8, lean = w.lean || 0, snap = w.snap || 0, grow = w.grow ?? 1.6;
       if (!amp && !lean && !snap) return this.drawImage(img, sx, sy, sw, sh, dx, dy, dw, dh);
       setBlend(this.globalCompositeOperation); const rec = texture(img), sc = this.silhouette, a1 = ga > 1 ? 1 : ga, col = sc ? pack(sc[0] / 255, sc[1] / 255, sc[2] / 255, a1) : pack(1, 1, 1, a1); sil = sc ? 32 : 0;
@@ -231,7 +233,7 @@ export function createGL2D(canvas, { antialias = false, units = UNITS, software 
      *  xy holds the (cols + 1) * (rows + 1) corner points row by row in the current transform's units, uv the same corners in
      *  image px. Batches with every other sprite. Canvas 2D (context.js) has no drawGrid: callers fall back to drawImage. */
     drawGrid(img, cols, rows, xy, uv) {
-      const ga = this.globalAlpha; if (ga <= 0 || !img || !img.width) return;
+      const ga = this.globalAlpha * this.alphaMul; if (ga <= 0 || !img || !img.width) return;
       setBlend(this.globalCompositeOperation); const rec = texture(img), sc = this.silhouette, a1 = ga > 1 ? 1 : ga, col = sc ? pack(sc[0] / 255, sc[1] / 255, sc[2] / 255, a1) : pack(1, 1, 1, a1); sil = sc ? 32 : 0;
       const m = T, R = (cols + 1) * 2;
       for (let j = 0; j < rows; j++) for (let i = 0; i < cols; i++) {
@@ -241,7 +243,7 @@ export function createGL2D(canvas, { antialias = false, units = UNITS, software 
         quadUV(rec, SP, SU, col); }
       sil = 0;
     },
-    fillRect(x, y, w, h) { const c = parseColour(this.fillStyle); setBlend(this.globalCompositeOperation); quad(texture(solid), x, y, x + w, y + h, 1, 1, 3, 3, pack(c[0], c[1], c[2], c[3] * this.globalAlpha)); },
+    fillRect(x, y, w, h) { const c = parseColour(this.fillStyle); setBlend(this.globalCompositeOperation); quad(texture(solid), x, y, x + w, y + h, 1, 1, 3, 3, pack(c[0], c[1], c[2], c[3] * this.globalAlpha * this.alphaMul)); },
     clearRect(x, y, w, h) { flush('clear'); if (x <= 0 && y <= 0 && x + w >= W && y + h >= H && T[0] === 1 && T[3] === 1) { gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT); } },
     beginPath() { path = []; sub = null; },
     moveTo(x, y) { sub = [this._x(x, y), this._y(x, y)]; path.push(sub); },
@@ -259,14 +261,14 @@ export function createGL2D(canvas, { antialias = false, units = UNITS, software 
     },
     _x(x, y) { return T[0] * x + T[2] * y + T[4]; }, _y(x, y) { return T[1] * x + T[3] * y + T[5]; },
     stroke() {
-      const c = parseColour(this.strokeStyle), col = pack(c[0], c[1], c[2], c[3] * this.globalAlpha); setBlend(this.globalCompositeOperation);
+      const c = parseColour(this.strokeStyle), col = pack(c[0], c[1], c[2], c[3] * this.globalAlpha * this.alphaMul); setBlend(this.globalCompositeOperation);
       const k = Math.sqrt(Math.abs(T[0] * T[3] - T[1] * T[2])), hw = Math.max(0.5, (this.lineWidth * k) / 2) + 0.5, rec = texture(line);   // half width in device px, + a feathered half pixel
       const p = [0, 0, 0, 0, 0, 0, 0, 0];
       for (const s of path) for (let i = 0; i + 3 < s.length; i += 2) { const x0 = s[i], y0 = s[i + 1], x1 = s[i + 2], y1 = s[i + 3], dx = x1 - x0, dy = y1 - y0, l = Math.hypot(dx, dy) || 1, nx = (-dy / l) * hw, ny = (dx / l) * hw, ex = this.lineCap === 'butt' ? 0 : (dx / l) * hw * 0.6, ey = this.lineCap === 'butt' ? 0 : (dy / l) * hw * 0.6;
         p[0] = x0 - nx - ex; p[1] = y0 - ny - ey; p[2] = x1 - nx + ex; p[3] = y1 - ny + ey; p[4] = x0 + nx - ex; p[5] = y0 + ny - ey; p[6] = x1 + nx + ex; p[7] = y1 + ny + ey; quadPts(rec, p, 1, 0, 3, 16, col); }
     },
     fill() {
-      const c = parseColour(this.fillStyle), col = pack(c[0], c[1], c[2], c[3] * this.globalAlpha); setBlend(this.globalCompositeOperation);
+      const c = parseColour(this.fillStyle), col = pack(c[0], c[1], c[2], c[3] * this.globalAlpha * this.alphaMul); setBlend(this.globalCompositeOperation);
       for (const s of path) {
         if (s.circle) { const [x, y, rx, ry, rot, M] = s.circle, keep = T; T = M; this.save(); T = M.slice(); const cr = Math.cos(rot), sr = Math.sin(rot); this.transform(cr, sr, -sr, cr, x, y); quad(texture(disc), -rx, -ry, rx, ry, 0, 0, 64, 64, col); this.restore(); T = keep; continue; }
         const rec = texture(solid), p = [0, 0, 0, 0, 0, 0, 0, 0];

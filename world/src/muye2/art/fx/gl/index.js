@@ -38,13 +38,14 @@ const HEAVY = { pairedWhips: 1, threeWhips: 1, goldWall: 1.3, greatAxe: 0.9 };  
 const LIGHT_OF = { metal: 'gold', fire: 'cinnabar', water: 'azurite', wood: 'malachite', earth: 'gold' };
 // the six of 梅山 land with 袁洪 at once: the shock is his alone (fx/gl/finale.js gives each his own column of ink)
 const MEISHAN_SIX = { wulong: 1, changhao: 1, daili: 1, jindasheng: 1, zhuzizhen: 1, yangxian: 1 };
-// the finale's two bosses get a short entrance kept off the hero (finaleEntrance)
-const FINALE_BOSS = { yuanhong: 1, zhouwang: 1 };
+// the finale's two bosses and the duellists get a short entrance kept off the hero (finaleEntrance); a duel's arena-wide
+// entrance is drawn by fx/gl/duel.js
+const FINALE_BOSS = { yuanhong: 1, zhouwang: 1, wenzhong: 1 };
 const BOSS_ELEMENT = { wenzhong: 'metal', zhangguifang: 'metal', moliqing: 'wood', molihong: 'water', molihai: 'metal', molishou: 'earth', kongxuan: 'fire', yuanhong: 'earth', zhouwang: 'fire' };
 
 export function createGLFx(ctx, { elementOf = () => 'ink', kick = () => {} } = {}) {
   const post = createPost(ctx), ink = createInk(post), blow = createBlow(post), weather = createWeather(post), voice = createVoice(post);
-  const Q = createQuality(ctx), impact = createImpact(post, Q), omen = createOmen(post, Q), wonders = createWonders(), _warm = wonders.loaded.then(() => ctx.prewarm && ctx.prewarm(wonders.image)), godsSheet = createWonders('gods'), _warmG = godsSheet.loaded.then(() => ctx.prewarm && ctx.prewarm(godsSheet.image)), seal = createSeal(ctx, impact, omen, wonders), treasures = createTreasures(ctx, ink, wonders, (a) => kick(a), godsSheet);
+  const Q = createQuality(ctx), impact = createImpact(post, Q), omen = createOmen(post, Q), wonders = createWonders(), _warm = wonders.loaded.then(() => ctx.prewarm && ctx.prewarm(wonders.image)), godsSheet = createWonders('gods'), _warmG = godsSheet.loaded.then(() => ctx.prewarm && ctx.prewarm(godsSheet.image)), seal = createSeal(ctx, impact, omen, wonders), treasures = createTreasures(ctx, ink, wonders, (a) => kick(a), godsSheet, (s) => hard(0, s));
   const gods = createGods(ctx, wonders, { ink, kick: (a) => kick(a), hold: (s) => hard(0, s), gw: godsSheet });
   ink.quality = Q;
   let zNow = 1, G = null, wx = null, wAmt = 1, wWind = 0, lastBoss = { t: -9, x: 0, y: 0 }, clock = 0, blowsAt = -9, holdUntil = 0;
@@ -138,7 +139,7 @@ export function createGLFx(ctx, { elementOf = () => 'ink', kick = () => {} } = {
       // (no wet wash at an evolution: its drops read as pools round him; the stroke ceremony and the treasure's own wonder carry it)
     } else if (t === 'land' && e.side === 'shang' && e.id === 'callName') {
       voice.call({ x: e.x, y: e.y, dir: typeof e.dir === 'number' ? e.dir : 0, half: ((e.angle || 36) * Math.PI) / 360, reach: e.radius || 440 });
-    } else if (t === 'land' && e.side === 'shang' && (HEAVY[e.id] || e.great)) godBlow(e);
+    } else if (t === 'land' && e.side === 'shang' && (HEAVY[e.id] || e.great) && !(G && G.campaign && G.campaign.duel)) godBlow(e);      // (in a duel, duel.js lands his blows)
     else if (t === 'trueForm') hard(18, 0.08);      // 显圣: gods.js stands the 法相 up (no omen sky: its ink band would cover the image's head)
     else if (t === 'generalSkill' && e.id === 'thunderDive' && !e.trueForm) { const L = 380, d = e.dir || 0; at(0.12, () => impact.hit({ x: e.x + Math.cos(d) * L, y: e.y + Math.sin(d) * L, power: 0.7, reach: 240, cracks: 5, light: LIGHT_OF.wood, column: 0.12, flash: 0.2, debris: 40, sparks: 30, life: 2, seed: 9 })); }   // great: the rules' shock blows (SPEC-CAMPAIGN 1.10)
   }
@@ -158,8 +159,14 @@ export function createGLFx(ctx, { elementOf = () => 'ink', kick = () => {} } = {
   return {
     onEvent,
     drawGround(V, dt) { clock += dt; zNow = V.z / V.dpr; Q.frame(omen.live + impact.live + seal.live > 0); for (let i = 0; i < plan.length; i++) if (plan[i][0] <= clock) { const f = plan[i][1]; plan.splice(i--, 1); f(); }
-      if (ink.live && !OFF.has('ink')) ink.draw(); if (impact.live) impact.drawGround(V, dt); if (seal.live) seal.drawGround(V, dt); if (blow.live) blow.drawGround(V, dt); treasures.drawGround(V, dt, G); gods.drawGround(V, dt, G); eyeRims(V); },
-    drawOver(V, dt) { if (voice.live) voice.draw(V, dt); inkFigures(V); treasures.drawOver(V, dt, G); gods.drawOver(V); if (omen.live && !OFF.has('omen')) { omen.draw(V, dt); omenClouds(V); } if (impact.live) impact.drawOver(V, dt); if (seal.live) seal.drawOver(V, dt); if (blow.live && !OFF.has('blow')) blow.draw(V, dt); if (wx) weather.draw(V, dt, wx, wAmt, wWind); treasures.drawLast(V); if (ink.live && !OFF.has('ink')) { const Vn = { ...V }; if (ctx.afterFrame) ctx.afterFrame(() => ink.after(Vn, dt)); else ink.after(Vn, dt); } },   // the ink steps after the frame's last draw (ink.js)
+      if (ink.live && !OFF.has('ink')) ink.draw(); if (impact.live) impact.drawGround(V, dt); if (seal.live) seal.drawGround(V, dt); if (blow.live) blow.drawGround(V, dt); ctx.alphaMul = treasures.duck(); treasures.drawGround(V, dt, G); gods.drawGround(V, dt, G); eyeRims(V); ctx.alphaMul = 1; },
+    /** the duel's boss in the ground pass: called by fx/index.js after its own strokes, so his warnings lie over the player's */
+    drawDuel(V, dt) { if (!OFF.has('duel')) treasures.duelDraw(V, 'ground', dt); },
+    /** how strongly the player's side is drawn now (1 outside a duel): fx/index.js ducks its own strokes by it */
+    duck: () => treasures.duck(),
+    drawOver(V, dt) { if (voice.live) voice.draw(V, dt); inkFigures(V); ctx.alphaMul = treasures.duck(); treasures.drawOver(V, dt, G);
+      // (the tester: a true form's blades over 闻仲 and his lanes) in a duel the gods' over-layer goes to half the duck again
+      if (G && G.campaign && G.campaign.duel) ctx.alphaMul *= 0.45; gods.drawOver(V); ctx.alphaMul = 1; if (omen.live && !OFF.has('omen')) { omen.draw(V, dt); omenClouds(V); } if (impact.live) impact.drawOver(V, dt); if (seal.live) seal.drawOver(V, dt); if (blow.live && !OFF.has('blow')) blow.draw(V, dt); if (wx) weather.draw(V, dt, wx, wAmt, wWind); if (!OFF.has('duel')) treasures.duelDraw(V, 'over'); treasures.drawLast(V); if (ink.live && !OFF.has('ink')) { const Vn = { ...V }; if (ctx.afterFrame) ctx.afterFrame(() => ink.after(Vn, dt)); else ink.after(Vn, dt); } },   // the ink steps after the frame's last draw (ink.js)
     setWeather(kind, amount = 1, wind = 0) { wx = kind || null; wAmt = amount; wWind = wind; },
     hold: () => Math.max(0, holdUntil - clock),
     useFigures: (f) => { drawAgain = f; treasures.useTip(f && f.heroWeapon); },
@@ -168,6 +175,8 @@ export function createGLFx(ctx, { elementOf = () => 'ink', kick = () => {} } = {
     owns: (e) => (e.type === 'evolve' && e.id === 'seal') || gods.owns(e),
     /** whether the painted wonder of this treasure is drawn here (the stroke effects then leave out their own) */
     has: (kind) => treasures.has(kind),
+    /** whether a duel's boss (by kind) has his zones and blows drawn here (the stroke effects then leave them out) */
+    duelOwns: (kind) => treasures.duelOwns(kind),
     get quality() { return { tier: Q.tier, why: Q.why }; },
     get live() { return ink.live + blow.live + impact.live + omen.live + seal.live; },
   };

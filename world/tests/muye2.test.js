@@ -10,6 +10,7 @@ import {
   CONTENT, BY, WORLD, STEP, HERO, CRY, ALLY, ALLY_CLEAR, SLOTS, MAX, OFFER, ELEMENTS, RESONANCE, TRIGRAMS, RIDER, SCHEDULE, SPAWN, PICKUPS, CHEST, PAYOFF, CAMPAIGN,
 } from '../src/muye2/sim.js';
 import {kill as killFoe, hitFoe as hitFoeRaw} from '../src/muye2/sim/harm.js';
+import {inZone} from '../src/muye2/sim/core.js';
 
 const C = WORLD.w / 2, TAU = Math.PI * 2;
 const near = (a, b, eps = 1e-6) => Math.abs(a - b) <= eps;
@@ -85,6 +86,8 @@ function worth(g, o) {
 }
 const pickSensible = g => { let best = 0; for (let i = 1; i < g.offer.length; i++) if (worth(g, g.offer[i]) > worth(g, g.offer[best])) best = i; return best; };
 
+/** How the riding players read warned ground: a reaction time (the tester's rider's), how far ahead a warning is weighed, a margin, the legs tried. */
+const READ = {react: .3, ahead: 2.5, pad: 8, legs: [.25, .5, .9, 1.6]};
 /**
  * Rides like someone who knows the genre: away from the side the foes are thickest on, out of warned ground and
  * the paths of arrows, over battle spirit and chests when it is safe, in long curves so the horse stays in full
@@ -130,6 +133,24 @@ function rider(pick, charge = false) {
       } else if (z.kind === 'lane') {
         const c = Math.cos(z.dir), s = Math.sin(z.dir), dx = h.x - z.x, dy = h.y - z.y, along = dx * c + dy * s, off = dy * c - dx * s;
         if (along > -40 && along < z.len + 40 && Math.abs(off) < z.w / 2 + 60) { const side = off >= 0 ? 1 : -1; fx += -s * side * 9; fy += c * side * 9; warned = warned || Math.abs(off) < z.w / 2 + 20; }
+      }
+    }
+    // warned ground read by its real shape (a lane, a ring, a band, a cone, rows across the arena), seen after a player's
+    // reaction: if where he is, or where he is riding, is struck, he rides for the place that is clear when each part
+    // strikes (so on tiled rows he waits on the row that strikes later), and only then goes on as before (READ, 2026-11-27)
+    const seen = [];
+    for (const z of g.zones) if (z.side === 'shang' && !z.dead && (z.kind === 'warn' || z.kind === 'lane') && z.t >= READ.react && z.life - z.t < READ.ahead) seen.push(z);
+    if (seen.length) {
+      const v = Math.max(HERO.speed * .8, Math.hypot(h.vx || 0, h.vy || 0)), pad = HERO.r * .5 + READ.pad;
+      const cost = (ux, uy, m) => { let c = 0; for (const z of seen) { const r = Math.max(0, z.life - z.t), T = Math.min(r, m); if (inZone(z, h.x + ux * v * T, h.y + uy * v * T, pad)) c += 10 + 4 / (r + .2); } return c; };
+      const fm = Math.hypot(fx, fy) || 1;
+      if (cost(0, 0, 0) > 0 || cost(fx / fm, fy / fm, .6) > 0) {
+        let bc = Infinity, bx = 0, by = 0;
+        for (let k = 0; k < 16; k++) {
+          const a = k / 16 * TAU, ux = Math.cos(a), uy = Math.sin(a);
+          for (const m of READ.legs) { const c = cost(ux, uy, m) + m * .5 + (1 - (ux * mx + uy * my)) * .3; if (c < bc) { bc = c; bx = ux; by = uy; } }
+        }
+        fx = bx * 40; fy = by * 40; warned = true;
       }
     }
     // what is worth riding over, when the way to it is not thick with foes
@@ -2199,15 +2220,16 @@ test('campaign: the timeline: two small bosses a stretch drawn by the seed, a bi
   const a1 = ev.find(e => e.type === 'arrive');
   assert.ok(a1 && a1.tier === 'small' && a1.kind === g.campaign.small[0].kind && a1.name.zh === BY.foe[a1.kind].name.zh && a1.title.en && ev.some(e => e.type === 'boss' && e.kind === a1.kind));
   assert.equal(a1.maxHp, Math.round(BY.foe[a1.kind].hp * CAMPAIGN.stretches[0].small[0].hp));
-  // 闻仲 comes with his four officers as his own: lieutenants, each with a short bar and his `retinue`
+  // 闻仲 comes to a duel (1.17): alone (his four ride in his patterns), the field clears, an arena, the campaign's clock stands
   g.t = 599.9;
   ev = run(g, 12);
   const wz = ev.find(e => e.type === 'arrive' && e.kind === 'wenzhong'), boss = g.foes.find(f => f.kind === 'wenzhong');
-  assert.ok(wz && wz.tier === 'big' && wz.phases.length >= 2 && g.campaign.bar === boss.id);
-  const four2 = g.foes.filter(f => f.retinue === boss.id);
-  assert.deepEqual(four2.map(f => f.kind).sort(), ['dengzhong', 'taorong', 'xinhuan', 'zhangjie']);
-  assert.ok(four2.every(f => f.tier === 'lieutenant' && f.named) && ev.filter(e => e.type === 'arrive' && e.tier === 'lieutenant').length === 4);
-  assert.ok(ev.some(e => e.type === 'stretch' && e.index === 1 && e.id === 'passes'));
+  assert.ok(wz && wz.tier === 'big' && wz.phases.length === 3 && g.campaign.bar === boss.id);
+  assert.ok(ev.some(e => e.type === 'duelBegin' && e.id === boss.id) && ev.some(e => e.type === 'arena' && e.phase === 0) && g.campaign.duel && g.campaign.duel.id === boss.id);
+  assert.ok(!g.foes.some(f => f.retinue === boss.id) && !g.foes.some(f => f.state !== 'dead' && f !== boss && !f.flee), 'he is alone on the field');
+  const clock0 = g.campaign.clock; run(g, 60);
+  assert.ok(near(g.campaign.clock, clock0, 1e-9), 'the campaign\'s clock stands');
+  assert.ok(!ev.some(e => e.type === 'stretch' && e.index === 1), 'the passes\' herald waits for his duel to end (1.17)');
   // a phase: below half his health his patterns come sooner; 120 s after he arrived he enrages
   boss.hp = boss.maxHp * .45; const dmg0 = boss.dmg;
   ev = run(g, 2);
@@ -2235,8 +2257,7 @@ test('campaign: a big boss\'s death: a march in which the Shang rout and nothing
   run(g, 30, NONE);
   for (let i = 0; i < 40; i++) addFoe(g, 'spear', C + 400 + i * 3, C);
   const boss = g.foes.find(f => f.kind === 'wenzhong');
-  boss.hp = 1; boss.armour = 0; boss.x = g.hero.x + 60; boss.y = g.hero.y;
-  g.hero.hp = g.hero.maxHp = 1e6; strike(g, boss, 50);
+  g.hero.hp = g.hero.maxHp = 1e6; killFoe(g, boss, 'test');     // (his duel's phase gates would hold a staged blow)
   let ev = run(g, 60 * 10, pick, (game, now) => now.some(e => e.type === 'march'));
   assert.ok(ev.some(e => e.type === 'bossDown' && e.kind === 'wenzhong' && e.tier === 'big') && g.phase !== 'won' && g.phase !== 'lost', '闻仲\'s death does not win the run');
   assert.ok(ev.some(e => e.type === 'rout' && e.count >= 40) && g.foes.every(f => f.state === 'dead' || f.flee));
@@ -2313,10 +2334,10 @@ test('campaign: a big boss\'s death: a march in which the Shang rout and nothing
   // a one-stretch run: {until: 'wenzhong'} wins on his death; the rage starts SCHEDULE.late.until s after he comes
   const u = createGame(3, {bare: true, until: 'wenzhong'});
   u.spawn.elite = 99; u.spawn.ring = 99; u.campaign.si = 99;
-  u.t = 599.5; run(u, 60);
+  u.t = 599.5; run(u, 60 * 4);                                  // (past his duel's held entrance)
   const w = u.foes.find(f => f.kind === 'wenzhong');
   assert.ok(near(u.campaign.rageAt, w.born + SCHEDULE.late.until, .02));
-  w.hp = 1; w.armour = 0; u.hero.hp = u.hero.maxHp = 1e6; strike(u, w, 50);
+  u.hero.hp = u.hero.maxHp = 1e6; killFoe(u, w, 'test');      // (his duel's phase gates would hold a staged blow)
   run(u, 60 * 10, pick, game => game.phase === 'won');
   assert.equal(u.phase, 'won');
 });
@@ -2325,7 +2346,7 @@ test('campaign: shocks: a big boss lands and a great blow lands with a push outw
   // a great blow: 闻仲's golden wall slam throws the foes and soldiers round it outward; the hero is not thrown by it
   const g = stage(), W = BY.foe.wenzhong, wall = W.patterns.find(p => p.id === 'goldWall');
   assert.ok(wall.great);
-  const boss = dummy(g, 'wenzhong', C + 400, C); boss.pcd = W.patterns.map(p => p === wall ? 0 : 1e9);
+  const boss = dummy(g, 'wenzhong', C + 400, C); boss.pcd = W.patterns.map(p => p === wall ? 0 : 1e9); boss.phase = wall.from || 0;
   g.hero.hp = g.hero.maxHp = 1e6;
   const near1 = dummy(g, 'spear', C + 60, C), near2 = dummy(g, 'spear', C, C - 70);
   const ev = run(g, 60 * 5, NONE, (game, now) => now.some(e => e.type === 'land' && e.great));
@@ -2354,11 +2375,10 @@ test('campaign: the scene\'s field (the ground session\'s fieldOf): landmarks on
   // 闻仲 falls: halfway through the march the hero stands at the start of the passes
   g.t = 599.5; g.spawn.elite = 99; g.spawn.ring = 99; g.campaign.si = 2; g.hero.hp = g.hero.maxHp = 1e6;
   const pick = game => game.phase === 'offer' ? {...NONE, pick: 0} : NONE;
-  run(g, 40, pick);
+  run(g, 60 * 4, pick);                                         // (past his duel's held entrance)
   const boss = g.foes.find(f => f.kind === 'wenzhong');
-  boss.hp = 1; boss.armour = 0; boss.wardT = 0; boss.capMax = 0;
-  const s = addShot(g, 'ring', 'zhou', 'test', boss.x, boss.y, 0, 0, 12, 50, .05); s.pierce = 99;
-  let ev = run(g, 60 * 3, pick, (game, now) => now.some(e => e.type === 'fieldLaid'));
+  killFoe(g, boss, 'test');                                     // (his duel's phase gates would hold a staged blow)
+  let ev = run(g, 60 * 8, pick, (game, now) => now.some(e => e.type === 'fieldLaid'));      // (the duel's fall is held first)
   const F1 = fieldOf(5, 1);
   assert.ok(g.campaign.march > 0 && g.campaign.march <= CAMPAIGN.march / 2 + .02, 'at half the march');
   assert.ok(near(g.hero.x, F1.start[0], 1) && near(g.hero.y, F1.start[1], 1) && !g.foes.some(f => f.flee && f.state !== 'dead'));
@@ -2568,6 +2588,122 @@ test('campaign: a boss alive past his band tires: every blow tells more, and his
   assert.ok(f.maxHp - f.hp > f.capMax * 3 * 1.8, `capped, 20 s past his band, he loses ${((f.maxHp - f.hp) / f.capMax / 3).toFixed(2)}x his share a second`);
 });
 
+test('campaign: 闻仲\'s duel (SPEC 1.17): a held entrance, an arena nobody leaves, phases that cannot be cut short, no idle spell, a staged fall, then the field and the clock return', () => {
+  const D = CAMPAIGN.duel, g = createGame(5, {}), pick = game => game.phase === 'offer' ? {...NONE, pick: 0} : NONE;
+  const keep = game => { game.hero.hp = game.hero.maxHp = 1e6; return pick(game); };
+  run(g, 60 * 5, keep); g.t = 599.9; g.campaign.si = 2;
+  let ev = run(g, 30, keep, (game, now) => now.some(e => e.type === 'duelBegin'));
+  const boss = g.foes.find(f => f.kind === 'wenzhong'), d = g.campaign.duel;
+  assert.ok(d && d.stage === 'enter' && boss.duelHold > 0 && ev.some(e => e.type === 'duelClear'));
+  // the entrance is held: he cannot be hurt and does not strike
+  const hp0 = boss.hp; addShot(g, 'ring', 'zhou', 'test', boss.x, boss.y, 0, 0, 30, 500, .05).pierce = 99;
+  ev = run(g, 60, keep);
+  assert.ok(boss.hp === hp0 && !ev.some(e => e.type === 'warn' && e.by === 'wenzhong'), 'held: untouched, still');
+  // the arena: ride out of it and he stays inside its ring
+  ev = run(g, 60 * 4, game => { const k = keep(game); return game.phase === 'offer' ? k : {...NONE, mx: 1}; });
+  assert.ok(Math.hypot(g.hero.x - d.x, g.hero.y - d.y) <= d.r - HERO.r + 1, 'the ring holds him');
+  assert.ok(ev.some(e => e.type === 'warn' && e.by === 'wenzhong'), 'and the fight is on');
+  // no idle spell: from the entrance's end, nothing of his is quiet for more than D.gap s (plus a pattern's own lead-in)
+  // (the tester's measure, as a player sees it: warned ground or a windup; a charge's run, its rest and a stagger are quiet)
+  let quietMax = 0, quiet = 0;
+  run(g, 60 * 20, keep, game => { const busy = game.zones.some(z => z.side === 'shang' && !z.dead && z.src === 'wenzhong' && (z.kind === 'warn' || z.kind === 'lane')) || boss.state === 'windup'; quiet = busy ? 0 : quiet + STEP; quietMax = Math.max(quietMax, quiet); });
+  assert.ok(quietMax <= D.gap + .5, `the longest quiet spell ${quietMax.toFixed(2)} s`);
+  // a phase cannot be cut short, and the bar does not lie: one huge blow takes no more than the pace's small bucket; blows
+  // without end drain him steadily, at his phase's health over its least time, to the line, and the line is crossed at once
+  boss.wardT = 0; boss.capMax = 0; boss.armour = 0;
+  const rate = (boss.phases[0] - boss.phases[1]) * boss.maxHp / D.minT[0];
+  assert.ok(boss.paceB <= rate * D.minT[0] + 1 && boss.maxHp - boss.hp + boss.paceB <= rate * d.phaseT + 1, 'what may be taken is never ahead of the pace');
+  boss.hp = boss.maxHp; boss.paceB = 0;                            // (a fresh phase: nothing may be taken yet)
+  hitFoeRaw(g, boss, boss.maxHp, 'test', null, boss.x, boss.y, null, true);
+  assert.ok(boss.hp === boss.maxHp, 'a huge blow at the pace\'s start takes nothing');
+  const left = boss.hp - boss.phases[1] * boss.maxHp, t0 = g.t;
+  let crossedAt = -1, trace = [];
+  ev = run(g, 60 * (D.minT[0] + 5), game => { if (game.campaign.duel.stage === 'fight') hitFoeRaw(game, boss, boss.maxHp, 'test', null, boss.x, boss.y, null, true); return keep(game); },
+    (game, now) => { if (Math.round((game.t - t0) * 60) % 60 === 0) trace.push(boss.hp / boss.maxHp); if (now.some(e => e.type === 'duelPhase')) { crossedAt = game.t - t0; return true; } });
+  assert.ok(crossedAt >= left / rate - .1 && crossedAt <= left / rate + 1.5, `the line is reached when the pace allows: ${crossedAt.toFixed(2)} s for ${(left / rate).toFixed(2)} s`);
+  for (let k = 1; k < trace.length; k++) assert.ok(trace[k] < trace[k - 1], `the bar drains every second: ${trace.map(x => x.toFixed(3))}`);
+  assert.ok(ev.some(e => e.type === 'duelPhase' && e.phase === 1) && d.stage === 'beat' && boss.duelHold > 0 && !g.zones.some(z => z.side === 'shang' && !z.dead));
+  ev = run(g, Math.round(D.beat * 60) + 5, keep);
+  assert.ok(ev.some(e => e.type === 'arena' && e.phase === 1 && e.scene === 'wenzhong:1') && d.stage === 'fight');
+  // the fall is held, then the field returns, the clock runs again and the march begins
+  const clock0 = g.campaign.clock;
+  killFoe(g, boss, 'test');
+  ev = run(g, Math.round(D.fall * 60) + 5, keep);
+  assert.ok(ev.some(e => e.type === 'duelFall') && ev.some(e => e.type === 'duelEnd') && !g.campaign.duel && g.campaign.march > 0);
+  const de = ev.findIndex(e => e.type === 'duelEnd'), st = ev.findIndex(e => e.type === 'stretch' && e.index === 1);
+  assert.ok(st > de && de >= 0, 'the next stretch\'s herald comes with his duel\'s end, not as he lands');
+  assert.ok(g.campaign.clock - clock0 <= .15, `the clock stood through the fall (it runs again only at its end: ${(g.campaign.clock - clock0).toFixed(3)} s)`);
+  run(g, 60, keep);
+  assert.ok(g.campaign.clock > clock0 + .9, 'and runs again after it');
+});
+
+test('campaign: a named foe\'s body brushes (1.17): a quarter of his blow, then a grace; on a charge it strikes in full', () => {
+  const T = CAMPAIGN.touch;
+  for (const kind of ['molihai', 'dengzhong']) {
+    const g = stage(), h = g.hero, f = dummy(g, kind, h.x, h.y);
+    h.hp = h.maxHp = 1e6;
+    const ev = run(g, 60 * 3).filter(e => e.type === 'hurt' && e.by === kind && !e.pattern);
+    assert.ok(ev.length >= 2 && ev.length <= Math.ceil(3 / T.grace) + 1, `${kind}: ${ev.length} brushes in 3 s (one each ${T.grace} s)`);
+    assert.ok(ev.every(e => e.dmg <= f.dmg * T.brush + 1e-6), `${kind}: a brush costs at most ${T.brush} of his blow (${ev.map(e => e.dmg.toFixed(1))} of ${f.dmg.toFixed(1)})`);
+    // on a charge his body strikes in full, grace or not
+    h.safe = 0; f.act = 'charge'; f.actT = 9; f.cs = 0; f.cdmg = f.dmg; f.pat = 'test';
+    const hit = run(g, 2).filter(e => e.type === 'hurt' && e.by === kind);
+    assert.ok(hit.length === 1 && hit[0].dmg > f.dmg * T.brush * 2, `${kind}: the charge strikes in full (${hit.map(e => e.dmg.toFixed(1))})`);
+  }
+});
+
+test('campaign: 闻仲\'s duel keeps its pace and its distance (1.17): the whips are laid while the Qilin charges, he is never stood on outside a charge, the Qilin\'s lanes can be left at a 0.45 s reaction', () => {
+  const g = createGame(5, {}), pick = game => game.phase === 'offer' ? {...NONE, pick: 0} : NONE;
+  const keep = game => { game.hero.hp = game.hero.maxHp = 1e6; return pick(game); };
+  run(g, 60 * 5, keep); g.t = 599.9; g.campaign.si = 2;
+  run(g, 30, keep, (game, now) => now.some(e => e.type === 'duelBegin'));
+  const boss = g.foes.find(f => f.kind === 'wenzhong'), pats = BY.foe.wenzhong.patterns, rush = pats.findIndex(p => p.id === 'qilinRush');
+  run(g, Math.round(CAMPAIGN.duel.enter * 60) + 5, keep);
+  // the follow-up: the paired whips are warned while he is still on the Qilin's lane, where the dodge carries the hero
+  for (let k = 0; k < pats.length; k++) boss.pcd[k] = k === rush ? 0 : 1e9;
+  let whipsOnCharge = false;
+  run(g, 60 * 3, game => { const k = keep(game); return game.phase === 'offer' ? k : {...NONE, mx: 1}; }, (game, now) => { if (now.some(e => e.type === 'warn' && e.kind === 'pairedWhips') && (boss.act === 'aim' || boss.act === 'charge')) whipsOnCharge = true; return whipsOnCharge; });
+  assert.ok(whipsOnCharge, 'the whips come while the Qilin is still running');
+  // his distance: a hero who rides straight at him never stands on him outside a charge (he is drawn half again his size)
+  for (let k = 0; k < pats.length; k++) boss.pcd[k] = 2;
+  let on = 0, n = 0;
+  run(g, 60 * 20, game => { const k = keep(game); if (game.phase === 'offer') return k; const dx = boss.x - game.hero.x, dy = boss.y - game.hero.y, q = Math.hypot(dx, dy) || 1; return {...NONE, mx: dx / q, my: dy / q}; },
+    game => { if (game.campaign.duel && game.campaign.duel.stage === 'fight' && boss.act !== 'aim' && boss.act !== 'charge') { n++; if (dist(boss, game.hero) < boss.r + HERO.r) on++; } });
+  assert.ok(n > 300 && on === 0, `stood on outside a charge: ${on} of ${n} steps`);
+  // the Qilin's lanes cover his duel body, and a hero on the lane's line who sees it 0.45 s late still clears his body in time
+  const r = Math.round(BY.foe.wenzhong.r * CAMPAIGN.duel.size);
+  for (const P of pats.filter(p => p.shape === 'lane' && p.chargeSpeed)) {
+    assert.ok(P.width >= 2 * r, `${P.id}: the lane (${P.width}) is as wide as his body (${2 * r})`);
+    const need = (Math.max(P.width / 2, r) + HERO.r) / HERO.speed;
+    assert.ok(P.warn - .45 >= need + .15, `${P.id}: ${P.warn} s of warning, 0.45 s to see it, ${need.toFixed(2)} s to clear`);
+  }
+  // the hero's fall ends the duel as his loss: once he is falling nothing harms the boss, who does not fall over him
+  boss.paceB = boss.maxHp; boss.capMax = 0; boss.wardT = 0; g.hero.hp = 1; g.hero.maxHp = 100; g.hero.safe = 0;
+  g.hero.fallT = 1.5;
+  const hpF = boss.hp;
+  hitFoeRaw(g, boss, boss.maxHp * 2, 'test', null, boss.x, boss.y, null, true);
+  const evF = run(g, 120);
+  assert.ok(boss.hp === hpF && boss.state !== 'dead' && !evF.some(e => e.type === 'duelFall') && g.phase === 'lost', 'no fall over a fallen hero');
+});
+
+test('campaign: poise (SPEC 1.17): control fills a great boss\'s meter; full, he is staggered for a fixed time, then shrugs control off, and needs more the next time; others are untouched', () => {
+  const P = CAMPAIGN.poise, g = stage(), boss = dummy(g, 'kongxuan', C + 300, C);
+  boss.tier = 'big'; boss.poiseNeed = P.need; boss.poise = 0; boss.speed = 0; boss.pcd = boss.pcd.map(() => 1e9);
+  const small = dummy(g, 'moliqing', C - 300, C); small.tier = 'small'; small.speed = 0; small.pcd = small.pcd.map(() => 1e9);
+  let held = 0, ev = [];
+  for (let i = 0; i < 60 * 30; i++) {
+    boss.stun = Math.max(boss.stun, .5); small.stun = Math.max(small.stun, .5);      // the heaviest control: a fresh stun every step
+    ev.push(...run(g, 1));
+    if (boss.stun > 0) held += STEP;
+  }
+  const st = ev.filter(e => e.type === 'stagger' && e.id === boss.id);
+  assert.ok(st.length >= 2 && st.every(e => e.time === P.stagger), `staggered ${st.length} times`);
+  assert.ok(held / 30 <= .12, `controlled ${(100 * held / 30).toFixed(1)}% of 30 s`);
+  assert.ok(ev.some(e => e.type === 'shrug' && e.id === boss.id && e.what === 'stun') && ev.some(e => e.type === 'poiseReady' && e.id === boss.id));
+  assert.ok(boss.poiseNeed > P.need * P.grow - 1e-9, 'he needs more each time');
+  assert.ok(small.stun > 0 && !ev.some(e => e.id === small.id && (e.type === 'stagger' || e.type === 'shrug')), 'a small boss is controlled as ever');
+});
+
 test('campaign: a boss is a fight: warded as he arrives, and his health falls no faster than his tier allows (SPEC-CAMPAIGN 1.14)', () => {
   const g = createGame(5, {bare: true});
   g.spawn.elite = 99; g.spawn.ring = 99; g.spawn.shamanAt = 1e9; g.spawn.scoutAt = 1e9;
@@ -2649,6 +2785,7 @@ test('6. named foes: after a normal reaction most ways out of every warned blow 
     let stood = 0;
     for (let k = 0; k < PLACINGS; k++) if (trial(foe, pi, k, 0, null)) stood++;
     assert.equal(stood, PLACINGS, `${foe.id} ${P.id}: a rider who stands through it is struck (${stood} of ${PLACINGS})`);
+    if (P.read) return;                                  // an arena pattern has no straight way out: the next test reads it
     const safe = (react, dist) => { let n = 0; for (let d = 0; d < 8; d++) { let hit = 0; for (let k = 0; k < PLACINGS; k++) if (trial(foe, pi, k, react, d * Math.PI / 4, dist)) hit++; if (!hit) n++; } return n; };
     const a = safe(.4), b = safe(.6);
     assert.ok(a >= 6, `${foe.id} ${P.id} (warned ${P.warn} s): reacting at 0.4 s, ${a} of 8 directions are safe (at least 6)`);
@@ -2662,6 +2799,52 @@ test('6. named foes: after a normal reaction most ways out of every warned blow 
       assert.ok(c >= 6, `${foe.id} ${P.id} at ${dist} px: reacting at 0.4 s, ${c} of 8 directions are safe (at least 6)`);
     }
   });
+});
+
+test('6b. arena patterns (`read`, SPEC 1.17): who stands is struck, and after a 0.4 s reaction there is always a place within reach to ride to and wait', async () => {
+  const {inZone} = await import('../src/muye2/sim/core.js');
+  const PLACINGS = 6, SPOTS = [[0, 0], ...Array.from({length: 48}, (_, i) => { const a = (i % 16) * TAU / 16, r = [110, 220, 340][Math.floor(i / 16)]; return [Math.cos(a) * r, Math.sin(a) * r]; })];
+  // the reader: at 0.4 s he looks at the warned ground (where and when each part falls) and picks a spot and when to leave for
+  // it (now, or just after a part has fallen) such that no part falls where he is at that moment; then rides there and waits
+  const trial = (foe, pi, k, read) => {
+    const P = foe.patterns[pi], g = createGame(31 + k, {bare: true, spawn: false}), h = g.hero, ang = k * 1.37, dist = Math.min(P.within * .75, 360);
+    const f = addFoe(g, foe.id, h.x + Math.cos(ang) * dist, h.y + Math.sin(ang) * dist);
+    f.pcd = foe.patterns.map((_, i) => i === pi ? 0 : 1e9); f.phase = P.from || 0; f.speed = 0; h.hp = h.maxHp = 1e6;
+    let warnAt = -1, wounds = 0, quiet = 0, plan = null;
+    for (let i = 0; i < 60 * 14 && quiet <= 30; i++) {
+      let inp = NONE;
+      const t = g.t - warnAt;
+      if (warnAt >= 0 && read && t >= .4) {
+        if (!plan) {
+          const zs = g.zones.filter(z => z.side === 'shang' && !z.dead && z.pattern === P.id), T = HERO.speed * .95, x0 = h.x, y0 = h.y;
+          const departs = [t, ...zs.map(z => t + z.life - z.t + .08)];
+          search: for (const D of departs) for (const [dx, dy] of SPOTS) {
+            const go = Math.hypot(dx, dy) / T, at = s => s < D ? [x0, y0] : s >= D + go ? [x0 + dx, y0 + dy] : [x0 + dx * (s - D) / go, y0 + dy * (s - D) / go];
+            if (zs.every(z => { const [px, py] = at(t + z.life - z.t); return !inZone(z, px, py, HERO.r + 4); })) { plan = {D, x: x0 + dx, y: y0 + dy}; break search; }
+          }
+          if (!plan) plan = {D: 1e9, x: h.x, y: h.y};
+        }
+        const dx = plan.x - h.x, dy = plan.y - h.y, d = Math.hypot(dx, dy);
+        if (t >= plan.D && d > 4) inp = {...NONE, mx: dx / d, my: dy / d};
+      }
+      step(g, inp);
+      for (const e of g.events) { if (e.type === 'warn' && warnAt < 0) { warnAt = g.t; f.pcd = foe.patterns.map(() => 1e9); } if (e.type === 'hurt' && warnAt >= 0 && e.pattern) wounds++; }
+      g.events.length = 0;
+      quiet = warnAt >= 0 && !g.zones.some(z => z.side === 'shang') && f.act !== 'aim' && f.act !== 'charge' && f.act !== 'slam' ? quiet + 1 : 0;
+    }
+    assert.ok(warnAt >= 0, `${foe.id} ${P.id}: warned`);
+    return wounds;
+  };
+  let n = 0;
+  for (const foe of CONTENT.foes) (foe.patterns || []).forEach((P, pi) => {
+    if (!P.read) return;
+    n++;
+    for (let k = 0; k < PLACINGS; k++) {
+      assert.ok(trial(foe, pi, k, null) > 0, `${foe.id} ${P.id} (placing ${k}): who stands is struck`);
+      assert.equal(trial(foe, pi, k, true), 0, `${foe.id} ${P.id} (placing ${k}): who reads it at 0.4 s finds a place to wait`);
+    }
+  });
+  assert.ok(n >= 5, `the arena patterns (${n})`);
 });
 
 test('6. named foes: every pattern is warned, strikes who stays, and can be ridden out of from a standstill with 0.2 s to spare', () => {
@@ -2690,9 +2873,9 @@ test('6. named foes: every pattern is warned, strikes who stays, and can be ridd
   ];
   for (const [kind, k, place, ride, shape] of cases) {
     const stay = trial(kind, k, place, null), A = stay.A;
-    assert.ok(stay.warns.length >= 1 && stay.warns.every(w => w.kind === A.id && w.by === kind && w.shape === shape && w.time > 0 && Number.isFinite(w.x)), `${kind} ${A.id}: warned as a ${shape}`);
+    assert.ok(stay.warns.length >= 1 && stay.warns.every(w => w.kind === A.id && w.by === kind && w.shape === shape && w.time > 0 && Number.isFinite(w.x)), `${kind} ${A.id}: warned as a ${shape}: ${JSON.stringify(stay.warns.map(w => [w.kind, w.by, w.shape]))}`);
     assert.ok(stay.hurt.length >= 1, `${kind} ${A.id}: who stays is struck`);
-    assert.ok(A.chargeSpeed || stay.ev.some(e => e.type === 'land' && e.id === A.id && e.side === 'shang'));
+    assert.ok(A.chargeSpeed || stay.ev.some(e => e.type === 'land' && e.id === A.id && e.side === 'shang'), `${kind} ${A.id}: lands`);
     const out = trial(kind, k, place, ride);
     assert.equal(out.hurt.length, 0, `${kind} ${A.id}: ridden out of from a standstill after ${REACT} s`);
   }
@@ -2734,8 +2917,8 @@ test('6. named foes: every pattern is warned, strikes who stays, and can be ridd
     assert.equal(g.foes.filter(x => x.kind === 'marten').length, 1, 'one at a time');
   }
   { // 金遁: a ring of gold round the hero; then a whip inside it
-    const A = BY.foe.wenzhong.patterns[2];
-    const setup = () => { const g = stage(), f = addFoe(g, 'wenzhong', C + 400, C); f.speed = 0; f.pcd = [1e9, 1e9, 0]; g.hero.hp = g.hero.maxHp = 1000; return {g, f}; };
+    const A = BY.foe.wenzhong.patterns.find(p => p.id === 'goldWall');
+    const setup = () => { const g = stage(), f = addFoe(g, 'wenzhong', C + 400, C); f.speed = 0; f.pcd = BY.foe.wenzhong.patterns.map(p => p === A ? 0 : 1e9); f.phase = A.from || 0; g.hero.hp = g.hero.maxHp = 1000; return {g, f}; };
     const a = setup();
     let ev = run(a.g, 60 * 4);
     assert.ok(ev.some(e => e.type === 'warn' && e.kind === 'goldWall' && e.shape === 'ring' && e.radius === A.r && e.inner === A.r0));
@@ -2994,6 +3177,7 @@ test('1. the schedule: from a trickle to hundreds, from every side; chariots, sh
       const f = g.foes[i];
       seenIds.add(f.id);
       if (g.t < .1 || f.kind === 'marten' || f.retinue) continue;   // those already on the field when the run begins; a creature a foe looses; a boss's own
+      if (BY.foe[f.kind].duel) { entered++; continue; }            // a duel's boss lands inside his arena, on screen (1.17)
       entered++;
       const kd = f.scout ? 'scout' : f.kind;
       kinds[kd] = (kinds[kd] || 0) + 1;

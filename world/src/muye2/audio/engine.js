@@ -16,10 +16,11 @@
 // The treasures fire by themselves, about 70 times a second in a maxed build, so their voices go through a budget:
 // at most CAST_VOICES at once, the same treasure not again within 90 ms, fainter the more there have been this second.
 import {createBank} from './bank.js';
-import {RATE, HELD} from './instruments.js';
+import {RATE, HELD, BREATH, keyOf} from './instruments.js';
 import {createMusic} from './music.js';
+import {DUELS, STRETCH_DUEL, NEXT_DUEL} from './duels.js';
 
-const CAST_VOICES = 6, SPOIL_SOURCES = 6, VOICES = 48, MUSIC_VOICES = 28, MUSIC_GAIN = .2, CAST_GAIN = .6, PAUSED_DB = -9;
+const CAST_VOICES = 6, SPOIL_SOURCES = 6, VOICES = 48, MUSIC_VOICES = 64, MUSIC_GAIN = .2, DUEL_GAIN = .16, HALL_GAIN = 1.6, BLOWS_GAIN = .6, CAST_GAIN = .6, PAUSED_DB = -9;
 const ELEMENTS = ['fire', 'water', 'wood', 'metal', 'earth'];
 const PENT = [0, 2, 4, 7, 9];
 /** The frequency of pentatonic index i, where 0 is C3 (130.81 Hz), 5 is C4, -5 is C2. */
@@ -31,11 +32,11 @@ const DRY = {}, NO_BANK = {stats: {}, want() {}, get: () => null, room: null};  
     `bank`: a bank to share between instances (the listening page makes one per render); else each makes its own. */
 export function createSound({context = null, bank: shared = null} = {}) {
   const offline = !!context, bank = shared || createBank({sync: offline});
-  let ctx = null, out = null, buses = null, trim = null, room = null, on = true, volume = .8, music = null, paused = false;
-  let voices = 0, musicVoices = 0, castVoices = 0, spoilSources = 0, density = 0, densityAt = 0, kills = 0, killsAt = 0, crowdAt = -9;
+  let ctx = null, out = null, buses = null, trim = null, room = null, roomBig = null, on = true, volume = .8, music = null, paused = false;
+  let dropped = 0, voices = 0, musicVoices = 0, castVoices = 0, spoilSources = 0, density = 0, densityAt = 0, kills = 0, killsAt = 0, crowdAt = -9;
   let collect = null, fakeT = 0;                       // the dry run that lists every sound the game will ask for
   let cur = null;                                       // the event being handled, for the page's own calls that follow it
-  const lastCast = new Map(), live = new Map();         // live: the bosses on the field, id -> tier
+  const lastCast = new Map(), live = new Map(), prepared = new Set(), duelSets = new Map(); let duelKind = null;         // live: the bosses on the field, id -> tier
   const level = () => on ? volume : 0;
   const now = () => collect ? fakeT : ctx.currentTime;
   const alive = () => !!(ctx || collect);
@@ -55,11 +56,20 @@ export function createSound({context = null, bank: shared = null} = {}) {
     pre.connect(glue); glue.connect(lim); lim.connect(out); out.connect(ctx.destination);
     room = ctx.createConvolver(); room.normalize = false;
     const roomOut = ctx.createGain(); roomOut.gain.value = 1.6; room.connect(roomOut); roomOut.connect(pre);
-    const hallIn = () => { const [L, R] = bank.room, ir = ctx.createBuffer(2, L.length, RATE); ir.copyToChannel(L, 0); ir.copyToChannel(R, 1); room.buffer = ir; };
+    // the duel's own hall, larger: only the boss themes send to it
+    roomBig = ctx.createConvolver(); roomBig.normalize = false;
+    const bigOut = ctx.createGain(); bigOut.gain.value = HALL_GAIN; roomBig.connect(bigOut); bigOut.connect(pre);
+    const ir = ([L, R]) => { const b = ctx.createBuffer(2, L.length, RATE); b.copyToChannel(L, 0); b.copyToChannel(R, 1); return b; };
+    const hallIn = () => { room.buffer = ir(bank.room); if (bank.roomBig && bank.roomBig.length) roomBig.buffer = ir(bank.roomBig); };
     if (bank.room) hallIn(); else bank.onReady = () => { if (!room.buffer && bank.room) hallIn(); };
     trim = ctx.createGain(); trim.gain.value = paused ? Math.pow(10, PAUSED_DB / 20) : 1; trim.connect(pre);
     const bus = (g, send, to = pre) => { const b = ctx.createGain(); b.gain.value = g; b.connect(to); const s = ctx.createGain(); s.gain.value = send; b.connect(s); s.connect(room); return b; };
-    buses = {cast: bus(CAST_GAIN, .18), sfx: bus(.8, .12), alert: bus(1.4, .06), music: bus(MUSIC_GAIN, .35, trim), moment: bus(.6, .3)};
+    // the duel's music keeps a notch at the warning's knock (1.4 kHz) so a warning cuts through the fullest theme
+    const notch = ctx.createBiquadFilter(); notch.type = 'peaking'; notch.frequency.value = 1400; notch.Q.value = 1.1; notch.gain.value = -6; notch.connect(trim);
+    // a boss's attacks: their own bus, with the same notch at the warning's knock, and a short dip under each warning
+    const notchB = ctx.createBiquadFilter(); notchB.type = 'peaking'; notchB.frequency.value = 1400; notchB.Q.value = 1.1; notchB.gain.value = -8; notchB.connect(pre);
+    buses = {cast: bus(CAST_GAIN, .18), sfx: bus(.8, .12), alert: bus(1.4, .06), music: bus(MUSIC_GAIN, .35, trim), moment: bus(.6, .3), duel: bus(DUEL_GAIN, .08, notch), blows: bus(BLOWS_GAIN, .22, notchB)};
+    { const s = ctx.createGain(); s.gain.value = .35; buses.duel.connect(s); s.connect(roomBig); } buses.duelHall = bigOut;
     if (wanted) { const w = wanted; wanted = null; music.play(w.cue); if (w.boss) music.boss(w.boss); }
     return true;
   }
@@ -69,13 +79,15 @@ export function createSound({context = null, bank: shared = null} = {}) {
       `pan` -1..1, `bus` the bus name, `kind` 'cast' | 'spoil' for the budgets. Returns the source, or null if dropped. */
   function play(name, arg, {gain = .5, rate = 1, at = 0, when = null, pan = 0, bus = 'sfx', kind = '', len = null, bend = 0} = {}) {
     let rel = .08;
-    if ((name === 'horn' || name === 'xun') && Array.isArray(arg)) {      // a breath held for `d` s: one of three rendered lengths, cut to d
+    if (BREATH.has(name) && Array.isArray(arg)) {      // a breath held for `d` s: one of the HELD lengths, cut to d
       const d = arg[1], D = HELD.find(x => x >= d - .02) ?? HELD[HELD.length - 1];
       if (D - d > .05) { len = len ?? d; rel = .3; }
       arg = name === 'horn' ? [arg[0], D, (arg[2] ?? 1) < .9 ? .8 : 1] : [arg[0], D];
     }
     if (collect) { collect.push([name, arg]); return null; }
-    if (!ctx || !on || (bus === 'music' ? musicVoices >= MUSIC_VOICES : voices >= VOICES)) return null;
+    const mus = bus === 'music' || bus === 'duel';
+    if (!ctx || !on) return null;
+    if (mus ? musicVoices >= MUSIC_VOICES : voices >= VOICES) { if (mus) dropped++; return null; }
     const b = bank.get(ctx, name, arg); if (!b) return null;
     const t = when ?? now() + at, src = ctx.createBufferSource(), g = ctx.createGain();
     src.buffer = b; src.playbackRate.value = rate;
@@ -84,7 +96,7 @@ export function createSound({context = null, bank: shared = null} = {}) {
     let node = g;
     if (pan && ctx.createStereoPanner) { const p = ctx.createStereoPanner(); p.pan.value = clamp(pan, -1, 1); g.connect(p); node = p; }
     src.connect(g); node.connect(buses[bus] || buses.sfx);
-    const mus = bus === 'music'; if (mus) musicVoices++; else voices++; if (kind === 'cast') castVoices++; if (kind === 'spoil') spoilSources++;
+    if (mus) musicVoices++; else voices++; if (kind === 'cast') castVoices++; if (kind === 'spoil') spoilSources++;
     src.onended = () => { if (mus) musicVoices--; else voices--; if (kind === 'cast') castVoices--; if (kind === 'spoil') spoilSources--; node.disconnect(); if (node !== g) g.disconnect(); };
     src.start(t); if (len) { g.gain.setValueAtTime(gain, t + len); g.gain.exponentialRampToValueAtTime(.0005, t + len + rel); src.stop(t + len + rel + .02); }
     return src;
@@ -94,7 +106,9 @@ export function createSound({context = null, bank: shared = null} = {}) {
     if (!ctx) return; const g = buses[name].gain, t = now(), low = base * Math.pow(10, -db / 20);
     g.cancelScheduledValues(t); g.setValueAtTime(g.value, t); g.linearRampToValueAtTime(low, t + .04); g.setValueAtTime(low, t + hold); g.linearRampToValueAtTime(base, t + hold + back);
   }
-  const duck = (db = 6, hold = .5, back = .6) => duckBus('music', MUSIC_GAIN, db, hold, back);
+  const duck = (db = 6, hold = .5, back = .6) => { duckBus('music', MUSIC_GAIN, db, hold, back); duckBus('duel', DUEL_GAIN, db, hold, back); };
+  /** Under a warning the duel's theme steps back a moment (the field's music is quiet enough not to need it). */
+  const duckDuel = (db, hold, back) => { if (music && music.duelState) { duckBus('duel', DUEL_GAIN, db, hold, back); duckBus('duelHall', HALL_GAIN, db, hold, back); } };      // the hall's tail too: it is most of the wash
   const duckCasts = (db, hold, back) => duckBus('cast', CAST_GAIN, db, hold, back);
   const vary = (v, by = .04) => v * (1 + (Math.random() - .5) * 2 * by);
   // a pitch of its own for every treasure: its id picks one of eight notes of the collection, C4 to E5
@@ -147,10 +161,50 @@ export function createSound({context = null, bank: shared = null} = {}) {
     play('horn', [pent(-5), 1.6, 1], {gain: .3, at: .45, bus: 'moment'}); play('horn', [pent(-2), 1.4, .9], {gain: .22, at: .5, bus: 'moment'});
     voice(element)(1.3, 5, true, {bus: 'moment', at: .5});
   }
-  /** A general's own true form, where one is written. 杨戬's is being redesigned round the third eye: his slot is here,
-      and until it is written it plays the common true form. */
+  /** A general's own true form, where one is written: FEATS[general](element) plays instead of the common one. */
   const FEATS = {
-    yangjian: null,       // the third eye opens: to be written with the redesigned feat
+    /** 杨戬, 天眼照妖: the ground gives as in every true form, then his third eye opens: a harmonic rising out of silence,
+        the bells fanning upward like the light from his brow, a held low bell under them, the horn last. */
+    yangjian(element) {
+      duck(9, 1.8, 1.4);
+      play('drum', 52, {gain: .55, bus: 'moment'}); play('bellDark', pent(-5), {gain: .42, at: .02, bus: 'moment'}); play('rumble', undefined, {gain: .3, bus: 'moment'});
+      play('harm', pent(12), {gain: .3, at: .35, bus: 'moment', bend: 2}); play('harm', pent(14), {gain: .2, at: .5, bus: 'moment', bend: 2});
+      [5, 7, 8, 10, 12, 13, 15].forEach((d, i) => play('bell', pent(d), {gain: .14 + i * .012, at: .55 + i * .07, bus: 'moment'}));
+      play('horn', [pent(-5), 1.6, 1], {gain: .28, at: .9, bus: 'moment'}); play('horn', [pent(-2), 1.4, .9], {gain: .2, at: .95, bus: 'moment'});
+      voice(element)(1.1, 5, true, {bus: 'moment', at: 1});
+    },
+  };
+  /** 天眼's gaze each time it opens (every 5 s): a rising harmonic, a soft bell, a breath of light. Under the cast budget. */
+  const gaze = (k, o) => { play('harm', pent(12), {gain: .2 * k, bend: 2, ...o}); play('bell', pent(13), {gain: .12 * k, at: .05, ...o}); play('whoosh', undefined, {gain: .1 * k, rate: .6, ...o}); };
+
+  /** 闻仲's attacks, voiced as they land (the warning has already knocked). Each is short and placed in stereo; the
+      repeated ones are rate-limited so a sweep of lanes or a storm of nine strikes is a pattern, not a wall. */
+  const blowAt = new Map(), riders = [];
+  const once = (key, gap) => { const t = now(), last = blowAt.get(key) ?? -9; if (t - last < gap) return false; blowAt.set(key, t); return true; };
+  const BLOWS = {
+    // 雷部: the rows land in two waves (two claps); the last storm's nine strikes crack one after another
+    thunderRows: pan => { if (once('rows', .25)) { play('clap', undefined, {bus: 'blows', gain: .55, pan: pan * .5}); duckDuel(4, .5, .8); } },
+    thunderStorm: pan => { if (once('storm', .12)) play('clap', undefined, {bus: 'blows', gain: .38, rate: vary(1, .12), pan}); },
+    // 雌雄鞭: each whip falls where its ring was
+    pairedWhips: pan => { if (once('whip', .07)) play('whip', undefined, {bus: 'blows', gain: .85, rate: vary(1, .06), pan}); },
+    threeWhips: pan => { if (once('whip', .07)) play('whip', undefined, {bus: 'blows', gain: .85, rate: vary(1, .06), pan}); },
+    goldWall: (pan, e) => { if (e.shape === 'wall' || e.shape === 'ring') { play('bellDark', pent(1), {bus: 'blows', gain: .3, pan}); play('rumble', undefined, {bus: 'blows', gain: .2, pan}); } else if (once('wallSlam', .3)) { play('whip', undefined, {bus: 'blows', gain: .5, rate: .8, pan}); play('drum', 52, {bus: 'blows', gain: .45, pan}); } },
+    // 墨麒麟: the charge down the lane, and back
+    qilinRush: pan => { if (once('qilin', .5)) play('gallop', undefined, {bus: 'blows', gain: .8, pan}); },
+    qilinReturn: pan => { if (once('qilin', .5)) play('gallop', undefined, {bus: 'blows', gain: .8, rate: 1.05, pan}); },
+    // his four generals ride across, one after another, each with his own weapon
+    fourGenerals: pan => {
+      const who = riders.shift() || '';
+      play('gallop', undefined, {bus: 'blows', gain: .28, rate: 1.15, pan, len: .5});
+      if (who === 'dengzhong') { play('whoosh', undefined, {bus: 'blows', gain: .25, rate: .7, pan}); play('clash', 900, {bus: 'blows', gain: .3, at: .08, pan}); }          // the axe cleaves
+      else if (who === 'xinhuan') { play('wind', undefined, {bus: 'blows', gain: .3, rate: 1.6, pan}); play('whoosh', undefined, {bus: 'blows', gain: .2, rate: 1.4, at: .1, pan}); }      // wings
+      else if (who === 'zhangjie') { play('shing', undefined, {bus: 'blows', gain: .3, pan}); play('wood', 300, {bus: 'blows', gain: .2, at: .05, pan}); }           // the spear's thrust
+      else { play('wind', undefined, {bus: 'blows', gain: .25, rate: .8, pan}); play('drum', 80, {bus: 'blows', gain: .3, pan}); }                                  // 陶荣's banner
+    },
+    // 绝龙岭: fire columns rise band by band
+    dragonPillars: pan => { if (once('pillar', .2)) play('pillar', undefined, {bus: 'blows', gain: .42, rate: vary(1, .05), pan}); },
+    // his third eye's light, lane by lane
+    thirdEye: pan => { if (once('eye', .2)) { play('harm', pent(13), {bus: 'blows', gain: .12, pan}); play('shing', undefined, {bus: 'blows', gain: .1, rate: .7, pan}); } },
   };
 
   let streak = 0, streakAt = -9, pickAt = -9, killAt = -9, warnAt = -9, trampleAt = -9, blockAt = -9, namedAt = -9, wardAt = -9, sortieAt = -9, stride = 0;
@@ -166,17 +220,33 @@ export function createSound({context = null, bank: shared = null} = {}) {
     get started() { return !!ctx; },
     get offline() { return offline; },
     /** For checks: what the budget and the bank are doing. */
-    get mix() { return {voices, musicVoices, castVoices, spoilSources, density: +density.toFixed(2), rendered: bank.stats.rendered, late: bank.stats.late, ready: bank.stats.ready, worker: bank.stats.worker, cue: music ? music.cue : null}; },
+    get mix() { return {dropped, voices, musicVoices, castVoices, spoilSources, density: +density.toFixed(2), rendered: bank.stats.rendered, late: bank.stats.late, ready: bank.stats.ready, worker: bank.stats.worker, cue: music ? music.cue : null}; },
     get music() { return music; },
     toggle() { on = !on; if (out) out.gain.value = level(); return on; },
     setVolume(v) { volume = clamp(v, 0, 1); if (out) out.gain.value = level(); },
     /** Every sound the game can ask for, as [name, arg]. Listed by a dry run on a throwaway instance: the run moves
         the clock and the repeat guards, and would leave them set in this one. */
-    wanted() { return createSound({context: DRY, bank: NO_BANK}).dryRun(); },
+    wanted(part = 'all') { return createSound({context: DRY, bank: NO_BANK}).dryRun(part); },
+    /** The sounds only a duel's boss uses (none the field shares): what is rendered for his stretch and freed after. */
+    duelSet(id) { if (!duelSets.has(id)) { const field = new Set(api.wanted('field').map(([n, a]) => keyOf(n, a))); duelSets.set(id, api.wanted(id).filter(([n, a]) => !field.has(keyOf(n, a)))); } return duelSets.get(id); },
+    /** Renders a duel's sounds ahead (his stretch has begun). */
+    prepareDuel(id) { if (!DUELS[id] || prepared.has(id)) return; prepared.add(id); bank.want(api.duelSet(id)); },
+    /** Frees a duel's sounds (he has fallen, or the run is over). */
+    freeDuel(id) {
+      if (!prepared.has(id)) return; prepared.delete(id);
+      const keep = new Set([...prepared].flatMap(o => api.duelSet(o).map(([n, a]) => keyOf(n, a))));      // a sound another prepared duel shares stays
+      bank.free(api.duelSet(id).map(([n, a]) => keyOf(n, a)).filter(k => !keep.has(k)));
+    },
     /** The dry run itself: every voice once (or over its range), the clock jumping between calls, nothing played. */
-    dryRun() {
+    dryRun(part = 'all') {
       const list = []; collect = list; fakeT = 100; const step = () => { fakeT += 10; };
+      const field = part === 'all' || part === 'field', duel = part === 'all' || !!DUELS[part];
       try {
+        if (duel) { for (const id in BLOWS) for (const shape of ['wall', 'circle']) { step(); riders.length = 0; riders.push('dengzhong'); blowAt.clear(); BLOWS[id](0, {shape}); }
+          for (const w of ['xinhuan', 'zhangjie', 'taorong']) { step(); riders.length = 0; riders.push(w); BLOWS.fourGenerals(0, {}); }
+          step(); api.fallPillars(); }
+        music.wanted(part === 'all' ? 'all' : field ? 'field' : part);
+        if (!field) return list;
         for (const el of ELEMENTS) for (let d = 0; d < 8; d++) for (const big of [false, true]) VOICE[el](1, d, big, {});
         for (const el of ELEMENTS) for (const big of [false, true]) VOICE[el](1, 3, big, {}), VOICE[el](1, 5, big, {}), VOICE[el](1, 0, big, {});
         for (const id in SPOIL) SPOIL[id](1, {});
@@ -186,18 +256,18 @@ export function createSound({context = null, bank: shared = null} = {}) {
           () => api.encircle(true), () => api.warn(), () => api.hurt(), () => api.block(), () => api.dash(), () => api.cry(true), () => api.cry(false), () => api.trample(), () => api.kill(true), () => api.kill(false),
           () => api.fall(), () => api.hooves(400, 300, .1), () => api.bossPhase(), () => api.enrage(), () => api.gateOpen(false), () => api.gateOpen(true), () => api.merge('fire'),
           () => api.guards(), () => api.landmark(), () => api.rear(), () => api.unhorsed(), () => api.remount(), () => api.transform('wind'), () => api.transform('stone'), () => api.transform('back'), () => api.burrow(), () => api.emerge(),
-          () => api.meishan(), () => api.lastWave(), () => api.kinWard(false), () => api.kinWard(true), () => api.rout(), () => api.host(), () => api.sortie(), () => api.hostReserve(), () => api.lastGuard(), () => api.lightReturned()];
+          () => api.meishan(), () => api.lastWave(), () => api.kinWard(false), () => api.kinWard(true), () => api.rout(), () => api.host(), () => api.sortie(), () => api.hostReserve(), () => api.lastGuard(), () => api.lightReturned(), () => api.stagger(), () => api.shrug(), () => api.phaseGate(), () => gaze(1, {})];
+        for (const el of ELEMENTS) calls.push(() => FEATS.yangjian(el));
         for (const el of ELEMENTS) calls.push(() => api.take(el), () => api.evolve(el), () => api.skill('x' + el, el, 5), () => api.general(el, false), () => api.general(el, true), () => trueFormDefault(el), () => api.merge(el));
         for (const i of [0, 1, 2]) calls.push(() => stretchCall(i));
         for (const tier of ['small', 'big', 'final']) calls.push(() => bossDownCall(tier));
         for (const k of ['bleed', 'held', 'soulLost', 'glare', 'dazzle', 'lightTaken', 'cured', 'freed']) calls.push(() => api.afflict(k));
         for (const c of calls) { step(); c(); }
-        music.wanted(list);
       } finally { collect = null; }
       return list;
     },
     /** Starts rendering the bank (in the game, at once, in a worker). */
-    prewarm() { bank.want(api.wanted()); return bank.stats; },
+    prewarm() { bank.want(api.wanted('field')); return bank.stats; },
 
     /* ---------- the one entry for the sim's stream ---------- */
     /** Every event of the sim, before the page's own handling. `hero`: for the stereo place of what is heard. */
@@ -207,9 +277,10 @@ export function createSound({context = null, bank: shared = null} = {}) {
       switch (e.type) {
         case 'kill': if (alive()) { const t = now(); kills = kills * Math.exp(-(t - killsAt) * .5) + 1; killsAt = t; } if (live.delete(e.id)) setBoss(); return;      // a boss killed outside the campaign's rules sends no bossDown
         case 'spoilStrike': api.spoilStrike(e.id, pan); return;
+        case 'warn': if (e.kind === 'fourGenerals' && e.who) { riders.push(e.who); if (riders.length > 8) riders.shift(); } return;
         case 'bleed': case 'held': case 'soulLost': case 'glare': case 'dazzle': case 'lightTaken': case 'cured': case 'freed': api.afflict(e.type); return;
         case 'lightReturned': api.lightReturned(); return;
-        case 'stretch': stretchNo = e.index || 0; stretchCall(stretchNo); return;
+        case 'stretch': stretchNo = e.index || 0; stretchCall(stretchNo); if (STRETCH_DUEL[stretchNo]) api.prepareDuel(STRETCH_DUEL[stretchNo]); return;
         case 'march': live.clear(); api.march(); return;
         case 'marchEnd': if (e.rest > 0) api.rest(true); return;
         case 'rest': api.rest(true); return;
@@ -229,6 +300,16 @@ export function createSound({context = null, bank: shared = null} = {}) {
         case 'burrow': api.burrow(pan); return;
         case 'emerge': api.emerge(pan); return;
         case 'rout': api.rout(); return;
+        // a stage-final boss's duel (duel-events.md): his theme, phases 0..2 here as 1..3; his fall
+        case 'duelBegin': duelKind = e.kind; api.prepareDuel(e.kind); api.duel(e.kind); return;
+        case 'duelPhase': api.duelPhase((e.phase || 0) + 1); return;
+        case 'duelFall': api.duelEnd(); if (duelKind === 'wenzhong') api.fallPillars(); return;      // 绝龙岭 is his alone
+        case 'duelEnd': { const k = e.kind || duelKind; if (NEXT_DUEL[k]) api.prepareDuel(NEXT_DUEL[k]); api.freeDuel(k); return; }
+        case 'land': if (e.side === 'shang' && e.id && BLOWS[e.id]) BLOWS[e.id](pan, e); return;
+        case 'stagger': api.stagger(pan); return;
+        case 'shrug': api.shrug(pan); return;
+        case 'phaseGate': api.phaseGate(pan); return;
+        case 'wardBroken': api.kinWard(true); return;
         // the finale (finale-events.md): 梅山七怪 land with 袁洪; the last common host; his kin's ward; 朝歌's gate; 纣王's sortie
         case 'meishan': api.meishan(); return;
         case 'lastWave': api.lastWave(); return;
@@ -245,18 +326,19 @@ export function createSound({context = null, bank: shared = null} = {}) {
     /** The pause sheet is up: the music steps back; it comes forward again on resume. */
     pause(p) { paused = !!p; if (trim) { const t = now(), g = trim.gain; g.cancelScheduledValues(t); g.setValueAtTime(g.value, t); g.linearRampToValueAtTime(p ? Math.pow(10, PAUSED_DB / 20) : 1, t + .3); } },
     /** The run is left (back to the camp): the music stops. */
-    leave() { live.clear(); downBig = new Set(); wanted = null; if (music) music.stop(); },
+    leave() { live.clear(); downBig = new Set(); wanted = null; if (music) music.stop(); for (const id of [...prepared]) api.freeDuel(id); },
 
     /* ---------- the build ---------- */
     cast(id, element, evolved, pan = 0) {
       if (!alive()) return false;
       const c = takeCur(e => (e.type === 'cast' && e.id === id) || (e.type === 'generalSkill' && e.general === id)); if (c) pan = c.pan;
+      const eye = c && c.e.type === 'generalSkill' && c.e.id === 'heavenEye';
       const t = now(), since = t - (lastCast.get(id) ?? -9);
       density *= Math.exp(-(t - densityAt) * 1.2); densityAt = t; density += 1;
       if (since < .09 || castVoices >= CAST_VOICES) return false;
       lastCast.set(id, t);
       const duckK = Math.min(1, .45 + since / .45 * .55), thin = 1 / (1 + Math.max(0, density - 3) / 5);
-      voice(element)(duckK * thin, degree(id), !!evolved, {...castOpts, pan});
+      if (eye) gaze(duckK * thin, {...castOpts, pan}); else voice(element)(duckK * thin, degree(id), !!evolved, {...castOpts, pan});
       return true;
     },
     /** A boss's spoil works. Its own budget, and no spoil twice within 0.25 s. */
@@ -349,8 +431,30 @@ export function createSound({context = null, bank: shared = null} = {}) {
     march() { cue('march'); },
     rest(r) { if (!music) return; if (r) { live.clear(); cue('rest'); } else { cue(music.stretchCue); setBoss(); } },
     bossArrives(tier) { live.set('page:' + tier, tier); setBoss(); },
+    /** A stage-final boss's duel: his theme's entrance, then phase 1; a held beat into each next phase; his fall. */
+    duel(id) { if (music && ctx) music.duel(id); },
+    duelPhase(n) { if (music && ctx) music.duelPhase(n); },
+    duelEnd() { if (music && ctx) music.duelEnd(); },
+    /** His fall (绝龙岭): his qilin collapses at 0.7 s; 云中子's fire pillars rise round him one by one and close on him; his soul goes up. */
+    fallPillars() {
+      // 0.7 s in, the 墨麒麟 goes down under him: a heavy body on the ground, a skid of dust
+      play('drum', 52, {gain: .5, at: .7, bus: 'moment'}); play('drumSoft', 70, {gain: .35, at: .74, bus: 'moment'}); play('rumble', undefined, {gain: .3, at: .7, bus: 'moment'}); play('whoosh', undefined, {gain: .16, rate: .45, at: .75, bus: 'moment'});
+      [0, .35, .7, 1.05].forEach((at, i) => play('pillar', undefined, {gain: .34, at, pan: [-.5, .5, -.25, .25][i], bus: 'moment'}));
+      play('fireBig', undefined, {gain: .35, at: 1.6, bus: 'moment'}); play('drum', 52, {gain: .4, at: 1.6, bus: 'moment'});
+      play('soul', undefined, {gain: .22, at: 1.9, bus: 'moment'});
+    },
+    /** The page's duel title card: 'sweep' (0 ms), 'name' (550), 'seal' (950), 'clear' (2000) after duelBegin. The
+        entrance has its strokes at those moments already; a card that comes at another time moves them to it. */
+    duelCard(moment, kind) { if (music && ctx) music.duelCard(moment, kind); },
+    /** His poise breaks: a great bronze struck and a drum, he reels. */
+    stagger(pan = 0) { play('clash', 900, {gain: .4, pan, bus: 'alert'}); play('drum', 52, {gain: .45, pan, bus: 'alert'}); play('bell', pent(1), {gain: .2, at: .04, pan, bus: 'alert', bend: -2}); },
+    /** Control reached him and did nothing: a dull knock, a short ring (the sim sends at most one a second). */
+    shrug(pan = 0) { play('wood', 160, {gain: .22, pan}); play('clash', 700, {gain: .1, rate: .7, pan}); },
+    /** A blow is turned aside at a phase line: a low bell bending, a breath. */
+    phaseGate(pan = 0) { play('bellDark', pent(-3), {gain: .25, pan, bend: -2}); play('whoosh', undefined, {gain: .12, rate: .5, pan}); },
     bossDown: tier => bossDownCall(tier),
-    bossPhase() { play('drum', 52, {gain: .5, bus: 'alert'}); play('drum', 52, {gain: .4, at: .12, bus: 'alert'}); play('bellDark', pent(-4), {gain: .35, at: .12, bus: 'alert'}); if (music) music.lift(); },
+    bossPhase() { if (music && music.duelState) return;      // in a duel the theme's held beat is the phase's sound
+      play('drum', 52, {gain: .5, bus: 'alert'}); play('drum', 52, {gain: .4, at: .12, bus: 'alert'}); play('bellDark', pent(-4), {gain: .35, at: .12, bus: 'alert'}); if (music) music.lift(); },
     enrage() { drumRoll(); play('horn', [pent(1), .6, 1], {gain: .25, at: .5, bus: 'alert'}); play('horn', [pent(4), .8, 1], {gain: .3, at: .3, bus: 'alert'}); if (music) music.lift(); },
     /** Hemmed in. The page also calls it after a boss's phase or rage: then the event has voiced it already. */
     encircle(force) { if (!force && takeCur(e => e.type === 'bossPhase' || e.type === 'enrage')) return; drumRoll(); play('horn', [pent(1), .6, 1], {gain: .25, at: .5, bus: 'alert'}); },
@@ -400,11 +504,12 @@ export function createSound({context = null, bank: shared = null} = {}) {
 
     /* ---------- danger ---------- */
     /** A telegraph on the ground: two hard knocks of wood, high, where nothing else in the mix sits. */
-    warn() { if (!alive() || now() - warnAt < .33) return; const c = takeCur(e => e.type === 'warn'), pan = c ? c.pan * .6 : 0; warnAt = now(); for (const at of [0, .11]) play('wood', 1400, {gain: .9, at, pan, bus: 'alert'}); },
+    warn() { if (!alive() || now() - warnAt < .33) return; const c = takeCur(e => e.type === 'warn'), pan = c ? c.pan * .6 : 0; warnAt = now(); duckDuel(12, .28, .35); if (buses) duckBus('blows', BLOWS_GAIN, 8, .25, .3); for (const at of [0, .11]) play('wood', 1400, {gain: .9, at, pan, bus: 'alert'}); },
     hurt() {
-      duck(6, .25, .4); duckCasts(5, .25, .35);
-      play('drum', 70, {gain: .75, bus: 'alert', rate: vary(1)}); play('tear', undefined, {gain: .22, rate: .6, bus: 'alert'});
-      play('chime', pent(4) * 1.059, {gain: .2, bus: 'alert', len: .3}); play('chime', pent(4), {gain: .2, bus: 'alert', len: .3});      // a minor second: a wince
+      duck(6, .25, .4); duckCasts(5, .25, .35); duckDuel(14, .28, .45); if (buses) duckBus('blows', BLOWS_GAIN, 8, .25, .35);      // in a duel, a hit stops the theme for a breath
+      const k = music && music.duelState ? 1.4 : 1;      // in a duel the theme is fuller: a hit lands about 3 dB harder
+      play('drum', 70, {gain: .75 * k, bus: 'alert', rate: vary(1)}); play('tear', undefined, {gain: .22 * k, rate: .6, bus: 'alert'});
+      play('chime', pent(4) * 1.059, {gain: .2 * k, bus: 'alert', len: .3}); play('chime', pent(4), {gain: .2 * k, bus: 'alert', len: .3});      // a minor second: a wince
     },
     block() { if (!alive() || now() - blockAt < .12) return; blockAt = now(); play('clash', 1300, {gain: .45, rate: vary(1, .08)}); },
     /** The afflictions, one sound each, on the alert bus: what has happened to the hero must be heard. */
@@ -430,7 +535,7 @@ export function createSound({context = null, bank: shared = null} = {}) {
     emerge(pan = 0) { play('rumble', undefined, {gain: .3, rate: 1.3, pan, bus: 'alert'}); play('drum', 52, {gain: .45, pan, bus: 'alert'}); },
     fall() { duck(12, 2, 2); play('drum', 52, {gain: .6, bus: 'alert'}); play('bellDark', pent(-6), {gain: .45, at: .1, bus: 'alert'}); play('horn', [pent(-3), 2, .8], {gain: .3, at: .4, bus: 'alert', bend: -3}); },
     won() { live.clear(); if (music && ctx) music.play('won'); },
-    lost() { live.clear(); if (music && ctx) music.play('lost'); },
+    lost() { live.clear(); if (music && ctx) music.play('lost'); for (const id of [...prepared]) api.freeDuel(id); },
 
     /* ---------- the hero ---------- */
     dash() { play('whoosh', undefined, {gain: .3}); for (let i = 0; i < 4; i++) play('hoof', 140, {gain: .18, at: .02 + i * .06, rate: vary(1, .1)}); },
@@ -465,7 +570,7 @@ export function createSound({context = null, bank: shared = null} = {}) {
   /** A boss falls: the low bell, a drum, the chimes descending; horns for a great one. 纣王's fall is the victory's. */
   function bossDownCall(tier) {
     if (!collect) setBoss();
-    if (tier === 'final') return;
+    if (tier === 'final' || (!collect && music && music.duelState)) return;      // a duel boss's fall is his theme's
     duck(8, 1.4, 1.2);
     play('bellDark', pent(-5), {gain: .5, bus: 'moment'}); play('drum', 52, {gain: .55, bus: 'moment'});
     [12, 11, 10, 9, 8, 7].forEach((d, i) => play('chime', pent(d), {gain: .13, at: .2 + i * .07, bus: 'moment'}));

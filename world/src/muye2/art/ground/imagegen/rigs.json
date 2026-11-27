@@ -1410,5 +1410,132 @@
 ]
 }
 ]
+},
+{
+"src": "raw/w1-seal.png",
+"kind": "polys",
+"name": "wz-seal",
+"atlas": "paint-duel",
+"scale": 0.6,
+"sat": 0.8,
+"r": 0,
+"stand": [
+{
+"poly": [
+[
+0,
+0
+],
+[
+1024,
+0
+],
+[
+1024,
+1024
+],
+[
+0,
+1024
+]
+],
+"foot": [
+512,
+1024
+]
+}
+]
+},
+{
+"src": "raw/w1-sky.png",
+"kind": "polys",
+"name": "wz-sky",
+"atlas": "paint-duel",
+"scale": 0.75,
+"sat": 0.85,
+"fade": 60,
+"r": 0,
+"stand": [
+{
+"poly": [
+[
+0,
+250
+],
+[
+1536,
+250
+],
+[
+1536,
+800
+],
+[
+0,
+800
+]
+],
+"foot": [
+768,
+800
+]
+}
+]
+},
+{
+"src": "raw/w1-sky3.png",
+"kind": "polys",
+"name": "wz-sky3",
+"atlas": "paint-duel",
+"scale": 0.75,
+"sat": 0.85,
+"fade": 60,
+"r": 0,
+"stand": [
+{
+"poly": [
+[
+0,
+240
+],
+[
+1536,
+240
+],
+[
+1536,
+790
+],
+[
+0,
+790
+]
+],
+"foot": [
+768,
+790
+]
+}
+]
+},
+{
+"src": "raw/w1-standards.png",
+"kind": "set",
+"name": "wz-std",
+"atlas": "paint-duel",
+"scale": 0.34,
+"minArea": 8000,
+"dropPale": 0.3,
+"r": 16
+},
+{
+"src": "raw/w1-pillars.png",
+"kind": "set",
+"name": "wz-pil",
+"atlas": "paint-duel",
+"scale": 0.42,
+"minArea": 8000,
+"dropPale": 0.3,
+"r": 40
 }
 ]

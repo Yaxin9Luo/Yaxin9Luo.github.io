@@ -20,7 +20,10 @@ const REACH_AT = 126;   // the hero's height when his weapon parts were cut to t
 // ones 2.3H (143), 纣王 2.6H (161); 土行孙 stays short (71). 法相 and book giants only exceed it.
 export const KEY_FIGURES = {
   'shang:zhouwang': { file: 'zhouwang', height: 161, side: 'shang', shadow: [42, 8, 0.45], attack: { up: [-100, 40], hit: [34, 84], fol: [20, 70] } },
-  'shang:wenzhong': { file: 'wenzhong', height: 143, side: 'shang', shadow: [39, 7, 0.42], attack: { up: [-70, 20], hit: [30, 50], fol: [18, 36] } },
+  // attack2: the far arm's angle (arm2) at gather, blow and follow-through, for a figure who strikes with both hands (闻仲's 雌雄鞭)
+  // eye: the pattern whose warning and blow open the eye painted on his brow (the part eyeOpen; shut otherwise; art/index.js passes o.eye)
+  // duel: how much larger a stage-final boss is drawn in his own duel's arena (art/index.js duelGrow; shadow and pose scale with him)
+  'shang:wenzhong': { file: 'wenzhong', height: 143, duel: 1.5, side: 'shang', shadow: [39, 7, 0.42], attack: { up: [-70, 20], hit: [30, 50], fol: [18, 36] }, attack2: [-35, 65, 40], eye: 'thirdEye' },
   'zhou:jiangziya': { file: 'jiangziya', height: 112, side: 'zhou', shadow: [32, 6, 0.4], attack: { up: [-55, -25], hit: [14, 22], fol: [8, 12] } },
   'shang:zhangguifang': { file: 'zhangguifang', height: 124, side: 'shang', shadow: [33, 6, 0.4], attack: { up: [-35, 62], hit: [30, 86], fol: [22, 80] } },
   'shang:dengzhong': { file: 'dengzhong', height: 124, side: 'shang', shadow: [35, 7, 0.4] },
@@ -177,6 +180,7 @@ const statesFor = (F) => {
   if (F.spread != null) { const W = S2.attack[0]; S2.attack = [{ ...W, rider: { ...W.rider, banner: F.spread } }, ...S2.attack.slice(1)]; }   // 孔宣: the gathered frame raises his five-coloured train
   if (F.bannerSway != null) for (const L of Object.values(S2)) for (const P of L) if (P.rider && P.rider.banner != null) P.rider = { ...P.rider, banner: P.rider.banner * F.bannerSway };   // a tall standard sways less
   if (F.straightFore) for (const L of Object.values(S2)) for (const P of L) if (P.mount && P.mount.legA != null) P.mount = { ...P.mount, legA2: Math.max(0, -P.mount.legA) * 1.1 };
+  if (F.attack2) S2.attack = S2.attack.map((P, i) => ({ ...P, rider: { ...P.rider, arm2: F.attack2[i] } }));   // both hands strike
   return { ...S2, walk: S2.move, gallop: S2.move, stand: S2.idle, windup: S2.attack.slice(0, 1), strike: S2.attack.slice(1), dead: S2.fall };
 };
 const STATES = statesFor({});
@@ -202,7 +206,7 @@ export async function loadKeyFigures(keys = Object.keys(KEY_FIGURES), { base = B
     const img = new Image(); img.src = base + F.file + suffix + '.webp' + q; await img.decode();
     const mount = puppetOf(meta, img, 'mount', paper, F.drop), rider = puppetOf(meta, img, 'rider', paper, F.drop);
     // measure: rider's head top above the ground in the idle pose, to set the game scale
-    const fig = { F, meta, mount, rider, seat: meta.seat, scale: 1, states: statesFor(F), foot: !!F.foot };
+    const fig = { F, meta, mount, rider, seat: meta.seat, scale: 1, states: statesFor(F), foot: !!F.foot, eye: !!rider.byId.eyeOpen };
     const g = groundDrop(fig, STATES.idle[0]); const top = headTop(fig, STATES.idle[0]);
     fig.scale = F.height / (g - top);
     sharpen(fig, dev);
@@ -293,11 +297,13 @@ export async function loadKeyFigures(keys = Object.keys(KEY_FIGURES), { base = B
         const r2 = strikes.get(u.id); if (r2) { let sk = now - r2[0]; const d = sk - r2[1];
           if (sk >= 0.7 && r2[1] && d > -0.22 && d < 0.35) { const f = d < 0 ? 0.6 * (d + 0.22) / 0.22 : d < 0.15 ? 0.6 : 0.6 * Math.max(0, 1 - (d - 0.15) / 0.2); sk = -0.22 + 0.25 * f; }
           o = { ...o, strike: sk }; } }
-      const fig = figs[key], P = unitPose(fig, u, now, x, y, o), st = u.state === 'dead' ? 'fall' : '', sh = shadow && fig.F.shadow, flip = legible(face ?? (u.facing < 0 ? -1 : 1));
+      const fig = figs[key], P = unitPose(fig, u, now, x, y, o), st = u.state === 'dead' && o.fallen == null ? 'fall' : '', sh = shadow && fig.F.shadow, flip = legible(face ?? (u.facing < 0 ? -1 : 1));
       if (sh && st !== 'fall') { const g = ctx.createRadialGradient(0, 0, 0, 0, 0, 1); g.addColorStop(0, `rgba(30,26,22,${sh[2]})`); g.addColorStop(0.6, `rgba(30,26,22,${sh[2] * 0.6})`); g.addColorStop(1, 'rgba(30,26,22,0)');
         ctx.setTransform(sh[0] * z, 0, 0, sh[1] * z, X, Y + z); ctx.globalAlpha = alpha; ctx.fillStyle = g; ctx.beginPath(); ctx.arc(0, 0, 1, 0, TAU); ctx.fill(); }
-      const box = drawFigure(ctx, fig, P, X, Y, fig.scale * z, flip, alpha); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 1; return box;
+      const box = drawFigure(ctx, fig, o.eye && fig.eye ? { ...P, rider: { ...P.rider, $eye: 1 } } : P, X, Y, fig.scale * z, flip, alpha); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 1; return box;
     },
+    /** a named point of the figure (the atlas json's anchors: 'eye', 'head') as it was in this figure's last draw, in the context's px; null if none */
+    point(key, name) { const f = figs[key], a = f && f._Mr && (f.meta.anchors || []).find((q) => q.name === name), m = a && f._Mr[a.id]; return m ? apply(m, a.pt[0], a.pt[1]) : null; },
     count: (key, state) => ((figs[key] ? figs[key].states : STATES)[state] || []).length,
     /** paint frame i of a state with the ground point at (x, y). flip -1 faces left. px multiplies the game scale. */
     draw(ctx, key, state, i, x, y, { flip = 1, px = 1, alpha = 1 } = {}) {
@@ -373,6 +379,19 @@ function gatherFor(F, A, shape, foot, now) {
   if (g === 'burst') return { mount: foot ? {} : { body: 6, neck: 10, legA: 14, legA2: 30, legB: 12, legC: -14, legD: -10, tail: 20 }, rider: { ...(foot ? A[0].rider : {}), torso: 16, head: 2, arm: at.up[0] * 0.5 + 30, weapon: at.up[1] + 20, thighN: foot ? -10 : 0, shinN: foot ? 30 : 0, thighF: foot ? 20 : 0, shinF: foot ? 30 : 0 } };
   return A[0];
 }
+// a stage-final boss's fall in his duel (o.fallen: seconds into the rules' fall hold, art/index.js): struck (0-0.15 s), then the mount
+// goes down (0.15-0.7 s): all four legs fold under it, so its feet-based ground drop brings its belly to the ground, tilted forward;
+// the rider slumps over its neck, crown bowed, both whips hanging; a settle (0.7-1.0 s: a dip and back, where the effects' dust
+// rises), then a slow breath until the soul rises (the fade is art/index.js's). On foot: the struck pose, held.
+const COLLAPSE = { mount: { body: 18, legA: 100, legA2: 150, legB: 100, legB2: 150, legC: -90, legC2: 150, legD: -90, legD2: 150, tail: -20 },
+  rider: { torso: 50, head: 38, arm: 105, weapon: 70, arm2: -165, whip2: -60, cloak: -25, plume: -50, banner: -10 } };
+function fallenPose(fig, s, now) {
+  const H = fig.states.hurt[0]; if (fig.foot) return s < 0.12 ? lerpP(fig.states.idle[0], H, easeS(s / 0.12)) : H;
+  if (s < 0.15) return lerpP(fig.states.idle[0], H, easeS(s / 0.15));
+  const q = Math.min(1, (s - 0.15) / 0.55), P = lerpP(H, COLLAPSE, q * q * (3 - 2 * q));   // he goes down
+  const dip = s > 0.7 && s < 1 ? Math.sin(Math.PI * (s - 0.7) / 0.3) : 0, b = Math.sin(now * 2.1) * Math.min(1, Math.max(0, s - 1));
+  P.mount.body += 4 * dip + 0.6 * b; P.rider.torso += 6 * dip + 1.5 * b; P.rider.head += 4 * dip + 1.2 * b; return P;
+}
 // a god's strike (true forms): his joints may turn only maxTurn, so the travel is his whole figure's. Rows: seconds from the
 // cast, lean (deg, at the root), lunge (share of his height), lift (share of his height), squash [x, y]; the arm and weapon
 // go rest, up, hit, fol, rest with them (F.attack). Gathered back and up, the blow forward and down, the follow-through, home.
@@ -390,6 +409,7 @@ function godStrike(F, base, s, foot) {
 function unitPose(fig, u, now, x, y, o = {}) {
   const F = fig.F, S = fig.states, st = u.state, t = u.stateT || 0, foot = fig.foot;
   if (F.still) return S.idle[0];
+  if (o.fallen != null) return fallenPose(fig, o.fallen, now);
   if (st === 'dead') { const L = S.fall, q = Math.min(L.length - 1, t / 0.14), i = Math.floor(q); return i >= L.length - 1 ? L[L.length - 1] : lerpP(L[i], L[i + 1], easeS(q - i)); }
   // the gait follows how fast he really moves on the ground (o.v, px/s, measured by drawUnit), so a rush or a slide the rules give
   // any state name still gallops; the state names are the fallback when no measure exists yet
@@ -469,8 +489,8 @@ function shrink(src, w, h) {
   if (c.width === w && c.height === h) return c;
   const n = document.createElement('canvas'); n.width = w; n.height = h; const x = n.getContext('2d'); x.imageSmoothingEnabled = true; x.imageSmoothingQuality = 'high'; x.drawImage(c, 0, 0, w, h); return n;
 }
-function sharpen(fig, dev) {
-  const f = fig.scale * dev * 1.15; if (!(f < 0.85)) return;
+function sharpen(fig, dev) {   // a stage-final boss drawn larger in his duel (F.duel) keeps the px for that size
+  const f = fig.scale * dev * 1.15 * (fig.F.duel || 1); if (!(f < 0.85)) return;
   for (const pup of [fig.mount, fig.rider]) for (const p of pup.parts) p.cv = shrink(p.cv, Math.max(2, Math.round(p.w * f)), Math.max(2, Math.round(p.h * f)));
 }
 
@@ -557,7 +577,9 @@ function drawPup(ctx, pup, base, pose) {
 // the eased turn (art/index.js faceOf, -1..1 over 0.12 s) is drawn never narrower than 0.6 of the figure: it squeezes a little,
 // then flips at the middle, so no frame shows him edge-on as a sliver
 const legible = (f) => (f < 0 ? -1 : 1) * (0.6 + 0.4 * Math.min(1, Math.abs(f)));
+const EYE_SHUT = { eyeOpen: 1 }, EYE_OPEN = { eyeShut: 1 };
 function drawFigure(ctx, fig, P, x, y, k, flip, alpha) {
+  if (fig.eye) { const E = P.rider.$eye ? EYE_OPEN : EYE_SHUT; P = { ...P, rider: { ...P.rider, $hide: P.rider.$hide ? { ...P.rider.$hide, ...E } : E } }; }   // the brow's eye: shut, or open when asked (o.eye)
   if (fig.foot) {   // on foot: feet on the ground; lying, the lowest edge of any part on the ground (a little sunk, as cloth lies)
     const R = P.rider, drop = R.$lie ? lowestAll(fig.rider, R) - 6 : lowest(fig.rider, R) - (R.$bob || 0);
     const run = (R.$run || 0) * fig.F.height / fig.scale;   // a lunge forward on the blow

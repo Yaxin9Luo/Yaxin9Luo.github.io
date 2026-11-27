@@ -15,10 +15,13 @@ import {P, chance} from '../../../../board/baked/kit.mjs';
 import {vocabulary} from './cells.mjs';
 import {wonders} from './wonders.cells.mjs';
 import {gods} from './gods.cells.mjs';
+import {duel} from './duel.cells.mjs';
 // SET=wonders bakes the large brushwork of the great moments instead (wonders.cells.mjs -> baked/wonders.webp, wonders.json)
 const WONDERS = process.env.SET === 'wonders';
 // SET=gods bakes the true-form feats of the ten generals (gods.cells.mjs -> baked/gods.webp, gods.json)
 const GODS = process.env.SET === 'gods';
+// SET=duel bakes the stage-final bosses' set pieces for their night arenas (duel.cells.mjs -> baked/duel.webp, duel.json)
+const DUEL = process.env.SET === 'duel';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const sharp = createRequire(join(root, '../../../../package.json'))('sharp');
@@ -59,8 +62,8 @@ export const PAINT = {
   ochre: ['#A07C46', '#86673A'], ochreHi: ['#B8945A', '#A07C46'],
 };
 // Two sheets: main at 1.5 px a unit (loaded strokes whose edges are seen), soft at 1 px a unit (dry, pale, broken)
-const pages = GODS ? {gods: {scale: 1.3, w: 3100, q: 80, cells: []}} : WONDERS ? {wonders: {scale: 1.6, w: 2400, q: 80, cells: []}} : {main: {scale: 1.5, w: 1600, q: 76, cells: []}, soft: {scale: 1, w: 1400, q: 72, cells: []}, big: {scale: .5, w: 1900, q: 70, cells: []}};
-const PAGE_NO = {main: 0, soft: 1, big: 2, wonders: 0, gods: 0}, FILE = {main: 'fx-main.webp', soft: 'fx-soft.webp', big: 'fx-big.webp', wonders: 'wonders.webp', gods: 'gods.webp'};
+const pages = DUEL ? {duel: {scale: 1.1, w: 3000, q: 80, cells: []}} : GODS ? {gods: {scale: 1.3, w: 3100, q: 80, cells: []}} : WONDERS ? {wonders: {scale: 1.6, w: 2400, q: 80, cells: []}} : {main: {scale: 1.5, w: 1600, q: 76, cells: []}, soft: {scale: 1, w: 1400, q: 72, cells: []}, big: {scale: .5, w: 1900, q: 70, cells: []}};
+const PAGE_NO = {main: 0, soft: 1, big: 2, wonders: 0, gods: 0, duel: 0}, FILE = {duel: 'duel.webp', main: 'fx-main.webp', soft: 'fx-soft.webp', big: 'fx-big.webp', wonders: 'wonders.webp', gods: 'gods.webp'};
 /** box: [x0, y0, x1, y1] round the pivot; axis: 'x' | 'up' | 'down' | '' */
 function cell(name, box, axis, paint, page = 'main') {
   const even = v => Math.ceil(v / 4) * 4;
@@ -71,7 +74,7 @@ const off = (path, d) => path.map((p, i) => { const a = path[Math.max(0, i - 1)]
 const part = (path, a, b) => path.slice(Math.round(a * (path.length - 1)), Math.round(b * (path.length - 1)) + 1);
 const strokeAt = (x, y, ang, len, curv = 0, n = 6) => arc(x - Math.cos(ang) * len / 2, y - Math.sin(ang) * len / 2, ang, len, curv, n);
 
-(GODS ? gods : WONDERS ? wonders : vocabulary)({cell, PAINT, pts, off, part, strokeAt, spline});
+(DUEL ? duel : GODS ? gods : WONDERS ? wonders : vocabulary)({cell, PAINT, pts, off, part, strokeAt, spline});
 
 /* ---------- pack: shelves, tallest first ---------- */
 const PAD = 4;
@@ -134,5 +137,5 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
       await sharp({create: {width: W, height: H, channels: 3, background: '#EFE7D6'}}).composite([{input: await img.png().toBuffer()}, {input: Buffer.from(labels)}]).png().toFile(join(root, 'review', `_atlas-${pname}.png`)); }
     console.log(`${file} ${W}x${H} ${pg.cells.length} cells ${((performance.now() - t0) / 1000).toFixed(1)} s`);
   }
-  if (!only) writeFileSync(join(root, 'baked', GODS ? 'gods.json' : WONDERS ? 'wonders.json' : 'atlas.json'), JSON.stringify(json));
+  if (!only) writeFileSync(join(root, 'baked', DUEL ? 'duel.json' : GODS ? 'gods.json' : WONDERS ? 'wonders.json' : 'atlas.json'), JSON.stringify(json));
 }

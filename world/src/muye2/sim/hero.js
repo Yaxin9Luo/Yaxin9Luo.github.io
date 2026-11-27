@@ -4,7 +4,7 @@ import {KB, clamp, wrap, setState, query, Qhero} from './core.js';
 import {hitFoe, hurtHero, fallNow} from './harm.js';
 import {meritNow} from './campaign.js';
 import * as BUILD from './build.js';
-import {WORLD, HERO, CRY, BY} from '../content.js';
+import {WORLD, HERO, CRY, BY, CAMPAIGN} from '../content.js';
 
 export const BREACH = {eliteMult: 1};
 
@@ -97,7 +97,11 @@ export function stepContact(g) {
     }
     if (f.stun > 0 && !f.heavy) continue;
     if (f.under || f.gone || f.melee) continue;                     // the foot mass swings instead (foes.js)
-    const struck = hurtHero(g, f.act === 'charge' ? f.cdmg : f.dmg, f.kind, f.x, f.y, f.act === 'charge' ? f.pat : '');
+    if (f.duelFoe && f.act !== 'charge') continue;                   // a duel's boss strikes by his patterns, not by touch (1.17)
+    const brushed = !!f.tier && f.act !== 'charge';                  // a named foe's brush (1.17): a quarter of his blow, then a grace
+    if (brushed && g.t - f.touchAt < CAMPAIGN.touch.grace) continue;
+    const struck = hurtHero(g, f.act === 'charge' ? f.cdmg : brushed ? f.dmg * CAMPAIGN.touch.brush : f.dmg, f.kind, f.x, f.y, f.act === 'charge' ? f.pat : '');
+    if (struck && brushed) f.touchAt = g.t;
     const row = BY.foe[f.kind];
     if (struck && row.hook && f.hookCd <= 0 && h.held <= 0) { f.hookCd = row.hook.every; h.held = row.hook.hold; g.events.push({type: 'held', time: row.hook.hold, by: f.kind, how: 'hook', x: h.x, y: h.y}); }
   }
