@@ -35,7 +35,7 @@ export const KEY_FIGURES = {
   'zhou:leizhenzi': { file: 'leizhenzi', height: 84, side: 'zhou', foot: true, hover: 19, shadow: [17, 4, 0.25], attack: { up: [-70, 20], hit: [44, 60], fol: [28, 44] } },
   'zhou:tuxingsun': { file: 'tuxingsun', height: 71, side: 'zhou', foot: true, shadow: [19, 5, 0.3], attack: { up: [-40, -30], hit: [30, 40], fol: [20, 30] } },
   'zhou:dengchanyu': { file: 'dengchanyu', height: 112, side: 'zhou', shadow: [30, 6, 0.4], attack: { up: [-70, -10], hit: [22, 10], fol: [12, 6] } },
-  'zhou:yangjian': { file: 'yangjian', height: 112, side: 'zhou', shadow: [29, 6, 0.4], attack: { up: [-40, 55], hit: [30, 85], fol: [22, 80] } },
+  'zhou:yangjian': { file: 'yangjian', height: 93, side: 'zhou', foot: true, shadow: [30, 5, 0.35], level: ['hound'], roll: { hound: [1.2, 0] }, limits: { head: [-3, 3], arm: [-6, 8], cloak: [-3, 4] }, attack: { up: [-6, 0], hit: [8, 0], fol: [4, 0] } },
   'zhou:huangfeihu': { file: 'huangfeihu', height: 112, side: 'zhou', shadow: [32, 6, 0.4], attack: { up: [-40, 55], hit: [30, 85], fol: [22, 80] } },
   'zhou:zhenglun': { file: 'zhenglun', height: 112, side: 'zhou', shadow: [32, 6, 0.4], attack: { up: [-70, 10], hit: [36, 50], fol: [22, 36] } },
   'zhou:longji': { file: 'longji', height: 112, side: 'zhou', shadow: [28, 5, 0.3], attack: { up: [-50, -20], hit: [24, 10], fol: [14, 6] } },
@@ -65,7 +65,7 @@ export const KEY_FIGURES = {
   'shang:wanggui': { file: 'wanggui', height: 93, side: 'shang', foot: true, shadow: [16, 4, 0.35], attack: { up: [-40, -10], hit: [16, 10], fol: [10, 6] } },
   'hero:wuwang-afoot': { file: 'wuwang-afoot', height: 84, side: 'zhou', foot: true, shadow: [18, 4, 0.45], attack: { up: [40, -4], hit: [-30, 2], fol: [-14, 2] } },   // his spear is cut level: the thrust is the arm drawing back then driving forward, the spear kept near 0
   // 显圣 true forms (the general revealed as a god, temple-mural iconography in this hand): apparitions up to 2.6H
-  'zhou:yangjian-true': { travel: true, file: 'yangjian-t2', height: 143, side: 'zhou', shadow: [40, 8, 0.35], attack: { up: [-40, 55], hit: [30, 85], fol: [22, 80] } },
+  'zhou:yangjian-true': { travel: true, file: 'yangjian-t2', height: 143, side: 'zhou', foot: true, shadow: [46, 8, 0.35], level: ['hound'], roll: { hound: [1.5, 0.25] }, limits: { head: [-3, 3], arm: [-6, 8], cloak: [-3, 4] }, attack: { up: [-6, 0], hit: [8, 0], fol: [4, 0] } },
   'zhou:nezha-true': { travel: true, file: 'nezha-t2', height: 124, side: 'zhou', foot: true, hover: 7, shadow: [26, 6, 0.3], attack: { up: [-14, 0], hit: [12, 0], fol: [6, 0] } },
   'zhou:huangfeihu-true': { travel: true, file: 'huangfeihu-t2', height: 143, side: 'zhou', shadow: [40, 8, 0.35], attack: { up: [-30, 20], hit: [20, 10], fol: [12, 6] } },
   'zhou:leizhenzi-true': { travel: true, file: 'leizhenzi-t2', height: 124, side: 'zhou', foot: true, hover: 19, shadow: [22, 5, 0.25], attack: { up: [-50, 20], hit: [30, 40], fol: [18, 28] } },
@@ -443,6 +443,8 @@ function unitPose(fig, u, now, x, y, o = {}) {
   if (F.gain) for (const k in F.gain) if (typeof R[k] === 'number') R[k] *= F.gain[k];
   if (F.roll) { const w = still ? now * 0.7 : phase * 2; for (const k in F.roll) R[k] = (R[k] || 0) + F.roll[k][0] * Math.sin((w + F.roll[k][1]) * Math.PI * 2); }
   if (F.limits) for (const k in F.limits) if (typeof R[k] === 'number') R[k] = Math.max(F.limits[k][0], Math.min(F.limits[k][1], R[k]));
+  // level: parts that keep their own angle however the torso leans (杨戬's hound runs on the ground beside him; its pivot is the torso's)
+  if (F.level) for (const k of F.level) R[k] = (R[k] || 0) - (R.torso || 0);
   { // squash and stretch: the wind-up settles and widens him, the blow stretches him out
     const an = st === 'windup' ? Math.min(1, t / 0.4) : 0, sx = st === 'attack' && t < 0.25 ? 1 - t / 0.25 : 0;
     if ((an || sx) && !R.$sq) R.$sq = { torso: [1 + 0.05 * an - 0.04 * sx, 1 - 0.08 * an + 0.07 * sx] }; }

@@ -15,7 +15,7 @@ await Promise.all(IDS.map(async (id) => {
   try { await im.decode(); IMG[id] = im; } catch { /* a missing picture leaves that god without a great image */ }
 }));
 // head: the centre of each god's aureole in the picture's pixels (measured from the baked pictures), for the held beat
-const HEAD = {nezha: [352, 211], yangjian: [444, 143], leizhenzi: [327, 210], tuxingsun: [277, 257], dengchanyu: [395, 100], huangfeihu: [590, 142], jiangziya: [527, 132], zhenglun: [575, 150], longji: [568, 143], huangtianhua: [506, 135]};
+const HEAD = {nezha: [352, 211], yangjian: [345, 234], leizhenzi: [327, 210], tuxingsun: [277, 257], dengchanyu: [395, 100], huangfeihu: [590, 142], jiangziya: [527, 132], zhenglun: [575, 150], longji: [568, 143], huangtianhua: [506, 135]};
 export const FAXIANG = Object.fromEntries(Object.entries(IMG).map(([id, im]) => { const w = Math.round((im.width * H) / im.height), k = w / im.width; return [id, { w, h: H, pivot: [Math.round(w / 2), H], head: HEAD[id] && [Math.round(HEAD[id][0] * k), Math.round(HEAD[id][1] * k)] }]; }));
 
 /** k: scale. */
